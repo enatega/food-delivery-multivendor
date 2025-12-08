@@ -71,7 +71,7 @@ const OrderTableHeader: React.FC<IOrderVendorHeaderProps> = ({
 
         <div className="hidden sm:block">
           <TextIconClickable
-            className="w-44 rounded border border-dotted border-[#E4E4E7] text-black"
+            className="w-44 rounded border border-dotted border-[#E4E4E7] text-black dark:text-white"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
             title={t('Orders Status')}

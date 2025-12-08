@@ -373,7 +373,7 @@ export default function CategoryAddForm({
                                                     parentCategoryId: '',
                                                   })
                                                 }
-                                                className="w-full flex justify-center items-center py-2 border border-dashed border-gray-400 rounded-md text-gray-600 hover:text-black hover:border-black transition-all"
+                                                className="w-full flex justify-center items-center py-2 border border-dashed border-gray-400 rounded-md text-gray-600 hover:text-black  hover:border-black transition-all"
                                               />
                                             </div>
                                           )}
@@ -388,7 +388,7 @@ export default function CategoryAddForm({
 
                           <div className="mt-4 flex justify-end">
                             <CustomButton
-                              className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                              className="h-10 w-fit border-gray-300 bg-black dark:bg-white px-8 text-white"
                               label={category ? t('Update') : t('Add')}
                               type="submit"
                               loading={mutationLoading}

@@ -239,7 +239,7 @@ export default function VendorsLayoutRestaurantCard({
 
       <div className="mb-2 px-4">
         <CustomButton
-          className="h-10 w-full bg-[#EBEDE6] text-black"
+          className="h-10 w-full bg-[#EBEDE6] text-black dark:text-white"
           label={t('View Details')}
           onClick={() => {
             onUseLocalStorage('save', 'shopType', shopType )

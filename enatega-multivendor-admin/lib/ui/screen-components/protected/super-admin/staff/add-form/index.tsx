@@ -320,7 +320,7 @@ export default function StaffAddForm({
 
                         <div className="flex justify-end py-4">
                           <CustomButton
-                            className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                            className="h-10 w-fit border-gray-300 bg-black dark:bg-white px-8 text-white"
                             label={staff ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}

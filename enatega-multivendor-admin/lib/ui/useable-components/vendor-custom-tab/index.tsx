@@ -13,7 +13,7 @@ const VendorCustomTab = ({
           key={String(option)}
           className={`flex cursor-pointer items-center justify-center rounded px-4 ${
             selectedTab === option
-              ? 'bg-white dark:bg-dark-950 text-black shadow'
+              ? 'bg-white dark:bg-dark-950 text-black dark:text-white shadow'
               : 'text-gray-500'
           }`}
           onClick={() => setSelectedTab(option)}

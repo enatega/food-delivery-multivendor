@@ -276,7 +276,7 @@ export default function OptionAddForm({
                               {!option && (
                                 <div className="mt-4 flex justify-end">
                                   <TextIconClickable
-                                    className="w-full rounded border border-black bg-transparent text-black"
+                                    className="w-full rounded border border-black bg-transparent text-black dark:text-white"
                                     icon={faAdd}
                                     iconStyles={{ color: 'black' }}
                                     title={t('Add New Option')}
@@ -292,7 +292,7 @@ export default function OptionAddForm({
 
                         <div className="mt-4 flex justify-end">
                           <CustomButton
-                            className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                            className="h-10 w-fit border-gray-300 bg-black dark:bg-white px-8 text-white"
                             label={option ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}

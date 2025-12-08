@@ -44,7 +44,7 @@ export default function SubCategoriesPreiwModal({
       className="p-3 w-1/3 mx-auto"
       header={() => {
         return (
-          <div className="mx-auto font-bold text-gray-700">
+          <div className="mx-auto font-bold text-gray-700 ">
             {t('Child Categories')}
           </div>
         );

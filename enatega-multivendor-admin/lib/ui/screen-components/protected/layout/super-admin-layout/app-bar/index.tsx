@@ -246,7 +246,7 @@ const AppTopbar = () => {
             className={
               pathname === '/zone'
                 ? 'rounded bg-primary-color text-white'
-                : 'bg-transparent hover:rounded hover:bg-secondary-color dark:hover:text-black'
+                : 'bg-transparent hover:rounded hover:bg-secondary-color dark:hover:text-black '
             }
             iconStyles={{
               color: pathname === '/zone' || isDarkMode ? 'white' : 'gray',
@@ -272,7 +272,7 @@ const AppTopbar = () => {
         <div className="relative z-50">
           <FontAwesomeIcon
             icon={faBell}
-            className="cursor-pointer text-gray-600 dark:text-white hover:text-black"
+            className="cursor-pointer text-gray-600  hover:text-black"
             onClick={toggleDropdown}
             title="Notifications" // 👈 native tooltip added here
           />
@@ -302,7 +302,7 @@ const AppTopbar = () => {
                   ))
                 ) : notifications.length === 0 ? (
                   <div className="flex p-2 gap-2 justify-center items-center">
-                    <li className="text-center text-gray-500 dark:text-white">
+                    <li className="text-center text-gray-500 ">
                       No notifications yet
                     </li>
                     <FontAwesomeIcon
@@ -329,7 +329,7 @@ const AppTopbar = () => {
                       }}
                     >
                       <p>{notification.body}</p>
-                      <p className="text-xs text-gray-400 dark:text-white">
+                      <p className="text-xs text-gray-400 ">
                         {timeAgo(+notification.createdAt)}
                       </p>
                     </Link>

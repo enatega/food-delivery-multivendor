@@ -74,7 +74,7 @@ export const COMMISSION_RATE_COLUMNS = ({
             <Form onSubmit={handleSubmit}>
               <CustomButton
                 type="submit"
-                className="mt-2 flex h-10 w-24 rounded-md border border-gray-500 bg-white dark:bg-dark-950 px-4 text-black transition-colors duration-200 hover:bg-black hover:text-white"
+                className="mt-2 flex h-10 w-24 rounded-md border border-gray-500 bg-white dark:bg-dark-950 px-4 text-black dark:text-white transition-colors duration-200 hover:bg-black hover:text-white"
                 label={t('Save')}
                 rounded={false}
                 loading={loadingRestaurant === restaurant._id || isSubmitting}
