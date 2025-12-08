@@ -91,6 +91,7 @@ body {
 }
 .dark .layout-top-container {
   border-bottom: 0.2px solid var(--dark-600);
+  background-color: var(--dark-900);
 }
 .layout-main {
   height: 100%;
