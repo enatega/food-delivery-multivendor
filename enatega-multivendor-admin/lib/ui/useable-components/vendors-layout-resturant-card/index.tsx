@@ -156,8 +156,8 @@ export default function VendorsLayoutRestaurantCard({
   };
 
   return (
-    <div className="flex flex-col rounded-lg border-2 border-[#F4F4F5] bg-white dark:bg-dark-950 shadow-md">
-      <div className="mb-4 flex items-center rounded-t-lg bg-gray-200 p-4">
+    <div className="flex flex-col rounded-lg border-2 border-[#F4F4F5] dark:border-dark-600 bg-white dark:bg-dark-950 shadow-md">
+      <div className="mb-4 flex items-center rounded-t-lg bg-gray-200 dark:bg-dark-900 p-4">
         {image ? (
           <Image
             src={image}
@@ -177,11 +177,11 @@ export default function VendorsLayoutRestaurantCard({
         <div className="min-w-0 flex-grow">
           <TextComponent className={`card-h2 truncate`} text={name} />
           <TextComponent
-            className={`card-h3 truncate text-gray-500`}
+            className={`card-h3 truncate text-gray-500 dark:text-white`}
             text={unique_restaurant_id}
           />
           <TextComponent
-            className={`card-h3 truncate text-gray-500`}
+            className={`card-h3 truncate text-gray-500 dark:text-white`}
             text={shopType}
           />
         </div>
@@ -202,18 +202,18 @@ export default function VendorsLayoutRestaurantCard({
           )}
         </div>
       </div>
-      <div className="mb-4 flex items-center gap-x-2 truncate px-4 text-sm text-gray-500">
+      <div className="mb-4 flex items-center gap-x-2 truncate px-4 text-sm dark:text-white text-gray-500">
         <FontAwesomeIcon icon={faLocationDot} />
 
         <TextComponent
-          className={`card-h2 truncate text-gray-500`}
+          className={`card-h2 truncate text-gray-500 dark:text-white`}
           text={address}
         />
       </div>
 
       <div className="mb-4 flex flex-wrap items-center gap-x-2 px-2 sm:grid sm:grid-cols-2 sm:gap-4 lg:flex">
         {/* Delivery Time */}
-        <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-2 mb-2 text-sm">
+        <div className="flex items-center gap-2 rounded-lg border border-gray-300 dark:border-dark-600 p-2 mb-2 text-sm">
           <FrameSVG width="24" height="24" />
           <span>
             {restaurant?.deliveryTime} {t('min')}
@@ -221,7 +221,7 @@ export default function VendorsLayoutRestaurantCard({
         </div>
 
         {/* Delivery Fee */}
-        <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-2 mb-2 text-sm">
+        <div className="flex items-center gap-2 rounded-lg border border-gray-300 dark:border-dark-600 p-2 mb-2 text-sm">
           <CarSVG width="24" height="24" />
           <span>
             {'₪'} {deliveryRate}
@@ -229,7 +229,7 @@ export default function VendorsLayoutRestaurantCard({
         </div>
 
         {/* Minimum Order */}
-        <div className="flex items-center gap-1 rounded-lg border border-gray-300 p-2 mb-2 text-sm">
+        <div className="flex items-center gap-1 rounded-lg border border-gray-300 dark:border-dark-600 p-2 mb-2 text-sm">
           <span>{t('Min Order')}</span>
           <span>
             {'₪'} {restaurant?.minimumOrder}
@@ -239,7 +239,7 @@ export default function VendorsLayoutRestaurantCard({
 
       <div className="mb-2 px-4">
         <CustomButton
-          className="h-10 w-full bg-[#EBEDE6] text-black dark:text-white"
+          className="h-10 w-full bg-primary-color  text-black dark:text-white"
           label={t('View Details')}
           onClick={() => {
             onUseLocalStorage('save', 'shopType', shopType )

@@ -258,7 +258,7 @@ const BannersAddForm = ({
                         <div
                           className={`${errors.file && !values.file
                             ? 'border-red-500'
-                            : 'border-gray-200'
+                            : 'border-gray-200 dark:border-dark-600'
                             } rounded-lg border p-4`}
                         >
                           <CustomUploadImageComponent

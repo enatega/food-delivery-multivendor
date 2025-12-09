@@ -123,7 +123,7 @@ const TimingAddForm = () => {
   };
 
   return (
-    <div className="mt-7 max-h-[calc(100vh-152px)] overflow-auto rounded border px-8 py-8">
+    <div className="mt-7 max-h-[calc(100vh-152px)] overflow-auto rounded border dark:border-dark-600 px-8 py-8">
       <Formik
         initialValues={initialValues}
         validationSchema={TimingSchema}
@@ -202,7 +202,7 @@ const TimingAddForm = () => {
                                 </ErrorMessage>
                               </div>
 
-                              <span className="self-center text-xs">-</span>
+                              <span className="self-center text-xs dark:text-white">-</span>
 
                               <div className="max-w-4min-w-44 relative flex w-full min-w-44 flex-col">
                                 <CustomTimeInput
@@ -284,7 +284,7 @@ const TimingAddForm = () => {
             })}
 
             <CustomButton
-              className="mb-[2px] mr-auto mt-auto flex h-11 rounded-md border-gray-300 bg-[black] px-10 text-white"
+              className="mb-[2px] mr-auto mt-auto flex h-11 rounded-md border dark:border-dark-600 border-gray-300 bg-[black] px-10 text-white"
               label={t('Save')}
               rounded={false}
               disabled={loading}

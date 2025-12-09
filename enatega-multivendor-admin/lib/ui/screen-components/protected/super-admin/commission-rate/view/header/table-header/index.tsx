@@ -7,6 +7,7 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import React, { useRef, useState } from 'react';
 import classes from './commission-rate.header.module.css';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 
 interface MenuItem {
   label: string;
@@ -20,7 +21,7 @@ const CommissionRateHeader: React.FC<ICommissionRateHeaderProps> = ({
 }) => {
   // Hooks
   const t = useTranslations();
-
+  const {theme } = useTheme()
   // States
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -74,9 +75,9 @@ const CommissionRateHeader: React.FC<ICommissionRateHeaderProps> = ({
 
         <div className="hidden sm:block">
           <TextIconClickable
-            className="w-44 rounded border border-dotted border-[#E4E4E7] text-black dark:text-white"
+            className="w-44 rounded border border-dotted dark:border-dark-600 border-[#E4E4E7] text-black dark:text-white"
             icon={faAdd}
-            iconStyles={{ color: 'black' }}
+            iconStyles={theme === 'dark' ? { color: 'white' } : { color: 'black' }}
             title={t('Commission Rate')}
             onClick={(e) => overlayPanelRef.current?.toggle(e)}
           />

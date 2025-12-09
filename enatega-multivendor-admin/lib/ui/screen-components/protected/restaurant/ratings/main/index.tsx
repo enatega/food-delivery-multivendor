@@ -85,7 +85,7 @@ const RatingMain: React.FC = () => {
     <div className="p-3">
       {!data || !data.reviews || data.reviews.length === 0 ? (
         <div className="text-center">
-          <p className="mt-8 text-gray-600">{t('No records found')}</p>
+          <p className="mt-8 text-gray-600 dark:text-white">{t('No records found')}</p>
         </div>
       ) : (
         <CustomDataView

@@ -40,7 +40,7 @@ export default function UpdateRestaurantLocation({
   });
 
   return (
-    <div className="flex h-full w-full items-center justify-start">
+    <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950 ">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div>

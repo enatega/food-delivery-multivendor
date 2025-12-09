@@ -272,7 +272,7 @@ const AppTopbar = () => {
         <div className="relative z-50">
           <FontAwesomeIcon
             icon={faBell}
-            className="cursor-pointer text-gray-600  hover:text-black"
+            className="cursor-pointer text-gray-600 dark:text-white hover:text-black"
             onClick={toggleDropdown}
             title="Notifications" // 👈 native tooltip added here
           />

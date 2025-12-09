@@ -22,7 +22,7 @@ export default function VendorHeader() {
     useContext(VendorContext);
 
   return (
-    <div className="hidden w-full flex-shrink-0 border-b p-3 sm:block dark:bg-dark-950 dark:text-white">
+    <div className="hidden w-full flex-shrink-0 border-b dark:border-dark-600 p-3 sm:block dark:bg-dark-950 dark:text-white">
       <div className="mb-4 flex flex-col items-center justify-between sm:flex-row">
         <HeaderText text={t('Vendors')} />
 

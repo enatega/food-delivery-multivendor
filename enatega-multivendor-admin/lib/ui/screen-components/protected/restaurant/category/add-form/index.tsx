@@ -230,7 +230,7 @@ export default function CategoryAddForm({
         visible={isAddCategoryVisible}
         position={position}
         onHide={onHide}
-        className="w-full sm:w-[450px]"
+        className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 dark:border dark:border-dark-600"
       >
         <div className="flex h-full w-full items-center justify-start">
           <div className="h-full w-full">
@@ -388,7 +388,7 @@ export default function CategoryAddForm({
 
                           <div className="mt-4 flex justify-end">
                             <CustomButton
-                              className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                              className="h-10 w-fit border-gray-300 border dark:border-dark-600 bg-black px-8 text-white"
                               label={category ? t('Update') : t('Add')}
                               type="submit"
                               loading={mutationLoading}

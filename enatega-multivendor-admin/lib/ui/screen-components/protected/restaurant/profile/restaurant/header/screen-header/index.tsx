@@ -22,7 +22,7 @@ const ProfileHeader: React.FC = () => {
       <div className="flex w-full justify-between">
         <HeaderText className="heading" text={t('Profile')} />
         <TextIconClickable
-          className="sm:w-auto bg-black text-white border-gray-300 rounded"
+          className="sm:w-auto border bg-black dark:border-dark-600 text-white border-gray-300 rounded"
           icon={faWrench}
           iconStyles={{ color: 'white' }}
           title={t('Update Profile')}

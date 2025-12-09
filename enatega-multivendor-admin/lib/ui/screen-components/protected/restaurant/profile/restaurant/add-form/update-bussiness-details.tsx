@@ -116,7 +116,7 @@ export default function UpdateBusinessDetails({
   };
 
   return (
-    <div className="flex h-full w-full items-center justify-start">
+    <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950 ">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="mb-2 flex flex-col">
@@ -278,7 +278,7 @@ export default function UpdateBusinessDetails({
 
                     <div className="mt-4 flex justify-end">
                       <CustomButton
-                        className="h-10 w-fit border-gray-300 bg-black  px-8 text-white"
+                        className="h-10 w-fit border-gray-300 border dark:border-dark-600 bg-black  px-8 text-white"
                         label={t('Update')}
                         type="submit"
                         loading={isSubmitting}

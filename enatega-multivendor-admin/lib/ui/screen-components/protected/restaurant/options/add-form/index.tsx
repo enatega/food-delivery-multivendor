@@ -133,7 +133,7 @@ export default function OptionAddForm({
       visible={isAddOptionsVisible}
       position={position}
       onHide={onHide}
-      className="w-full sm:w-[450px]"
+      className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <div className="flex h-full w-full items-center justify-start">
         <div className="h-full w-full">
@@ -191,6 +191,7 @@ export default function OptionAddForm({
                                           <Fieldset
                                             legend={`${t('Option')} ${index + 1} ${value.title ? `(${value.title})` : ''}`}
                                             toggleable
+                                            className='dark:text-white dark:bg-dark-950 '
                                           >
                                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                               <div>
@@ -276,7 +277,7 @@ export default function OptionAddForm({
                               {!option && (
                                 <div className="mt-4 flex justify-end">
                                   <TextIconClickable
-                                    className="w-full rounded border border-black bg-transparent text-black dark:text-white"
+                                    className="w-full rounded border dark:border-dark-600 border-black bg-transparent text-black dark:text-white"
                                     icon={faAdd}
                                     iconStyles={{ color: 'black' }}
                                     title={t('Add New Option')}
@@ -292,7 +293,7 @@ export default function OptionAddForm({
 
                         <div className="mt-4 flex justify-end">
                           <CustomButton
-                            className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                            className="h-10 w-fit border dark:border-dark-600 border-gray-300 bg-black px-8 text-white"
                             label={option ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}

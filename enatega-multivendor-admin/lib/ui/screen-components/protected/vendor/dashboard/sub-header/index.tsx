@@ -15,12 +15,12 @@ export default function DashboardSubHeader({
   return (
     <div className="flex flex-row items-center justify-between px-4 py-3 bg-white dark:bg-dark-950 rounded-lg ">
       <div className="flex items-center space-x-4">
-        <h2 className="text-xl font-semibold text-gray-800">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
           {t('Business Overview')}
         </h2>
         <div className="flex items-center space-x-2">
           <span
-            className={`text-sm leading-5 font-medium font-inter ${!isStoreView ? 'text-black dark:text-white' : 'text-[#71717A]'}`}
+            className={`text-sm leading-5 font-medium font-inter ${!isStoreView ? 'text-black dark:text-white' : 'text-[#71717A] dark:text-white'}`}
           >
             {t('Graph View')}
           </span>
@@ -31,7 +31,7 @@ export default function DashboardSubHeader({
             />
           )}
           <span
-            className={`text-sm leading-5 font-medium font-inter ${isStoreView ? 'text-black dark:text-white' : 'text-[#71717A]'}`}
+            className={`text-sm leading-5 font-medium font-inter ${isStoreView ? 'text-black dark:text-white' : ' dark:text-white text-[#71717A]'}`}
           >
             {t('Store View')}
           </span>

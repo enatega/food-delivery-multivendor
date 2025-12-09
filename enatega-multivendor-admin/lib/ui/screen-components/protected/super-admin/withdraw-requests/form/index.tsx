@@ -62,7 +62,7 @@ export default function WithdrawRequestForm({
       visible={visible}
       onHide={() => setVisible(false)}
       position="right"
-      className="w-full max-w-md"
+      className="w-full max-w-md dark:text-white dark:bg-dark-950 border dark:border-dark-600"
       showCloseIcon={false} // Hide default close icon
     >
       <div className="flex items-center justify-between border-b pb-4">

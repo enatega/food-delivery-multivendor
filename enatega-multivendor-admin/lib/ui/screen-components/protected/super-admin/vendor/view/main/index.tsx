@@ -63,7 +63,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
         }`}
       >
         {/* Mobile-only header for Vendors section */}
-        <div className="mt-3  border-b p-3 sm:hidden">
+        <div className="mt-3  border-b dark:border-dark-600 p-3 sm:hidden">
           <div className="mb-4 flex items-center justify-between">
             <HeaderText text={t('Vendors')} />
             <TextIconClickable
@@ -125,7 +125,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
         }`}
       >
         {/* Header for Restaurants section */}
-        <div className="border-b pb-2 pt-3 dark:border-dark-600">
+        <div className="border-b  pb-2 pt-3 dark:border-dark-600">
           <div className="mb-4 flex items-center justify-between">
             <div className="hidden sm:block">
               <HeaderText text={t('Stores')} />

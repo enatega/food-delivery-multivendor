@@ -178,7 +178,7 @@ const VendorAppTopbar = () => {
     }
   }, [vendorData?.getVendor?.name]);
   return (
-    <div className={`${classes['layout-topbar']}`}>
+    <div className={` dark:bg-dark-950 dark:text-white  dark:border-dark-600 ${classes['layout-topbar']}`}>
       <div className="flex items-center cursor-pointer">
         <div id="sidebar-opening-icon">
           <button onClick={() => showVendorSidebar()}>
