@@ -12,7 +12,7 @@ export default function NoData({
   return (
     <div className="w-full flex flex-col items-center justify-center p-8 text-center">
       <svg
-        className="w-24 h-24 text-gray-300 mb-4"
+        className="w-24 h-24 text-gray-300 dark:text-white mb-4"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -25,10 +25,10 @@ export default function NoData({
           d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>
-      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+      <h3 className="text-xl font-semibold text-gray-700 dark:text-white mb-2">
         {title ?? t('No Data Available')}
       </h3>
-      <p className="text-gray-500">
+      <p className="text-gray-500 dark:text-white">
         {message ?? t("There's nothing to display at the moment")}.
       </p>
     </div>

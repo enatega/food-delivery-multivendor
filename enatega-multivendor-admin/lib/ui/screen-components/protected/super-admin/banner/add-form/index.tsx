@@ -134,7 +134,7 @@ const BannersAddForm = ({
       visible={isAddBannerVisible}
       position={position}
       onHide={onHide}
-      className="w-full sm:w-[450px] py-4"
+      className="w-full sm:w-[450px] py-4 dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <div className="flex h-full w-full items-center justify-start">
         <div className="h-full w-full">
@@ -258,7 +258,7 @@ const BannersAddForm = ({
                         <div
                           className={`${errors.file && !values.file
                             ? 'border-red-500'
-                            : 'border-gray-200'
+                            : 'border-gray-200 dark:border-dark-600'
                             } rounded-lg border p-4`}
                         >
                           <CustomUploadImageComponent
@@ -282,7 +282,7 @@ const BannersAddForm = ({
 
                         <div className="m-4 flex justify-end">
                           <CustomButton
-                            className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                            className="h-10 w-fit border dark:border-dark-600 border-gray-300 bg-black px-8 text-white"
                             label={banner ? t('Update') : t('Add')}
                             type="submit"
                             loading={mutationLoading}

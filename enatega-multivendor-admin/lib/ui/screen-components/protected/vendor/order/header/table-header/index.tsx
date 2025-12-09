@@ -8,6 +8,7 @@ import classes from './order-vendor.header.module.css';
 import { IOrderVendorHeaderProps } from '@/lib/utils/interfaces/orders/order-vendor.interface';
 import { IMenuItem } from '@/lib/utils/interfaces/orders/order-vendor.interface';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 
 const OrderTableHeader: React.FC<IOrderVendorHeaderProps> = ({
   setSelectedActions,
@@ -16,7 +17,7 @@ const OrderTableHeader: React.FC<IOrderVendorHeaderProps> = ({
 }) => {
   // Hooks
   const t = useTranslations();
-
+  const {theme } = useTheme()
   // States
   const [searchValue, setSearchValue] = useState<string>('');
   const overlayPanelRef = useRef<OverlayPanel>(null);
@@ -52,7 +53,7 @@ const OrderTableHeader: React.FC<IOrderVendorHeaderProps> = ({
             <TextIconClickable
               className="flex h-10 w-10 items-center justify-center rounded-full border border-dotted border-[#E4E4E7]"
               icon={faAdd}
-              iconStyles={{ color: 'black' }}
+              iconStyles={theme === 'dark' ? { color: 'white' } : { color: 'black' }}
               onClick={(e) => overlayPanelRef.current?.toggle(e)}
             />
           </div>
@@ -71,9 +72,9 @@ const OrderTableHeader: React.FC<IOrderVendorHeaderProps> = ({
 
         <div className="hidden sm:block">
           <TextIconClickable
-            className="w-44 rounded border border-dotted border-[#E4E4E7] text-black"
+            className="w-44 rounded border border-dotted dark:border-dark-600 border-[#E4E4E7] text-black dark:text-white"
             icon={faAdd}
-            iconStyles={{ color: 'black' }}
+              iconStyles={theme === 'dark' ? { color: 'white' } : { color: 'black' }}
             title={t('Orders Status')}
             onClick={(e) => overlayPanelRef.current?.toggle(e)}
           />

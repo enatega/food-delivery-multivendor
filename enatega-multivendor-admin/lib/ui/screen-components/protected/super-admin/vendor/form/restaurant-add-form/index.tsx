@@ -58,7 +58,7 @@ const RestaurantsForm = ({
       visible={isRestaurantFormVisible}
       position={position}
       onHide={onSidebarHideHandler}
-      className="w-full sm:w-[600px]"
+      className="w-full sm:w-[600px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <div ref={stepperRef}>
         <Stepper linear headerPosition="bottom" activeStep={activeIndex}>

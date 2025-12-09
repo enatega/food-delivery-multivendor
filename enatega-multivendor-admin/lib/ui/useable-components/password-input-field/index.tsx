@@ -23,7 +23,7 @@ export default function CustomPasswordTextField({
       )}
       <Password
         className={twMerge(
-          `icon-right h-10 w-full rounded-lg border border-gray-300 border-inherit pr-8 text-sm focus:shadow-none focus:outline-none`,
+          `icon-right h-10 w-full rounded-lg border border-gray-300 dark:border-dark-600 border-inherit pr-8 text-sm focus:shadow-none focus:outline-none`,
           className
         )}
         placeholder={placeholder}

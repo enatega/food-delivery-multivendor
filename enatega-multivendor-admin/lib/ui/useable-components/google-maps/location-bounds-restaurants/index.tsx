@@ -64,6 +64,8 @@ import useLocation from '@/lib/hooks/useLocation';
 import { RestaurantsContext } from '@/lib/context/super-admin/restaurants.context';
 import calculateZoom from '@/lib/utils/methods/zoom-calculator';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
+import { darkMapStyle } from '@/lib/utils/map-style/mapStyle';
 
 const autocompleteService: {
   current: google.maps.places.AutocompleteService | null;
@@ -74,6 +76,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
 > = ({ onStepChange, hideControls, height }) => {
   // Hooks
   const t = useTranslations();
+  const { theme } = useTheme();
 
   // Context
   const { restaurantsContextData, onSetRestaurantsContextData } =
@@ -669,7 +672,6 @@ const CustomGoogleMapsLocationBounds: React.FC<
                                   key={index}
                                   style={{
                                     fontWeight: part.highlight ? 700 : 400,
-                                    color: 'black',
                                     marginRight: '2px',
                                   }}
                                 >
@@ -718,6 +720,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
               mapTypeControl: !hideControls,
               fullscreenControl: !hideControls,
               draggable: !hideControls,
+              styles: theme === 'dark' ? darkMapStyle : null,
             }}
             onClick={
               deliveryZoneType === 'point' ? onClickGoogleMaps : undefined
@@ -828,7 +831,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
 
           <div className="mt-4 flex justify-end">
             <CustomButton
-              className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+              className="h-10 w-fit border-gray-300 border dark:border-dark-600 bg-black px-8 text-white"
               label={t('Save')}
               type="button"
               loading={isSubmitting}

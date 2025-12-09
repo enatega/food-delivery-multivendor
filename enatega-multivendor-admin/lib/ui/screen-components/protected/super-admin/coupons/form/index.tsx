@@ -155,7 +155,7 @@ export default function CouponForm({
         });
       }}
       position="right"
-      className="w-full sm:w-[450px]"
+      className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <Formik
         initialValues={initialValues}
@@ -267,7 +267,7 @@ export default function CouponForm({
                 />
 
                 <button
-                  className="float-end h-10 w-fit rounded-md border-gray-300 bg-black px-8 text-white"
+                  className="float-end h-10 w-fit rounded-md border dark:border-dark-600 border-gray-300 bg-black px-8 text-white"
                   disabled={
                     isSubmitting || editCouponLoading || createCouponLoading
                   }

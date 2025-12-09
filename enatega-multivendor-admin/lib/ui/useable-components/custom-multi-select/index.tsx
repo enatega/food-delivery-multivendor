@@ -43,7 +43,7 @@ const CustomMultiSelectComponent = ({
       <div className="flex justify-between space-x-2">
         {extraFooterButton?.title ? (
           <TextIconClickable
-            className="w-full h-fit rounded  text-black"
+            className="w-full h-fit rounded  text-black dark:text-white"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
             title={`${extraFooterButton.title} (${length} ${t('selected')})`}
@@ -61,7 +61,7 @@ const CustomMultiSelectComponent = ({
   return !isLoading ? (
     <div className={twMerge(`flex w-full flex-col justify-center gap-y-1`, className)}>
       {showLabel && (
-        <label htmlFor="username" className="text-sm font-[500]">
+        <label htmlFor="username" className="text-sm font-[500] dark:text-white">
           {placeholder}
         </label>
       )}
@@ -79,7 +79,7 @@ const CustomMultiSelectComponent = ({
         placeholder={placeholder}
         itemTemplate={itemTemplate}
         panelFooterTemplate={panelFooterTemplate}
-        className={twMerge("md:w-20rem m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none", multiSelectClassName)}
+        className={twMerge("md:w-20rem m-0 h-10 w-full border dark:border-dark-600 dark:bg-dark-950 dark:text-white border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none", multiSelectClassName)}
         panelClassName="border-gray-200 border-2"
         display="chip"
         dropdownIcon={(options) => (

@@ -36,7 +36,7 @@ import { useTranslations } from 'next-intl';
 
 // Status templates
 const valueTemplate = (option: IDropdownSelectItem) => (
-  <div className="flex items-center justify-start gap-2">
+  <div className="flex items-center justify-start gap-2 dark:text-white">
     <Tag
       severity={severityChecker(option?.code)}
       value={option?.label}
@@ -322,7 +322,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                   handleAssignRider(e.value, rowData)
                 }
                 // filter={true}
-                className="min-w-[120px] outline outline-1 outline-gray-300"
+                className="min-w-[120px] outline outline-1 outline-gray-600 "
               />
             </div>
           );
@@ -349,7 +349,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                 //   handleAssignRider(e.value, rowData)
                 // }
                 // filter={true}
-                className="min-w-[150px] outline outline-1 outline-gray-300"
+                className="min-w-[150px] outline outline-1 outline-gray-600"
               />
             </div>
           );

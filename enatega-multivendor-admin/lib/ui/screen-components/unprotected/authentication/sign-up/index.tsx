@@ -210,7 +210,7 @@ export default function SignupMain() {
                       </div>
 
                       <CustomButton
-                        className="hover:bg-whit h-12 w-full border-gray-300 bg-transparent px-32 text-black"
+                        className="hover:bg-whit h-12 w-full border-gray-300 bg-transparent px-32 text-black dark:text-white"
                         label="Create Account"
                         rounded={true}
                         icon="pi pi-google"

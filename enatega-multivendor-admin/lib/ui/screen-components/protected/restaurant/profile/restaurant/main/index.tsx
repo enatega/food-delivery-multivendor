@@ -30,7 +30,7 @@ const RestaurantMain: React.FC = () => {
     }
     return (
       <div>
-        <p className="text-xs text-gray-500 mb-2">{label}</p>
+        <p className="text-xs text-gray-500 dark:text-white mb-2">{label}</p>
         <p className="font-medium">
           {icon}
           {value || 'N/A'}
@@ -40,20 +40,20 @@ const RestaurantMain: React.FC = () => {
   };
   return (
     <div className="flex items-center justify-center mt-8">
-      <div className="bg-white p-8 w-full border-2 border-dotted rounded border-inherit">
+      <div className="bg-white dark:bg-dark-950 p-8 w-full border-2 border-dotted dark:border-dark-600 rounded border-inherit">
         <div className="flex items-center mb-6">
           <ProfileLogoSVG width="55" height="55" strokeColor="#1E1E1E" />
           <div className="ml-2">
-            <h1 className="text-xs text-gray-500">{t('Store Name')}</h1>
+            <h1 className="text-xs text-gray-500 dark:text-white">{t('Store Name')}</h1>
             <h2 className="text-2xl font-bold">{restaurant?.name || 'N/A'}</h2>
           </div>
         </div>
-        <hr className="mb-6" />
+        <hr className="mb-6 border-dark-600" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <InfoItem label={t('Email')} value={restaurant?.username} />
           <InfoItem label={t('Password')} value={restaurant?.password} />
           <div className="md:row-span-4">
-            <p className="text-xs text-gray-500 mb-4">{t('Images')}</p>
+            <p className="text-xs text-gray-500 dark:text-white mb-4">{t('Images')}</p>
             <div className="flex space-x-2">
               {restaurant?.image ? (
                 <Image

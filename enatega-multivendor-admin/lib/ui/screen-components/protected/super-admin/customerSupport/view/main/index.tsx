@@ -459,11 +459,11 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
     <div className="flex flex-grow flex-col overflow-hidden sm:flex-row">
       {/* Left panel - Users list */}
       <div
-        className={`w-full overflow-y-auto border-gray-200 bg-white sm:w-1/3 ${activeTab === 'tickets' ? '' : 'hidden sm:block'
+        className={`w-full overflow-y-auto border-gray-200 border dark:border-dark-600 bg-white dark:bg-dark-950 sm:w-1/3 ${activeTab === 'tickets' ? '' : 'hidden sm:block'
           }`}
       >
         {/* Mobile-only header for Users section */}
-        <div className="mt-3 border-b p-3 sm:hidden">
+        <div className="mt-3 border-b dark:border-dark-600 p-3 sm:hidden">
           <div className="mb-4 flex items-center justify-between">
             <HeaderText text={t('Support Users')} />
           </div>
@@ -494,11 +494,11 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
 
       {/* Right panel - Tickets list */}
       <div
-        className={`flex-1 overflow-y-auto border-l border-gray-200 px-2 ${activeTab === 'chats' ? '' : 'hidden sm:block'
+        className={`flex-1 overflow-y-auto border-l border-gray-200 dark:border-dark-600 px-2 ${activeTab === 'chats' ? '' : 'hidden sm:block'
           }`}
       >
         {/* Header for Tickets section */}
-        <div className="border-b pb-2 pt-3">
+        <div className="border-b dark:border-dark-600  pb-2 pt-3">
           <div className="mb-4 flex items-center justify-between">
             <div className="hidden sm:block">
               <HeaderText text={t('ticket_chats')} />
@@ -519,7 +519,7 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
         <div className="pb-16">
           {!selectedUserId ? (
             <div className="flex items-center justify-center p-8">
-              <p className="text-gray-500">{t('select_a_user_to_view_tickets')}</p>
+              <p className="text-gray-500 dark:text-white">{t('select_a_user_to_view_tickets')}</p>
             </div>
           ) : showTicketSkeleton || (ticketsLoading && !sortedTickets.length) ? (
             <TicketCardSkeleton count={3} />

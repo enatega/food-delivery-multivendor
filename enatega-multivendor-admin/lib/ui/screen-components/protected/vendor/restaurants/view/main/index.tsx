@@ -31,9 +31,9 @@ export default function VendorRestaurantsMain() {
 
   return (
     <div className="flex flex-grow flex-col overflow-hidden sm:flex-row">
-      <div className={`flex-1 overflow-y-auto border-l border-gray-200 px-2`}>
+      <div className={`flex-1 overflow-y-auto border-l border-gray-200 dark:border-dark-600 px-2`}>
         {/* Header for Restaurants section */}
-        <div className="border-b pb-2 pt-3">
+        <div className="border-b dark:border-dark-600 pb-2 pt-3">
           <div className="mb-4 flex items-center justify-between">
             <div className="hidden sm:block">
               <HeaderText text={t('Stores')} />
@@ -42,7 +42,7 @@ export default function VendorRestaurantsMain() {
               <HeaderText text={t('Stores')} />
             </div>
             <TextIconClickable
-              className="rounded border-gray-300 bg-black text-white sm:w-auto"
+              className="rounded border dark:border-dark-600 border-gray-300  bg-black text-white sm:w-auto"
               icon={faAdd}
               iconStyles={{ color: 'white' }}
               title={t('Add Store')}
