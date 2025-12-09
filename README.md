@@ -46,7 +46,7 @@
 <div align="center">
 
   <a href="https://www.youtube.com/watch?v=00voqzkFpHU">
-    <img src="./assets/thumbnail.webp" alt="Demo video" style="border-radius: 6px; width: auto;">
+    <img src="./assets/Multi Service Solution.webp" alt="Demo video" style="border-radius: 6px; width: auto;">
   </a>
 
 </div>
@@ -176,23 +176,23 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 |          Rider App           |
 | :--------------------------: |
-| ![](./assets/rider-app.webp) |
+| ![](./assets/RiderApp.webp) |
 
-|               Restaurant APP               |
+|               Store APP               |
 | :----------------------------------------: |
-| ![](./assets/restuarant-app-1-scaled.webp) |
+| ![](./assets/StoreApp.webp) |
 
 |          Customer App           |
 | :-----------------------------: |
-| ![](./assets/Customer-app.webp) |
+| ![](./assets/CustomerApp.webp) |
 
 |           Customer Web            |
 | :-------------------------------: |
-| ![](./assets/Web-app-scaled.webp) |
+| ![](./assets/customerWeb.webp) |
 
 |             Dashboard              |
 | :--------------------------------: |
-| ![](./assets/dasboard-scaled.webp) |
+| ![](./assets/AdminDashboard.webp) |
 
 ## :wrench: High Level Architecture: <a id="heading-7"></a>
 
