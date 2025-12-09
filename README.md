@@ -12,8 +12,8 @@
 </div>
 
 <div align="center">
-  <h2>Enatega Multi Vendor Food Delivery System</h2>
-  <i>The food delivery and order management system for the future.</i>
+  <h2>Enatega Multi Vendor Delivery Management System</h2>
+  <i>A modern and customizable platform for managing online ordering and logistics across industries.</i>
  <br/>
 <br />
 </div>
@@ -46,16 +46,18 @@
 <div align="center">
 
   <a href="https://www.youtube.com/watch?v=00voqzkFpHU">
-    <img src="./assets/thumbnail.webp" alt="Demo video" style="border-radius: 6px; width: auto;">
+    <img src="./assets/Multi Service Solution.webp" alt="Demo video" style="border-radius: 6px; width: auto;">
   </a>
 
 </div>
 
 <br>
 
-The Enatega Multi vendor food delivery system is perfect for customers looking to deploy a readymade and easy to use food ordering platform for their own food delivery and logistics business. Just like foodpanda and ubereats, our food delivery system can incorporate multiple restaurants as well as restaurants that operate in multiple locations. With access to the admin panel and separate applications for customers and riders, you can use this solution to create your own online food ordering and order/delivery management system instantaneously.
+The Enatega Multi Vendor Delivery Management System is designed for businesses looking to deploy a complete, ready-to-use platform for running their online ordering and delivery operations. Whether it is food or grocery delivery, parcel logistics, home services, flowers, pharmacy orders, or other delivery-based businesses, Enatega can be adapted to your needs.
+Built with ease of use and intuitiveness in mind, the Enatega system supports multiple vendors and multiple service regions. With separate applications for customers, vendors and delivery agents, along with a powerful admin dashboard, Enatega enables you to launch and operate your own end-to-end ordering and delivery ecosystem without building everything from scratch.
 
-Our solution is open source but the backend and API are proprietary, and can be obtained via paid license.
+The solution is fully open source, but the backend and API are proprietary and can be licensed as part of a paid package.
+
 
 <!-- Add a horizontal rule for separation -->
 <hr/>
@@ -82,34 +84,34 @@ Our solution is open source but the backend and API are proprietary, and can be 
 
 ## :question: What is included: <a id="heading-1"></a>
 
-Our food delivery system also comes with the following:
+Enatega provides a complete set of software components, including:
 
-- Enatega Multi vendor Customer App
-- Enatega Multi vendor Rider App
-- Enatega Multi vendor Restaurant App
-- Customer Food Ordering Website
+- Enatega Multi Vendor Customer App
+- Enatega Multi Vendor Rider/Driver App
+- Enatega Multi Vendor Vendor/Store App
+- Customer Ordering Website
 - Admin Web Dashboard
-- Application ProgramInterface Server
-- Analytics Dashboard with Expo Amplitude
-- Error crash reporting with Sentry
+- AAPI Server
+- Analytics Dashboard using Expo Amplitude
+- Error monitoring and reporting with Sentry
 
 ## :fire: Features: <a id="heading-2"></a>
 
 - Authentication using Google, Apple, and Facebook
-- Different sections feature for promoting restaurants
-- Push notifications and Emails to Users for account creation and order status changes
-- Real-time tracking of Rider and chat with Rider option
-- Email and Phone number verification
-- Location-based restaurants shown on Map and Home Screen
-- Multi-Language and different themes support
-- Rating and Review features for order
-- Details of restaurants include ratings and reviews, opening and closing timings, delivery timings, restaurant menu and items, restaurant location, minimum order
-- Payment Integration for both PayPal and Stripe
-- Previous order history and adding favorite restaurants
-- Adding address with Google Places suggestions and Maps integration
-- Analytics and Error reporting with Amplitude and Sentry
-- Options to add different variations of food items and adding notes to restaurant
-  Pick up and delivery option with different timings
+- Dynamic home sections for highlighting top vendors and services
+- Push notifications and email alerts for account creation, order updates, and delivery progress
+- Real-time tracking of delivery agents and in-app chat
+- Email and phone number verification
+- Location-based vendor discovery on Maps and Home Screen
+- Multi-language support and customizable themes
+- Ratings and reviews for orders and service experiences
+- Vendor/service details including ratings, schedules, delivery timelines, offerings, location, minimum order or service amount, and more
+- Payment integrations including PayPal and Stripe
+- Order and booking history with the ability to favorite vendors
+- Address management with Google Places suggestions and Maps integration
+- Analytics and error reporting with Amplitude and Sentry
+- Support for item/service variations, notes, pickup and delivery modes, and customizable timing options
+
 
 ## :repeat_one: Setup: <a id="heading-3"></a>
 
@@ -174,23 +176,23 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 |          Rider App           |
 | :--------------------------: |
-| ![](./assets/rider-app.webp) |
+| ![](./assets/RiderApp.webp) |
 
-|               Restaurant APP               |
+|               Store APP               |
 | :----------------------------------------: |
-| ![](./assets/restuarant-app-1-scaled.webp) |
+| ![](./assets/StoreApp.webp) |
 
 |          Customer App           |
 | :-----------------------------: |
-| ![](./assets/Customer-app.webp) |
+| ![](./assets/CustomerApp.webp) |
 
 |           Customer Web            |
 | :-------------------------------: |
-| ![](./assets/Web-app-scaled.webp) |
+| ![](./assets/customerWeb.webp) |
 
 |             Dashboard              |
 | :--------------------------------: |
-| ![](./assets/dasboard-scaled.webp) |
+| ![](./assets/AdminDashboard.webp) |
 
 ## :wrench: High Level Architecture: <a id="heading-7"></a>
 
