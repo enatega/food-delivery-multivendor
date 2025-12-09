@@ -133,7 +133,7 @@ const Layout = ({ children }: IProvider) => {
           <SuperAdminSidebar />
         </div>
         <div
-          className={`h-auto max-w-[100vw] ${isSuperAdminSidebarVisible ? 'w-[calc(100vw-260px)]' : 'w-full'}`}
+          className={`h-auto max-w-[100vw] dark:bg-dark-950 ${isSuperAdminSidebarVisible ? 'w-[calc(100vw-260px)]' : 'w-full'}`}
         >
           {children}
         </div>

@@ -61,6 +61,8 @@ import CustomShape from '../shapes';
 import useLocation from '@/lib/hooks/useLocation';
 import calculateZoom from '@/lib/utils/methods/zoom-calculator';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
+import { darkMapStyle } from '@/lib/utils/map-style/mapStyle';
 
 const autocompleteService: {
   current: google.maps.places.AutocompleteService | null;
@@ -103,6 +105,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
 
   // Hooks
   const t = useTranslations();
+    const { theme } = useTheme();
   const { getCurrentLocation } = useLocation();
 
   // API
@@ -701,6 +704,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
               mapTypeControl: !hideControls,
               fullscreenControl: !hideControls,
               draggable: !hideControls,
+              styles: theme === 'dark' ? darkMapStyle : null,
             }}
             onClick={
               deliveryZoneType === 'point' ? onClickGoogleMaps : undefined
@@ -791,7 +795,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
 
           <div className="mt-4 flex justify-end">
             <CustomButton
-              className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+              className="h-10 w-fit border dark:border-dark-600 border-gray-300 bg-black px-8 text-white"
               label={t('Save')}
               type="button"
               loading={isSubmitting}

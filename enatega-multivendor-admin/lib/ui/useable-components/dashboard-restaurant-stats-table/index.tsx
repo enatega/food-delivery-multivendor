@@ -28,9 +28,9 @@ export default function DashboardRestaurantStatsTable({
 
   return (
     <div className="w-full h-auto mx-auto">
-      <div className="bg-white dark:bg-dark-950 h-full shadow-md rounded-lg border border-gray-300">
-        <div className="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg">
-          <h2 className="text-lg font-bold text-gray-800">
+      <div className="bg-white dark:bg-dark-950 h-full shadow-md rounded-lg border border-gray-300 dark:border-dark-600">
+        <div className="flex justify-between items-center bg-gray-100 dark:bg-dark-900 p-4 rounded-t-lg">
+          <h2 className="text-lg font-bold text-gray-800 dark:text-white">
             {t(
               DASHBOARD_PAYMENT_METHOD_SUB_TITLE[
                 title as keyof typeof DASHBOARD_PAYMENT_METHOD_SUB_TITLE
@@ -41,15 +41,15 @@ export default function DashboardRestaurantStatsTable({
         </div>
         <div className="p-4 max-h-50 overflow-auto ">
           <div className={`flex justify-between py-2`}>
-            <span className="text-gray-800">{t('Total Orders')}</span>
-            <span className="text-gray-800">
+            <span className="text-gray-800 dark:text-white">{t('Total Orders')}</span>
+            <span className="text-gray-800 dark:text-white">
               {amountConfig ? formatNumber(total_orders) : total_orders}
             </span>
           </div>
 
           <div className={`flex justify-between py-2`}>
-            <span className="text-gray-800">{t('Total Sales')}</span>
-            <span className="text-gray-800">
+            <span className="text-gray-800 dark:text-white">{t('Total Sales')}</span>
+            <span className="text-gray-800 dark:text-white">
               {amountConfig
                 ? formatNumberWithCurrency(total_sales, amountConfig.currency)
                 : total_sales}
@@ -57,10 +57,10 @@ export default function DashboardRestaurantStatsTable({
           </div>
 
           <div className={`flex justify-between py-2`}>
-            <span className="text-gray-800">
+            <span className="text-gray-800 dark:text-white">
               {t('Total Sales Without Delivery')}
             </span>
-            <span className="text-gray-800">
+            <span className="text-gray-800 dark:text-white">
               {amountConfig
                 ? formatNumberWithCurrency(
                     total_sales_without_delivery,
@@ -71,8 +71,8 @@ export default function DashboardRestaurantStatsTable({
           </div>
 
           <div className={`flex justify-between py-2`}>
-            <span className="text-gray-800">{t('Total Delivery Fee')}</span>
-            <span className="text-gray-800">
+            <span className="text-gray-800 dark:text-white">{t('Total Delivery Fee')}</span>
+            <span className="text-gray-800 dark:text-white">
               {amountConfig
                 ? formatNumberWithCurrency(
                     total_delivery_fee,

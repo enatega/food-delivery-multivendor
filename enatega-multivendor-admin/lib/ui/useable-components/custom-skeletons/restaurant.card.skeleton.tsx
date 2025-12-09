@@ -2,8 +2,8 @@ import { Skeleton } from 'primereact/skeleton';
 
 export default function CustomRestaurantCardSkeleton() {
   return (
-    <div className="flex flex-col rounded-lg border-2 border-[#F4F4F5] bg-white dark:bg-dark-950 shadow-md">
-      <div className="mb-4 flex items-center rounded-t-lg bg-gray-200 p-4">
+    <div className="flex flex-col rounded-lg border-2 border-[#F4F4F5]  bg-white dark:bg-dark-950 shadow-md">
+      <div className="mb-4 flex items-center rounded-t-lg dark:bg-dark-950 bg-gray-200 p-4">
         <Skeleton shape="circle" size="3rem" className="mr-3" />
         <div className="min-w-0 flex-grow">
           <Skeleton width="70%" height="1.5rem" className="mb-2" />

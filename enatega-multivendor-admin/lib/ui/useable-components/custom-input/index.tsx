@@ -51,7 +51,7 @@ export default function CustomNumberTextField({
       <div className="relative flex items-center justify-between">
         {/* Decrease */}
         <div
-          className="absolute left-2 z-10 flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full border border-[#E4E4E7] hover:bg-slate-200"
+          className="absolute left-2 z-10 flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full border border-[#E4E4E7] dark:hover:bg-dark-600 hover:bg-slate-200"
           onClick={handleDecrease}
         >
           <span className="text-gray-500 dark:text-white">-</span>
@@ -72,7 +72,7 @@ export default function CustomNumberTextField({
 
         {/* Increase */}
         <div
-          className="absolute right-2 z-10 flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full border border-[#E4E4E7] hover:bg-slate-200"
+          className="absolute right-2 z-10 flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-full border border-[#E4E4E7] hover:bg-slate-200 dark:hover:bg-dark-600"
           onClick={handleIncrease}
         >
           <span className="text-gray-500 dark:text-white">+</span>

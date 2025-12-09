@@ -1266,3 +1266,15 @@ body {
   position: relative;
   overflow: hidden;
 }
+
+.p-paginator .p-dropdown {
+  @apply dark:bg-dark-900 dark:text-white;
+}
+
+.p-paginator .p-dropdown-panel {
+  @apply dark:bg-gray-900 dark:text-white dark:border dark:border-dark-600;
+}
+
+.p-paginator .p-dropdown-item {
+  @apply dark:text-white dark:hover:bg-gray-700 ;
+}

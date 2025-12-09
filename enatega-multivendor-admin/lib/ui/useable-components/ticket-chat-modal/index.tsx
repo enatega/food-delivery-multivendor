@@ -274,7 +274,7 @@ export default function TicketChatModal({
                   value={ticket?.status}
                   options={statusOptions}
                   onChange={(e) => handleStatusChange(e.value)}
-                  className="p-dropdown-sm mt-1"
+                  className="p-dropdown-sm mt-1 dark:bg-gray-800 dark:border dark:border-dark-600 dark:text-white"
                   style={{ fontSize: '0.8rem' }}
                 />
               ) : (
@@ -312,12 +312,12 @@ export default function TicketChatModal({
 
         {/* Fixed Ticket Description Section (non-scrollable) */}
         {ticketDescription && (
-          <div className="border-b border-gray-200 p-3 bg-gray-50">
-            <div className="text-xs font-medium text-gray-500 mb-1">
+          <div className="border-b dark:border-dark-600 border-gray-200 p-3 bg-gray-50 dark:bg-dark-950">
+            <div className="text-xs font-medium text-gray-500 dark:text-white mb-1">
               {t('ticket_description')}
             </div>
-            <p className="text-sm text-gray-700">{ticketDescription}</p>
-            <div className="text-xs text-right mt-1 text-gray-500">
+            <p className="text-sm text-gray-700 dark:text-white">{ticketDescription}</p>
+            <div className="text-xs text-right mt-1 text-gray-500 dark:text-white">
               {formatTimestamp(ticket?.createdAt || Date.now().toString())}
             </div>
           </div>
@@ -347,7 +347,7 @@ export default function TicketChatModal({
                     key={msg._id}
                     className={`rounded-lg p-3 max-w-[80%] ${isAdminMessage
                       ? 'bg-primary-dark text-white ml-auto'
-                      : 'bg-gray-100 text-gray-800 mr-auto'
+                      : 'bg-gray-100 dark:bg-dark-600 dark:text-white text-gray-800 mr-auto'
                       }`}
                   >
                     <p className="break-words">{msg.content}</p>
@@ -361,15 +361,15 @@ export default function TicketChatModal({
             </div>
           ) : (
             <div className="flex justify-center items-center h-full">
-              <p className="text-gray-500">{t('No_messages_yet')}</p>
+              <p className="text-gray-500 dark:text-white">{t('No_messages_yet')}</p>
             </div>
           )}
         </div>
 
         {/* Input Area - Only shown if the ticket is not closed */}
         {isClosed ? (
-          <div className="p-4 border-t border-gray-200 bg-gray-50 text-center">
-            <p className="text-gray-500">
+          <div className="p-4 border-t border-gray-200 bg-gray-50 dark:bg-dark-900 text-center">
+            <p className="text-gray-500 dark:text-white">
               {t('this_ticket_is_closed_you_cannot_send_new_messages')}
             </p>
           </div>
@@ -381,7 +381,7 @@ export default function TicketChatModal({
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder={t('type_your_message_here')}
-                className="flex-1 p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none"
+                className="flex-1 p-3 border border-gray-300 dark:text-white rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none"
                 rows={2}
                 disabled={isSending}
               />

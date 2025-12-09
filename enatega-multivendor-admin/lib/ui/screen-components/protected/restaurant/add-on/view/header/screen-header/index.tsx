@@ -17,7 +17,7 @@ const AddonHeader = ({ setIsAddAddonVisible }: IAddonHeaderProps) => {
       <div className="flex w-full justify-between">
         <HeaderText text={t('Addons')} />
         <TextIconClickable
-          className="rounded border-gray-300 bg-black text-white sm:w-auto"
+          className="rounded border dark:border-dark-600 border-gray-300 bg-black text-white sm:w-auto"
           icon={faAdd}
           iconStyles={{ color: 'white' }}
           title={t('Add Add-on')}

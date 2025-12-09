@@ -110,7 +110,7 @@ export default function CouponsAddForm({
       visible={isAddCouponVisible}
       position={position}
       onHide={onHide}
-      className="w-full sm:w-[600px]"
+      className="w-full sm:w-[600px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <div className="flex h-full w-full items-center justify-start">
         <div className="h-full w-full">
@@ -179,7 +179,7 @@ export default function CouponsAddForm({
                         />
 
                         <CustomButton
-                          className="h-10 ml-auto  w-fit border-gray-300 bg-black  px-8 text-white"
+                          className="h-10 ml-auto  w-fit border dark:border-dark-600 border-gray-300 bg-black  px-8 text-white"
                           label={coupon ? t('Update') : t('Add')}
                           type="submit"
                           loading={mutationLoading}

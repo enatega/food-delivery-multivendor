@@ -22,7 +22,7 @@ export default function NotificationHeader({
           iconStyles={{ color: 'white' }}
           onClick={handleButtonClick}
           title={t('Send Notification')}
-          className="rounded border-gray-300 bg-black text-white sm:w-auto"
+          className="rounded border-gray-300 border dark:border-dark-600 bg-black text-white sm:w-auto"
         />
       </div>
     </div>

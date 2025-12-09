@@ -33,7 +33,7 @@ export default function DashboardDateFilter({
 
   return (
     <div className="flex items-center justify-center p-3">
-      <div className="w-full rounded-lg bg-white shadow-lg">
+      <div className="w-full rounded-lg bg-white dark:bg-dark-900 shadow-lg">
         <div className="rounded-t-lg bg-primary-color py-2 text-center text-white">
           <h2 className="text-lg font-semibold">{t('Graph Filter')}</h2>
         </div>
@@ -75,7 +75,7 @@ export default function DashboardDateFilter({
               </div>
             ) : (
               <button
-                className="mt-8 w-full rounded-full bg-black dark:bg-white px-6 py-2 font-semibold text-white"
+                className="mt-8 w-full rounded-full dark:border dark:border-dark-600 bg-black px-6 py-2 font-semibold text-white"
                 onClick={onApply}
               >
                 {t('APPLY')}

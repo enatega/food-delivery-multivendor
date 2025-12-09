@@ -228,7 +228,7 @@ export default function VariationAddForm({
   };
 
   return (
-    <div className="flex h-full w-full items-center justify-start">
+    <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950 ">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="mb-2 flex flex-col">
@@ -283,6 +283,7 @@ export default function VariationAddForm({
                                         <Fieldset
                                           legend={`${t('Variation')} ${index + 1} ${value.title ? `(${value.title})` : ''}`}
                                           toggleable
+                                          className='dark:text-white dark:bg-dark-950'
                                         >
                                           <div className="grid grid-cols-12 gap-4">
                                             <div className="col-span-12 sm:col-span-12">
@@ -436,7 +437,7 @@ export default function VariationAddForm({
                               )}
                             <div className="mt-4 flex justify-end">
                               <TextIconClickable
-                                className="w-full rounded border border-black bg-transparent text-black dark:text-white"
+                                className="w-full rounded border dark:border-dark-600 border-black bg-transparent text-black dark:text-white"
                                 icon={faAdd}
                                 iconStyles={{ color: 'black' }}
                                 title={t('Add New Variation')}
@@ -449,7 +450,7 @@ export default function VariationAddForm({
 
                       <div className="mt-4 flex justify-between">
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                          className="h-10 w-fit border dark:border-dark-600 border-gray-300 bg-black px-8 text-white"
                           label={t('Back')}
                           type="button"
                           onClick={() => {
@@ -457,7 +458,7 @@ export default function VariationAddForm({
                           }}
                         />
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black  px-8 text-white"
+                          className="h-10 w-fit border dark:border-dark-600 border-gray-300 bg-black  px-8 text-white"
                           label={
                             foodContextData?.isEditing ? t('Update') : t('Add')
                           }

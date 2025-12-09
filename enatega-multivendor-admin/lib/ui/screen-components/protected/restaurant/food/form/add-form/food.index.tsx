@@ -219,7 +219,7 @@ export default function FoodDetails({
   }, [categoriesDropdown]);
 
   return (
-    <div className="w-full h-full flex items-center justify-start">
+    <div className="w-full h-full flex items-center justify-start dark:text-white dark:bg-dark-950">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div>
@@ -254,7 +254,7 @@ export default function FoodDetails({
                           name="category"
                           value={values.category}
                           placeholder={t('Select Category')}
-                          className="md:w-20rem p-dropdown-no-box-shadow m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none"
+                          className="md:w-20rem m-0 h-10 w-full border dark:text-white dark:bg-dark-950 border-gray-300 dark:border-dark-600 p-0 align-middle text-sm focus:shadow-none focus:outline-none"
                           panelClassName="border-gray-200 border-2"
                           onChange={(e: DropdownChangeEvent) => {
                             handleChange(e);
@@ -403,7 +403,7 @@ export default function FoodDetails({
 
                     <div className="flex justify-end mt-4">
                       <CustomButton
-                        className="w-fit h-10 bg-black text-white border-gray-300 px-8"
+                        className="w-fit h-10 border dark:border-dark-600 bg-black text-white border-gray-300 px-8"
                         label={t('Next')}
                         type="submit"
                         loading={isSubmitting}

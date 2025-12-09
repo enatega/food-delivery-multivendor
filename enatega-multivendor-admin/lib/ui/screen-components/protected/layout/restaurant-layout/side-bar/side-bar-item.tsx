@@ -21,7 +21,7 @@ function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
   return (
     <div
       className={`my-2 rounded-md p-2 ${
-        active ? 'bg-gray-300' : 'hover:bg-indigo-50'
+        active ? 'bg-gray-300 dark:bg-dark-600 dark:text-white' :  'dark:hover:bg-dark-950 dark:text-white hover:bg-indigo-50'
       }`}
     >
       <div className="flex items-center justify-center">
@@ -86,7 +86,7 @@ export default function SidebarItem({
             isActive && !subMenu
               ? `bg-${isClickable ? bg_color : ''} text-${isClickable ? text_color : '[#71717A]'}`
               : `bg-${bg_color} text-${text_color} hover:bg-secondary-color`
-          } ${!expanded && 'hidden sm:flex'} `}
+          } ${!expanded && 'hidden sm:flex'} dark:text-white `}
           onClick={() => {
             if (!isParent || isClickable) {
               router.push(route ?? '');

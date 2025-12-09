@@ -145,7 +145,7 @@ export default function GrowthOverView() {
   return (
     <div className={`w-full p-3`}>
       <h2 className="text-lg font-semibold">{t('Growth Overview')}</h2>
-      <p className="text-gray-500 ">
+      <p className="text-gray-500 dark:text-white ">
         {t('Tracking Store Growth Over the Year')}
       </p>
       <div className="mt-4">

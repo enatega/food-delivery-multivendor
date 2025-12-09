@@ -29,7 +29,7 @@ const RestaurantLayout = ({ children }: IProvider) => {
           <RestaurantSidebar />
         </div>
         <div
-          className={`h-auto max-w-[100vw] ${isRestaurantSidebarVisible ? 'w-[calc(100vw-260px)]' : 'w-full'} px-5`}
+          className={`h-auto max-w-[100vw] dark:bg-dark-950 ${isRestaurantSidebarVisible ? 'w-[calc(100vw-260px)]' : 'w-full'} px-5`}
         >
           {children}
         </div>
