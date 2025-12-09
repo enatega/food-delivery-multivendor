@@ -191,7 +191,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
                   : faDashboard
           }
           color={option.code === 'CANCELLED' ? 'red' : 'black'}
-          className="h-4 w-4"
+          className="h-4 w-4 dark:text-white"
         />
       </div>
       <div className="flex h-full items-center">

@@ -181,7 +181,7 @@ export default function UpdateRestaurantDetails({
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-start">
+    <div className="w-full h-full flex items-center justify-start dark:text-white dark:bg-dark-950  ">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="flex flex-col mb-2">
@@ -459,7 +459,7 @@ export default function UpdateRestaurantDetails({
                       }}
                     />
 
-                    <div className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 p-4">
+                    <div className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 dark:border-dark-600 p-4">
                       <CustomUploadImageComponent
                         key="logo"
                         name="logo"
@@ -511,7 +511,7 @@ export default function UpdateRestaurantDetails({
                         <small className="p-error mr-4">{errors.address}</small>
                       )}
                       <CustomButton
-                        className="w-fit h-10 bg-black text-white border-gray-300 px-8"
+                        className="w-fit h-10 bg-black border dark:border-dark-600 text-white border-gray-300 px-8"
                         label={t('Update')}
                         type="submit"
                         loading={isSubmitting}

@@ -26,10 +26,13 @@ const config = {
         none: 'none',
       },
       colors: {
-        'primary-color': "var(--primary-color)",
-        'primary-dark': "var(--primary-dark)",
-        'secondary-color': "var(--secondary-color)",
+        'primary-color': 'var(--primary-color)',
+        'primary-dark': 'var(--primary-dark)',
+        'secondary-color': 'var(--secondary-color)',
         'secondary-border-color': '#111827',
+        'dark-950': 'var(--dark-950)',
+        'dark-900': 'var(--dark-900)',
+        'dark-600': 'var(--dark-600)',
       },
       width: {
         'custom-button': '110px',

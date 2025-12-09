@@ -135,7 +135,7 @@ export default function EarningRestaurantTableHeader({
         />
         <button
           onClick={onClearFilters}
-          className="max-w-32  px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors "
+          className="max-w-32  px-4 py-2 dark:bg-dark-900 dark:text-white  dark:border dark:border-dark-600 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors "
           type="button"
         >
           {t('Reset')}

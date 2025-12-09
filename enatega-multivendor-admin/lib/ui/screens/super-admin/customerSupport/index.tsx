@@ -19,7 +19,7 @@ export default function CustomerSupportScreen() {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       {/* Header */}
-      <div className="w-full flex-shrink-0 border-b p-3">
+      <div className="w-full flex-shrink-0 border-b dark:border-dark-600 p-3">
         <div className="mb-4 flex flex-col items-center justify-between sm:flex-row">
           <HeaderText text={t('CustomerSupport')} />
         </div>

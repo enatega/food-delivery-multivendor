@@ -22,12 +22,12 @@ export default function VendorHeader() {
     useContext(VendorContext);
 
   return (
-    <div className="hidden w-full flex-shrink-0 border-b p-3 sm:block">
+    <div className="hidden w-full flex-shrink-0 border-b dark:border-dark-600 p-3 sm:block dark:bg-dark-950 dark:text-white">
       <div className="mb-4 flex flex-col items-center justify-between sm:flex-row">
         <HeaderText text={t('Vendors')} />
 
         <TextIconClickable
-          className="rounded border-gray-300 bg-black text-white sm:w-auto"
+          className="rounded border border-gray-300 bg-black dark:bg-dark-950  text-white sm:w-auto dark:border-dark-600"
           icon={faAdd}
           iconStyles={{ color: 'white' }}
           title={t('Add Vendor')}

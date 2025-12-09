@@ -44,7 +44,7 @@ export default function CustomNumberField({
 
       <InputNumber
         
-        className={`h-10 w-full rounded-lg border border-gray-300 bg-gray-300 text-sm focus:shadow-none focus:outline-none ${className}`}
+        className={`h-10 w-full rounded-lg border border-gray-300 dark:border-dark-600 bg-gray-300 text-sm focus:shadow-none focus:outline-none ${className}`}
         placeholder={placeholder}
         min={min}
         max={max}
