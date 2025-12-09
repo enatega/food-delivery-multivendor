@@ -4,6 +4,7 @@
 import { Sidebar } from "primereact/sidebar";
 import { Menu } from "primereact/menu";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/lib/providers/ThemeProvider";
 import {
   useContext,
   useEffect,
@@ -83,6 +84,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // REf
   const menuRef = useRef<Menu>(null);
   const languageMenuRef = useRef<Menu>(null);
+
+  //Theme Provider
+  const { theme, toggleTheme } = useTheme();
 
   const [position, setPosition] = useState<"left" | "right">("right");
   useEffect(() => {
@@ -396,7 +400,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   >
                     {/* Show on large screens only */}
                     <div className="hidden md:block p-[4px] m-2 rounded-full">
-                      <LocationSvg width={22} height={22}  />
+                      <LocationSvg width={22} height={22} />
                     </div>
 
                     <span className="hidden md:inline text-xs sm:text-sm md:text-base text-primary-color font-inter font-normal leading-6 tracking-normal mr-2 truncate">
@@ -474,7 +478,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   >
                     <div
                       className="h-6 w-6 md:w-8 md:h-8 rounded-full bg-primary-color flex items-center justify-center text-white font-semibold select-none uppercase"
-                      
+
                     >
                       {profile?.name
                         ?.trim()
@@ -554,7 +558,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {/* Language Dropdown */}{" "}
                 {!isSearchFocused && (
-                  <div className="relative" title="Languages">
+                  <div className="relative flex items-center gap-x-2" title="Languages">
+                    <div onClick={toggleTheme} className="cursor-pointer p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                      {theme === "dark" ? "🌙" : "☀️"}
+                    </div>
                     {" "}
                     <button
                       onClick={(e) => languageMenuRef.current?.toggle(e)}

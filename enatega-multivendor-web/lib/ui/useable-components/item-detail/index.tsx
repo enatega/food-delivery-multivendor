@@ -25,8 +25,8 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
   const { CURRENCY_SYMBOL } = useConfig();
   const { id, slug }: { id: string; slug: string } = useParams();
 
-    // get the RTL direction
-    const direction = document.documentElement.getAttribute('dir') || 'ltr';
+  // get the RTL direction
+  const direction = document.documentElement.getAttribute('dir') || 'ltr';
 
   // Access user context for cart functionality
   const {
@@ -162,13 +162,13 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
         item.variation._id === selectedVariation._id &&
         // check if addons ids and their option id's of item matches formattedAddons ids and option id's
         JSON.stringify(item.addons?.map((a) => a._id)) ===
-          JSON.stringify(formattedAddons.map((a) => a._id)) &&
+        JSON.stringify(formattedAddons.map((a) => a._id)) &&
         JSON.stringify(
           item.addons?.flatMap((a) => a.options.map((o) => o._id))
         ) ===
-          JSON.stringify(
-            formattedAddons.flatMap((a) => a.options.map((o) => o._id))
-          )
+        JSON.stringify(
+          formattedAddons.flatMap((a) => a.options.map((o) => o._id))
+        )
     );
 
     if (isItemInCart) {
@@ -178,13 +178,13 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           item.variation._id === selectedVariation._id &&
           // check if addons ids and their option id's of item matches formattedAddons ids and option id's
           JSON.stringify(item.addons?.map((a) => a._id)) ===
-            JSON.stringify(formattedAddons.map((a) => a._id)) &&
+          JSON.stringify(formattedAddons.map((a) => a._id)) &&
           JSON.stringify(
             item.addons?.flatMap((a) => a.options.map((o) => o._id))
           ) ===
-            JSON.stringify(
-              formattedAddons.flatMap((a) => a.options.map((o) => o._id))
-            )
+          JSON.stringify(
+            formattedAddons.flatMap((a) => a.options.map((o) => o._id))
+          )
         ) {
           // If item is already in cart, update its quantity
           updateItemQuantity(item.key, quantity);
@@ -202,17 +202,17 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
         // Special instructions - could add a field for this
       );
       // save restaurant id to local storage for product recommendation
-      if(!isRecommendedProduct){
+      if (!isRecommendedProduct) {
         onUseLocalStorage("save", "cart-product-store-id", id);
         onUseLocalStorage("save", "cart-product-store-slug", slug);
       }
-      
+
     }
 
     // UPDAT4 STORAGE
 
     onUseLocalStorage("save", "restaurant", restaurant?._id);
-    onUseLocalStorage("save", "restaurant-slug", restaurant?.slug) ;
+    onUseLocalStorage("save", "restaurant-slug", restaurant?.slug);
     onUseLocalStorage(
       "save",
       "currentShopType",
@@ -290,7 +290,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
       {/* close icon to close the modal */}
       <button
         onClick={onClose}
-        className={`${direction === "rtl" ? "left-3" : "right-3" } absolute top-3 bg-slate-400 hover:bg-slate-500 transition-all duration-300 rounded-full p-2`}
+        className={`${direction === "rtl" ? "left-3" : "right-3"} absolute top-3 bg-slate-400 hover:bg-slate-500 transition-all duration-300 rounded-full p-2`}
       >
         <FontAwesomeIcon
           icon={faXmark}
@@ -306,9 +306,8 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
         )}
         <Image
           alt={foodItem?.title ?? ""}
-          className={`md:max-w-md w-100 h-[200px] object-cover object-center rounded-t-md transition-opacity duration-300 ${
-            isLoading ? "opacity-0" : "opacity-100"
-          }`}
+          className={`md:max-w-md w-100 h-[200px] object-cover object-center rounded-t-md transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"
+            }`}
           src={foodItem?.image ?? ""}
           width={500}
           height={200}
@@ -349,8 +348,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           {variationAddons.map((addon) => {
             if (!addon) return null; // Skip rendering if addon is undefined
 
-            const isSingleSelect =
-              addon.quantityMinimum === 1 && addon.quantityMaximum === 1;
+            const isSingleSelect = addon.quantityMaximum === 1;
             const addonOptions = getAddonOptions(addon);
 
             // Determine required/optional tag text
@@ -373,11 +371,11 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
                 onSingleSelect={
                   isSingleSelect
                     ? (option) =>
-                        handleAddonSelection(
-                          addon._id ?? "",
-                          false,
-                          option as Option
-                        )
+                      handleAddonSelection(
+                        addon._id ?? "",
+                        false,
+                        option as Option
+                      )
                     : undefined
                 }
                 multiSelected={
@@ -388,18 +386,18 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
                 onMultiSelect={
                   !isSingleSelect
                     ? (updateFn) => {
-                        const current =
-                          (selectedAddonOptions[addon._id ?? ""] as Option[]) ||
-                          [];
-                        if (typeof updateFn === "function") {
-                          const updated = updateFn(current);
-                          handleAddonSelection(
-                            addon._id ?? "",
-                            true,
-                            updated as Option[]
-                          );
-                        }
+                      const current =
+                        (selectedAddonOptions[addon._id ?? ""] as Option[]) ||
+                        [];
+                      if (typeof updateFn === "function") {
+                        const updated = updateFn(current);
+                        handleAddonSelection(
+                          addon._id ?? "",
+                          true,
+                          updated as Option[]
+                        );
                       }
+                    }
                     : undefined
                 }
                 options={addonOptions as Option[]}

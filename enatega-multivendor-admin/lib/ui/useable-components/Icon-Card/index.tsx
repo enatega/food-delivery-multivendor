@@ -8,6 +8,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
   orderedItems,
   rating,
   imageSrc,
+  comments,
   reviewContent,
   orderId,
   createdAt,
@@ -34,28 +35,28 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
           height={58}
           className="rounded-md mr-4"
         />
-        <div className="flex-grow text-center md:text-left">
+        <div className="basis-[70%] flex-grow text-center md:text-left">
           <div className="font-semibold">{name}</div>
           <div className="text-sm text-gray-500">{orderedItems}</div>
           <div className="text-xs text-gray-400">Order ID: {orderId}</div>
           <div className="text-xs text-gray-400">Date: {createdAt}</div>
         </div>
-        <div className="flex items-center mt-4 md:mt-0">
-          <div className="flex items-center mr-4">
+        <div className="basis[30%] flex items-center flex-wrap gap-4 justify-center sm:justify-end mt-4 md:mt-0">
+          <div className="flex items-center">
             <Rating value={rating} readOnly cancel={false} />
           </div>
           <button
             onClick={handleReviewClick}
-            className={`flex items-center border px-2 py-1 rounded ${
-              reviewContent
-                ? 'hover:bg-gray-100'
-                : 'opacity-50 cursor-not-allowed'
-            }`}
+            className={`flex items-center border px-2 py-1 rounded ${reviewContent
+              ? 'hover:bg-gray-100'
+              : 'opacity-50 cursor-not-allowed'
+              }`}
             disabled={!reviewContent}
           >
             <span className="mr-1">💬</span>
             <span>Review</span>
           </button>
+          <span className='p-2 text-xs rounded-full bg-gray-100'>{comments ? comments : 'No comments'}</span>
         </div>
       </div>
       {reviewContent && showModal && (

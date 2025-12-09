@@ -47,7 +47,13 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
     const d = orderTrackingDetails;
     if (!d?.createdAt) return "20 - 30 min";
 
-    const prep = d.selectedPrepTime ?? 20; // default prep if not provided
+    let prep = d.selectedPrepTime || 20;
+    if (!d.selectedPrepTime && d.preparationTime && d.acceptedAt) {
+      const diff =
+        new Date(d.preparationTime).getTime() -
+        new Date(d.acceptedAt).getTime();
+      prep = Math.round(diff / 60000);
+    }
     const deliveryBuffer = 10; // add extra 10 min for delivery after prep
 
     const formatTime = (ts: string | number | Date) =>
@@ -72,7 +78,7 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
         return `${Math.max(5, prep - 10)} - ${prep} min`;
 
       case "ACCEPTED":
-        return getRangeFrom(d.createdAt);
+        return getRangeFrom(d.acceptedAt ?? d.createdAt);
 
       case "ASSIGNED":
         if (d.assignedAt) return getRangeFrom(d.assignedAt);
