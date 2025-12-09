@@ -91,7 +91,7 @@ Enatega provides a complete set of software components, including:
 - Enatega Multi Vendor Vendor/Store App
 - Customer Ordering Website
 - Admin Web Dashboard
-- AAPI Server
+- API Server
 - Analytics Dashboard using Expo Amplitude
 - Error monitoring and reporting with Sentry
 
@@ -180,7 +180,7 @@ NOTE: Email provider has been only been tested for gmail accounts
 
 |               Store APP               |
 | :----------------------------------------: |
-| ![](./assets/StoreApp.webp) |
+| ![](./assets/StoreApps.webp) |
 
 |          Customer App           |
 | :-----------------------------: |
