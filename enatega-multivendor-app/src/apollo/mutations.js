@@ -335,8 +335,8 @@ export const Deactivate = `
   }
   `
 export const login = `
-  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$name:String,$notificationToken:String){
-    login(email:$email,password:$password,type:$type,appleId:$appleId,name:$name,notificationToken:$notificationToken){
+  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$name:String,$notificationToken:String, $referralCode: String){
+    login(email:$email,password:$password,type:$type,appleId:$appleId,name:$name,notificationToken:$notificationToken, referralCode: $referralCode){
      userId
      token
      tokenExpiration
@@ -349,7 +349,7 @@ export const login = `
   }
   `
 export const createUser = `
-    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean){
+    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean, $referralCode: String){
         createUser(userInput:{
             phone:$phone,
             email:$email,
@@ -359,6 +359,7 @@ export const createUser = `
             appleId:$appleId,
             emailIsVerified:$emailIsVerified
             isPhoneExists:$isPhoneExists
+            referralCode: $referralCode
         }){
             userId
             token

@@ -17,6 +17,7 @@ import SaveAddress from '../screens/SaveAddress/SaveAddress'
 import RateAndReview from '../screens/RateAndReview/RateAndReview'
 import Payment from '../screens/Payment/Payment'
 import Help from '../screens/Help/Help'
+import ReferralAndLoyaltyRewards from '../screens/Referral-And-Loyalty/Referral-And-Loyalty'
 import Paypal from '../screens/Paypal/Paypal'
 import StripeCheckout from '../screens/Stripe/StripeCheckout'
 import Profile from '../screens/Profile/Profile'
@@ -66,6 +67,9 @@ import CategoryPage from '../components/SubCategoryPage/SubCategoryPage'
 import NewRestaurantDetailDesign from '../components/NewRestaurantDetailDesign/RestaurantDetailDesign'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
 import * as LocationImport from 'expo-location'
+import QRAndReferral from '../screens/QR-And-Referral/QR-And-Referral'
+import ReferralAndLoyaltyRecentActivity from '../screens/Referral-And-Loyalty-Recent-Activity/Referral-And-Loyalty-Recent-Activity'
+import LoyaltyPoints from '../screens/Loyalty-Points/Loyalty-Points'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -150,6 +154,10 @@ function MainNavigator() {
       <NavigationStack.Screen name='MyOrders' component={MyOrders} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='Reorder' component={Reorder} />
       <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='ReferralAndLoyaltyRewards' component={ReferralAndLoyaltyRewards} />
+      <NavigationStack.Screen name='LoyaltyPoints' component={LoyaltyPoints} />
+      <NavigationStack.Screen name='QRAndReferral' component={QRAndReferral} />
+      <NavigationStack.Screen name='ReferralAndLoyaltyRecentActivity' component={ReferralAndLoyaltyRecentActivity} />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reviews' component={Reviews} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />

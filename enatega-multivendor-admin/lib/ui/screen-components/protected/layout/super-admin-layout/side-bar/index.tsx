@@ -187,6 +187,12 @@ export default function MakeSidebar() {
           route: '/audit-logs',
           isParent: false,
         },
+           {
+          text: 'Loyalty and Referrals',
+          label: t('Orders'),
+          route: '/management/loyalty-referrals',
+          isParent: false,
+        },
       ]),
       shouldShow: function () {
         return this.subMenu ? this.subMenu.length > 0 : false;

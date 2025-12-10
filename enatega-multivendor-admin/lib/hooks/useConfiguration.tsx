@@ -70,7 +70,7 @@ export const useConfiguration = () => {
   const APP_PRIVACY = configuration?.privacyPolicy;
   const APP_TEST_OTP = configuration?.testOtp;
   const CURRENCY_CODE = configuration?.currency;
-  const CURRENCY_SYMBOL = configuration?.currency;
+  const CURRENCY_SYMBOL = configuration?.currencySymbol;
   const ISPAID_VERSION = configuration?.isPaidVersion;
 
   return {
@@ -149,7 +149,6 @@ export const useConfiguration = () => {
     //CURRENCY
     CURRENCY_CODE,
     CURRENCY_SYMBOL,
-    CURRENT_SYMBOL,
 
     // AMPLITUDE
     AMPLITUDE_API_KEY_WEB,

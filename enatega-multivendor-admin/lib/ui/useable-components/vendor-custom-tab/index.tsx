@@ -1,11 +1,11 @@
 // Interface
-import { IVendorCustomTabProps } from '@/lib/utils/interfaces';
+import { ICustomTabProps } from '@/lib/utils/interfaces';
 
-const VendorCustomTab = ({
+const CustomTab = ({
   options,
   selectedTab,
   setSelectedTab,
-}: IVendorCustomTabProps) => {
+}: ICustomTabProps) => {
   return (
     <div className="flex h-10 w-fit space-x-2 rounded bg-gray-100 p-1">
       {options.map((option) => (
@@ -25,4 +25,4 @@ const VendorCustomTab = ({
   );
 };
 
-export default VendorCustomTab;
+export default CustomTab;

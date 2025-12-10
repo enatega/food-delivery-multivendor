@@ -11,6 +11,9 @@ import {
   IVariationErrors,
   IUpdateBussinessDetailsFormErrors,
   IShopTypeErrors,
+  ILevelError,
+  ITierError,
+  IBreakdownError,
 } from '@/lib/utils/interfaces/forms';
 
 import {
@@ -183,10 +186,27 @@ export const ShopTypeErrors: IShopTypeErrors = {
     'Title is a required field',
   ],
   image: [],
-  isActive: []
+  isActive: [],
 };
 
+export const LevelErrors: ILevelError = {
+  type: ['Required'],
+  value: ['Required'],
+};
 
+export const TierErrors: ITierError = {
+  type: ['Required'],
+  value: ['Required'],
+};
+
+export const BreakdownErrors: IBreakdownError = {
+  min: ['Required'],
+  max: ['Required'],
+  bronze: ['Required'],
+  silver: ['Required'],
+  gold: ['Required'],
+  platinum: ['Required'],
+};
 
 export const CouponErrors: ICouponErrors = {
   title: [
@@ -203,8 +223,6 @@ export const CouponErrors: ICouponErrors = {
   ],
   enabled: ['Required', 'Please choose one'],
 };
-
-
 
 export const NotificationErrors: INoticiationErrors = {
   title: ['Required'],

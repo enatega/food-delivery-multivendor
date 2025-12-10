@@ -345,6 +345,14 @@ export const profile = `
               selected
             }
             favourite
+            referralCode
+             tier {
+              _id
+              current_tier_name
+              current_earned_points
+              next_tier_name
+              next_tier_points
+            }
           }
         }`
 
@@ -1140,6 +1148,31 @@ export const GET_SUB_CATEGORIES_BY_PARENT_ID = gql`
       _id
       title
       parentCategoryId
+    }
+  }
+`
+
+export const FETCH_LOYALTY_CONFIGURATIon = gql`
+  query FetchLoyaltyConfiguraion {
+    fetchLoyaltyConfiguration {
+      _id
+      pointsPerDollar
+    }
+  }
+`
+
+export const FETCH_LOYALTY_REFERRAL_HISTORY = gql`
+  query FetchReferralLoyaltyHistory($filter: FetchLoyaltyReferralHistoryFilterInput) {
+    fetchReferralLoyaltyHistory(filter: $filter) {
+      _id
+      user_name
+      user_rank
+      type
+      source
+      level
+      value
+      triggeredBy
+      createdAt
     }
   }
 `
