@@ -115,7 +115,14 @@ export const RESTAURANT_TABLE_COLUMNS = ({
         );
       },
     },
-    { headerName: t('ID'), propertyName: 'unique_restaurant_id' },
+    {
+      headerName: t('ID'),
+      propertyName: 'unique_restaurant_id',
+      body: (restaurant: IRestaurantResponse) => {
+        // Show unique_restaurant_id for actual stores, _id for cloned stores
+        return restaurant.unique_restaurant_id || restaurant._id;
+      }
+    },
     { headerName: t('Name'), propertyName: 'name' },
     { headerName: t('Vendor'), propertyName: 'owner.email' },
     {
