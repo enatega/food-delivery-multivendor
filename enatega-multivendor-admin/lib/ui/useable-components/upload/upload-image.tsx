@@ -175,33 +175,36 @@ function CustomUploadImageComponent({
         className={
           page && page === 'vendor-profile-edit'
             ? `bg-transparnt`
-            : `mx-auto flex h-48 w-48 flex-col items-center justify-start border-2 border-dashed ${imageValidationErr.bool ? 'border-red-900' : 'border-gray-300'}`
+            : `mx-auto flex h-48 w-48 flex-col items-center justify-start border-2 border-dashed ${imageValidationErr.bool ? 'border-red-900' : 'border-gray-300 dark:border-dark-600'}`
         }
         // className="bg-transparnt"
       >
         <FileUpload
+          headerClassName='dark:text-white'
+          contentClassName='dark:text-white'
+          
           accept={fileTypes?.join(',')}
           id={`${name}-upload`}
-          className="mx-auto -mt-7 h-28 w-44 items-center justify-center rounded-md bg-transparent"
+          className="mx-auto -mt-7 h-28 w-44 items-center dark:text-white justify-center rounded-md bg-transparent"
           onSelect={(e) => handleFileSelect(e)}
           emptyTemplate={() => {
             return (
               <div className="mx-auto h-auto w-40">
                 {!isUploading && (
                   <div
-                    className={`flex h-auto w-full flex-col items-center justify-center pt-5 text-center`}
+                    className={`flex h-auto dark:text-white  w-full flex-col items-center justify-center pt-5 text-center`}
                   >
                     {(page && page === 'vendor-profile-edit') ?? (
                       <>
                         <FontAwesomeIcon icon={faUpload} size="sm" />
-                        <p className="w-36 text-xs text-gray-600">
+                        <p className="w-36 text-xs text-gray-600 dark:text-white">
                           {t('Drag & Drop Image Here')}
                         </p>
                       </>
                     )}
 
                     <div className="flex w-12 flex-col items-center justify-center">
-                      <div className="relative my-2 h-12 w-12 overflow-hidden rounded-md">
+                      <div className="relative my-2 h-12 w-12 overflow-hidden rounded-md dark:text-white">
                         {existingImageUrl ? (
                           existingImageUrl.includes('video/') ? (
                             <video
@@ -240,6 +243,7 @@ function CustomUploadImageComponent({
             const { chooseButton, cancelButton } = options;
             return (
               <button
+              className='dark:text-white'
                 type="button"
                 onClick={() =>
                   handleCancelClick(imageFile ? 'cancel' : 'choose')
@@ -255,12 +259,12 @@ function CustomUploadImageComponent({
           chooseOptions={
             page === 'vendor-profile-edit'
               ? {
-                  className: `z-50 bg-white max-[500px]:ml-[-20px] ${!imageFile ? 'text-gray-700' : imageValidationErr.bool && !imageFile ? 'text-[#E4E4E7]' : 'text-[#E4E4E7]'} border border-[#E4E4E7] rounded-md items-center justify-center relative left-[20%] translate-y-[45px] w-[173px] h-[40px] text-[14px] gap-[5px] font-medium`,
+                  className: `z-50 bg-white dark:text-white dark:bg-dark-950 max-[500px]:ml-[-20px] ${!imageFile ? 'text-gray-700' : imageValidationErr.bool && !imageFile ? 'text-[#E4E4E7]' : 'text-[#E4E4E7]'} border border-[#E4E4E7] dark:border-dark-600 rounded-md items-center justify-center relative left-[20%] translate-y-[45px] w-[173px] h-[40px] text-[14px] gap-[5px] font-medium`,
                   label: t('Upload Image'),
                   icon: () => <FontAwesomeIcon icon={faArrowUpFromBracket} />,
                 }
               : {
-                  className: `z-50 bg-gray-200 ${!imageFile ? 'text-gray-700' : imageValidationErr.bool && !imageFile ? 'text-red-900' : 'text-gray-700'} border border-gray-500 rounded-md items-center justify-center relative left-[20%] translate-y-[45px] w-32 h-8 text-xs`,
+                  className: `z-50 bg-gray-200 ${!imageFile ? 'text-gray-700' : imageValidationErr.bool && !imageFile ? 'text-red-900' : 'text-gray-700'} border border-gray-500 dark:border-dark-600 rounded-md items-center justify-center relative left-[20%] translate-y-[45px] w-32 h-8 text-xs`,
                   label: t('Browse Files'),
                   icon: () => <></>,
                 }

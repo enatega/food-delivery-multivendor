@@ -13,14 +13,14 @@ export default function DashboardSubHeader({
 
   if (!isStoreView || !handleViewChange) return;
   return (
-    <div className="flex flex-row items-center justify-between rounded-lg bg-white px-4 py-3 shadow-sm">
+    <div className="flex flex-row items-center justify-between rounded-lg bg-white dark:bg-dark-950 px-4 py-3 shadow-sm">
       <div className="flex items-center space-x-4">
         <h2 className="text-xl font-semibold text-gray-800">
           {t('Business Overview')}
         </h2>
         <div className="flex items-center space-x-2">
           <span
-            className={`font-inter text-sm font-medium leading-5 ${!isStoreView ? 'text-black' : 'text-[#71717A]'}`}
+            className={`font-inter text-sm font-medium leading-5 ${!isStoreView ? 'text-black dark:text-white' : 'text-[#71717A]'}`}
           >
             {t('Graph View')}
           </span>
@@ -29,7 +29,7 @@ export default function DashboardSubHeader({
             onChange={handleViewChange}
           />
           <span
-            className={`font-inter text-sm font-medium leading-5 ${isStoreView ? 'text-black' : 'text-[#71717A]'}`}
+            className={`font-inter text-sm font-medium leading-5 ${isStoreView ? 'text-black dark:text-white' : 'text-[#71717A]'}`}
           >
             {t('Store View')}
           </span>

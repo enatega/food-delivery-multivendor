@@ -84,7 +84,7 @@ export default function WithdrawRequestAddForm({
       visible={isAddWithdrawRequestVisible}
       position={position}
       onHide={onHide}
-      className="w-full sm:w-[600px]"
+      className="w-full sm:w-[600px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <div className="flex h-full w-full items-center justify-start">
         <div className="h-full w-full">
@@ -121,12 +121,12 @@ export default function WithdrawRequestAddForm({
                     </div>
                   )}
 
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-white">
                     {t('available_balance')}: ${currentWalletAmount?.toLocaleString('en-US')}
                   </div>
 
                   <CustomButton
-                    className="ml-auto h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                    className="ml-auto h-10 w-fit border dark:border-dark-600 border-gray-300 bg-black px-8 text-white"
                     label={t('submit_request')}
                     type="submit"
                     loading={mutationLoading}

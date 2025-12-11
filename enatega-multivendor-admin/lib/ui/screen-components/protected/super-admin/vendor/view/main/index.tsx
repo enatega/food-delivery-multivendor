@@ -58,16 +58,16 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
   return (
     <div className="flex flex-grow flex-col overflow-hidden sm:flex-row">
       <div
-        className={`w-full overflow-y-auto border-gray-200 bg-white sm:w-1/3 z-10 ${
+        className={`w-full overflow-y-auto border border-gray-200 bg-white dark:bg-dark-950 dark:border-dark-600 sm:w-1/3 z-10 ${
           activeTab === 'vendors' ? '' : 'hidden sm:block'
         }`}
       >
         {/* Mobile-only header for Vendors section */}
-        <div className="mt-3  border-b p-3 sm:hidden">
+        <div className="mt-3  border-b dark:border-dark-600 p-3 sm:hidden">
           <div className="mb-4 flex items-center justify-between">
             <HeaderText text={t('Vendors')} />
             <TextIconClickable
-              className="rounded border-gray-300 bg-black text-white sm:w-auto"
+              className="rounded border-gray-300 bg-black dark:bg-dark-950 dark:border-dark-600 text-white sm:w-auto"
               icon={faAdd}
               iconStyles={{ color: 'white' }}
               title={t('Add Vendor')}
@@ -120,12 +120,12 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
       </div>
 
       <div
-        className={`flex-1 overflow-y-auto border-l border-gray-200 px-2 ${
+        className={`flex-1 overflow-y-auto border-l border-gray-200  dark:border-dark-600 px-2 ${
           activeTab === 'restaurants' ? '' : 'hidden sm:block'
         }`}
       >
         {/* Header for Restaurants section */}
-        <div className="border-b pb-2 pt-3">
+        <div className="border-b  pb-2 pt-3 dark:border-dark-600">
           <div className="mb-4 flex items-center justify-between">
             <div className="hidden sm:block">
               <HeaderText text={t('Stores')} />
@@ -139,7 +139,7 @@ export default function VendorMain({ activeTab }: IVendorMainComponentProps) {
               />
             </div>
             <TextIconClickable
-              className="rounded border-gray-300 bg-black text-white sm:w-auto"
+              className="rounded border-gray-300 border dark:border-dark-600  bg-black text-white sm:w-auto"
               icon={faAdd}
               iconStyles={{ color: 'white' }}
               title={t('Add Store')}

@@ -9,11 +9,11 @@ export default function VendorMobilesTabs({
   // Hooks
   const t = useTranslations();
   return (
-    <div className="flex border-b bg-gray-100 sm:hidden">
+    <div className="flex border-b bg-gray-100 dark:bg-dark-950 dark:text-white sm:hidden">
       <button
         className={`flex-1 px-4 py-2 text-center ${
           activeTab === 'vendors'
-            ? 'border-b-2 border-black bg-white font-bold'
+            ? 'border-b-2 border-black bg-white  dark:bg-dark-900  font-bold'
             : ''
         }`}
         onClick={() => setActiveTab('vendors')}
@@ -23,7 +23,7 @@ export default function VendorMobilesTabs({
       <button
         className={`flex-1 px-4 py-2 text-center ${
           activeTab === 'restaurants'
-            ? 'border-b-2 border-black bg-white font-bold'
+            ? 'border-b-2 border-black bg-white  dark:bg-dark-900  font-bold'
             : ''
         }`}
         onClick={() => setActiveTab('restaurants')}

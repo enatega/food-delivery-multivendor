@@ -9,6 +9,7 @@ import { ICouponTableHeaderProps } from '@/lib/utils/interfaces/coupons.interfac
 // Icons
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 
 // Prime react
 import { Checkbox } from 'primereact/checkbox';
@@ -23,6 +24,7 @@ export default function CouponTableHeader({
 }: ICouponTableHeaderProps) {
   // Hooks
   const t = useTranslations();
+  const { theme } = useTheme();
 
   //Ref
   const overlayPanelRef = useRef<OverlayPanel>(null);
@@ -119,9 +121,11 @@ export default function CouponTableHeader({
           </OverlayPanel>
 
           <TextIconClickable
-            className="w-20 rounded border border-dotted border-[#E4E4E7] text-black"
+            className="w-20 rounded border border-dotted border-[#E4E4E7] dark:border-dark-600 text-black dark:text-white"
             icon={faAdd}
-            iconStyles={{ color: 'black' }}
+            iconStyles={
+              theme === 'dark' ? { color: 'white' } : { color: 'black' }
+            }
             title={selectedActions.length > 0 ? t('Filter') : t('Actions')}
             onClick={(e) => overlayPanelRef.current?.toggle(e)}
           />

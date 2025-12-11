@@ -153,7 +153,7 @@ export default function VendorCard({
       className="relative"
     >
       <div
-        className={`flex items-center bg-${vendorId === _id ? 'black' : 'white'} cursor-pointer p-2 px-3`}
+        className={`flex items-center ${vendorId === _id ? 'bg-black dark:bg-dark-900 ' : 'bg-white dark:bg-dark-950 '}  cursor-pointer p-2 px-3`}
       >
         <Image
           width={40}
@@ -168,15 +168,15 @@ export default function VendorCard({
         />
         <div className="flex flex-1 flex-col gap-y-1">
           <TextComponent
-            className={`text-card-h3 flex flex-1 text-xs text-${vendorId === _id ? 'white' : 'black'}`}
+            className={`text-card-h3 flex flex-1 text-xs ${vendorId === _id ? 'text-white' : 'text-black dark:text-white'}`}
             text={name ?? t('Vendor')}
           />
           <TextComponent
-            className={`text-card-h3 flex flex-1 text-xs text-${vendorId === _id ? 'white' : 'black'}`}
+            className={`text-card-h3 flex flex-1 text-xs ${vendorId === _id ? 'text-white' : 'text-black dark:text-white'}`}
             text={uniqueId ?? ''}
           />
           <TextComponent
-            className={`card-h3 text-${vendorId === _id ? 'white' : 'black'}`}
+            className={`card-h3 ${vendorId === _id ? 'text-white' : 'text-black dark:text-white'}`}
             text={email}
           />
 
@@ -221,21 +221,21 @@ export default function VendorCard({
                     icon: faEye,
                     fn: onHandlerView,
                     data: vendorId,
-                    color: 'text-gray-600',
+                    color: 'text-gray-600 dark:text-white',
                   },
                   {
                     title: t('Edit'),
                     icon: faEdit,
                     fn: onHandlerEdit,
                     data: vendorId,
-                    color: 'text-gray-600',
+                    color: 'text-gray-600 dark:text-white',
                   },
                   {
                     title: t('Delete'),
                     icon: faTrash,
                     fn: onHandlerDelete,
                     data: null,
-                    color: 'text-red-500',
+                    color: 'text-red-500 dark:text-white',
                   },
                 ]}
               />
