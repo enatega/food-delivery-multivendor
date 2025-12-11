@@ -1,6 +1,5 @@
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
 import CustomButton from "@/lib/ui/useable-components/button";
-import { useTranslations } from "next-intl";
 
 interface IPhoneConflictModalProps {
     isVisible: boolean;
@@ -15,7 +14,6 @@ export default function PhoneConflictModal({
     onCancel,
     isLoading = false,
 }: IPhoneConflictModalProps) {
-    const t = useTranslations();
 
     return (
         <CustomDialog visible={isVisible} onHide={onCancel} width="420px">
