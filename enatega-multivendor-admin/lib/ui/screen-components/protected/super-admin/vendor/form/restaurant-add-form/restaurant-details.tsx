@@ -249,7 +249,7 @@ export default function RestaurantDetails({
   }
 
   return (
-    <div className="flex h-full w-full items-center justify-start">
+    <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="mb-2 flex flex-col">
@@ -525,7 +525,7 @@ export default function RestaurantDetails({
                           }}
                         />
                       </div>
-                      <div className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 p-4">
+                      <div className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 dark:border-dark-600 p-4">
                         <CustomUploadImageComponent
                           key="logo"
                           name="logo"
@@ -579,7 +579,7 @@ export default function RestaurantDetails({
                           </small>
                         )}
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                          className="h-10 w-fit border-gray-300 border dark:border-dark-600 bg-black px-8 text-white"
                           label={t('Add')}
                           type="submit"
                           loading={isSubmitting}

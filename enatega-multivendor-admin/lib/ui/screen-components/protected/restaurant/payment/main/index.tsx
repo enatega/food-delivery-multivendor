@@ -103,8 +103,8 @@ export default function PaymentMain() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-white">
-      <div className="w-full rounded-lg border border-gray-200 p-8 md:p-16">
+    <div className="flex flex-col items-center justify-center bg-white dark:bg-dark-950">
+      <div className="w-full rounded-lg border border-gray-200 dark:border-dark-600 p-8 md:p-16">
         <div
           className={`grid gap-6 pb-16 ${
             paymentMethods.length === 1

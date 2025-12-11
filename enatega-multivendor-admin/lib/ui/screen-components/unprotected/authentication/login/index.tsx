@@ -27,7 +27,7 @@ export default function LoginMain() {
 
             <div className="flex flex-col items-center justify-center gap-2">
               <CustomButton
-                className="border-gray-30 h-12 w-full border bg-transparent text-black hover:bg-gray-100"
+                className="border-gray-30 h-12 w-full border bg-transparent text-black dark:text-white hover:bg-gray-100"
                 label="Login with Google"
                 rounded={true}
                 icon="pi pi-google"

@@ -69,7 +69,7 @@ export default function RestaurantStatesTable({
   if (!dashboardOrderSalesDetailsByPaymentMethod) return;
 
   return (
-    <div className="p-3 bg-gray-50 rounded-lg shadow-md space-y-6">
+    <div className="p-3 bg-gray-50 dark:bg-gray-950 rounded-lg shadow-md space-y-6">
       {paymentMethod.map((method: string) => {
         const key: keyof typeof dashboardOrderSalesDetailsByPaymentMethod =
           method as keyof typeof dashboardOrderSalesDetailsByPaymentMethod;
@@ -104,7 +104,7 @@ export default function RestaurantStatesTable({
                 )}
               </div>
             </div>
-            <Divider className="my-4 border-t border-gray-300" />
+            <Divider className="my-4 border-t border-gray-300 dark:border-dark-600" />
           </>
         );
       })}

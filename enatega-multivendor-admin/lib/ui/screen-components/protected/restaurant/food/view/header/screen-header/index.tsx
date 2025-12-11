@@ -18,11 +18,12 @@ const FoodHeader = () => {
   const { onFoodFormVisible } = useContext(FoodsContext);
 
   return (
-    <div className="w-full flex-shrink-0 sticky top-0 bg-white z-10 shadow-sm p-3">
+    <div className="w-full flex-shrink-0 sticky top-0 bg-white dark:bg-dark-950 z-10 shadow-sm p-3">
       <div className="flex w-full justify-between">
         <HeaderText text={t('Products')} />
         <TextIconClickable
-          className="rounded border-gray-300 bg-black text-white sm:w-auto"
+          className="rounded border dark:border-dark-600
+           border-gray-300 bg-black text-white sm:w-auto"
           icon={faAdd}
           iconStyles={{ color: 'white' }}
           title={t('Add Product')}

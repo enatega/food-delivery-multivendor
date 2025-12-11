@@ -124,7 +124,7 @@ const Layout = ({ children }: IProvider) => {
   }, []);
 
   return (
-    <div className="layout-main">
+    <div className="layout-main bg-white dark:bg-dark-950 dark:text-white">
       <div className="layout-top-container">
         <AppTopbar />
       </div>
@@ -133,7 +133,7 @@ const Layout = ({ children }: IProvider) => {
           <SuperAdminSidebar />
         </div>
         <div
-          className={`h-auto max-w-[100vw] ${isSuperAdminSidebarVisible ? 'w-[calc(100vw-260px)]' : 'w-full'} px-5`}
+          className={`h-auto max-w-[100vw] dark:bg-dark-950 ${isSuperAdminSidebarVisible ? 'w-[calc(100vw-260px)]' : 'w-full'}`}
         >
           {children}
         </div>
