@@ -34,7 +34,7 @@ interface IGoogleMapTrackingComponent {
   orderStatus: string;
   riderId?: string;
   isCheckingCache?: boolean;
-  setDirections?: (directions: google.maps.DirectionsResult | null) => void;
+
 }
 
 function GoogleMapTrackingComponent({
@@ -46,7 +46,7 @@ function GoogleMapTrackingComponent({
   directionsCallback,
   orderStatus,
   riderId,
-  setDirections,
+
 }: IGoogleMapTrackingComponent) {
   // State to track rider's live location
   const [riderLocation, setRiderLocation] = useState<{ lat: number; lng: number } | null>(null);
