@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <>
       <div
-        className={`flex flex-col ${isSuperAdminSidebarVisible ? 'w-[99%]' : 'w-[100%]'}  overflow-x-hidden p-3 h-full`}
+        className={`flex flex-col ${isSuperAdminSidebarVisible ? 'w-[99%]' : 'w-[100%]'}  overflow-x-hidden p-3 h-full bg-white dark:bg-dark-950`}
       >
         <UserStats />
         <GrowthOverView />

@@ -157,7 +157,7 @@ export default function VendorUpdateForms() {
                   <>
                     <div>
                       <Form onSubmit={handleSubmit}>
-                        <div className="edit-profile-file-upload ml-[11px] space-y-3 rounded-[10px] border border-[#E4E4E7] p-[34px] max-[991px]:p-[20px]">
+                        <div className="edit-profile-file-upload ml-[11px] space-y-3 rounded-[10px] border border-[#E4E4E7] dark:border-dark-600 p-[34px] max-[991px]:p-[20px]">
                           <div className="mb-[32px] flex flex-wrap max-[991px]:mb-[20px] max-[400px]:mb-[0px] max-[400px]:justify-center">
                             <div className="h-[120px] w-[120px] shrink-0 overflow-hidden rounded-full">
                               <Image
@@ -189,16 +189,16 @@ export default function VendorUpdateForms() {
                               />
                             </div>
                           </div>
-                          <div className="border-t border-[#E4E4E7] pt-[32px] max-[991px]:pt-[20px]">
+                          <div className="border-t border-[#E4E4E7] dark:border-dark-600 pt-[32px] max-[991px]:pt-[20px]">
                             <div>
-                              <h3 className="pb-[32px] text-[20px] font-semibold text-[#18181B] max-[991px]:pb-[8px]">
+                              <h3 className="pb-[32px] text-[20px] font-semibold dark:text-white text-[#18181B] max-[991px]:pb-[8px]">
                                 {t('Personal Information')}
                               </h3>
                             </div>
                           </div>
                           <div className="!mb-8 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
                             <div>
-                              <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                              <label className="mb-[4px] text-[14px] font-medium dark:text-white text-[#09090B]">
                                 {t('First Name')}
                               </label>
                               <CustomTextField
@@ -218,12 +218,12 @@ export default function VendorUpdateForms() {
                                     ? 'red'
                                     : '',
                                 }}
-                                className="rounded-[6px] border-[#D1D5DB]"
+                                className="rounded-[6px] border-dark-600 border-[#D1D5DB]"
                               />
                             </div>
 
                             <div>
-                              <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                              <label className="mb-[4px] text-[14px] font-medium dark:text-white text-[#09090B]">
                                 {t('Last Name')}
                               </label>
                               <CustomTextField
@@ -294,9 +294,9 @@ export default function VendorUpdateForms() {
                             </div>
                           </div>
 
-                          <div className="border-t border-[#E4E4E7] pt-[32px] max-[991px]:pt-[20px]">
+                          <div className="border-t border-[#E4E4E7] dark:border-dark-600 pt-[32px] max-[991px]:pt-[20px]">
                             <div>
-                              <h3 className="pb-[32px] text-[20px] font-semibold text-[#18181B] max-[991px]:pb-[20px]">
+                              <h3 className="pb-[32px] text-[20px] font-semibold dark:text-white text-[#18181B] max-[991px]:pb-[20px]">
                                 {t('Change Password')}
                               </h3>
                             </div>
@@ -304,7 +304,7 @@ export default function VendorUpdateForms() {
 
                           <div className="!mt-0 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
                             <div>
-                              <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                              <label className="mb-[4px] text-[14px] font-medium dark:text-white text-[#09090B]">
                                 {t('Current Password')}
                               </label>
                               <CustomPasswordTextField
@@ -329,7 +329,7 @@ export default function VendorUpdateForms() {
                               />
                             </div>
                             <div>
-                              <label className="mb-[4px] text-[14px] font-medium text-[#09090B]">
+                              <label className="mb-[4px] text-[14px] font-medium dark:text-white text-[#09090B]">
                                 {' '}
                                 {t('New Password')}
                               </label>
@@ -356,7 +356,7 @@ export default function VendorUpdateForms() {
                           </div>
                           <div className="mt-4 flex justify-end">
                             <CustomButton
-                              className="h-10 w-[65px] border-gray-300 bg-[#18181B] text-center text-[#FAFAFA]"
+                              className="h-10 w-[65px] border dark:border-dark-600 border-gray-300 bg-[#18181B] text-center text-[#FAFAFA]"
                               label={t('Save')}
                               type="submit"
                               loading={isSubmitting}

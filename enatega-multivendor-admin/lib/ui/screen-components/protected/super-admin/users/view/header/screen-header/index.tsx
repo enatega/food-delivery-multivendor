@@ -55,7 +55,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({
   };
 
   return (
-    <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white p-3 shadow-sm">
+    <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white dark:bg-dark-950 p-3 shadow-sm">
       <div className="flex flex-col w-full flex-wrap items-start justify-between gap-3">
         <HeaderText text={t('Users')} />
         <div className="flex flex-row flex-wrap w-full items-center gap-3">
@@ -71,7 +71,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({
             options={registrationMethodOptions}
             setSelectedItems={(key, items) => handleRegistrationMethodChange(items)}
             placeholder={t('registration_method')}
-            className=" w-min border rounded-md py-1"
+            className=" w-min border dark:border-dark-600 rounded-md py-1"
             multiSelectClassName='border-none'
 
           />
@@ -81,7 +81,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({
             options={accountStatusOptions}
             setSelectedItems={(key, items) => handleAccountStatusChange(items)}
             placeholder={t('account_status')}
-            className=" w-min border rounded-md py-1"
+            className=" w-min border  border dark:border-dark-600 rounded-md py-1"
             multiSelectClassName='border-none'
 
           />

@@ -37,7 +37,7 @@ export default function OTPVerificationMain() {
             />
 
             <CustomButton
-              className="h-full w-full border-secondary-border-color bg-transparent text-black hover:bg-gray-100"
+              className="h-full w-full border-secondary-border-color bg-transparent text-black dark:text-white hover:bg-gray-100"
               label="Resend OTP"
               rounded={true}
             />
