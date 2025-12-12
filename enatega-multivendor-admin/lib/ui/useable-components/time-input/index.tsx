@@ -20,7 +20,7 @@ const CustomTimeInput = ({
       <input
         id="timeInput"
         type="time"
-        className={`h-10 w-full rounded-lg border border-gray-300 px-8 text-sm outline-none focus:shadow-none focus:outline-none ${className}`}
+        className={`h-10 w-full dark:text-white rounded-lg border border-gray-300 px-8 text-sm outline-none focus:shadow-none focus:outline-none ${className}`}
         placeholder={placeholder}
         // 'HH:MM' format
         value={value ?? ''}

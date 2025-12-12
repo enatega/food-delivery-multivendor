@@ -317,11 +317,10 @@ const AppTopbar = () => {
                   notifications?.map((notification, index) => (
                     <Link
                       key={index}
-                      className={`p-2 mx-3 rounded-md text-sm cursor-pointer ${
-                        notification.read
-                          ? 'text-black dark:text-white'
-                          : 'text-[#484848] dark:text-white bg-secondary-color'
-                      } hover:bg-gray-300`}
+                      className={`p-2 mx-3 rounded-md text-sm cursor-pointer ${notification.read
+                        ? 'text-black dark:text-white'
+                        : 'text-[#484848] dark:hover:text-white dark:text-dark-950 bg-secondary-color'
+                        } hover:bg-gray-300 dark:hover:bg-dark-600`}
                       href={`${notification.navigateTo}`}
                       onClick={() => {
                         markAllAsRead();

@@ -52,7 +52,7 @@ export default function CustomRadiusInputField({
           className="absolute left-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[#E4E4E7] dark:hover:bg-dark-600 hover:bg-slate-200"
           onClick={handleDecrease}
         >
-          <span className="text-gray-500">-</span>
+          <span className="text-gray-500 dark:text-white">-</span>
         </div>
 
         <InputText
@@ -71,7 +71,7 @@ export default function CustomRadiusInputField({
           className="absolute right-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-[#E4E4E7] dark:hover:bg-dark-600 hover:bg-slate-200"
           onClick={handleIncrease}
         >
-          <span className="text-gray-500">+</span>
+          <span className="text-gray-500 dark:text-white">+</span>
         </div>
       </div>
     </div>
