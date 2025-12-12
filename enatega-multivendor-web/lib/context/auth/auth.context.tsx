@@ -220,7 +220,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("login_error"),
         message: t("invalid_credentials"),
-        sticky: true,
+        // sticky: true,
       });
     } finally {
       setIsLoading(false);
@@ -314,7 +314,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             type: "success",
             title: t("login_success"),
             message: t("login_success_message"),
-            sticky: true,
           });
         } else {
           setActivePanel(4);
@@ -328,7 +327,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("login_error"),
         message: t("invalid_credentials"),
-        sticky: true,
       });
     }
   }
@@ -342,14 +340,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("login_error"),
         message: error.message,
-        sticky: true,
       });
     } else {
       showToast({
         type: "error",
         title: t("login_error"),
         message: t("invalid_credentials"),
-        sticky: true,
       });
     }
   }

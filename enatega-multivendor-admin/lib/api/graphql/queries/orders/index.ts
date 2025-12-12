@@ -293,85 +293,99 @@ export const GET_ORDERS = gql`
   }
 `;
 
-export const GET_ORDERS_WITHOUT_PAGINATION = gql`
-  query OrdersWithoutPagination(
+export const GET_ALL_ORDERS_PAGINATED = gql`
+  query AllOrdersPaginated(
+    $page: Int!
+    $rows: Int!
     $dateKeyword: String
     $starting_date: String
     $ending_date: String
+    $orderStatus: [String]
+    $search: String
   ) {
-    allOrdersWithoutPagination(
+    allOrdersPaginated(
+      page: $page
+      rows: $rows
       dateKeyword: $dateKeyword
       starting_date: $starting_date
       ending_date: $ending_date
+      orderStatus: $orderStatus
+      search: $search
     ) {
-      _id
-      orderId
-      restaurant {
+      orders {
         _id
-        name
-        image
-        address
-        location {
-          coordinates
+        orderId
+        restaurant {
+          _id
+          name
+          image
+          address
+          location {
+            coordinates
+          }
         }
-      }
-      deliveryAddress {
-        location {
-          coordinates
+        deliveryAddress {
+          location {
+            coordinates
+          }
+          deliveryAddress
+          details
+          label
         }
-        deliveryAddress
-        details
-        label
-      }
-      items {
-        _id
-        title
-        description
-        image
-        quantity
-        variation {
+        items {
           _id
           title
-          price
-          discounted
-        }
-        addons {
-          _id
-          options {
+          description
+          image
+          quantity
+          variation {
             _id
             title
-            description
             price
+            discounted
           }
-          description
-          title
-          quantityMinimum
-          quantityMaximum
+          addons {
+            _id
+            options {
+              _id
+              title
+              description
+              price
+            }
+            description
+            title
+            quantityMinimum
+            quantityMaximum
+          }
+          specialInstructions
+          isActive
+          createdAt
+          updatedAt
         }
-        specialInstructions
+        paymentMethod
+        paidAmount
+        orderAmount
+        orderStatus
+        status
+        paymentStatus
+        reason
         isActive
         createdAt
-        updatedAt
+        deliveryCharges
+        tipping
+        taxationAmount
+        rider {
+          _id
+          name
+          username
+          available
+        }
       }
-      
-      paymentMethod
-      paidAmount
-      orderAmount
-      orderStatus
-      status
-      paymentStatus
-      reason
-      isActive
-      createdAt
-      deliveryCharges
-      tipping
-      taxationAmount
-      rider {
-        _id
-        name
-        username
-        available
-      }
+      totalCount
+      currentPage
+      totalPages
+      prevPage
+      nextPage
     }
   }
 `;
