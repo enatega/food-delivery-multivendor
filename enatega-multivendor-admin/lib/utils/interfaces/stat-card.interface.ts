@@ -6,6 +6,7 @@ export interface IStatsCardProps extends IGlobalComponentProps {
   total: number;
   description?: string;
   route: string;
+  currencySymbol?: string;
   icon?: IconDefinition;
   loading?: boolean;
   isClickable?: boolean;

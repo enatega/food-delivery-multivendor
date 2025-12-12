@@ -30,7 +30,7 @@ export default function DiscoveryBannerSection() {
   }
 
   return (
-    <div dir={isRTL ? "rtl" : "ltr"}>
+    <div dir={isRTL ? "rtl" : "ltr"} className="mt-10 sm:mt-0">
     <Carousel
       className={`discovery-carousel ${isRTL ? "rtl-carousel" : ""}`} // Add RTL class
       value={data?.banners}

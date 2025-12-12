@@ -23,11 +23,11 @@ import { usePathname } from "next/navigation";
 
 const AppLayout = ({ children }: IProvider) => {
   const pathname = usePathname();
-  const [isScrolled , setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   // Hooks
   const { isAuthModalVisible, setIsAuthModalVisible, setActivePanel } = useAuth();
   const { isSearchFocused } = useSearchUI();
-  
+
   // Hook
   const { GOOGLE_MAPS_KEY, LIBRARIES } = useConfig();
 
@@ -42,7 +42,7 @@ const AppLayout = ({ children }: IProvider) => {
 
   useEffect(() => {
     setIsScrolled(false);
-    window.document.body.scrollTo({top:0, behavior:"smooth"})
+    window.document.body.scrollTo({ top: 0, behavior: "smooth" })
   }, [pathname]);
 
   useEffect(() => {
@@ -78,12 +78,12 @@ const AppLayout = ({ children }: IProvider) => {
     </div>
   );
 
-  useEffect(() => {}, [GOOGLE_MAPS_KEY]);
+  useEffect(() => { }, [GOOGLE_MAPS_KEY]);
 
   return GOOGLE_MAPS_KEY ?
-      <GoogleMapsProvider apiKey={GOOGLE_MAPS_KEY} libraries={LIBRARIES}>
-        <>{UI}</>
-      </GoogleMapsProvider>
+    <GoogleMapsProvider apiKey={GOOGLE_MAPS_KEY} libraries={LIBRARIES}>
+      <>{UI}</>
+    </GoogleMapsProvider>
     : <>{UI}</>;
 };
 

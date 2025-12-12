@@ -53,9 +53,9 @@ export default function useSetUserCurrentLocation() {
 
       let address = formattedAddress || "Unknown Address";
 
-      if (address.length > 21) {
-        address = address.substring(0, 21) + "...";
-      }
+      // if (address.length > 21) {
+      //   address = address.substring(0, 21) + "...";
+      // }
 
       if (error) {
         showToast({

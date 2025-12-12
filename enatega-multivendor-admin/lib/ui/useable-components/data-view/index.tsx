@@ -18,6 +18,7 @@ const CustomDataView: React.FC<ICustomDataViewProps> = ({
           orderedItems={review.order.items.map((item) => item.title).join(', ')}
           rating={review.rating}
           imageSrc={review.restaurant.image}
+          comments={review.comments}
           reviewContent={review.description}
           orderId={review.order.orderId}
           createdAt={new Date(parseInt(review.createdAt)).toLocaleDateString()}

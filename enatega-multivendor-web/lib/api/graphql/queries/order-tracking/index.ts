@@ -86,6 +86,7 @@ export const ORDER_TRACKING = gql`query OrderDetails($orderDetailsId: String!) {
     acceptedAt
     pickedAt
     preparationTime
+    selectedPrepTime
     instructions
     __typename
   }

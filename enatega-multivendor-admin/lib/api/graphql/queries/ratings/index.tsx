@@ -21,6 +21,7 @@ export const GET_REVIEWS = gql`
         image
       }
       rating
+      comments
       description
       createdAt
     }

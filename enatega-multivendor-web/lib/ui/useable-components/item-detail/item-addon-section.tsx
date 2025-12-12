@@ -56,14 +56,13 @@ export const ItemDetailAddonSection = <
             <input
               type={
                 (
-                  addonOptions.quantityMinimum === 1 &&
                   addonOptions.quantityMaximum === 1
                 ) ?
                   "radio"
-                : "checkbox"
+                  : "checkbox"
               }
               name={name}
-              // checked={false}
+            // checked={false}
             />
 
             {/* Label & Price */}

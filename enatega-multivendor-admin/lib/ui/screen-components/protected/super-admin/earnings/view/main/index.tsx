@@ -25,6 +25,7 @@ export default function EarningsMain({
       value: null as string | null,
       matchMode: FilterMatchMode.CONTAINS,
     },
+    
   });
 
   // Hooks

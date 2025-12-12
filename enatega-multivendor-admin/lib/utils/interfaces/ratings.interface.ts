@@ -11,6 +11,7 @@ export interface IRating extends IGlobalComponentProps {
   rating: number;
   imageSrc: string;
   reviewContent: string;
+  comments?: string;
 }
 
 export interface IReview extends IGlobalComponentProps {
@@ -31,6 +32,7 @@ export interface IReview extends IGlobalComponentProps {
     image: string;
   };
   rating: number;
+  comments: string;
   description: string;
   createdAt: string;
 }

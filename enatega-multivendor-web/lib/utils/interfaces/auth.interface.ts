@@ -16,6 +16,7 @@ export interface IAuthFormData {
   password?: string;
   phone?: string;
   type?: "default" | "google";
+  isReset?: boolean;
 }
 export interface ILoginWithGoogleProps {
   googleLogin: (overrideConfig?: OverridableTokenClientConfig) => void;
@@ -28,7 +29,7 @@ export interface ILoginWithEmailProps {
   handleChangePanel: (index: number) => void;
   handleFormChange: (name: string, value: string) => void;
   formData: IAuthFormData;
-  setFormData : Dispatch<SetStateAction<IAuthFormData>>
+  setFormData: Dispatch<SetStateAction<IAuthFormData>>
 }
 
 export interface ISaveEmailAddressProps {
@@ -39,14 +40,14 @@ export interface IEmailVerificationProps {
   emailOtp: string;
   setEmailOtp: Dispatch<SetStateAction<string>>;
   handleChangePanel: (index: number) => void;
-   formData:any,
-   setFormData : any
+  formData: any,
+  setFormData: any
 }
 export interface IPhoneVerificationProps {
   phoneOtp: string;
   setPhoneOtp: Dispatch<SetStateAction<string>>;
   handleChangePanel: (index: number) => void;
-  formData:any,
+  formData: any,
 }
 
 export interface IUserLoginArguments {
@@ -166,7 +167,7 @@ export interface IEnterPasswordProps {
 }
 
 export interface IUserAddressComponentProps {
-  confirmYourAddress?:boolean
+  confirmYourAddress?: boolean
   editAddress?: IUserAddress | null;
   visible: boolean;
   onHide: () => void;
@@ -197,7 +198,7 @@ export interface ICreateUserArguments {
   notificationToken?: string;
   appleId?: string;
   emailIsVerified?: boolean; // optional, can be undefined
-
+  isReset?: boolean;
 }
 export interface IVerificationEmailForChangePasswordProps {
   handleSubmitAfterVerification: () => void;
