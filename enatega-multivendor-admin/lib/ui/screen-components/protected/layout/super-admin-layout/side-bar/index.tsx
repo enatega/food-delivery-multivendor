@@ -20,6 +20,8 @@ import {
   faSliders,
   faUpRightFromSquare,
   faWallet,
+  faCreditCard,
+  faGift,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Constants and Utiils
@@ -140,13 +142,13 @@ export default function MakeSidebar() {
           label: t('Orders'),
           route: '/management/orders',
           isParent: false,
-          isAllowed: IS_MULTIVENDOR === true,
         },
         {
           text: 'Coupons',
           label: t('Coupons'),
           route: '/management/coupons',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
         {
           text: 'Cuisine',
@@ -165,7 +167,6 @@ export default function MakeSidebar() {
           label: t('Banners'),
           route: '/management/banners',
           isParent: false,
-          isAllowed: IS_MULTIVENDOR === true,
         },
         {
           text: 'Tipping',
@@ -178,6 +179,7 @@ export default function MakeSidebar() {
           label: t('Commission Rate'),
           route: '/management/commission-rates',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
 
         {
@@ -197,47 +199,60 @@ export default function MakeSidebar() {
         return this.subMenu ? this.subMenu.length > 0 : false;
       },
     },
-    ...(IS_MULTIVENDOR
-      ? [
-          {
-            text: t('Wallet'),
-            route: '/wallet',
-            isParent: true,
-            icon: faWallet,
-            subMenu: useCheckAllowedRoutes([
-              {
-                text: t('Transaction History'),
-                label: t('Transaction History'),
-                route: '/wallet/transaction-history',
-                isParent: false,
-              },
-              {
-                text: 'Withdrawal Request',
-                label: t('Withdrawal Request'),
-                route: '/wallet/withdraw-requests',
-                isParent: false,
-              },
-              {
-                text: t('Earnings'),
-                label: t('Earnings'),
-                route: '/wallet/earnings',
-                isParent: false,
-              },
-            ]),
-            shouldShow: function () {
-              return this.subMenu ? this.subMenu.length > 0 : false;
-            },
-          },
-          {
-            text: 'CustomerSupport',
-            label: t('CustomerSupport'),
-            route: '/customerSupport',
-            icon: faHeadset,
-            isClickable: true,
-            isParent: true,
-          },
-        ]
-      : []),
+
+    {
+      text: t('Wallet'),
+      route: '/wallet',
+      isParent: true,
+      icon: faWallet,
+      subMenu: useCheckAllowedRoutes([
+        {
+          text: t('Transaction History'),
+          label: t('Transaction History'),
+          route: '/wallet/transaction-history',
+          isParent: false,
+        },
+        {
+          text: 'Withdrawal Request',
+          label: t('Withdrawal Request'),
+          route: '/wallet/withdraw-requests',
+          isParent: false,
+        },
+        {
+          text: t('Earnings'),
+          label: t('Earnings'),
+          route: '/wallet/earnings',
+          isParent: false,
+        },
+      ]),
+      shouldShow: function () {
+        return this.subMenu ? this.subMenu.length > 0 : false;
+      },
+    },
+    {
+      text: 'Subscription',
+      label: t('Subscription'),
+      route: '/subscription',
+      isParent: true,
+      icon: faCreditCard,
+      isClickable: true,
+    },
+    {
+      text: 'Referral Wallet',
+      label: t('Referral Wallet'),
+      route: '/referral-wallet',
+      isParent: true,
+      icon: faGift,
+      isClickable: true,
+    },
+    {
+      text: 'CustomerSupport',
+      label: t('CustomerSupport'),
+      route: '/customerSupport',
+      icon: faHeadset,
+      isClickable: true,
+      isParent: true,
+    },
   ];
 
   return (

@@ -83,9 +83,10 @@ function CustomUploadImageComponent({
   const uploadImageToS3 = useCallback(
     async (file: File): Promise<void> => {
       setIsUploading(true);
-      setImageFile(URL.createObjectURL(file));
 
       if (!CLOUDINARY_UPLOAD_URL) {
+        setImageFile(URL.createObjectURL(file));
+
         try {
           // Compress file based on type
           let processedFile: File;
@@ -136,7 +137,6 @@ function CustomUploadImageComponent({
           setImageFile('');
         } finally {
           setIsUploading(false);
-          return;
         }
       } else {
         const fileReader = new FileReader();

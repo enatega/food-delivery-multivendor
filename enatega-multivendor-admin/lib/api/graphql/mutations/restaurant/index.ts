@@ -202,3 +202,25 @@ export const UPDATE_RESTAURANT_BUSSINESS_DETAILS = gql`
     }
   }
 `;
+
+export const UPDATE_RESTAURANT_SCHEDULE = gql`
+  mutation updateScheduleTimings(
+    $id: ID!
+    $scheduleTimings: [ScheduleTypeInput]
+  ) {
+    updateScheduleTimings(id: $id, scheduleTimings: $scheduleTimings) {
+      name
+      scheduleTimings {
+        _id
+        day
+        isOpen
+        times {
+          _id
+          startTime
+          endTime
+          maxOrder
+        }
+      }
+    }
+  }
+`;

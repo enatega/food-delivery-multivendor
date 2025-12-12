@@ -3,6 +3,8 @@ import { TWeekDays } from '../types/days';
 export interface ITimeSlot {
   startTime: string | null;
   endTime: string | null;
+  maxOrders: number | null;
+  _id?: string;
 }
 
 export interface ITimingForm {

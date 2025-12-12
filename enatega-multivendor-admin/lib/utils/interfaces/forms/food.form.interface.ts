@@ -7,6 +7,10 @@ export interface IFoodErrors {
   image: string[];
   category: string[];
   subCategory: string[];
+  inventory: string[];
+  uom: string[];
+  minQuantity: string[];
+  maxQuantity: string[];
 }
 
 export interface IFoodDetailsForm {
@@ -16,4 +20,8 @@ export interface IFoodDetailsForm {
   image: string;
   category: IDropdownSelectItem | null;
   subCategory: IDropdownSelectItem | null;
+  inventory?: number | null;
+  uom?: string;
+  minQuantity?: number | null;
+  maxQuantity?: number | null;
 }

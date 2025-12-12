@@ -101,6 +101,10 @@ export interface IFoodNew {
   isActive: boolean;
   __typename: string;
   isOutOfStock: boolean;
+  inventory?: number;
+  uom?: string;
+  minQuantity?: number;
+  maxQuantity?: number;
 }
 
 export interface IFoodCategory {

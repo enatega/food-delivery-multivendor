@@ -71,3 +71,33 @@ export const DELETE_FOOD = gql`
     }
   }
 `;
+
+export const CREATE_FOOD_SINGLE_VENDOR = gql`
+  mutation CreateFoodSingleVendor($foodInput: inputCreateFood!) {
+    createFoodSingleVendor(foodInput: $foodInput) {
+      _id
+      categories {
+        _id
+        title
+        foods {
+          _id
+          title
+          description
+          subCategory
+          variations {
+            _id
+            title
+            price
+            discounted
+            addons
+            isOutOfStock
+          }
+          image
+          isActive
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;

@@ -21,6 +21,7 @@ import {
   faStar,
   faStore,
   faWallet,
+  faGift,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Components
@@ -59,7 +60,7 @@ export default function MakeSidebar() {
     useContext<LayoutContextProps>(LayoutContext);
   const { user } = useUserContext();
   const { IS_MULTIVENDOR } = useConfiguration();
-  
+
   // Get the current route stack from localStorage without modifying it
   const [routeStack, setRouteStack] = useState<string[]>(
     JSON.parse(onUseLocalStorage('get', 'routeStack') || '[]')
@@ -80,13 +81,21 @@ export default function MakeSidebar() {
       isParent: false,
     },
     // Only include Banners when IS_MULTIVENDOR is false
-    ...(IS_MULTIVENDOR ? [] : [
-      {
-        text: t('Banners'),
-        route: '/admin/store/product-management/banners',
-        isParent: false,
-      }
-    ]),
+    ...(IS_MULTIVENDOR
+      ? []
+      : [
+          {
+            text: t('Banners'),
+            route: '/admin/store/product-management/banners',
+            isParent: false,
+          },
+        ]),
+    {
+      text: t('Deals'),
+      route: '/admin/store/product-management/deals',
+      isParent: true,
+      isClickable: true,
+    },
     {
       text: t('Options'),
       route: '/admin/store/product-management/options',
@@ -183,6 +192,7 @@ export default function MakeSidebar() {
       icon: faMoneyBillTrendUp,
       isClickable: true,
     },
+
     {
       text: t('Reviews'),
       route: '/admin/store/ratings',

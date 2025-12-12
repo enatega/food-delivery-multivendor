@@ -23,3 +23,23 @@ export const SCREEN_NAMES = [
     code: 'Top Brands',
   },
 ];
+
+// Screen names for single vendor mode
+export const SINGLE_VENDOR_SCREEN_NAMES = [
+  {
+    label: 'Deals',
+    code: 'Deals',
+  },
+  {
+    label: 'Category',
+    code: 'Category',
+  },
+  {
+    label: 'Subscription',
+    code: 'Subscription',
+  },
+  {
+    label: 'Info',
+    code: 'Info',
+  },
+];

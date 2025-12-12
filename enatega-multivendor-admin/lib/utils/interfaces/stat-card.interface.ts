@@ -3,9 +3,10 @@ import { IGlobalComponentProps } from './global.interface';
 
 export interface IStatsCardProps extends IGlobalComponentProps {
   label: string;
-  total: number;
+  total: number | string;
   description?: string;
-  route: string;
+  descriptionIcon?: IconDefinition;
+  route?: string;
   icon?: IconDefinition;
   loading?: boolean;
   isClickable?: boolean;

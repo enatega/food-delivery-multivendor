@@ -258,3 +258,19 @@ export const GET_CLONED_RESTAURANTS_PAGINATED = gql`
     }
   }
 `;
+
+export const GET_RESTAURANT_SCHEDULE = gql`
+  query GetRestaurantSchedule($restaurantId: ID!) {
+    getRestaurantSchedule(restaurantId: $restaurantId) {
+      day
+      isOpen
+      _id
+      times {
+        startTime
+        endTime
+        maxOrder
+        _id
+      }
+    }
+  }
+`;

@@ -34,8 +34,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
 
-
-
 const TimingAddForm = () => {
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
@@ -59,6 +57,7 @@ const TimingAddForm = () => {
         return {
           startTime: formatTime(timing.startTime),
           endTime: formatTime(timing.endTime),
+          maxOrders: 50,
         };
       });
 
@@ -67,7 +66,6 @@ const TimingAddForm = () => {
         times,
       };
     }) ?? [];
-
 
   const initialValues: ITimingForm[] =
     openingTimes.length > 0 ? openingTimes : TIMING_INITIAL_VALUE;
@@ -123,7 +121,7 @@ const TimingAddForm = () => {
   };
 
   return (
-    <div className="mt-7 max-h-[calc(100vh-152px)] overflow-auto rounded border dark:border-dark-600 px-8 py-8">
+    <div className="mt-7 flex-1 rounded border dark:border-dark-600 px-8 py-8">
       <Formik
         initialValues={initialValues}
         validationSchema={TimingSchema}
@@ -146,6 +144,7 @@ const TimingAddForm = () => {
                                 {
                                   startTime: '00:00',
                                   endTime: '23:59',
+                                  maxOrders: 50,
                                 },
                               ];
                         setFieldValue(`${dayIndex}.times`, newTimes);
@@ -202,7 +201,9 @@ const TimingAddForm = () => {
                                 </ErrorMessage>
                               </div>
 
-                              <span className="self-center text-xs dark:text-white">-</span>
+                              <span className="self-center text-xs dark:text-white">
+                                -
+                              </span>
 
                               <div className="max-w-4min-w-44 relative flex w-full min-w-44 flex-col">
                                 <CustomTimeInput
@@ -259,7 +260,11 @@ const TimingAddForm = () => {
                               <button
                                 onClick={() => {
                                   const prev = [...values[dayIndex].times];
-                                  prev.push({ startTime: null, endTime: null });
+                                  prev.push({
+                                    startTime: null,
+                                    endTime: null,
+                                    maxOrders: 50,
+                                  });
                                   setFieldValue(`${dayIndex}.times`, prev);
                                 }}
                                 type="button"
