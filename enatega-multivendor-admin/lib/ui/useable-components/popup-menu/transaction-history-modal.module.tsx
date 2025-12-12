@@ -27,21 +27,25 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
       visible={visible}
       onHide={onHide}
       header={`Transaction Details #${transaction.transactionId}`}
-      className="w-full max-w-2xl"
+      className="w-full max-w-2xl dark:bg-dark-950 dark:border dark:border-dark-600 dark:text-white"
+      headerClassName='dark:bg-dark-950 dark:border dark:border-dark-600 dark:text-white'
+      contentClassName='dark:bg-dark-950 dark:border dark:border-dark-600 dark:text-white'
+      
+      
     >
       <div className="space-y-6 p-4">
         {/* Basic Transaction Info */}
-        <div className="rounded-lg bg-gray-50 p-4">
+        <div className="rounded-lg bg-gray-50 dark:bg-dark-900 p-4">
           <h3 className="mb-3 text-lg font-semibold">
             {t('Transaction Information')}
           </h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-gray-600">{t('Amount')}</p>
+              <p className="text-gray-600 dark:text-white">{t('Amount')}</p>
               <p className="font-medium">{`${transaction?.amountCurrency} ${transaction.amountTransferred.toFixed(2)}`}</p>
             </div>
             <div>
-              <p className="text-gray-600">{t('Status')}</p>
+              <p className="text-gray-600 dark:text-white">{t('Status')}</p>
               <span
                 className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium ${
                   transaction.status === 'COMPLETED'
@@ -55,13 +59,13 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
               </span>
             </div>
             <div>
-              <p className="text-gray-600">{t('Date')}</p>
+              <p className="text-gray-600 dark:text-white">{t('Date')}</p>
               <p className="font-medium">
                 {new Date(transaction?.createdAt).toLocaleDateString()}
               </p>
             </div>
             <div>
-              <p className="text-gray-600">{t('User Type')}</p>
+              <p className="text-gray-600 dark:text-white">{t('User Type')}</p>
               <p className="font-medium">{transaction?.userType}</p>
             </div>
           </div>
@@ -69,27 +73,27 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
 
         {/* Bank Transfer Details */}
         {transaction.toBank && (
-          <div className="rounded-lg bg-gray-50 p-4">
+          <div className="rounded-lg bg-gray-50 dark:bg-dark-900 p-4">
             <h3 className="mb-3 text-lg font-semibold">{t('Bank Details')}</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-gray-600">{t('Account Name')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Account Name')}</p>
                 <p className="font-medium">
                   {transaction?.toBank?.accountName}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Bank Name')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Bank Name')}</p>
                 <p className="font-medium">{transaction?.toBank?.bankName}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Account Number')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Account Number')}</p>
                 <p className="font-medium">
                   {transaction?.toBank?.accountNumber}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Account Code')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Account Code')}</p>
                 <p className="font-medium">
                   {transaction?.toBank?.accountCode}
                 </p>
@@ -100,19 +104,19 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
 
         {/* Rider Details */}
         {transaction.rider && (
-          <div className="rounded-lg bg-gray-50 p-4">
+          <div className="rounded-lg bg-gray-50 dark:bg-dark-900 p-4">
             <h3 className="mb-3 text-lg font-semibold">{t('Rider Details')}</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-gray-600">{t('Name')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Name')}</p>
                 <p className="font-medium">{transaction?.rider?.name}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Username')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Username')}</p>
                 <p className="font-medium">{transaction?.rider?.username}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Phone')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Phone')}</p>
                 <p className="font-medium">{transaction?.rider?.phone}</p>
               </div>
               {/* <div>
@@ -122,13 +126,13 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                 </p>
               </div> */}
               <div>
-                <p className="text-gray-600">{t('Current Wallet Amount')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Current Wallet Amount')}</p>
                 <p className="font-medium">
                   ${transaction?.rider?.currentWalletAmount.toFixed(2)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Total Earnings')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Total Earnings')}</p>
                 <p className="font-medium">
                   ${transaction?.rider?.totalWalletAmount.toFixed(2)}
                 </p>
@@ -139,21 +143,21 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
 
         {/* Store Details */}
         {transaction.store && (
-          <div className="rounded-lg bg-gray-50 p-4">
+          <div className="rounded-lg bg-gray-50 dark:bg-dark-900 p-4">
             <h3 className="mb-3 text-lg font-semibold">{t('Store Details')}</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-gray-600">{t('Store Name')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Store Name')}</p>
                 <p className="font-medium">{transaction?.store?.name}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Store ID')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Store ID')}</p>
                 <p className="font-medium">
                   {transaction?.store?.unique_restaurant_id}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Rating')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Rating')}</p>
                 <p className="font-medium">
                   <Rating
                     value={transaction?.store?.reviewAverage}
@@ -175,15 +179,15 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                 </p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Phone')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Phone')}</p>
                 <p className="font-medium">{transaction?.store?.phone}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Location')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Location')}</p>
                 <p className="font-medium">{transaction?.store?.address}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('Status')}</p>
+                <p className="text-gray-600 dark:text-white">{t('Status')}</p>
                 <div className="space-x-2">
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${

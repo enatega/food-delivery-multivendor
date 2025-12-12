@@ -160,6 +160,7 @@ export default function SubCategoriesAddForm({
       onHide={onHide}
       visible={isAddSubCategoriesVisible.bool}
       position="right"
+      className='dark:text-white dark:bg-dark-950 dark:border dark:border-dark-600'
     >
       <Formik
         initialValues={initialValues}
@@ -177,11 +178,11 @@ export default function SubCategoriesAddForm({
                     value.parentCategoryId =
                       isAddSubCategoriesVisible.parentCategoryId;
                     return (
-                      <div key={index} className=" rounded-lg shadow-sm">
+                      <div key={index} className=" rounded-lg shadow-sm ">
                         <Fieldset
                           legend={`${t('Sub-Category')} #${index + 1} ${value.title ? `(${value.title})` : ''}`}
                           toggleable
-                          className="my-1"
+                          className="my-1 dark:text-white dark:bg-dark-950"
                         >
                           {/* Sub-Category Field and Remove Button */}
                           <div className="flex-col justify-center items-center">
@@ -225,7 +226,7 @@ export default function SubCategoriesAddForm({
                                   parentCategoryId: '',
                                 })
                               }
-                              className="w-full flex justify-center items-center py-2 border border-dashed border-gray-400 rounded-md text-gray-600 hover:text-black hover:border-black transition-all"
+                              className="w-full flex justify-center items-center py-2 border border-dashed dark:border-dark-600 border-gray-400 rounded-md text-gray-600 dark:text-white hover:text-black  hover:border-black transition-all"
                             />
                           </div>
                         )}
@@ -240,7 +241,7 @@ export default function SubCategoriesAddForm({
             ) : (
               <CustomButton
                 label={t('Submit')}
-                className="h-10 w-fit border-gray-300 bg-black px-8 text-white block m-auto my-2"
+                className="h-10 w-fit border-gray-300 dark:border-dark-600 border bg-black px-8 text-white block m-auto my-2"
                 onClick={() => handleSubmit()}
                 type="submit"
               />

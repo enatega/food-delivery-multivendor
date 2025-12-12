@@ -139,7 +139,7 @@ const RestaurantTiming = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 rounded">
+    <div className="flex flex-col gap-2 rounded dark:text-white dark:bg-dark-950">
       <div className="mb-2 flex flex-col">
         <span className="text-lg">{t('Store Timing')}</span>
       </div>
@@ -184,7 +184,7 @@ const RestaurantTiming = ({
                             className="flex items-start gap-4"
                           >
                             <div className="flex flex-col gap-0 sm:flex-row sm:gap-4">
-                              <div className="max-w-4min-w-44 relative flex w-full min-w-44 flex-col">
+                              <div className="max-w-4min-w-44 relative flex w-full min-w-44 flex-col dark:text-white">
                                 <CustomTimeInput
                                   name={`${dayIndex}.times[${timeIndex}].startTime`}
                                   showLabel={false}
@@ -303,7 +303,7 @@ const RestaurantTiming = ({
             })}
 
             <CustomButton
-              className="mb-[2px] mr-auto mt-auto flex h-11 rounded-md border-gray-300 bg-[black] px-10 text-white"
+              className="mb-[2px] mr-auto mt-auto flex h-11 rounded-md border-gray-300 border dark:border-dark-600 bg-[black] px-10 text-white"
               label={t('Save')}
               rounded={false}
               disabled={loading}

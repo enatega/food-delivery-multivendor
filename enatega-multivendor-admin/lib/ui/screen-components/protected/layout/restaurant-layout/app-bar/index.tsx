@@ -70,6 +70,7 @@ import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
 import { useLocale, useTranslations } from 'next-intl';
 import { TLocale } from '@/lib/utils/types/locale';
 import { setUserLocale } from '@/lib/utils/methods/locale';
+import ThemeToggle from '@/lib/ui/useable-components/theme-button';
 
 const AppTopbar = () => {
   // Hooks
@@ -182,7 +183,7 @@ const AppTopbar = () => {
     }
   }, [restaurantData?.restaurant?.name]);
   return (
-    <div className={`${classes['layout-topbar']}`}>
+    <div className={`dark:bg-dark-950 dark:text-white  dark:border-dark-600 ${classes['layout-topbar']}`}>
       <div className="flex items-center cursor-pointer">
         <div id="sidebar-opening-icon">
           <button onClick={() => showRestaurantSidebar()}>
@@ -194,6 +195,9 @@ const AppTopbar = () => {
         </div>
       </div>
       <div className="hidden items-center space-x-1 md:flex">
+         <div className="flex items-center space-x-3">
+          <ThemeToggle />
+        </div>
         <div
           className="flex items-center space-x-2 rounded-md p-2 hover:bg-[#d8d8d837] cursor-pointer"
           onClick={(event) => languageMenuRef.current?.toggle(event)}
@@ -264,7 +268,7 @@ const AppTopbar = () => {
       </div>
       {isMenuOpen && (
         <div
-          className="absolute right-4 top-8 z-50 rounded-lg bg-white p-4 shadow-lg"
+          className="absolute right-4 top-8 z-50 rounded-lg bg-white dark:bg-dark-950 p-4 shadow-lg"
           ref={containerRef}
         >
           <div className="flex flex-col items-center space-y-4">

@@ -13,11 +13,11 @@ const CategoryHeader = ({ setIsAddCategoryVisible }: ICategoryHeaderProps) => {
   // Hooks
   const t = useTranslations();
   return (
-    <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white p-3 shadow-sm">
+    <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white dark:bg-dark-950 p-3 shadow-sm">
       <div className="flex w-full justify-between">
         <HeaderText text={t('Category')} />
         <TextIconClickable
-          className="rounded border-gray-300 bg-black text-white sm:w-auto"
+          className="rounded border dark:border-dark-600 border-gray-300 bg-black text-white sm:w-auto"
           icon={faAdd}
           iconStyles={{ color: 'white' }}
           title={t('Add Category')}

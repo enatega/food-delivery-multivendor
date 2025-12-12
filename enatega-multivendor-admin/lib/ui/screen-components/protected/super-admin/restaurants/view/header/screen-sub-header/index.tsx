@@ -20,7 +20,7 @@ export default function RestaurantsScreenSubHeader() {
   const { IS_MULTIVENDOR } = useConfiguration();
 
   return (
-    <div className="sticky top-0 z-10 w-full flex-shrink-0 bg-white p-3 shadow-sm">
+    <div className="sticky top-0 z-10 w-full flex-shrink-0 dark:bg-dark-950 bg-white p-3 shadow-sm">
       <div className="flex w-full justify-between">
         {IS_MULTIVENDOR && (
           <CustomTab

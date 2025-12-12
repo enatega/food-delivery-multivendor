@@ -57,7 +57,7 @@ const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
                     onClick={() => setIsExpanded(!isExpanded)}
                 />
                 {isExpanded && (
-                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <div className="bg-gray-50 dark:bg-dark-950 p-3 rounded-lg border border-gray-200">
                         <pre className="whitespace-pre-wrap text-xs font-mono">
                             {Object.entries(diffs).map(([key, value]) => (
                                 <div key={key} className="mb-2">
@@ -84,7 +84,7 @@ const ChangesDiff: React.FC<ChangesDiffProps> = ({ changes }) => {
                     onClick={() => setIsExpanded(!isExpanded)}
                 />
                 {isExpanded && (
-                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <div className="bg-gray-50 dark:bg-dark-950 p-3 rounded-lg border dark:border-dark-600 border-gray-200">
                         <pre className="whitespace-pre-wrap text-xs font-mono">
                             {renderValue(parsedChanges)}
                         </pre>

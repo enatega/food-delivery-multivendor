@@ -234,7 +234,7 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({
         text
         rounded
         aria-label="Actions"
-        className="p-2 rounded-md border hover:bg-muted/30 transition-all"
+        className="p-2 rounded-md border dark:border-dark-600 hover:bg-muted/30 transition-all"
         onClick={(event) => {
           // Toggle menu and update open state
           if (setOpenMenuId) {

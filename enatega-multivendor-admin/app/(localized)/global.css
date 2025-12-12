@@ -21,6 +21,9 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+  --dark-950: #030712;
+  --dark-900: #111827;
+  --dark-600: #4b5563;
 }
 
 html,
@@ -47,6 +50,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+    
 }
 
 /* Screen Container */
@@ -58,6 +62,16 @@ body {
   overflow-y: auto;
 }
 /* End Generation Here */
+.dark .screen-container {
+  background-color: var(--dark-950);
+  color: white;
+}
+
+.dark .stores-screen-container {
+  background-color: var(--dark-950);
+  color: white;
+}
+
 
 /* Layout */
 
@@ -75,7 +89,10 @@ body {
   display: flex;
   overflow: hidden;
 }
-
+.dark .layout-top-container {
+  border-bottom: 0.2px solid var(--dark-600);
+  background-color: var(--dark-900);
+}
 .layout-main {
   height: 100%;
 }
@@ -228,6 +245,95 @@ body {
   /* background-color: var(--secondary-color); */
 }
 
+/* === DARK THEME === */
+.dark .p-multiselect-panel {
+  background-color: var(--dark-950) !important; /* gray-900 */
+  border: 1px solid var(--dark-600) !important; /* gray-700 */
+  color: #f9fafb !important;
+}
+
+.dark .p-multiselect-panel .p-multiselect-items {
+  background-color: var(--dark-950) !important;
+}
+
+/* Items */
+.dark .p-multiselect-panel .p-multiselect-items .p-multiselect-item {
+  background-color: var(--dark-950) !important;
+  color: #f9fafb !important;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.dark .p-multiselect-panel .p-multiselect-items .p-multiselect-item:hover {
+  background-color: var(--dark-900) !important; /* gray-800 */
+}
+
+.dark
+  .p-multiselect-panel
+  .p-multiselect-items
+  .p-multiselect-item.p-highlight {
+  background-color: #374151 !important; /* gray-700 */
+  color: #f9fafb !important;
+}
+
+/* === Checkbox (Items & Select All) === */
+.dark .p-multiselect-item .p-checkbox-box,
+.dark .p-multiselect-header .p-checkbox-box {
+  background-color: var(--dark-900) !important; /* gray-800 */
+  border: 1px solid var(--dark-600) !important; /* gray-600 */
+  border-radius: 4px !important;
+  transition: all 0.15s ease;
+}
+
+.dark .p-multiselect-item .p-checkbox-box:hover,
+.dark .p-multiselect-header .p-checkbox-box:hover {
+  border-color: var(--primary-color) !important;
+}
+
+.dark .p-multiselect-item.p-highlight .p-checkbox-box,
+.dark .p-multiselect-select-all .p-highlight .p-checkbox-box,
+.dark .p-multiselect-header .p-checkbox-box.p-highlight {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+.dark .p-multiselect-item .p-checkbox-box svg,
+.dark .p-multiselect-header .p-checkbox-box svg {
+  fill: #ffffff !important;
+}
+
+/* === Header === */
+.dark .p-multiselect-header {
+  background-color: var(--dark-900) !important; /* gray-900 */
+  border-bottom: 1px solid var(--dark-600) !important;
+  padding: 0.5rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* === Header filter (dark) === */
+.dark .p-multiselect-filter-container {
+  background-color: var(--dark-950) !important;
+}
+
+.dark .p-multiselect-filter {
+  background-color: var(--dark-900) !important; /* gray-800 */
+  color: #f9fafb !important;
+  border: 1px solid var(--dark-600) !important;
+  border-radius: 0.375rem !important;
+  padding: 0.375rem 0.5rem !important;
+  width: 100% !important;
+}
+
+.dark .p-multiselect-filter:focus {
+  border-color: #3b82f6 !important; /* blue-500 */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4) !important;
+  outline: none !important;
+}
+
 .p-dropdown {
   box-shadow: none !important;
 }
@@ -318,8 +424,118 @@ body {
 }
 
 .p-datatable-table .p-checkbox.p-highlight .p-checkbox-box {
-  background-color: var(--primary-dark)!important;
+  background-color: var(--primary-dark) !important;
   border-color: var(--primary-dark) !important;
+}
+
+/* === DARK THEME === */
+.dark .p-datatable-table {
+  background-color: var(--dark-950) !important; /* 🌑 dark background */
+  color: #f9fafb !important; /* near-white text */
+  border: 1px solid var(--dark-600) !important; /* dark gray border */
+}
+
+.dark .p-datatable-table tbody {
+  border-color: var(--dark-600) !important;
+}
+
+.dark .p-datatable-table tbody tr {
+  border-bottom: 1px solid var(--dark-600) !important;
+  background-color: var(--dark-950) !important;
+  transition: background-color 0.15s ease;
+}
+
+.dark .p-datatable-table tbody tr:hover {
+  background-color: var(--dark-950) !important; /* slightly lighter on hover */
+}
+
+.dark .p-datatable-table tr.p-highlight {
+  background-color: rgba(90, 193, 47, 0.15) !important; /* soft green tint */
+  color: #5ac12f !important;
+}
+
+/* === Dark mode: dropdown input inside DataTable === */
+.dark .p-datatable .p-dropdown {
+  background-color: var(--dark-950) !important; /* dark table bg */
+  color: white !important; /* text color */
+  border-color: var(--dark-600) !important; /* subtle dark border */
+}
+
+/* === Dark Theme === */
+.dark .p-dropdown-panel {
+  background-color: var(--dark-950) !important; /* Tailwind gray-900 */
+  border-color: var(--dark-600) !important; /* Tailwind gray-700 */
+  color: #f9fafb !important;
+}
+
+.dark .p-datatable .p-dropdown .p-dropdown-label {
+  color: #f9fafb !important;
+}
+
+.dark .p-datatable .p-dropdown .p-dropdown-trigger {
+  background-color: transparent !important;
+  color: #f9fafb !important;
+}
+
+.dark .p-datatable .p-dropdown .p-dropdown-trigger-icon {
+  color: #f9fafb !important;
+}
+
+/* Checkbox styling */
+.dark .p-datatable-table .p-checkbox .p-checkbox-box {
+  background-color: var(--dark-950) !important;
+  border: 1px solid var(--dark-600) !important;
+  transition: all 0.15s ease;
+}
+
+.dark .p-datatable-table .p-checkbox .p-checkbox-box:hover {
+  border-color: var(--primary-dark) !important;
+}
+
+.dark .p-datatable-table .p-checkbox.p-highlight .p-checkbox-box {
+  background-color: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+.dark .p-datatable-table .p-checkbox .p-checkbox-box svg {
+  fill: #ffffff !important;
+}
+
+/* === Paginator === */
+.dark .p-paginator-bottom {
+  background-color: var(--dark-950) !important;
+  border: 1px solid var(--dark-600) !important;
+  color: #f9fafb !important;
+}
+
+.dark .p-paginator .p-paginator-pages .p-paginator-page {
+  background-color: var(--dark-950) !important;
+  color: #f9fafb !important;
+}
+
+.dark .p-paginator .p-paginator-pages .p-paginator-page:hover {
+  background-color: var(--dark-900) !important;
+}
+
+.dark .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: var(--primary-dark) !important;
+  color: #ffffff !important;
+  border-color: var(--primary-dark) !important;
+}
+
+/* === Scrollbar (optional) === */
+.dark .p-datatable-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark .p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--dark-600);
+  border-radius: 8px;
+}
+
+.dark .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: var(--dark-600);
 }
 
 .p-datatable-tbody tr td {
@@ -348,6 +564,41 @@ body {
   outline: none;
   box-shadow: none;
 }
+
+/* === Dark Theme: InputText only (not dropdowns) === */
+
+/* Applies to standalone text inputs, not dropdowns */
+.dark input.p-inputtext::placeholder,
+.dark textarea.p-inputtext::placeholder {
+  color: #f9fafb !important;
+  opacity: 0.7;
+}
+
+/* Optional: tweak background/text for dark mode inputs */
+.dark input.p-inputtext,
+.dark textarea.p-inputtext {
+  background-color: var(--dark-950) !important;
+  color: white !important;
+  border-color: #4b5563 !important;
+}
+
+/* When user selects text inside inputs or textareas */
+.dark input::selection,
+.dark textarea::selection,
+.dark .p-inputtext::selection {
+  background-color: #374151 !important; /* gray-700 */
+  color: #f9fafb !important; /* white text on selection */
+}
+
+/* For placeholder suggestions/autofill (Chrome, Safari) */
+.dark input:-webkit-autofill,
+.dark textarea:-webkit-autofill {
+  background-color: var(--dark-950) !important;
+  -webkit-box-shadow: 0 0 0px 1000px --dark-950 inset !important;
+  -webkit-text-fill-color: #f9fafb !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
 
 /* Password */
 .p-password > .p-icon-field {
@@ -420,6 +671,11 @@ body {
   color: black;
 }
 
+.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  color: white;
+}
+
+
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus {
   background: rgba(4, 4, 4, 0.24);
   color: black;
@@ -429,6 +685,69 @@ body {
   padding: 5px 1.5rem;
   font-size: 14px;
 }
+
+/* === Dark Theme === */
+.dark .p-dropdown-panel {
+  background-color: var(--dark-950) !important; /* Tailwind gray-900 */
+  border-color: var(--dark-600) !important; /* Tailwind gray-700 */
+  color: #f9fafb !important;
+}
+
+.dark .p-dropdown .p-dropdown-label {
+  color: #f9fafb !important;
+}
+
+.dark .p-dropdown-panel .p-dropdown-items {
+  background-color: var(--dark-950) !important;
+}
+
+/* Highlighted */
+.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: var(--dark-600) !important; /* Tailwind gray-700 */
+  color: white !important;
+}
+
+.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus {
+  background-color: var(--dark-600) !important; /* Tailwind gray-600 */
+  color: white !important;
+}
+
+/* Hover */
+.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+  background-color: var(--dark-600) !important; /* Tailwind gray-800 */
+  color: #f9fafb !important;
+}
+
+/* Prevent flicker between items */
+.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  background-color: var(--dark-950) !important;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* === DARK THEME SEARCH BAR === */
+.dark .p-dropdown-panel .p-dropdown-header {
+  background-color: var(--dark-950) !important; /* gray-900 */
+  border-bottom: 1px solid --dark-600 !important; /* gray-700 */
+  padding: 0.5rem !important;
+}
+
+.dark .p-dropdown-panel .p-dropdown-filter-container {
+  background-color: var(--dark-950) !important;
+}
+
+.dark .p-dropdown-panel .p-dropdown-filter {
+  background-color: var(--dark-900) !important; /* gray-800 */
+  color: #f9fafb !important;
+  border: 1px solid var(--dark-600) !important; /* gray-700 */
+  border-radius: 0.375rem !important;
+  padding: 0.375rem 0.5rem !important;
+  width: 100% !important;
+  transition: all 0.15s ease;
+}
+
+
 
 .p-dropdown-label {
   /* margin-top: -2px; */
@@ -441,11 +760,18 @@ body {
 .p-multiselect-label {
   margin-top: -2px;
 }
-
+.dark .p-multiselect-label {
+  color: white;
+}
 /* Stepper */
 .p-stepper-title {
   font-size: 12px;
 }
+
+.dark .p-stepper-title {
+  color: #d1d5db;
+}
+
 
 .p-stepper-number {
   font-size: 16px;
@@ -476,26 +802,55 @@ body {
   margin-top: 2px;
 }
 
+.dark .p-autocomplete-panel {
+  background-color: var(--dark-900);
+  color: white;
+}
+
+
 .p-autocomplete-item:hover {
   background-color: var(--secondary-color);
 }
 
+.dark .p-autocomplete-item:hover {
+  background-color: var(--secondary-color);
+  color: #000000;
+}
+.dark .p-autocomplete-item {
+  color: white;
+}
 .p-autocomplete-dropdown {
   background-color: white;
   height: 2.62rem;
   margin-top: 1px;
 }
 
+.dark .p-autocomplete-dropdown {
+  background-color: var(--dark-950);
+  border: 1px solid var(--dark-600);
+  color: white;
+}
+
+
 /* Fieldset */
 .p-fieldset {
   border: 1px dashed black;
   padding: 8px;
+}
+.dark .p-fieldset {
+  border: 1px dashed var(--dark-600);
 }
 
 .p-fieldset-legend {
   margin-left: 10px;
   height: fit-content;
   border: 1px dashed gray;
+}
+
+.dark .p-fieldset-legend {
+  border: 1px dashed var(--dark-600);
+  background-color: #374151;
+  color: white;
 }
 
 .p-fieldset-legend > a {
@@ -580,4 +935,346 @@ body {
 .react-international-phone-input-container
   .react-international-phone-country-selector-button {
   height: 40px;
+}
+
+
+.dark .p-dialog-footer {
+  background-color: var(--dark-950);
+}
+
+/* === DARK THEME FIX for PrimeReact Menu === */
+.dark .p-menu.p-component.p-menu-overlay {
+  background-color: var(--dark-900) !important; /* dark bg */
+  color: #f9fafb !important;
+  border: none !important;
+}
+
+.dark .p-menu.p-component.p-menu-overlay .p-menuitem-content {
+  background-color: var(--dark-900) !important;
+  color: #f9fafb !important;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.dark .p-menu.p-component.p-menu-overlay .p-menuitem-content:hover {
+  background-color: var(--dark-900) !important; /* gray-800 */
+  color: #ffffff !important;
+}
+
+.dark .p-menu.p-component.p-menu-overlay .p-menuitem-text,
+.dark .p-menu.p-component.p-menu-overlay .p-menuitem-icon {
+  color: #f9fafb !important;
+}
+
+.dark .p-fileupload-content {
+  background-color: transparent;
+  color: white;
+}
+
+/* === DARK THEME === */
+.dark .react-international-phone-input-container {
+  background-color: var(--dark-950); /* gray-900 */
+}
+
+/* Input field (dark) */
+.dark
+  .react-international-phone-input-container
+  input.react-international-phone-input {
+  background-color: var(--dark-950) !important;
+  color: #f9fafb !important;
+  width: 100%;
+  border-radius: 0 5px 5px 0; /* top-left top-right bottom-right bottom-left */
+  height: 40px;
+  border-color: var(--dark-600);
+}
+
+.dark
+  .react-international-phone-input-container
+  input.react-international-phone-input::placeholder {
+  color: #f9fafb !important;
+  opacity: 0.7;
+}
+
+/* Country dropdown button (dark) */
+.dark .react-international-phone-country-selector-button {
+  background-color: var(--dark-950) !important; /* gray-800 */
+  border-color: var(--dark-600);
+}
+
+.dark .react-international-phone-country-selector-button:hover {
+  background-color: #374151 !important; /* gray-700 */
+}
+
+/* Dropdown panel (dark) */
+.dark .react-international-phone-country-selector-dropdown {
+  background-color: var(--dark-950) !important;
+  border: 1px solid #374151 !important;
+  color: #f9fafb !important;
+}
+
+.dark .react-international-phone-country-selector-dropdown li:hover {
+  background-color: var(--dark-600) !important;
+}
+/* === Fix for Selected Country Highlight in Dark Mode === */
+.dark
+  .react-international-phone-country-selector-dropdown__list-item[aria-selected='true'],
+.dark .react-international-phone-country-selector-dropdown__list-item--active,
+.dark .react-international-phone-country-selector-dropdown__list-item:focus,
+.dark .react-international-phone-country-selector-dropdown__list-item:hover {
+  background-color: var(--dark-600) !important; /* dark gray hover */
+  color: #f9fafb !important;
+}
+
+/* Some versions inject inline white background on selected item */
+.dark .react-international-phone-country-selector-dropdown__list-item[style] {
+  background-color: var(--dark-900) !important;
+  color: #f9fafb !important;
+}
+
+/* === DARK THEME: PrimeReact Password Strength Panel === */
+.dark .p-password-panel {
+  background-color: var(--dark-950) !important; /* Tailwind gray-950 */
+  color: #f9fafb !important;
+  border: 1px solid var(--dark-600) !important; /* gray-700 */
+  box-shadow: 0 4px 8px var(--dark-600) !important;
+}
+
+/* Progress bar inside the strength panel */
+.dark .p-password-meter {
+  background-color: var(--dark-900) !important; /* gray-800 (meter background) */
+}
+
+.dark .p-password-strength.weak {
+  background-color: #ef4444 !important; /* red-500 */
+}
+
+.dark .p-password-strength.medium {
+  background-color: #f59e0b !important; /* amber-500 */
+}
+
+.dark .p-password-strength.strong {
+  background-color: #22c55e !important; /* green-500 */
+}
+
+/* Feedback text inside the panel */
+.dark .p-password-info {
+  color: #d1d5db !important; /* gray-300 */
+}
+
+/* === DARK THEME: Native Time Input === */
+.dark input[type='time'] {
+  background-color: var(--dark-950) !important; /* dark background */
+  color: #f9fafb !important; /* white text */
+  border: 1px solid var(--dark-600) !important; /* gray-700 border */
+  border-radius: 0.5rem !important; /* rounded-lg */
+}
+
+/* Placeholder color (for browsers that show it in time inputs) */
+.dark input[type='time']::placeholder {
+  color: var(--dark-600) !important; /* gray-400 */
+}
+
+/* Clock icon (Chrome/Safari) */
+.dark input[type='time']::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.2); /* makes icon white */
+  cursor: pointer;
+}
+
+/* Firefox fallback */
+.dark input[type='time']::-moz-focus-inner {
+  border: 0;
+}
+
+/* Focused state */
+.dark input[type='time']:focus {
+  outline: none !important;
+}
+
+/* === Dark theme for PrimeReact OverlayPanel === */
+.dark .p-overlaypanel {
+  background-color: var(--dark-950) !important; /* dark gray (gray-900) */
+  border: 1px solid var(--dark-600) !important; /* gray-700 border */
+  color: #f9fafb !important; /* white text */
+  box-shadow: 0 4px 16px var(--dark-600) !important;
+}
+
+/* OverlayPanel content */
+.dark .p-overlaypanel-content {
+  background-color: var(--dark-950) !important;
+  color: #f9fafb !important;
+}
+
+/* Border between sections */
+.dark .p-overlaypanel .border-b,
+.dark .p-overlaypanel .border-t {
+  border-color: var(--dark-600) !important; /* gray-700 borders */
+}
+
+/* Checkbox and labels inside */
+.dark .p-checkbox-box {
+  background-color: var(--dark-900) !important; /* gray-800 */
+  border: 1px solid var(--dark-600) !important; /* gray-600 */
+}
+
+.dark .p-checkbox .p-checkbox-icon {
+  color: #fff !important;
+}
+.dark .p-overlaypanel label {
+  color: #f3f4f6 !important; /* gray-100 text */
+}
+
+.dark .p-overlaypanel p:hover {
+  color: #ffffff !important; /* white on hover */
+}
+
+/* === PrimeReact Calendar Dark Theme === */
+
+/* Calendar input field */
+.dark .p-calendar {
+  background-color: var(--dark-950) !important;
+  border-color: var(--dark-600) !important;
+  color: white !important;
+}
+
+.dark .p-calendar .p-inputtext {
+  background-color: var(--dark-950) !important;
+  color: white !important;
+  border-color: var(--dark-600) !important;
+}
+
+.dark .p-calendar .p-inputtext::placeholder {
+  color: white !important; /* gray-400 */
+}
+
+/* Calendar overlay panel (the date picker popup) */
+.dark .p-datepicker {
+  background-color: var(--dark-950) !important; /* gray-900 */
+  border-color: var(--dark-600) !important;
+  color: #f9fafb !important;
+  box-shadow: 0 2px 12px var(--dark-600);
+}
+
+/* Month / Year navigation bar */
+.dark .p-datepicker-header {
+  background-color: var(--dark-900) !important; /* gray-800 */
+  border-color: var(--dark-600) !important;
+  color: #f9fafb !important;
+}
+
+.dark .p-datepicker-prev,
+.dark .p-datepicker-next {
+  color: #d1d5db !important;
+}
+
+.dark .p-datepicker-prev:hover,
+.dark .p-datepicker-next:hover {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* Calendar day cells */
+.dark .p-datepicker-calendar td {
+  background-color: var(--dark-950) !important;
+  color: #f9fafb !important;
+}
+
+.dark .p-datepicker-calendar td > span {
+  color: #f9fafb !important;
+}
+
+/* Hover on date */
+.dark .p-datepicker-calendar td span:hover {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* === Selected date & today === */
+
+/* === Selected & Today Styles for Dark Theme === */
+
+/* Selected date (stronger specificity to override light blue) */
+.dark .p-datepicker .p-datepicker-calendar td.p-highlight > span,
+.dark .p-datepicker .p-datepicker-calendar td > span.p-highlight {
+  background-color: #4b5563 !important; /* gray-600 */
+  color: #ffffff !important;
+
+  border: none !important;
+}
+
+/* Today (not selected) */
+.dark .p-datepicker .p-datepicker-calendar td.p-datepicker-today > span {
+  background-color: #22c55e !important; /* green-500 */
+  color: #ffffff !important;
+
+  border: none !important;
+}
+
+/* Today + selected (both) */
+.dark
+  .p-datepicker
+  .p-datepicker-calendar
+  td.p-datepicker-today.p-highlight
+  > span {
+  background-color: #16a34a !important; /* darker green */
+  color: #ffffff !important;
+
+  border: none !important;
+}
+
+/* Disabled dates */
+.dark .p-datepicker-calendar td.p-disabled > span {
+  color: #6b7280 !important; /* gray-500 */
+}
+
+/* Time picker inside calendar (if enabled) */
+.dark .p-timepicker {
+  background-color: var(--dark-950) !important;
+  border-top: 1px solid #374151 !important;
+}
+
+.dark .p-timepicker span {
+  color: #f9fafb !important;
+}
+
+.dark .p-timepicker span:hover {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* === Remove blue focus border on PrimeReact Calendar (dark mode only) === */
+.dark .p-calendar .p-inputtext:focus,
+.dark .p-calendar .p-inputtext.p-focus,
+.dark .p-calendar.p-focus .p-inputtext,
+.dark .p-calendar input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: var(--dark-600) !important; /* keep subtle border */
+}
+
+/* === PrimeReact DataView Dark Theme === */
+
+/* Individual grid items */
+.dark .p-dataview-grid > div {
+  background-color: #030712 !important;
+}
+
+/* === PrimeReact Skeleton Dark Theme === */
+.dark .p-skeleton {
+  background-color: #1f2937 !important; /* gray-800 base */
+  border-radius: 0.5rem !important; /* keep consistent rounded look */
+  position: relative;
+  overflow: hidden;
+}
+
+.p-paginator .p-dropdown {
+  @apply dark:bg-dark-900 dark:text-white;
+}
+
+.p-paginator .p-dropdown-panel {
+  @apply dark:bg-gray-900 dark:text-white dark:border dark:border-dark-600;
+}
+
+.p-paginator .p-dropdown-item {
+  @apply dark:text-white dark:hover:bg-gray-700 ;
 }

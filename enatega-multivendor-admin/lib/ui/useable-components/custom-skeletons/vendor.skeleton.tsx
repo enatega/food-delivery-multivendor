@@ -2,7 +2,7 @@ import { Skeleton } from 'primereact/skeleton';
 
 export default function CustomVendorSkeleton() {
   return (
-    <div className="flex items-center p-2 px-3">
+    <div className="flex items-center p-2 px-3 dark:bg-dark-950">
       <Skeleton shape="circle" size="40px" className="mr-3" />
       <div className="flex flex-1 flex-col gap-y-1">
         <Skeleton width="150px" className="mb-2" />

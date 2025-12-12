@@ -30,6 +30,7 @@ import {
   faFaceFrown,
   faGear,
 } from '@fortawesome/free-solid-svg-icons';
+import { useTheme } from 'next-themes';
 
 // UI Components
 import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
@@ -76,6 +77,7 @@ import {
   GET_WEB_NOTIFICATIONS,
   MARK_WEB_NOTIFICATIONS_AS_READ,
 } from '@/lib/api/graphql';
+import ThemeToggle from '@/lib/ui/useable-components/theme-button';
 
 const AppTopbar = () => {
   // States
@@ -90,6 +92,8 @@ const AppTopbar = () => {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const currentLocale = useLocale();
+  const { resolvedTheme } = useTheme();
+  const isDarkMode = resolvedTheme === 'dark';
 
   // Ref
   const containerRef = useRef<HTMLDivElement>(null);
@@ -222,7 +226,9 @@ const AppTopbar = () => {
   }));
 
   return (
-    <div className={`${classes['layout-topbar']}`}>
+    <div
+      className={` dark:bg-dark-950 dark:text-white  dark:border-dark-600 ${classes['layout-topbar']}`}
+    >
       <div className="flex items-center cursor-pointer">
         <div id="sidebar-opening-icon">
           <button onClick={() => showSuperAdminSidebar()}>
@@ -241,10 +247,10 @@ const AppTopbar = () => {
             className={
               pathname === '/zone'
                 ? 'rounded bg-primary-color text-white'
-                : 'bg-transparent hover:rounded hover:bg-secondary-color'
+                : 'bg-transparent hover:rounded hover:bg-secondary-color dark:hover:text-black '
             }
             iconStyles={{
-              color: pathname === '/zone' ? 'white' : 'gray',
+              color: pathname === '/zone' || isDarkMode ? 'white' : 'gray',
             }}
             onClick={() => onRedirectToPage('/zone')}
           />
@@ -256,16 +262,18 @@ const AppTopbar = () => {
             className={
               pathname === '/dispatch'
                 ? 'rounded bg-primary-color text-white'
-                : 'bg-transparent hover:rounded hover:bg-secondary-color'
+                : 'bg-transparent hover:rounded hover:bg-secondary-color dark:hover:text-black'
             }
-            iconStyles={{ color: pathname === '/dispatch' ? 'white' : 'gray' }}
+            iconStyles={{
+              color: pathname === '/dispatch' || isDarkMode ? 'white' : 'gray',
+            }}
             onClick={() => onRedirectToPage('/dispatch')}
           />
         )}
         <div className="relative z-50">
           <FontAwesomeIcon
             icon={faBell}
-            className="cursor-pointer text-gray-600 hover:text-black"
+            className="cursor-pointer text-gray-600 dark:text-white hover:text-black"
             onClick={toggleDropdown}
             title="Notifications" // 👈 native tooltip added here
           />
@@ -279,10 +287,10 @@ const AppTopbar = () => {
           {isNtfnOpen && (
             <div
               ref={ntfnDropdownRef}
-              className="absolute flex select-none flex-col pb-2 top-5 right-0 mt-2 w-72 bg-white shadow-xl rounded-md border"
+              className="absolute flex select-none flex-col pb-2 top-5 right-0 mt-2 w-72 bg-white dark:bg-dark-950 shadow-xl rounded-md border dark:border-dark-600 dark:text-white"
             >
               <p className="select-none text-center font-medium p-2 shadow-sm">
-                {t("Notifications")}
+                {t('Notifications')}
               </p>
 
               <ul className="flex flex-col gap-1 pt-2 overflow-y-auto max-h-[368px]">
@@ -295,7 +303,7 @@ const AppTopbar = () => {
                   ))
                 ) : notifications.length === 0 ? (
                   <div className="flex p-2 gap-2 justify-center items-center">
-                    <li className="text-center text-gray-500">
+                    <li className="text-center text-gray-500 ">
                       No notifications yet
                     </li>
                     <FontAwesomeIcon
@@ -312,8 +320,8 @@ const AppTopbar = () => {
                       key={index}
                       className={`p-2 mx-3 rounded-md text-sm cursor-pointer ${
                         notification.read
-                          ? 'text-black'
-                          : 'text-[#484848] bg-secondary-color'
+                          ? 'text-black dark:text-white'
+                          : 'text-[#484848] dark:text-white bg-secondary-color'
                       } hover:bg-gray-300`}
                       href={`${notification.navigateTo}`}
                       onClick={() => {
@@ -322,7 +330,7 @@ const AppTopbar = () => {
                       }}
                     >
                       <p>{notification.body}</p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-gray-400 ">
                         {timeAgo(+notification.createdAt)}
                       </p>
                     </Link>
@@ -334,6 +342,9 @@ const AppTopbar = () => {
         </div>
 
         <div className="hidden items-center space-x-3 md:flex">
+          <div className="flex items-center space-x-3">
+            <ThemeToggle />
+          </div>
           <div
             className="flex items-center space-x-2 rounded-md p-2 hover:bg-[#d8d8d837] cursor-pointer"
             onClick={(event) => languageMenuRef.current?.toggle(event)}
@@ -349,6 +360,7 @@ const AppTopbar = () => {
               ref={languageMenuRef}
               id="popup_menu_right"
               popupAlignment="right"
+              className="dark:bg-dark-950 dark:border-dark-600 dark:text-white"
             />
           </div>
 
@@ -392,6 +404,7 @@ const AppTopbar = () => {
               ref={menuRef}
               id="popup_menu_right"
               popupAlignment="right"
+              className="dark:bg-dark-950 dark:border-dark-600 dark:text-white"
             />
           </div>
         </div>
@@ -417,6 +430,7 @@ const AppTopbar = () => {
         [&_.p-menu-list]:overflow-y-auto
         [&_.p-menu-list]:scrollbar-thin
         shadow-lg
+        dark:bg-dark-950 dark:border-dark-600 dark:text-white
       "
           />
         </div>
@@ -428,7 +442,7 @@ const AppTopbar = () => {
 
       {isMenuOpen && (
         <div
-          className="absolute right-4 top-8 z-50 rounded-lg bg-white p-4 shadow-lg"
+          className="absolute right-4 top-8 z-50 rounded-lg bg-white dark:bg-dark-950 p-4 shadow-lg dark:border dark:border-dark-600 dark:text-white"
           ref={containerRef}
         >
           <div className="flex flex-col items-center space-y-4">
@@ -443,6 +457,9 @@ const AppTopbar = () => {
               <TextIconClickable
                 className="justify-between"
                 icon={faMap}
+                iconStyles={{
+                  color: pathname === '/zone' || isDarkMode ? 'white' : 'gray',
+                }}
                 onClick={() => onRedirectToPage('/zone')}
               />
             )}
@@ -450,6 +467,10 @@ const AppTopbar = () => {
               <TextIconClickable
                 className="justify-between"
                 icon={faTruck}
+                iconStyles={{
+                  color:
+                    pathname === '/dispatch' || isDarkMode ? 'white' : 'gray',
+                }}
                 onClick={() => onRedirectToPage('/dispatch')}
               />
             )}
