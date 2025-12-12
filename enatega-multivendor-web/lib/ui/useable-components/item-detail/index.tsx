@@ -17,16 +17,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
 export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
   const { foodItem, addons, options, onClose, restaurant, isRecommendedProduct } = props;
   const { CURRENCY_SYMBOL } = useConfig();
   const { id, slug }: { id: string; slug: string } = useParams();
+  const locale = useLocale();
 
-  // get the RTL direction
-  const direction = document.documentElement.getAttribute('dir') || 'ltr';
+  // Map locale to direction - same logic as DirectionHandler.tsx (SSR-safe)
+  const isRTL = ["ar", "he", "fa", "ur"].includes(locale);
+  const direction = isRTL ? "rtl" : "ltr";
 
   // Access user context for cart functionality
   const {
@@ -315,7 +317,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
         />
       </div>
 
-      <div className="py-3 px-6 mb-4">
+      <div className="py-3 px-6 mb-4" dir={direction}>
         <h2 className="font-inter font-bold text-[#111827] dark:text-white text-[16px] md:text-[18px] lg:text-[19px] leading-[22px] md:leading-[24px]">
           {foodItem?.title}
         </h2>

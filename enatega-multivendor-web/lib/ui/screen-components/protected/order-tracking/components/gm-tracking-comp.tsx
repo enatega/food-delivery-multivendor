@@ -54,6 +54,10 @@ function GoogleMapTrackingComponent({
   const [needsRiderDirections, setNeedsRiderDirections] = useState(false);
   const prevOrderStatusRef = useRef<string>(orderStatus);
 
+  // Debounce interval for rider directions requests (in milliseconds)
+  const DIRECTIONS_DEBOUNCE_INTERVAL = 30000; // 30 seconds
+  const lastDirectionsRequestTimeRef = useRef<number>(0);
+
   // Determine which markers to show based on order status
   const showRestaurantMarker = ["PENDING", "ACCEPTED", "ASSIGNED"].includes(
     orderStatus
@@ -68,16 +72,23 @@ function GoogleMapTrackingComponent({
       // Order just changed to PICKED, reset directions to trigger new route calculation
       setRiderDirections(null);
       setNeedsRiderDirections(true);
+      lastDirectionsRequestTimeRef.current = Date.now(); // Reset debounce timer
     }
     prevOrderStatusRef.current = orderStatus;
   }, [orderStatus]);
 
-  // Callback for when rider location updates
+  // Callback for when rider location updates (with time-based debouncing)
   const onRiderLocationUpdate = useCallback((location: { lat: number; lng: number }) => {
     setRiderLocation(location);
-    // When rider location updates during PICKED status, request new directions
+    // When rider location updates during PICKED status, request new directions only if debounce interval has passed
     if (orderStatus === "PICKED") {
-      setNeedsRiderDirections(true);
+      const now = Date.now();
+      const timeSinceLastRequest = now - lastDirectionsRequestTimeRef.current;
+
+      if (timeSinceLastRequest >= DIRECTIONS_DEBOUNCE_INTERVAL) {
+        setNeedsRiderDirections(true);
+        lastDirectionsRequestTimeRef.current = now;
+      }
     }
   }, [orderStatus]);
 

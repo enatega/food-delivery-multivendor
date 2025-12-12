@@ -221,7 +221,6 @@ export default function OrderTrackingScreen({
     onInitDirectionCacheSet();
   }, [store_user_location_cache_key]);
 
-  console.log("data ", mergedOrderDetails)
   return (
     <>
       {showConfetti && (

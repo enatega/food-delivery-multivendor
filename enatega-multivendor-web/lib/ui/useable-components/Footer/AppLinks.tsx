@@ -29,11 +29,7 @@ const AppLinks = () => {
   }, []);
 
   const logoClickHandler = () => {
-    if (isLogin) {
-      router.push("/");
-    } else {
-      router.push("/");
-    }
+    router.push("/");
   };
 
   return (

@@ -361,8 +361,8 @@ export default function CategoryAddForm({
                                           </Fieldset>
                                           {/* Add More Button */}
                                           {index ===
-                                            (values.subCategories.length - 1 &&
-                                              !category) && (
+                                            values.subCategories.length - 1 &&
+                                            !category && (
                                               <div className="mt-4">
                                                 <TextIconClickable
                                                   icon={faAdd}

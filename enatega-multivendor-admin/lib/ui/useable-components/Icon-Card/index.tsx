@@ -41,15 +41,15 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
           <div className="text-xs text-gray-400 dark:text-white">Order ID: {orderId}</div>
           <div className="text-xs text-gray-400 dark:text-white">Date: {createdAt}</div>
         </div>
-        <div className="basis[30%] flex items-center flex-wrap gap-4 justify-center sm:justify-end mt-4 md:mt-0">
+        <div className="basis-[30%] flex items-center flex-wrap gap-4 justify-center sm:justify-end mt-4 md:mt-0">
           <div className="flex items-center">
             <Rating value={rating} readOnly cancel={false} />
           </div>
           <button
             onClick={handleReviewClick}
             className={`flex items-center border dark:border-dark-600 px-2 py-1 rounded ${reviewContent
-                ? 'hover:bg-gray-100'
-                : 'opacity-50 cursor-not-allowed'
+              ? 'hover:bg-gray-100'
+              : 'opacity-50 cursor-not-allowed'
               }`}
             disabled={!reviewContent}
           >
