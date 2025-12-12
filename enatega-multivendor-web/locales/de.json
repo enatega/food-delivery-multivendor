@@ -9,5 +9,6 @@
   "active_orders_message": "Sie haben derzeit {{count}} aktive {{orderText}}. Sie können Ihr Konto erst löschen, wenn alle Ihre Bestellungen abgeschlossen sind.",
   "order": "Bestellung",
   "orders": "Bestellungen",
+  "shop-types": "Ladenarten",
   "ok": "OK"
 }
