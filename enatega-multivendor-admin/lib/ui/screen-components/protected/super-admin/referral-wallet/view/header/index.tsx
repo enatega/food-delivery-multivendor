@@ -54,12 +54,12 @@ export default function ReferralWalletHeader({
   return (
     <div className="mb-6 flex flex-col gap-5">
       <div className="flex items-center justify-between ">
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-2xl font-bold dark:text-white">
           {t('Referral Points Management')}
         </h1>
         <button
           onClick={handleAdjustPointsClick}
-          className="h-10 rounded-md bg-black px-6 text-white hover:bg-gray-800"
+          className="h-10 rounded-md bg-black dark:bg-primary-color px-6 text-white hover:bg-gray-800 dark:hover:bg-primary-dark"
         >
           {t('Adjust Points')}
         </button>

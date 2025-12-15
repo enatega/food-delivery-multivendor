@@ -173,15 +173,18 @@ export default function FoodDetails() {
             <div className="space-y-3">
               <div className="space-y-3">
                 <div>
-                  <label htmlFor="category" className="text-sm font-[500]">
-                    {t('Category')}
+                  <label
+                    htmlFor="category"
+                    className="text-sm font-[500] dark:text-gray-300"
+                  >
+                    {t('Category')} <span className="text-red-500">*</span>
                   </label>
                   <Dropdown
                     name="category"
                     value={values.category}
                     placeholder={t('Select Category')}
-                    className="md:w-20rem p-dropdown-no-box-shadow m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none"
-                    panelClassName="border-gray-200 border-2"
+                    className="md:w-20rem p-dropdown-no-box-shadow m-0 h-10 w-full border border-gray-300 dark:border-dark-600 dark:bg-dark-900 dark:text-white p-0 align-middle text-sm focus:shadow-none focus:outline-none"
+                    panelClassName="border-gray-200 dark:border-dark-600 border-2 dark:bg-dark-900"
                     onChange={(e: DropdownChangeEvent) => {
                       handleChange(e);
                       setCategoryDropDown(e.value);
@@ -190,11 +193,11 @@ export default function FoodDetails() {
                     loading={categoriesLoading}
                     panelFooterTemplate={() => {
                       return (
-                        <div className="flex justify-between space-x-2">
+                        <div className="flex justify-between space-x-2 dark:bg-dark-900">
                           <TextIconClickable
-                            className="w-full h-fit rounded  text-black"
+                            className="w-full h-fit rounded text-black dark:text-white"
                             icon={faAdd}
-                            iconStyles={{ color: 'black' }}
+                            iconStyles={{ color: 'currentColor' }}
                             title={t('Add New Category')}
                             onClick={() => setIsAddCategoryVisible(true)}
                           />
@@ -264,6 +267,7 @@ export default function FoodDetails() {
                     value={values.title}
                     onChange={handleChange}
                     showLabel={true}
+                    isRequired={true}
                     style={{
                       borderColor: onErrorMessageMatcher(
                         'title',
@@ -374,7 +378,7 @@ export default function FoodDetails() {
                         ? 'red'
                         : '',
                     }}
-                  />
+                  />{' '}
                 </div>
 
                 <div>
@@ -392,6 +396,7 @@ export default function FoodDetails() {
                     showExistingImage={
                       foodContextData?.isEditing ? true : false
                     }
+                    isRequired={true}
                     style={{
                       borderColor: onErrorMessageMatcher(
                         'image',

@@ -34,7 +34,9 @@ export interface IFoodProvider extends IProvider {}
 export interface IFoodHeaderProps extends IGlobalComponentProps {
   setIsAddFoodVisible: (visible: boolean) => void;
 }
-export interface IFoodTableHeaderProps extends IGlobalTableHeaderProps {}
+export interface IFoodTableHeaderProps extends IGlobalTableHeaderProps {
+  onClearFilter?: () => void;
+}
 
 export interface IFoodAddFormComponentProps extends IGlobalComponentProps {
   position?: TSideBarFormPosition;
@@ -123,4 +125,73 @@ export interface IRestaurant {
 
 export interface IFoodByRestaurantResponse {
   restaurant: IRestaurant;
+}
+
+// Paginated Food API Interfaces
+export interface IFoodDealType {
+  id: string;
+  name: string;
+  type: string;
+  value: number;
+  startDate: number; // Unix timestamp in milliseconds
+  endDate: number; // Unix timestamp in milliseconds
+  isActive: boolean;
+}
+
+export interface IFoodAddon {
+  title: string;
+  description?: string;
+  isActive?: boolean;
+}
+
+export interface IFoodVariation {
+  id: string;
+  title: string;
+  price: number;
+  outofstock?: boolean;
+  deal?: IFoodDealType | null;
+  addons?: IFoodAddon[];
+}
+
+export interface IOrderQuantity {
+  min?: number;
+  max?: number;
+}
+
+export interface IFoodCategoryInfo {
+  id: string;
+  title: string;
+  subCategory?: string;
+}
+
+export interface IFoodItem {
+  id: string;
+  title: string;
+  image: string;
+  isActive?: boolean;
+  UOM?: string;
+  inventory?: number;
+  isOutOfStock?: boolean;
+  orderQuantity?: IOrderQuantity;
+  variations: IFoodVariation[];
+  deal: IFoodDealType | null;
+  subCategory?: string;
+}
+
+export interface IFoodWithCategory {
+  category: IFoodCategoryInfo;
+  food: IFoodItem;
+}
+
+export interface IFoodPaginationResponse {
+  page: number;
+  limit: number;
+  hasnext: boolean;
+  hasprev: boolean;
+  totalFoods: number;
+  foods: IFoodWithCategory[];
+}
+
+export interface IGetAllFoodsPaginatedResponse {
+  getAllfoodsPaginated: IFoodPaginationResponse;
 }

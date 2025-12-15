@@ -70,29 +70,29 @@ export const SubscriptionCard = ({
   ];
 
   return (
-    <div className="relative rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md h-full flex flex-col">
+    <div className="relative rounded-lg border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-950 shadow-sm transition-shadow hover:shadow-md h-full flex flex-col">
       {/* Menu */}
       <div className="absolute right-4 top-4">
         <Menu model={getMenuItems()} popup ref={menu} />
         <button
           onClick={(e) => menu.current?.toggle(e)}
-          className="rounded p-2 hover:bg-gray-100"
+          className="rounded p-2 hover:bg-gray-100 dark:hover:bg-dark-900"
         >
           <FontAwesomeIcon
             icon={faEllipsisV}
-            className="h-4 w-4 text-gray-600"
+            className="h-4 w-4 text-gray-600 dark:text-gray-400"
           />
         </button>
       </div>
 
       {/* Plan Header */}
-      <div className="mb-4 rounded-t-lg bg-gray-100 p-4">
+      <div className="mb-4 rounded-t-lg bg-gray-100 dark:bg-dark-900 p-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-md font-semibold text-gray-900 capitalize">
+          <h3 className="text-md font-semibold text-gray-900 dark:text-white capitalize">
             {formattedInterval}
           </h3>
           {savingsPercent > 0 && (
-            <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
+            <span className="rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-1 text-xs font-semibold text-green-800 dark:text-green-300">
               {t('Save')} {savingsPercent}%
             </span>
           )}
@@ -102,10 +102,10 @@ export const SubscriptionCard = ({
       {/* Pricing */}
       <div className="mb-4 p-4 pt-0">
         <div className="flex items-baseline">
-          <span className="text-3xl font-bold text-gray-900">
+          <span className="text-3xl font-bold text-gray-900 dark:text-white">
             €{plan.amount.toFixed(2)}
           </span>
-          <span className="ml-2 text-gray-600 capitalize">
+          <span className="ml-2 text-gray-600 dark:text-gray-400 capitalize">
             / {formattedSuffix}
           </span>
         </div>
@@ -117,9 +117,9 @@ export const SubscriptionCard = ({
           <div className="flex items-center gap-2">
             <FontAwesomeIcon
               icon={faTrophy}
-              className="h-4 w-4 text-gray-700"
+              className="h-4 w-4 text-gray-700 dark:text-gray-400"
             />
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-gray-700 dark:text-gray-300">
               {t('Unlimited €1 Deliveries')}
             </span>
           </div>

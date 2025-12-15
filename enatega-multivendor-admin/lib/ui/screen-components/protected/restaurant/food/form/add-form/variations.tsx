@@ -45,6 +45,7 @@ import {
   faTimes,
   faTag,
   faTrash,
+  faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Apollo
@@ -180,6 +181,15 @@ export default function VariationAddForm() {
                               <Fieldset
                                 legend={`${t('Variation')} ${index + 1} ${value.title ? `(${value.title})` : ''}`}
                                 toggleable
+                                className="dark:bg-dark-900 dark:border-dark-600"
+                                pt={{
+                                  legend: {
+                                    className:
+                                      'dark:bg-dark-900 dark:text-white',
+                                  },
+                                  content: { className: 'dark:bg-dark-900' },
+                                  togglerIcon: { className: 'dark:text-white' },
+                                }}
                               >
                                 <div className="grid grid-cols-12 gap-4">
                                   <div className="col-span-12 sm:col-span-12">
@@ -196,6 +206,7 @@ export default function VariationAddForm() {
                                         )
                                       }
                                       showLabel={true}
+                                      isRequired={true}
                                       style={{
                                         borderColor: onErrorMessageMatcher(
                                           'title',
@@ -230,7 +241,7 @@ export default function VariationAddForm() {
                                       }}
                                     />
                                     {value.discounted > 0 && (
-                                      <div className="absolute bottom-[-15px] left-[2px] font-semibold text-[10px] flex gap-2">
+                                      <div className="absolute bottom-[-15px] left-[2px] font-semibold text-[10px] flex gap-2 dark:text-gray-300">
                                         <p>
                                           {t('Actual Price')}&nbsp;: &nbsp;
                                           <span className="line-through">
@@ -300,36 +311,70 @@ export default function VariationAddForm() {
                                       {/* Deal Section */}
                                       <div className="flex-1">
                                         {value.deal ? (
-                                          <div className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md max-w-fit">
-                                            <div className="flex flex-col">
-                                              <span className="text-sm font-semibold text-green-800 flex items-center gap-1">
+                                          <div className="flex items-center justify-between gap-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700/50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                                            <div className="flex items-center gap-3 flex-1">
+                                              <div className="flex items-center justify-center w-10 h-10 bg-green-100 dark:bg-green-800/30 rounded-full">
                                                 <FontAwesomeIcon
                                                   icon={faTag}
-                                                  className="text-xs"
+                                                  className="text-green-600 dark:text-green-400"
                                                 />
-                                                {value.deal.dealName}
-                                              </span>
-                                              <span className="text-xs text-green-600">
-                                                {value.deal.discountType ===
-                                                'PERCENTAGE'
-                                                  ? `${value.deal.discountValue}% Off`
-                                                  : `€${value.deal.discountValue} Off`}
-                                              </span>
+                                              </div>
+                                              <div className="flex flex-col gap-0.5">
+                                                <span className="text-sm font-bold text-green-900 dark:text-green-300">
+                                                  {value.deal.dealName}
+                                                </span>
+                                                <div className="flex items-center gap-2">
+                                                  <span className="text-xs font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-800/40 px-2 py-0.5 rounded-full">
+                                                    {value.deal.discountType ===
+                                                    'PERCENTAGE'
+                                                      ? `${value.deal.discountValue}% OFF`
+                                                      : `€${value.deal.discountValue} OFF`}
+                                                  </span>
+                                                  {value.deal.isActive ? (
+                                                    <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                                                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                                      {t('Active')}
+                                                    </span>
+                                                  ) : (
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                      {t('Inactive')}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                              </div>
                                             </div>
-                                            <button
-                                              type="button"
-                                              onClick={() =>
-                                                onDeleteDeal(index)
-                                              }
-                                              className="text-red-500 hover:text-red-700 ml-2"
-                                              title={t('Remove Deal')}
-                                            >
-                                              <FontAwesomeIcon icon={faTrash} />
-                                            </button>
+                                            <div className="flex gap-2">
+                                              <button
+                                                type="button"
+                                                onClick={() =>
+                                                  onAddDealClick(index)
+                                                }
+                                                className="flex items-center justify-center w-8 h-8 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-colors duration-150"
+                                                title={t('Edit Deal')}
+                                              >
+                                                <FontAwesomeIcon
+                                                  icon={faEdit}
+                                                  className="text-sm"
+                                                />
+                                              </button>
+                                              <button
+                                                type="button"
+                                                onClick={() =>
+                                                  onDeleteDeal(index)
+                                                }
+                                                className="flex items-center justify-center w-8 h-8 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-md transition-colors duration-150"
+                                                title={t('Remove Deal')}
+                                              >
+                                                <FontAwesomeIcon
+                                                  icon={faTrash}
+                                                  className="text-sm"
+                                                />
+                                              </button>
+                                            </div>
                                           </div>
                                         ) : (
                                           <TextIconClickable
-                                            className="h-8 w-fit rounded border border-gray-300 bg-black text-white px-3 text-xs"
+                                            className="h-8 w-fit rounded border border-gray-300 dark:border-dark-600 bg-black dark:bg-primary-color text-white px-3 text-xs hover:bg-gray-800 dark:hover:bg-primary-dark"
                                             title={t('Add Deal')}
                                             onClick={() =>
                                               onAddDealClick(index)
@@ -361,9 +406,9 @@ export default function VariationAddForm() {
                       })}
                     <div className="mt-4 flex justify-end">
                       <TextIconClickable
-                        className="w-full rounded border border-black bg-transparent text-black"
+                        className="w-full rounded border border-black dark:border-dark-600 bg-transparent dark:bg-dark-900 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-dark-800"
                         icon={faAdd}
-                        iconStyles={{ color: 'black' }}
+                        iconStyles={{ color: 'currentColor' }}
                         title={t('Add New Variation')}
                         onClick={() => push(initialFormValuesTemplate)}
                       />

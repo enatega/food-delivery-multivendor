@@ -32,6 +32,8 @@ import {
   EDIT_FOOD,
   GET_FOODS_BY_RESTAURANT_ID,
   CREATE_FOOD_SINGLE_VENDOR,
+  UPDATE_FOOD_SINGLE_VENDOR,
+  GET_ALL_FOODS_PAGINATED,
 } from '@/lib/api/graphql';
 import {
   CREATE_FOOD_DEAL,
@@ -61,22 +63,47 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
 
   // Mutations
   const [createFood, { loading: createFoodLoading }] = useMutation(
-    foodContextData?.isEditing ? EDIT_FOOD : CREATE_FOOD_SINGLE_VENDOR,
+    CREATE_FOOD_SINGLE_VENDOR,
     {
       refetchQueries: [
         {
           query: GET_FOODS_BY_RESTAURANT_ID,
           variables: { id: restaurantId },
         },
+        {
+          query: GET_ALL_FOODS_PAGINATED,
+          variables: {
+            restaurantId,
+            page: 1, // Reset to page 1 after creating new food
+            limit: 10,
+          },
+        },
       ],
     }
   );
 
-  const [createFoodDeal] = useMutation(CREATE_FOOD_DEAL);
-  const [updateFoodDeal] = useMutation(UPDATE_FOOD_DEAL);
+  const [updateFood, { loading: updateFoodLoading }] = useMutation(
+    UPDATE_FOOD_SINGLE_VENDOR,
+    {
+      refetchQueries: [
+        {
+          query: GET_FOODS_BY_RESTAURANT_ID,
+          variables: { id: restaurantId },
+        },
+        {
+          query: GET_ALL_FOODS_PAGINATED,
+          variables: {
+            restaurantId,
+            page: 1, // Reset to page 1 after updating food
+            limit: 10,
+          },
+        },
+      ],
+    }
+  );
 
   const onSidebarHideHandler = () => {
-    if (!createFoodLoading) {
+    if (!createFoodLoading && !updateFoodLoading) {
       onClearFoodData();
     }
   };
@@ -121,113 +148,97 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
   // Validation Schema
   const CombinedSchema = Yup.object().shape({
     ...FoodSchema.fields,
-    variations: Yup.array().of(VariationSchema),
+    variations: Yup.array()
+      .of(VariationSchema)
+      .min(1, 'At least one variation is required')
+      .required('Required'),
   });
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     setSubmitting(true);
     try {
       if (foodContextData?.isEditing) {
-        // For editing, use the old EDIT_FOOD mutation
-        const _variations = values.variations.map(
-          ({ discounted, deal, ...item }: any) => {
-            delete item.__typename;
-            return {
-              ...item,
-              discounted: discounted,
-              addons: item?.addons?.map((addon: any) => addon.code || addon),
+        // For editing, use UPDATE_FOOD_SINGLE_VENDOR
+        const _variations = values.variations.map((item: any) => {
+          const variation: any = {
+            id: item._id,
+            title: item.title,
+            price: Number(item.price),
+            discounted: item.discounted ? Number(item.discounted) : undefined,
+            addons:
+              item?.addons?.map((addon: any) => addon.code || addon) || [],
+            isOutOfStock: item.isOutOfStock || false,
+          };
+
+          // Add deal if present
+          if (item.deal) {
+            variation.deal = {
+              title: item.deal.dealName,
+              discountType: item.deal.discountType,
+              startDate: item.deal.startDate.toISOString(),
+              endDate: item.deal.endDate.toISOString(),
+              discountValue: Number(item.deal.discountValue),
+              isActive: item.deal.isActive,
             };
           }
-        );
+
+          return variation;
+        });
 
         const foodInput = {
-          _id: foodContextData?.food?._id || '',
           restaurant: restaurantId,
-          title: values.title,
-          description: values.description,
-          image: values.image,
           category: values.category?.code || values.category,
-          subCategory: values.subCategory?.code || values.subCategory,
-          isOutOfStock: false,
-          isActive: true,
+
+          food: {
+            title: values.title,
+            description: values.description || undefined,
+            subCategory:
+              values.subCategory?.code || values.subCategory || undefined,
+            image: values.image || undefined,
+            isActive: true,
+            isOutOfStock: false,
+            inventory: values.inventory ? Number(values.inventory) : undefined,
+            UOM: values.uom || undefined,
+            orderQuantity: {
+              min: values.minQuantity ? Number(values.minQuantity) : 0,
+              max: values.maxQuantity ? Number(values.maxQuantity) : 0,
+            },
+          },
           variations: _variations,
-          inventory: values.inventory ? Number(values.inventory) : undefined,
-          uom: values.uom,
-          minQuantity: values.minQuantity
-            ? Number(values.minQuantity)
-            : undefined,
-          maxQuantity: values.maxQuantity
-            ? Number(values.maxQuantity)
-            : undefined,
         };
 
-        const foodResult = await createFood({
+        await updateFood({
           variables: {
+            foodId: foodContextData?.food?._id || '',
             foodInput,
           },
         });
-
-        const editedFood = foodResult.data.editFood;
-        const foodId = editedFood._id;
-        const createdVariations = editedFood.variations;
-
-        // Handle deals for editing
-        const dealPromises = values.variations.map(
-          async (variation: any, index: number) => {
-            if (variation.deal) {
-              const variationId = createdVariations[index]?._id;
-              if (!variationId) return;
-
-              const baseDealInput = {
-                title: variation.deal.dealName,
-                discountType: variation.deal.discountType,
-                food: foodId,
-                discountValue: variation.deal.discountValue,
-                variation: variationId,
-                restaurant: restaurantId,
-                startDate: variation.deal.startDate.toISOString(),
-                endDate: variation.deal.endDate.toISOString(),
-                isActive: variation.deal.isActive,
-              };
-
-              await createFoodDeal({
-                variables: {
-                  input: baseDealInput,
-                },
-              });
-            }
-          }
-        );
-
-        await Promise.all(dealPromises);
       } else {
         // For creating new food, use CREATE_FOOD_SINGLE_VENDOR
-        const _variations = values.variations.map(
-          ({ discounted, deal, ...item }: any) => {
-            delete item.__typename;
-            return {
-              title: item.title,
-              price: Number(item.price),
-              discounted: discounted ? Number(discounted) : undefined,
-              addons:
-                item?.addons?.map((addon: any) => addon.code || addon) || [],
-              isOutOfStock: item.isOutOfStock || false,
+        const _variations = values.variations.map((item: any) => {
+          const variation: any = {
+            title: item.title,
+            price: Number(item.price),
+            discounted: item.discounted ? Number(item.discounted) : undefined,
+            addons:
+              item?.addons?.map((addon: any) => addon.code || addon) || [],
+            isOutOfStock: item.isOutOfStock || false,
+          };
+
+          // Add deal if present
+          if (item.deal) {
+            variation.deal = {
+              title: item.deal.dealName,
+              discountType: item.deal.discountType,
+              startDate: item.deal.startDate.toISOString(),
+              endDate: item.deal.endDate.toISOString(),
+              discountValue: Number(item.deal.discountValue),
+              isActive: item.deal.isActive,
             };
           }
-        );
 
-        // Find first deal if any (API accepts single deal at food level)
-        const firstDealVariation = values.variations.find((v: any) => v.deal);
-        const dealInput = firstDealVariation?.deal
-          ? {
-              title: firstDealVariation.deal.dealName,
-              discountType: firstDealVariation.deal.discountType,
-              startDate: firstDealVariation.deal.startDate.toISOString(),
-              endDate: firstDealVariation.deal.endDate.toISOString(),
-              discountValue: Number(firstDealVariation.deal.discountValue),
-              isActive: firstDealVariation.deal.isActive,
-            }
-          : undefined;
+          return variation;
+        });
 
         const foodInput = {
           food: {
@@ -243,12 +254,11 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
             inventory: values.inventory ? Number(values.inventory) : 0,
             UOM: values.uom || '',
             orderQuantity: {
-              minimum: values.minQuantity ? Number(values.minQuantity) : 0,
-              maximum: values.maxQuantity ? Number(values.maxQuantity) : 0,
+              min: values.minQuantity ? Number(values.minQuantity) : 0,
+              max: values.maxQuantity ? Number(values.maxQuantity) : 0,
             },
           },
           variations: _variations,
-          deal: dealInput,
         };
 
         await createFood({
@@ -261,7 +271,7 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
       showToast({
         type: 'success',
         title: t('Success'),
-        message: t('Food and deals saved successfully'),
+        message: t('Food saved successfully'),
       });
 
       onClearFoodData();
@@ -298,51 +308,96 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
           initialValues={getInitialValues()}
           validationSchema={CombinedSchema}
           enableReinitialize
+          validateOnChange={true}
+          validateOnBlur={true}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
-            <Form className="flex flex-col gap-6 pb-4">
-              {/* Food Details Section */}
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg">
-                  <FoodDetails />
+          {({ isSubmitting, errors: formErrors, isValid }) => {
+            // Log validation errors to console for debugging
+            if (Object.keys(formErrors).length > 0) {
+              console.log('Form validation errors:', formErrors);
+            }
+            const isLoading =
+              isSubmitting || createFoodLoading || updateFoodLoading;
+            return (
+              <Form className="flex flex-col gap-6 pb-4">
+                {/* Food Details Section */}
+                <div className="space-y-6">
+                  <div className="bg-white dark:bg-dark-950 rounded-lg">
+                    <FoodDetails />
+                  </div>
+
+                  <div className="border-t dark:border-dark-600 pt-4">
+                    <h3 className="text-lg font-semibold mb-3 dark:text-white">
+                      {t('Variations')}
+                    </h3>
+                    <VariationAddForm />
+                  </div>
                 </div>
 
-                <div className="border-t pt-4">
-                  <h3 className="text-lg font-semibold mb-3">
-                    {t('Variations')}
-                  </h3>
-                  <VariationAddForm />
-                </div>
-              </div>
-
-              {/* Footer Actions */}
-              <div className="border-t pt-4 pb-12 bg-white flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={onSidebarHideHandler}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                  disabled={isSubmitting}
-                >
-                  {t('Cancel')}
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-6 py-2 bg-black text-white rounded-md hover:bg-gray-800 disabled:opacity-50 flex items-center justify-center min-w-[100px]"
-                >
-                  {isSubmitting ? (
-                    <ProgressSpinner
-                      style={{ width: '20px', height: '20px' }}
-                      strokeWidth="4"
-                    />
-                  ) : (
-                    t('Save')
+                {/* Footer Actions */}
+                <div className="border-t dark:border-dark-600 pt-4 pb-12 bg-white dark:bg-dark-950">
+                  {/* Error Summary */}
+                  {Object.keys(formErrors).length > 0 && !isValid && (
+                    <div className="mb-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+                      <p className="text-sm text-red-800 dark:text-red-300 font-semibold mb-1">
+                        {t('Please fix the following errors:')}
+                      </p>
+                      <ul className="text-xs text-red-700 dark:text-red-300 list-disc list-inside">
+                        {Object.entries(formErrors).map(([key, value]) => {
+                          if (key === 'variations' && Array.isArray(value)) {
+                            return value.map((varError: any, idx: number) => {
+                              if (varError && typeof varError === 'object') {
+                                return Object.entries(varError).map(
+                                  ([field, msg]) => (
+                                    <li key={`${key}-${idx}-${field}`}>
+                                      Variation {idx + 1} - {field}:{' '}
+                                      {msg as string}
+                                    </li>
+                                  )
+                                );
+                              }
+                              return null;
+                            });
+                          }
+                          return (
+                            <li key={key}>
+                              {key}: {value as string}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
                   )}
-                </button>
-              </div>
-            </Form>
-          )}
+
+                  <div className="flex justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={onSidebarHideHandler}
+                      className="px-4 py-2 border border-gray-300 dark:border-dark-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-900"
+                      disabled={isLoading}
+                    >
+                      {t('Cancel')}
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="px-6 py-2 bg-black dark:bg-primary-color text-white rounded-md hover:bg-gray-800 dark:hover:bg-primary-dark disabled:opacity-50 flex items-center justify-center min-w-[100px]"
+                    >
+                      {isLoading ? (
+                        <ProgressSpinner
+                          style={{ width: '20px', height: '20px' }}
+                          strokeWidth="4"
+                        />
+                      ) : (
+                        t('Save')
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </Form>
+            );
+          }}
         </Formik>
       </div>
     </Sidebar>

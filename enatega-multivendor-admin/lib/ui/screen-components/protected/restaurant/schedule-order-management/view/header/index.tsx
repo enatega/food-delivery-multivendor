@@ -8,7 +8,7 @@ const ScheduleOrderHeader = () => {
   return (
     <div className="w-full flex-shrink-0">
       <div className="flex w-full justify-between">
-        <h2 className="text-xl font-semibold">{t('Schedule Order Management')}</h2>
+        <h2 className="text-xl font-semibold dark:text-white">{t('Schedule Order Management')}</h2>
       </div>
     </div>
   );

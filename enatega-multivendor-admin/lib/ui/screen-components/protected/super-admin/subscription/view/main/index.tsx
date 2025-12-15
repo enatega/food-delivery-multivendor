@@ -132,7 +132,7 @@ export default function SubscriptionMain({
     <div className="p-6">
       {subscriptionPlans.length === 0 ? (
         <div className="flex h-[400px] w-full flex-col items-center justify-center gap-4 text-center">
-          <p className="text-gray-500">{t('No subscription plans found')}</p>
+          <p className="text-gray-500 dark:text-gray-400">{t('No subscription plans found')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

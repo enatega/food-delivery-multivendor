@@ -119,7 +119,7 @@ export default function SubscriptionForm({
         resetForm();
       }}
       position="right"
-      className="w-full sm:w-[450px]"
+      className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <Formik
         initialValues={initialValues}
@@ -150,13 +150,13 @@ export default function SubscriptionForm({
           return (
             <Form onSubmit={handleSubmit} className="h-full flex flex-col">
               <div className="space-y-4 flex-grow">
-                <h2 className="text-xl font-bold">
+                <h2 className="text-xl font-bold dark:text-white">
                   {isEditing.bool ? t('Edit') : t('Add')}{' '}
                   {t('Subscription Plan')}
                 </h2>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('Duration')}
                   </label>
                   <Dropdown
@@ -172,7 +172,7 @@ export default function SubscriptionForm({
                     disabled={isSubmitting || mutationLoading}
                   />
                   {errors.duration && (
-                    <p className="mt-1 text-sm text-red-500">
+                    <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                       {errors.duration}
                     </p>
                   )}
@@ -194,7 +194,7 @@ export default function SubscriptionForm({
                   disabled={isSubmitting || mutationLoading}
                 />
                 {errors.price && (
-                  <p className="text-sm text-red-500">{errors.price}</p>
+                  <p className="text-sm text-red-500 dark:text-red-400">{errors.price}</p>
                 )}
 
                 {/* Reward field removed as it is not part of CreatePriceInput */}
@@ -202,7 +202,7 @@ export default function SubscriptionForm({
 
               <div className="mt-auto py-4">
                 <button
-                  className="float-end h-10 w-fit rounded-md border-gray-300 bg-black px-8 text-white disabled:opacity-50"
+                  className="float-end h-10 w-fit rounded-md border-gray-300 dark:border-dark-600 bg-black dark:bg-primary-color px-8 text-white hover:bg-gray-800 dark:hover:bg-primary-dark disabled:opacity-50"
                   disabled={isSubmitting || mutationLoading}
                   type="submit"
                 >

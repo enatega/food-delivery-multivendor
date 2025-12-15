@@ -1283,3 +1283,30 @@ body {
 .p-paginator .p-dropdown-item {
   @apply dark:text-white dark:hover:bg-gray-700;
 }
+
+/* Custom Pagination - Current Page Styling */
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: var(--primary-color) !important;
+  border-radius: 9999px !important;
+  color: white !important;
+  border-color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page:hover:not(.p-highlight) {
+  background-color: rgba(177, 199, 72, 0.1) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Dark Theme Override */
+.dark .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: var(--primary-color) !important;
+  border-radius: 9999px !important;
+  color: white !important;
+  border-color: var(--primary-color) !important;
+}

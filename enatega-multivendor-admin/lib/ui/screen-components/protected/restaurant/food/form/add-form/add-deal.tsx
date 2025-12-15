@@ -40,7 +40,7 @@ const AddDealForm = ({
   const defaultValues: IDealFormValues = {
     dealName: '',
     discountType: 'PERCENTAGE',
-    discountValue: 0,
+    discountValue: 1,
     startDate: new Date(),
     endDate: new Date(),
     isActive: true,
@@ -51,7 +51,7 @@ const AddDealForm = ({
     discountType: Yup.string().required(t('Discount type is required')),
     discountValue: Yup.number()
       .required(t('Discount value is required'))
-      .min(0, t('Value must be positive')),
+      .min(1, t('Value must be positive')),
     startDate: Yup.date().required(t('Start date is required')),
     endDate: Yup.date()
       .required(t('End date is required'))
@@ -68,13 +68,13 @@ const AddDealForm = ({
       visible={visible}
       position="right"
       onHide={onHide}
-      className="w-full sm:w-[500px]"
+      className="w-full sm:w-[500px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold">{t('Add Deal')}</h2>
+        <h2 className="text-xl font-bold dark:text-white">{t('Add Deal')}</h2>
 
         {/* Read-only info */}
-        <div className="rounded-md bg-gray-50 p-3 text-sm text-gray-700 space-y-1">
+        <div className="rounded-md bg-gray-50 dark:bg-dark-900 p-3 text-sm text-gray-700 dark:text-gray-300 space-y-1">
           <p>
             <strong>{t('Product')}:</strong> {productName}
           </p>
@@ -106,23 +106,27 @@ const AddDealForm = ({
                 }}
               />
               {touched.dealName && errors.dealName && (
-                <small className="text-red-500">{errors.dealName}</small>
+                <small className="text-red-500 dark:text-red-400">
+                  {errors.dealName}
+                </small>
               )}
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
+                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('Discount Type')}
                 </label>
                 <Dropdown
                   value={values.discountType}
                   options={discountTypeOptions}
                   onChange={(e) => setFieldValue('discountType', e.value)}
-                  className="w-full"
+                  className="w-full dark:bg-dark-900 dark:text-white"
+                  panelClassName="dark:bg-dark-900 dark:border-dark-600"
                   pt={{
                     root: {
-                      className: 'border border-gray-300 rounded-md h-10',
+                      className:
+                        'border border-gray-300 dark:border-dark-600 rounded-md h-10 dark:bg-dark-900',
                     },
-                    input: { className: 'text-sm p-2' },
+                    input: { className: 'text-sm p-2 dark:text-white' },
                   }}
                 />
               </div>
@@ -146,13 +150,15 @@ const AddDealForm = ({
                   }}
                 />
                 {touched.discountValue && errors.discountValue && (
-                  <small className="text-red-500">{errors.discountValue}</small>
+                  <small className="text-red-500 dark:text-red-400">
+                    {errors.discountValue}
+                  </small>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('Start Date')}
                   </label>
                   <Calendar
@@ -160,20 +166,28 @@ const AddDealForm = ({
                     onChange={(e) => setFieldValue('startDate', e.value)}
                     showIcon
                     dateFormat="dd/mm/yy"
-                    className="w-full"
-                    pt={{
-                      input: { className: 'h-10 text-sm' },
+                    className="w-full calendar-no-focus-border dark:bg-dark-900"
+                    inputClassName="text-sm dark:bg-dark-900 dark:text-white"
+                    panelClassName="dark:bg-dark-900 dark:border-dark-600"
+                    style={{
+                      border: '1px solid #d1d5db',
+                      borderRadius: '0.375rem',
+                      height: '2.4rem',
+                    }}
+                    inputStyle={{
+                      fontSize: '0.875rem',
+                      padding: '0.5rem 0.75rem',
                     }}
                   />
                   {touched.startDate && errors.startDate && (
-                    <small className="text-red-500">
+                    <small className="text-red-500 dark:text-red-400">
                       {errors.startDate as string}
                     </small>
                   )}
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('End Date')}
                   </label>
                   <Calendar
@@ -182,13 +196,21 @@ const AddDealForm = ({
                     showIcon
                     dateFormat="dd/mm/yy"
                     minDate={values.startDate}
-                    className="w-full"
-                    pt={{
-                      input: { className: 'h-10 text-sm' },
+                    className="w-full calendar-no-focus-border dark:bg-dark-900"
+                    inputClassName="text-sm dark:bg-dark-900 dark:text-white"
+                    panelClassName="dark:bg-dark-900 dark:border-dark-600"
+                    style={{
+                      border: '1px solid #d1d5db',
+                      borderRadius: '0.375rem',
+                      height: '2.4rem',
+                    }}
+                    inputStyle={{
+                      fontSize: '0.875rem',
+                      padding: '0.5rem 0.75rem',
                     }}
                   />
                   {touched.endDate && errors.endDate && (
-                    <small className="text-red-500">
+                    <small className="text-red-500 dark:text-red-400">
                       {errors.endDate as string}
                     </small>
                   )}
@@ -198,7 +220,7 @@ const AddDealForm = ({
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="deal-status"
-                  className="font-medium text-gray-700"
+                  className="font-medium text-gray-700 dark:text-gray-300"
                 >
                   {t('Active')}
                 </label>
@@ -206,6 +228,13 @@ const AddDealForm = ({
                   inputId="deal-status"
                   checked={values.isActive}
                   onChange={(e) => setFieldValue('isActive', e.value)}
+                  pt={{
+                    slider: {
+                      className: values.isActive
+                        ? 'bg-primary-color dark:bg-primary-color'
+                        : 'bg-gray-300 dark:bg-gray-600',
+                    },
+                  }}
                 />
               </div>
 
@@ -213,7 +242,7 @@ const AddDealForm = ({
                 <CustomButton
                   label={t('Save Deal')}
                   type="submit"
-                  className="bg-black text-white px-6 py-2 rounded-md"
+                  className="bg-black dark:bg-primary-color text-white px-6 py-2 rounded-md hover:bg-gray-800 dark:hover:bg-primary-dark"
                 />
               </div>
             </Form>

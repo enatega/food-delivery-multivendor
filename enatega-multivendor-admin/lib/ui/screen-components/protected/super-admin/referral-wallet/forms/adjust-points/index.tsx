@@ -99,7 +99,7 @@ export default function AdjustPointsForm({
       visible={visible}
       onHide={() => setVisible(false)}
       position="right"
-      className="w-full sm:w-[450px]"
+      className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <Formik
         initialValues={initialValues}
@@ -131,10 +131,10 @@ export default function AdjustPointsForm({
           return (
             <Form onSubmit={handleSubmit}>
               <div className="space-y-4">
-                <h2 className="text-xl font-bold">{t('Adjust Points')}</h2>
+                <h2 className="text-xl font-bold dark:text-white">{t('Adjust Points')}</h2>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('User')}
                   </label>
                   <Dropdown
@@ -159,12 +159,12 @@ export default function AdjustPointsForm({
                     }}
                   />
                   {errors.userId && (
-                    <p className="mt-1 text-sm text-red-500">{errors.userId}</p>
+                    <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.userId}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('Points')}
                   </label>
                   <CustomNumberField
@@ -186,15 +186,15 @@ export default function AdjustPointsForm({
                     }}
                   />
                   {errors.points && (
-                    <p className="mt-1 text-sm text-red-500">{errors.points}</p>
+                    <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.points}</p>
                   )}
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                     {t('Use positive for credit, negative for debit')}
                   </p>
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('Reason')}
                   </label>
                   <Dropdown
@@ -210,12 +210,12 @@ export default function AdjustPointsForm({
                     }}
                   />
                   {errors.reason && (
-                    <p className="mt-1 text-sm text-red-500">{errors.reason}</p>
+                    <p className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.reason}</p>
                   )}
                 </div>
 
                 <button
-                  className="float-end h-10 w-fit rounded-md border-gray-300 bg-black px-8 text-white disabled:opacity-50"
+                  className="float-end h-10 w-fit rounded-md border-gray-300 dark:border-dark-600 bg-black dark:bg-primary-color px-8 text-white hover:bg-gray-800 dark:hover:bg-primary-dark disabled:opacity-50"
                   disabled={isSubmitting}
                   type="submit"
                 >

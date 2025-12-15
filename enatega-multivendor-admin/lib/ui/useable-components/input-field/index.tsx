@@ -11,13 +11,14 @@ export default function CustomTextField({
   showLabel,
   isLoading = false,
   error,
+  isRequired = false,
   ...props
-}: ITextFieldProps) {
+}: ITextFieldProps & { isRequired?: boolean }) {
   return !isLoading ? (
     <div className={`flex w-full flex-col justify-center gap-y-1`}>
       {showLabel && (
         <label htmlFor="username" className="text-sm font-[500] dark:text-white">
-          {placeholder}
+          {placeholder} {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
 
@@ -26,7 +27,7 @@ export default function CustomTextField({
         placeholder={placeholder}
         {...props}
       />
-      {error && <p className="text-sm text-red-500">{error}</p>} 
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   ) : (
     <InputSkeleton />

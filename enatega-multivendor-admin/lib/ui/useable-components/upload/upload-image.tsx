@@ -50,7 +50,8 @@ function CustomUploadImageComponent({
     'video/webm',
     'video/mp4',
   ],
-}: IImageUploadComponentProps) {
+  isRequired = false,
+}: IImageUploadComponentProps & { isRequired?: boolean }) {
   // Context
   const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_API_KEY } = useConfiguration();
   const { showToast } = useContext(ToastContext);
@@ -84,7 +85,7 @@ function CustomUploadImageComponent({
     async (file: File): Promise<void> => {
       setIsUploading(true);
 
-      if (!CLOUDINARY_UPLOAD_URL) {
+      if (true) {
         setImageFile(URL.createObjectURL(file));
 
         try {
@@ -235,7 +236,9 @@ function CustomUploadImageComponent({
   };
   return (
     <div className="flex flex-col items-center justify-center gap-3">
-      <span className="mx-auto self-start text-sm font-[600]">{title}</span>
+      <span className="mx-auto self-start text-sm font-[600]">
+        {title} {isRequired && <span className="text-red-500">*</span>}
+      </span>
       <div
         style={style}
         className={
@@ -246,9 +249,8 @@ function CustomUploadImageComponent({
         // className="bg-transparnt"
       >
         <FileUpload
-          headerClassName='dark:text-white'
-          contentClassName='dark:text-white'
-          
+          headerClassName="dark:text-white"
+          contentClassName="dark:text-white"
           accept={fileTypes?.join(',')}
           id={`${name}-upload`}
           className="mx-auto -mt-7 h-28 w-44 items-center dark:text-white justify-center rounded-md bg-transparent"
@@ -309,7 +311,7 @@ function CustomUploadImageComponent({
             const { chooseButton, cancelButton } = options;
             return (
               <button
-              className='dark:text-white'
+                className="dark:text-white"
                 type="button"
                 onClick={() =>
                   handleCancelClick(imageFile ? 'cancel' : 'choose')

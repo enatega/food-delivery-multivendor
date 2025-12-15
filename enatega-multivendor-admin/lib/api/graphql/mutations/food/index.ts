@@ -101,3 +101,36 @@ export const CREATE_FOOD_SINGLE_VENDOR = gql`
     }
   }
 `;
+
+export const UPDATE_FOOD_SINGLE_VENDOR = gql`
+  mutation UpdateFoodSingleVendor(
+    $foodId: ID!
+    $foodInput: inputUpdateFood!
+  ) {
+    updateFoodSingleVendor(foodId: $foodId, foodInput: $foodInput) {
+      _id
+      categories {
+        _id
+        title
+        foods {
+          _id
+          title
+          description
+          subCategory
+          variations {
+            _id
+            title
+            price
+            discounted
+            addons
+            isOutOfStock
+          }
+          image
+          isActive
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;

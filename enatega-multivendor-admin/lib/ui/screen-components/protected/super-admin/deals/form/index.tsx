@@ -230,7 +230,7 @@ export default function DealsForm({
   // Product option template
   const productOptionTemplate = (option: IProduct) => {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 dark:text-white">
         {option.image && (
           <img
             src={option.image}
@@ -246,10 +246,12 @@ export default function DealsForm({
   // Selected product template
   const selectedProductTemplate = (option: IProduct | null) => {
     if (!option) {
-      return <span>{t('Select a product')}</span>;
+      return (
+        <span className="dark:text-gray-400">{t('Select a product')}</span>
+      );
     }
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 dark:text-white">
         {option.image && (
           <img
             src={option.image}
@@ -265,9 +267,11 @@ export default function DealsForm({
   // Variation option template
   const variationOptionTemplate = (option: IVariation) => {
     return (
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between dark:text-white">
         <span>{option.title}</span>
-        <span className="text-sm text-gray-500">${option.price}</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          ${option.price}
+        </span>
       </div>
     );
   };
@@ -299,7 +303,7 @@ export default function DealsForm({
         resetForm();
       }}
       position="right"
-      className="w-full sm:w-[450px]"
+      className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
     >
       <Formik
         initialValues={initialValues}
@@ -412,7 +416,7 @@ export default function DealsForm({
           return (
             <Form onSubmit={handleSubmit}>
               <div className="space-y-4">
-                <h2 className="text-xl font-bold">
+                <h2 className="text-xl font-bold dark:text-white">
                   {isEditing.bool ? t('Edit') : t('Add')} {t('Deal')}
                 </h2>
 
@@ -431,13 +435,13 @@ export default function DealsForm({
                   }}
                 />
                 {errors.dealName && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-red-500 dark:text-red-400">
                     {errors.dealName as string}
                   </p>
                 )}
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('Select Product')}
                   </label>
                   <Dropdown
@@ -457,7 +461,8 @@ export default function DealsForm({
                     onFilter={(e) => setSearchProduct(e.filter)}
                     itemTemplate={productOptionTemplate}
                     valueTemplate={selectedProductTemplate}
-                    className="w-full"
+                    className="w-full dark:bg-dark-900 dark:text-white"
+                    panelClassName="dark:bg-dark-900 dark:border-dark-600"
                     disabled={productsLoading || !!productsError}
                     style={{
                       border: '1px solid #d1d5db',
@@ -466,12 +471,12 @@ export default function DealsForm({
                     }}
                   />
                   {productsError && (
-                    <p className="mt-1 text-sm text-red-500">
+                    <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                       {t('Failed to load products. Please try again.')}
                     </p>
                   )}
                   {errors.productId && (
-                    <p className="mt-1 text-sm text-red-500">
+                    <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                       {errors.productId as string}
                     </p>
                   )}
@@ -480,7 +485,7 @@ export default function DealsForm({
                 {/* Variation Dropdown - Shows when product is selected */}
                 {selectedProduct && availableVariations.length > 0 && (
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('Select Variation')}
                     </label>
                     <Dropdown
@@ -494,7 +499,8 @@ export default function DealsForm({
                       valueTemplate={(option) =>
                         option ? option.title : t('Select a variation')
                       }
-                      className="w-full"
+                      className="w-full dark:bg-dark-900 dark:text-white"
+                      panelClassName="dark:bg-dark-900 dark:border-dark-600"
                       style={{
                         border: '1px solid #d1d5db',
                         borderRadius: '0.375rem',
@@ -502,7 +508,7 @@ export default function DealsForm({
                       }}
                     />
                     {errors.variationId && (
-                      <p className="mt-1 text-sm text-red-500">
+                      <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                         {errors.variationId as string}
                       </p>
                     )}
@@ -510,7 +516,7 @@ export default function DealsForm({
                 )}
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('Discount Type')}
                   </label>
                   <Dropdown
@@ -518,7 +524,8 @@ export default function DealsForm({
                     options={discountTypeOptions}
                     onChange={(e) => setFieldValue('discountType', e.value)}
                     placeholder={t('Select type')}
-                    className="w-full"
+                    className="w-full dark:bg-dark-900 dark:text-white"
+                    panelClassName="dark:bg-dark-900 dark:border-dark-600"
                     style={{
                       border: '1px solid #d1d5db',
                       borderRadius: '0.375rem',
@@ -526,7 +533,7 @@ export default function DealsForm({
                     }}
                   />
                   {errors.discountType && (
-                    <p className="mt-1 text-sm text-red-500">
+                    <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                       {errors.discountType as string}
                     </p>
                   )}
@@ -545,9 +552,9 @@ export default function DealsForm({
                     onChange={setFieldValue}
                     min={0}
                     max={values.discountType === 'PERCENTAGE' ? 100 : undefined}
+                    className="bg-white dark:bg-black dark:text-white dark:border-dark-600"
                     style={{
                       borderColor: errors?.discountValue ? 'red' : '#d1d5db',
-                      backgroundColor: '#fff',
                       borderRadius: '0.375rem',
                       fontSize: '0.875rem',
                       padding: '0.5rem 0.75rem',
@@ -555,7 +562,7 @@ export default function DealsForm({
                     }}
                   />
                   {errors.discountValue && (
-                    <p className="text-sm text-red-500">
+                    <p className="text-sm text-red-500 dark:text-red-400">
                       {errors.discountValue as string}
                     </p>
                   )}
@@ -563,7 +570,7 @@ export default function DealsForm({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('Start Date')}
                     </label>
                     <Calendar
@@ -571,8 +578,9 @@ export default function DealsForm({
                       onChange={(e) => setFieldValue('startDate', e.value)}
                       showIcon
                       dateFormat="dd/mm/yy"
-                      className="w-full calendar-no-focus-border"
-                      inputClassName="text-sm"
+                      className="w-full calendar-no-focus-border dark:bg-dark-900"
+                      inputClassName="text-sm dark:bg-dark-900 dark:text-white"
+                      panelClassName="dark:bg-dark-900 dark:border-dark-600"
                       style={{
                         border: '1px solid #d1d5db',
                         borderRadius: '0.375rem',
@@ -584,14 +592,14 @@ export default function DealsForm({
                       }}
                     />
                     {errors.startDate && (
-                      <p className="mt-1 text-sm text-red-500">
+                      <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                         {errors.startDate as string}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('End Date')}
                     </label>
                     <Calendar
@@ -600,8 +608,9 @@ export default function DealsForm({
                       showIcon
                       dateFormat="dd/mm/yy"
                       minDate={values.startDate}
-                      className="w-full calendar-no-focus-border"
-                      inputClassName="text-sm"
+                      className="w-full calendar-no-focus-border dark:bg-dark-900"
+                      inputClassName="text-sm dark:bg-dark-900 dark:text-white"
+                      panelClassName="dark:bg-dark-900 dark:border-dark-600"
                       style={{
                         border: '1px solid #d1d5db',
                         borderRadius: '0.375rem',
@@ -613,7 +622,7 @@ export default function DealsForm({
                       }}
                     />
                     {errors.endDate && (
-                      <p className="mt-1 text-sm text-red-500">
+                      <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                         {errors.endDate as string}
                       </p>
                     )}
@@ -623,7 +632,7 @@ export default function DealsForm({
                 <div className="flex items-center justify-between  !mb-10 ">
                   <label
                     htmlFor="isActive"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
                     {t('Status')}
                   </label>
@@ -631,11 +640,18 @@ export default function DealsForm({
                     inputId="isActive"
                     checked={values.isActive}
                     onChange={(e) => setFieldValue('isActive', e.value)}
+                    pt={{
+                      slider: {
+                        className: values.isActive
+                          ? 'bg-primary-color dark:bg-primary-color'
+                          : 'bg-gray-300 dark:bg-gray-600',
+                      },
+                    }}
                   />
                 </div>
 
                 <button
-                  className="float-end h-10 w-fit rounded-md border-gray-300 bg-black px-8 text-white disabled:opacity-50"
+                  className="float-end h-10 w-fit rounded-md border-gray-300 dark:border-dark-600 bg-black dark:bg-primary-color px-8 text-white hover:bg-gray-800 dark:hover:bg-primary-dark disabled:opacity-50"
                   disabled={isSubmitting || createLoading || updateLoading}
                   type="submit"
                 >

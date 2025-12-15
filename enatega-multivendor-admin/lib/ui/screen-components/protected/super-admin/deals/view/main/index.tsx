@@ -329,22 +329,22 @@ export default function DealsMain({
           <div className="mb-4 flex gap-4">
             <FontAwesomeIcon
               icon={faSearch}
-              className="h-16 w-16 text-gray-300"
+              className="h-16 w-16 text-gray-300 dark:text-gray-600"
             />
             <FontAwesomeIcon
               icon={faFileAlt}
-              className="h-16 w-16 text-gray-300"
+              className="h-16 w-16 text-gray-300 dark:text-gray-600"
             />
           </div>
-          <h3 className="mb-2 text-xl font-semibold text-gray-700">
+          <h3 className="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">
             {t('No Deals Found')}
           </h3>
-          <p className="mb-4 text-gray-500">
+          <p className="mb-4 text-gray-500 dark:text-gray-400">
             {t('Create and manage your deals here by adding new deals.')}
           </p>
           <button
             onClick={() => setVisible(true)}
-            className="rounded-md bg-black px-6 py-2 text-white hover:bg-gray-800"
+            className="rounded-md bg-black dark:bg-primary-color px-6 py-2 text-white hover:bg-gray-800 dark:hover:bg-primary-dark"
           >
             {t('Add Deal')}
           </button>
@@ -377,19 +377,19 @@ export default function DealsMain({
         <div className="relative w-full max-w-md">
           <FontAwesomeIcon
             icon={faSearch}
-            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500"
           />
           <input
             type="text"
             value={globalFilterValue}
             onChange={(e) => setGlobalFilterValue(e.target.value)}
             placeholder={t('Search deals...')}
-            className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-10 text-sm focus:border-primary-color focus:outline-none focus:ring-1 focus:ring-primary-color"
+            className="w-full rounded-lg border border-gray-300 dark:border-dark-600 bg-white dark:bg-dark-900 text-gray-900 dark:text-white py-2 pl-10 pr-10 text-sm focus:border-primary-color focus:outline-none focus:ring-1 focus:ring-primary-color placeholder:text-gray-500 dark:placeholder:text-gray-500"
           />
           {globalFilterValue && (
             <button
               onClick={() => setGlobalFilterValue('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
             >
               <FontAwesomeIcon icon={faTimes} className="h-4 w-4" />
             </button>

@@ -83,3 +83,60 @@ export const GET_ALL_FOOD_DEALS_ADMIN = gql`
     }
   }
 `;
+
+export const GET_ALL_FOODS_PAGINATED = gql`
+  query GetAllFoodsPaginated($restaurantId: ID!, $page: Int, $limit: Int, $search: String) {
+    getAllfoodsPaginated(
+      restaurantId: $restaurantId
+      page: $page
+      limit: $limit
+      search: $search
+    ) {
+      page
+      limit
+      hasnext
+      hasprev
+      totalFoods
+      foods {
+        category {
+          id
+          title
+        }
+        food {
+          id
+          title
+          subCategory
+          image
+          isActive
+          UOM
+          inventory
+          isOutOfStock
+          orderQuantity {
+            min
+            max
+          }
+          variations {
+            id
+            title
+            price
+            outofstock
+            deal {
+              id
+              name
+              type
+              value
+              startDate
+              endDate
+              isActive
+            }
+            addons {
+              title
+              description
+              isActive
+            }
+          }
+        }
+      }
+    }
+  }
+`;

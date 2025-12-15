@@ -312,27 +312,27 @@ const ScheduleOrderMain = () => {
           <Form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Table */}
             <div
-              className={`overflow-x-auto border border-b-none border-gray-300 rounded-lg ${mutationLoading ? 'pointer-events-none opacity-50' : ''}`}
+              className={`overflow-x-auto border border-b-none border-gray-300 dark:border-dark-600 rounded-lg ${mutationLoading ? 'pointer-events-none opacity-50' : ''}`}
             >
-              <table className="w-full border-collapse">
+              <table className="w-full border-collapse dark:bg-dark-950">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className=" border-b border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  <tr className="bg-gray-100 dark:bg-dark-900">
+                    <th className=" border-b border-gray-300 dark:border-dark-600 px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('Day')}
                     </th>
-                    <th className=" border-b border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                    <th className=" border-b border-gray-300 dark:border-dark-600 px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('Start time')}
                     </th>
-                    <th className=" border-b border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                    <th className=" border-b border-gray-300 dark:border-dark-600 px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('End time')}
                     </th>
-                    <th className=" border-b border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                    <th className=" border-b border-gray-300 dark:border-dark-600 px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('Max orders')}
                     </th>
-                    <th className=" border-b border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                    <th className=" border-b border-gray-300 dark:border-dark-600 px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('Action')}
                     </th>
-                    <th className="border-b border-gray-300 px-4 py-3 text-left text-sm font-medium text-gray-700">
+                    <th className="border-b border-gray-300 dark:border-dark-600 px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                       {t('Day Off')}
                     </th>
                   </tr>
@@ -346,11 +346,11 @@ const ScheduleOrderMain = () => {
                             (time: ITimeSlot, timeIndex: number) => (
                               <tr
                                 key={`${dayIndex}-${timeIndex}`}
-                                className="border-b border-gray-300"
+                                className="border-b border-gray-300 dark:border-dark-600"
                               >
                                 {timeIndex === 0 ? (
                                   <td
-                                    className="border-r border-gray-300 px-4 py-3 align-top"
+                                    className="border-r border-gray-300 dark:border-dark-600 px-4 py-3 align-top dark:text-white"
                                     rowSpan={value.times.length}
                                   >
                                     <span className="text-sm font-medium">
@@ -369,7 +369,8 @@ const ScheduleOrderMain = () => {
                                       )
                                     }
                                     placeholder={t('Select time')}
-                                    className="w-32 border border-gray-300 rounded"
+                                    className="w-32 border border-gray-300 dark:border-dark-600 dark:bg-dark-900 dark:text-white rounded"
+                                    panelClassName="dark:bg-dark-900 dark:border-dark-600"
                                     disabled={mutationLoading}
                                   />
                                 </td>
@@ -384,7 +385,8 @@ const ScheduleOrderMain = () => {
                                       )
                                     }
                                     placeholder={t('Select time')}
-                                    className="w-32 border border-gray-300 rounded"
+                                    className="w-32 border border-gray-300 dark:border-dark-600 dark:bg-dark-900 dark:text-white rounded"
+                                    panelClassName="dark:bg-dark-900 dark:border-dark-600"
                                     disabled={mutationLoading}
                                   />
                                 </td>
@@ -399,7 +401,8 @@ const ScheduleOrderMain = () => {
                                       )
                                     }
                                     placeholder={t('Select')}
-                                    className="w-24 border border-gray-300 rounded"
+                                    className="w-24 border border-gray-300 dark:border-dark-600 dark:bg-dark-900 dark:text-white rounded"
+                                    panelClassName="dark:bg-dark-900 dark:border-dark-600"
                                     disabled={mutationLoading}
                                   />
                                 </td>
@@ -447,7 +450,7 @@ const ScheduleOrderMain = () => {
                                 </td>
                                 {timeIndex === 0 ? (
                                   <td
-                                    className="border-l border-gray-300 px-4 py-3 align-top"
+                                    className="border-l border-gray-300 dark:border-dark-600 px-4 py-3 align-top"
                                     rowSpan={value.times.length}
                                   >
                                     <InputSwitch
@@ -458,6 +461,13 @@ const ScheduleOrderMain = () => {
                                           !value.isOpen
                                         );
                                       }}
+                                      pt={{
+                                        slider: {
+                                          className: value.isOpen
+                                            ? 'bg-primary-color dark:bg-primary-color'
+                                            : 'bg-gray-300 dark:bg-gray-600',
+                                        },
+                                      }}
                                     />
                                   </td>
                                 ) : null}
@@ -466,23 +476,23 @@ const ScheduleOrderMain = () => {
                           )
                         ) : (
                           <tr key={dayIndex}>
-                            <td className=" border-b border-gray-300 px-4 py-3 align-top">
+                            <td className=" border-b border-gray-300 dark:border-dark-600 px-4 py-3 align-top dark:text-white">
                               <span className="text-sm font-medium">
                                 {t(value.day)}
                               </span>
                             </td>
                             <td
                               colSpan={3}
-                              className=" border-b border-gray-300 px-4 py-3"
+                              className=" border-b border-gray-300 dark:border-dark-600 px-4 py-3"
                             >
-                              <span className="inline-block rounded-full bg-black px-3 py-1 text-xs text-white">
+                              <span className="inline-block rounded-full bg-black dark:bg-dark-600 px-3 py-1 text-xs text-white">
                                 {t('Closed all Day')}
                               </span>
                             </td>
-                            <td className=" border-b border-gray-300 px-4 py-3">
+                            <td className=" border-b border-gray-300 dark:border-dark-600 px-4 py-3">
                               {/* Empty action cell for closed days */}
                             </td>
-                            <td className="border-b border-gray-300 px-4 py-3 align-top">
+                            <td className="border-b border-gray-300 dark:border-dark-600 px-4 py-3 align-top">
                               <InputSwitch
                                 checked={value.isOpen}
                                 onChange={() => {
@@ -504,6 +514,13 @@ const ScheduleOrderMain = () => {
                                     ]);
                                   }
                                 }}
+                                pt={{
+                                  slider: {
+                                    className: value.isOpen
+                                      ? 'bg-primary-color dark:bg-primary-color'
+                                      : 'bg-gray-300 dark:bg-gray-600',
+                                  },
+                                }}
                               />
                             </td>
                           </tr>
@@ -517,7 +534,7 @@ const ScheduleOrderMain = () => {
 
             <div className="flex justify-end mt-6">
               <CustomButton
-                className="h-11 rounded-md border-gray-300 bg-black px-10 text-white"
+                className="h-11 rounded-md border-gray-300 dark:border-dark-600 bg-black dark:bg-primary-color px-10 text-white hover:bg-gray-800 dark:hover:bg-primary-dark"
                 label={t('Save')}
                 rounded={false}
                 disabled={loading || mutationLoading || !dirty}

@@ -117,11 +117,11 @@ export default function ReferralWalletMain({
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       {/* Left side - Table */}
       <div className="lg:col-span-2">
-        <div className="card border">
-          <h2 className=" text-lg font-semibold">
+        <div className="card border dark:border-dark-600 dark:bg-dark-950">
+          <h2 className=" text-lg font-semibold dark:text-white">
             {t('User Points Distribution')}
           </h2>
-          <p className="text-sm  mb-4 text-gray-500">
+          <p className="text-sm  mb-4 text-gray-500 dark:text-gray-400">
             {t('Configure points for referral tiers.')}
           </p>
           <Table data={mockUsers} columns={columns} filters={filters} />
@@ -131,31 +131,31 @@ export default function ReferralWalletMain({
       {/* Right side - Cards */}
       <div className="flex flex-col gap-6">
         {/* Referral Levels Card */}
-        <div className="card border">
+        <div className="card border dark:border-dark-600 dark:bg-dark-950">
           <div className="mb-2 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">{t('Referral Levels')}</h2>
-              <p className="text-sm text-gray-500">
+              <h2 className="text-lg font-semibold dark:text-white">{t('Referral Levels')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {t('Configure points for referral tiers.')}
               </p>
             </div>
             <button
               onClick={handleReferralLevelsClick}
-              className="text-black hover:text-primary-color"
+              className="text-black dark:text-white hover:text-primary-color dark:hover:text-primary-color"
             >
               <FontAwesomeIcon
                 icon={faPen}
-                className="h-5 w-5 border rounded-full px-2 py-2.5 shadow-md"
+                className="h-5 w-5 border dark:border-dark-600 rounded-full px-2 py-2.5 shadow-md"
               />
             </button>
           </div>
           <div className="mt-4 space-y-4">
             {referralLevels.map((level, index) => (
               <div key={index}>
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">
                   {level.name}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {level.points} {level.unit || 'pts'}
                 </p>
               </div>
@@ -164,31 +164,31 @@ export default function ReferralWalletMain({
         </div>
 
         {/* Loyalty Levels Card */}
-        <div className="card border">
+        <div className="card border dark:border-dark-600 dark:bg-dark-950">
           <div className="mb-2 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">{t('Loyalty Levels')}</h2>
-              <p className="text-sm text-gray-500">
+              <h2 className="text-lg font-semibold dark:text-white">{t('Loyalty Levels')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {t('Define points for loyalty levels.')}
               </p>
             </div>
             <button
               onClick={handleLoyaltyLevelsClick}
-              className="text-black hover:text-primary-color"
+              className="text-black dark:text-white hover:text-primary-color dark:hover:text-primary-color"
             >
               <FontAwesomeIcon
                 icon={faPen}
-                className="h-5 w-5 border rounded-full px-2 py-2.5 shadow-md"
+                className="h-5 w-5 border dark:border-dark-600 rounded-full px-2 py-2.5 shadow-md"
               />
             </button>
           </div>
           <div className="mt-4 space-y-4">
             {loyaltyLevels.map((level, index) => (
               <div key={index}>
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">
                   {level.name}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {level.points.toLocaleString()} pts
                 </p>
               </div>
