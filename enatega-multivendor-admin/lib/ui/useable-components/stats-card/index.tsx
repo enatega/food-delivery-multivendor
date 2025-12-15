@@ -13,6 +13,7 @@ export default function StatsCard({
   label,
   total,
   description,
+  currencySymbol,
   icon,
   route,
   loading = false,
@@ -30,7 +31,7 @@ export default function StatsCard({
         {icon && <FontAwesomeIcon icon={icon} />}
       </div>
       <div className="text-2xl font-bold">
-        {' '}
+        {currencySymbol ? currencySymbol : ''}
         {amountConfig
           ? amountConfig?.format === 'currency'
             ? formatNumberWithCurrency(total, amountConfig.currency)
