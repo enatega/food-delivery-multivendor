@@ -87,6 +87,7 @@ export default function PhoneVerification({
             phone: formData?.phone,
             name: formData?.name,
             password: formData?.password,
+            isReset: formData?.isReset,
           });
 
           if (!userData.phoneIsVerified) {
@@ -119,14 +120,14 @@ export default function PhoneVerification({
         } else {
           const args = isRegistering
             ? {
-                name: user?.name ?? "",
-                phoneIsVerified: true,
-              }
+              name: user?.name ?? "",
+              phoneIsVerified: true,
+            }
             : {
-                phone: user?.phone,
-                name: user?.name ?? "",
-                phoneIsVerified: true,
-              };
+              phone: user?.phone,
+              name: user?.name ?? "",
+              phoneIsVerified: true,
+            };
 
           const userData = await updateUser({
             variables: args,
@@ -296,7 +297,7 @@ export default function PhoneVerification({
                   }
                 }
               }}
-              className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border dark:bg-gray-800 border-gray-300 rounded-lg focus:outline-none focus:border-[#5AC12F] focus:ring-2 focus:ring-[#5AC12F] focus:ring-opacity-20"
+              className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border dark:bg-gray-800 border-gray-300 rounded-lg focus:outline-none focus:border-primary-color focus:ring-2 focus:ring-primary-color focus:ring-opacity-20"
             />
           ))}
         </div>
@@ -311,7 +312,7 @@ export default function PhoneVerification({
       <CustomButton
         label={t("continue_label")}
         loading={isLoading}
-        className="bg-[#5AC12F] text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg sm:text-md font-medium"
+        className="bg-primary-color text-white flex items-center justify-center rounded-full p-3 w-full mb-4 h-12 sm:h-14 text-lg sm:text-md font-medium"
         onClick={handleSubmit}
       />
 

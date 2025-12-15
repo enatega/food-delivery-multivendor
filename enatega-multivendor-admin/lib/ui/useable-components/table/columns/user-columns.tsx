@@ -7,11 +7,11 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslations } from 'next-intl';
 
-export const USERS_TABLE_COLUMNS = () => {
+export const USERS_TABLE_COLUMNS = (openMenuId?: string | null, setOpenMenuId?: (id: string | null) => void) => {
   // Hooks
   const t = useTranslations();
   return [
-    { headerName: t('User ID'), propertyName: '_id' },
+    { headerName: t('user_id'), propertyName: '_id' },
     {
 
       headerName: t('Name'),
@@ -31,7 +31,7 @@ export const USERS_TABLE_COLUMNS = () => {
     { headerName: t('Phone'), propertyName: 'phone' },
 
     {
-      headerName: t('Registration Method'),
+      headerName: t('registration_method'),
       propertyName: 'userType',
       body: (user: IUserResponse) => {
         const userType = user.userType || 'default';
@@ -44,7 +44,7 @@ export const USERS_TABLE_COLUMNS = () => {
       },
     },
     {
-      headerName: t('Status'),
+      headerName: t('account_status'),
       propertyName: 'status',
       body: (user: IUserResponse) => {
         const status = user.status || 'active';
@@ -57,7 +57,7 @@ export const USERS_TABLE_COLUMNS = () => {
       },
     },
     {
-      headerName: t('Last Login'), propertyName: 'lastLogin',
+      headerName: t('last_login'), propertyName: 'lastLogin',
       body: (user: IUserResponse) => {
         if (!user.lastLogin) return <div className="text-gray-400">—</div>;
 
@@ -96,7 +96,7 @@ export const USERS_TABLE_COLUMNS = () => {
     {
       headerName: t('Actions'),
       propertyName: '_id',
-      body: (rowData: IUserResponse) => <ActionMenu rowData={rowData} />,
+      body: (rowData: IUserResponse) => <ActionMenu rowData={rowData} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} />,
       style: { width: '60px', textAlign: 'right', paddingRight: '12px' },
       headerStyle: { textAlign: 'right', paddingRight: '12px' },
     }

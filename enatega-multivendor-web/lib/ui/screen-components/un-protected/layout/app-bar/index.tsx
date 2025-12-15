@@ -4,6 +4,7 @@
 import { Sidebar } from "primereact/sidebar";
 import { Menu } from "primereact/menu";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/lib/providers/ThemeProvider";
 import {
   useContext,
   useEffect,
@@ -83,6 +84,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // REf
   const menuRef = useRef<Menu>(null);
   const languageMenuRef = useRef<Menu>(null);
+
+  //Theme Provider
+  const { theme, toggleTheme } = useTheme();
 
   const [position, setPosition] = useState<"left" | "right">("right");
   useEffect(() => {
@@ -203,7 +207,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // Logo click handler
   const logoClickHandler = () => {
     if (isLogin) {
-      router.push("/discovery");
+      router.push("/");
     } else {
       router.push("/");
     }
@@ -293,7 +297,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               {t("you_recently_searched")}
             </span>
             <span
-              className="text-sm font-normal mb-2 text-sky-500 hover:cursor-pointer dark:text-[#94e469]"
+              className="text-sm font-normal mb-2 text-secondary-color hover:cursor-pointer dark:text-primary-color"
               onClick={() => {
                 deleteSearchedKeywords();
                 setSearchedKeywords([]);
@@ -356,7 +360,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     template(item: any) {
       return (
         <div
-          className={`hover:bg-[#5AC12F] ${currentLocale === lang.code ? "bg-[#5AC12F]" : ""} p-2 cursor-pointer`}
+          className={`hover:bg-primary-color ${currentLocale === lang.code ? "bg-primary-color" : ""} p-2 cursor-pointer`}
           onClick={() => onLocaleChange(lang.code)}
         >
           {item.label}
@@ -375,7 +379,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       >
         <div className="w-full">
           <PaddingContainer>
-            <div className="flex items-center justify-between w-full h-16 gap-2 flex-wrap md:flex-nowrap">
+            <div className="flex items-center justify-between w-full h-20 sm:h-16 flex-wrap md:flex-nowrap">
               {/* Left Section */}
               <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer">
                 {!isSearchFocused && (
@@ -384,7 +388,6 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     className="text-xl font-bold text-gray-900 dark:text-white"
                   >
                     <Logo
-                      className="w-32 h-auto"
                       fillColor="#000000"
                       darkmode="#FFFFFFFF"
                     />
@@ -400,7 +403,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       <LocationSvg width={22} height={22} />
                     </div>
 
-                    <span className="hidden md:inline text-xs sm:text-sm md:text-base text-[#94e469] font-inter font-normal leading-6 tracking-normal mr-2 truncate">
+                    <span className="hidden md:inline text-xs sm:text-sm md:text-base text-primary-color font-inter font-normal leading-6 tracking-normal mr-2 truncate">
                       {fittedAddress(userAddress?.deliveryAddress)}
                     </span>
 
@@ -409,7 +412,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                         icon={faChevronDown}
                         width={12}
                         hanging={12}
-                        color="#94e469"
+                        className="text-primary-color"
                       />
                     </div>
                   </div>
@@ -420,7 +423,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               <div
                 className={`flex-grow transition-all duration-500 ease-in-out ${isSearchFocused ? "max-w-full" : "max-w-md"} px-2`}
               >
-                <div className="relative w-full">
+                <div className="relative w-[14rem] sm:w-full">
                   <input
                     id="search-input"
                     value={filter}
@@ -428,7 +431,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     onFocus={() => setIsSearchFocused(true)}
                     placeholder={t("SearchBarPlaceholder")}
                     className={`
-                w-full px-4 py-2 pr-10 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-sky-500
+                w-full px-4 py-2 pr-10 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-secondary-color
                 ${!isSearchFocused ? "hidden" : "block"} sm:block
                 dark:bg-gray-800 dark:text-white
               `}
@@ -459,7 +462,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {!authToken && !isSearchFocused ? (
                   <button
-                    className="w-auto min-w-[64px] h-fit py-2 md:py-3 px-4 bg-[#5AC12F] rounded text-sm lg:text-[16px] md:text-md flex items-center justify-center"
+                    className="w-auto min-w-[64px] h-fit py-2 md:py-3 px-4 bg-primary-color rounded text-sm lg:text-[16px] md:text-md flex items-center justify-center"
                     onClick={handleModalToggle}
                   >
                     <span className="text-white font-semibold text-xs md:text-[16px] whitespace-nowrap">
@@ -474,8 +477,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     aria-haspopup
                   >
                     <div
-                      className="h-6 w-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-white font-semibold select-none uppercase"
-                      style={{ backgroundColor: "#94e469" }}
+                      className="h-6 w-6 md:w-8 md:h-8 rounded-full bg-primary-color flex items-center justify-center text-white font-semibold select-none uppercase"
+
                     >
                       {profile?.name
                         ?.trim()
@@ -495,7 +498,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       icon={faChevronDown}
                       width={12}
                       hanging={12}
-                      color="#94e469"
+                      className="text-primary-color"
                     />
                     <Menu
                       className="
@@ -555,7 +558,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {/* Language Dropdown */}{" "}
                 {!isSearchFocused && (
-                  <div className="relative" title="Languages">
+                  <div className="relative flex items-center gap-x-2" title="Languages">
+                    <div onClick={toggleTheme} className="cursor-pointer p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                      {theme === "dark" ? "🌙" : "☀️"}
+                    </div>
                     {" "}
                     <button
                       onClick={(e) => languageMenuRef.current?.toggle(e)}
@@ -590,7 +596,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 <div className="p-1 cursor-pointer">
                   {cartCount > 0 && !isSearchFocused && (
                     <div
-                      className="hidden lg:flex items-center justify-between bg-[#5AC12F] rounded-lg px-4 py-3 w-64 cursor-pointer"
+                      className="hidden lg:flex items-center justify-between bg-primary-color rounded-lg px-4 py-3 w-64 cursor-pointer"
                       onClick={() => {
                         if (!authToken) {
                           setIsAuthModalVisible(true); // ⬅️ Show login/signup modal
@@ -600,7 +606,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       }}
                     >
                       <div className="flex items-center gap-2">
-                        <div className="bg-white text-[#5AC12F] rounded-full w-5 h-5 flex items-center justify-center text-[10px] sm:text-[12px]">
+                        <div className="bg-white text-primary-color rounded-full w-5 h-5 flex items-center justify-center text-[10px] sm:text-[12px]">
                           {cartCount}
                         </div>
                         <span className="ml-2 text-white text-[14px] font-semibold sm:text-[14px]">
@@ -634,7 +640,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                         <CartSvg color="black" width={22} height={22} />
                       </div>
                       {cartCount > 0 && authToken && (
-                        <div className="absolute -top-1 -right-1 bg-black text-[#5AC12F] text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
+                        <div className="absolute -top-1 -right-1 bg-black text-primary-color text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
                           {cartCount}
                         </div>
                       )}
@@ -678,7 +684,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               >
                 <div className="flex gap-4">
                   <LocationSvg width={22} height={22} />
-                  <p className="text-[14px] text-[#94e469]">
+                  <p className="text-[14px] text-primary-color">
                     {userAddress?.deliveryAddress}
                   </p>
                   <div className="sm:flex items-center">
@@ -759,7 +765,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
             />
 
             <button
-              className="w-1/2 h-fit flex items-center justify-center gap-2 bg-[#5AC12F] text-white py-2 rounded-full text-sm font-medium"
+              className="w-1/2 h-fit flex items-center justify-center gap-2 bg-primary-color text-white py-2 rounded-full text-sm font-medium"
               onClick={onLogout}
             >
               <FontAwesomeIcon icon={faSignOutAlt} />

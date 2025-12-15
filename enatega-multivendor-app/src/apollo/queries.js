@@ -1029,8 +1029,8 @@ export const recentOrderRestaurantsPreviewQuery = gql`
 
 export const mostOrderedRestaurantsQuery = gql`
   ${restaurantPreviewFragment}
-  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!) {
-    mostOrderedRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
+  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!, $shopType:String) {
+    mostOrderedRestaurantsPreview(latitude: $latitude, longitude: $longitude, shopType: $shopType) {
       ...RestaurantPreviewFields
     }
   }

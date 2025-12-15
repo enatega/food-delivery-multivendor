@@ -9,9 +9,9 @@ export default function DashboardHeader() {
 
   return (
     <div className="m-3">
-      <div className="rounded-lg bg-[#F4F4F5]">
+      <div className="rounded-lg dark:bg-dark-950 bg-[#F4F4F5]">
         <div className="flex h-20 items-center pl-[1rem]">
-          <span className="text-[32px] font-[500] text-[#09090B]">
+          <span className="text-[32px] font-[500] dark:text-white text-[#09090B]">
             {vendorProfileResponse?.data?.getVendor?.name
               ? `${t('Hi')} ${vendorProfileResponse?.data?.getVendor.name},`
               : ''}

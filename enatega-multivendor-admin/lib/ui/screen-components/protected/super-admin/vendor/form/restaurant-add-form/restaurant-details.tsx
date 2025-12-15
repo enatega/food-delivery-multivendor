@@ -33,7 +33,6 @@ import {
   MAX_LANSDCAPE_FILE_SIZE,
   MAX_SQUARE_FILE_SIZE,
   RestaurantErrors,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 
 // Interface
@@ -65,6 +64,7 @@ import {
 } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 const initialValues: IRestaurantForm = {
   name: '',
@@ -128,6 +128,11 @@ export default function RestaurantDetails({
   });
 
   // call GET_RESTAURANTS query
+
+    const { dropdownList, loading } = useShopTypes({
+      invoke_now: true,
+      transform_to_dropdown_list: true,
+    });
 
   const cuisineResponse = useQueryGQL(GET_CUISINES, {
     debounceMs: 300,
@@ -244,7 +249,7 @@ export default function RestaurantDetails({
   }
 
   return (
-    <div className="flex h-full w-full items-center justify-start">
+    <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="mb-2 flex flex-col">
@@ -481,12 +486,13 @@ export default function RestaurantDetails({
                         />
                       </div>
                       <div>
-                        <CustomDropdownComponent
+                      <CustomDropdownComponent
                           name="shopType"
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
                           setSelectedItem={setFieldValue}
-                          options={SHOP_TYPE}
+                          loading={loading}
+                          options={dropdownList || []}
                           showLabel={true}
                           style={{
                             borderColor: onErrorMessageMatcher(
@@ -519,7 +525,7 @@ export default function RestaurantDetails({
                           }}
                         />
                       </div>
-                      <div className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 p-4">
+                      <div className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 dark:border-dark-600 p-4">
                         <CustomUploadImageComponent
                           key="logo"
                           name="logo"
@@ -573,7 +579,7 @@ export default function RestaurantDetails({
                           </small>
                         )}
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                          className="h-10 w-fit border-gray-300 border dark:border-dark-600 bg-black px-8 text-white"
                           label={t('Add')}
                           type="submit"
                           loading={isSubmitting}

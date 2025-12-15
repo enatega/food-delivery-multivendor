@@ -62,6 +62,8 @@ import CustomRadiusInputField from '../../custom-radius-input';
 import CustomShape from '../shapes';
 import calculateZoom from '@/lib/utils/methods/zoom-calculator';
 import { useTranslations } from 'next-intl';
+import { darkMapStyle } from '@/lib/utils/map-style/mapStyle';
+import { useTheme } from 'next-themes';
 
 const autocompleteService: {
   current: google.maps.places.AutocompleteService | null;
@@ -92,6 +94,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
   const [distance, setDistance] = useState(1);
   // Hooks
   const t = useTranslations();
+  const { theme } = useTheme()
 
   // States
   const [options, setOptions] = useState<IPlaceSelectedOption[]>([]);
@@ -634,7 +637,6 @@ const CustomGoogleMapsLocationBounds: React.FC<
                                   key={index}
                                   style={{
                                     fontWeight: part.highlight ? 700 : 400,
-                                    color: 'black',
                                     marginRight: '2px',
                                   }}
                                 >
@@ -683,6 +685,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
               mapTypeControl: !hideControls,
               fullscreenControl: !hideControls,
               draggable: !hideControls,
+              styles: theme === 'dark' ? darkMapStyle : null,
             }}
             onClick={
               deliveryZoneType === 'point' ? onClickGoogleMaps : undefined
@@ -795,7 +798,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
 
           <div className="mt-4 flex justify-end">
             <CustomButton
-              className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+              className="h-10 w-fit dark:border-dark-600 border border-gray-300 bg-black px-8 text-white"
               label={t('Save')}
               type="button"
               loading={isSubmitting}

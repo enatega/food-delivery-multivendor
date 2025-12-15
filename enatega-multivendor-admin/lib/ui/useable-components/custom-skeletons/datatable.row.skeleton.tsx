@@ -2,7 +2,7 @@ import { Skeleton } from 'primereact/skeleton';
 
 export default function DataTableRowSkeleton() {
   return (
-    <div className="flex items-center p-2">
+    <div className="flex items-center p-2 dark:bg-dark-950">
       <Skeleton shape="circle" size="2.5rem" className="mr-3"></Skeleton>
       <div className="flex-1">
         <Skeleton width="70%" height="1rem" className="mb-2"></Skeleton>

@@ -1,34 +1,36 @@
 import { useMemo } from 'react';
 import { Tag } from 'primereact/tag';
 import { IWithDrawRequest } from '@/lib/utils/interfaces';
+import { useTranslations } from 'next-intl'
 
 export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
+  const t = useTranslations();
   const options = useMemo(
     () => [
       {
         code: 'REQUESTED',
-        label: 'Requested',
+        label: t('REQUESTED'),
       },
       {
         code: 'TRANSFERRED',
-        label: 'Transferred',
+        label: t('TRANSFERRED'),
       },
       {
         code: 'CANCELLED',
-        label: 'Cancelled',
+        label: t('CANCELLED'),
       },
     ],
-    []
+    [t]
   );
 
   return useMemo(
     () => [
       {
-        headerName: 'Request ID',
+        headerName: t('RequestID'),
         propertyName: 'requestId',
       },
       {
-        headerName: 'User Type',
+        headerName: t('User Type'),
         propertyName: 'rider.name',
         body: (rowData: IWithDrawRequest) => (
           <div className="flex flex-col">
@@ -42,7 +44,7 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
         ),
       },
       {
-        headerName: 'Amount',
+        headerName: t('Amount'),
         propertyName: 'requestAmount',
         body: (rowData: IWithDrawRequest) => (
           <span className="font-medium">
@@ -51,7 +53,7 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
         ),
       },
       {
-        headerName: 'Date',
+        headerName: t('Date'),
         propertyName: 'requestTime',
         body: (rowData: IWithDrawRequest) => {
           const date = new Date(rowData.requestTime);
@@ -60,7 +62,7 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
         },
       },
       {
-        headerName: 'Status',
+        headerName: t('Status'),
         propertyName: 'status',
         body: (rowData: IWithDrawRequest) => {
           const findSeverity = (code: string | undefined) => {
@@ -90,6 +92,6 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
         },
       },
     ],
-    [options]
+    [options, t]
   );
 };

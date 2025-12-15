@@ -21,12 +21,15 @@ import {
   ProfileErrors,
   RestaurantErrors,
   SELECTED_SHOPTYPE,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { EDIT_RESTAURANT, GET_CUISINES } from '@/lib/api/graphql';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
-import { onErrorMessageMatcher, onUseLocalStorage, toTextCase } from '@/lib/utils/methods';
+import {
+  onErrorMessageMatcher,
+  onUseLocalStorage,
+  toTextCase,
+} from '@/lib/utils/methods';
 
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 
@@ -42,6 +45,7 @@ import {
 } from '@/lib/utils/interfaces/cuisine.interface';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 export default function UpdateRestaurantDetails({
   stepperProps,
@@ -88,6 +92,11 @@ export default function UpdateRestaurantDetails({
     },
   });
 
+  const { dropdownList, loading } = useShopTypes({
+    invoke_now: true,
+    transform_to_dropdown_list: true,
+  });
+
   const cuisineResponse = useQueryGQL(GET_CUISINES, {
     debounceMs: 300,
   }) as IQueryResult<IGetCuisinesData | undefined, undefined>;
@@ -114,7 +123,7 @@ export default function UpdateRestaurantDetails({
       minOrder: restaurantData?.minimumOrder ?? 0,
       salesTax: restaurantData?.tax ?? 0,
       shopType:
-        SHOP_TYPE.find((type) => type.code === restaurantData?.shopType) ??
+        dropdownList?.find((type) => type.label === restaurantData?.shopType) ??
         null,
       cuisines: Array.isArray(restaurantData?.cuisines)
         ? restaurantData.cuisines.map((cuisine) => ({
@@ -127,7 +136,7 @@ export default function UpdateRestaurantDetails({
       email: restaurantData?.username ?? '',
       orderprefix: restaurantData?.orderPrefix ?? '',
     };
-  }, [restaurantProfileResponse.data?.restaurant]);
+  }, [restaurantProfileResponse.data?.restaurant, dropdownList]);
 
   const onEditRestaurant = async (data: IUpdateProfileForm) => {
     if (!restaurantId) {
@@ -161,7 +170,7 @@ export default function UpdateRestaurantDetails({
           },
         },
       });
-       onUseLocalStorage('save', SELECTED_SHOPTYPE, data.shopType?.code);
+      onUseLocalStorage('save', SELECTED_SHOPTYPE, data.shopType?.code);
     } catch (error) {
       showToast({
         type: 'error',
@@ -172,7 +181,7 @@ export default function UpdateRestaurantDetails({
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-start">
+    <div className="w-full h-full flex items-center justify-start dark:text-white dark:bg-dark-950  ">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           <div className="flex flex-col mb-2">
@@ -418,7 +427,8 @@ export default function UpdateRestaurantDetails({
                       placeholder={t('Shop Category')}
                       selectedItem={values.shopType}
                       setSelectedItem={setFieldValue}
-                      options={SHOP_TYPE}
+                      options={dropdownList || []}
+                      loading={loading}
                       showLabel={true}
                       style={{
                         borderColor: onErrorMessageMatcher(
@@ -449,7 +459,7 @@ export default function UpdateRestaurantDetails({
                       }}
                     />
 
-                    <div className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 p-4">
+                    <div className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 dark:border-dark-600 p-4">
                       <CustomUploadImageComponent
                         key="logo"
                         name="logo"
@@ -501,7 +511,7 @@ export default function UpdateRestaurantDetails({
                         <small className="p-error mr-4">{errors.address}</small>
                       )}
                       <CustomButton
-                        className="w-fit h-10 bg-black text-white border-gray-300 px-8"
+                        className="w-fit h-10 bg-black border dark:border-dark-600 text-white border-gray-300 px-8"
                         label={t('Update')}
                         type="submit"
                         loading={isSubmitting}

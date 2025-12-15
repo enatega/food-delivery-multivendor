@@ -8,7 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ApolloCache, ApolloError, useMutation } from "@apollo/client";
+import {
+  ApolloCache,
+  ApolloError,
+  useMutation,
+  useQuery,
+} from "@apollo/client";
 import { Message } from "primereact/message";
 import { useRouter } from "next/navigation";
 
@@ -41,13 +46,18 @@ import { InfoSvg } from "@/lib/utils/assets/svg";
 
 // Constants
 import { DAYS } from "@/lib/utils/constants/orders";
-import { PAYMENT_METHOD_LIST, TIPS } from "@/lib/utils/constants";
+import { PAYMENT_METHOD_LIST } from "@/lib/utils/constants";
 
 // API
 import { PLACE_ORDER, VERIFY_COUPON, ORDERS } from "@/lib/api/graphql";
 
 // Interfaces
-import { ICoupon, ICouponData, IOpeningTime, IOrder } from "@/lib/utils/interfaces";
+import {
+  ICoupon,
+  ICouponData,
+  IOpeningTime,
+  IOrder,
+} from "@/lib/utils/interfaces";
 
 // Types
 import { OrderTypes } from "@/lib/utils/types/order";
@@ -67,6 +77,13 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useTheme } from "@/lib/providers/ThemeProvider";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
+import { GET_TIPS } from "@/lib/api/graphql/queries/tipping";
+
+//Coupon localStorage Keys
+const COUPON_STORAGE_KEY = "applied_coupon";
+const COUPON_TEXT_STORAGE_KEY = "coupon_text";
+const COUPON_APPLIED_STORAGE_KEY = "is_coupon_applied";
+const COUPON_RESTAURANT_KEY = "coupon_restaurant_id";
 
 export default function OrderCheckoutScreen() {
   const t = useTranslations();
@@ -90,7 +107,7 @@ export default function OrderCheckoutScreen() {
   // Coupon
   const [isCouponApplied, setIsCouponApplied] = useState(false);
   const [couponText, setCouponText] = useState("");
-  const [coupon, setCoupon] = useState<ICouponData>({} as ICouponData);
+  const [coupon, setCoupon] = useState<ICouponData | null>(null);
 
   // Hooks
   const router = useRouter();
@@ -107,7 +124,6 @@ export default function OrderCheckoutScreen() {
     fetchProfile,
     loadingProfile,
   } = useUser();
-
   const { userAddress } = useUserAddress();
   const restaurantFromLocalStorage = localStorage.getItem("restaurant");
   const { data: restaurantData } = useRestaurant(restaurantId || "") || {
@@ -135,6 +151,178 @@ export default function OrderCheckoutScreen() {
     }
   }, [restaurantData, restaurantFromLocalStorage]);
 
+  // Load saved coupon from localStorage when page loads
+
+  // ============================================================================
+  // FIX: Clear coupon when restaurant changes
+  // ============================================================================
+
+  // ADD THIS NEW CONSTANT with your other coupon constants (around line 76)
+
+  // ============================================================================
+  // STEP 1: Update couponCompleted to save restaurant ID
+  // ============================================================================
+
+  // Find the couponCompleted function (around line 420) and UPDATE it:
+
+  function couponCompleted({ coupon }: { coupon: ICoupon }) {
+    if (!coupon.success) {
+      showToast({
+        type: "info",
+        title: t("coupon_not_found_title"),
+        message: `${couponText} ${t("coupon_is_not_valid_message_with_title")}`,
+      });
+    } else if (coupon.coupon) {
+      if (coupon.coupon.enabled) {
+        showToast({
+          type: "info",
+          title: t("coupon_applied_title"),
+          message: `${coupon.coupon.title} ${t("coupon_has_been_applied_message")}`,
+        });
+        setIsCouponApplied(true);
+        setCoupon(coupon.coupon);
+
+        // SAVE TO LOCALSTORAGE
+        onUseLocalStorage(
+          "save",
+          COUPON_STORAGE_KEY,
+          JSON.stringify(coupon.coupon)
+        );
+        onUseLocalStorage("save", COUPON_TEXT_STORAGE_KEY, couponText);
+        onUseLocalStorage("save", COUPON_APPLIED_STORAGE_KEY, "true");
+
+        // SAVE RESTAURANT ID WITH COUPON
+        onUseLocalStorage("save", COUPON_RESTAURANT_KEY, restaurantId || "");
+      } else {
+        showToast({
+          type: "info",
+          title: t("coupon_not_found_title"),
+          message: `${coupon.coupon.title} ${t("coupon_is_not_valid_message_with_title")}`,
+        });
+      }
+    }
+  }
+
+  // ============================================================================
+  // STEP 2: Add useEffect to check restaurant change
+  // ============================================================================
+
+  // ADD THIS NEW useEffect after your existing coupon useEffects (around line 185)
+
+  // Clear coupon when restaurant changes
+  useEffect(() => {
+    // Only run this check if restaurantId has actually loaded
+    if (typeof window !== "undefined" && isCouponApplied && restaurantId) {
+      const savedRestaurantId = onUseLocalStorage("get", COUPON_RESTAURANT_KEY);
+
+      // Only clear if both IDs exist and are different
+      if (savedRestaurantId && savedRestaurantId !== restaurantId) {
+        // Restaurant changed - clear coupon
+        setIsCouponApplied(false);
+        setCoupon({} as ICouponData);
+        setCouponText("");
+
+        onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
+
+        showToast({
+          type: "info",
+          title: t("coupon_removed_title"),
+          message: t("coupon_removed_different_restaurant"),
+        });
+
+        console.log("Coupon cleared: restaurant changed");
+      }
+    }
+  }, [restaurantId, isCouponApplied, showToast, t]);
+
+  // ============================================================================
+  // STEP 3: Update the load coupon useEffect to validate restaurant
+  // ============================================================================
+
+  // REPLACE your existing "Load saved coupon" useEffect (around line 160) with this:
+
+  // Load saved coupon from localStorage when page loads
+  useEffect(() => {
+    // Wait until restaurantId is loaded before checking coupon
+    if (typeof window !== "undefined" && restaurantId) {
+      const savedCouponData = onUseLocalStorage("get", COUPON_STORAGE_KEY);
+      const savedCouponText = onUseLocalStorage("get", COUPON_TEXT_STORAGE_KEY);
+      const savedCouponApplied = onUseLocalStorage(
+        "get",
+        COUPON_APPLIED_STORAGE_KEY
+      );
+      const savedRestaurantId = onUseLocalStorage("get", COUPON_RESTAURANT_KEY);
+
+      if (savedCouponData && savedCouponText && savedCouponApplied === "true") {
+        // CHECK IF RESTAURANT MATCHES
+        if (savedRestaurantId === restaurantId) {
+          try {
+            const parsedCoupon = JSON.parse(savedCouponData);
+            setCoupon(parsedCoupon);
+            setCouponText(savedCouponText);
+            setIsCouponApplied(true);
+          } catch (error) {
+            // Clear invalid data
+            onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+            onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+            onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+            onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
+          }
+        } else {
+          // DIFFERENT RESTAURANT - CLEAR COUPON
+          console.log("Coupon not loaded: different restaurant");
+          onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+          onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+          onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+          onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
+        }
+      }
+    }
+  }, [restaurantId]); // restaurantId is the key dependency here
+
+  // Clear coupon when cart is empty
+  useEffect(() => {
+    if (isCouponApplied && cart.length === 0) {
+      // Cart is empty - clear coupon
+      setIsCouponApplied(false);
+      setCoupon({} as ICouponData);
+      setCouponText("");
+
+      onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+    }
+  }, [cart.length, isCouponApplied]);
+
+  // Clear coupon when restaurant changes
+  useEffect(() => {
+    if (typeof window !== "undefined" && isCouponApplied && restaurantId) {
+      const savedRestaurantId = onUseLocalStorage("get", COUPON_RESTAURANT_KEY);
+
+      if (savedRestaurantId && savedRestaurantId !== restaurantId) {
+        // Restaurant changed - clear coupon
+        setIsCouponApplied(false);
+        setCoupon({} as ICouponData);
+        setCouponText("");
+
+        onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
+
+        showToast({
+          type: "info",
+          title: t("coupon_removed_title"),
+          message: t("coupon_removed_different_restaurant"),
+        });
+
+        console.log("Coupon cleared: restaurant changed");
+      }
+    }
+  }, [restaurantId, isCouponApplied]);
   // Use local restaurant data if GraphQL data is not available
   const finalRestaurantData = restaurantData || localRestaurantData;
 
@@ -199,6 +387,7 @@ export default function OrderCheckoutScreen() {
   }, []);
 
   // API
+  const { data: tipData } = useQuery(GET_TIPS);
   const [placeOrder, { loading: loadingOrderMutation }] = useMutation(
     PLACE_ORDER,
     {
@@ -214,6 +403,7 @@ export default function OrderCheckoutScreen() {
     }
   );
 
+  console.log("Tipps from admin:", tipData);
   // Handlers
   const onInit = () => {
     if (!finalRestaurantData) return;
@@ -238,6 +428,17 @@ export default function OrderCheckoutScreen() {
     }
   }, [finalRestaurantData, taxValue]);
 
+  useEffect(() => {
+    const savedCoupon = localStorage.getItem("appliedCoupon");
+
+    if (savedCoupon) {
+      const parsed = JSON.parse(savedCoupon);
+      setCoupon(parsed);
+      setIsCouponApplied(true);  // ← VERY IMPORTANT
+    }
+  }, []);
+
+
   const onInitDirectionCacheSet = () => {
     try {
       const stored_direction = onUseLocalStorage(
@@ -246,9 +447,12 @@ export default function OrderCheckoutScreen() {
       );
       if (stored_direction) {
         setDirections(JSON.parse(stored_direction));
+      } else {
+        setDirections(null);
       }
       setIsCheckingCache(false); // done checking
     } catch (err) {
+      setDirections(null);
       setIsCheckingCache(false);
     }
   };
@@ -287,9 +491,9 @@ export default function OrderCheckoutScreen() {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-              _id,
-              options: options.map(({ _id }) => _id),
-            }))
+            _id,
+            options: options.map(({ _id }) => _id),
+          }))
           : [],
         specialInstructions: food.specialInstructions,
       };
@@ -322,11 +526,11 @@ export default function OrderCheckoutScreen() {
 
   // API Handlers
   const onApplyCoupon = () => {
-    verifyCoupon({ variables: { coupon: couponText, restaurantId:restaurantId } });
+    verifyCoupon({ variables: { coupon: couponText, restaurantId: restaurantId } });
   };
 
   function couponCompleted({ coupon }: { coupon: ICoupon }) {
-    if(!coupon.success){
+    if (!coupon.success) {
       showToast({
         type: "info",
         title: t("coupon_not_found_title"),
@@ -342,6 +546,7 @@ export default function OrderCheckoutScreen() {
         });
         setIsCouponApplied(true);
         setCoupon(coupon.coupon);
+        localStorage.setItem("coupon", JSON.stringify(coupon.coupon));
       } else {
         showToast({
           type: "info",
@@ -601,13 +806,14 @@ export default function OrderCheckoutScreen() {
 
     if (checkPaymentMethod(CURRENCY, paymentMethod)) {
       const items = transformOrder(cart);
+
       placeOrder({
         variables: {
           restaurant: restaurantId,
           orderInput: items,
           instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
-          couponCode: isCouponApplied? coupon? coupon.title : null : null,
+          couponCode: isCouponApplied ? coupon ? coupon.title : null : null,
           tipping: +selectedTip,
           taxationAmount: +taxCalculation(),
           // address: {
@@ -641,7 +847,11 @@ export default function OrderCheckoutScreen() {
   async function onCompleted(data: { placeOrder: IOrder }) {
     localStorage.removeItem("orderInstructions");
     clearCart();
-
+    // CLEAR COUPON FROM LOCALSTORAGE
+    onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+    onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+    onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+    onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
     if (paymentMethod === "COD") {
       router.replace(`/order/${data.placeOrder._id}/tracking`);
     } else if (paymentMethod === "PAYPAL") {
@@ -837,7 +1047,7 @@ export default function OrderCheckoutScreen() {
               height={300}
               className="w-full h-64 object-cover"
             />
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#5AC12F] text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary-color text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">
               H
             </div>{" "}
           </>
@@ -846,7 +1056,7 @@ export default function OrderCheckoutScreen() {
       {/* <!-- Toggle Prices Button for Mobile --> 
           <div className="sm:hidden fixed top-14 left-0 right-0 bg-transparent z-10 p-4">
             <button
-              className="bg-white text-[#5AC12F] w-full py-2 px-4 rounded-full border border-gray-300 flex justify-between items-center"
+              className="bg-white text-primary-color w-full py-2 px-4 rounded-full border border-gray-300 flex justify-between items-center"
               onClick={togglePriceSummary}
             >
               <span className="font-inter text-[14px]">
@@ -865,11 +1075,10 @@ export default function OrderCheckoutScreen() {
             {/* <!-- Delivery and Pickup Toggle --> */}
             <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full p-2 mb-6">
               <button
-                className={`w-1/2 ${
-                  deliveryType === "Delivery"
-                    ? "bg-[#5AC12F]"
-                    : "bg-gray-100 dark:bg-gray-700"
-                } text-white py-2 rounded-full flex items-center justify-center`}
+                className={`w-1/2 ${deliveryType === "Delivery"
+                  ? "bg-primary-color"
+                  : "bg-gray-100 dark:bg-gray-700"
+                  } text-white py-2 rounded-full flex items-center justify-center`}
                 onClick={() => {
                   setDeliveryType("Delivery");
                   setIsPickUp(false);
@@ -885,11 +1094,10 @@ export default function OrderCheckoutScreen() {
               </button>
 
               <button
-                className={`w-1/2 ${
-                  deliveryType === "Pickup"
-                    ? "bg-[#5AC12F]"
-                    : "bg-gray-100 dark:bg-gray-700"
-                } px-6 py-2 rounded-full mx-2 flex items-center justify-center`}
+                className={`w-1/2 ${deliveryType === "Pickup"
+                  ? "bg-primary-color"
+                  : "bg-gray-100 dark:bg-gray-700"
+                  } px-6 py-2 rounded-full mx-2 flex items-center justify-center`}
                 onClick={() => {
                   setDeliveryType("Pickup");
                   setIsPickUp(true);
@@ -1013,14 +1221,14 @@ export default function OrderCheckoutScreen() {
                             }
                           )}
                         </div>
-                        <p className="text-[#0EA5E9] font-semibold text-sm sm:text-base md:text-[11px] lg:text-[12px] xl:text-[14px]">
+                        <p className="text-secondary-color font-semibold text-sm sm:text-base md:text-[11px] lg:text-[12px] xl:text-[14px]">
                           {CURRENCY_SYMBOL}
                           {item.price}
                         </p>
                       </div>
                     </div>
 
-                    <div className="border border-[#0EA5E9] text-[#0EA5E9] py-1 px-3 rounded-lg text-xs sm:text-sm font-medium w-fit">
+                    <div className="border border-secondary-color text-secondary-color py-1 px-3 rounded-lg text-xs sm:text-sm font-medium w-fit">
                       {item.quantity}
                     </div>
                   </div>
@@ -1106,26 +1314,27 @@ export default function OrderCheckoutScreen() {
                     {t("tip_courier_info")}
                   </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {TIPS.map((tip: string, index: number) => (
-                      <button
-                        key={index}
-                        className={`text-[12px] ${
-                          selectedTip === tip
-                            ? "text-white bg-[#0EA5E9]"
-                            : "text-[#0EA5E9] bg-white dark:bg-gray-800 dark:text-[#0EA5E9]"
-                        } border border-[#0EA5E9] px-4 py-2 rounded-full w-full`}
-                        onClick={() => {
-                          if (selectedTip === tip) {
-                            setSelectedTip("");
-                          } else {
-                            setSelectedTip(tip);
-                          }
-                        }}
-                      >
-                        {tip !== "Other" ? CURRENCY_SYMBOL : ""}
-                        {tip}
-                      </button>
-                    ))}
+                    {tipData?.tips.tipVariations.map(
+                      (tip: string, index: number) => (
+                        <button
+                          key={index}
+                          className={`text-[12px] ${selectedTip === tip
+                            ? "text-white bg-secondary-color"
+                            : "text-secondary-color bg-white dark:bg-gray-800 dark:text-secondary-color"
+                            } border border-secondary-color px-4 py-2 rounded-full w-full`}
+                          onClick={() => {
+                            if (selectedTip === tip) {
+                              setSelectedTip("");
+                            } else {
+                              setSelectedTip(tip);
+                            }
+                          }}
+                        >
+                          {tip !== "Other" ? CURRENCY_SYMBOL : ""}
+                          {tip}
+                        </button>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
@@ -1148,6 +1357,14 @@ export default function OrderCheckoutScreen() {
                     className="border border-red-500 text-red-500 hover:bg-red-50 dark:border-red-500 dark:hover:border-red-700 dark:hover:bg-inherit rtl:mr-3 ml-3 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium   tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
                     onClick={() => {
                       setIsCouponApplied(false);
+                      setCoupon({} as ICouponData);
+                      setCouponText("");
+
+                      // CLEAR FROM LOCALSTORAGE
+                      onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+                      onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+                      onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+                      onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
                     }}
                   >
                     {couponLoading ? (
@@ -1172,7 +1389,7 @@ export default function OrderCheckoutScreen() {
                       disabled={couponLoading}
                     />
                     <button
-                      className="bg-[#5AC12F] rtl:mr-2 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium text-gray-900 dark:text-gray-900  tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
+                      className="bg-primary-color rtl:mr-2 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium text-gray-900 dark:text-gray-900  tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
                       onClick={onApplyCoupon}
                     >
                       {couponLoading ? (
@@ -1279,7 +1496,7 @@ export default function OrderCheckoutScreen() {
                 </div>
               )}
 
-              {/* <div className="text-[#0EA5E9] mb-1 text-left font-inter text-xs lg:text-[12px]">
+              {/* <div className="text-secondary-color mb-1 text-left font-inter text-xs lg:text-[12px]">
                     Choose an offer (1 available)
                   </div>
 
@@ -1291,7 +1508,7 @@ export default function OrderCheckoutScreen() {
               </div>
 
               <button
-                className="bg-[#5AC12F] text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px]"
+                className="bg-primary-color text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px]"
                 onClick={onPlaceOrder}
               >
                 {loadingOrderMutation ? (
@@ -1391,7 +1608,7 @@ export default function OrderCheckoutScreen() {
                 </div>
               )}
 
-              {/* <div className="text-[#0EA5E9] mb-1 text-left font-inter text-xs lg:text-[12px]">
+              {/* <div className="text-secondary-color mb-1 text-left font-inter text-xs lg:text-[12px]">
                     Choose an offer (1 available)
                   </div> */}
 
@@ -1403,7 +1620,7 @@ export default function OrderCheckoutScreen() {
               </div>
 
               <button
-                className="bg-[#5AC12F] text-gray-900 dark:text-white w-full py-2 rounded-full text-xs lg:text-[12px]"
+                className="bg-primary-color text-gray-900 dark:text-white w-full py-2 rounded-full text-xs lg:text-[12px]"
                 onClick={onPlaceOrder}
               >
                 {loadingOrderMutation ? (
@@ -1502,7 +1719,7 @@ export default function OrderCheckoutScreen() {
                         </span>
                       </div>
 
-                      <div className="text-[#0EA5E9] mb-1 text-left font-inter text-[14px] md:text-lg leading-6 md:leading-7">
+                      <div className="text-secondary-color mb-1 text-left font-inter text-[14px] md:text-lg leading-6 md:leading-7">
                         Choose an offer (1 available)
                       </div>
                       <Divider />
@@ -1515,7 +1732,7 @@ export default function OrderCheckoutScreen() {
                         </span>
                       </div>
                       <button
-                        className="bg-[#5AC12F] text-gray-900 w-full py-2 rounded-full text-sm"
+                        className="bg-primary-color text-gray-900 w-full py-2 rounded-full text-sm"
                         onClick={onPlaceOrder}
                       >
                         {loadingOrderMutation ?

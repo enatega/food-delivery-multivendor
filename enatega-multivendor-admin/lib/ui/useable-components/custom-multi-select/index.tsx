@@ -9,6 +9,7 @@ import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
 import TextIconClickable from '../text-icon-clickable';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { twMerge } from 'tailwind-merge';
+import { useTranslations } from 'next-intl';
 
 const CustomMultiSelectComponent = ({
   name,
@@ -25,6 +26,7 @@ const CustomMultiSelectComponent = ({
   multiSelectClassName,
   ...props
 }: IMultiSelectComponentProps) => {
+   const t = useTranslations()
   const itemTemplate = (option: { label: string }) => {
     return (
       <div className="align-items-center flex">
@@ -33,22 +35,23 @@ const CustomMultiSelectComponent = ({
     );
   };
 
+
   const panelFooterTemplate = () => {
     const length = selectedItems ? selectedItems.length : 0;
-
+   
     return (
       <div className="flex justify-between space-x-2">
         {extraFooterButton?.title ? (
           <TextIconClickable
-            className="w-full h-fit rounded  text-black"
+            className="w-full h-fit rounded  text-black dark:text-white"
             icon={faAdd}
             iconStyles={{ color: 'black' }}
-            title={`${extraFooterButton.title} (${length} Selected)`}
+            title={`${extraFooterButton.title} (${length} ${t('selected')})`}
             onClick={extraFooterButton.onChange}
           />
         ) : (
           <div className="px-3 py-2">
-            <b>{length}</b> item{length > 1 ? 's' : ''} selected.
+            <b>{length}</b> {length > 1 ? t('Items') : t('item')} {t('selected')}
           </div>
         )}
       </div>
@@ -58,7 +61,7 @@ const CustomMultiSelectComponent = ({
   return !isLoading ? (
     <div className={twMerge(`flex w-full flex-col justify-center gap-y-1`, className)}>
       {showLabel && (
-        <label htmlFor="username" className="text-sm font-[500]">
+        <label htmlFor="username" className="text-sm font-[500] dark:text-white">
           {placeholder}
         </label>
       )}
@@ -76,7 +79,7 @@ const CustomMultiSelectComponent = ({
         placeholder={placeholder}
         itemTemplate={itemTemplate}
         panelFooterTemplate={panelFooterTemplate}
-        className={twMerge("md:w-20rem m-0 h-10 w-full border border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none", multiSelectClassName)}
+        className={twMerge("md:w-20rem m-0 h-10 w-full border dark:border-dark-600 dark:bg-dark-950 dark:text-white border-gray-300 p-0 align-middle text-sm focus:shadow-none focus:outline-none", multiSelectClassName)}
         panelClassName="border-gray-200 border-2"
         display="chip"
         dropdownIcon={(options) => (

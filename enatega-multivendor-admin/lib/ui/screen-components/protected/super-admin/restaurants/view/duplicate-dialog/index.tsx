@@ -134,7 +134,7 @@ const RestaurantDuplicateDialog = ({
         label={t('Cancel')}
         icon="pi pi-times"
         onClick={onHide}
-        className="h-9 rounded border border-gray-300 bg-transparent px-5 text-black"
+        className="h-9 rounded border border-gray-300 bg-transparent px-5 text-black dark:text-white"
       />
       <CustomButton
         loading={loading}

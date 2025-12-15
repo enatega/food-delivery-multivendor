@@ -54,7 +54,7 @@ export default function GrowthOverView() {
     const textColorSecondary = documentStyle.getPropertyValue(
       '--text-color-secondary'
     );
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    const surfaceBorder = '#4b5563'; // tailwind gray-600
     const data = {
       labels: [
         t('January'),
@@ -155,7 +155,7 @@ export default function GrowthOverView() {
       <p className="text-gray-500">
         {t('Tracking Stakeholders Growth Over the Year')}
       </p>
-      <div className="mt-4">
+      <div className="mt-4 bg-white dark:bg-dark-950">
         {loading ? (
           <DashboardUsersByYearStatsSkeleton />
         ) : (

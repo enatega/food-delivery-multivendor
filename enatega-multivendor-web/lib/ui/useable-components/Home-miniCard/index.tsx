@@ -20,7 +20,7 @@ const HomeMiniCard:React.FC<HomeMiniCardProps> = ({image,heading,subText,heading
 const bgColor = theme === "dark" ? darkBackColor : backColor;
 
   return (
-    <div className='h-[400px] flex justify-center items-center flex-col bg-green-100 rounded-3xl '
+    <div className='h-[400px] flex justify-center items-center flex-col  rounded-3xl '
     style={{backgroundColor:bgColor}}
     >
       <div className='w-[300px] mx-auto flex flex-col items-center justify-between'>

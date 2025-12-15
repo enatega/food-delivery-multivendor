@@ -108,9 +108,9 @@ export default function EarningTableHeader({
     <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between  ">
       <div className="flex flex-wrap gap-4">
         <span className="p-input-icon-left w-full md:w-auto">
-          <i className="pi pi-search" />
+          <i className="pi pi-search pl-2" />
           <InputText
-            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-7 pr-3"
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
             placeholder={t('Search')}
@@ -204,21 +204,12 @@ export default function EarningTableHeader({
         />
          <button
         onClick={onClearFilters}
-        className="max-w-32  px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors "
+        className="max-w-32 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors "
         type="button"
       >
         {t('Reset')}
       </button>
       </div>
-
-      <button
-        onClick={onClearFilters}
-        className="max-w-32 mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded h-10 transition-colors"
-        type="button"
-      >
-        {t('Reset')}
-      </button>
-
     </div>
   );
 }

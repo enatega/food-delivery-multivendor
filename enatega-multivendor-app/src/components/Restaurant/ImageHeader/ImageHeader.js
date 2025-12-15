@@ -82,7 +82,8 @@ function ImageTextCenterHeader(props, ref) {
     restaurantUrl: props?.restaurant ? props?.restaurant?.restaurantUrl : '',
     IsOpen: isOpen(props?.restaurant ? props?.restaurant : ''),
     reviewsCount: props?.restaurant ? props?.restaurant?.reviewCount : '...',
-    reviewsAverage: props?.reviewAverage
+    reviewsAverage: props?.reviewAverage,
+    _id: props?.restaurantId
   }
 
   const currentDayShort = new Date()

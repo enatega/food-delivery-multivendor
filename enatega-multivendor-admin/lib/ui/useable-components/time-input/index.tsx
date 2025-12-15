@@ -13,7 +13,7 @@ const CustomTimeInput = ({
   return !isLoading ? (
     <div className="flex w-full flex-col justify-center gap-y-1">
       {showLabel && (
-        <label htmlFor="timeInput" className="text-sm font-[500]">
+        <label htmlFor="timeInput" className="text-sm font-[500] dark:text-white">
           {placeholder}
         </label>
       )}

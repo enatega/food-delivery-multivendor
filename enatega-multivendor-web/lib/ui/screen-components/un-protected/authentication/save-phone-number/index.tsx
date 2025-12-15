@@ -86,7 +86,7 @@ export default function SavePhoneNumber() {
 
     {/* Continue button */}
     <CustomButton
-      className="bg-[#5AC12F] flex items-center justify-center gap-x-4 px-4 py-3 rounded-full w-72 my-3 text-white font-medium shadow-sm"
+      className="bg-primary-color flex items-center justify-center gap-x-4 px-4 py-3 rounded-full w-72 my-3 text-white font-medium shadow-sm"
       onClick={handleSubmit}
       loading={isLoading}
       label={t("continue_label")}

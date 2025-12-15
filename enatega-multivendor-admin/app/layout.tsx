@@ -1,12 +1,13 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import Script from 'next/script';
+import { ThemeProvider } from 'next-themes';
 
 // ✅ Add metadata export for favicon
 export const metadata = {
   title: 'Enatega Admin Dashboard',
   icons: {
-    icon: '/favicon.png',
+    icon: '/favsicons.png',
     // You can add more like:
     // shortcut: "/favicon.png",
     // apple: "/apple-touch-icon.png"
@@ -23,7 +24,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-       <head>
+      <head>
         {/* Microsoft Clarity */}
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
@@ -36,9 +37,11 @@ export default async function RootLayout({
         </Script>
       </head>
       <body>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        <ThemeProvider attribute={'class'}>
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

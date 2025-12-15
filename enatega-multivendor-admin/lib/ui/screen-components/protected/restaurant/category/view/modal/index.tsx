@@ -44,7 +44,7 @@ export default function SubCategoriesPreiwModal({
       className="p-3 w-1/3 mx-auto"
       header={() => {
         return (
-          <div className="mx-auto font-bold text-gray-700">
+          <div className="mx-auto font-bold text-gray-700 ">
             {t('Child Categories')}
           </div>
         );
@@ -62,7 +62,7 @@ export default function SubCategoriesPreiwModal({
             return (
               <li
                 key={sub_ctg._id}
-                className="my-1 text-sm font-semibold text-green-500"
+                className="my-1 text-sm font-semibold text-primary-dark"
               >
                 {sub_ctg.title}
               </li>

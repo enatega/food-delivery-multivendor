@@ -36,7 +36,7 @@ import { useTranslations } from 'next-intl';
 
 // Status templates
 const valueTemplate = (option: IDropdownSelectItem) => (
-  <div className="flex items-center justify-start gap-2">
+  <div className="flex items-center justify-start gap-2 dark:text-white">
     <Tag
       severity={severityChecker(option?.code)}
       value={option?.label}
@@ -51,7 +51,7 @@ const itemTemplate = (option: IDropdownSelectItem) => {
     <div
       className={`flex flex-row-reverse items-center justify-start gap-2 ${classes.dropDownItem}`}
     >
-      <span>{option.code}</span>
+      <span>{option.label}</span>
     </div>
   );
 };
@@ -80,34 +80,34 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   // Status options
   const actionStatusOptions = [
     {
-      label: t('Pending'),
+      label: t('PENDING'),
       code: 'PENDING',
-      body: () => <Tag value={t('Pending')} severity="secondary" rounded />,
+      body: () => <Tag value={t('PENDING')} severity="secondary" rounded />,
     },
     {
-      label: t('Assigned'),
+      label: t('ASSIGNED'),
       code: 'ASSIGNED',
-      body: () => <Tag value={t('Assigned')} severity="warning" rounded />,
+      body: () => <Tag value={t('ASSIGNED')} severity="warning" rounded />,
     },
     {
-      label: t('Accepted'),
+      label: t('ACCEPTED'),
       code: 'ACCEPTED',
-      body: () => <Tag value={t('Accepted')} severity="info" rounded />,
+      body: () => <Tag value={t('ACCEPTED')} severity="info" rounded />,
     },
     {
-      label: t('Delivered'),
+      label: t('DELIVERED'),
       code: 'DELIVERED',
-      body: () => <Tag value={t('Delivered')} severity="success" rounded />,
+      body: () => <Tag value={t('DELIVERED')} severity="success" rounded />,
     },
     {
-      label: t('Picked'),
+      label: t('PICKED'),
       code: 'PICKED',
-      body: () => <Tag value={t('Picked')} severity="contrast" rounded />,
+      body: () => <Tag value={t('PICKED')} severity="contrast" rounded />,
     },
     {
-      label: t('Rejected'),
+      label: t('CANCELLED'),
       code: 'CANCELLED',
-      body: () => <Tag value={t('Rejected')} severity="danger" rounded />,
+      body: () => <Tag value={t('CANCELLED')} severity="danger" rounded />,
     },
   ];
 
@@ -160,7 +160,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   };
   const OrderSubscription = ({ rowData }: { rowData: IActiveOrders }) => {
     useOrderSubscription(rowData);
-    return <p>{rowData.deliveryAddress.deliveryAddress}</p>;
+    return <p>{rowData.isPickedUp === false ? "Not Picked" : "Picked"}</p>;
   };
 
   // Mutations
@@ -322,7 +322,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                   handleAssignRider(e.value, rowData)
                 }
                 // filter={true}
-                className="min-w-[120px] outline outline-1 outline-gray-300"
+                className="min-w-[120px] outline outline-1 outline-gray-600 "
               />
             </div>
           );
@@ -349,7 +349,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                 //   handleAssignRider(e.value, rowData)
                 // }
                 // filter={true}
-                className="min-w-[150px] outline outline-1 outline-gray-300"
+                className="min-w-[150px] outline outline-1 outline-gray-600"
               />
             </div>
           );
@@ -400,10 +400,10 @@ export const DISPATCH_TABLE_COLUMNS = () => {
         // CHANGE 2: Filter status options based on whether it's a pickup order
         const availableStatuses = rowData.isPickedUp
           ? actionStatusOptions.filter((status) =>
-              ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
-                status.code
-              )
+            ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
+              status.code
             )
+          )
           : actionStatusOptions;
 
         const currentStatus = availableStatuses.find(

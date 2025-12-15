@@ -39,7 +39,7 @@ export default function RidersDetailScreen() {
 
   return (
     <div className="screen-container p-3">
-      <HeaderText className="heading" text={t('Rider Information')} />
+      <HeaderText className="heading" text={t('rider_information')} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
         {/* top-left */}

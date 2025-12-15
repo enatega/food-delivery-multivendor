@@ -36,13 +36,13 @@ function SuperAdminSidebar({ children }: IGlobalComponentProps) {
     useContext<LayoutContextProps>(LayoutContext);
 
   return (
-    <div className="relative">
+    <div className="relative dark:text-white">
       <aside
         id="app-sidebar"
         className={`box-border transform overflow-hidden transition-all duration-300 ease-in-out ${isSuperAdminSidebarVisible ? 'w-64 translate-x-0' : 'w-0 -translate-x-full'}`}
       >
         <nav
-          className={`flex h-full flex-col border-r bg-white shadow-sm transition-opacity duration-300 ${isSuperAdminSidebarVisible ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+          className={`flex h-full flex-col border-r bg-white dark:bg-dark-950 dark:border-dark-600 dark:text-white shadow-sm transition-opacity duration-300 ${isSuperAdminSidebarVisible ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
         >
           <ul className="flex-1 pl-2">{children}</ul>
         </nav>
@@ -207,16 +207,19 @@ export default function MakeSidebar() {
       subMenu: useCheckAllowedRoutes([
         {
           text: t('Transaction History'),
+          label: t('Transaction History'),
           route: '/wallet/transaction-history',
           isParent: false,
         },
         {
           text: 'Withdrawal Request',
+          label: t('Withdrawal Request'),
           route: '/wallet/withdraw-requests',
           isParent: false,
         },
         {
           text: t('Earnings'),
+          label: t('Earnings'),
           route: '/wallet/earnings',
           isParent: false,
         },
@@ -226,7 +229,7 @@ export default function MakeSidebar() {
       },
     },
     {
-      text: 'CustomerSupport',
+      text: 'CustomerSupport',  
       label: t('CustomerSupport'),
       route: '/customerSupport',
       icon: faHeadset,

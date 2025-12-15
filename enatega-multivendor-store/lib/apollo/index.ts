@@ -8,7 +8,8 @@ import {
   Operation,
   split,
 } from "@apollo/client";
-import { WebSocketLink } from "@apollo/client/link/ws";
+import { createClient } from "graphql-ws";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 
 import getEnvVars from "@/environment";
@@ -20,12 +21,11 @@ import { STORE_TOKEN } from "../utils/constants";
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars();
 
-  const wsLink = new WebSocketLink({
-    uri: WS_GRAPHQL_URL,
-    options: {
-      reconnect: true,
-    },
-  });
+  const wsLink = new GraphQLWsLink(
+    createClient({
+      url: WS_GRAPHQL_URL,
+    })
+  );
   const cache = new InMemoryCache();
   // eslint-disable-next-line new-cap
   const httpLink = createHttpLink({

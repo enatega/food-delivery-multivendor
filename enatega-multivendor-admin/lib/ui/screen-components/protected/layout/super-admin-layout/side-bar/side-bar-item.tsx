@@ -19,7 +19,9 @@ function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
   return (
     <div
       className={`my-3 rounded-md p-2 ${
-        active ? 'bg-gray-300' : 'hover:bg-indigo-50'
+        active
+          ? 'bg-gray-300 dark:bg-dark-600 dark:text-white'
+          : 'hover:bg-indigo-50 dark:hover:bg-dark-950 dark:text-white'
       }`}
     >
       <div className="flex items-center justify-center">
@@ -38,6 +40,7 @@ function HoveredSubMenuItem({ icon, text, active }: SubMenuItemProps) {
 export default function SidebarItem({
   icon,
   text,
+  label,
   expanded = false,
   subMenu = null,
   route,
@@ -82,7 +85,7 @@ export default function SidebarItem({
             isActive && !subMenu
               ? `bg-${isClickable ? bg_color : ''} text-${isClickable ? text_color : '[#71717A]'}`
               : `bg-${bg_color} text-${text_color} hover:bg-secondary-color`
-          } ${!expanded && 'hidden sm:flex'} `}
+          } ${!expanded && 'hidden sm:flex'} dark:text-white`}
           onClick={() => {
             if (!isParent || isClickable) {
               if (
@@ -116,7 +119,7 @@ export default function SidebarItem({
               expanded ? 'ml-3 w-44' : 'w-0'
             }`}
           >
-            {text}
+             {label || text}
             {/* {label} */}
           </span>
           {subMenu && (
@@ -129,14 +132,14 @@ export default function SidebarItem({
 
           {!expanded && (
             <div
-              className={`text-primary-500 invisible absolute left-full ml-6 -translate-x-3 rounded-md bg-indigo-100 px-2 py-1 text-sm opacity-20 transition-all group-hover:visible group-hover:translate-x-0 group-hover:opacity-100`}
+              className={`text-primary-500 invisible absolute left-full ml-6 -translate-x-3 rounded-md bg-indigo-100 px-2 py-1 text-sm opacity-20 transition-all group-hover:visible group-hover:translate-x-0 group-hover:opacity-100 dark:bg-dark-950 dark:border dark:border-dark-600 dark:text-white`}
             >
               {!subMenu
-                ? text
+                ? (label || text)
                 : subMenu.map((item, index) => (
                     <HoveredSubMenuItem
                       key={index}
-                      text={item.text}
+                      text={item.label || item.text}
                       icon={item.icon}
                       active={isActive}
                     />
@@ -149,7 +152,7 @@ export default function SidebarItem({
         className={`${classes['sub-menu']} relative pl-6`}
         style={{ height: subMenuHeight }}
       >
-        <div className="absolute bottom-0 left-6 top-0 w-px bg-gray-300"></div>
+        <div className="absolute bottom-0 left-6 top-0 w-px bg-gray-300 dark:bg-dark-600"></div>
 
         {(expanded ||
           onUseLocalStorage('get', SELECTED_SIDEBAR_MENU) === text) &&
@@ -158,7 +161,7 @@ export default function SidebarItem({
             return (
               <li key={index} className="relative">
                 {isActive && (
-                  <div className="absolute -left-[0.26rem] top-1/2 z-10 h-2 w-2 -translate-y-1/2 transform rounded-full bg-green-500"></div>
+                  <div className="absolute -left-[0.26rem] top-1/2 z-10 h-2 w-2 -translate-y-1/2 transform rounded-full bg-primary-dark"></div>
                 )}
                 <SidebarItem {...item} expanded={expanded} />
               </li>

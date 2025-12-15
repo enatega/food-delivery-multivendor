@@ -27,7 +27,6 @@ import {
   MAX_LANSDCAPE_FILE_SIZE,
   MAX_SQUARE_FILE_SIZE,
   RestaurantErrors,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 
 // Interface
@@ -57,6 +56,7 @@ import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
 import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 const initialValues: IRestaurantForm = {
   name: '',
@@ -129,6 +129,8 @@ export default function RestaurantDetailsForm({
     debounceMs: 300,
   }) as IQueryResult<IGetCuisinesData | undefined, undefined>;
   cuisineResponse.data?.cuisines;
+
+  const {dropdownList,loading} =  useShopTypes({invoke_now: true, transform_to_dropdown_list: true})
 
   // Memoized Constants
   const cuisinesDropdown = useMemo(
@@ -235,7 +237,7 @@ export default function RestaurantDetailsForm({
   }
 
   return (
-    <div className="flex h-full w-full items-center justify-start">
+    <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950">
       <div className="h-full w-full">
         <div className="flex flex-col gap-2">
           {/* <div className="flex flex-col mb-2">
@@ -473,12 +475,13 @@ export default function RestaurantDetailsForm({
                         />
                       </div>
                       <div>
-                        <CustomDropdownComponent
+                      <CustomDropdownComponent
                           name="shopType"
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
                           setSelectedItem={setFieldValue}
-                          options={SHOP_TYPE}
+                          loading={loading}
+                          options={dropdownList || []}
                           showLabel={true}
                           style={{
                             borderColor: onErrorMessageMatcher(
