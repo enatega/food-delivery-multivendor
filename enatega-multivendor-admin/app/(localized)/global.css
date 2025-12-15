@@ -771,7 +771,7 @@ body {
 .dark .p-dropdown-panel .p-dropdown-header {
   background-color: var(--dark-950) !important;
   /* gray-900 */
-  border-bottom: 1px solid --dark-600 !important;
+  border-bottom: 1px solid var(--dark-600) !important;
   /* gray-700 */
   padding: 0.5rem !important;
 }
