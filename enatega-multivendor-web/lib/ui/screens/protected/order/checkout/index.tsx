@@ -8,7 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ApolloCache, ApolloError, useMutation, useQuery } from "@apollo/client";
+import {
+  ApolloCache,
+  ApolloError,
+  useMutation,
+  useQuery,
+} from "@apollo/client";
 import { Message } from "primereact/message";
 import { useRouter } from "next/navigation";
 
@@ -47,7 +52,12 @@ import { PAYMENT_METHOD_LIST } from "@/lib/utils/constants";
 import { PLACE_ORDER, VERIFY_COUPON, ORDERS } from "@/lib/api/graphql";
 
 // Interfaces
-import { ICoupon, ICouponData, IOpeningTime, IOrder } from "@/lib/utils/interfaces";
+import {
+  ICoupon,
+  ICouponData,
+  IOpeningTime,
+  IOrder,
+} from "@/lib/utils/interfaces";
 
 // Types
 import { OrderTypes } from "@/lib/utils/types/order";
@@ -68,6 +78,12 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "@/lib/providers/ThemeProvider";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
 import { GET_TIPS } from "@/lib/api/graphql/queries/tipping";
+
+//Coupon localStorage Keys
+const COUPON_STORAGE_KEY = "applied_coupon";
+const COUPON_TEXT_STORAGE_KEY = "coupon_text";
+const COUPON_APPLIED_STORAGE_KEY = "is_coupon_applied";
+const COUPON_RESTAURANT_KEY = "coupon_restaurant_id";
 
 export default function OrderCheckoutScreen() {
   const t = useTranslations();
@@ -135,6 +151,178 @@ export default function OrderCheckoutScreen() {
     }
   }, [restaurantData, restaurantFromLocalStorage]);
 
+  // Load saved coupon from localStorage when page loads
+
+  // ============================================================================
+  // FIX: Clear coupon when restaurant changes
+  // ============================================================================
+
+  // ADD THIS NEW CONSTANT with your other coupon constants (around line 76)
+
+  // ============================================================================
+  // STEP 1: Update couponCompleted to save restaurant ID
+  // ============================================================================
+
+  // Find the couponCompleted function (around line 420) and UPDATE it:
+
+  function couponCompleted({ coupon }: { coupon: ICoupon }) {
+    if (!coupon.success) {
+      showToast({
+        type: "info",
+        title: t("coupon_not_found_title"),
+        message: `${couponText} ${t("coupon_is_not_valid_message_with_title")}`,
+      });
+    } else if (coupon.coupon) {
+      if (coupon.coupon.enabled) {
+        showToast({
+          type: "info",
+          title: t("coupon_applied_title"),
+          message: `${coupon.coupon.title} ${t("coupon_has_been_applied_message")}`,
+        });
+        setIsCouponApplied(true);
+        setCoupon(coupon.coupon);
+
+        // SAVE TO LOCALSTORAGE
+        onUseLocalStorage(
+          "save",
+          COUPON_STORAGE_KEY,
+          JSON.stringify(coupon.coupon)
+        );
+        onUseLocalStorage("save", COUPON_TEXT_STORAGE_KEY, couponText);
+        onUseLocalStorage("save", COUPON_APPLIED_STORAGE_KEY, "true");
+
+        // SAVE RESTAURANT ID WITH COUPON
+        onUseLocalStorage("save", COUPON_RESTAURANT_KEY, restaurantId || "");
+      } else {
+        showToast({
+          type: "info",
+          title: t("coupon_not_found_title"),
+          message: `${coupon.coupon.title} ${t("coupon_is_not_valid_message_with_title")}`,
+        });
+      }
+    }
+  }
+
+  // ============================================================================
+  // STEP 2: Add useEffect to check restaurant change
+  // ============================================================================
+
+  // ADD THIS NEW useEffect after your existing coupon useEffects (around line 185)
+
+  // Clear coupon when restaurant changes
+  useEffect(() => {
+    // Only run this check if restaurantId has actually loaded
+    if (typeof window !== "undefined" && isCouponApplied && restaurantId) {
+      const savedRestaurantId = onUseLocalStorage("get", COUPON_RESTAURANT_KEY);
+
+      // Only clear if both IDs exist and are different
+      if (savedRestaurantId && savedRestaurantId !== restaurantId) {
+        // Restaurant changed - clear coupon
+        setIsCouponApplied(false);
+        setCoupon({} as ICouponData);
+        setCouponText("");
+
+        onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
+
+        showToast({
+          type: "info",
+          title: t("coupon_removed_title"),
+          message: t("coupon_removed_different_restaurant"),
+        });
+
+        console.log("Coupon cleared: restaurant changed");
+      }
+    }
+  }, [restaurantId, isCouponApplied, showToast, t]);
+
+  // ============================================================================
+  // STEP 3: Update the load coupon useEffect to validate restaurant
+  // ============================================================================
+
+  // REPLACE your existing "Load saved coupon" useEffect (around line 160) with this:
+
+  // Load saved coupon from localStorage when page loads
+  useEffect(() => {
+    // Wait until restaurantId is loaded before checking coupon
+    if (typeof window !== "undefined" && restaurantId) {
+      const savedCouponData = onUseLocalStorage("get", COUPON_STORAGE_KEY);
+      const savedCouponText = onUseLocalStorage("get", COUPON_TEXT_STORAGE_KEY);
+      const savedCouponApplied = onUseLocalStorage(
+        "get",
+        COUPON_APPLIED_STORAGE_KEY
+      );
+      const savedRestaurantId = onUseLocalStorage("get", COUPON_RESTAURANT_KEY);
+
+      if (savedCouponData && savedCouponText && savedCouponApplied === "true") {
+        // CHECK IF RESTAURANT MATCHES
+        if (savedRestaurantId === restaurantId) {
+          try {
+            const parsedCoupon = JSON.parse(savedCouponData);
+            setCoupon(parsedCoupon);
+            setCouponText(savedCouponText);
+            setIsCouponApplied(true);
+          } catch (error) {
+            // Clear invalid data
+            onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+            onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+            onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+            onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
+          }
+        } else {
+          // DIFFERENT RESTAURANT - CLEAR COUPON
+          console.log("Coupon not loaded: different restaurant");
+          onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+          onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+          onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+          onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
+        }
+      }
+    }
+  }, [restaurantId]); // restaurantId is the key dependency here
+
+  // Clear coupon when cart is empty
+  useEffect(() => {
+    if (isCouponApplied && cart.length === 0) {
+      // Cart is empty - clear coupon
+      setIsCouponApplied(false);
+      setCoupon({} as ICouponData);
+      setCouponText("");
+
+      onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+    }
+  }, [cart.length, isCouponApplied]);
+
+  // Clear coupon when restaurant changes
+  useEffect(() => {
+    if (typeof window !== "undefined" && isCouponApplied && restaurantId) {
+      const savedRestaurantId = onUseLocalStorage("get", COUPON_RESTAURANT_KEY);
+
+      if (savedRestaurantId && savedRestaurantId !== restaurantId) {
+        // Restaurant changed - clear coupon
+        setIsCouponApplied(false);
+        setCoupon({} as ICouponData);
+        setCouponText("");
+
+        onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+        onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
+
+        showToast({
+          type: "info",
+          title: t("coupon_removed_title"),
+          message: t("coupon_removed_different_restaurant"),
+        });
+
+        console.log("Coupon cleared: restaurant changed");
+      }
+    }
+  }, [restaurantId, isCouponApplied]);
   // Use local restaurant data if GraphQL data is not available
   const finalRestaurantData = restaurantData || localRestaurantData;
 
@@ -659,7 +847,11 @@ export default function OrderCheckoutScreen() {
   async function onCompleted(data: { placeOrder: IOrder }) {
     localStorage.removeItem("orderInstructions");
     clearCart();
-
+    // CLEAR COUPON FROM LOCALSTORAGE
+    onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+    onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+    onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+    onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
     if (paymentMethod === "COD") {
       router.replace(`/order/${data.placeOrder._id}/tracking`);
     } else if (paymentMethod === "PAYPAL") {
@@ -1165,8 +1357,14 @@ export default function OrderCheckoutScreen() {
                     className="border border-red-500 text-red-500 hover:bg-red-50 dark:border-red-500 dark:hover:border-red-700 dark:hover:bg-inherit rtl:mr-3 ml-3 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium   tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
                     onClick={() => {
                       setIsCouponApplied(false);
-                      setCoupon(null);
-                      localStorage.removeItem("coupon");
+                      setCoupon({} as ICouponData);
+                      setCouponText("");
+
+                      // CLEAR FROM LOCALSTORAGE
+                      onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+                      onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+                      onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+                      onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
                     }}
                   >
                     {couponLoading ? (
