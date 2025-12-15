@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -29,6 +30,9 @@ const AppLinks = () => {
   }, []);
 
   const logoClickHandler = () => {
+    if (isLogin) {
+      router.push("/");
+    }
     router.push("/");
   };
 

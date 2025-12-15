@@ -53,6 +53,7 @@ import { faAdd } from '@fortawesome/free-solid-svg-icons';
 // Components
 import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 import InputSkeleton from '@/lib/ui/useable-components/custom-skeletons/inputfield.skeleton';
+import { useTheme } from 'next-themes';
 
 const initialValues: IFoodDetailsForm = {
   _id: null,
@@ -67,10 +68,10 @@ export default function FoodDetails({
 }: IFoodDetailsComponentProps) {
   // Hooks
   const t = useTranslations();
-
+  const { theme } = useTheme();
   // Props
   const { onStepChange, order } = stepperProps ?? {
-    onStepChange: () => {},
+    onStepChange: () => { },
     type: '',
     order: -1,
   };
@@ -268,7 +269,7 @@ export default function FoodDetails({
                                 <TextIconClickable
                                   className="w-full h-fit rounded  text-black dark:text-white"
                                   icon={faAdd}
-                                  iconStyles={{ color: 'black' }}
+                                  iconStyles={theme === 'dark' ? { color: 'white' } : { color: 'black' }}
                                   title={t('Add New Category')}
                                   onClick={() => setIsAddCategoryVisible(true)}
                                 />

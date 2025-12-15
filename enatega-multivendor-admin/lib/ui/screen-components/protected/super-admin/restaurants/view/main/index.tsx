@@ -53,7 +53,7 @@ export default function RestaurantsMain() {
   // Context
   const { showToast } = useContext(ToastContext);
   const { currentTab } = useContext(RestaurantsContext);
-  
+
   // Hooks
   const router = useRouter();
 
@@ -65,7 +65,7 @@ export default function RestaurantsMain() {
   const [selectedProducts, setSelectedProducts] = useState<IRestaurantResponse[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
-  
+
   // Debounce search to avoid too many API calls
   const debouncedSearchTerm = useDebounce(globalFilterValue, 500);
 
@@ -185,9 +185,9 @@ export default function RestaurantsMain() {
   ];
 
   // Get pagination data
-  const restaurantData = currentTab === 'Actual' 
-  ? data?.restaurantsPaginated 
-  : data?.getClonedRestaurantsPaginated;
+  const restaurantData = currentTab === 'Actual'
+    ? data?.restaurantsPaginated
+    : data?.getClonedRestaurantsPaginated;
 
   const restaurants = restaurantData?.data || [];
   const totalRecords = restaurantData?.totalCount || 0;
