@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const CREATE_RESTAURANT = gql`
-  mutation CreateRestaurant($restaurant: RestaurantInput!, $owner: ID!) {
+  mutation CreateRestaurant($restaurant: RestaurantInput!, $owner: ID) {
     createRestaurant(restaurant: $restaurant, owner: $owner) {
       _id
       name
@@ -198,6 +198,28 @@ export const UPDATE_RESTAURANT_BUSSINESS_DETAILS = gql`
       message
       data {
         _id
+      }
+    }
+  }
+`;
+
+export const UPDATE_RESTAURANT_SCHEDULE = gql`
+  mutation updateScheduleTimings(
+    $id: ID!
+    $scheduleTimings: [ScheduleTypeInput]
+  ) {
+    updateScheduleTimings(id: $id, scheduleTimings: $scheduleTimings) {
+      name
+      scheduleTimings {
+        _id
+        day
+        isOpen
+        times {
+          _id
+          startTime
+          endTime
+          maxOrder
+        }
       }
     }
   }

@@ -1,5 +1,4 @@
 // Contexts
-// import { ConfigurationContext } from '@/lib/context/global/configuration.context';
 import { ToastContext } from '@/lib/context/global/toast.context';
 
 // GraphQL
@@ -7,9 +6,7 @@ import { useMutation } from '@apollo/client';
 import { UPLOAD_IMAGE_TO_S3 } from '@/lib/api/graphql/mutations';
 
 // Interfaces
-import {
-  IImageUploadComponentProps,
-} from '@/lib/utils/interfaces';
+import { IImageUploadComponentProps } from '@/lib/utils/interfaces';
 import Image from 'next/image';
 
 // Hooks
@@ -33,6 +30,8 @@ import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'use-intl';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
+import { uploadImageToCloudinary } from '@/lib/services';
 // import { MAX_VIDEO_FILE_SIZE } from '@/lib/utils/constants';
 
 function CustomUploadImageComponent({
@@ -51,10 +50,10 @@ function CustomUploadImageComponent({
     'video/webm',
     'video/mp4',
   ],
-}: IImageUploadComponentProps) {
+  isRequired = false,
+}: IImageUploadComponentProps & { isRequired?: boolean }) {
   // Context
-  // const configuration: IConfiguration | undefined =
-  //   useContext(ConfigurationContext);
+  const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_API_KEY } = useConfiguration();
   const { showToast } = useContext(ToastContext);
 
   // Mutations
@@ -85,61 +84,129 @@ function CustomUploadImageComponent({
   const uploadImageToS3 = useCallback(
     async (file: File): Promise<void> => {
       setIsUploading(true);
-      setImageFile(URL.createObjectURL(file));
-      
-      try {
-        // Compress file based on type
-        let processedFile: File;
-        if (file.type.startsWith('image/')) {
-          processedFile = await compressImage(file, 800, 0.7);
-        } else if (file.type.startsWith('video/')) {
-          processedFile = await compressVideo(file);
-        } else {
-          processedFile = file;
-        }
-        
-        // Convert to base64
-        const base64 = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(processedFile);
-        });
-        
-        const { data } = await uploadToS3({
-          variables: { image: base64 }
-        });
-        
-        const imageUrl = data?.uploadImageToS3?.imageUrl;
-        
-        if (imageUrl) {
-          onSetImageUrl(name, imageUrl);
+
+      if (true) {
+        setImageFile(URL.createObjectURL(file));
+
+        try {
+          // Compress file based on type
+          let processedFile: File;
+          if (file.type.startsWith('image/')) {
+            processedFile = await compressImage(file, 800, 0.7);
+          } else if (file.type.startsWith('video/')) {
+            processedFile = await compressVideo(file);
+          } else {
+            processedFile = file;
+          }
+
+          // Convert to base64
+          const base64 = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(processedFile);
+          });
+
+          const { data } = await uploadToS3({
+            variables: { image: base64 },
+          });
+
+          const imageUrl = data?.uploadImageToS3?.imageUrl;
+
+          if (imageUrl) {
+            onSetImageUrl(name, imageUrl);
+            showToast({
+              type: 'info',
+              title: title,
+              message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
+              duration: 2500,
+            });
+          } else {
+            throw new Error('No image URL returned');
+          }
+        } catch (error) {
+          onSetImageUrl(name, '');
           showToast({
-            type: 'info',
+            type: 'error',
             title: title,
-            message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
+            message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
             duration: 2500,
           });
-        } else {
-          throw new Error('No image URL returned');
+          setImageValidationErr({
+            bool: true,
+            msg: 'Upload failed',
+          });
+          setImageFile('');
+        } finally {
+          setIsUploading(false);
         }
-      } catch (error) {
-        onSetImageUrl(name, '');
-        showToast({
-          type: 'error',
-          title: title,
-          message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
-          duration: 2500,
-        });
-        setImageValidationErr({
-          bool: true,
-          msg: 'Upload failed',
-        });
-        setImageFile('');
-      } finally {
-        setIsUploading(false);
+      } else {
+        const fileReader = new FileReader();
+        fileReader.onloadend = async () => {
+          if (fileReader.result) {
+            setImageFile(fileReader.result as string);
+            const uploadURL = file?.type.startsWith('video/')
+              ? CLOUDINARY_UPLOAD_URL?.replace('image', 'video')
+              : (CLOUDINARY_UPLOAD_URL ?? '');
+            await uploadImageToCloudinary(
+              fileReader.result as string,
+              uploadURL ?? '',
+              CLOUDINARY_API_KEY ?? ''
+            )
+              .then((url) => {
+                console.log(':rocket: ~ .then ~ url:', url);
+
+                console.log(':rocket: ~ Valid url idk about the response');
+                onSetImageUrl(name, url);
+                if (!url) {
+                  showToast({
+                    type: 'error',
+                    title: title,
+                    message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
+                    duration: 2500,
+                  });
+                  setImageValidationErr({
+                    bool: true,
+                    msg: 'Cloudinary Url Invalid',
+                  });
+                  setImageFile('');
+                  return;
+                }
+                showToast({
+                  type: 'info',
+                  title: title,
+                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
+                  duration: 2500,
+                });
+              })
+              .catch((err) => {
+                onSetImageUrl(name, '');
+                showToast({
+                  type: 'error',
+                  title: title,
+                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
+                  duration: 2500,
+                });
+
+                console.log('errrror=====>', err);
+              })
+              .finally(() => {
+                setIsUploading(false);
+              });
+          }
+        };
+        fileReader.readAsDataURL(file);
       }
     },
-    [name, onSetImageUrl, showToast, title, fileTypes, uploadToS3, t]
+    [
+      name,
+      onSetImageUrl,
+      CLOUDINARY_API_KEY,
+      CLOUDINARY_UPLOAD_URL,
+      showToast,
+      title,
+      // validateImage,
+      fileTypes,
+    ]
   );
 
   // Select Image
@@ -169,7 +236,9 @@ function CustomUploadImageComponent({
   };
   return (
     <div className="flex flex-col items-center justify-center gap-3">
-      <span className="mx-auto self-start text-sm font-[600]">{title}</span>
+      <span className="mx-auto self-start text-sm font-[600]">
+        {title} {isRequired && <span className="text-red-500">*</span>}
+      </span>
       <div
         style={style}
         className={
@@ -180,9 +249,8 @@ function CustomUploadImageComponent({
         // className="bg-transparnt"
       >
         <FileUpload
-          headerClassName='dark:text-white'
-          contentClassName='dark:text-white'
-          
+          headerClassName="dark:text-white"
+          contentClassName="dark:text-white"
           accept={fileTypes?.join(',')}
           id={`${name}-upload`}
           className="mx-auto -mt-7 h-28 w-44 items-center dark:text-white justify-center rounded-md bg-transparent"
@@ -243,7 +311,7 @@ function CustomUploadImageComponent({
             const { chooseButton, cancelButton } = options;
             return (
               <button
-              className='dark:text-white'
+                className="dark:text-white"
                 type="button"
                 onClick={() =>
                   handleCancelClick(imageFile ? 'cancel' : 'choose')

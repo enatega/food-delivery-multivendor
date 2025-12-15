@@ -1,6 +1,7 @@
-import ComingSoon from '@/lib/ui/useable-components/coming-soon';
-import React from 'react';
+'use client';
+
+import SettingsScreen from '@/lib/ui/screens/super-admin/settings';
 
 export default function SettingsPage() {
-  return <ComingSoon />;
+  return <SettingsScreen />;
 }

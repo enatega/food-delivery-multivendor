@@ -19,9 +19,10 @@ const CustomDropdownComponent = ({
   isLoading = false,
   filter = true,
   extraFooterButton,
+  isRequired = false,
   ...props
-}: IDropdownComponentProps) => {
-  const t = useTranslations()
+}: IDropdownComponentProps & { isRequired?: boolean }) => {
+  const t = useTranslations();
   const itemTemplate = (option: { label: string }) => {
     return (
       <div className="align-items-center flex dark:text-white ">
@@ -50,7 +51,8 @@ const CustomDropdownComponent = ({
     <div className={`flex w-full flex-col justify-center gap-y-1`}>
       {showLabel && (
         <label htmlFor="username" className="text-sm font-[500] dark:text-white">
-          {placeholder}
+          {placeholder}{' '}
+          {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
 
@@ -67,7 +69,7 @@ const CustomDropdownComponent = ({
         checkmark={true}
         panelFooterTemplate={panelFooterTemplate}
         {...props}
-        emptyMessage={t("No available options")}
+        emptyMessage={t('No available options')}
       />
     </div>
   ) : (

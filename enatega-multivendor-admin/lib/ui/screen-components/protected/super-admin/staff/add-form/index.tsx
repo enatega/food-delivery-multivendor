@@ -19,7 +19,8 @@ import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-
 import Toggle from '@/lib/ui/useable-components/toggle';
 
 // Utilities and Constants
-import { PERMISSIONS, StaffErrors } from '@/lib/utils/constants';
+import {  StaffErrors } from '@/lib/utils/constants';
+import { usePermissions } from '@/lib/utils/constants';
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 import { StaffSchema } from '@/lib/utils/schema/staff';
 
@@ -41,6 +42,8 @@ export default function StaffAddForm({
 }: IStaffAddFormComponentProps) {
   // Hooks
   const t = useTranslations();
+
+  const PERMISSIONS = usePermissions();
 
   // States
   const initialValues: IStaffForm = {

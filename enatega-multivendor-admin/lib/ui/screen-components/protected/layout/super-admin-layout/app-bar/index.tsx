@@ -28,6 +28,7 @@ import {
   faBars,
   faGlobe,
   faFaceFrown,
+  faGear,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from 'next-themes';
 
@@ -387,6 +388,12 @@ const AppTopbar = () => {
             <Menu
               model={[
                 {
+                  label: 'Settings',
+                  command: () => {
+                    router.push('/settings');
+                  },
+                },
+                {
                   label: t('Logout'),
                   command: () => {
                     setLogoutModalVisible(true);
@@ -467,6 +474,11 @@ const AppTopbar = () => {
                 onClick={() => onRedirectToPage('/dispatch')}
               />
             )}
+            <TextIconClickable
+              icon={faGear}
+              className="justify-between"
+              onClick={() => router.push('/settings')}
+            />
             {/* <TextIconClickable className="justify-between" icon={faCog} /> */}
             {/* <TextIconClickable className="justify-between" icon={faGlobe} /> */}
             <TextIconClickable

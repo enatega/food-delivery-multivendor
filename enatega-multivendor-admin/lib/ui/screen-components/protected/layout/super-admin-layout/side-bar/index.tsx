@@ -20,6 +20,8 @@ import {
   faSliders,
   faUpRightFromSquare,
   faWallet,
+  faCreditCard,
+  faGift,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Constants and Utiils
@@ -29,6 +31,7 @@ import useCheckAllowedRoutes from '@/lib/hooks/useCheckAllowedRoutes';
 import SidebarItem from './side-bar-item';
 import { useTranslations } from 'next-intl';
 import { faHeadset } from '@fortawesome/free-solid-svg-icons/faHeadset';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 function SuperAdminSidebar({ children }: IGlobalComponentProps) {
   // Contexts
@@ -54,6 +57,7 @@ function SuperAdminSidebar({ children }: IGlobalComponentProps) {
 export default function MakeSidebar() {
   // Hooks
   const t = useTranslations();
+  const { IS_MULTIVENDOR } = useConfiguration();
 
   // Contexts
   const { isSuperAdminSidebarVisible } =
@@ -89,10 +93,11 @@ export default function MakeSidebar() {
           label: t('Vendors'),
           route: '/general/vendors',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
         {
-          text: 'Stores',
-          label: t('Stores'),
+          text: IS_MULTIVENDOR === true ? 'Stores' : 'Store',
+          label: IS_MULTIVENDOR === true ? t('Stores') : t('Store'),
           route: '/general/stores',
           isParent: false,
         },
@@ -143,6 +148,7 @@ export default function MakeSidebar() {
           label: t('Coupons'),
           route: '/management/coupons',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
         {
           text: 'Cuisine',
@@ -173,6 +179,7 @@ export default function MakeSidebar() {
           label: t('Commission Rate'),
           route: '/management/commission-rates',
           isParent: false,
+          isAllowed: IS_MULTIVENDOR === true,
         },
 
         {
@@ -192,9 +199,9 @@ export default function MakeSidebar() {
         return this.subMenu ? this.subMenu.length > 0 : false;
       },
     },
+
     {
-      text: 'Wallet',
-      label: t('Wallet'),
+      text: t('Wallet'),
       route: '/wallet',
       isParent: true,
       icon: faWallet,
@@ -223,7 +230,23 @@ export default function MakeSidebar() {
       },
     },
     {
-      text: 'CustomerSupport',  
+      text: 'Subscription',
+      label: t('Subscription'),
+      route: '/subscription',
+      isParent: true,
+      icon: faCreditCard,
+      isClickable: true,
+    },
+    {
+      text: 'Referral Wallet',
+      label: t('Referral Wallet'),
+      route: '/referral-wallet',
+      isParent: true,
+      icon: faGift,
+      isClickable: true,
+    },
+    {
+      text: 'CustomerSupport',
       label: t('CustomerSupport'),
       route: '/customerSupport',
       icon: faHeadset,

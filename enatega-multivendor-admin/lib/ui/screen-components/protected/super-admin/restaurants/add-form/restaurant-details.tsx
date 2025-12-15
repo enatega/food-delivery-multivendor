@@ -53,10 +53,16 @@ import {
 import { IRestaurantsAddRestaurantComponentProps } from '@/lib/utils/interfaces/restaurants.interface';
 import { toTextCase } from '@/lib/utils/methods';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
-import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client';
+import {
+  ApolloCache,
+  ApolloError,
+  useMutation,
+  useQuery,
+} from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 import { useShopTypes } from '@/lib/hooks/useShopType';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 const initialValues: IRestaurantForm = {
   name: '',
@@ -80,6 +86,10 @@ export default function RestaurantDetailsForm({
 }: IRestaurantsAddRestaurantComponentProps) {
   // Hooks
   const t = useTranslations();
+  const { IS_MULTIVENDOR, RESTURANT_COUNT } = useConfiguration();
+
+  // Constants
+  const IS_NOT_ALLOWED_MORE = !IS_MULTIVENDOR && (RESTURANT_COUNT || 0) >= 1;
 
   // Props
   const { onStepChange, order } = stepperProps ?? {
@@ -130,7 +140,10 @@ export default function RestaurantDetailsForm({
   }) as IQueryResult<IGetCuisinesData | undefined, undefined>;
   cuisineResponse.data?.cuisines;
 
-  const {dropdownList,loading} =  useShopTypes({invoke_now: true, transform_to_dropdown_list: true})
+  const { dropdownList, loading } = useShopTypes({
+    invoke_now: true,
+    transform_to_dropdown_list: true,
+  });
 
   // Memoized Constants
   const cuisinesDropdown = useMemo(
@@ -144,20 +157,34 @@ export default function RestaurantDetailsForm({
   // Handlers
   const onCreateRestaurant = async (data: IRestaurantForm) => {
     try {
-      const vendorId = restaurantsContextData?.vendor?._id?.code;
-      if (!vendorId) {
+      if (IS_NOT_ALLOWED_MORE) {
         showToast({
           type: 'error',
           title: t('Create Store'),
-          message: t(`Store Creation Failed - Please select a vendor.`),
+          message: 'Unauthorized Resource. Only single restaurant is allowed',
           duration: 2500,
         });
         return;
       }
 
-       // check if values.name is present in restaurantData and show error toast
-       const existingRestaurant = restaurantData?.restaurants.find(
-        (restaurant:IRestaurantForm) =>
+      let vendorId = null;
+
+      if (IS_MULTIVENDOR) {
+        vendorId = restaurantsContextData?.vendor?._id?.code;
+        if (!vendorId) {
+          showToast({
+            type: 'error',
+            title: t('Create Store'),
+            message: t(`Store Creation Failed - Please select a vendor.`),
+            duration: 2500,
+          });
+          return;
+        }
+      }
+
+      // check if values.name is present in restaurantData and show error toast
+      const existingRestaurant = restaurantData?.restaurants.find(
+        (restaurant: IRestaurantForm) =>
           restaurant.name.toLowerCase() === data.name.toLowerCase()
       );
       console.log('existingRestaurant ==> ', existingRestaurant);
@@ -173,7 +200,7 @@ export default function RestaurantDetailsForm({
 
       await createRestaurant({
         variables: {
-          owner: vendorId,
+          ...(IS_MULTIVENDOR ? { owner: vendorId } : {}),
           restaurant: {
             name: data.name,
             address: data.address,
@@ -475,7 +502,7 @@ export default function RestaurantDetailsForm({
                         />
                       </div>
                       <div>
-                      <CustomDropdownComponent
+                        <CustomDropdownComponent
                           name="shopType"
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
@@ -576,7 +603,7 @@ export default function RestaurantDetailsForm({
                           loading={isSubmitting}
                         />
                       </div>
-                      <div className='flex justify-end'>
+                      <div className="flex justify-end">
                         {errors.address && touched.address && (
                           <small className="ml-5 p-error">
                             {errors.address}

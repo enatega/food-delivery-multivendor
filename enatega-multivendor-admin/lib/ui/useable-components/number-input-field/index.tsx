@@ -19,8 +19,9 @@ export default function CustomNumberField({
   disabled = false,
   min,
   max,
+  isRequired = false,
   ...props
-}: INumberTextFieldProps) {
+}: INumberTextFieldProps & { isRequired?: boolean }) {
   // Toast
   const { showToast } = useToast();
 
@@ -38,7 +39,7 @@ export default function CustomNumberField({
     <div className={`flex w-full flex-col justify-center gap-y-1`}>
       {showLabel && (
         <label htmlFor="username" className="text-sm font-[500]">
-          {placeholder}
+          {placeholder} {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
 

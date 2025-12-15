@@ -21,6 +21,7 @@ import RestaurantDuplicateDialog from '../duplicate-dialog';
 import RestaurantsTableHeader from '../header/table-header';
 import Table from '@/lib/ui/useable-components/table';
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 // Constants and Interfaces
 import {
@@ -50,10 +51,12 @@ export default function RestaurantsMain() {
   // Hooks
   const t = useTranslations();
 
+  const { IS_MULTIVENDOR } = useConfiguration();
+
   // Context
   const { showToast } = useContext(ToastContext);
   const { currentTab } = useContext(RestaurantsContext);
-  
+
   // Hooks
   const router = useRouter();
 
@@ -62,10 +65,12 @@ export default function RestaurantsMain() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [deleteId, setDeleteId] = useState('');
   const [duplicateId, setDuplicateId] = useState('');
-  const [selectedProducts, setSelectedProducts] = useState<IRestaurantResponse[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<
+    IRestaurantResponse[]
+  >([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
-  
+
   // Debounce search to avoid too many API calls
   const debouncedSearchTerm = useDebounce(globalFilterValue, 500);
 
@@ -91,17 +96,15 @@ export default function RestaurantsMain() {
 
   //Query
   const { data, loading, refetch } = useQueryGQL(
-    currentTab === 'Actual' ? GET_RESTAURANTS_PAGINATED : GET_CLONED_RESTAURANTS_PAGINATED,
+    currentTab === 'Actual'
+      ? GET_RESTAURANTS_PAGINATED
+      : GET_CLONED_RESTAURANTS_PAGINATED,
     queryVariables,
     {
       fetchPolicy: 'cache-and-network',
       debounceMs: 300,
     }
   ) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
-
-  useEffect(() => {
-    console.log("🚀 Store Screen Rendered");
-  });
 
   // API
   const [hardDeleteRestaurant, { loading: isHardDeleting }] = useMutation(
@@ -153,7 +156,8 @@ export default function RestaurantsMain() {
   };
 
   // Constants
-  const menuItems: IActionMenuItem<IRestaurantResponse>[] = [
+  // Create base menu items
+  const baseMenuItems: IActionMenuItem<IRestaurantResponse>[] = [
     {
       label: t('View'),
       command: (data?: IRestaurantResponse) => {
@@ -167,14 +171,6 @@ export default function RestaurantsMain() {
       },
     },
     {
-      label: t('Duplicate'),
-      command: (data?: IRestaurantResponse) => {
-        if (data) {
-          setDuplicateId(data._id);
-        }
-      },
-    },
-    {
       label: t('Delete'),
       command: (data?: IRestaurantResponse) => {
         if (data) {
@@ -184,10 +180,27 @@ export default function RestaurantsMain() {
     },
   ];
 
+  // Add duplicate option only if IS_MULTIVENDOR is true
+  const menuItems = IS_MULTIVENDOR
+    ? [
+        baseMenuItems[0],
+        {
+          label: t('Duplicate'),
+          command: (data?: IRestaurantResponse) => {
+            if (data) {
+              setDuplicateId(data._id);
+            }
+          },
+        },
+        baseMenuItems[1],
+      ]
+    : baseMenuItems;
+
   // Get pagination data
-  const restaurantData = currentTab === 'Actual' 
-  ? data?.restaurantsPaginated 
-  : data?.getClonedRestaurantsPaginated;
+  const restaurantData =
+    currentTab === 'Actual'
+      ? data?.restaurantsPaginated
+      : data?.getClonedRestaurantsPaginated;
 
   const restaurants = restaurantData?.data || [];
   const totalRecords = restaurantData?.totalCount || 0;
@@ -241,13 +254,15 @@ export default function RestaurantsMain() {
         message={t('Are you sure you want to delete this store?')}
       />
 
-      <RestaurantDuplicateDialog
-        restaurantId={duplicateId}
-        visible={!!duplicateId}
-        onHide={() => {
-          setDuplicateId('');
-        }}
-      />
+      {IS_MULTIVENDOR && (
+        <RestaurantDuplicateDialog
+          restaurantId={duplicateId}
+          visible={!!duplicateId}
+          onHide={() => {
+            setDuplicateId('');
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@
 import { useContext } from 'react';
 
 // Context
-import { IConfiguration } from '@/lib/utils/interfaces';
+import { IConfiguration, IConfigurationContext } from '@/lib/utils/interfaces';
 
 // Interface
 import { ConfigurationContext } from '@/lib/context/global/configuration.context';
@@ -13,8 +13,11 @@ import { ConfigurationContext } from '@/lib/context/global/configuration.context
 import { Libraries } from '@react-google-maps/api';
 
 export const useConfiguration = () => {
-  const configuration: IConfiguration | undefined =
+  const data: IConfigurationContext | undefined =
     useContext(ConfigurationContext);
+
+  const configuration: IConfiguration | undefined = data?.configuration;
+  const loading = data?.loading;
 
   const GOOGLE_CLIENT_ID = configuration?.webClientID;
   const GOOGLE_CLIENT_ID_ANDRIOD = configuration?.androidClientID;
@@ -72,11 +75,16 @@ export const useConfiguration = () => {
   const CURRENCY_CODE = configuration?.currency;
   const CURRENCY_SYMBOL = configuration?.currency;
   const ISPAID_VERSION = configuration?.isPaidVersion;
+  const IS_MULTIVENDOR = configuration?.isMultiVendor;
+  const IS_FETCHING_CONFIGURATION = loading;
+  const RESTURANT_COUNT = configuration?.restaurantCount;
 
   return {
     SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
     WS_SERVER_URL: process.env.NEXT_PUBLIC_WS_SERVER_URL,
     COLORS,
+    IS_FETCHING_CONFIGURATION,
+    RESTURANT_COUNT,
 
     // EMAIL CONFIG
     EMAIL_NAME,
@@ -157,5 +165,8 @@ export const useConfiguration = () => {
 
     // IS PAID VERSION
     ISPAID_VERSION,
+
+    // VENDOR TYPE
+    IS_MULTIVENDOR,
   };
 };

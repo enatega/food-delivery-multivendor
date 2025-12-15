@@ -32,12 +32,14 @@ import RestaurantLocation from './restaurant-location';
 import VendorDetails from './vendor-details';
 import RestaurantTiming from './restaurant-timing';
 import { useTranslations } from 'next-intl';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 const RestaurantsForm = ({
   position = 'right',
 }: IRestaurantsAddFormComponentProps) => {
   // Hooks
   const t = useTranslations();
+  const { IS_MULTIVENDOR, IS_FETCHING_CONFIGURATION } = useConfiguration();
 
   // Ref
   const stepperRef = useRef(null);
@@ -91,15 +93,19 @@ const RestaurantsForm = ({
     >
       <div ref={stepperRef}>
         <Stepper linear headerPosition="bottom" activeStep={activeIndex}>
-          <StepperPanel header={t('Set Vendor')}>
-            <VendorDetails
-              vendorsDropdown={vendorsDropdown ?? []}
-              stepperProps={{
-                onStepChange: onHandleStepChange,
-                order: activeIndex,
-              }}
-            />
-          </StepperPanel>
+          {IS_FETCHING_CONFIGURATION || !IS_MULTIVENDOR ? (
+            <></>
+          ) : (
+            <StepperPanel header={t('Set Vendor')}>
+              <VendorDetails
+                vendorsDropdown={vendorsDropdown ?? []}
+                stepperProps={{
+                  onStepChange: onHandleStepChange,
+                  order: activeIndex,
+                }}
+              />
+            </StepperPanel>
+          )}
           <StepperPanel header={t('Add Details')}>
             <RestaurantDetailsForm
               stepperProps={{

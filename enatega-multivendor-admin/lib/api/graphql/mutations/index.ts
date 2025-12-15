@@ -17,6 +17,7 @@ export * from './withdraw-requests';
 export * from './zone';
 export * from './configuration';
 export * from './food';
+export * from './food-deal';
 export * from './app-versions';
 export * from './shop-type';
 export * from './upload';

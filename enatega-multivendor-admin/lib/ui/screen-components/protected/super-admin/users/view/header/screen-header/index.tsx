@@ -33,7 +33,8 @@ const UserHeader: React.FC<UserHeaderProps> = ({
   const registrationMethodOptions = [
     { id: 1, label: t('Google'), code: 'google' },
     { id: 2, label: t('Apple'), code: 'apple' },
-    { id: 3, label: t('Manual'), code: 'default' },
+    { id: 3, label: t('Phone'), code: 'phone' },
+    { id: 4, label: t('Manual'), code: 'default' },
   ];
 
   const accountStatusOptions = [

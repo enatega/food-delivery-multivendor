@@ -12,18 +12,23 @@ export default function CustomTextAreaField({
   onChange,
   rows = 0,
   maxLength,
+  isRequired = false,
   ...props
-}: ICustomTextAreaField) {
+}: ICustomTextAreaField & { isRequired?: boolean }) {
   return (
     <div className="flex flex-col justify-center gap-y-1">
       {showLabel && (
         <label htmlFor={name ?? 'text-area'} className="text-sm font-[500]">
-          {label}
+          {label} {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
       <InputTextarea
         value={value}
-        className={`min-h-20 w-full rounded-lg border ${error? 'border-red-500': 'border-gray-300'} px-2 pt-1 text-sm focus:shadow-none focus:outline-none ${className ?? ''}`}
+        className={`min-h-20 w-full rounded-lg border ${
+          error ? 'border-red-500' : 'border-gray-300'
+        } px-2 pt-1 text-sm focus:shadow-none focus:outline-none ${
+          className ?? ''
+        }`}
         id={name}
         placeholder={placeholder}
         onChange={onChange}
@@ -32,7 +37,7 @@ export default function CustomTextAreaField({
         rows={rows}
         {...props}
       />
-      {error && <p className="text-sm text-red-500">{error}</p>} 
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

@@ -62,7 +62,7 @@ const ActionMenu = <T,>({
           menuRef.current?.toggle(event);
           onToggle();
         }}
-        className="h-full w-full"
+        className="rounded-md border border-gray-300 p-2 px-3.5 hover:bg-gray-50"
       >
         <FontAwesomeIcon icon={faEllipsisV} />
       </button>

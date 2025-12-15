@@ -7,13 +7,15 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslations } from 'next-intl';
 
-export const USERS_TABLE_COLUMNS = (openMenuId?: string | null, setOpenMenuId?: (id: string | null) => void) => {
+export const USERS_TABLE_COLUMNS = (
+  openMenuId?: string | null,
+  setOpenMenuId?: (id: string | null) => void
+) => {
   // Hooks
   const t = useTranslations();
   return [
     { headerName: t('user_id'), propertyName: '_id' },
     {
-
       headerName: t('Name'),
       propertyName: 'name',
       body: (user: IUserResponse) => {
@@ -38,9 +40,12 @@ export const USERS_TABLE_COLUMNS = (openMenuId?: string | null, setOpenMenuId?: 
         const formattedUserType = {
           google: 'Google',
           apple: 'Apple',
-          default: 'Manual'
+          phone: 'Phone',
+          default: 'Manual',
         }[userType];
-        return <div className="flex items-center gap-2">{formattedUserType}</div>;
+        return (
+          <div className="flex items-center gap-2">{formattedUserType}</div>
+        );
       },
     },
     {
@@ -51,13 +56,14 @@ export const USERS_TABLE_COLUMNS = (openMenuId?: string | null, setOpenMenuId?: 
         const formattedStatus = {
           active: 'Active',
           blocked: 'Blocked',
-          deactivate: 'Deactivated'
+          deactivate: 'Deactivated',
         }[status];
         return <div className="flex items-center gap-2">{formattedStatus}</div>;
       },
     },
     {
-      headerName: t('last_login'), propertyName: 'lastLogin',
+      headerName: t('last_login'),
+      propertyName: 'lastLogin',
       body: (user: IUserResponse) => {
         if (!user.lastLogin) return <div className="text-gray-400">—</div>;
 
@@ -81,7 +87,6 @@ export const USERS_TABLE_COLUMNS = (openMenuId?: string | null, setOpenMenuId?: 
           </div>
         );
       },
-
     },
     {
       headerName: t('Created At'),
@@ -96,10 +101,15 @@ export const USERS_TABLE_COLUMNS = (openMenuId?: string | null, setOpenMenuId?: 
     {
       headerName: t('Actions'),
       propertyName: '_id',
-      body: (rowData: IUserResponse) => <ActionMenu rowData={rowData} openMenuId={openMenuId} setOpenMenuId={setOpenMenuId} />,
+      body: (rowData: IUserResponse) => (
+        <ActionMenu
+          rowData={rowData}
+          openMenuId={openMenuId}
+          setOpenMenuId={setOpenMenuId}
+        />
+      ),
       style: { width: '60px', textAlign: 'right', paddingRight: '12px' },
       headerStyle: { textAlign: 'right', paddingRight: '12px' },
-    }
-
+    },
   ];
 };

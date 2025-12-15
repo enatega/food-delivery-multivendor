@@ -1,4 +1,4 @@
-@layer tailwind-base, primereact, tailwind-utilities;
+@layer tailwind-base, primereact, tailwind-utilities, custom-overrides;
 
 /* IMPORTANT: In "styled" mode you must add the PrimeReact Theme here. Do NOT include in "unstyled" mode */
 @import 'primereact/resources/primereact.min.css' layer(primereact);
@@ -50,7 +50,6 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-    
 }
 
 /* Screen Container */
@@ -71,7 +70,6 @@ body {
   background-color: var(--dark-950);
   color: white;
 }
-
 
 /* Layout */
 
@@ -177,6 +175,19 @@ body {
   line-height: 20px;
   letter-spacing: 3%;
   font-weight: 400;
+}
+
+/* PrimeReact Global Focus Color Override */
+.p-component:focus,
+.p-inputtext:enabled:focus,
+.p-inputnumber-input:enabled:focus,
+.p-dropdown:not(.p-disabled).p-focus,
+.p-multiselect:not(.p-disabled).p-focus,
+.p-calendar:not(.p-calendar-disabled).p-focus > .p-inputtext {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  border-color: #d1d5db !important;
 }
 
 /* Scroll Bar  */
@@ -599,7 +610,6 @@ body {
   transition: background-color 5000s ease-in-out 0s !important;
 }
 
-
 /* Password */
 .p-password > .p-icon-field {
   width: 100%;
@@ -675,7 +685,6 @@ body {
   color: white;
 }
 
-
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus {
   background: rgba(4, 4, 4, 0.24);
   color: black;
@@ -747,8 +756,6 @@ body {
   transition: all 0.15s ease;
 }
 
-
-
 .p-dropdown-label {
   /* margin-top: -2px; */
 }
@@ -771,7 +778,6 @@ body {
 .dark .p-stepper-title {
   color: #d1d5db;
 }
-
 
 .p-stepper-number {
   font-size: 16px;
@@ -807,7 +813,6 @@ body {
   color: white;
 }
 
-
 .p-autocomplete-item:hover {
   background-color: var(--secondary-color);
 }
@@ -830,7 +835,6 @@ body {
   border: 1px solid var(--dark-600);
   color: white;
 }
-
 
 /* Fieldset */
 .p-fieldset {
@@ -937,7 +941,6 @@ body {
   height: 40px;
 }
 
-
 .dark .p-dialog-footer {
   background-color: var(--dark-950);
 }
@@ -1042,7 +1045,9 @@ body {
 
 /* Progress bar inside the strength panel */
 .dark .p-password-meter {
-  background-color: var(--dark-900) !important; /* gray-800 (meter background) */
+  background-color: var(
+    --dark-900
+  ) !important; /* gray-800 (meter background) */
 }
 
 .dark .p-password-strength.weak {
@@ -1276,5 +1281,32 @@ body {
 }
 
 .p-paginator .p-dropdown-item {
-  @apply dark:text-white dark:hover:bg-gray-700 ;
+  @apply dark:text-white dark:hover:bg-gray-700;
+}
+
+/* Custom Pagination - Current Page Styling */
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: var(--primary-color) !important;
+  border-radius: 9999px !important;
+  color: white !important;
+  border-color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page:hover:not(.p-highlight) {
+  background-color: rgba(177, 199, 72, 0.1) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Dark Theme Override */
+.dark .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: var(--primary-color) !important;
+  border-radius: 9999px !important;
+  color: white !important;
+  border-color: var(--primary-color) !important;
 }

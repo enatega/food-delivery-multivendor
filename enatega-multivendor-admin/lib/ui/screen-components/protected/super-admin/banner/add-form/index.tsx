@@ -13,6 +13,7 @@ import {
   ACTION_TYPES,
   BannersErrors,
   SCREEN_NAMES,
+  SINGLE_VENDOR_SCREEN_NAMES,
 } from '@/lib/utils/constants';
 import {
   IQueryResult,
@@ -28,6 +29,7 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Sidebar } from 'primereact/sidebar';
 import { useMemo } from 'react';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 const BannersAddForm = ({
   isAddBannerVisible,
@@ -42,7 +44,8 @@ const BannersAddForm = ({
 
   // Hooks
   const t = useTranslations();
-  
+  const { IS_MULTIVENDOR } = useConfiguration();
+
   const RESTAURANT_NAMES = useMemo(() => {
     // @ts-ignore
     return data?.restaurants?.map((v) => ({
@@ -50,7 +53,21 @@ const BannersAddForm = ({
       code: v._id,
     })) ?? []; // Using nullish coalescing operator
   }, [data]);
-  
+
+  // Filter ACTION_TYPES based on multivendor mode
+  const filteredActionTypes = useMemo(() => {
+    if (IS_MULTIVENDOR) {
+      return ACTION_TYPES;
+    }
+    // In single vendor mode, remove "Navigate Specific Restaurant" option
+    return ACTION_TYPES.filter(
+      (action) => action.code !== 'Navigate Specific Restaurant'
+    );
+  }, [IS_MULTIVENDOR]);
+
+  // Get the appropriate screen names based on mode
+  const screenNames = IS_MULTIVENDOR ? SCREEN_NAMES : SINGLE_VENDOR_SCREEN_NAMES;
+
   //State
   const initialValues: IBannersForm = {
     title: banner?.title || '',
@@ -60,7 +77,12 @@ const BannersAddForm = ({
         label: getLabelByCode(ACTION_TYPES, banner.action),
         code: banner.action,
       }
-      : null,
+      : IS_MULTIVENDOR
+        ? null
+        : {
+            label: 'Navigate To Specific Page',
+            code: 'Navigate Specific Page',
+          },
     screen: banner
       ? banner.action === 'Navigate Specific Page'
         ? {
@@ -208,7 +230,7 @@ const BannersAddForm = ({
                         <div>
                           <CustomDropdownComponent
                             placeholder={t('Actions')}
-                            options={ACTION_TYPES}
+                            options={filteredActionTypes}
                             showLabel={true}
                             name="action"
                             filter={false}
@@ -235,7 +257,7 @@ const BannersAddForm = ({
                                 ? RESTAURANT_NAMES
                                 : values.action?.code ===
                                   'Navigate Specific Page'
-                                  ? SCREEN_NAMES
+                                  ? screenNames
                                   : []
                             }
                             showLabel={true}

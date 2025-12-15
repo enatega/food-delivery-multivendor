@@ -29,6 +29,7 @@ import { onErrorMessageMatcher } from '@/lib/utils/methods';
 import {
   CuisineErrors,
   MAX_SQUARE_FILE_SIZE,
+  SHOP_TYPE,
 } from '@/lib/utils/constants';
 import { useTranslations } from 'next-intl';
 import { useShopTypes } from '@/lib/hooks/useShopType';
@@ -81,7 +82,6 @@ export default function CuisineForm({
       refetchQueries: [{ query: GET_CUISINES }],
     }
   );
-  console.log(isEditing.data);
 
   const [editCuisine, { loading: editCuisineLoading }] = useMutation(
     EDIT_CUISINE,
@@ -290,8 +290,8 @@ export default function CuisineForm({
                     type="submit"
                   >
                     {isSubmitting ||
-                      createCuisineLoading ||
-                      editCuisineLoading ? (
+                    createCuisineLoading ||
+                    editCuisineLoading ? (
                       <ProgressSpinner
                         className="m-0 h-6 w-6 items-center self-center p-0"
                         strokeWidth="5"
