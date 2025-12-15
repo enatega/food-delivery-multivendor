@@ -80,16 +80,6 @@ export default function MakeSidebar() {
       route: '/admin/store/product-management/category',
       isParent: false,
     },
-    // Only include Banners when IS_MULTIVENDOR is false
-    ...(IS_MULTIVENDOR
-      ? []
-      : [
-          {
-            text: t('Banners'),
-            route: '/admin/store/product-management/banners',
-            isParent: false,
-          },
-        ]),
     {
       text: t('Deals'),
       route: '/admin/store/product-management/deals',
