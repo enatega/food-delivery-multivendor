@@ -50,7 +50,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Fieldset } from 'primereact/fieldset';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
-
+import { useTheme } from 'next-themes';
 // State
 const initialFormValuesTemplate: IAddonForm = {
   title: '',
@@ -77,13 +77,14 @@ export default function AddonAddForm({
 }: IAddonAddFormComponentProps) {
   // Hooks
   const t = useTranslations();
+  const { theme } = useTheme();
   const { showToast } = useToast();
   // Context
 
-  const { restaurantLayoutContextData ,   setIsAddOptionsVisible,
+  const { restaurantLayoutContextData, setIsAddOptionsVisible,
     option,
     setOption,
-    isAddOptionsVisible,} = useContext(RestaurantLayoutContext);
+    isAddOptionsVisible, } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
   const [initialValues, setInitialValues] = useState({
@@ -152,7 +153,7 @@ export default function AddonAddForm({
 
   // Handlers
   // Complete and Error
-  function onFetchAddonsByRestaurantCompleted() {}
+  function onFetchAddonsByRestaurantCompleted() { }
   function onErrorFetchAddonsByRestaurant() {
     showToast({
       type: 'error',
@@ -178,8 +179,8 @@ export default function AddonAddForm({
           restaurant: restaurantId,
           addons: addon
             ? mapOptions([
-                omitExtraAttributes(addons[0], initialEditFormValuesTemplate),
-              ])[0]
+              omitExtraAttributes(addons[0], initialEditFormValuesTemplate),
+            ])[0]
             : mapOptions(addons),
         },
       },
@@ -434,7 +435,7 @@ export default function AddonAddForm({
                                   <TextIconClickable
                                     className="w-full rounded border dark:border-dark-600  border-black bg-transparent text-black dark:text-white"
                                     icon={faAdd}
-                                    iconStyles={{ color: 'black' }}
+                                    iconStyles={{ color: theme === 'dark' ? 'secondary-color' : 'dark-950' }}
                                     title={t('Add New Addon')}
                                     onClick={() =>
                                       push(initialFormValuesTemplate)

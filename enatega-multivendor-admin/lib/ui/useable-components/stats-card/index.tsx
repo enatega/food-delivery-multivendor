@@ -39,7 +39,7 @@ export default function StatsCard({
           : total}
       </div>
       {description && (
-        <div className="text-sm text-primary-dark dark:text-white"> {description}</div>
+        <div className="text-sm text-primary-dark"> {description}</div>
       )}
     </div>
   );

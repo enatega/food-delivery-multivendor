@@ -83,7 +83,7 @@ export default function RestaurantDetailsForm({
 
   // Props
   const { onStepChange, order } = stepperProps ?? {
-    onStepChange: () => {},
+    onStepChange: () => { },
     type: '',
     order: -1,
   };
@@ -130,7 +130,7 @@ export default function RestaurantDetailsForm({
   }) as IQueryResult<IGetCuisinesData | undefined, undefined>;
   cuisineResponse.data?.cuisines;
 
-  const {dropdownList,loading} =  useShopTypes({invoke_now: true, transform_to_dropdown_list: true})
+  const { dropdownList, loading } = useShopTypes({ invoke_now: true, transform_to_dropdown_list: true })
 
   // Memoized Constants
   const cuisinesDropdown = useMemo(
@@ -155,9 +155,9 @@ export default function RestaurantDetailsForm({
         return;
       }
 
-       // check if values.name is present in restaurantData and show error toast
-       const existingRestaurant = restaurantData?.restaurants.find(
-        (restaurant:IRestaurantForm) =>
+      // check if values.name is present in restaurantData and show error toast
+      const existingRestaurant = restaurantData?.restaurants.find(
+        (restaurant: IRestaurantForm) =>
           restaurant.name.toLowerCase() === data.name.toLowerCase()
       );
       console.log('existingRestaurant ==> ', existingRestaurant);
@@ -475,7 +475,7 @@ export default function RestaurantDetailsForm({
                         />
                       </div>
                       <div>
-                      <CustomDropdownComponent
+                        <CustomDropdownComponent
                           name="shopType"
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
@@ -563,14 +563,14 @@ export default function RestaurantDetailsForm({
 
                       <div className="mt-4 flex justify-between">
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                          className="h-10 w-fit border border-gray-300 dark:hover:bg-dark-600 dark:border-dark-600 bg-black px-8 text-white"
                           label={t('Back')}
                           type="button"
                           onClick={() => onStepChange(order - 1)}
                         />
 
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                          className="h-10 w-fit border border-gray-300 dark:hover:bg-dark-600 dark:border-dark-600 bg-black px-8 text-white"
                           label={t('Save & Next')}
                           type="submit"
                           loading={isSubmitting}

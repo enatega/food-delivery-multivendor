@@ -529,35 +529,6 @@ export default function OrderCheckoutScreen() {
     verifyCoupon({ variables: { coupon: couponText, restaurantId: restaurantId } });
   };
 
-  function couponCompleted({ coupon }: { coupon: ICoupon }) {
-    if (!coupon.success) {
-      showToast({
-        type: "info",
-        title: t("coupon_not_found_title"),
-        message: `${couponText} ${t("coupon_is_not_valid_message_with_title")}`,
-      });
-    }
-    else if (coupon.coupon) {
-      if (coupon.coupon.enabled) {
-        showToast({
-          type: "info",
-          title: t("coupon_applied_title"),
-          message: `${coupon.coupon.title} ${t("coupon_has_been_applied_message")}`,
-        });
-        setIsCouponApplied(true);
-        setCoupon(coupon.coupon);
-        localStorage.setItem("coupon", JSON.stringify(coupon.coupon));
-      } else {
-        showToast({
-          type: "info",
-          title: t("coupon_not_found_title"),
-          message: `${coupon.coupon.title} ${t("coupon_is_not_valid_message_with_title")}`,
-        });
-      }
-    }
-
-
-  }
 
 
 
