@@ -160,7 +160,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   };
   const OrderSubscription = ({ rowData }: { rowData: IActiveOrders }) => {
     useOrderSubscription(rowData);
-    return <p>{rowData.isPickedUp === false ? "Not Picked" : "Picked"}</p>;
+    return <p>{rowData.isPickedUp === false ? "Delivery" : "Picked"}</p>;
   };
 
   // Mutations
