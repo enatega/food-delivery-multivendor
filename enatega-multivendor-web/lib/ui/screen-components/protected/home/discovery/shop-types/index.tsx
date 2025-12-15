@@ -4,8 +4,10 @@ import CuisinesSliderCard from "@/lib/ui/useable-components/cuisines-slider-card
 import CuisinesSliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/cuisines.slider.skeleton";
 import { useQuery } from "@apollo/client";
 import { FETCH_ALL_SHOP_TYPES } from "@/lib/api/graphql/queries/shop-type";
+import { useTranslations } from "next-intl";
 
 function ShopTypes() {
+  const t = useTranslations();
   const { data, loading, error } = useQuery(FETCH_ALL_SHOP_TYPES);
 
   if (loading) {
@@ -17,7 +19,7 @@ function ShopTypes() {
       <div className="mt-7 px-4">
         <div className="flex justify-start mb-4">
           <h2 className="font-inter font-bold text-xl sm:text-2xl text-gray-900 dark:text-white">
-            Shop Types
+            {t("shop-types")}
           </h2>
         </div>
 

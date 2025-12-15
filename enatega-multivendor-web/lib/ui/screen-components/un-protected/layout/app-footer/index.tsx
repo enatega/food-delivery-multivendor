@@ -74,9 +74,8 @@ const AppFooter = () => {
 
   return (
     <div
-      className={`w-full h-auto bg-[#141414] flex items-center justify-center ${
-        isDiscoveryPage ? "md:pb-0 pb-20" : ""
-      }`}
+      className={`w-full h-auto bg-[#141414] flex items-center justify-center ${isDiscoveryPage ? "md:pb-0 pb-20" : ""
+        }`}
     >
       <div className="mx-auto my-[30px] md:mt-[60px] md:mb-[60px] p-4 flex md:items-center md:justify-center flex-col">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 w-screen md:w-full md:px-0 px-4">

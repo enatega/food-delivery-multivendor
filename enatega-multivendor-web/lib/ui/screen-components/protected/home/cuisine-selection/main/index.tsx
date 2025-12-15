@@ -38,7 +38,7 @@ function CuisineSelectionSection() {
 
   const [isModalOpen, setIsModalOpen] = useState({ value: false, id: "" });
 
-  const { queryData, loading, error } = useNearByRestaurantsPreview(true,1,109,null);
+  const { queryData, loading, error } = useNearByRestaurantsPreview(true, 1, 109, null);
 
   const getCuisinRestaurants = queryData?.filter((item) =>
     item?.cuisines?.some(
@@ -49,7 +49,7 @@ function CuisineSelectionSection() {
   const handleUpdateIsModalOpen = useCallback(
     (value: boolean, id: string) => {
       if (isModalOpen.value !== value || isModalOpen.id !== id) {
-        setIsModalOpen({ value, id });  
+        setIsModalOpen({ value, id });
       }
     },
     [isModalOpen]
@@ -62,7 +62,7 @@ function CuisineSelectionSection() {
 
   return (
     <>
-      <HomeHeadingSection title={title} />
+      <HomeHeadingSection title={title} showFilter={false} />
       <div className="mb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-4 items-center">
           {(getCuisinRestaurants as IRestaurant[] | undefined)?.map((item) => (

@@ -71,10 +71,10 @@ export default function CategoryAddForm({
       parentCategoryId: category?._id,
     },
   });
-   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
+  const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
-  const shopType = onUseLocalStorage('get', "shopType" )
+  const shopType = onUseLocalStorage('get', "shopType")
 
   // Fetch all categories for duplicate check
   const {
@@ -102,7 +102,7 @@ export default function CategoryAddForm({
   const { showToast } = useToast();
 
   // Context
- 
+
   // const shopType = restaurantLayoutContextData?.shopType || '';
   // console.log("🚀 ~ shopType:", shopType)
 
@@ -294,7 +294,7 @@ export default function CategoryAddForm({
                                   )
                                     ? 'red'
                                     : '',
-                                }} maxFileSize={0} maxFileWidth={1980} maxFileHeight={1080} fileTypes={[]}                              />
+                                }} maxFileSize={0} maxFileWidth={1980} maxFileHeight={1080} fileTypes={[]} />
                             </div>
                           )}
                           {/* Sub Categories  */}
@@ -361,22 +361,22 @@ export default function CategoryAddForm({
                                           </Fieldset>
                                           {/* Add More Button */}
                                           {index ===
-                                            (values.subCategories.length - 1 &&
-                                              !category) && (
-                                            <div className="mt-4">
-                                              <TextIconClickable
-                                                icon={faAdd}
-                                                title={t('Add More')}
-                                                onClick={() =>
-                                                  push({
-                                                    title: '',
-                                                    parentCategoryId: '',
-                                                  })
-                                                }
-                                                className="w-full flex justify-center items-center py-2 border border-dashed border-gray-400 rounded-md text-gray-600 hover:text-black  hover:border-black transition-all"
-                                              />
-                                            </div>
-                                          )}
+                                            values.subCategories.length - 1 &&
+                                            !category && (
+                                              <div className="mt-4">
+                                                <TextIconClickable
+                                                  icon={faAdd}
+                                                  title={t('Add More')}
+                                                  onClick={() =>
+                                                    push({
+                                                      title: '',
+                                                      parentCategoryId: '',
+                                                    })
+                                                  }
+                                                  className="w-full flex justify-center items-center py-2 border border-dashed border-gray-400 rounded-md text-gray-600 hover:text-black  hover:border-black transition-all"
+                                                />
+                                              </div>
+                                            )}
                                         </div>
                                       );
                                     }

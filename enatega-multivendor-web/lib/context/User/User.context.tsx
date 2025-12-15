@@ -159,9 +159,9 @@ export interface UserContextType {
   addQuantity: (key: string, quantity?: number) => Promise<void>;
   removeQuantity: (key: string) => Promise<void>;
   addItem: (
-    image : string,
+    image: string,
     foodId: string,
-    variationId: string,    
+    variationId: string,
     restaurantId: string,
     quantity?: number,
     addons?: Array<{
@@ -233,7 +233,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       subscribeToMore: subscribeToMoreOrders,
     },
   ] = useLazyQuery(ORDERS, {
-    variables:{
+    variables: {
       page: 1,
       limit: 300,
     },
@@ -311,21 +311,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     []
   );
 
-  const onInit = async (isSubscribed: boolean) => {
+  const onInit = useCallback(async (isSubscribed: boolean) => {
     if (!isSubscribed) return;
-    
+
     setIsLoading(true);
-    
+
     const _token = localStorage.getItem("token") || null;
     setToken(_token);
-    
+
     if (_token) {
       await fetchProfile();
       await fetchOrders();
     }
-    
+
     setIsLoading(false);
-  };
+  }, [fetchProfile, fetchOrders]);
 
   // Define setCartRestaurant before it's used in dependencies
   const setCartRestaurant = useCallback(async (id: string) => {
@@ -367,14 +367,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     return () => {
       isSubscribed = false;
     };
-  // Important: Include token as a dependency to refetch when it changes
-  }, [token]);
+    // Important: Include token as a dependency to refetch when it changes
+  }, [token, onInit]);
 
-  // Setup subscription when profile is loaded
-  useEffect(() => {
-    if (!dataProfile) return;
-    subscribeOrders();
-  }, [dataProfile, subscribeToMoreOrders]);
+
 
   function onProfileCompleted(data: IProfileResponse) {
     if (data.profile) {
@@ -386,7 +382,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     console.log("error", error.message);
   }
 
-  const setTokenAsync = async (tokenReq: string, cb: () => void = () => {}) => {
+  const setTokenAsync = async (tokenReq: string, cb: () => void = () => { }) => {
     setToken(tokenReq);
     if (typeof window !== "undefined") {
       localStorage.setItem("token", tokenReq);
@@ -457,6 +453,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       console.log("error subscribing order", err.message);
     }
   }, [client, dataProfile, subscribeToMoreOrders]);
+
+  // Setup subscription when profile is loaded
+  useEffect(() => {
+    if (!dataProfile) return;
+    subscribeOrders();
+  }, [dataProfile, subscribeOrders]);
 
   const fetchMoreOrdersFunc = useCallback(() => {
     if (networkStatusOrders === 7 && fetchMoreOrders) {
@@ -584,7 +586,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
   // Enhanced method that replaces the old addCartItem - uses setCartRestaurant which is defined above
   const addItem = useCallback(
     async (
-      image : string,
+      image: string,
       foodId: string,
       variationId: string,
       restaurantId: string,
@@ -733,73 +735,22 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     [deleteItem]
   );
 
-const calculateSubtotal = useCallback(() => {
-  return cart
-    .reduce((total, item) => {
-      const priceRaw = (item.variation as { price?: number | string })?.price ?? item.price ?? 0;
-      const price = typeof priceRaw === 'string' ? parseFloat(priceRaw) : priceRaw;
-      const quantity = item.quantity ?? 0;
-      return total + price * quantity;
-    }, 0)
-    .toFixed(2);
-}, [cart]);
+  const calculateSubtotal = useCallback(() => {
+    return cart
+      .reduce((total, item) => {
+        const priceRaw = (item.variation as { price?: number | string })?.price ?? item.price ?? 0;
+        const price = typeof priceRaw === 'string' ? parseFloat(priceRaw) : priceRaw;
+        const quantity = item.quantity ?? 0;
+        return total + price * quantity;
+      }, 0)
+      .toFixed(2);
+  }, [cart]);
 
 
 
 
 
-  // UseEffects
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-    if (token && userId) {
-      fetchProfile();
-    }
-  }, []);
-  // Initialize from local storage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedRestaurant = localStorage.getItem("restaurant");
-      const storedCart = localStorage.getItem("cartItems");
 
-      if (storedRestaurant) {
-        setRestaurant(storedRestaurant);
-      }
-
-      if (storedCart) {
-        try {
-          setCart(JSON.parse(storedCart));
-        } catch (error) {
-          console.error("Error parsing cart items from localStorage:", error);
-          setCart([]);
-        }
-      }
-    }
-
-    setIsLoading(false);
-  }, []);
-
-  // Load user profile and orders
-  useEffect(() => {
-    let isSubscribed = true;
-
-    onInit(isSubscribed);
-
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-
-    return () => {
-      isSubscribed = false;
-    };
-  }, [token, fetchProfile, fetchOrders]);
-
-  // Setup subscription when profile is loaded
-  useEffect(() => {
-    if (!dataProfile) return;
-    subscribeOrders();
-  }, [dataProfile]);
 
   return (
     <UserContext.Provider
