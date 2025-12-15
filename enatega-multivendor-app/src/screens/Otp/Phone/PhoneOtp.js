@@ -13,7 +13,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import screenOptions from '../screenOptions'
-import OTPInputView from '@twotalltotems/react-native-otp-input'
+import { OtpInput } from 'react-native-otp-entry'
 import usePhoneOtp from './usePhoneOtp'
 import { useTranslation } from 'react-i18next'
 import { Ionicons } from '@expo/vector-icons'
@@ -96,23 +96,22 @@ function PhoneOtp(props) {
               </TextDefault> */}
             </View>
             <View>
-              <OTPInputView
-                pinCount={6}
-                style={styles().otpInput}
-                codeInputFieldStyle={[
-                  styles(currentTheme).otpBox,
-                  otpError && styles().errorInput
-                ]}
-                codeInputHighlightStyle={{
-                  borderColor: currentTheme.iconColorPink
+              <OtpInput
+                numberOfDigits={6}
+                onTextChange={(code) => setOtp(code)}
+                onFilled={(code) => onCodeFilled(code)}
+                theme={{
+                  containerStyle: styles().otpInput,
+                  inputsContainerStyle: {},
+                  pinCodeContainerStyle: [
+                    styles(currentTheme).otpBox,
+                    otpError && styles().errorInput
+                  ],
+                  focusedPinCodeContainerStyle: {
+                    borderColor: currentTheme.iconColorPink
+                  }
                 }}
-                autoFocusOnLoad
-                code={otp}
-                onCodeChanged={(code) => setOtp(code)}
-                onCodeFilled={(code) => {
-                  onCodeFilled(code)
-                }}
-                editable
+                autoFocus
               />
               {otpError && (
                 <TextDefault

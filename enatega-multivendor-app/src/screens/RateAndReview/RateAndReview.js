@@ -12,7 +12,7 @@ import ImageHeader from '../../components/CustomizeComponents/ImageHeader/ImageH
 import styles from './styles'
 import { reviewOrder } from '../../apollo/mutations'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-// import StarRating from 'react-native-star-rating'
+import { Rating } from 'react-native-ratings'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -178,14 +178,16 @@ function RateAndReview(props) {
           </View>
           <View style={styles().ratingContainer}>
             <View style={styles().ratingSubContainer}>
-              {/* <StarRating
-                emptyStarColor={currentTheme.startColor}
-                fullStarColor={currentTheme.startOutlineColor}
-                disabled={false}
-                maxStars={5}
-                rating={rating}
-                selectedStar={onFinishRating}
-              /> */}
+              <Rating
+                type='star'
+                ratingCount={5}
+                imageSize={30}
+                startingValue={rating}
+                onFinishRating={onFinishRating}
+                tintColor={currentTheme.themeBackground}
+                ratingColor={currentTheme.startOutlineColor}
+                ratingBackgroundColor={currentTheme.startColor}
+              />
             </View>
           </View>
           <View style={styles().line}></View>
