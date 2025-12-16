@@ -109,22 +109,22 @@ function OrderDetail(props) {
   }, [orders])
 
   const [remainingTimeState, setRemainingTimeState] = useState(0)
-  
+
   useEffect(() => {
     if (order && ![ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
       const initialTime = calulateRemainingTime(order)
       setRemainingTimeState(initialTime)
- 
-    
+
+
       const intervalId = setInterval(() => {
         const updatedTime = calulateRemainingTime(order)
         setRemainingTimeState(updatedTime)
-        
+
         if (updatedTime <= 0 || [ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
           clearInterval(intervalId)
         }
       }, 5000)
-      
+
       return () => clearInterval(intervalId)
     }
   }, [order])
@@ -139,10 +139,10 @@ function OrderDetail(props) {
   const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges } = order
 
   const subTotal = total - tip - tax - deliveryCharges
-  
+
   const isOrderPending = order?.orderStatus === ORDER_STATUS_ENUM.PENDING
   const isOrderCancelable = isOrderPending
-  
+
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
@@ -261,12 +261,22 @@ function OrderDetail(props) {
         <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol} />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
+        {/* Tip is not showing on the tracking page
+        {tip > 0 && (
+  <PriceRow 
+    theme={currentTheme} 
+    title={t('tip')}   // uses translation
+    currency={configuration.currencySymbol} 
+    price={tip.toFixed(2)} 
+  />
+)} */}
+
         <PriceRow theme={currentTheme} title={t('total')} currency={configuration.currencySymbol} price={total.toFixed(2)} />
-        
-          <View style={{ margin: scale(20) }}>
-            <Button disabled={isOrderCancelable ? false : true} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
-          </View>
-        
+
+        <View style={{ margin: scale(20) }}>
+          <Button disabled={isOrderCancelable ? false : true} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
+        </View>
+
       </View>
       <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle} cancelOrder={cancelOrder} loading={loadingCancel} orderStatus={order?.orderStatus} />
     </View>

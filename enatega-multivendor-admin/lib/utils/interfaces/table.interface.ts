@@ -46,6 +46,9 @@ export interface IDataTableProps<T> extends IGlobalComponentProps {
   sortField?: string;
   sortOrder?: SortOrder;
   minWidth?: string;
+  paginator?: boolean;
+  first?: number;
+  rows?: number;
 }
 
 export interface ITableExtends extends IGlobalComponentProps {

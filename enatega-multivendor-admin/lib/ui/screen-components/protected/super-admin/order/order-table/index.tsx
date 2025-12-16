@@ -1,0 +1,127 @@
+import { DataTablePageEvent, DataTableRowClickEvent } from 'primereact/datatable';
+import React, { useMemo, useState, useEffect } from 'react';
+import Table from '@/lib/ui/useable-components/table';
+import { ORDER_SUPER_ADMIN_COLUMNS } from '@/lib/ui/useable-components/table/columns/order-superadmin-columns';
+import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/orders.vendor.row.skeleton';
+import { IExtendedOrder, IOrder } from '@/lib/utils/interfaces';
+import { TOrderRowData } from '@/lib/utils/types';
+import CustomPaginator from '@/lib/ui/useable-components/custom-paginator';
+
+interface OrderTableProps {
+  data: {
+    orders: IOrder[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+    prevPage: number | null;
+    nextPage: number | null;
+  } | undefined;
+  loading: boolean;
+  isInitialLoad: boolean; // New prop
+  handleRowClick: (event: DataTableRowClickEvent) => void; // Changed type
+  selectedData: IExtendedOrder[];
+  setSelectedData: React.Dispatch<React.SetStateAction<IExtendedOrder[]>>;
+  first: number;
+  rows: number;
+  onPage: (e: DataTablePageEvent) => void;
+}
+
+export default function OrderTable({
+  data,
+  loading,
+  isInitialLoad, // Destructure new prop
+  handleRowClick,
+  selectedData,
+  setSelectedData,
+  first,
+  rows,
+  onPage,
+}: OrderTableProps) {
+  // Removed const t = useTranslations();
+
+  console.log('OrderTable props:', { data, loading, first, rows });
+
+  const [lastValidOrders, setLastValidOrders] = useState<IOrder[]>([]);
+
+  useEffect(() => {
+    if (!loading && data?.orders) {
+      setLastValidOrders(data.orders);
+    }
+  }, [loading, data?.orders]);
+
+  const displayData: TOrderRowData[] = useMemo(() => {
+    if (loading && isInitialLoad) { // Only show skeleton on initial load
+      return OrderTableSkeleton({ rowCount: 10 }); // Display 10 skeleton rows while loading
+    }
+    // If loading but not initial load, return last valid orders
+    if (loading && !isInitialLoad) {
+      return lastValidOrders.map(
+        (order: IOrder): IExtendedOrder => ({
+          ...order,
+          itemsTitle:
+            order.items
+              .map((item) => item.title)
+              .join(', ')
+              .slice(0, 15) + '...',
+          OrderdeliveryAddress:
+            order.deliveryAddress.deliveryAddress.toString().slice(0, 15) + '...',
+          DateCreated: order.createdAt.toString().slice(0, 10),
+        })
+      );
+    }
+    // If not loading, or initial load is complete, return current data
+    if (!data?.orders) return [];
+
+    return data.orders.map(
+      (order: IOrder): IExtendedOrder => ({
+        ...order,
+        itemsTitle:
+          order.items
+            .map((item) => item.title)
+            .join(', ')
+            .slice(0, 15) + '...',
+        OrderdeliveryAddress:
+          order.deliveryAddress.deliveryAddress.toString().slice(0, 15) + '...',
+        DateCreated: order.createdAt.toString().slice(0, 10),
+      })
+    );
+  }, [data, loading, isInitialLoad, lastValidOrders]); // Add lastValidOrders to dependencies
+
+  return (
+    <>
+      <Table
+        data={displayData as IExtendedOrder[]}
+        setSelectedData={setSelectedData}
+        selectedData={selectedData}
+        columns={ORDER_SUPER_ADMIN_COLUMNS()}
+        loading={loading}
+        handleRowClick={handleRowClick}
+        moduleName={'SuperAdmin-Order'}
+        paginator={false}
+        first={first}
+        rows={rows}
+        totalRecords={data?.totalCount || 0}
+        onPage={onPage}
+      />
+      {data && (
+        <CustomPaginator
+          first={first}
+          rows={rows}
+          totalRecords={data.totalCount}
+          currentPage={data.currentPage}
+          totalPages={data.totalPages}
+          prevPage={data.prevPage}
+          nextPage={data.nextPage}
+          onPageChange={(e) => {
+            onPage({
+              first: e.first,
+              rows: e.rows,
+              page: e.page,
+              pageCount: e.pageCount,
+            } as DataTablePageEvent);
+          }}
+        />
+      )}
+    </>
+  );
+}

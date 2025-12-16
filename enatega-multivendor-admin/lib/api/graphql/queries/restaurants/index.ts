@@ -17,8 +17,10 @@ export const GET_RESTAURANTS_DROPDOWN = gql`
   }
 `;
 
+//apply pagination on this query
 export const GET_RESTAURANTS = gql`
   query restaurants {
+  
     restaurants {
       unique_restaurant_id
       _id
@@ -42,6 +44,50 @@ export const GET_RESTAURANTS = gql`
     }
   }
 `;
+
+export const GET_RESTAURANTS_PAGINATED = gql`
+  query restaurantsPaginated(
+    $page: Int
+    $rows: Int
+    $search: String
+    $isActive: Boolean
+  ) {
+    restaurantsPaginated(
+      page: $page
+      rows: $rows
+      search: $search
+      isActive: $isActive
+    ) {
+      totalCount
+      currentPage
+      totalPages
+      prevPage
+      nextPage
+      restaurants {
+        unique_restaurant_id
+        _id
+        name
+        image
+        orderPrefix
+        slug q
+        address
+        deliveryTime
+        minimumOrder
+        isActive
+        commissionRate
+        username
+        tax
+        shopType
+        owner {
+          _id
+          email
+          isActive
+        }
+      }
+    }
+  }
+`;
+
 
 export const GET_CLONED_RESTAURANTS = gql`
   query getClonedRestaurants {
@@ -193,36 +239,7 @@ export const GET_RESTAURANT_PROFILE = gql`
   }
 `;
 
-export const GET_RESTAURANTS_PAGINATED = gql`
-  query restaurantsPaginated($page: Int, $limit: Int, $search: String) {
-    restaurantsPaginated(page: $page, limit: $limit, search: $search) {
-      data {
-        unique_restaurant_id
-        _id
-        name
-        image
-        orderPrefix
-        slug
-        address
-        deliveryTime
-        minimumOrder
-        isActive
-        commissionRate
-        username
-        tax
-        owner {
-          _id
-          email
-          isActive
-        }
-        shopType
-      }
-      totalCount
-      currentPage
-      totalPages
-    }
-  }
-`;
+
 
 export const GET_CLONED_RESTAURANTS_PAGINATED = gql`
   query getClonedRestaurantsPaginated(
