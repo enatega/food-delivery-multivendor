@@ -46,30 +46,15 @@ export const GET_RESTAURANTS = gql`
 `;
 
 export const GET_RESTAURANTS_PAGINATED = gql`
-  query restaurantsPaginated(
-    $page: Int
-    $rows: Int
-    $search: String
-    $isActive: Boolean
-  ) {
-    restaurantsPaginated(
-      page: $page
-      rows: $rows
-      search: $search
-      isActive: $isActive
-    ) {
-      totalCount
-      currentPage
-      totalPages
-      prevPage
-      nextPage
-      restaurants {
+  query restaurantsPaginated($page: Int, $limit: Int, $search: String) {
+    restaurantsPaginated(page: $page, limit: $limit, search: $search) {
+      data {
         unique_restaurant_id
         _id
         name
         image
         orderPrefix
-        slug q
+        slug
         address
         deliveryTime
         minimumOrder
@@ -77,13 +62,16 @@ export const GET_RESTAURANTS_PAGINATED = gql`
         commissionRate
         username
         tax
-        shopType
         owner {
           _id
           email
           isActive
         }
+        shopType
       }
+      totalCount
+      currentPage
+      totalPages
     }
   }
 `;

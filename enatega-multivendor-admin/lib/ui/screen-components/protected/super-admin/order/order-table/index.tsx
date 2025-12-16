@@ -6,6 +6,7 @@ import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/ord
 import { IExtendedOrder, IOrder } from '@/lib/utils/interfaces';
 import { TOrderRowData } from '@/lib/utils/types';
 import CustomPaginator from '@/lib/ui/useable-components/custom-paginator';
+import { DataTableFilterMeta } from 'primereact/datatable';
 
 interface OrderTableProps {
   data: {
@@ -24,6 +25,8 @@ interface OrderTableProps {
   first: number;
   rows: number;
   onPage: (e: DataTablePageEvent) => void;
+  filters?: DataTableFilterMeta;
+  globalFilterValue?: string;
 }
 
 export default function OrderTable({
@@ -36,10 +39,11 @@ export default function OrderTable({
   first,
   rows,
   onPage,
+  filters,
+  globalFilterValue,
 }: OrderTableProps) {
   // Removed const t = useTranslations();
 
-  console.log('OrderTable props:', { data, loading, first, rows });
 
   const [lastValidOrders, setLastValidOrders] = useState<IOrder[]>([]);
 
@@ -54,7 +58,7 @@ export default function OrderTable({
       return OrderTableSkeleton({ rowCount: 10 }); // Display 10 skeleton rows while loading
     }
     // If loading but not initial load, return last valid orders
-    if (loading && !isInitialLoad) {
+    if (loading && !isInitialLoad && !data?.orders) {
       return lastValidOrders.map(
         (order: IOrder): IExtendedOrder => ({
           ...order,
@@ -102,6 +106,8 @@ export default function OrderTable({
         rows={rows}
         totalRecords={data?.totalCount || 0}
         onPage={onPage}
+        filters={filters}
+        globalFilterFields={['orderId', 'orderStatus', 'restaurant.name', 'deliveryAddress.deliveryAddress']}
       />
       {data && (
         <CustomPaginator

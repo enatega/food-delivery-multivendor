@@ -85,7 +85,7 @@ export default function RestaurantsMain() {
   // Query variables
   const queryVariables = {
     page: currentPage,
-    rows: rowsPerPage,
+    limit: rowsPerPage,
     search: debouncedSearchTerm || undefined,
   };
 

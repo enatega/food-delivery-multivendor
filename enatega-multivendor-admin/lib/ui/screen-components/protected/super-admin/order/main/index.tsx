@@ -1,12 +1,12 @@
 // Hooks
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 
 // Interfaces & Types
 import { IDateFilter, IQueryResult } from '@/lib/utils/interfaces';
 import { IOrder, IExtendedOrder } from '@/lib/utils/interfaces';
-// import { TOrderRowData } from '@/lib/utils/types';
+import { TOrderRowData } from '@/lib/utils/types';
 
 // GraphQL
 import { GET_ALL_ORDERS_PAGINATED } from '@/lib/api/graphql';
@@ -14,7 +14,7 @@ import { GET_ALL_ORDERS_PAGINATED } from '@/lib/api/graphql';
 // Components
 import OrderSuperAdminTableHeader from '../header/table-header';
 // import Table from '@/lib/ui/useable-components/table';
-// import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/orders.vendor.row.skeleton';
+import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/orders.vendor.row.skeleton';
 // import { ORDER_SUPER_ADMIN_COLUMNS } from '@/lib/ui/useable-components/table/columns/order-superadmin-columns';
 import OrderDetailModal from '@/lib/ui/useable-components/popup-menu/order-details-modal';
 import DashboardDateFilter from '@/lib/ui/useable-components/date-filter';
@@ -30,7 +30,6 @@ export default function OrderSuperAdminMain() {
   // States
   const [selectedData, setSelectedData] = useState<IExtendedOrder[]>([]);
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<IExtendedOrder | null>(null);
@@ -42,7 +41,7 @@ export default function OrderSuperAdminMain() {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10); // For PrimeReact Table's 'rows' prop
   const [currentPage, setCurrentPage] = useState(1); // For API 'page' parameter
-   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleDateFilter = (dateFilter: IDateFilter) => {
     setDateFilter({
@@ -60,22 +59,21 @@ export default function OrderSuperAdminMain() {
       starting_date: dateFilter.startDate,
       ending_date: dateFilter.endDate,
       orderStatus: selectedActions.length > 0 ? selectedActions : undefined,
-      search: searchTerm.length > 0 ? searchTerm : undefined,
     },
     {
       fetchPolicy: 'network-only',
     }
   ) as IQueryResult<
     | {
-        allOrdersPaginated: {
-          totalCount: number;
-          currentPage: number;
-          totalPages: number;
-          prevPage: number;
-          nextPage: number;
-          orders: IOrder[];
-        };
-      }
+      allOrdersPaginated: {
+        totalCount: number;
+        currentPage: number;
+        totalPages: number;
+        prevPage: number;
+        nextPage: number;
+        orders: IOrder[];
+      };
+    }
     | undefined,
     undefined
   >;
@@ -87,13 +85,14 @@ export default function OrderSuperAdminMain() {
       matchMode: FilterMatchMode.CONTAINS,
     },
   });
-    useEffect(() => {
+
+  useEffect(() => {
     if (!loading && isInitialLoad) {
       setIsInitialLoad(false);
     }
   }, [loading, isInitialLoad]);
 
-  // For global search
+  // For global search - updates filters for PrimeReact DataTable
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const _filters = { ...filters };
@@ -102,80 +101,75 @@ export default function OrderSuperAdminMain() {
     setGlobalFilterValue(value);
   };
 
-  const handleSearch = (newSearchTerm: string) => {
-    setSearchTerm(newSearchTerm);
-  };
-
   const handleRowClick = (event: DataTableRowClickEvent) => {
     const selectedOrder = event.data as IExtendedOrder;
     setSelectedRestaurant(selectedOrder);
     setIsModalOpen(true);
   };
 
-  // const tableData = useMemo(() => {
-  //   if (!data?.allOrdersPaginated?.orders) return [];
+  const tableData = useMemo(() => {
+    if (!data?.allOrdersPaginated?.orders) return [];
 
-  //   return data.allOrdersPaginated.orders.map(
-  //     (order: IOrder): IExtendedOrder => ({
-  //       ...order,
-  //       itemsTitle:
-  //         order.items
-  //           .map((item) => item.title)
-  //           .join(', ')
-  //           .slice(0, 15) + '...',
-  //       OrderdeliveryAddress:
-  //         order.deliveryAddress.deliveryAddress.toString().slice(0, 15) + '...',
-  //       DateCreated: order.createdAt.toString().slice(0, 10),
-  //     })
-  //   );
-  // }, [data]);
+    return data.allOrdersPaginated.orders.map(
+      (order: IOrder): IExtendedOrder => ({
+        ...order,
+        itemsTitle:
+          order.items
+            .map((item) => item.title)
+            .join(', ')
+            .slice(0, 15) + '...',
+        OrderdeliveryAddress:
+          order.deliveryAddress.deliveryAddress.toString().slice(0, 15) + '...',
+        DateCreated: order.createdAt.toString().slice(0, 10),
+      })
+    );
+  }, [data]);
 
-  // const filteredData = useMemo(() => {
-  //   return tableData.filter((order: IExtendedOrder) => {
-  //     const statusFilter =
-  //       selectedActions.length === 0 ||
-  //       selectedActions.includes(order.orderStatus);
-  //     return statusFilter;
-  //   });
-  // }, [tableData, selectedActions, searchTerm]);
-
-  // const displayData: TOrderRowData[] = useMemo(() => {
-  //   if (loading) {
-  //     return OrderTableSkeleton({ rowCount: 10 }); // Display 10 skeleton rows while loading
-  //   }
-  //   return filteredData;
-  // }, [loading, filteredData]);
+  const displayData: TOrderRowData[] = useMemo(() => {
+    if (loading) {
+      return OrderTableSkeleton({ rowCount: 10 }); // Display 10 skeleton rows while loading
+    }
+    return tableData;
+  }, [loading, tableData]);
 
   return (
     <div className="p-3 screen-container">
-        {
-          <>
-            <OrderSuperAdminTableHeader
-              globalFilterValue={globalFilterValue}
-              onGlobalFilterChange={onGlobalFilterChange}
-              selectedActions={selectedActions}
-              setSelectedActions={setSelectedActions}
-              onSearch={handleSearch}
-              dateFilter={dateFilter}
-              handleDateFilter={handleDateFilter}
-            />
-            <DashboardDateFilter
-              dateFilter={dateFilter}
-              setDateFilter={setDateFilter}
-            />
-          </>
-        }
-        
-    
+      {
+        <>
+          <OrderSuperAdminTableHeader
+            globalFilterValue={globalFilterValue}
+            onGlobalFilterChange={onGlobalFilterChange}
+            selectedActions={selectedActions}
+            setSelectedActions={setSelectedActions}
+            dateFilter={dateFilter}
+            handleDateFilter={handleDateFilter}
+          />
+          <DashboardDateFilter
+            dateFilter={dateFilter}
+            setDateFilter={setDateFilter}
+          />
+        </>
+      }
+
+
       <OrderTable
-        data={data?.allOrdersPaginated}
+        data={
+          data?.allOrdersPaginated
+            ? {
+              ...data.allOrdersPaginated,
+              orders: displayData as IExtendedOrder[],
+            }
+            : undefined
+        }
         loading={loading}
-        isInitialLoad={isInitialLoad} // Pass isInitialLoad to OrderTable
+        isInitialLoad={isInitialLoad}
         handleRowClick={handleRowClick}
         selectedData={selectedData}
         setSelectedData={setSelectedData}
         first={first}
         rows={rows}
+        filters={filters}
+        globalFilterValue={globalFilterValue}
         onPage={(e) => {
           setFirst(e.first);
           setRows(Math.min(e.rows, 100));
