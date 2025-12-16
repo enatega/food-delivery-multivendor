@@ -15,7 +15,7 @@ const ActionMenu = <T,>({
   items,
   data,
   isOpen,
-  onToggle = () => {},
+  onToggle = () => { },
 }: IActionMenuProps<T>) => {
   const menuRef = useRef<Menu>(null);
 

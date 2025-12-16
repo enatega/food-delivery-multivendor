@@ -40,6 +40,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Fieldset } from 'primereact/fieldset';
 import { useContext } from 'react';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 
 // State
 const initialFormValuesTemplate: IOptionForm = {
@@ -63,6 +64,7 @@ export default function OptionAddForm({
   // Hooks
   const t = useTranslations();
   const { showToast } = useToast();
+  const { theme } = useTheme();
 
   // Context
   const { CURRENT_SYMBOL } = useConfiguration();
@@ -279,7 +281,7 @@ export default function OptionAddForm({
                                   <TextIconClickable
                                     className="w-full rounded border dark:border-dark-600 border-black bg-transparent text-black dark:text-white"
                                     icon={faAdd}
-                                    iconStyles={{ color: 'black' }}
+                                    iconStyles={{ color: theme === 'dark' ? 'white' : 'black' }}
                                     title={t('Add New Option')}
                                     onClick={() =>
                                       push(initialFormValuesTemplate)

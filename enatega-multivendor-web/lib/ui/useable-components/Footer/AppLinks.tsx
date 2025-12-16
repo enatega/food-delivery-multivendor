@@ -1,4 +1,6 @@
-import React from "react";
+"use client"
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const PlayStoreLink =
@@ -9,16 +11,35 @@ import Logo from "@/lib/utils/assets/svg/Logo";
 import { useTranslations } from "next-intl";
 
 const AppLinks = () => {
-  
+
   const t = useTranslations()
+  const [isLogin, setIsLogin] = useState(false);
+  const router = useRouter();
   const handleButtonClick = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    if (!token || !userId) {
+      setIsLogin(false);
+    } else {
+      setIsLogin(true);
+    }
+  }, []);
+
+  const logoClickHandler = () => {
+    if (isLogin) {
+      router.push("/");
+    }
+    router.push("/");
+  };
+
   return (
     <div>
-      <div className="text-[20px] mb-4 font-extrabold text-white">
-      <Logo fillColor="#FFFFFFFF" darkmode="#FFFFFFFF" />
+      <div className="text-[20px] mb-4 font-extrabold text-white cursor-pointer" onClick={logoClickHandler}>
+        <Logo fillColor="#FFFFFFFF" darkmode="#FFFFFFFF" />
       </div>
 
       <div className="flex gap-2 flex-wrap">

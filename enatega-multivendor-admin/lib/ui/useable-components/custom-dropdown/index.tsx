@@ -1,3 +1,4 @@
+'use client';
 // Interface
 import { IDropdownComponentProps } from '@/lib/utils/interfaces';
 
@@ -7,6 +8,7 @@ import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import TextIconClickable from '../text-icon-clickable';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 
 
 const CustomDropdownComponent = ({
@@ -21,7 +23,9 @@ const CustomDropdownComponent = ({
   extraFooterButton,
   ...props
 }: IDropdownComponentProps) => {
-  const t = useTranslations()
+  const t = useTranslations();
+  const { theme } = useTheme();
+
   const itemTemplate = (option: { label: string }) => {
     return (
       <div className="align-items-center flex dark:text-white ">
@@ -37,7 +41,7 @@ const CustomDropdownComponent = ({
           <TextIconClickable
             className="w-full h-fit rounded  text-black dark:text-white"
             icon={faAdd}
-            iconStyles={{ color: 'black' }}
+            iconStyles={theme === 'dark' ? { color: 'white' } : { color: 'black' }}
             title={extraFooterButton.title}
             onClick={extraFooterButton.onChange}
           />
