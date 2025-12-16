@@ -30,9 +30,6 @@ import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'use-intl';
-import { useConfiguration } from '@/lib/hooks/useConfiguration';
-import { uploadImageToCloudinary } from '@/lib/services';
-// import { MAX_VIDEO_FILE_SIZE } from '@/lib/utils/constants';
 
 function CustomUploadImageComponent({
   name,
@@ -53,7 +50,6 @@ function CustomUploadImageComponent({
   isRequired = false,
 }: IImageUploadComponentProps & { isRequired?: boolean }) {
   // Context
-  const { CLOUDINARY_UPLOAD_URL, CLOUDINARY_API_KEY } = useConfiguration();
   const { showToast } = useContext(ToastContext);
 
   // Mutations
@@ -85,123 +81,63 @@ function CustomUploadImageComponent({
     async (file: File): Promise<void> => {
       setIsUploading(true);
 
-      if (true) {
-        setImageFile(URL.createObjectURL(file));
+      setImageFile(URL.createObjectURL(file));
 
-        try {
-          // Compress file based on type
-          let processedFile: File;
-          if (file.type.startsWith('image/')) {
-            processedFile = await compressImage(file, 800, 0.7);
-          } else if (file.type.startsWith('video/')) {
-            processedFile = await compressVideo(file);
-          } else {
-            processedFile = file;
-          }
+      try {
+        // Compress file based on type
+        let processedFile: File;
+        if (file.type.startsWith('image/')) {
+          processedFile = await compressImage(file, 800, 0.7);
+        } else if (file.type.startsWith('video/')) {
+          processedFile = await compressVideo(file);
+        } else {
+          processedFile = file;
+        }
 
-          // Convert to base64
-          const base64 = await new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(processedFile);
-          });
+        // Convert to base64
+        const base64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(processedFile);
+        });
 
-          const { data } = await uploadToS3({
-            variables: { image: base64 },
-          });
+        const { data } = await uploadToS3({
+          variables: { image: base64 },
+        });
 
-          const imageUrl = data?.uploadImageToS3?.imageUrl;
+        const imageUrl = data?.uploadImageToS3?.imageUrl;
 
-          if (imageUrl) {
-            onSetImageUrl(name, imageUrl);
-            showToast({
-              type: 'info',
-              title: title,
-              message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
-              duration: 2500,
-            });
-          } else {
-            throw new Error('No image URL returned');
-          }
-        } catch (error) {
-          onSetImageUrl(name, '');
+        if (imageUrl) {
+          onSetImageUrl(name, imageUrl);
           showToast({
-            type: 'error',
+            type: 'info',
             title: title,
-            message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
+            message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
             duration: 2500,
           });
-          setImageValidationErr({
-            bool: true,
-            msg: 'Upload failed',
-          });
-          setImageFile('');
-        } finally {
-          setIsUploading(false);
+        } else {
+          throw new Error('No image URL returned');
         }
-      } else {
-        const fileReader = new FileReader();
-        fileReader.onloadend = async () => {
-          if (fileReader.result) {
-            setImageFile(fileReader.result as string);
-            const uploadURL = file?.type.startsWith('video/')
-              ? CLOUDINARY_UPLOAD_URL?.replace('image', 'video')
-              : (CLOUDINARY_UPLOAD_URL ?? '');
-            await uploadImageToCloudinary(
-              fileReader.result as string,
-              uploadURL ?? '',
-              CLOUDINARY_API_KEY ?? ''
-            )
-              .then((url) => {
-                console.log(':rocket: ~ .then ~ url:', url);
-
-                console.log(':rocket: ~ Valid url idk about the response');
-                onSetImageUrl(name, url);
-                if (!url) {
-                  showToast({
-                    type: 'error',
-                    title: title,
-                    message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
-                    duration: 2500,
-                  });
-                  setImageValidationErr({
-                    bool: true,
-                    msg: 'Cloudinary Url Invalid',
-                  });
-                  setImageFile('');
-                  return;
-                }
-                showToast({
-                  type: 'info',
-                  title: title,
-                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
-                  duration: 2500,
-                });
-              })
-              .catch((err) => {
-                onSetImageUrl(name, '');
-                showToast({
-                  type: 'error',
-                  title: title,
-                  message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
-                  duration: 2500,
-                });
-
-                console.log('errrror=====>', err);
-              })
-              .finally(() => {
-                setIsUploading(false);
-              });
-          }
-        };
-        fileReader.readAsDataURL(file);
+      } catch (error) {
+        onSetImageUrl(name, '');
+        showToast({
+          type: 'error',
+          title: title,
+          message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
+          duration: 2500,
+        });
+        setImageValidationErr({
+          bool: true,
+          msg: 'Upload failed',
+        });
+        setImageFile('');
+      } finally {
+        setIsUploading(false);
       }
     },
     [
       name,
       onSetImageUrl,
-      CLOUDINARY_API_KEY,
-      CLOUDINARY_UPLOAD_URL,
       showToast,
       title,
       // validateImage,

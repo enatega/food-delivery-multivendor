@@ -1,5 +1,5 @@
 // Core
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 // Hooks
 import useToast from '@/lib/hooks/useToast';
@@ -12,9 +12,6 @@ import { DEACTIVATE_SUBSCRIPTION_PLAN } from '@/lib/api/graphql/mutations/subscr
 
 // Components
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
-import { Menu } from 'primereact/menu';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import ErrorState from '@/lib/ui/useable-components/error-state';
 
@@ -30,11 +27,8 @@ interface ISubscriptionMainProps {
   setIsEditing: (editing: IEditState<ISubscriptionPlan>) => void;
 }
 
-export default function SubscriptionMain({
-  setVisible,
-  isEditing,
-  setIsEditing,
-}: ISubscriptionMainProps) {
+/* eslint-disable-next-line */
+export default function SubscriptionMain(props: ISubscriptionMainProps) {
   // Hooks
   const { showToast } = useToast();
   const t = useTranslations();
@@ -132,7 +126,9 @@ export default function SubscriptionMain({
     <div className="p-6">
       {subscriptionPlans.length === 0 ? (
         <div className="flex h-[400px] w-full flex-col items-center justify-center gap-4 text-center">
-          <p className="text-gray-500 dark:text-gray-400">{t('No subscription plans found')}</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            {t('No subscription plans found')}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

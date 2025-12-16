@@ -22,6 +22,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 // Hooks
 import useToast from '@/lib/hooks/useToast';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useState, useMemo, useEffect } from 'react';
 
 // GraphQL
@@ -196,21 +197,21 @@ export default function DealsForm({
       : 'PERCENTAGE',
     discountValue: isEditing.bool ? (isEditing.data.discountValue ?? 0) : 0,
     startDate: isEditing.bool
-      ? new Date(
+      ? (new Date(
           typeof isEditing.data.startDate === 'string' &&
           !isNaN(Number(isEditing.data.startDate))
             ? Number(isEditing.data.startDate)
             : isEditing.data.startDate
-        )
-      : new Date(),
+        ) as Date)
+      : (new Date() as Date),
     endDate: isEditing.bool
-      ? new Date(
+      ? (new Date(
           typeof isEditing.data.endDate === 'string' &&
           !isNaN(Number(isEditing.data.endDate))
             ? Number(isEditing.data.endDate)
             : isEditing.data.endDate
-        )
-      : new Date(),
+        ) as Date)
+      : (new Date() as Date),
     isActive: isEditing.bool ? (isEditing.data.isActive ?? true) : true,
   };
 
@@ -232,9 +233,11 @@ export default function DealsForm({
     return (
       <div className="flex items-center gap-2 dark:text-white">
         {option.image && (
-          <img
+          <Image
             src={option.image}
             alt={option.title}
+            width={32}
+            height={32}
             className="h-8 w-8 rounded object-cover"
           />
         )}
@@ -253,9 +256,11 @@ export default function DealsForm({
     return (
       <div className="flex items-center gap-2 dark:text-white">
         {option.image && (
-          <img
+          <Image
             src={option.image}
             alt={option.title}
+            width={32}
+            height={32}
             className="h-8 w-8 rounded object-cover"
           />
         )}
@@ -354,39 +359,36 @@ export default function DealsForm({
             // Only close and reset form on success
             setVisible(false);
             resetForm();
-          } catch (error: any) {
+          } catch (error: unknown) {
             console.error('DealsForm Error:', error);
             let message = '';
-            try {
-              if (error instanceof ApolloError) {
-                if (error.graphQLErrors && error.graphQLErrors.length > 0) {
-                  message = error.graphQLErrors[0].message;
-                } else if (error.networkError) {
-                  // Attempt to extract body from network error if possible, though typically complex types
-                  // Cast to any to access internal properties if known, or just use message
-                  const networkErr = error.networkError as any;
-                  if (networkErr?.result?.errors?.length > 0) {
-                    message = networkErr.result.errors[0].message;
-                  } else if (networkErr?.bodyText) {
-                    try {
-                      const body = JSON.parse(networkErr.bodyText);
-                      message =
-                        body?.errors?.[0]?.message ||
-                        body?.message ||
-                        networkErr.message;
-                    } catch {
-                      message = error.message;
-                    }
-                  } else {
-                    message = error.message;
+            if (error instanceof ApolloError) {
+              if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+                message = error.graphQLErrors[0].message;
+              } else if (error.networkError) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const networkErr = error.networkError as any;
+                if (networkErr?.result?.errors?.length > 0) {
+                  message = networkErr.result.errors[0].message;
+                } else if (networkErr?.bodyText) {
+                  try {
+                    const body = JSON.parse(networkErr.bodyText);
+                    message =
+                      body?.errors?.[0]?.message ||
+                      body?.message ||
+                      networkErr.message;
+                  } catch {
+                    message = networkErr.message;
                   }
                 } else {
-                  message = error.message;
+                  message = networkErr.message;
                 }
               } else {
-                message = (error as Error).message;
+                message = error.message;
               }
-            } catch (err) {
+            } else if (error instanceof Error) {
+              message = error.message;
+            } else {
               message = t('ActionFailedTryAgain');
             }
             showToast({
@@ -395,7 +397,6 @@ export default function DealsForm({
               message,
               duration: 3000,
             });
-            // Do not close or reset form on error
           } finally {
             setSubmitting(false);
           }

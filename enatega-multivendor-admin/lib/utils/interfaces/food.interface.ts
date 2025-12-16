@@ -74,7 +74,7 @@ export interface IVariation {
   _id: string;
   title: string;
   price: number;
-  discounted: number;
+  discounted?: number;
   addons: string[];
   isOutOfStock: boolean;
   __typename?: string;
@@ -101,12 +101,12 @@ export interface IFoodNew {
   subCategory: IDropdownSelectItem | null;
   image: string;
   isActive: boolean;
-  __typename: string;
+  __typename?: string; // Changed to optional string
   isOutOfStock: boolean;
-  inventory?: number;
+  inventory?: number | null; // Changed to optional number or null
   uom?: string;
-  minQuantity?: number;
-  maxQuantity?: number;
+  minQuantity?: number | null;
+  maxQuantity?: number | null;
 }
 
 export interface IFoodCategory {

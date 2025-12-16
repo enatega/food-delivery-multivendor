@@ -18,6 +18,7 @@ import {
   IQueryResult,
   ISubCategory,
   ISubCategoryByParentIdResponse,
+  IFoodNew, // Added IFoodNew
 } from '@/lib/utils/interfaces';
 
 // Constants and Methods
@@ -44,6 +45,7 @@ import { faAdd } from '@fortawesome/free-solid-svg-icons';
 // Components
 import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 import InputSkeleton from '@/lib/ui/useable-components/custom-skeletons/inputfield.skeleton';
+import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 
 export default function FoodDetails() {
   // Hooks
@@ -51,7 +53,7 @@ export default function FoodDetails() {
 
   // Formik Context (from Parent)
   const { values, errors, handleChange, setFieldValue } =
-    useFormikContext<any>();
+    useFormikContext<IFoodNew>();
 
   // Context
   const { foodContextData } = useContext(FoodsContext);
@@ -280,13 +282,13 @@ export default function FoodDetails() {
                   />
                 </div>
                 <div>
-                  <CustomTextField
-                    type="number"
+                  <CustomNumberField
                     name="inventory"
                     placeholder={t('Inventory')}
                     value={values.inventory}
-                    onChange={handleChange}
+                    onChangeFieldValue={setFieldValue}
                     showLabel={true}
+                    min={0}
                     style={{
                       borderColor: onErrorMessageMatcher(
                         'inventory',
@@ -321,13 +323,13 @@ export default function FoodDetails() {
                 {/* Min & Max Order Quantity Row */}
                 <div className="flex w-full gap-4">
                   <div className="w-1/2">
-                    <CustomTextField
-                      type="number"
+                    <CustomNumberField
                       name="minQuantity"
                       placeholder={t('Min QTY Order')}
                       value={values.minQuantity}
-                      onChange={handleChange}
+                      onChangeFieldValue={setFieldValue}
                       showLabel={true}
+                      min={0}
                       style={{
                         borderColor: onErrorMessageMatcher(
                           'minQuantity',
@@ -340,13 +342,13 @@ export default function FoodDetails() {
                     />
                   </div>
                   <div className="w-1/2">
-                    <CustomTextField
-                      type="number"
+                    <CustomNumberField
                       name="maxQuantity"
                       placeholder={t('Max QTY Order')}
                       value={values.maxQuantity}
-                      onChange={handleChange}
+                      onChangeFieldValue={setFieldValue}
                       showLabel={true}
+                      min={0}
                       style={{
                         borderColor: onErrorMessageMatcher(
                           'maxQuantity',

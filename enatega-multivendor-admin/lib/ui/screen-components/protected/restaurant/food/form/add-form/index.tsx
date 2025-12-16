@@ -1,7 +1,7 @@
 'use client';
 
 // Core imports
-import { useContext, useRef } from 'react';
+import { useContext } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
@@ -13,12 +13,15 @@ import { FoodsContext } from '@/lib/context/restaurant/foods.context';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 
 // Interfaces
+import { IFoodAddFormComponentProps } from '@/lib/utils/interfaces';
 import {
-  IFoodAddFormComponentProps,
-  IFoodNew,
+  IFoodDetailsForm,
+  IFoodNewFormValues, // Added
+  IVariationInput,
+  IFoodInput,
   IVariationForm,
-} from '@/lib/utils/interfaces';
-import { IFoodDetailsForm } from '@/lib/utils/interfaces/forms/food.form.interface';
+} from '@/lib/utils/interfaces/forms/food.form.interface';
+import { IDropdownSelectItem } from '@/lib/utils/interfaces/global.interface';
 
 // Components
 import FoodDetails from './food.index';
@@ -26,19 +29,13 @@ import VariationAddForm from './variations';
 import { useTranslations } from 'next-intl';
 
 // API
-import { useMutation } from '@apollo/client';
+import { ApolloError, useMutation } from '@apollo/client';
 import {
-  CREATE_FOOD,
-  EDIT_FOOD,
   GET_FOODS_BY_RESTAURANT_ID,
   CREATE_FOOD_SINGLE_VENDOR,
   UPDATE_FOOD_SINGLE_VENDOR,
   GET_ALL_FOODS_PAGINATED,
 } from '@/lib/api/graphql';
-import {
-  CREATE_FOOD_DEAL,
-  UPDATE_FOOD_DEAL,
-} from '@/lib/api/graphql/mutations/food-deal';
 import useToast from '@/lib/hooks/useToast';
 import { FoodSchema, VariationSchema } from '@/lib/utils/schema';
 
@@ -51,12 +48,8 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
   const { showToast } = useToast();
 
   // Context
-  const {
-    isFoodFormVisible,
-    onClearFoodData,
-    foodContextData,
-    onSetFoodContextData,
-  } = useContext(FoodsContext);
+  const { isFoodFormVisible, onClearFoodData, foodContextData } =
+    useContext(FoodsContext);
 
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData.restaurantId;
@@ -112,7 +105,7 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
   const getInitialValues = () => {
     // Basic Food Data
     const basicInfo: IFoodDetailsForm = {
-      _id: foodContextData?.food?.data?._id || null,
+      _id: foodContextData?.food?.data?._id || '',
       title: foodContextData?.food?.data?.title || '',
       description: foodContextData?.food?.data?.description || '',
       image: foodContextData?.food?.data?.image || '',
@@ -122,6 +115,9 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
       uom: foodContextData?.food?.data?.uom || '',
       minQuantity: foodContextData?.food?.data?.minQuantity || null,
       maxQuantity: foodContextData?.food?.data?.maxQuantity || null,
+      isActive: foodContextData?.food?.data?.isActive ?? true, // Added default
+      __typename: foodContextData?.food?.data?.__typename ?? 'Food', // Added default
+      isOutOfStock: foodContextData?.food?.data?.isOutOfStock ?? false, // Added default
     };
 
     // Variations Data
@@ -154,46 +150,73 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
       .required('Required'),
   });
 
-  const handleSubmit = async (values: any, { setSubmitting }: any) => {
+  const handleSubmit = async (
+    values: IFoodNewFormValues, // Changed from IFoodNew
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  ) => {
     setSubmitting(true);
     try {
       if (foodContextData?.isEditing) {
         // For editing, use UPDATE_FOOD_SINGLE_VENDOR
-        const _variations = values.variations.map((item: any) => {
-          const variation: any = {
+        const _variations: IVariationInput[] = values.variations.map((item) => {
+          const variation: IVariationInput = {
             id: item._id,
             title: item.title,
             price: Number(item.price),
             discounted: item.discounted ? Number(item.discounted) : undefined,
-            addons:
-              item?.addons?.map((addon: any) => addon.code || addon) || [],
+            addons: item?.addons ? (item.addons.map((addon: IDropdownSelectItem | string) => (typeof addon === 'object' ? addon.code : addon)).filter(Boolean) as string[]) : [],
             isOutOfStock: item.isOutOfStock || false,
           };
 
           // Add deal if present
           if (item.deal) {
+            let dealTitle: string;
+            let dealDiscountType: string;
+            let dealDiscountValue: number;
+            let dealStartDate: Date;
+            let dealEndDate: Date;
+            let dealIsActive: boolean;
+
+            if ('name' in item.deal && typeof item.deal.name === 'string') { // IFoodDealType
+                dealTitle = item.deal.name;
+                dealDiscountType = item.deal.type;
+                dealDiscountValue = item.deal.value;
+                dealStartDate = new Date(item.deal.startDate);
+                dealEndDate = new Date(item.deal.endDate);
+                dealIsActive = item.deal.isActive;
+            } else if ('dealName' in item.deal && item.deal.dealName) { // IDealFormValues or IDeal with dealName
+                dealTitle = item.deal.dealName;
+                dealDiscountType = item.deal.discountType || '';
+                dealDiscountValue = item.deal.discountValue || 0;
+                dealStartDate = item.deal.startDate instanceof Date ? item.deal.startDate : new Date(item.deal.startDate);
+                dealEndDate = item.deal.endDate instanceof Date ? item.deal.endDate : new Date(item.deal.endDate);
+                dealIsActive = item.deal.isActive ?? true;
+            } else {
+                // Skip deal if no valid title found
+                return variation;
+            }
+
             variation.deal = {
-              title: item.deal.dealName,
-              discountType: item.deal.discountType,
-              startDate: item.deal.startDate.toISOString(),
-              endDate: item.deal.endDate.toISOString(),
-              discountValue: Number(item.deal.discountValue),
-              isActive: item.deal.isActive,
+              title: dealTitle,
+              discountType: dealDiscountType,
+              startDate: dealStartDate.toISOString(),
+              endDate: dealEndDate.toISOString(),
+              discountValue: dealDiscountValue,
+              isActive: dealIsActive,
             };
           }
 
           return variation;
         });
 
-        const foodInput = {
-          restaurant: restaurantId,
-          category: values.category?.code || values.category,
-
+        const foodInput: IFoodInput = {
           food: {
+            restaurant: restaurantId,
+            category: (values.category?.code || values.category) as string,
             title: values.title,
             description: values.description || undefined,
             subCategory:
-              values.subCategory?.code || values.subCategory || undefined,
+              (values.subCategory?.code || values.subCategory || undefined) as string,
             image: values.image || undefined,
             isActive: true,
             isOutOfStock: false,
@@ -215,37 +238,62 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
         });
       } else {
         // For creating new food, use CREATE_FOOD_SINGLE_VENDOR
-        const _variations = values.variations.map((item: any) => {
-          const variation: any = {
+        const _variations: IVariationInput[] = values.variations.map((item) => {
+          const variation: IVariationInput = {
             title: item.title,
             price: Number(item.price),
             discounted: item.discounted ? Number(item.discounted) : undefined,
-            addons:
-              item?.addons?.map((addon: any) => addon.code || addon) || [],
+            addons: item?.addons ? (item.addons.map((addon: IDropdownSelectItem | string) => (typeof addon === 'object' ? addon.code : addon)).filter(Boolean) as string[]) : [],
             isOutOfStock: item.isOutOfStock || false,
           };
 
           // Add deal if present
           if (item.deal) {
+            let dealTitle: string;
+            let dealDiscountType: string;
+            let dealDiscountValue: number;
+            let dealStartDate: Date;
+            let dealEndDate: Date;
+            let dealIsActive: boolean;
+
+            if ('name' in item.deal && typeof item.deal.name === 'string') { // IFoodDealType
+                dealTitle = item.deal.name;
+                dealDiscountType = item.deal.type;
+                dealDiscountValue = item.deal.value;
+                dealStartDate = new Date(item.deal.startDate);
+                dealEndDate = new Date(item.deal.endDate);
+                dealIsActive = item.deal.isActive;
+            } else if ('dealName' in item.deal && item.deal.dealName) { // IDealFormValues or IDeal with dealName
+                dealTitle = item.deal.dealName;
+                dealDiscountType = item.deal.discountType || '';
+                dealDiscountValue = item.deal.discountValue || 0;
+                dealStartDate = item.deal.startDate instanceof Date ? item.deal.startDate : new Date(item.deal.startDate);
+                dealEndDate = item.deal.endDate instanceof Date ? item.deal.endDate : new Date(item.deal.endDate);
+                dealIsActive = item.deal.isActive ?? true;
+            } else {
+                // Skip deal if no valid title found
+                return variation;
+            }
+
             variation.deal = {
-              title: item.deal.dealName,
-              discountType: item.deal.discountType,
-              startDate: item.deal.startDate.toISOString(),
-              endDate: item.deal.endDate.toISOString(),
-              discountValue: Number(item.deal.discountValue),
-              isActive: item.deal.isActive,
+              title: dealTitle,
+              discountType: dealDiscountType,
+              startDate: dealStartDate.toISOString(),
+              endDate: dealEndDate.toISOString(),
+              discountValue: dealDiscountValue,
+              isActive: dealIsActive,
             };
           }
 
           return variation;
         });
 
-        const foodInput = {
+        const foodInput: IFoodInput = {
           food: {
             restaurant: restaurantId,
-            category: values.category?.code || values.category,
+            category: (values.category?.code || values.category) as string,
             subCategory:
-              values.subCategory?.code || values.subCategory || undefined,
+              (values.subCategory?.code || values.subCategory || undefined) as string,
             title: values.title,
             description: values.description || undefined,
             image: values.image || undefined,
@@ -275,11 +323,18 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
       });
 
       onClearFoodData();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Food Form Error', error);
-      let message = error.message || t('Something went wrong');
-      if (error.graphQLErrors?.length > 0) {
-        message = error.graphQLErrors[0].message;
+      let message = t('Something went wrong');
+      if (error instanceof Error) {
+        message = error.message;
+        if (
+          'graphQLErrors' in error &&
+          Array.isArray(error.graphQLErrors) &&
+          error.graphQLErrors.length > 0
+        ) {
+          message = (error.graphQLErrors as ApolloError['graphQLErrors'])[0].message;
+        }
       }
       showToast({
         type: 'error',
@@ -304,7 +359,7 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
           {foodContextData?.isEditing ? t('Edit Product') : t('Add Product')}
         </h2>
 
-        <Formik
+        <Formik<IFoodNewFormValues> // Added explicit type here
           initialValues={getInitialValues()}
           validationSchema={CombinedSchema}
           enableReinitialize
@@ -346,19 +401,21 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
                       <ul className="text-xs text-red-700 dark:text-red-300 list-disc list-inside">
                         {Object.entries(formErrors).map(([key, value]) => {
                           if (key === 'variations' && Array.isArray(value)) {
-                            return value.map((varError: any, idx: number) => {
-                              if (varError && typeof varError === 'object') {
-                                return Object.entries(varError).map(
-                                  ([field, msg]) => (
-                                    <li key={`${key}-${idx}-${field}`}>
-                                      Variation {idx + 1} - {field}:{' '}
-                                      {msg as string}
-                                    </li>
-                                  )
-                                );
+                            return (value as Array<Record<string, string> | undefined>).map(
+                              (varError, idx: number) => {
+                                if (varError && typeof varError === 'object') {
+                                  return Object.entries(varError).map(
+                                    ([field, msg]) => (
+                                      <li key={`${key}-${idx}-${field}`}>
+                                        Variation {idx + 1} - {field}:{' '}
+                                        {msg as string}
+                                      </li>
+                                    )
+                                  );
+                                }
+                                return null;
                               }
-                              return null;
-                            });
+                            );
                           }
                           return (
                             <li key={key}>

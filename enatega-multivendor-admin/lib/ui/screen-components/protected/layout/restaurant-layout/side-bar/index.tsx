@@ -21,7 +21,6 @@ import {
   faStar,
   faStore,
   faWallet,
-  faGift,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Components
@@ -29,7 +28,6 @@ import SidebarItem from './side-bar-item';
 import { useUserContext } from '@/lib/hooks/useUser';
 import { onUseLocalStorage } from '@/lib/utils/methods';
 import { useTranslations } from 'next-intl';
-import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 function AdminSidebar({ children }: IGlobalComponentProps) {
   // Context
@@ -59,7 +57,6 @@ export default function MakeSidebar() {
   const { isRestaurantSidebarVisible } =
     useContext<LayoutContextProps>(LayoutContext);
   const { user } = useUserContext();
-  const { IS_MULTIVENDOR } = useConfiguration();
 
   // Get the current route stack from localStorage without modifying it
   const [routeStack, setRouteStack] = useState<string[]>(

@@ -12,12 +12,11 @@ import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaur
 import {
   IAddon,
   IAddonByRestaurantResponse,
-  IDropdownSelectItem,
-  IFoodVariationsAddRestaurantComponentProps,
   IQueryResult,
   IVariationForm,
+  IDropdownSelectItem,
 } from '@/lib/utils/interfaces';
-import { IDealFormValues } from './add-deal';
+import { IFoodNew, IDealFormValues } from '@/lib/utils/interfaces/forms/food.form.interface';
 
 // Constants and Methods
 import { MAX_PRICE, MIN_PRICE, VariationErrors } from '@/lib/utils/constants';
@@ -30,7 +29,7 @@ import CustomTextField from '@/lib/ui/useable-components/input-field';
 import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import AddonAddForm from '../../../add-on/add-form';
 import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
-import CustomButton from '@/lib/ui/useable-components/button';
+
 import AddDealForm from './add-deal';
 
 // Context
@@ -60,12 +59,64 @@ const initialFormValuesTemplate: IVariationForm = {
   isOutOfStock: false,
 };
 
+// Helper to extract deal properties from different deal types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getDealInfo = (deal: any) => {
+  if ('name' in deal && typeof deal.name === 'string') {
+    // IFoodDealType
+    return {
+      name: deal.name as string,
+      discountType: (deal.type as string) || '',
+      discountValue: (deal.value as number) || 0,
+      isActive: (deal.isActive as boolean) ?? true,
+    };
+  } else if ('dealName' in deal) {
+    // IDealFormValues or IDeal
+    return {
+      name: (deal.dealName as string) || (deal.title as string) || '',
+      discountType: (deal.discountType as string) || '',
+      discountValue: (deal.discountValue as number) || 0,
+      isActive: (deal.isActive as boolean) ?? true,
+    };
+  }
+  return { name: '', discountType: '', discountValue: 0, isActive: false };
+};
+
+// Helper to convert any deal type to IDealFormValues
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const convertToDealFormValues = (deal: any): IDealFormValues | undefined => {
+  if (!deal) return undefined;
+
+  if ('name' in deal && typeof deal.name === 'string') {
+    // IFoodDealType
+    return {
+      dealName: deal.name,
+      discountType: deal.type || 'PERCENTAGE',
+      discountValue: deal.value || 0,
+      startDate: new Date(deal.startDate),
+      endDate: new Date(deal.endDate),
+      isActive: deal.isActive ?? true,
+    };
+  } else if ('dealName' in deal) {
+    // IDealFormValues or IDeal
+    return {
+      dealName: deal.dealName || deal.title || '',
+      discountType: deal.discountType || 'PERCENTAGE',
+      discountValue: deal.discountValue || 0,
+      startDate: deal.startDate instanceof Date ? deal.startDate : new Date(deal.startDate),
+      endDate: deal.endDate instanceof Date ? deal.endDate : new Date(deal.endDate),
+      isActive: deal.isActive ?? true,
+    };
+  }
+  return undefined;
+};
+
 export default function VariationAddForm() {
   // Hooks
   const t = useTranslations();
 
   // Formik Context
-  const { values, errors, setFieldValue } = useFormikContext<any>();
+  const { values, errors, setFieldValue } = useFormikContext<IFoodNew>();
 
   // State
   const [isAddAddonVisible, setIsAddAddonVisible] = useState(false);
@@ -161,7 +212,7 @@ export default function VariationAddForm() {
                 {({ remove, push }) => (
                   <div>
                     {values.variations.length > 0 &&
-                      values.variations.map((value: any, index: number) => {
+                      values.variations.map((value: IVariationForm, index: number) => {
                         return (
                           <div className="mb-2" key={`variations-${index}`}>
                             <div className="relative">
@@ -240,12 +291,12 @@ export default function VariationAddForm() {
                                           : '',
                                       }}
                                     />
-                                    {value.discounted > 0 && (
+                                    {(value.discounted ?? 0) > 0 && (
                                       <div className="absolute bottom-[-15px] left-[2px] font-semibold text-[10px] flex gap-2 dark:text-gray-300">
                                         <p>
                                           {t('Actual Price')}&nbsp;: &nbsp;
                                           <span className="line-through">
-                                            {value.price + value.discounted}
+                                            {value.price + (value.discounted ?? 0)}
                                           </span>
                                         </p>
                                         ,
@@ -284,9 +335,9 @@ export default function VariationAddForm() {
                                       placeholder={t('Addons')}
                                       options={addonsDropdown ?? []}
                                       selectedItems={
-                                        value.addons ?? [
-                                          { code: '', label: '' },
-                                        ]
+                                        (value.addons && Array.isArray(value.addons) && value.addons.length > 0 && typeof value.addons[0] === 'object'
+                                          ? value.addons as IDropdownSelectItem[]
+                                          : []) ?? []
                                       }
                                       setSelectedItems={setFieldValue}
                                       showLabel={true}
@@ -321,16 +372,16 @@ export default function VariationAddForm() {
                                               </div>
                                               <div className="flex flex-col gap-0.5">
                                                 <span className="text-sm font-bold text-green-900 dark:text-green-300">
-                                                  {value.deal.dealName}
+                                                  {getDealInfo(value.deal).name}
                                                 </span>
                                                 <div className="flex items-center gap-2">
                                                   <span className="text-xs font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-800/40 px-2 py-0.5 rounded-full">
-                                                    {value.deal.discountType ===
+                                                    {getDealInfo(value.deal).discountType ===
                                                     'PERCENTAGE'
-                                                      ? `${value.deal.discountValue}% OFF`
-                                                      : `€${value.deal.discountValue} OFF`}
+                                                      ? `${getDealInfo(value.deal).discountValue}% OFF`
+                                                      : `€${getDealInfo(value.deal).discountValue} OFF`}
                                                   </span>
-                                                  {value.deal.isActive ? (
+                                                  {getDealInfo(value.deal).isActive ? (
                                                     <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
                                                       <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                                                       {t('Active')}
@@ -449,7 +500,7 @@ export default function VariationAddForm() {
               values.variations[activeVariationIndex]?.title ||
               t('New Variation')
             }
-            initialValues={values.variations[activeVariationIndex]?.deal}
+            initialValues={convertToDealFormValues(values.variations[activeVariationIndex]?.deal)}
           />
         )}
       </div>

@@ -271,7 +271,7 @@ const UpdateTiming = ({
                               <button
                                 onClick={() => {
                                   const prev = [...values[dayIndex].times];
-                                  prev.push({ startTime: null, endTime: null });
+                                  prev.push({ startTime: null, endTime: null, maxOrders: null });
                                   setFieldValue(`${dayIndex}.times`, prev);
                                 }}
                                 type="button"

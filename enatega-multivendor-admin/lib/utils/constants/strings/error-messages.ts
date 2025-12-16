@@ -226,6 +226,10 @@ export const FoodErrors: IFoodErrors = {
   image: ['Required'],
   category: ['Required'],
   subCategory: [''],
+  inventory: [],
+  uom: [],
+  minQuantity: [],
+  maxQuantity: [],
 };
 
 export const VariationErrors: IVariationErrors = {

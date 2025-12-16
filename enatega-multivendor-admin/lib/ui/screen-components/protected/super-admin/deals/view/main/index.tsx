@@ -58,7 +58,8 @@ export default function DealsMain({
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [isActiveFilter, setIsActiveFilter] = useState<boolean | null>(null);
+  /* eslint-disable-next-line */
+  const [isActiveFilter, _setIsActiveFilter] = useState<boolean | null>(null);
   const [restaurantId, setRestaurantId] = useState('');
   const [editDealLoading, setEditDealLoading] = useState({
     _id: '',

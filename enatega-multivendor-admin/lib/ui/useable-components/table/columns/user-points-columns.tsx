@@ -1,5 +1,6 @@
 // Interfaces
 import { IActionMenuProps } from '@/lib/utils/interfaces';
+import Image from 'next/image';
 import { IUserPointsDistribution } from '@/lib/ui/screens/super-admin/referral-wallet';
 
 // Hooks
@@ -23,12 +24,13 @@ export const USER_POINTS_COLUMNS = ({
         body: (rowData: IUserPointsDistribution) => (
           <div className="flex items-center gap-3">
             {rowData.avatar && (
-              <img
-                src={rowData.avatar}
-                alt={rowData.userName}
-                className="h-10 w-10 rounded-full object-cover"
-              />
-            )}
+                          <Image
+                            src={rowData.avatar}
+                            alt={rowData.userName}
+                            width={40}
+                            height={40}
+                            className="h-10 w-10 rounded-full object-cover"
+                          />            )}
             <span className="font-medium">{rowData.userName}</span>
           </div>
         ),

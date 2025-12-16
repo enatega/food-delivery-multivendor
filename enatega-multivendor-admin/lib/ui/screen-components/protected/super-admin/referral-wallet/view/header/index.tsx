@@ -9,8 +9,6 @@ import {
   faUsers,
   faWallet,
   faChartLine,
-  faArrowUp,
-  faArrowDown,
   faArrowTrendDown,
   faArrowTrendUp,
 } from '@fortawesome/free-solid-svg-icons';

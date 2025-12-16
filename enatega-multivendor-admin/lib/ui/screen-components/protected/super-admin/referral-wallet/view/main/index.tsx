@@ -20,7 +20,7 @@ import {
 
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 // Columns
 import { USER_POINTS_COLUMNS } from '@/lib/ui/useable-components/table/columns/user-points-columns';
@@ -39,17 +39,18 @@ interface IReferralWalletMainProps {
 export default function ReferralWalletMain({
   handleLoyaltyLevelsClick,
   handleReferralLevelsClick,
-  isEditingLoyalty,
-  setIsEditingLoyalty,
-  isEditingReferral,
-  setIsEditingReferral,
-  setLoyaltyLevelsVisible,
-  setReferralLevelsVisible,
+  // isEditingLoyalty,
+  // setIsEditingLoyalty,
+  // isEditingReferral,
+  // setIsEditingReferral,
+  // setLoyaltyLevelsVisible,
+  // setReferralLevelsVisible,
 }: IReferralWalletMainProps) {
   const t = useTranslations();
 
   // States
-  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  /* eslint-disable-next-line */
+  const [globalFilterValue, _setGlobalFilterValue] = useState('');
 
   // Filters
   const filters = {
@@ -134,7 +135,9 @@ export default function ReferralWalletMain({
         <div className="card border dark:border-dark-600 dark:bg-dark-950">
           <div className="mb-2 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold dark:text-white">{t('Referral Levels')}</h2>
+              <h2 className="text-lg font-semibold dark:text-white">
+                {t('Referral Levels')}
+              </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {t('Configure points for referral tiers.')}
               </p>
@@ -167,7 +170,9 @@ export default function ReferralWalletMain({
         <div className="card border dark:border-dark-600 dark:bg-dark-950">
           <div className="mb-2 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold dark:text-white">{t('Loyalty Levels')}</h2>
+              <h2 className="text-lg font-semibold dark:text-white">
+                {t('Loyalty Levels')}
+              </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {t('Define points for loyalty levels.')}
               </p>

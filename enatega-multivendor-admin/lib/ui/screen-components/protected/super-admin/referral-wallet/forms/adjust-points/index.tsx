@@ -15,6 +15,7 @@ import { Dropdown } from 'primereact/dropdown';
 // Hooks
 import useToast from '@/lib/hooks/useToast';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 interface IAdjustPointsFormProps {
   setVisible: (visible: boolean) => void;
@@ -83,9 +84,11 @@ export default function AdjustPointsForm({
     return (
       <div className="flex items-center gap-2">
         {option.avatar && (
-          <img
+          <Image
             src={option.avatar}
             alt={option.name}
+            width={32}
+            height={32}
             className="h-8 w-8 rounded-full object-cover"
           />
         )}

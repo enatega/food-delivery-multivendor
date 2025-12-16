@@ -16,6 +16,6 @@ export const VariationSchema = Yup.object().shape({
   discounted: Yup.number().min(0).required('Required'),
   addons: Yup.array()
     .of(Yup.mixed<IDropdownSelectItem>())
-    .optional(),
+    .required('Required'),
   isOutOfStock: Yup.boolean(),
 });

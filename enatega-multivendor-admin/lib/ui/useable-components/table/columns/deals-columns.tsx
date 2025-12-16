@@ -20,7 +20,6 @@ interface IDealsTableColumnsProps {
 export const DEALS_TABLE_COLUMNS = ({
   menuItems,
   t,
-  showToast,
   editDealLoading,
   handleStatusChange,
 }: IDealsTableColumnsProps) => {

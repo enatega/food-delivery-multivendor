@@ -2,7 +2,6 @@
 
 // Components
 import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
-import CustomTextField from '@/lib/ui/useable-components/input-field';
 
 // Interfaces
 import { IEditState } from '@/lib/utils/interfaces';
@@ -194,7 +193,9 @@ export default function SubscriptionForm({
                   disabled={isSubmitting || mutationLoading}
                 />
                 {errors.price && (
-                  <p className="text-sm text-red-500 dark:text-red-400">{errors.price}</p>
+                  <p className="text-sm text-red-500 dark:text-red-400">
+                    {errors.price}
+                  </p>
                 )}
 
                 {/* Reward field removed as it is not part of CreatePriceInput */}

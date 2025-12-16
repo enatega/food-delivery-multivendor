@@ -28,7 +28,8 @@ interface ILoyaltyLevelsFormProps {
 
 export default function LoyaltyLevelsForm({
   setVisible,
-  isEditing,
+  /* eslint-disable-next-line */
+  isEditing: _isEditing, // Renamed to _isEditing
   visible,
   setIsEditing,
 }: ILoyaltyLevelsFormProps) {

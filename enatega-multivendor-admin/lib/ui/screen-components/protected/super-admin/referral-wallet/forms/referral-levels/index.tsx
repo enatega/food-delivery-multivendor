@@ -29,7 +29,7 @@ interface IReferralLevelsFormProps {
 
 export default function ReferralLevelsForm({
   setVisible,
-  isEditing,
+  // isEditing,
   visible,
   setIsEditing,
 }: IReferralLevelsFormProps) {

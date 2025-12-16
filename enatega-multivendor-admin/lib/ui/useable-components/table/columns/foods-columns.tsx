@@ -7,7 +7,6 @@ import { IActionMenuProps, IFoodNew } from '@/lib/utils/interfaces';
 import ActionMenu from '../../action-menu';
 import { ApolloError, useMutation } from '@apollo/client';
 import {
-  GET_FOODS_BY_RESTAURANT_ID,
   UPDATE_FOOD_OUT_OF_STOCK,
   GET_ALL_FOODS_PAGINATED,
 } from '@/lib/api/graphql';
@@ -115,11 +114,31 @@ export const FOODS_TABLE_COLUMNS = ({
           );
         }
 
-        // Helper to get deal info (handles both IFoodDealType and IDealFormValues)
+        // Helper to get deal info (handles IFoodDealType, IDealFormValues, and IDeal)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const getDealInfo = (deal: any) => {
-          const name = deal.name || deal.dealName || '';
-          const type = deal.type || deal.discountType || 'PERCENTAGE';
-          const value = deal.value || deal.discountValue || 0;
+          let name: string;
+          let type: string;
+          let value: number;
+
+          if ('name' in deal && typeof deal.name === 'string') { // This is IFoodDealType
+            name = deal.name;
+            type = deal.type || '';
+            value = deal.value || 0;
+          } else if ('dealName' in deal && deal.dealName) { // This is IDealFormValues or IDeal with dealName
+            name = deal.dealName;
+            type = deal.discountType || '';
+            value = deal.discountValue || 0;
+          } else if ('title' in deal && deal.title) { // This is IDeal with title
+            name = deal.title;
+            type = deal.discountType || '';
+            value = deal.discountValue || 0;
+          } else {
+            name = '';
+            type = '';
+            value = 0;
+          }
+
           const symbol = type === 'PERCENTAGE' ? '%' : '€';
           return { name, type, value, symbol };
         };

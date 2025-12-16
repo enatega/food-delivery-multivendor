@@ -8,15 +8,9 @@ import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { InputSwitch } from 'primereact/inputswitch';
 import CustomButton from '@/lib/ui/useable-components/button';
+import { IDealFormValues } from '@/lib/utils/interfaces/forms/food.form.interface';
 
-export interface IDealFormValues {
-  dealName: string;
-  discountType: string;
-  discountValue: number;
-  startDate: Date;
-  endDate: Date;
-  isActive: boolean;
-}
+
 
 interface IAddDealFormProps {
   visible: boolean;

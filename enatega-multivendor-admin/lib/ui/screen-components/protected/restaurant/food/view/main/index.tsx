@@ -16,8 +16,6 @@ import {
   IActionMenuItem,
   IAddon,
   IAddonByRestaurantResponse,
-  IDropdownSelectItem,
-  IFood,
   IFoodByRestaurantResponse,
   IFoodNew,
   IQueryResult,
@@ -115,7 +113,9 @@ export default function FoodsMain() {
   const [debouncedSearch, setDebouncedSearch] = useState(() =>
     getCachedValue<string>(cacheKeySearch, '')
   );
-  const [filters, setFilters] = useState({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /* eslint-disable-next-line */
+  const [filters, _setFilters] = useState({
     global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
   });
 
@@ -184,7 +184,9 @@ export default function FoodsMain() {
     data: paginatedFoodsData,
     loading: paginatedLoading,
     refetch: refetchPaginatedFoods,
-    error: paginatedError,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable-next-line */
+    error: _paginatedError,
   } = useQueryGQL(
     GET_ALL_FOODS_PAGINATED,
     {
@@ -212,8 +214,10 @@ export default function FoodsMain() {
   // Fallback Query - Old API for editing
   const {
     data: foodsData,
-    loading: fallbackLoading,
-    refetch: refetchFallbackFoods,
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // loading,
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // refetch,
   } = useQueryGQL(
     GET_FOODS_BY_RESTAURANT_ID,
     { id: restaurantId },
@@ -255,7 +259,12 @@ export default function FoodsMain() {
     refetchQueries: [
       {
         query: GET_ALL_FOODS_PAGINATED,
-        variables: { restaurantId, page: currentPage, limit: pageSize, search: debouncedSearch || null },
+        variables: {
+          restaurantId,
+          page: currentPage,
+          limit: pageSize,
+          search: debouncedSearch || null,
+        },
       },
       {
         query: GET_FOODS_BY_RESTAURANT_ID,
@@ -287,7 +296,9 @@ export default function FoodsMain() {
   });
 
   // Memoized Data
-  const addons = useMemo(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /* eslint-disable-next-line */
+  const _addons = useMemo(
     () =>
       data?.restaurant?.addons.map((addon: IAddon) => {
         return { label: addon.title, code: addon._id };
@@ -449,7 +460,7 @@ export default function FoodsMain() {
           if (!subCategoriesLoading) {
             await onSetFoodContextData({
               food: {
-                _id: data._id ?? null,
+                _id: data._id ?? '',
                 data: {
                   ...data,
                   minQuantity: data.minQuantity,
@@ -468,7 +479,10 @@ export default function FoodsMain() {
       label: t('Delete'),
       command: (data?: IFoodNew) => {
         if (data) {
-          setDeleteId({ id: data._id, categoryId: data?.category?.code ?? '' });
+          setDeleteId({
+            id: data._id ?? '',
+            categoryId: data?.category?.code ?? '',
+          });
         }
       },
     },
