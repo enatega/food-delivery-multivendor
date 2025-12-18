@@ -4,8 +4,7 @@ import { useTranslations } from 'next-intl';
 // Interface for component props
 export interface IApiErrorAlertProps {
     error: string | null;
-    refetch?: (variables?: unknown) => void | Promise<unknown>; // Accepts variables
-    variables?: unknown;
+    refetch?: () => void | Promise<void>;
     queryName?: string; // New prop for query name
     title?: string;
 }
@@ -13,7 +12,7 @@ export interface IApiErrorAlertProps {
 export default function ApiErrorAlert({
     error,
     refetch,
-    variables,
+    // variables,
     // queryName,
     title,
 }: IApiErrorAlertProps) {
@@ -50,7 +49,7 @@ export default function ApiErrorAlert({
                     <button
                         onClick={() => {
                             // Passing variables to refetch as requested
-                            refetch(variables);
+                            refetch();
                         }}
                         className="flex-shrink-0 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                     >

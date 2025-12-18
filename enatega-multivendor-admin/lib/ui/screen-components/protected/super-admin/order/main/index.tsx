@@ -190,7 +190,6 @@ export default function OrderSuperAdminMain() {
       <ApiErrorAlert
         error={getGraphQLErrorMessage(error)}
         refetch={refetch}
-        variables={queryVariables}
         queryName="GET_ALL_ORDERS_PAGINATED"
         title={t('Error')}
       />

@@ -19,11 +19,11 @@ export const getGraphQLErrorMessage = (
   if (!error) return null;
 
   const isApolloError = (err: unknown): err is ApolloError => {
-    return (
-      typeof err === 'object' &&
-      err !== null &&
-      ('graphQLErrors' in err || 'networkError' in err)
-    );
+    if (typeof err !== 'object' || err === null) {
+      return false;
+    }
+
+    return 'graphQLErrors' in err || 'networkError' in err;
   };
 
   if (isApolloError(error)) {
