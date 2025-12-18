@@ -35,11 +35,11 @@ export default function OrderTable({
   handleRowClick,
   selectedData,
   setSelectedData,
-  first,
+  // first,
   rows,
   onPage,
   filters,
-  globalFilterValue,
+  // globalFilterValue,
 }: OrderTableProps) {
   // Removed const t = useTranslations();
 

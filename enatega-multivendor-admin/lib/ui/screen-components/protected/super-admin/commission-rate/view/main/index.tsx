@@ -10,7 +10,7 @@ import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import Table from '@/lib/ui/useable-components/table';
 
 // Utility functions
-import { generateDummyCommissionRates } from '@/lib/utils/dummy';
+// import { generateDummyCommissionRates } from '@/lib/utils/dummy';
 
 // Type definitions
 import { IQueryResult, IRestaurantResponse } from '@/lib/utils/interfaces';
