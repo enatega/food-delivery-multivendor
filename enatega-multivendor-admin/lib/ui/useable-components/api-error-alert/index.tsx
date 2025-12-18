@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 // Interface for component props
 export interface IApiErrorAlertProps {
     error: string | null;
-    refetch?: (variables?: unknown) => void | Promise<any>; // Accepts variables
+    refetch?: (variables?: unknown) => void | Promise<unknown>; // Accepts variables
     variables?: unknown;
     queryName?: string; // New prop for query name
     title?: string;
