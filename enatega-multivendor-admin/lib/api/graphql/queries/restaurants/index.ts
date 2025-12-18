@@ -19,9 +19,8 @@ export const GET_RESTAURANTS_DROPDOWN = gql`
 
 //apply pagination on this query
 export const GET_RESTAURANTS = gql`
-  query restaurants {
-  
-    restaurants {
+  query restaurants($page: Int, $limit: Int) {
+    restaurants(page: $page, limit: $limit) {
       unique_restaurant_id
       _id
       name
