@@ -13,20 +13,32 @@ export const onErrorMessageMatcher = <T extends string>(
 
 
 // Update input type to allow 'Error'
-export const getGraphQLErrorMessage = (error: ApolloError | Error | undefined | null): string | null => {
+export const getGraphQLErrorMessage = (
+  error: ApolloError | Error | undefined | null
+): string | null => {
   if (!error) return null;
-  const isApolloError = (err: any): err is ApolloError => {
-      return 'graphQLErrors' in err || 'networkError' in err;
+
+  const isApolloError = (err: unknown): err is ApolloError => {
+    return (
+      typeof err === 'object' &&
+      err !== null &&
+      ('graphQLErrors' in err || 'networkError' in err)
+    );
   };
 
   if (isApolloError(error)) {
-      if (error.networkError) {
-        return 'Connection failed. Please check your internet connection.';
-      }
-      if (error.graphQLErrors && error.graphQLErrors.length > 0) {
-        return error.graphQLErrors.map((e) => e.message).join(', ');
-      }
-      return error.message?.replace(/^GraphQL error: /, '') || 'An unexpected error occurred.';
+    if (error.networkError) {
+      return 'Connection failed. Please check your internet connection.';
+    }
+
+    if (error.graphQLErrors?.length) {
+      return error.graphQLErrors.map((e) => e.message).join(', ');
+    }
+
+    return (
+      error.message?.replace(/^GraphQL error: /, '') ||
+      'An unexpected error occurred.'
+    );
   }
 
   return error.message || 'An unexpected error occurred.';
