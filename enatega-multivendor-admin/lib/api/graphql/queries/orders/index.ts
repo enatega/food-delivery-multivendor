@@ -38,7 +38,7 @@ export const GET_ACTIVE_ORDERS = gql`
           deliveryAddress
         }
         user {
-          name         
+          name
           phone
         }
         paymentMethod
@@ -293,6 +293,114 @@ export const GET_ORDERS = gql`
   }
 `;
 
+export const GET_ALL_ORDERS_PAGINATED = gql`
+  query allOrdersPaginated(
+    $page: Int
+    $rows: Int
+    $dateKeyword: String
+    $starting_date: String
+    $ending_date: String
+    $orderStatus: [String]
+    $search: String
+  ) {
+    allOrdersPaginated(
+      page: $page
+      rows: $rows
+      dateKeyword: $dateKeyword
+      starting_date: $starting_date
+      ending_date: $ending_date
+      orderStatus: $orderStatus
+      search: $search
+    ) {
+      totalCount
+      currentPage
+      totalPages
+      prevPage
+      nextPage
+      orders {
+        _id
+        orderId
+        restaurant {
+          _id
+          name
+          image
+          address
+          location {
+            coordinates
+          }
+        }
+        deliveryAddress {
+          location {
+            coordinates
+          }
+          deliveryAddress
+          details
+          label
+        }
+        items {
+          _id
+          id
+          title
+          description
+          image
+          quantity
+          variation {
+            _id
+            id
+            title
+            price
+            discounted
+          }
+          addons {
+            _id
+            id
+            options {
+              _id
+              id
+              title
+              description
+              price
+            }
+            description
+            title
+            quantityMinimum
+            quantityMaximum
+          }
+          specialInstructions
+          isActive
+          createdAt
+          updatedAt
+        }
+        user {
+          _id
+          name
+          phone
+          email
+        }
+        paymentMethod
+        paidAmount
+        orderAmount
+        orderStatus
+        status
+        paymentStatus
+        reason
+        isActive
+        createdAt
+        deliveryCharges
+        tipping
+        taxationAmount
+        rider {
+          _id
+          name
+          username
+          available
+        }
+      }
+    }
+  }
+`;
+
+
 export const GET_ORDERS_WITHOUT_PAGINATION = gql`
   query OrdersWithoutPagination(
     $dateKeyword: String
@@ -353,7 +461,6 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
         createdAt
         updatedAt
       }
-      
       paymentMethod
       paidAmount
       orderAmount
@@ -375,3 +482,10 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
     }
   }
 `;
+
+
+
+
+
+
+

@@ -3,6 +3,7 @@ import { IGlobalComponentProps } from './global.interface';
 import {
   DataTableRowClickEvent,
   DataTableStateEvent,
+  DataTableFilterMeta,
   SortOrder,
 } from 'primereact/datatable';
 
@@ -27,12 +28,13 @@ export interface IDataTableProps<T> extends IGlobalComponentProps {
   selectedData?: T[];
   setSelectedData?: React.Dispatch<React.SetStateAction<T[]>>;
   columns: IColumnConfig<T>[];
-  filters?: IFilterType;
+  filters?: DataTableFilterMeta;
   size?: 'small' | 'normal' | 'large';
   loading?: boolean;
   handleRowClick?: (event: DataTableRowClickEvent) => void;
   rowsPerPage?: number;
   moduleName?: string;
+  globalFilterFields?: string[];
 
   // Server-side pagination props (optional)
   totalRecords?: number;
@@ -46,6 +48,9 @@ export interface IDataTableProps<T> extends IGlobalComponentProps {
   sortField?: string;
   sortOrder?: SortOrder;
   minWidth?: string;
+  paginator?: boolean;
+  first?: number;
+  rows?: number;
 }
 
 export interface ITableExtends extends IGlobalComponentProps {
