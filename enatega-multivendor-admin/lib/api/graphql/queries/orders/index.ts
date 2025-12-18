@@ -320,7 +320,6 @@ export const GET_ALL_ORDERS_PAGINATED = gql`
       orders {
         _id
         orderId
-        
         restaurant {
           _id
           name

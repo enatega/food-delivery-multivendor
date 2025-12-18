@@ -157,7 +157,7 @@ export default function OrderSuperAdminMain() {
           />
         </>
       }
-      <OrderTable
+      {!error && <OrderTable
         data={
           data?.allOrdersPaginated
             ? {
@@ -180,7 +180,7 @@ export default function OrderSuperAdminMain() {
           setRows(Math.min(e.rows, 100));
           setCurrentPage((e.page ?? 0) + 1);
         }}
-      />
+      />}
       <OrderDetailModal
         visible={isModalOpen}
         onHide={() => setIsModalOpen(false)}
