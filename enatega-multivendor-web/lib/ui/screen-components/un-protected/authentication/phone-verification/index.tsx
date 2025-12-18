@@ -87,7 +87,7 @@ export default function PhoneVerification({
             phone: formData?.phone,
             name: formData?.name,
             password: formData?.password,
-            isReset: formData?.isReset,
+            isPhoneExists: formData?.isPhoneExists,
           });
 
           if (!userData.phoneIsVerified) {
@@ -120,14 +120,14 @@ export default function PhoneVerification({
         } else {
           const args = isRegistering
             ? {
-              name: user?.name ?? "",
-              phoneIsVerified: true,
-            }
+                name: user?.name ?? "",
+                phoneIsVerified: true,
+              }
             : {
-              phone: user?.phone,
-              name: user?.name ?? "",
-              phoneIsVerified: true,
-            };
+                phone: user?.phone,
+                name: user?.name ?? "",
+                phoneIsVerified: true,
+              };
 
           const userData = await updateUser({
             variables: args,
