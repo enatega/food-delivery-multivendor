@@ -1,12 +1,13 @@
 // Hooks
 import { useState, useMemo, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
-
+import useDebounce from '@/lib/hooks/useDebounce';
 // Interfaces & Types
 import { IDateFilter, IQueryResult } from '@/lib/utils/interfaces';
 import { IOrder, IExtendedOrder } from '@/lib/utils/interfaces';
 import { TOrderRowData } from '@/lib/utils/types';
+import { getGraphQLErrorMessage } from '@/lib/utils/methods/error';
+import { useTranslations } from 'next-intl';
 
 // GraphQL
 import { GET_ALL_ORDERS_PAGINATED } from '@/lib/api/graphql';
@@ -19,14 +20,13 @@ import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/ord
 import OrderDetailModal from '@/lib/ui/useable-components/popup-menu/order-details-modal';
 import DashboardDateFilter from '@/lib/ui/useable-components/date-filter';
 import OrderTable from '../order-table';
+import ApiErrorAlert from '@/lib/ui/useable-components/api-error-alert';
 // Prime React
 import { FilterMatchMode } from 'primereact/api';
 import { DataTableRowClickEvent } from 'primereact/datatable';
 
 export default function OrderSuperAdminMain() {
-  // Hooks
   const t = useTranslations();
-
   // States
   const [selectedData, setSelectedData] = useState<IExtendedOrder[]>([]);
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
@@ -37,11 +37,16 @@ export default function OrderSuperAdminMain() {
     dateKeyword: 'All',
     startDate: `${new Date().getFullYear()}-01-01`, // Current year, January 1st
     endDate: `${new Date().getFullYear()}-${String(new Date().getMonth()).padStart(2, '0')}-${String(new Date(new Date().getFullYear(), new Date().getMonth(), 0).getDate()).padStart(2, '0')}`, // Last day of previous month
+
+
   });
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10); // For PrimeReact Table's 'rows' prop
   const [currentPage, setCurrentPage] = useState(1); // For API 'page' parameter
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const debouncedSearch = useDebounce(globalFilterValue, 600);
 
   const handleDateFilter = (dateFilter: IDateFilter) => {
     setDateFilter({
@@ -50,16 +55,19 @@ export default function OrderSuperAdminMain() {
     });
   };
 
-  const { data, error, loading } = useQueryGQL(
+  const queryVariables = {
+    page: currentPage,
+    rows: rows,
+    dateKeyword: dateFilter.dateKeyword,
+    starting_date: dateFilter.startDate,
+    ending_date: dateFilter.endDate,
+    orderStatus: selectedActions.length > 0 ? selectedActions : undefined,
+    search: debouncedSearch,
+  };
+
+  const { data, error, loading, refetch } = useQueryGQL(
     GET_ALL_ORDERS_PAGINATED,
-    {
-      page: currentPage,
-      rows: rows,
-      dateKeyword: dateFilter.dateKeyword,
-      starting_date: dateFilter.startDate,
-      ending_date: dateFilter.endDate,
-      orderStatus: selectedActions.length > 0 ? selectedActions : undefined,
-    },
+    queryVariables,
     {
       fetchPolicy: 'network-only',
     }
@@ -78,7 +86,6 @@ export default function OrderSuperAdminMain() {
     undefined
   >;
 
-  const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [filters, setFilters] = useState({
     global: {
       value: '' as string | null,
@@ -102,7 +109,7 @@ export default function OrderSuperAdminMain() {
   };
 
   const handleRowClick = (event: DataTableRowClickEvent) => {
-    const selectedOrder = event.data as IExtendedOrder;
+    const selectedOrder = event?.data as IExtendedOrder;
     setSelectedRestaurant(selectedOrder);
     setIsModalOpen(true);
   };
@@ -110,17 +117,17 @@ export default function OrderSuperAdminMain() {
   const tableData = useMemo(() => {
     if (!data?.allOrdersPaginated?.orders) return [];
 
-    return data.allOrdersPaginated.orders.map(
+    return data?.allOrdersPaginated?.orders?.map(
       (order: IOrder): IExtendedOrder => ({
         ...order,
         itemsTitle:
-          order.items
-            .map((item) => item.title)
+          order?.items
+            .map((item) => item?.title)
             .join(', ')
             .slice(0, 15) + '...',
         OrderdeliveryAddress:
-          order.deliveryAddress.deliveryAddress.toString().slice(0, 15) + '...',
-        DateCreated: order.createdAt.toString().slice(0, 10),
+          order?.deliveryAddress?.deliveryAddress?.toString()?.slice(0, 15) + '...',
+        DateCreated: order?.createdAt?.toString()?.slice(0, 10),
       })
     );
   }, [data]);
@@ -150,8 +157,6 @@ export default function OrderSuperAdminMain() {
           />
         </>
       }
-
-
       <OrderTable
         data={
           data?.allOrdersPaginated
@@ -182,11 +187,13 @@ export default function OrderSuperAdminMain() {
         restaurantData={selectedRestaurant}
       />
 
-      {error && (
-        <p className="text-red-500">
-          {t('Error')}: {error.message}
-        </p>
-      )}
+      <ApiErrorAlert
+        error={getGraphQLErrorMessage(error)}
+        refetch={refetch}
+        variables={queryVariables}
+        queryName="GET_ALL_ORDERS_PAGINATED"
+        title={t('Error')}
+      />
     </div>
   );
 }

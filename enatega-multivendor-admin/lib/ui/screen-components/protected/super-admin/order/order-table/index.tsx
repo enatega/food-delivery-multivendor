@@ -5,7 +5,6 @@ import { ORDER_SUPER_ADMIN_COLUMNS } from '@/lib/ui/useable-components/table/col
 import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/orders.vendor.row.skeleton';
 import { IExtendedOrder, IOrder } from '@/lib/utils/interfaces';
 import { TOrderRowData } from '@/lib/utils/types';
-import CustomPaginator from '@/lib/ui/useable-components/custom-paginator';
 import { DataTableFilterMeta } from 'primereact/datatable';
 
 interface OrderTableProps {
@@ -63,13 +62,13 @@ export default function OrderTable({
         (order: IOrder): IExtendedOrder => ({
           ...order,
           itemsTitle:
-            order.items
-              .map((item) => item.title)
+            order?.items
+              .map((item) => item?.title)
               .join(', ')
               .slice(0, 15) + '...',
           OrderdeliveryAddress:
-            order.deliveryAddress.deliveryAddress.toString().slice(0, 15) + '...',
-          DateCreated: order.createdAt.toString().slice(0, 10),
+            order?.deliveryAddress?.deliveryAddress?.toString()?.slice(0, 15) + '...',
+          DateCreated: order?.createdAt?.toString()?.slice(0, 10),
         })
       );
     }
@@ -80,54 +79,39 @@ export default function OrderTable({
       (order: IOrder): IExtendedOrder => ({
         ...order,
         itemsTitle:
-          order.items
-            .map((item) => item.title)
+          order?.items
+            .map((item) => item?.title)
             .join(', ')
             .slice(0, 15) + '...',
         OrderdeliveryAddress:
-          order.deliveryAddress.deliveryAddress.toString().slice(0, 15) + '...',
-        DateCreated: order.createdAt.toString().slice(0, 10),
+          order?.deliveryAddress?.deliveryAddress?.toString()?.slice(0, 15) + '...',
+        DateCreated: order?.createdAt?.toString()?.slice(0, 10),
       })
     );
   }, [data, loading, isInitialLoad, lastValidOrders]); // Add lastValidOrders to dependencies
 
   return (
-    <>
-      <Table
-        data={displayData as IExtendedOrder[]}
-        setSelectedData={setSelectedData}
-        selectedData={selectedData}
-        columns={ORDER_SUPER_ADMIN_COLUMNS()}
-        loading={loading}
-        handleRowClick={handleRowClick}
-        moduleName={'SuperAdmin-Order'}
-        paginator={false}
-        first={first}
-        rows={rows}
-        totalRecords={data?.totalCount || 0}
-        onPage={onPage}
-        filters={filters}
-        globalFilterFields={['orderId', 'orderStatus', 'restaurant.name', 'deliveryAddress.deliveryAddress']}
-      />
-      {data && (
-        <CustomPaginator
-          first={first}
-          rows={rows}
-          totalRecords={data.totalCount}
-          currentPage={data.currentPage}
-          totalPages={data.totalPages}
-          prevPage={data.prevPage}
-          nextPage={data.nextPage}
-          onPageChange={(e) => {
-            onPage({
-              first: e.first,
-              rows: e.rows,
-              page: e.page,
-              pageCount: e.pageCount,
-            } as DataTablePageEvent);
-          }}
-        />
-      )}
-    </>
+    <Table
+      data={displayData as IExtendedOrder[]}
+      setSelectedData={setSelectedData}
+      selectedData={selectedData}
+      columns={ORDER_SUPER_ADMIN_COLUMNS()}
+      loading={loading}
+      handleRowClick={handleRowClick}
+      moduleName={'SuperAdmin-Order'}
+      totalRecords={data?.totalCount || 0}
+      onPageChange={(page, pageSize) => {
+        onPage({
+          first: (page - 1) * pageSize,
+          rows: pageSize,
+          page: page - 1,
+          pageCount: Math.ceil((data?.totalCount || 0) / pageSize),
+        } as DataTablePageEvent);
+      }}
+      currentPage={data?.currentPage || 1}
+      rowsPerPage={rows}
+      filters={filters}
+      globalFilterFields={['orderId', 'orderStatus', 'restaurant.name', 'deliveryAddress.deliveryAddress']}
+    />
   );
 }

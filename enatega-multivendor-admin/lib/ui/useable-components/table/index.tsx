@@ -93,6 +93,7 @@ const Table = <T extends ITableExtends>({
 
   return (
     <>
+
       <DataTable
         header={header}
         paginator
@@ -130,13 +131,13 @@ const Table = <T extends ITableExtends>({
         {columns.map((col, index) => (
           <Column
             key={index}
-            field={col.propertyName}
-            header={col.headerName}
+            field={col?.propertyName}
+            header={col?.headerName}
             className='dark:text-white'
             headerClassName="dark:text-white dark:bg-dark-900"
             footerClassName="dark:text-white dark:bg-dark-900"
-            sortable={!col.propertyName.includes('action')}
-            hidden={col.hidden}
+            sortable={!col?.propertyName?.includes('action')}
+            hidden={col?.hidden}
             bodyClassName="selectable-column"
             body={loading ? <DataTableColumnSkeleton /> : col.body}
           />
