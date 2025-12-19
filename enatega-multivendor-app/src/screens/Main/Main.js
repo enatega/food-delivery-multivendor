@@ -5,7 +5,7 @@ import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
-import { getBanners, getCuisines, restaurantListPreview } from '../../apollo/queries'
+import { FetchAllShopTypes, getBanners, getCuisines, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -41,6 +41,7 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import ModalDropdown from '../../components/Picker/ModalDropdown'
 import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
 
+
 const RESTAURANTS = gql`
   ${restaurantListPreview}
 `
@@ -53,6 +54,7 @@ const GET_BANNERS = gql`
 const GET_CUISINES = gql`
   ${getCuisines}
 `
+const FETCH_ALL_SHOPTYPES = FetchAllShopTypes
 
 function Main(props) {
   const Analytics = analytics()
@@ -96,7 +98,9 @@ function Main(props) {
     fetchPolicy: 'network-only'
   })
   const { data: allCuisines } = useQuery(GET_CUISINES)
-
+  const { data: allShopTypes } = useQuery(FETCH_ALL_SHOPTYPES)
+  console.log('allShopTypes.data', allShopTypes)
+  console.log('allCuisines.data', allCuisines)
   const cus = new Set()
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
 
@@ -303,8 +307,6 @@ function Main(props) {
     </View>
   )
 
-  if (error) return <ErrorView />
-
   // const filterCusinies = () => {
   //   if (data !== undefined) {
   //     const cuisineShopTypeMap = new Map()
@@ -345,6 +347,8 @@ function Main(props) {
   const restaurantCuisines = useCuisinesData('restaurant', allCuisines)
   const groceryCuisines = useCuisinesData('grocery', allCuisines)
 
+  if (error) return <ErrorView />
+
   return (
     <>
       {!connect ? (
@@ -366,6 +370,44 @@ function Main(props) {
                         <View>{isLoggedIn && recentOrderRestaurantsVar && recentOrderRestaurantsVar.length > 0 && <>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(recentOrderRestaurantsVar || [])} loading={orderLoading} error={orderError} title={'Order it again'} queryType='orderAgain' />}</>}</View>
 
                         <View>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(mostOrderedRestaurantsVar || [])} loading={orderLoading} error={orderError} title={t('Popular right now')} queryType='topPicks' icon='trending' />}</View>
+
+                        <View style={{ padding: 15, gap: scale(8) }}>
+                          <TextDefault bolder H4 isRTL>
+                            {t('ShopTypes')}
+                          </TextDefault>
+                          <FlatList
+                            data={allShopTypes?.fetchAllShopTypes?.data ?? []}
+                            renderItem={({ item }) => {
+                              return (
+                                <CollectionCard
+                                  onPress={() => {
+                                    navigation.navigate('Store', {
+                                      collection: item.slug,
+                                      selectedType: item.slug,
+                                      isShopType:true
+                                    })
+                                  }}
+                                  image={item?.image}
+                                  name={item.name}
+                                />
+                              )
+                            }}
+                            keyExtractor={(item, index) => item?._id || `${item?.name}-restaurant-${index}`}
+                            contentContainerStyle={{
+                              flexGrow: 1,
+                              gap: 8,
+                              paddingBottom: 5
+                            }}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
+                            inverted={currentTheme?.isRTL ? true : false}
+                            maintainVisibleContentPosition={{
+                              minIndexForVisible: 0
+                            }}
+                          />
+                        </View                                         >
+
                         <View style={{ padding: 15, gap: scale(8) }}>
                           <TextDefault bolder H4 isRTL>
                             {t('I feel like eating...')}

@@ -92,6 +92,7 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
     queryVariables.shopType = selectedType || null
     queryVariables.ip = null
   }
+  
 
   const { data, refetch, networkStatus, loading, error } = useQuery(query, {
     variables: queryVariables,

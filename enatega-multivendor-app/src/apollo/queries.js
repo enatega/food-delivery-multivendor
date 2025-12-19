@@ -1021,7 +1021,7 @@ export const recentOrderRestaurantsPreviewQuery = gql`
 
 export const mostOrderedRestaurantsQuery = gql`
   ${restaurantPreviewFragment}
-  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!, $shopType:String) {
+  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!, $shopType: String) {
     mostOrderedRestaurantsPreview(latitude: $latitude, longitude: $longitude, shopType: $shopType) {
       ...RestaurantPreviewFields
     }
@@ -1143,3 +1143,50 @@ export const GET_SUB_CATEGORIES_BY_PARENT_ID = gql`
     }
   }
 `
+export const FetchAllShopTypes = gql`
+  query FetchAllShopTypes {
+    fetchAllShopTypes {
+      data {
+        _id
+        image
+        name
+        slug
+      }
+    }
+  }
+`
+
+// export const RestaurantCuisines = `query NearByRestaurantsCuisines {
+//     nearByRestaurantsCuisines(
+//        latitude: $latitude
+//     longitude:$longitude 
+//     shopType: $shopType
+//     ) {
+//         _id
+//         name
+//         description
+//         image
+//         shopType
+//     }
+// }`
+
+
+export const RestaurantCuisines = `
+query NearByRestaurantsCuisines(
+  $latitude: Float!
+  $longitude: Float!
+  $shopType: String!
+) {
+  nearByRestaurantsCuisines(
+    latitude: $latitude
+    longitude: $longitude
+    shopType: $shopType
+  ) {
+    _id
+    name
+    description
+    image
+    shopType
+  }
+}
+`;
