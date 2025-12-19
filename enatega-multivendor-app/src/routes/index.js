@@ -66,10 +66,11 @@ import CategoryPage from '../components/SubCategoryPage/SubCategoryPage'
 import NewRestaurantDetailDesign from '../components/NewRestaurantDetailDesign/RestaurantDetailDesign'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
 import * as LocationImport from 'expo-location'
+import BottomTabNavigator from './BottomTabNavigator'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
-const Tab = createBottomTabNavigator()
+
 
 function MainNavigator() {
   const themeContext = useContext(ThemeContext)
@@ -202,77 +203,77 @@ function LocationStack() {
   )
 }
 
-function BottomTabNavigator() {
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
-  const { t } = useTranslation()
-  const { profile: userProfile } = useContext(UserContext)
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
-          return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
-        },
-        tabBarStyle: {
-          paddingHorizontal: 15,
-          paddingVertical: 10,
-          paddingBottom: Platform.OS === 'ios' ? 25 : 15,
-          height: Platform.OS === 'ios' ? 90 : 70,
-          backgroundColor: currentTheme.cardBackground
-        },
-        tabBarActiveTintColor: '#0EA5E9',
-        tabBarInactiveTintColor: currentTheme.fontNewColor,
-        tabBarLabelStyle: { fontSize: 12 },
-        headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
-      })}
-    >
-      <Tab.Screen
-        name='Discovery'
-        component={Main}
-        options={{
-          tabBarLabel: t('Discovery')
-        }}
-      />
-      <Tab.Screen
-        name='Restaurants'
-        component={Menu}
-        options={{
-          tabBarLabel: t('Restaurants')
-        }}
-        initialParams={{
-          selectedType: 'restaurant',
-          queryType: 'restaurant'
-        }}
-      />
-      <Tab.Screen
-        name='Store'
-        component={Menu}
-        options={{
-          tabBarLabel: t('Store')
-        }}
-        initialParams={{
-          selectedType: 'grocery',
-          queryType: 'grocery'
-        }}
-      />
-      <Tab.Screen
-        name='Search'
-        component={SearchScreen}
-        options={{
-          tabBarLabel: t('search')
-        }}
-      />
-      <Tab.Screen
-        name='Profile'
-        component={userProfile ? Profile : CreateAccount}
-        options={{
-          tabBarLabel: t('titleProfile')
-        }}
-      />
-    </Tab.Navigator>
-  )
-}
+// function BottomTabNavigator() {
+//   const themeContext = useContext(ThemeContext)
+//   const currentTheme = theme[themeContext.ThemeValue]
+//   const { t } = useTranslation()
+//   const { profile: userProfile } = useContext(UserContext)
+//   return (
+//     <Tab.Navigator
+//       screenOptions={({ route }) => ({
+//         tabBarIcon: ({ focused, color, size }) => {
+//           // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
+//           return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
+//         },
+//         tabBarStyle: {
+//           paddingHorizontal: 15,
+//           paddingVertical: 10,
+//           paddingBottom: Platform.OS === 'ios' ? 25 : 15,
+//           height: Platform.OS === 'ios' ? 90 : 70,
+//           backgroundColor: currentTheme.cardBackground
+//         },
+//         tabBarActiveTintColor: '#0EA5E9',
+//         tabBarInactiveTintColor: currentTheme.fontNewColor,
+//         tabBarLabelStyle: { fontSize: 12 },
+//         headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
+//       })}
+//     >
+//       <Tab.Screen
+//         name='Discovery'
+//         component={Main}
+//         options={{
+//           tabBarLabel: t('Discovery')
+//         }}
+//       />
+//       <Tab.Screen
+//         name='Restaurants'
+//         component={Menu}
+//         options={{
+//           tabBarLabel: t('Restaurants')
+//         }}
+//         initialParams={{
+//           selectedType: 'restaurant',
+//           queryType: 'restaurant'
+//         }}
+//       />
+//       <Tab.Screen
+//         name='Store'
+//         component={Menu}
+//         options={{
+//           tabBarLabel: t('Store')
+//         }}
+//         initialParams={{
+//           selectedType: 'grocery',
+//           queryType: 'grocery'
+//         }}
+//       />
+//       <Tab.Screen
+//         name='Search'
+//         component={SearchScreen}
+//         options={{
+//           tabBarLabel: t('search')
+//         }}
+//       />
+//       <Tab.Screen
+//         name='Profile'
+//         component={userProfile ? Profile : CreateAccount}
+//         options={{
+//           tabBarLabel: t('titleProfile')
+//         }}
+//       />
+//     </Tab.Navigator>
+//   )
+// }
 
 function AppContainer() {
   const client = useApolloClient()
