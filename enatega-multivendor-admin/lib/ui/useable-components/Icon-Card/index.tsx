@@ -48,7 +48,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
           <button
             onClick={handleReviewClick}
             className={`flex items-center border dark:border-dark-600 px-2 py-1 rounded ${reviewContent
-              ? 'hover:bg-gray-100'
+              ? 'hover:bg-gray-100 dark:hover:bg-dark-600'
               : 'opacity-50 cursor-not-allowed'
               }`}
             disabled={!reviewContent}

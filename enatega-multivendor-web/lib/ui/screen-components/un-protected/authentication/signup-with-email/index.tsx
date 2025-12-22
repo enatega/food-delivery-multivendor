@@ -41,9 +41,9 @@ export default function SignUpWithEmail({
     setIsAuthModalVisible,
     handleCreateUser,
     checkPhoneExists,
+    checkEmailExists,
   } = useAuth();
   const { showToast } = useToast();
-  <q> </q>;
   const { SKIP_EMAIL_VERIFICATION, SKIP_MOBILE_VERIFICATION } = useConfig();
   const [isValid, setIsValid] = useState(true);
   const [showPhoneConflictModal, setShowPhoneConflictModal] = useState(false);
@@ -109,15 +109,35 @@ export default function SignUpWithEmail({
         return;
       }
 
-      // If phone provided, check existence first
-      // Only check if we are NOT resetting (i.e. first attempt)
+      // Check email existence first (before phone check)
+      // Only check if we are NOT already continuing with isPhoneExists flag
+      if (!isPhoneExists && formData.email) {
+        console.log("Checking email existence for:", formData.email);
+        const emailResult = await checkEmailExists(formData.email);
+        const emailExists = !!emailResult?._id;
+        console.log("Email exists result:", emailExists);
+
+        if (emailExists) {
+          // Email already exists - show toast and stop
+          showToast({
+            type: "error",
+            title: t("create_user_label"),
+            message: t("email_already_registered"),
+          });
+          return;
+        }
+      }
+
+      // If phone provided, check existence
+      // Only check if we are NOT continuing with isPhoneExists flag
       if (formData.phone && !isPhoneExists) {
         console.log("Checking phone existence for:", formData.phone);
-        const exists = await checkPhoneExists(formData.phone);
-        console.log("Phone exists result:", exists);
+        const phoneExists = await checkPhoneExists(formData.phone);
+        console.log("Phone exists result:", phoneExists);
 
-        if (exists) {
-          console.log("Phone exists, showing modal");
+        if (phoneExists) {
+          // Email is new but phone exists - show phone conflict modal
+          console.log("Phone exists with new email, showing modal");
           setShowPhoneConflictModal(true);
           return;
         }
@@ -125,16 +145,18 @@ export default function SignUpWithEmail({
 
       // Verification flow (prioritize email, then phone, then direct create)
       if (formData.email && !SKIP_EMAIL_VERIFICATION) {
+        // Store isPhoneExists in formData before proceeding to email verification
+        if (isPhoneExists) {
+          setFormData({ ...formData, isPhoneExists: true });
+        }
         sendOtpToEmailAddress(formData.email);
         handleChangePanel(3); // Email OTP step
-        // setIsAuthModalVisible(true); // uncomment if your UX shows modal here
         return;
       }
 
       if (formData.phone && !SKIP_MOBILE_VERIFICATION) {
         sendOtpToPhoneNumber(formData.phone);
         handleChangePanel(6); // Phone OTP step
-        // setIsAuthModalVisible(true); // uncomment if needed
         return;
       }
 

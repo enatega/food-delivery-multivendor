@@ -160,7 +160,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   };
   const OrderSubscription = ({ rowData }: { rowData: IActiveOrders }) => {
     useOrderSubscription(rowData);
-    return <p>{rowData.isPickedUp === false ? "Delivery" : "Picked"}</p>;
+    return <p>{rowData.isPickedUp === false ? 'Delivery' : 'Pick Up'}</p>;
   };
 
   // Mutations
@@ -400,10 +400,10 @@ export const DISPATCH_TABLE_COLUMNS = () => {
         // CHANGE 2: Filter status options based on whether it's a pickup order
         const availableStatuses = rowData.isPickedUp
           ? actionStatusOptions.filter((status) =>
-            ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
-              status.code
+              ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
+                status.code
+              )
             )
-          )
           : actionStatusOptions;
 
         const currentStatus = availableStatuses.find(
