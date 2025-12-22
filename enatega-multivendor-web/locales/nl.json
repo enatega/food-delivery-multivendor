@@ -915,5 +915,7 @@
   "Thursday": "Donderdag",
   "Friday": "Vrijdag",
   "Saturday": "Zaterdag",
-  "Sunday": "Zondag"
+  "Sunday": "Zondag",
+  "loading_orders": "Bestellingen laden...",
+  "show_more_orders": "Meer bestellingen tonen"
 }

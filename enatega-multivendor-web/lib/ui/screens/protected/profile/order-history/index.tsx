@@ -1,83 +1,163 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { ORDERS } from "@/lib/api/graphql/queries/orders";
+import {
+  GET_USERS_ACTIVE_ORDERS,
+  GET_USERS_PAST_ORDERS,
+} from "@/lib/api/graphql/queries/orders";
 import {
   ActiveOrders,
   PastOrders,
 } from "@/lib/ui/screen-components/protected/profile";
-import { ACTIVE_STATUS, INACTIVE_STATUS } from "@/lib/utils/constants/orders";
 import { IOrder } from "@/lib/utils/interfaces/orders.interface";
+import { useTranslations } from "next-intl";
+import ErrorDisplay from "@/lib/ui/useable-components/slider-error-display";
 
 export default function OrderHistoryScreen() {
   const [page, setPage] = useState(1);
-  const [allOrders, setAllOrders] = useState<IOrder[]>([]);
-  const [hasMore, setHasMore] = useState(true);
-  const limit = 10;
+  const [activeOrders, setActiveOrders] = useState<IOrder[]>([]);
+  const [pastOrders, setPastOrders] = useState<IOrder[]>([]);
+  const [activeOrderHasMore, setActiveOrderHasMore] = useState(true);
+  const [pastOrderHasMore, setPastOrderHasMore] = useState(true);
+  const limit = 5;
+  const t = useTranslations();
 
-  const { data, loading, fetchMore, networkStatus } = useQuery(ORDERS, {
-    variables: { page, limit },
-    fetchPolicy: "cache-and-network",
-    notifyOnNetworkStatusChange: true,
+  const {
+    data: pastOrder,
+    loading: pastOrderLoading,
+    fetchMore: pastOrderFetchMore,
+    networkStatus: pastOrderNetwork,
+    error: pastOrderError,
+  } = useQuery(GET_USERS_PAST_ORDERS, {
+    variables: {
+      page,
+      limit,
+      offset: 0,
+    },
+  });
+
+  const {
+    data: activeOrder,
+    loading: activeOrderLoading,
+    fetchMore: activeOrderFetchMore,
+    networkStatus: activeOrderNetwork,
+    error: activeOrderError,
+  } = useQuery(GET_USERS_ACTIVE_ORDERS, {
+    variables: {
+      page,
+      limit,
+      offset: 0,
+    },
   });
 
   // Merge new orders & update hasMore
   useEffect(() => {
-    if (data?.orders) {
-      setAllOrders((prev) => {
-        const newOrders = data.orders.filter(
-          (order: IOrder) => !prev.some((p) => p._id === order._id)
-        );
-        return [...prev, ...newOrders];
-      });
+    if (!activeOrder?.getUsersActiveOrders) return;
+    
+    setActiveOrders((prev) => {
+      const newOrders = activeOrder.getUsersActiveOrders.filter(
+        (order: IOrder) => !prev.some((p) => p._id === order._id)
+      );
+      return [...prev, ...newOrders];
+    });
 
-      if (data.orders.length < limit) {
-        setHasMore(false);
-      }
+    // Only update hasMore after pagination starts
+    if (page > 1 && activeOrder.getUsersActiveOrders.length < limit) {
+      setActiveOrderHasMore(false);
     }
-  }, [data]);
+  }, [activeOrder, page, limit]);
 
-  const activeOrders = allOrders.filter((o) =>
-    ACTIVE_STATUS.includes(o.orderStatus)
-  );
-  const pastOrders = allOrders.filter((o) =>
-    INACTIVE_STATUS.includes(o.orderStatus)
-  );
+  useEffect(() => {
+    if (!pastOrder?.getUsersPastOrders) return;
+
+    setPastOrders((prev) => {
+      const newOrders = pastOrder.getUsersPastOrders.filter(
+        (order: IOrder) => !prev.some((p) => p._id === order._id)
+      );
+      return [...prev, ...newOrders];
+    });
+
+    // Only update hasMore after pagination starts
+    if (page > 1 && pastOrder.getUsersPastOrders.length < limit) {
+      setPastOrderHasMore(false);
+    }
+  }, [pastOrder, page, limit]);
 
   const loadMore = () => {
-    if (!hasMore) return;
+    // Stop completely if nothing has more data
+    if (!activeOrderHasMore && !pastOrderHasMore) return;
 
     const nextPage = page + 1;
     setPage(nextPage);
 
-    fetchMore({
-      variables: { page: nextPage, limit },
-    });
+    if (activeOrderHasMore) {
+      activeOrderFetchMore({
+        variables: {
+          page: nextPage,
+          limit,
+          offset: 0,
+        },
+      });
+    }
+
+    if (pastOrderHasMore) {
+      pastOrderFetchMore({
+        variables: {
+          page: nextPage,
+          limit,
+          offset: 0,
+        },
+      });
+    }
   };
+
+  
+  const retryInitialLoad = () => {
+  setPage(1);
+  setActiveOrderHasMore(true);
+  setPastOrderHasMore(true);
+  setActiveOrders([]);
+  setPastOrders([]);
+  activeOrderFetchMore({ variables:{page:1} });
+  pastOrderFetchMore({ variables:{page:1} });
+};
+
+
+  if (activeOrderError || pastOrderError) {
+  return (
+    <div className="flex flex-col items-center justify-center h-full">
+      <ErrorDisplay
+        message={activeOrderError?.message || pastOrderError?.message}
+        onRetry={retryInitialLoad}
+      />
+    </div>
+  );
+}
+
 
   return (
     <div className="flex flex-col space-y-10 my-10">
       {/* Active Orders */}
       <ActiveOrders
         activeOrders={activeOrders}
-        isOrdersLoading={networkStatus === 1} // initial load only
+        isOrdersLoading={activeOrderNetwork === 1} // initial load only
       />
 
       {/* Past Orders */}
       <PastOrders
         pastOrders={pastOrders}
-        isOrdersLoading={networkStatus === 1} // initial load only
+        isOrdersLoading={pastOrderNetwork === 1} // initial load only
       />
 
       {/* Load More Button */}
-      {hasMore && (
+      {(activeOrderHasMore || pastOrderHasMore) && (
         <div className="flex justify-center">
           <button
             onClick={loadMore}
-            disabled={loading}
+            disabled={activeOrderLoading || pastOrderLoading}
             className="flex items-center space-x-2 px-6 py-3 bg-primary-color dark:text-black text-white font-semibold rounded-full shadow-md hover:bg-primary-color transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? (
+            {activeOrderLoading || pastOrderLoading ? (
               <>
                 <svg
                   className="animate-spin h-5 w-5 dark:text-black text-white"
@@ -99,10 +179,10 @@ export default function OrderHistoryScreen() {
                     d="M4 12a8 8 0 018-8v8H4z"
                   ></path>
                 </svg>
-                <span>Loading orders </span>
+                <span>{t("loading_orders")}</span>
               </>
             ) : (
-              <span>Show more orders</span>
+              <span>{t("show_more_orders")}</span>
             )}
           </button>
         </div>

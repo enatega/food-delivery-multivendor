@@ -916,5 +916,7 @@
   "Thursday": "星期四",
   "Friday": "星期五",
   "Saturday": "星期六",
-  "Sunday": "星期日"
+  "Sunday": "星期日",
+  "loading_orders": "正在加载订单",
+  "show_more_orders": "显示更多订单"
 }

@@ -915,5 +915,7 @@
   "Thursday": "木曜日",
   "Friday": "金曜日",
   "Saturday": "土曜日",
-  "Sunday": "日曜日"
+  "Sunday": "日曜日",
+   "loading_orders": "注文を読み込み中...",
+  "show_more_orders": "さらに注文を表示"
 }

@@ -916,5 +916,7 @@
   "Thursday": "پنجشنبه",
   "Friday": "جمعه",
   "Saturday": "شنبه",
-  "Sunday": "یکشنبه"
+  "Sunday": "یکشنبه",
+  "loading_orders": "د امرونو بارول...",
+  "show_more_orders": "د امرونو بیشتر نیشاندن"
 }
