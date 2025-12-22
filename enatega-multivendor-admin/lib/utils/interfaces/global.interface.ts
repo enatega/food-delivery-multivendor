@@ -52,6 +52,11 @@ export interface IPaginationVars {
   rows?: number;
 }
 
+export interface IPaginationCommissionRateVars {
+  page?: number;
+  limit?: number;
+}
+
 export interface ITableColumn<T> {
   field?: string;
   header?: string;

@@ -13,7 +13,7 @@ import Table from '@/lib/ui/useable-components/table';
 // import { generateDummyCommissionRates } from '@/lib/utils/dummy';
 
 // Type definitions
-import { IQueryResult, ICommissionRateRestaurantResponse } from '@/lib/utils/interfaces';
+import { IQueryResult, ICommissionRateRestaurantResponse, IPaginationCommissionRateVars } from '@/lib/utils/interfaces';
 
 // Apollo Client hooks
 import { useMutation } from '@apollo/client';
@@ -68,7 +68,7 @@ export default function CommissionRateMain() {
     {
       fetchPolicy: 'network-only',
     }
-  ) as IQueryResult<CommissionRateData | undefined, undefined>;
+  ) as IQueryResult<CommissionRateData | undefined, IPaginationCommissionRateVars>;
 
   // Mutation
   const [updateCommissionMutation] = useMutation(updateCommission);

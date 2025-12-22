@@ -90,10 +90,6 @@ export default function DispatchMain() {
   const { data: subscriptionData } = useSubscription(
     SUBSCRIPTION_DISPATCH_ORDER,
     {
-      onError: (error) => {
-        console.error('❌ Subscription error:', error);
-        console.log('⚠️ Falling back to polling...');
-      },
       shouldResubscribe: true,
     }
   );
@@ -102,7 +98,6 @@ export default function DispatchMain() {
   // Handle subscription data
   useEffect(() => {
     if (subscriptionData) {
-      console.log('🔥 Real-time order update received via WebSocket!');
 
       if (refetchTimeoutRef.current) {
         clearTimeout(refetchTimeoutRef.current);
@@ -110,7 +105,6 @@ export default function DispatchMain() {
 
       refetchTimeoutRef.current = setTimeout(() => {
         if (refetch) {
-          console.log('📡 Refetching orders...');
           refetch();
         }
       }, 500);
@@ -122,7 +116,6 @@ export default function DispatchMain() {
     // Start polling
     pollingIntervalRef.current = setInterval(() => {
       if (refetch && !active_orders_loading) {
-        console.log('Polling for updates...');
         refetch();
       }
     }, 5000); // Poll every 5 seconds
