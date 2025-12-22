@@ -67,6 +67,7 @@ import NewRestaurantDetailDesign from '../components/NewRestaurantDetailDesign/R
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
 import * as LocationImport from 'expo-location'
 import BottomTabNavigator from './BottomTabNavigator'
+import ProductExplorer from '../singlevendor/components/ProductExplorer/ProductExplorer'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -180,6 +181,9 @@ function MainNavigator() {
       <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen name='SearchScreen' component={SearchScreen} />
       {/* <NavigationStack.Screen name='HypCheckout' component={HypCheckout} /> */}
+
+      {/* Single Vendor Routes */}
+      <NavigationStack.Screen name='ProductExplorer' component={ProductExplorer} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
     </NavigationStack.Navigator>
   )
 }

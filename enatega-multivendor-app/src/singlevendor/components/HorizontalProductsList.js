@@ -5,10 +5,12 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import ProductCard from './ProductCard'
 import SectionHeader from './SectionHeader'
+import { useNavigation } from '@react-navigation/native'
 
 const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks' }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
+  const navigation = useNavigation()
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   const handleSeeAll = () => {
@@ -21,6 +23,10 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks' }) => {
     console.log('Add to cart:', drink.name)
   }
 
+  const onProductPress = ()=>{
+    navigation.navigate('ProductExplorer') 
+  }
+
   return (
     <View style={styles(currentTheme).container}>
       <SectionHeader title={listTitle} onSeeAll={handleSeeAll} />
@@ -31,7 +37,7 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks' }) => {
         contentContainerStyle={styles(currentTheme).scrollContent}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: drink }) => (
-          <ProductCard product={drink} onAddToCart={handleAddToCart} />
+          <ProductCard product={drink} onAddToCart={handleAddToCart} onCardPress={onProductPress}/>
         )}
       />
     </View>

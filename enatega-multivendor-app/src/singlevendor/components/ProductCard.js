@@ -1,17 +1,17 @@
-import { View, Text, ImageBackground, StyleSheet } from 'react-native'
+import { View, Text, ImageBackground, StyleSheet, Pressable } from 'react-native'
 import React, { useContext } from 'react'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import ProductImageOverlay from './ProductImageOverlay'
 
-const ProductCard = ({ product, onAddToCart }) => {
+const ProductCard = ({ product, onAddToCart ,onCardPress}) => {
     const { i18n } = useTranslation()
     const themeContext = useContext(ThemeContext)
     const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
     return (
-        <View style={styles(currentTheme).card}>
+        <Pressable onPress={onCardPress} style={styles(currentTheme).card}>
             <ImageBackground 
                 source={product.image} 
                 style={styles(currentTheme).imageContainer}
@@ -32,7 +32,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                 <Text style={styles(currentTheme).pricePerLiter}>€ {product.pricePerLiter.toFixed(1)}/l</Text>
             </View>
             </View>
-        </View>
+        </Pressable>
     )
 }
 

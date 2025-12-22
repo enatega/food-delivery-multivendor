@@ -1,25 +1,25 @@
 import { View, Text, Platform } from 'react-native'
 import React, { useContext } from 'react'
-import BottomTabIcon from '../../../components/BottomTabIcon/BottomTabIcon'
-import { theme } from '../../../utils/themeColors'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { RightButton } from '../../../components/Header/HeaderIcons/HeaderIcons'
+
+import { theme } from '../../utils/themeColors'
+import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import { RightButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import { useTranslation } from 'react-i18next'
-import Main from '../../../screens/Main/Main'
-import Menu from '../../../screens/Menu/Menu'
-import SearchScreen from '../../../screens/Search/SearchScreen'
-import CreateAccount from '../../../screens/CreateAccount/CreateAccount'
-import Profile from '../../../screens/Profile/Profile'
-import Home from '../../screens/Home/Home'
-import Deals from '../../screens/Deals/Deals'
-import Cart from '../../screens/Cart/Cart'
-import Browse from '../../screens/Browse/Browse'
-import SelectedLocation from '../../../components/Main/Location/Location'
-import { alignment } from '../../../utils/alignment'
+
+
+import CreateAccount from '../../screens/CreateAccount/CreateAccount'
+import Profile from '../../screens/Profile/Profile'
+import Home from '../screens/Home/Home'
+import Deals from '../screens/Deals/Deals'
+import Cart from '../screens/Cart/Cart'
+import Browse from '../screens/Browse/Browse'
+import SelectedLocation from '../../components/Main/Location/Location'
+import { alignment } from '../../utils/alignment'
 import { useNavigation } from '@react-navigation/native'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import UserContext from '../../../context/User'
+import UserContext from '../../context/User'
+import BottomTabIcon from '../../components/BottomTabIcon/BottomTabIcon'
 
 const Tab = createBottomTabNavigator()
 
