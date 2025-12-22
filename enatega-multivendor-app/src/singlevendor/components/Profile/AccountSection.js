@@ -28,7 +28,7 @@ const AccountSection = () => {
       id: 2,
       icon: 'card-outline',
       title: t('Payment methods'),
-      onPress: () => navigation.navigate('Payment')
+      onPress: () => {}
     },
     {
       id: 3,
