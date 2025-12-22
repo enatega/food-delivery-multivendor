@@ -10,19 +10,34 @@ import Menu from '../../../screens/Menu/Menu'
 import SearchScreen from '../../../screens/Search/SearchScreen'
 import CreateAccount from '../../../screens/CreateAccount/CreateAccount'
 import Profile from '../../../screens/Profile/Profile'
+import Home from '../../screens/Home/Home'
+import Deals from '../../screens/Deals/Deals'
+import Cart from '../../screens/Cart/Cart'
+import Browse from '../../screens/Browse/Browse'
+import SelectedLocation from '../../../components/Main/Location/Location'
+import { alignment } from '../../../utils/alignment'
+import { useNavigation } from '@react-navigation/native'
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import UserContext from '../../../context/User'
 
 const Tab = createBottomTabNavigator()
 
 const SingleVendorBottomTab = () => {
-      const { t } = useTranslation()
+      const { t, i18n } = useTranslation()
       const themeContext = useContext(ThemeContext)
-    const currentTheme = theme[themeContext.ThemeValue]
+    const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
     const { profile: userProfile } = useContext(UserContext)
+    const navigation = useNavigation()
+    
+    const handleLocationModal = () => {
+      navigation.navigate('SelectLocation')
+    }
+    
   return (
    <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerShown: route.name === 'Discovery',
         tabBarIcon: ({ focused, color, size }) => {
           // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
           return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
@@ -42,14 +57,35 @@ const SingleVendorBottomTab = () => {
     >
       <Tab.Screen
         name='Discovery'
-        component={Main}
+        component={Home}
         options={{
-          tabBarLabel: 'Home'
+          tabBarLabel: 'Home',
+          headerStyle: {
+            shadowColor: 'transparent',
+            shadowRadius: 0,
+            backgroundColor: currentTheme.themeBackground
+          },
+          headerTitleStyle: {
+            color: currentTheme.darkBgFont,
+            ...alignment.PTlarge
+          },
+          headerTitleContainerStyle: {
+            alignItems: 'flex-start',
+            ...alignment.MLxSmall
+          },
+          headerTitleAlign: 'left',
+          headerTitle: (headerProp) => (
+            <SelectedLocation
+              {...headerProp}
+              modalOn={handleLocationModal}
+              navigation={navigation}
+            />
+          )
         }}
       />
       <Tab.Screen
-        name='Restaurants'
-        component={Menu}
+        name='Deals'
+        component={Deals}
         options={{
           tabBarLabel: 'Deals'
         }}
@@ -59,8 +95,8 @@ const SingleVendorBottomTab = () => {
         }}
       />
       <Tab.Screen
-        name='Store'
-        component={Menu}
+        name='cart'
+        component={Cart}
         options={{
           tabBarLabel:'Cart'
         }}
@@ -71,13 +107,13 @@ const SingleVendorBottomTab = () => {
       />
       <Tab.Screen
         name='Search'
-        component={SearchScreen}
+        component={Browse}
         options={{
-          tabBarLabel: 'Blah Blah'
+          tabBarLabel: 'Browse'
         }}
       />
       <Tab.Screen
-        name='Profile'
+        name='venderprofile'
         component={userProfile ? Profile : CreateAccount}
         options={{
           tabBarLabel: t('titleProfile')
