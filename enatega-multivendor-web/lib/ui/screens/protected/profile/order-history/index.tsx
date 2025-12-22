@@ -11,6 +11,7 @@ import {
 } from "@/lib/ui/screen-components/protected/profile";
 import { IOrder } from "@/lib/utils/interfaces/orders.interface";
 import { useTranslations } from "next-intl";
+import ErrorDisplay from "@/lib/ui/useable-components/slider-error-display";
 
 export default function OrderHistoryScreen() {
   const [page, setPage] = useState(1);
@@ -26,6 +27,7 @@ export default function OrderHistoryScreen() {
     loading: pastOrderLoading,
     fetchMore: pastOrderFetchMore,
     networkStatus: pastOrderNetwork,
+    error: pastOrderError,
   } = useQuery(GET_USERS_PAST_ORDERS, {
     variables: {
       page,
@@ -39,6 +41,7 @@ export default function OrderHistoryScreen() {
     loading: activeOrderLoading,
     fetchMore: activeOrderFetchMore,
     networkStatus: activeOrderNetwork,
+    error: activeOrderError,
   } = useQuery(GET_USERS_ACTIVE_ORDERS, {
     variables: {
       page,
@@ -107,6 +110,17 @@ export default function OrderHistoryScreen() {
       });
     }
   };
+
+  if(activeOrderError || pastOrderError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <ErrorDisplay
+          message={activeOrderError?.message || pastOrderError?.message}
+          onRetry={loadMore}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col space-y-10 my-10">
