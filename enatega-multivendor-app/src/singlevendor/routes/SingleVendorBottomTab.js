@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 
 import CreateAccount from '../../screens/CreateAccount/CreateAccount'
-import Profile from '../../screens/Profile/Profile'
+import Profile from '../screens/Profile/Profile'
 import Home from '../screens/Home/Home'
 import Deals from '../screens/Deals/Deals'
 import Cart from '../screens/Cart/Cart'
@@ -113,10 +113,10 @@ const SingleVendorBottomTab = () => {
         }}
       />
       <Tab.Screen
-        name='venderprofile'
+        name='Profile'
         component={userProfile ? Profile : CreateAccount}
         options={{
-          tabBarLabel: t('titleProfile')
+          tabBarLabel: t('Profile')
         }}
       />
     </Tab.Navigator>
