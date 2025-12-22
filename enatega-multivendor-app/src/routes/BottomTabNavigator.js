@@ -14,7 +14,7 @@ import Profile from '../screens/Profile/Profile'
 import CreateAccount from '../screens/CreateAccount/CreateAccount'
 import useVendorModeStore from "../singlevendor/stores/useVendorModeStore"
 import { isSingleVendor } from "../singlevendor/utils/helper"
-import SingleVendorBottomTab from "../singlevendor/components/SingleVendorBottomTab.js/SingleVendorBottomTab"
+import SingleVendorBottomTab from "../singlevendor/routes/SingleVendorBottomTab"
 const Tab = createBottomTabNavigator()
 const BottomTabNavigator=()=> {
   const themeContext = useContext(ThemeContext)
