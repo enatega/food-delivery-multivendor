@@ -129,7 +129,8 @@ export const theme = {
     radiusBorder: '#fe0000',
     radiusFill: 'rgba(0, 255, 0, 0.2)',
     toggler:"#fff",
-    headerMainFontColor: '#006189'
+    headerMainFontColor: '#006189',
+    singlevendorcolor: '#0090CD'
 
   },
   Dark: {
@@ -253,6 +254,7 @@ export const theme = {
     customBorder: 'transparent',
     radiusBorder: '#fe0000',
     radiusFill: 'rgba(0, 255, 0, 0.2)',
-    headerMainFontColor: '#006189'
+    headerMainFontColor: '#006189',
+    singlevendorcolor: '#0090CD'
   }
 }

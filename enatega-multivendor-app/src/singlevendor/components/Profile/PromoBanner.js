@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -16,18 +16,25 @@ const PromoBanner = () => {
 
   return (
     <View style={styles(currentTheme).container}>
-      <View style={styles(currentTheme).banner}>
+      <ImageBackground
+        source={require('../../assets/images/promo-banner.png')}
+        style={styles(currentTheme).banner}
+        imageStyle={styles(currentTheme).bannerImage}
+        resizeMode="cover"
+      >
         <View style={styles(currentTheme).textContainer}>
           <TextDefault
             H3
-            bold
-            textColor="#FFFFFF"
+            bolder
+            textColor="#000000"
             style={styles(currentTheme).title}
           >
             {t('Unlimited Deliveries for €1')}
           </TextDefault>
           <TextDefault
-            textColor="#FFFFFF"
+            textColor="#000000"
+            H3
+            bolder
             style={styles(currentTheme).subtitle}
           >
             {t('— Save €3.99 Each!')}
@@ -39,13 +46,13 @@ const PromoBanner = () => {
         >
           <TextDefault
             bold
-            textColor="#0EA5E9"
+            textColor="#ffffff"
             style={styles(currentTheme).buttonText}
           >
             {t('Join now')}
           </TextDefault>
         </TouchableOpacity>
-      </View>
+      </ImageBackground>
     </View>
   )
 }
@@ -57,30 +64,47 @@ const styles = (currentTheme) =>
       marginBottom: verticalScale(24)
     },
     banner: {
-      backgroundColor: '#0EA5E9',
       borderRadius: scale(12),
-      padding: scale(16),
-      overflow: 'hidden'
+      padding: scale(20),
+      overflow: 'hidden',
+      height: verticalScale(160),
+      justifyContent: 'space-between'
+    },
+    bannerImage: {
+      borderRadius: scale(12)
     },
     textContainer: {
-      marginBottom: verticalScale(12)
+      flex: 1,
+      justifyContent: 'center'
     },
     title: {
-      fontSize: scale(16),
-      marginBottom: verticalScale(4)
+      fontSize: scale(20),
+      marginBottom: verticalScale(6),
+      lineHeight: scale(26)
     },
     subtitle: {
-      fontSize: scale(14)
+      fontSize: scale(15),
+      lineHeight: scale(20),
+      opacity: 0.95
     },
     button: {
-      backgroundColor: '#FFFFFF',
-      paddingVertical: verticalScale(10),
-      paddingHorizontal: scale(20),
-      borderRadius: scale(8),
-      alignSelf: 'flex-start'
+      backgroundColor: currentTheme.singlevendorcolor,
+      paddingVertical: verticalScale(12),
+      paddingHorizontal: scale(24),
+      borderRadius: scale(12),
+      alignSelf: 'flex-start',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3
     },
     buttonText: {
-      fontSize: scale(14)
+      fontSize: scale(15),
+      letterSpacing: 0.3
     }
   })
 
