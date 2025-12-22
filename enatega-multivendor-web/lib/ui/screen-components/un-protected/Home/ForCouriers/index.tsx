@@ -9,7 +9,7 @@ import flexibleHours from "@/public/assets/images/png/flexibleHours.webp"
 import Banner2 from "@/public/assets/images/png/Banner2.webp"
 import { useTranslations } from "next-intl";
 
-import reachNewCustomersImg from "@/lib/assets/we_do_heavy_lifting.png"
+import reachNewCustomersImg from "@/public/assets/images/png/reachNewCustomers.jpg"
 
 const Couriers: React.FC = () => {
   const t = useTranslations();
