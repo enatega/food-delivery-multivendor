@@ -53,7 +53,7 @@ export default function OrderHistoryScreen() {
   // Merge new orders & update hasMore
   useEffect(() => {
     if (!activeOrder?.getUsersActiveOrders) return;
-
+    
     setActiveOrders((prev) => {
       const newOrders = activeOrder.getUsersActiveOrders.filter(
         (order: IOrder) => !prev.some((p) => p._id === order._id)
@@ -111,16 +111,29 @@ export default function OrderHistoryScreen() {
     }
   };
 
-  if(activeOrderError || pastOrderError) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <ErrorDisplay
-          message={activeOrderError?.message || pastOrderError?.message}
-          onRetry={loadMore}
-        />
-      </div>
-    );
-  }
+  
+  const retryInitialLoad = () => {
+  setPage(1);
+  setActiveOrderHasMore(true);
+  setPastOrderHasMore(true);
+  setActiveOrders([]);
+  setPastOrders([]);
+  activeOrderFetchMore({ variables:{page:1} });
+  pastOrderFetchMore({ variables:{page:1} });
+};
+
+
+  if (activeOrderError || pastOrderError) {
+  return (
+    <div className="flex flex-col items-center justify-center h-full">
+      <ErrorDisplay
+        message={activeOrderError?.message || pastOrderError?.message}
+        onRetry={retryInitialLoad}
+      />
+    </div>
+  );
+}
+
 
   return (
     <div className="flex flex-col space-y-10 my-10">
