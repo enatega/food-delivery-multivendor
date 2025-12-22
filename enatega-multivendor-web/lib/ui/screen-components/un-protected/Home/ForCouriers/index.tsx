@@ -3,13 +3,15 @@ import TinyTiles from "@/lib/ui/useable-components/tinyTiles";
 import React from "react";
 import TranparentButton from "@/lib/ui/useable-components/Home-Buttons/TranparentButton";
 
-import competetiveEarning  from "@/public/assets/images/png/competitiveEarning.webp"
-import flexibleHours  from "@/public/assets/images/png/flexibleHours.webp"
+import competetiveEarning from "@/public/assets/images/png/competitiveEarning.webp"
+import flexibleHours from "@/public/assets/images/png/flexibleHours.webp"
 
 import Banner2 from "@/public/assets/images/png/Banner2.webp"
 import { useTranslations } from "next-intl";
 
-const Couriers:React.FC = () => {
+import reachNewCustomersImg from "@/lib/assets/we do heavy lifting.png"
+
+const Couriers: React.FC = () => {
   const t = useTranslations();
   const EarningButton = <TranparentButton text={t('learn_more_btn')} link={'restaurantInfo'} />;
   const FLexiblegButton = <TranparentButton text={t('learn_more_btn')} link={'rider'} />;
@@ -30,7 +32,7 @@ const Couriers:React.FC = () => {
           image={competetiveEarning}
           heading={t('RidersInfoCards.heading2')}
           subText={
-           t('RidersInfoCards.subHeading2')
+            t('RidersInfoCards.subHeading2')
           }
           button={EarningButton}
         />
@@ -46,7 +48,7 @@ const Couriers:React.FC = () => {
 
       <TinyTiles
         image={
-          "https://images.ctfassets.net/23u853certza/QScF4OasY8MBTmzrKJfv1/9afd4f8a826825cc097fb36606a81963/3DCourier.webp?w=200&q=90&fm=webp"
+          reachNewCustomersImg.src
         }
         heading={t('RidersInfoCards.TinyTile.heading')}
         buttonText={t('RidersInfoCards.TinyTile.subText')}

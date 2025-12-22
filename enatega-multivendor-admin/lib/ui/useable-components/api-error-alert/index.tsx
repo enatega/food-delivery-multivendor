@@ -42,7 +42,6 @@ export default function ApiErrorAlert({
                     </h3>
                     <p className="text-sm text-red-700 dark:text-red-300">
                         {error}
-                        {/* You can display queryName here if needed, e.g. <span className="text-xs block text-red-500 mt-1">Query: {queryName}</span> */}
                     </p>
                 </div>
                 {refetch && (

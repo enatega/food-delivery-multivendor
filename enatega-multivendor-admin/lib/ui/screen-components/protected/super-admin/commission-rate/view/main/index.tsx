@@ -1,5 +1,5 @@
 // GraphQL API imports
-import { GET_RESTAURANTS, updateCommission } from '@/lib/api/graphql';
+import { GET_COMMISSION_RATES_PAGINATED, updateCommission } from '@/lib/api/graphql';
 
 // Context imports
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -28,8 +28,14 @@ import CommissionRateHeader from '../header/table-header';
 import { useTranslations } from 'next-intl';
 import { COMMISSION_RATE_COLUMNS } from '@/lib/ui/useable-components/table/columns/comission-rate-columns';
 
-interface RestaurantsData {
-  restaurants: IRestaurantResponse[];
+interface CommissionRateData {
+  commissionRate: {
+    restaurant: IRestaurantResponse[];
+    currentPage: number;
+    totalPages: number;
+    nextPage: boolean;
+    prevPage: boolean;
+  };
 }
 
 export default function CommissionRateMain() {
@@ -49,18 +55,20 @@ export default function CommissionRateMain() {
   );
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Context
   const { showToast } = useContext(ToastContext);
 
   // Query
   const { data, error, refetch, loading } = useQueryGQL(
-    GET_RESTAURANTS,
-    { page: 1, limit: 10 },
+    GET_COMMISSION_RATES_PAGINATED,
+    { page: currentPage, limit: rowsPerPage },
     {
       fetchPolicy: 'network-only',
     }
-  ) as IQueryResult<RestaurantsData | undefined, undefined>;
+  ) as IQueryResult<CommissionRateData | undefined, undefined>;
 
   // Mutation
   const [updateCommissionMutation] = useMutation(updateCommission);
@@ -176,15 +184,8 @@ export default function CommissionRateMain() {
 
   // Use Effects
   useEffect(() => {
-    if (data?.restaurants) {
-      let updatedRestaurants = data.restaurants.map((v) => {
-        let obj = { ...v };
-        console.log(v.commissionRate);
-        // if (v.commissionRate === null) obj['commissionRate'] = 25;
-
-        return obj;
-      });
-      setRestaurants(updatedRestaurants);
+    if (data?.commissionRate?.restaurant) {
+      setRestaurants(data.commissionRate.restaurant);
     } else if (error) {
       showToast({
         type: 'error',
@@ -211,6 +212,13 @@ export default function CommissionRateMain() {
           loadingRestaurant,
         })}
         loading={loading || restaurants === null}
+        currentPage={currentPage}
+        rowsPerPage={rowsPerPage}
+        totalRecords={(data?.commissionRate?.totalPages || 0) * rowsPerPage} // Approximation if totalCount missing
+        onPageChange={(page, rows) => {
+          setCurrentPage(page);
+          setRowsPerPage(rows);
+        }}
         header={
           <CommissionRateHeader
             selectedActions={selectedActions}
