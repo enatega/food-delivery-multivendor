@@ -914,5 +914,7 @@
   "continue": "Davam et",
   "active_orders_message": "Hazırda {{count}} aktiv {{orderText}} var. Hesabınızı yalnız bütün sifarişlər tamamlandıqdan sonra silə bilərsiniz.",
   "order": "sifariş",
-  "ok": "OK"
+  "ok": "OK",
+     "loading_orders ": "Sifarişlər yüklənir",
+  "show_more_orders": "Daha çox sifariş göstər"
 }

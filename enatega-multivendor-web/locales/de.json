@@ -10,5 +10,7 @@
   "order": "Bestellung",
   "orders": "Bestellungen",
   "shop-types": "Ladenarten",
-  "ok": "OK"
+  "ok": "OK",
+   "loading_orders": "Bestellungen werden geladen...",
+  "show_more_orders": "Weitere Bestellungen anzeigen"
 }

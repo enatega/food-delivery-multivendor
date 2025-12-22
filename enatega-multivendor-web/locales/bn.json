@@ -915,5 +915,7 @@
   "Thursday": "বৃহস্পতিবার",
   "Friday": "শুক্রবার",
   "Saturday": "শনিবার",
-  "Sunday": "রবিবার"
+  "Sunday": "রবিবার",
+   "loading_orders": "অর্ডার লোড হচ্ছে...",
+  "show_more_orders": "আরও অর্ডার দেখান"
 }
