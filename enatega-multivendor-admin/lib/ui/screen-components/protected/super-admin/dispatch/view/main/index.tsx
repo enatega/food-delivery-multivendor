@@ -77,17 +77,14 @@ export default function DispatchMain() {
     !hasDataRef.current && active_orders_loading;
 
   useEffect(() => {
-    if (active_orders_data?.getActiveOrders?.orders?.length) {
+    const orders = active_orders_data?.getActiveOrders?.orders;
+
+    if (orders?.length) {
       hasDataRef.current = true;
+      setLastValidOrders(orders);
     }
   }, [active_orders_data]);
 
-  useEffect(() => {
-    if (active_orders_data?.getActiveOrders?.orders?.length) {
-      hasDataRef.current = true;
-      setLastValidOrders(active_orders_data.getActiveOrders.orders);
-    }
-  }, [active_orders_data]);
 
   // 🔥 SUBSCRIPTION (will attempt to use, but has fallback)
   const { data: subscriptionData } = useSubscription(
@@ -120,12 +117,12 @@ export default function DispatchMain() {
     }
   }, [subscriptionData, refetch]);
 
-  // 🔄 POLLING FALLBACK - Polls every 5 seconds
+  //  POLLING FALLBACK - Polls every 5 seconds
   useEffect(() => {
     // Start polling
     pollingIntervalRef.current = setInterval(() => {
       if (refetch && !active_orders_loading) {
-        console.log('🔄 Polling for updates...');
+        console.log('Polling for updates...');
         refetch();
       }
     }, 5000); // Poll every 5 seconds

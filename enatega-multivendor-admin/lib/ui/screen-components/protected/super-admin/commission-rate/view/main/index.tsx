@@ -13,7 +13,7 @@ import Table from '@/lib/ui/useable-components/table';
 // import { generateDummyCommissionRates } from '@/lib/utils/dummy';
 
 // Type definitions
-import { IQueryResult, IRestaurantResponse } from '@/lib/utils/interfaces';
+import { IQueryResult, ICommissionRateRestaurantResponse } from '@/lib/utils/interfaces';
 
 // Apollo Client hooks
 import { useMutation } from '@apollo/client';
@@ -30,7 +30,7 @@ import { COMMISSION_RATE_COLUMNS } from '@/lib/ui/useable-components/table/colum
 
 interface CommissionRateData {
   commissionRate: {
-    restaurant: IRestaurantResponse[];
+    restaurant: ICommissionRateRestaurantResponse[];
     currentPage: number;
     totalPages: number;
     nextPage: boolean;
@@ -43,12 +43,12 @@ export default function CommissionRateMain() {
   const t = useTranslations();
 
   // States
-  const [restaurants, setRestaurants] = useState<IRestaurantResponse[] | null>(null);
+  const [restaurants, setRestaurants] = useState<ICommissionRateRestaurantResponse[] | null>(null);
   const [editingRestaurantIds, setEditingRestaurantIds] = useState<Set<string>>(
     new Set()
   );
   const [selectedRestaurants, setSelectedRestaurants] = useState<
-    IRestaurantResponse[]
+    ICommissionRateRestaurantResponse[]
   >([]);
   const [loadingRestaurant, setLoadingRestaurant] = useState<string | null>(
     null

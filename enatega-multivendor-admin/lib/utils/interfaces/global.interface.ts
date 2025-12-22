@@ -47,6 +47,11 @@ export interface IQueryResult<T, V> {
   isSuccess: boolean;
 }
 
+export interface IPaginationVars {
+  page?: number;
+  rows?: number;
+}
+
 export interface ITableColumn<T> {
   field?: string;
   header?: string;
