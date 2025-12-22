@@ -128,7 +128,9 @@ export const theme = {
     customBorder: '#E5E7EB',
     radiusBorder: '#fe0000',
     radiusFill: 'rgba(0, 255, 0, 0.2)',
-    toggler:"#fff"
+    toggler:"#fff",
+    headerMainFontColor: '#006189'
+
   },
   Dark: {
     toggler:"#000",
@@ -250,6 +252,7 @@ export const theme = {
     subText: '#475569',
     customBorder: 'transparent',
     radiusBorder: '#fe0000',
-    radiusFill: 'rgba(0, 255, 0, 0.2)'
+    radiusFill: 'rgba(0, 255, 0, 0.2)',
+    headerMainFontColor: '#006189'
   }
 }

@@ -19,7 +19,7 @@ const ProfileHeader = ({ userName }) => {
       <TextDefault
         H1
         bolder
-        textColor={currentTheme.fontMainColor}
+        textColor={currentTheme.headerMainFontColor}
         style={styles(currentTheme).welcomeText}
       >
         {t('Welcome back,')}
@@ -49,7 +49,9 @@ const styles = (currentTheme) =>
       marginBottom: verticalScale(4)
     },
     nameText: {
-      fontSize: scale(24)
+      color: currentTheme.headerMainFontColor,
+      fontSize: scale(24),
+      fontWeight: 'bold'    
     }
   })
 
