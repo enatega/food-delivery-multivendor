@@ -19,88 +19,94 @@ export default function OrderHistoryScreen() {
   const [activeOrderHasMore, setActiveOrderHasMore] = useState(true);
   const [pastOrderHasMore, setPastOrderHasMore] = useState(true);
   const limit = 5;
-  const t = useTranslations()
+  const t = useTranslations();
 
-  const { data:pastOrder, loading:pastOrderLoading, fetchMore:pastOrderFetchMore, networkStatus:pastOrderNetwork } = useQuery(
-    GET_USERS_PAST_ORDERS,
-    {
-      variables: {
-        page,
-        limit,
-        offset: 0,
-      },
-    }
-  );
+  const {
+    data: pastOrder,
+    loading: pastOrderLoading,
+    fetchMore: pastOrderFetchMore,
+    networkStatus: pastOrderNetwork,
+  } = useQuery(GET_USERS_PAST_ORDERS, {
+    variables: {
+      page,
+      limit,
+      offset: 0,
+    },
+  });
 
-    const { data:activeOrder, loading:activeOrderLoading, fetchMore:activeOrderFetchMore, networkStatus:activeOrderNetwork } = useQuery(
-    GET_USERS_ACTIVE_ORDERS,
-    {
-      variables: {
-        page,
-        limit,
-        offset: 0,
-      },
-    }
-  );
+  const {
+    data: activeOrder,
+    loading: activeOrderLoading,
+    fetchMore: activeOrderFetchMore,
+    networkStatus: activeOrderNetwork,
+  } = useQuery(GET_USERS_ACTIVE_ORDERS, {
+    variables: {
+      page,
+      limit,
+      offset: 0,
+    },
+  });
 
   // Merge new orders & update hasMore
   useEffect(() => {
-    if (activeOrder?.getUsersActiveOrders || pastOrder?.getUsersPastOrders) {
+    if (!activeOrder?.getUsersActiveOrders) return;
 
-       setActiveOrders((prev) => {
-        const newActiveOrders = activeOrder?.getUsersActiveOrders?.filter(
-          (order: IOrder) => !prev.some((p) => p._id === order._id)
-        ) ?? [];
-        return [...prev, ...newActiveOrders];
-      });
+    setActiveOrders((prev) => {
+      const newOrders = activeOrder.getUsersActiveOrders.filter(
+        (order: IOrder) => !prev.some((p) => p._id === order._id)
+      );
+      return [...prev, ...newOrders];
+    });
 
-       setPastOrders((prev) => {
-        const newPastOrders = pastOrder?.getUsersPastOrders?.filter(
-          (order: IOrder) => !prev.some((p) => p._id === order._id)
-        )?? [];
-        return [...prev, ...newPastOrders];
-      });
-
-
-      if (activeOrder?.getUsersActiveOrders?.length < limit ) {
-        setActiveOrderHasMore(false);
-      }
-      if (pastOrder?.getUsersPastOrders?.length < limit ) {
-        setPastOrderHasMore(false);
-      }
+    // Only update hasMore after pagination starts
+    if (page > 1 && activeOrder.getUsersActiveOrders.length < limit) {
+      setActiveOrderHasMore(false);
     }
-  }, [activeOrder,pastOrder]);
+  }, [activeOrder, page, limit]);
 
+  useEffect(() => {
+    if (!pastOrder?.getUsersPastOrders) return;
 
-
-const loadMore = () => {
-  // Stop completely if nothing has more data
-  if (!activeOrderHasMore && !pastOrderHasMore) return;
-
-  const nextPage = page + 1;
-  setPage(nextPage);
-
-  if (activeOrderHasMore) {
-    activeOrderFetchMore({
-      variables: {
-        page: nextPage,
-        limit,
-        offset: 0,
-      },
+    setPastOrders((prev) => {
+      const newOrders = pastOrder.getUsersPastOrders.filter(
+        (order: IOrder) => !prev.some((p) => p._id === order._id)
+      );
+      return [...prev, ...newOrders];
     });
-  }
 
-  if (pastOrderHasMore) {
-    pastOrderFetchMore({
-      variables: {
-        page: nextPage,
-        limit,
-        offset: 0,
-      },
-    });
-  }
-};
+    // Only update hasMore after pagination starts
+    if (page > 1 && pastOrder.getUsersPastOrders.length < limit) {
+      setPastOrderHasMore(false);
+    }
+  }, [pastOrder, page, limit]);
 
+  const loadMore = () => {
+    // Stop completely if nothing has more data
+    if (!activeOrderHasMore && !pastOrderHasMore) return;
+
+    const nextPage = page + 1;
+    setPage(nextPage);
+
+    if (activeOrderHasMore) {
+      activeOrderFetchMore({
+        variables: {
+          page: nextPage,
+          limit,
+          offset: 0,
+        },
+      });
+    }
+
+    if (pastOrderHasMore) {
+      pastOrderFetchMore({
+        variables: {
+          page: nextPage,
+          limit,
+          offset: 0,
+        },
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col space-y-10 my-10">
