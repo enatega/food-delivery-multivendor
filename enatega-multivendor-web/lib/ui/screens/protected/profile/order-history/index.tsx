@@ -16,16 +16,10 @@ export default function OrderHistoryScreen() {
   const [page, setPage] = useState(1);
   const [activeOrders, setActiveOrders] = useState<IOrder[]>([]);
   const [pastOrders, setPastOrders] = useState<IOrder[]>([]);
-  const [activeOrderhasMore, setActiveOrderHasMore] = useState(true);
-  const [pastOrderhasMore, setPastOrderHasMore] = useState(true);
+  const [activeOrderHasMore, setActiveOrderHasMore] = useState(true);
+  const [pastOrderHasMore, setPastOrderHasMore] = useState(true);
   const limit = 5;
   const t = useTranslations()
-
-  // const { data, loading, fetchMore, networkStatus } = useQuery(ORDERS, {
-  //   variables: { page, limit },
-  //   fetchPolicy: "cache-and-network",
-  //   notifyOnNetworkStatusChange: true,
-  // });
 
   const { data:pastOrder, loading:pastOrderLoading, fetchMore:pastOrderFetchMore, networkStatus:pastOrderNetwork } = useQuery(
     GET_USERS_PAST_ORDERS,
@@ -52,12 +46,7 @@ export default function OrderHistoryScreen() {
   // Merge new orders & update hasMore
   useEffect(() => {
     if (activeOrder?.getUsersActiveOrders || pastOrder?.getUsersPastOrders) {
-      // setAllOrders((prev) => {
-      //   const newOrders = data.orders.filter(
-      //     (order: IOrder) => !prev.some((p) => p._id === order._id)
-      //   );
-      //   return [...prev, ...newOrders];
-      // });
+
        setActiveOrders((prev) => {
         const newActiveOrders = activeOrder?.getUsersActiveOrders?.filter(
           (order: IOrder) => !prev.some((p) => p._id === order._id)
@@ -82,26 +71,36 @@ export default function OrderHistoryScreen() {
     }
   }, [activeOrder,pastOrder]);
 
-  // const activeOrders = allOrders.filter((o) =>
-  //   ACTIVE_STATUS.includes(o.orderStatus)
-  // );
-  // const pastOrders = allOrders.filter((o) =>
-  //   INACTIVE_STATUS.includes(o.orderStatus)
-  // );
 
-  const loadMore = () => {
-    if (!activeOrderhasMore && !pastOrderhasMore) return;
 
-    const nextPage = page + 1;
-    setPage(nextPage);
+const loadMore = () => {
+  // Stop completely if nothing has more data
+  if (!activeOrderHasMore && !pastOrderHasMore) return;
 
+  const nextPage = page + 1;
+  setPage(nextPage);
+
+  if (activeOrderHasMore) {
     activeOrderFetchMore({
-      variables: { page: nextPage, limit,offset: 0 },
+      variables: {
+        page: nextPage,
+        limit,
+        offset: 0,
+      },
     });
-     pastOrderFetchMore({
-      variables: { page: nextPage, limit,offset: 0 },
+  }
+
+  if (pastOrderHasMore) {
+    pastOrderFetchMore({
+      variables: {
+        page: nextPage,
+        limit,
+        offset: 0,
+      },
     });
-  };
+  }
+};
+
 
   return (
     <div className="flex flex-col space-y-10 my-10">
@@ -118,7 +117,7 @@ export default function OrderHistoryScreen() {
       />
 
       {/* Load More Button */}
-      {(activeOrderhasMore || pastOrderhasMore) && (
+      {(activeOrderHasMore || pastOrderHasMore) && (
         <div className="flex justify-center">
           <button
             onClick={loadMore}

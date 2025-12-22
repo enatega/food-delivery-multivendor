@@ -915,5 +915,7 @@
   "Thursday": "Thứ Năm",
   "Friday": "Thứ Sáu",
   "Saturday": "Thứ Bảy",
-  "Sunday": "Chủ Nhật"
+  "Sunday": "Chủ Nhật",
+  "loading_orders": "Đang tải đơn hàng",
+  "show_more_orders": "Hiển thị thêm đơn hàng"
 }

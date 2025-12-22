@@ -916,5 +916,7 @@
   "Thursday": "Payshanba",
   "Friday": "Juma",
   "Saturday": "Shanba",
-  "Sunday": "Yakshanba"
+  "Sunday": "Yakshanba",
+  "loading_orders": "Buyurtmalar yuklanmoqda...q",
+  "show_more_orders": "Ko'proq buyurtmalarni ko'rsatish"
 }
