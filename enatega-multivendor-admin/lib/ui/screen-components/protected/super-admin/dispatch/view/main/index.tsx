@@ -24,10 +24,14 @@ export default function DispatchMain() {
   const [selectedData, setSelectedData] = useState<IActiveOrders[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState('');
+  const hasDataRef = useRef(false);
+  const [lastValidOrders, setLastValidOrders] = useState<IActiveOrders[]>([]);
+
+
 
   // Ref for debouncing and polling
   const refetchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -64,29 +68,36 @@ export default function DispatchMain() {
       search: search,
       actions: selectedActions,
     },
-    onCompleted: () => {
-      setIsLoading(false);
-    },
+    // onCompleted: () => {
+    //   setIsLoading(false);
+    // },
     fetchPolicy: 'network-only',
   });
+  const showLoading =
+    !hasDataRef.current && active_orders_loading;
+
+  useEffect(() => {
+    const orders = active_orders_data?.getActiveOrders?.orders;
+
+    if (orders?.length) {
+      hasDataRef.current = true;
+      setLastValidOrders(orders);
+    }
+  }, [active_orders_data]);
+
 
   // 🔥 SUBSCRIPTION (will attempt to use, but has fallback)
   const { data: subscriptionData } = useSubscription(
     SUBSCRIPTION_DISPATCH_ORDER,
     {
-      onError: (error) => {
-        console.error('❌ Subscription error:', error);
-        console.log('⚠️ Falling back to polling...');
-      },
       shouldResubscribe: true,
     }
   );
 
 
-   // Handle subscription data
-   useEffect(() => {
+  // Handle subscription data
+  useEffect(() => {
     if (subscriptionData) {
-      console.log('🔥 Real-time order update received via WebSocket!');
 
       if (refetchTimeoutRef.current) {
         clearTimeout(refetchTimeoutRef.current);
@@ -94,19 +105,17 @@ export default function DispatchMain() {
 
       refetchTimeoutRef.current = setTimeout(() => {
         if (refetch) {
-          console.log('📡 Refetching orders...');
           refetch();
         }
       }, 500);
     }
   }, [subscriptionData, refetch]);
 
-   // 🔄 POLLING FALLBACK - Polls every 5 seconds
-   useEffect(() => {
+  //  POLLING FALLBACK - Polls every 5 seconds
+  useEffect(() => {
     // Start polling
     pollingIntervalRef.current = setInterval(() => {
       if (refetch && !active_orders_loading) {
-        console.log('🔄 Polling for updates...');
         refetch();
       }
     }, 5000); // Poll every 5 seconds
@@ -129,11 +138,12 @@ export default function DispatchMain() {
         restaurantId: '',
       },
     });
-    setIsLoading(true);
+    // setIsLoading(true);
   }, [rowsPerPage, page, selectedActions, search, fetchActiveOrders]);
 
-   // Cleanup
-   useEffect(() => {
+
+  // Cleanup
+  useEffect(() => {
     return () => {
       if (refetchTimeoutRef.current) {
         clearTimeout(refetchTimeoutRef.current);
@@ -149,10 +159,12 @@ export default function DispatchMain() {
       <Table
         columns={DISPATCH_TABLE_COLUMNS()}
         data={
-          active_orders_data?.getActiveOrders.orders ||
-          (isLoading || active_orders_loading ? generateDummyDispatchOrders() : [])
+          showLoading
+            ? generateDummyDispatchOrders()
+            : active_orders_data?.getActiveOrders.orders ??
+            lastValidOrders
         }
-        loading={isLoading || active_orders_loading}
+        loading={showLoading}
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e as IActiveOrders[])}
         header={
@@ -172,7 +184,7 @@ export default function DispatchMain() {
           setRowsPerPage(rowNumber);
         }}
         currentPage={page}
-        // filters={filters}
+      // filters={filters}
       />
     </div>
   );
