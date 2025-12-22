@@ -1,9 +1,9 @@
 import HomeMiniCard from '@/lib/ui/useable-components/Home-miniCard'
 import { useTranslations } from 'next-intl'
 import React from 'react'
-import onlineSaleBoostImg from "@/lib/assets/Power online sales Boost sales.png"
-import riderImage from "@/lib/assets/we do heavy lifting.png"
-import boostOnlineSalesImg from "@/lib/assets/Boost online sales.png"
+import onlineSaleBoostImg from "@/lib/assets/Power_online_sales_Boost_sales.png"
+import riderImage from "@/lib/assets/we_do_heavy_lifting.png"
+import boostOnlineSalesImg from "@/lib/assets/Boost_online_sales.png"
 import riskFreeImg from "@/lib/assets/risk_free.png"
 
 const MiniCards: React.FC = () => {

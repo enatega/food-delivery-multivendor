@@ -14,8 +14,8 @@ import TinyTiles from "../../useable-components/tinyTiles";
 import Couriers from "../../screen-components/un-protected/Home/ForCouriers";
 import { PaddingContainer } from "../../useable-components/containers";
 import { useTranslations } from "next-intl";
-import becomeStorePartnerImg from "@/lib/assets/become store.png"
-import reachNewCustomersImg from "@/lib/assets/we do heavy lifting.png"
+import becomeStorePartnerImg from "@/lib/assets/become_store.png"
+import reachNewCustomersImg from "@/lib/assets/we_do_heavy_lifting.png"
 
 const Main = () => {
   const t = useTranslations("MiniCardsHomeScreen");
