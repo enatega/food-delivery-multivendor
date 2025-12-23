@@ -916,5 +916,7 @@
   "Thursday": "Kamis",
   "Friday": "Jumat",
   "Saturday": "Sabtu",
-  "Sunday": "Minggu"
+  "Sunday": "Minggu",
+   "loading_orders": "Memuat pesanan...",
+  "show_more_orders": "Tampilkan lebih banyak pesanan"
 }

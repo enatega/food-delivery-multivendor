@@ -957,5 +957,7 @@
   "ok": "OK",
   "you_currently_have": "You currently have",
   "active": "active",
-  "you_can_only_delete_account": "You can only delete your account once all your orders are completed"
+  "you_can_only_delete_account": "You can only delete your account once all your orders are completed",
+  "loading_orders": "Loading orders",
+  "show_more_orders": "Show more orders"
 }

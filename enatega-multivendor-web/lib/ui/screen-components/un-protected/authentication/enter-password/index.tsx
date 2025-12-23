@@ -77,11 +77,11 @@ export default function EnterPassword({
         handleChangePanel(0);
         setFormData({} as IAuthFormData);
         setIsAuthModalVisible(false);
-        // showToast({
-        //   type: "success",
-        //   title: t("Login"),
-        //   message: t("You have logged in successfully"),
-        // });
+        showToast({
+          type: "success",
+          title: t("Login"),
+          message: t("You have logged in successfully"),
+        });
       }
     }
   };

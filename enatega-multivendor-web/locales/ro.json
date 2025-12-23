@@ -916,5 +916,7 @@
   "Thursday": "Joi",
   "Friday": "Vineri",
   "Saturday": "Sâmbătă",
-  "Sunday": "Duminică"
+  "Sunday": "Duminică",
+  "loading_orders": "Se încarcă comenzi",
+  "show_more_orders": "Afișează mai multe comenzi"
 }
