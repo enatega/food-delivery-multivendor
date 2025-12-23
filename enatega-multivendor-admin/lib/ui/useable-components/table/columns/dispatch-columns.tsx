@@ -412,7 +412,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
 
         // CHANGE 3: Disable status changes for delivered orders
         const isDelivered = rowData.orderStatus === 'DELIVERED';
-
+        const isRiderMissing = !rowData.rider && !rowData.isPickedUp;
         return (
           <>
             <Dropdown
@@ -425,7 +425,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                 isStatusUpdating.bool && isStatusUpdating._id === rowData._id
               }
               className="outline outline-1 outline-gray-300"
-              disabled={isDelivered} // CHANGE 5: Disable dropdown if delivered
+              disabled={isDelivered || isRiderMissing} // CHANGE 5: Disable dropdown if delivered
             />
           </>
         );
