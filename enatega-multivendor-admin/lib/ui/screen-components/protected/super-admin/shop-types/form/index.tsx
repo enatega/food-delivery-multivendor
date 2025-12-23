@@ -152,11 +152,11 @@ export default function ShopTypesForm({
         setIsEditing({
           bool: false,
           data: {
-            __typename: ' ',
+            __typename: '',
             _id: '',
-            name: ' ',
+            name: '',
             isActive: false,
-            image: ' ',
+            image: '',
           },
         });
       }}

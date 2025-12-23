@@ -29,7 +29,7 @@ export default function CouponsScreen() {
     setIsEditing({
       bool: false,
       data: {
-        __typename: ' ',
+        __typename: '',
         _id: '',
         isActive: false,
         image: '',

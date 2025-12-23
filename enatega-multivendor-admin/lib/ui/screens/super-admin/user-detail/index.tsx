@@ -47,9 +47,6 @@ const UserDetailScreen: React.FC<UserDetailScreenProps> = ({ userId }) => {
   // Fetch order history
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10); // Number of orders per page
-
-  console.log('GET_ORDERS_BY_USER:', GET_ORDERS_BY_USER);
-
   const {
     data: ordersData,
     loading: ordersLoading,
