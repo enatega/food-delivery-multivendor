@@ -9,7 +9,8 @@ import flexibleHours from "@/public/assets/images/png/flexibleHours.webp"
 import Banner2 from "@/public/assets/images/png/Banner2.webp"
 import { useTranslations } from "next-intl";
 
-import reachNewCustomersImg from "@/public/assets/images/png/reachNewCustomers.jpg"
+// import reachNewCustomersImg from "@/public/assets/images/png/reachNewCustomers.jpg"
+import becomeEnategaRider from "@/lib/assets/we_do_heavy_lifting.png";
 
 const Couriers: React.FC = () => {
   const t = useTranslations();
@@ -48,7 +49,7 @@ const Couriers: React.FC = () => {
 
       <TinyTiles
         image={
-          reachNewCustomersImg.src
+          becomeEnategaRider.src
         }
         heading={t('RidersInfoCards.TinyTile.heading')}
         buttonText={t('RidersInfoCards.TinyTile.subText')}
