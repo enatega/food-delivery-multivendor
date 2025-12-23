@@ -35,7 +35,6 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     errorInput: {
-      backgroundColor: props !== null ? props?.errorInputBack : '#F7E7E5',
       borderColor: props !== null ? props?.errorInputBorder : '#DB4A39'
     },
     btn: {
@@ -59,7 +58,10 @@ const styles = (props = null) =>
       borderRadius: scale(6)
     },
     headerLeftIcon: {
-      ...alignment.PLsmall
+      ...alignment.MLsmall,
+      ...alignment.Psmall,
+      backgroundColor: props !== null ? props?.colorBgTertiary : '#F4F4F5',
+      borderRadius: scale(50)
     },
     headerRightIcon: {
       ...alignment.PRsmall

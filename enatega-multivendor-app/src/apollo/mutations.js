@@ -417,9 +417,79 @@ export const createActivity = `
 `
 
 export const VERIFY_OTP = gql`
- mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
+  mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
     verifyOtp(otp: $otp, email: $email, phone: $phone) {
-        result
+      result
     }
-}
+  }
+`
+
+export const loginWithPhoneFirstStep = gql`
+  mutation LoginWithPhoneFirstStep($phone: String) {
+    loginWithPhoneFirstStep(phone: $phone) {
+      result
+      message
+    }
+  }
+`
+
+export const loginWithPhoneFinalStep = gql`
+  mutation LoginWithPhoneFinalStep($otp: String!, $phone: String!) {
+    loginWithPhoneFinalStep(otp: $otp, phone: $phone) {
+      userId
+      token
+      tokenExpiration
+      name
+      phone
+      phoneIsVerified
+      email
+      emailIsVerified
+      picture
+      addresses {
+        location {
+          coordinates
+        }
+        deliveryAddress
+      }
+      isNewUser
+      userTypeId
+      onboarding
+      isActive
+    }
+  }
+`
+
+export const onBoardingComplete = gql`
+  mutation OnBoardingComplete($name: String) {
+    onBoardingComplete(name: $name) {
+      _id
+      name
+      email
+      phone
+      isActive
+      userType
+      phoneIsVerified
+      emailIsVerified
+      password
+      status
+      lastLogin
+      isOrderNotification
+      isOfferNotification
+      createdAt
+      updatedAt
+      addresses {
+        _id
+        location {
+          coordinates
+        }
+        deliveryAddress
+        details
+        label
+        selected
+      }
+      notificationToken
+      favourite
+      notes
+    }
+  }
 `

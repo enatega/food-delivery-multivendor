@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { decodeJwtToken } from '../../utils/decode-jwt'
+import ContinueWithPhoneButton from '../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
 
 const { height } = Dimensions.get('window')
 
@@ -48,7 +49,7 @@ const CreateAccount = (props) => {
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
         buttonStyle={themeContext.ThemeValue === 'Dark' ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-        cornerRadius={scale(20)}
+        cornerRadius={scale(8)}
         style={styles().appleBtn}
         onPress={async () => {
           try {
@@ -102,20 +103,12 @@ const CreateAccount = (props) => {
     />
   )
 
-  const renderGuestButton = () => (
-    <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).guestButton} onPress={() => navigation.navigate('Discovery')} disabled={props.loadingIcon}>
-      {props.loadingIcon ? (
-        <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
-      ) : (
-        <TextDefault H4 textColor={currentTheme.primary} center bold>
-          {t('continueAsGuest')}
-        </TextDefault>
-      )}
-    </TouchableOpacity>
-  )
-
   const { isConnected: connect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
+
+  const handleContinueWithPhoneButton = () => {
+    navigation.navigate('PhoneAuth')
+  }
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
@@ -124,14 +117,15 @@ const CreateAccount = (props) => {
       <View style={styles().mainContainer}>
         {/* GIF Section */}
         <View style={styles().gifContainer}>
-          <Image source={require('../../assets/gifs/login.gif')} style={styles().gifImage} resizeMode='cover' />
+          <Image source={require('../../assets/images/CreateAccountImage.png')} style={styles().gifImage} resizeMode='contain' />
+          <Image source={require('../../assets/images/Fast.png')} style={{ width: 120, height: 40, marginTop: alignment.MTsmall }} resizeMode='contain' />
         </View>
 
         {/* Content Section */}
-        <View styl>
+        <View>
           {/* Welcome Text */}
           <View style={styles().welcomeSection}>
-            <TextDefault H1 bolder center textColor={currentTheme.newFontcolor} style={styles(currentTheme).mainTitle}>
+            <TextDefault H2 bolder center textColor={currentTheme.newFontcolor} style={styles(currentTheme).mainTitle}>
               {t('welcomeText')}
             </TextDefault>
             <TextDefault center H5 textColor={currentTheme.newFontcolor} style={styles().subTitle}>
@@ -144,7 +138,7 @@ const CreateAccount = (props) => {
             {renderGoogleAction()}
             {Platform.OS === 'ios' && enableApple && renderAppleAction()}
             {renderEmailAction()}
-            {renderGuestButton()}
+            {ContinueWithPhoneButton({ title: 'continueWithPhone', onPress: handleContinueWithPhoneButton, isLoading: props?.loadingIcon })}
           </View>
         </View>
       </View>

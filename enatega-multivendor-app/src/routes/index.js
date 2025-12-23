@@ -6,6 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
 import Login from '../screens/Login/Login'
+import PhoneAuth from '../screens/Login/ContinueWithPhone/screens/PhoneAuth/PhoneAuth'
+import VerifyPhoneNumber from '../screens/Login/ContinueWithPhone/screens/PhoneAuth/VerifyPhoneNumber'
+import OnBoarding from '../screens/Login/ContinueWithPhone/screens/PhoneAuth/Onboarding'
 import Register from '../screens/Register/Register'
 import ForgotPassword from '../screens/ForgotPassword/ForgotPassword'
 import SetYourPassword from '../screens/ForgotPassword/SetYourPassword'
@@ -163,6 +166,9 @@ function MainNavigator() {
       {/* Authentication Login */}
       <NavigationStack.Screen name='CreateAccount' component={CreateAccount} />
       <NavigationStack.Screen name='Login' component={Login} />
+      <NavigationStack.Screen name='PhoneAuth' component={PhoneAuth} />
+      <NavigationStack.Screen name='VerifyPhoneNumber' component={VerifyPhoneNumber} />
+      <NavigationStack.Screen name='OnBoarding' component={OnBoarding} />
       <NavigationStack.Screen name='Register' component={Register} />
       <NavigationStack.Screen name='PhoneNumber' component={PhoneNumber} />
       <NavigationStack.Screen name='ForgotPassword' component={ForgotPassword} />

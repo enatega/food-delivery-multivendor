@@ -39,6 +39,7 @@ export const useForgotPasswordOtp = () => {
       FlashMessage({
         message: error.graphQLErrors[0].message
       })
+      setOtpError(true)
     }
   }
 
@@ -47,7 +48,9 @@ export const useForgotPasswordOtp = () => {
     onError
   })
 
-  const [verifyOTP] = useMutation(VERIFY_OTP)
+  const [verifyOTP] = useMutation(VERIFY_OTP, {
+    onError
+  })
 
   
   const onCodeFilled = async (code) => {    

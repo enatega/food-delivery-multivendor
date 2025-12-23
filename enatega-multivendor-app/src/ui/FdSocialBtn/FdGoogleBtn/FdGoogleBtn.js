@@ -18,7 +18,7 @@ const FdGoogleBtn = props => {
 
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      activeOpacity={0.6}
       style={styles(currentTheme).mainContainer}
       onPressIn={props?.onPressIn}
       onPress={props?.onPress}>

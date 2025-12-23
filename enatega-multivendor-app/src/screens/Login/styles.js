@@ -93,11 +93,18 @@ const styles = (props = null) =>
       borderRadius: scale(28),
       textAlign:'center'
     },
-    headerLeftIcon: {
-      ...alignment.PLsmall
+      headerLeftIcon: {
+      ...alignment.MLsmall,
+      ...alignment.Psmall,
+      backgroundColor: props !== null ? props?.colorBgTertiary : '#F4F4F5',
+      borderRadius: scale(50)
     },
     headerRightIcon: {
       ...alignment.PRsmall
-    }
+    },
+    btnContainer: {
+      width: '100%',
+      marginTop: scale(5)
+    },
   })
 export default styles
