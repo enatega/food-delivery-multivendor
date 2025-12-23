@@ -915,5 +915,7 @@
   "Thursday": "गुरुवार",
   "Friday": "शुक्रवार",
   "Saturday": "शनिवार",
-  "Sunday": "रविवार"
+  "Sunday": "रविवार",
+  "loading_orders": "ऑर्डर लोड करत आहे...",
+  "show_more_orders": "अधिक ऑर्डर दाखवा"
 }

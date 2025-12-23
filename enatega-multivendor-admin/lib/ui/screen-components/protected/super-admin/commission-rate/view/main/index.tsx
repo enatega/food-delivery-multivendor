@@ -1,5 +1,5 @@
 // GraphQL API imports
-import { GET_RESTAURANTS, updateCommission } from '@/lib/api/graphql';
+import { GET_COMMISSION_RATES_PAGINATED, updateCommission } from '@/lib/api/graphql';
 
 // Context imports
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -10,10 +10,10 @@ import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import Table from '@/lib/ui/useable-components/table';
 
 // Utility functions
-import { generateDummyCommissionRates } from '@/lib/utils/dummy';
+// import { generateDummyCommissionRates } from '@/lib/utils/dummy';
 
 // Type definitions
-import { IQueryResult, IRestaurantResponse } from '@/lib/utils/interfaces';
+import { IQueryResult, ICommissionRateRestaurantResponse, IPaginationCommissionRateVars } from '@/lib/utils/interfaces';
 
 // Apollo Client hooks
 import { useMutation } from '@apollo/client';
@@ -28,8 +28,14 @@ import CommissionRateHeader from '../header/table-header';
 import { useTranslations } from 'next-intl';
 import { COMMISSION_RATE_COLUMNS } from '@/lib/ui/useable-components/table/columns/comission-rate-columns';
 
-interface RestaurantsData {
-  restaurants: IRestaurantResponse[];
+interface CommissionRateData {
+  commissionRate: {
+    restaurant: ICommissionRateRestaurantResponse[];
+    currentPage: number;
+    totalPages: number;
+    nextPage: boolean;
+    prevPage: boolean;
+  };
 }
 
 export default function CommissionRateMain() {
@@ -37,33 +43,39 @@ export default function CommissionRateMain() {
   const t = useTranslations();
 
   // States
-  const [restaurants, setRestaurants] = useState<IRestaurantResponse[]>([]);
+  const [restaurants, setRestaurants] = useState<ICommissionRateRestaurantResponse[] | null>(null);
   const [editingRestaurantIds, setEditingRestaurantIds] = useState<Set<string>>(
     new Set()
   );
   const [selectedRestaurants, setSelectedRestaurants] = useState<
-    IRestaurantResponse[]
+    ICommissionRateRestaurantResponse[]
   >([]);
   const [loadingRestaurant, setLoadingRestaurant] = useState<string | null>(
     null
   );
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Context
   const { showToast } = useContext(ToastContext);
 
   // Query
-  const { data, error, refetch, loading } = useQueryGQL(GET_RESTAURANTS, {
-    fetchPolicy: 'network-only',
-  }) as IQueryResult<RestaurantsData | undefined, undefined>;
+  const { data, error, refetch, loading } = useQueryGQL(
+    GET_COMMISSION_RATES_PAGINATED,
+    { page: currentPage, limit: rowsPerPage },
+    {
+      fetchPolicy: 'network-only',
+    }
+  ) as IQueryResult<CommissionRateData | undefined, IPaginationCommissionRateVars>;
 
   // Mutation
   const [updateCommissionMutation] = useMutation(updateCommission);
 
   // Handlers
   const handleSave = async (restaurantId: string) => {
-    const restaurant = restaurants.find((r) => r._id === restaurantId);
+    const restaurant = restaurants?.find((r) => r._id === restaurantId);
     if (!restaurant?.commissionRate) {
       return showToast({
         type: 'error',
@@ -117,11 +129,13 @@ export default function CommissionRateMain() {
 
   const handleCommissionRateChange = (restaurantId: string, value: number) => {
     setRestaurants((prevRestaurants) =>
-      prevRestaurants.map((restaurant) =>
-        restaurant._id === restaurantId
-          ? { ...restaurant, commissionRate: value }
-          : restaurant
-      )
+      prevRestaurants
+        ? prevRestaurants.map((restaurant) =>
+          restaurant._id === restaurantId
+            ? { ...restaurant, commissionRate: value }
+            : restaurant
+        )
+        : null
     );
     setEditingRestaurantIds((prev) => {
       const newSet = new Set(prev);
@@ -131,6 +145,7 @@ export default function CommissionRateMain() {
   };
 
   const getFilteredRestaurants = () => {
+    if (!restaurants) return [];
     return restaurants.filter((restaurant) => {
       const nameMatches = restaurant.name
         .toLowerCase()
@@ -169,15 +184,8 @@ export default function CommissionRateMain() {
 
   // Use Effects
   useEffect(() => {
-    if (data?.restaurants) {
-      let updatedRestaurants = data.restaurants.map((v) => {
-        let obj = { ...v };
-        console.log(v.commissionRate);
-        // if (v.commissionRate === null) obj['commissionRate'] = 25;
-
-        return obj;
-      });
-      setRestaurants(updatedRestaurants);
+    if (data?.commissionRate?.restaurant) {
+      setRestaurants(data.commissionRate.restaurant);
     } else if (error) {
       showToast({
         type: 'error',
@@ -194,7 +202,7 @@ export default function CommissionRateMain() {
     <div className="p-3">
       <Table
         data={
-          loading ? generateDummyCommissionRates() : getFilteredRestaurants()
+          (loading || restaurants === null) ? [] : getFilteredRestaurants()
         }
         setSelectedData={setSelectedRestaurants}
         selectedData={selectedRestaurants}
@@ -203,7 +211,14 @@ export default function CommissionRateMain() {
           handleCommissionRateChange,
           loadingRestaurant,
         })}
-        loading={loading}
+        loading={loading || restaurants === null}
+        currentPage={currentPage}
+        rowsPerPage={rowsPerPage}
+        totalRecords={(data?.commissionRate?.totalPages || 0) * rowsPerPage} // Approximation if totalCount missing
+        onPageChange={(page, rows) => {
+          setCurrentPage(page);
+          setRowsPerPage(rows);
+        }}
         header={
           <CommissionRateHeader
             selectedActions={selectedActions}

@@ -17,10 +17,35 @@ export const GET_RESTAURANTS_DROPDOWN = gql`
   }
 `;
 
+//commission rate pagination query
+//apply pagination on this query
+//search
+// shopType
+// totalCount
+// currentPage
+// totalPages
+export const GET_COMMISSION_RATES_PAGINATED = gql`
+  query CommissionRate($page: Int, $limit: Int) {
+    commissionRate(page: $page, limit: $limit) {
+      restaurant {
+        _id
+        unique_restaurant_id
+        orderId
+        orderPrefix
+        name
+        commissionRate
+      }
+      currentPage
+      totalPages
+      nextPage
+      prevPage
+    }
+  }
+`;
+
 //apply pagination on this query
 export const GET_RESTAURANTS = gql`
   query restaurants {
-  
     restaurants {
       unique_restaurant_id
       _id

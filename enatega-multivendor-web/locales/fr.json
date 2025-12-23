@@ -840,5 +840,7 @@
   "active_orders_message": "Vous avez actuellement {{count}} {{orderText}} active(s). Vous ne pouvez supprimer votre compte qu'une fois toutes vos commandes terminées.",
   "order": "commande",
   "orders": "commandes",
-  "ok": "OK"
+  "ok": "OK",
+   "loading_orders": "Chargement des commandes",
+  "show_more_orders": "Afficher plus de commandes"
 }
