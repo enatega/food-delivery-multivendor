@@ -35,7 +35,7 @@ export const usePhoneAuth = () => {
 
   const [mutateLoginWithPhoneFirstStep, { data: loginWithPhoneFirstStepData, loading: loginWithPhoneFirstStepLoading, error: loginWithPhoneFirstStepError }] = useMutation(loginWithPhoneFirstStep, {
     onCompleted: loginWithPhoneFirstStepOnCompleted,
-    onError: loginWithPhoneFirstStepOnError
+    onError
   })
 
   const [mutateloginWithPhoneFinalStep, { data: loginWithPhoneFinalStepData, loading: loginWithPhoneFinalStepLoading, error: loginWithPhoneFinalStepError }] = useMutation(loginWithPhoneFinalStep, {
@@ -45,7 +45,7 @@ export const usePhoneAuth = () => {
 
   const [mutateonBoardingComplete, { data: onBoardingCompleteData, loading: onBoardingCompleteLoading, error: onBoardingCompleteError }] = useMutation(onBoardingComplete, {
     onCompleted: onBoardingCompleteOnCompleted,
-    onError: onBoardingCompleteOnError
+    onError
   })
 
   const onCountrySelect = (country) => {
@@ -165,27 +165,16 @@ export const usePhoneAuth = () => {
     }
   }
 
-  function loginWithPhoneFirstStepOnError(error) {
-    console.log('onError')
+  function onError(error) {
     FlashMessage({
       message: error.graphQLErrors[0].message
     })
   }
 
   function loginWithPhoneFinalStepOnError(error) {
-    // console.log('onError')
-    // FlashMessage({
-    //   message: error.graphQLErrors[0].message
-    // })
     if (error.graphQLErrors[0].message === 'Invalid OTP') {
       setOtpError('The code you entered is incorrect.')
     }
-  }
-
-  function onBoardingCompleteOnError(error) {
-    FlashMessage({
-      message: error.graphQLErrors[0].message
-    })
   }
 
   function loginWithPhoneFirstStepResend(phoneNumber) {
