@@ -1,10 +1,11 @@
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import React from 'react'
-
+import styles from './Styles'
+import sliderImg1 from '../../assets/images/sliderImg1.png'
 const HomeBanner = () => {
   return (
-    <View>
-      <Text>HomeBanner</Text>
+    <View style={styles.sliderContainer}>
+      <Image source={sliderImg1} style={styles.image} />
     </View>
   )
 }
