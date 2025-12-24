@@ -5,13 +5,11 @@ import { AntDesign } from '@expo/vector-icons'
 const navigationOptions = props => {
   return {
     title: null,
-    // eslint-disable-next-line react/display-name
     headerRight: null,
-    // eslint-disable-next-line react/display-name
     headerLeft: () => (
       <AntDesign
         onPress={() => props?.navigation.goBack()}
-        name="arrowleft"
+        name='arrowleft'
         size={24}
         color={props?.iconColor}
         style={styles().headerLeftIcon}

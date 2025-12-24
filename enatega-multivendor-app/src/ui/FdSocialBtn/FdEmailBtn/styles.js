@@ -6,16 +6,14 @@ const { height } = Dimensions.get('window')
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      width: '90%',
+      width: '100%',
       alignSelf: 'center',
-      height: height * 0.07,
+      height: height * 0.06,
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      backgroundColor: 'transparent',
+      backgroundColor: props !== null ? props?.colorBgSecondary : '##CCE9F5',
       justifyContent: 'center',
-      borderRadius: scale(28),
-      borderWidth: scale(1),
-      borderColor: props !== null ? props?.newIconColor : '#9B9A9A',
+      borderRadius: scale(8),
       gap: scale(15)
     }
   })

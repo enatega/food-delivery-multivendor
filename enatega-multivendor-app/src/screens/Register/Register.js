@@ -1,20 +1,11 @@
-import React, { useLayoutEffect } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
-  TextInput,
-  Text,
-  ActivityIndicator
-} from 'react-native'
+import React, { useLayoutEffect, useState } from 'react'
+import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, TextInput, Text, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
-import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
+import { Entypo, FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import CountryPicker from 'react-native-country-picker-modal'
 import useRegister from './useRegister'
 import { useTranslation } from 'react-i18next'
@@ -23,37 +14,17 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import { scale } from '../../utils/scaling'
 import { I18nManager } from 'react-native'
 import PhoneNumberInput from '../../components/PhoneNumberInput'
+import Auth from '../../assets/SVG/imageComponents/Auth'
+import RegisterSvg from '../../assets/SVG/imageComponents/RegisterSvg'
+import ContinueWithPhoneButton from '../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
+import VerifyOtp from '../../assets/SVG/imageComponents/VerifyOtp'
 
 function Register(props) {
-  const {
-    email,
-    setEmail,
-    emailError,
-    firstname,
-    setFirstname,
-    firstnameError,
-    lastname,
-    setLastname,
-    lastnameError,
-    password,
-    setPassword,
-    passwordError,
-    phone,
-    setPhone,
-    phoneError,
-    showPassword,
-    setShowPassword,
-    country,
-    countryCode,
-    registerAction,
-    onCountrySelect,
-    currentTheme,
-    setPhoneError,
-    isCountryLoading
-  } = useRegister()
+  const { email, setEmail, emailError, firstname, setFirstname, firstnameError, lastname, setLastname, lastnameError, password, setPassword, passwordError, phone, setPhone, phoneError, showPassword, setShowPassword, country, countryCode, registerAction, onCountrySelect, currentTheme, setPhoneError, isCountryLoading } = useRegister()
 
   const { t } = useTranslation()
   const headerHeight = useHeaderHeight()
+  const [showCountryPicker, setShowCountryPicker] = useState(false)
   useLayoutEffect(() => {
     props?.navigation.setOptions(
       screenOptions({
@@ -65,31 +36,13 @@ function Register(props) {
     )
   }, [props?.navigation])
 
-
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles().flex}
-        keyboardVerticalOffset={headerHeight}
-      >
-        <ScrollView
-          style={styles().flex}
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
-          alwaysBounceVertical={false}
-        >
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles().flex} keyboardVerticalOffset={headerHeight}>
+        <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
-              <View>
-                <SignUpSvg
-                  fillColor={currentTheme.svgFill}
-                  strokeColor={currentTheme.newIconColor}
-                />
-              </View>
+              <RegisterSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
               <View>
                 <TextDefault
                   H2
@@ -103,188 +56,98 @@ function Register(props) {
                 >
                   {t('letsGetStarted')}
                 </TextDefault>
-                <TextDefault
-                  H5
-                  bold
-                  textColor={currentTheme.fontSecondColor}
-                  style={{ ...alignment.PBmedium }}
-                  isRTL
-                >
+                <TextDefault H5 bold textColor={currentTheme.fontSecondColor} style={{ ...alignment.PBmedium }} isRTL>
                   {t('createAccountFirst')}
                 </TextDefault>
               </View>
               <View style={styles().form}>
                 <View>
-                  <TextInput
-                    placeholder={t('email')}
-                    style={[
-                      styles(currentTheme).textField,
-                      emailError && styles(currentTheme).errorInput
-                    ]}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={email}
-                    onChangeText={(e) => setEmail(e)}
-                  />
+                  <TextInput placeholder={t('email')} style={[styles(currentTheme).textField, emailError && styles(currentTheme).errorInput]} placeholderTextColor={currentTheme.fontSecondColor} value={email} onChangeText={(e) => setEmail(e)} />
                   {emailError && (
-                    <TextDefault
-                      style={styles().error}
-                      bold
-                      textColor={currentTheme.textErrorColor}
-                      isRTL
-                    >
+                    <TextDefault style={styles().error} bold textColor={currentTheme.textErrorColor} isRTL>
                       {emailError}
                     </TextDefault>
                   )}
                 </View>
                 <View>
-                  <TextInput
-                    placeholder={t('firstNamePH')}
-                    style={[
-                      styles(currentTheme).textField,
-                      firstnameError && styles(currentTheme).errorInput
-                    ]}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={firstname}
-                    onChangeText={(e) => setFirstname(e)}
-                  />
+                  <TextInput placeholder={t('firstNamePH')} style={[styles(currentTheme).textField, firstnameError && styles(currentTheme).errorInput]} placeholderTextColor={currentTheme.fontSecondColor} value={firstname} onChangeText={(e) => setFirstname(e)} />
                   {firstnameError && (
-                    <TextDefault
-                      style={styles().error}
-                      bold
-                      textColor={currentTheme.textErrorColor}
-                      isRTL
-                    >
+                    <TextDefault style={styles().error} bold textColor={currentTheme.textErrorColor} isRTL>
                       {firstnameError}
                     </TextDefault>
                   )}
                 </View>
                 <View>
-                  <TextInput
-                    placeholder={t('lastNamePH')}
-                    style={[
-                      styles(currentTheme).textField,
-                      lastnameError && styles(currentTheme).errorInput
-                    ]}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={lastname}
-                    onChangeText={(e) => setLastname(e)}
-                  />
+                  <TextInput placeholder={t('lastNamePH')} style={[styles(currentTheme).textField, lastnameError && styles(currentTheme).errorInput]} placeholderTextColor={currentTheme.fontSecondColor} value={lastname} onChangeText={(e) => setLastname(e)} />
                   {lastnameError && (
-                    <TextDefault
-                      style={styles().error}
-                      bold
-                      textColor={currentTheme.textErrorColor}
-                      isRTL
-                    >
+                    <TextDefault style={styles().error} bold textColor={currentTheme.textErrorColor} isRTL>
                       {lastnameError}
                     </TextDefault>
                   )}
                 </View>
                 <View style={styles(currentTheme).passwordField}>
-                  <TextInput
-                    secureTextEntry={showPassword}
-                    placeholder={t('password')}
-                    style={[
-                      styles(currentTheme).textField,
-                      styles().passwordInput,
-                      passwordError && styles(currentTheme).errorInput
-                    ]}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={password}
-                    onChangeText={(e) => setPassword(e)}
-                  />
+                  <TextInput secureTextEntry={showPassword} placeholder={t('password')} style={[styles(currentTheme).textField, styles().passwordInput, passwordError && styles(currentTheme).errorInput]} placeholderTextColor={currentTheme.fontSecondColor} value={password} onChangeText={(e) => setPassword(e)} />
                   <View>
-                    <FontAwesome
-                      onPress={() => setShowPassword(!showPassword)}
-                      name={showPassword ? 'eye' : 'eye-slash'}
-                      size={24}
-                      color={currentTheme.fontFourthColor}
-                      style={styles(currentTheme).eyeBtn}
-                    />
+                    <FontAwesome onPress={() => setShowPassword(!showPassword)} name={showPassword ? 'eye' : 'eye-slash'} size={24} color={currentTheme.fontFourthColor} style={styles(currentTheme).eyeBtn} />
                   </View>
                 </View>
                 {passwordError && (
                   <View>
-                    <TextDefault
-                      style={styles().error}
-                      bold
-                      textColor={currentTheme.textErrorColor}
-                      isRTL
-                    >
+                    <TextDefault style={styles().error} bold textColor={currentTheme.textErrorColor} isRTL>
                       {passwordError}
                     </TextDefault>
                   </View>
                 )}
-                <View style={styles(currentTheme).number}>
-                  <View
-                    style={[
-                      styles(currentTheme).textField,
-                      styles(currentTheme).countryCode,
-                      { padding: Platform.OS === 'ios' ? scale(5) : scale(12) }
-                    ]}
-                  >
-
-                    {
-                      isCountryLoading ?
-
-                        <ActivityIndicator size='small' color={currentTheme.white} />
-                        :
-                        <>
-                          <CountryPicker
-                            countryCode={countryCode}
-                            onSelect={(country) => onCountrySelect(country)}
-                            withAlphaFilter
-                            withFilter
-                          />
-                          <TextDefault
-                            textColor={currentTheme.newFontcolor}
-                            style={{ marginTop: Platform.OS === 'android' ? 7 : 10 }}
-                            isRTL
-                          >
-                            {/* {country?.cca2} */}+{country?.callingCode[0]}
-                          </TextDefault>
-                        </>
-
-
-                    }
-                  </View>
-                  <View
-                    style={[
-                      styles(currentTheme).textField,
-                      styles(currentTheme).phoneNumber,
-                      phoneError && styles(currentTheme).errorInput,
-                      { padding: scale(0) }
-                    ]}
-                  >
-                    <View style={styles().phoneFieldInner}>
-                      <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.fontSecondColor} style={styles(currentTheme).phoneField} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
-                    </View>
-                  </View>
+                <View style={[styles(currentTheme).numberContainer, phoneError && styles(currentTheme).errorInput, { padding: scale(0), borderRadius: scale(8), borderWidth: scale(1), borderColor: currentTheme.borderColor }]}>
+                  <TouchableOpacity style={styles(currentTheme).countryCodeContainer} onPress={() => setShowCountryPicker(true)} activeOpacity={0.7}>
+                    {isCountryLoading ? (
+                      <ActivityIndicator size='small' color={currentTheme.newFontcolor} />
+                    ) : (
+                      <View style={styles(currentTheme).countryCodeInner}>
+                        <TextDefault H5 textColor={currentTheme.newFontcolor} style={styles(currentTheme).countryCodeText}>
+                          +{country?.callingCode[0]}
+                        </TextDefault>
+                        <Entypo name='chevron-small-down' size={22} color={currentTheme.newIconColor} />
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                  <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.fontSecondColor} style={styles(currentTheme).phoneField} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
                 </View>
+
                 {phoneError && (
                   <View style={{ marginLeft: '30%' }}>
-                    <TextDefault
-                      style={styles(currentTheme).error}
-                      bold
-                      textColor={currentTheme.textErrorColor}
-                      isRTL
-                    >
+                    <TextDefault style={styles(currentTheme).error} bold textColor={currentTheme.textErrorColor} isRTL>
                       {phoneError}
                     </TextDefault>
                   </View>
                 )}
               </View>
             </View>
+
+            <CountryPicker
+              visible={showCountryPicker}
+              withFilter
+              withFlag
+              withAlphaFilter
+              withCallingCode
+              withEmoji
+              onClose={() => setShowCountryPicker(false)}
+              onSelect={(country) => {
+                onCountrySelect(country)
+                setShowCountryPicker(false)
+              }}
+              countryCode={countryCode}
+              containerButtonStyle={{ display: 'none' }}
+              theme={{
+                backgroundColor: currentTheme.themeBackground,
+                primaryColor: currentTheme.newFontcolor,
+                primaryColorVariant: currentTheme.newIconColor,
+                onBackgroundTextColor: currentTheme.newFontcolor
+              }}
+            />
+
             <View style={styles().btnContainer}>
-              <TouchableOpacity
-                onPress={() => registerAction()}
-                activeOpacity={0.7}
-                style={styles(currentTheme).btn}
-              >
-                <TextDefault H4 textColor={currentTheme.black} bold>
-                  {t('getRegistered')}
-                </TextDefault>
-              </TouchableOpacity>
+              <ContinueWithPhoneButton title='continueBtn' onPress={() => registerAction()} />
             </View>
           </View>
         </ScrollView>
