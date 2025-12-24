@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 const useVendorModeStore = create((set) => ({
-  vendorMode: 'MULTI', // or 'MULTI'
+  vendorMode: 'SINGLE', // or 'MULTI'
   setVendorMode: (mode) => set({ vendorMode: mode }),
 }));
 

@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     alignSelf: 'center',
     borderRadius: 10,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    marginTop: 10
   }
 })
 
