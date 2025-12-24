@@ -28,13 +28,14 @@ export default HorizontalProductsEmptyView
 const styles = (currentTheme) =>
   StyleSheet.create({
     emptyView: {
-      width: '100%',
+      minWidth: '90%',
+      maxHeight:'100%',
       height: 180,
       backgroundColor: '#E0F2FE',
       borderWidth: 1,
       borderColor: '#0EA5E9',
       borderRadius: 10,
-      marginHorizontal: 20,
+      // marginHorizontal: 20,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
