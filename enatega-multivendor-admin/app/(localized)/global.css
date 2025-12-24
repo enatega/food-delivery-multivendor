@@ -915,6 +915,7 @@ body {
 
 .dark .p-fieldset {
   border: 1px dashed var(--dark-600);
+  background-color: var(--dark-900);
 }
 
 .p-fieldset-legend {
