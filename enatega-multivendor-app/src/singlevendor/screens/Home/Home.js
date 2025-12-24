@@ -1,20 +1,18 @@
-import { View, Text, Image, ScrollView } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
-
-
-import HorizontalProductsList from '../../components/HorizontalProductsList'
 import HorizontalCategoriesList from '../../components/HorizontalCategoriesList'
-
-import { drinksData, categoriesData } from '../../assets/dummyData'
 import HomeBanner from '../../components/Home/HomeBanner'
+import useHome from './useHome'
+import WrapperHorizontalProductsList from '../../components/WrapperHorizontalProductsList'
+import { FlatList } from 'react-native-gesture-handler'
 
 const Home = () => {
+  const { data } = useHome()
+  const categoriesData = data?.getRestaurantCategoriesSingleVendor
   return (
-    <ScrollView>
-      <HomeBanner></HomeBanner>
-      <HorizontalProductsList listTitle='Drinks' ListData={drinksData} />
-      <HorizontalCategoriesList categoriesData={categoriesData} />
-    </ScrollView>
+    <View>
+      <FlatList data={categoriesData} renderItem={({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />} keyExtractor={(item) => item.id} ListHeaderComponent={<HomeBanner />} ListFooterComponent={<HorizontalCategoriesList categoriesData={categoriesData} />} />
+    </View>
   )
 }
 

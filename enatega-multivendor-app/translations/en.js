@@ -673,4 +673,5 @@ export const en = {
   "Log in easily by entering your phone!": "Log in easily by entering your phone!",
   "The code you entered is incorrect.": "The code you entered is incorrect.",
   "Set new password": "Set new password",
+  "There is no items for this category": "There is no items for this category",
 }

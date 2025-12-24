@@ -10,12 +10,12 @@ const ProductCard = ({ product, onAddToCart ,onCardPress,containerStyles}) => {
     const themeContext = useContext(ThemeContext)
     const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
-    console.log("product card:",product?.image)
+    console.log("product card:",product)
 
     return (
         <Pressable onPress={onCardPress} style={[styles(currentTheme).card,containerStyles]}>
             <ImageBackground 
-                source={{uri:product?.image}} 
+                source={{uri:typeof product?.image == 'number'?'':product?.image}} 
                 style={styles(currentTheme).imageContainer}
                 imageStyle={styles(currentTheme).productImage}
             >
