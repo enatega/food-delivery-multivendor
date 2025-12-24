@@ -150,6 +150,7 @@
   "error_checking_email": "An error occurred while checking the email.",
   "phone_check_error": "Phone Check Error",
   "phone_already_registered": "This phone number is already registered, please enter a different one.",
+  "email_already_registered": "This email address is already registered. Please use a different email or login to your existing account.",
   "error_checking_phone": "An error occurred while checking the phone.",
   "password_reset": "Password Reset",
   "password_reset_success": "Your password has been reset successfully.",

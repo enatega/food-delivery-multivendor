@@ -9,17 +9,14 @@ import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
 import CustomButton from "@/lib/ui/useable-components/button";
 import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
-import {
-  IEmailVerificationProps,
-
-} from "@/lib/utils/interfaces";
+import { IEmailVerificationProps } from "@/lib/utils/interfaces";
 
 export default function EmailVerification({
   handleChangePanel,
   emailOtp,
   setEmailOtp,
   formData,
-  setFormData
+  setFormData,
 }: IEmailVerificationProps) {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -32,14 +29,13 @@ export default function EmailVerification({
     setIsAuthModalVisible,
     setOtp: setStoredOtp,
     sendOtpToEmailAddress,
-    // sendOtpToPhoneNumber,
+    sendOtpToPhoneNumber,
     isLoading,
     handleCreateUser,
-    setIsRegistering
+    setIsRegistering,
   } = useAuth();
   const { showToast } = useToast();
   const { profile } = useUser();
-
 
   // Sync parent state with local OTP
   useEffect(() => {
@@ -111,53 +107,42 @@ export default function EmailVerification({
     });
 
     if (otpResponse.data?.verifyOtp.result && !!formData?.email) {
-      // if otp is verified then createuser also update it
+      // Create user with isPhoneExists flag if set in formData
       const userData = await handleCreateUser({
         email: formData?.email,
         phone: formData?.phone,
         name: formData?.name,
         password: formData?.password,
         emailIsVerified: true,
+        isPhoneExists: formData?.isPhoneExists || false,
       });
 
-
- 
       setStoredOtp("");
       setEmailOtp("");
 
-
-
-      // now check if phone number is verified after user creation
-      if (
-        userData?.phone && 
-        !userData?.phoneIsVerified
-      ) {
-        setIsRegistering(false)
-        handleChangePanel(4); // Go to phone verification panel
+      // Check if phone number needs verification after user creation
+      if (userData?.phone && !userData?.phoneIsVerified) {
+        setIsRegistering(false);
+        // Send OTP to phone number before redirecting to phone verification
+        await sendOtpToPhoneNumber(userData.phone);
+        handleChangePanel(6); // Go to phone verification panel (panel 6, not 4)
         return;
       }
-
-    
 
       showToast({
         type: "success",
         title: t("email_verification_label"),
         message: t("your_email_verified_successfully_message"),
       });
-      showToast({
-        type: "success",
-        title: t("register_label"),
-        message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
-      });
-      
+
       handleChangePanel(0);
       setIsAuthModalVisible(false);
       setFormData({
-        name : "",
-        email : "",
-        phone : "",
-        password : ""
-      })
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+      });
     } else {
       showToast({
         type: "error",

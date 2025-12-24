@@ -3,7 +3,11 @@ import { ChangeEvent, useContext } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMutation } from '@apollo/client';
 // GraphQL
-import { CREATE_SHOP_TYPE, GET_SHOP_TYPES, UPDATE_SHOP_TYPE } from '@/lib/api/graphql';
+import {
+  CREATE_SHOP_TYPE,
+  GET_SHOP_TYPES,
+  UPDATE_SHOP_TYPE,
+} from '@/lib/api/graphql';
 
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -30,12 +34,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { onErrorMessageMatcher } from '@/lib/utils/methods';
 
 // Constants
-import {
-  MAX_SQUARE_FILE_SIZE,
-  ShopTypeErrors,
-} from '@/lib/utils/constants';
-
-
+import { MAX_SQUARE_FILE_SIZE, ShopTypeErrors } from '@/lib/utils/constants';
 
 export default function ShopTypesForm({
   setVisible,
@@ -150,6 +149,16 @@ export default function ShopTypesForm({
       visible={visible}
       onHide={() => {
         setVisible(false);
+        setIsEditing({
+          bool: false,
+          data: {
+            __typename: '',
+            _id: '',
+            name: '',
+            isActive: false,
+            image: '',
+          },
+        });
       }}
       position="right"
       className="w-full sm:w-[450px] dark:text-white dark:bg-dark-950 border dark:border-dark-600"
@@ -157,6 +166,7 @@ export default function ShopTypesForm({
       <Formik
         initialValues={initialValues}
         validationSchema={ShopTypeFormSchema}
+        enableReinitialize={true}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
           let formData;
