@@ -1,3 +1,12 @@
+export const CATEGORIES = [
+  { id: 'all', title: 'All Items' },
+  { id: 'soft', title: 'Soft Drinks' },
+  { id: 'water', title: 'Water' },
+  { id: 'juice', title: 'Juices' },
+  { id: 'energy', title: 'Energy Drinks' },
+];
+
+
 export const SUB_CATEGORIES = [
   { id: 'all', title: 'All Items' },
   { id: 'soft', title: 'Soft Drinks' },

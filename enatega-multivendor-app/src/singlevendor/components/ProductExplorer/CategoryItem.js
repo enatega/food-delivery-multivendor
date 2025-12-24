@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Text, Pressable, StyleSheet } from 'react-native';
 
-const SubCategoryItem = ({ title, active, onPress }) => (
+const CategoryItem = ({ title, active, onPress }) => (
   <Pressable
     onPress={onPress}
     style={[styles.item, active && styles.activeItem]}
@@ -12,7 +12,7 @@ const SubCategoryItem = ({ title, active, onPress }) => (
   </Pressable>
 );
 
-export default memo(SubCategoryItem);
+export default memo(CategoryItem);
 
 const styles = StyleSheet.create({
   item: {
