@@ -18,6 +18,7 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
   const handleSeeAll = () => {
     // Handle see all action
     console.log(`See all ${listTitle.toLowerCase()}`)
+    navigation.navigate('ProductExplorer')
   }
 
   const handleAddToCart = (drink) => {
@@ -26,7 +27,7 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
   }
 
   const onProductPress = () => {
-    navigation.navigate('ProductExplorer')
+    
   }
 
   return (

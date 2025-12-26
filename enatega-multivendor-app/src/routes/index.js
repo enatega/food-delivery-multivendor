@@ -75,7 +75,6 @@ import ProductExplorer from '../singlevendor/components/ProductExplorer/ProductE
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
 
-
 function MainNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -189,7 +188,7 @@ function MainNavigator() {
       {/* <NavigationStack.Screen name='HypCheckout' component={HypCheckout} /> */}
 
       {/* Single Vendor Routes */}
-      <NavigationStack.Screen name='ProductExplorer' component={ProductExplorer} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='ProductExplorer' component={ProductExplorer} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     </NavigationStack.Navigator>
   )
 }
@@ -316,7 +315,7 @@ function AppContainer() {
   const init = async () => {
     try {
       const permission_state = await LocationImport.getForegroundPermissionsAsync()
-      console.log({permission_state})
+      console.log({ permission_state })
 
       setPermissionState(permission_state)
       setIsLoadingPermission(false)
