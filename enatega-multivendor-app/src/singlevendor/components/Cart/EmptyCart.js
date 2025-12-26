@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { scale } from '../../../utils/scaling';
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext';
 import { theme } from '../../../utils/themeColors';
@@ -18,7 +18,11 @@ const EmptyCart = ({ onStartShopping }) => {
   return (
     <View style={styles(currentTheme).container}>
       <View style={styles().imageContainer}>
-        <EmptyCartSVG width={scale(200)} height={scale(200)} />
+        {/* <EmptyCartSVG width={scale(200)} height={scale(200)} /> */}
+        <Image 
+          style={{ width: scale(200), height: scale(200) }}
+          source={require('../../../assets/images/emptycartnew.png')}
+        />
       </View>
       
       <View style={styles().descriptionContainer}>
@@ -47,8 +51,8 @@ const EmptyCart = ({ onStartShopping }) => {
         onPress={onStartShopping}
       >
         <TextDefault 
-          textColor={currentTheme.white} 
-          bolder 
+          textColor={currentTheme.headerMainFontColor} 
+          bold 
           H5
           center
         >
@@ -78,7 +82,7 @@ const styles = (currentTheme = null) =>
       alignItems: 'center'
     },
     button: {
-      backgroundColor: currentTheme ? currentTheme.primaryBlue : '#0EA5E9',
+      backgroundColor: currentTheme ? currentTheme.lightBlue : '#CCE9F5',
       paddingVertical: scale(14),
       paddingHorizontal: scale(40),
       borderRadius: scale(8),
