@@ -66,7 +66,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: '#000',
-    paddingVertical: 0 // Android alignment fix
+    paddingVertical: 0, // Android alignment fix
+    height:'100%'
   },
   tapContainer: {
     minWidth: '100%',

@@ -119,7 +119,7 @@ const ProductExplorer = () => {
             initialPage={0}
           >
             {categories.map((item, index) => (
-              <ProductPage category={categories[index]} pageIndex={index}></ProductPage>
+              <ProductPage key={index} category={categories[index]} pageIndex={index}></ProductPage>
             ))}
           </PagerView>
         </View>
