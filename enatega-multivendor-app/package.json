@@ -109,6 +109,7 @@
     "react-native-material-textfield": "^0.16.1",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-modalize": "^2.0.13",
+    "react-native-pager-view": "^8.0.0",
     "react-native-paper": "^5.8.0",
     "react-native-phone-number-input": "^2.1.0",
     "react-native-reanimated": "~3.17.4",
