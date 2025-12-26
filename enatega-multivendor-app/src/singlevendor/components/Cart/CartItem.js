@@ -65,7 +65,7 @@ const CartItem = ({
         >
           <TextDefault
             numberOfLines={1}
-            textColor={currentTheme.fontSecondColor}
+            textColor={currentTheme.fontMainColor}
             small
             isRTL
             style={styles().descriptionText}
@@ -76,7 +76,7 @@ const CartItem = ({
             <Feather
               name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}
               size={16}
-              color={currentTheme.fontSecondColor}
+              color={currentTheme.fontMainColor}
             />
           )}
         </TouchableOpacity>

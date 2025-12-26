@@ -16,8 +16,8 @@ const styles = (props = null) =>
       borderBottomWidth: 0
     },
     imageContainer: {
-      width: scale(80),
-      height: scale(80),
+      width: scale(56),
+      height: scale(49),
       backgroundColor: '#F9F9F9',
       borderRadius: scale(12),
       overflow: 'hidden',
@@ -35,7 +35,7 @@ const styles = (props = null) =>
     descriptionRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      marginTop: scale(4),
+      marginTop: scale(8),
       marginBottom: scale(8),
       gap: scale(6)
     },
@@ -46,7 +46,7 @@ const styles = (props = null) =>
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginTop: scale(4)
+      // marginTop: scale(6)
     },
     quantityControls: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
