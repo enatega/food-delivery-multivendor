@@ -9,7 +9,7 @@ export const mockCartItems = [
     title: 'Apple Juice',
     description: 'Golden Delicious Apples, Filter Water, Ascorbic Acid',
     image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=300&h=300&fit=crop',
-    price: 8.74,
+    price: 2.50,
     variationId: 'var-1',
     variationTitle: '1L',
     addons: ['Extra Ice', 'No Sugar'],
@@ -21,11 +21,23 @@ export const mockCartItems = [
     title: 'Orange Juice',
     description: 'Fresh squeezed oranges',
     image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=300&h=300&fit=crop',
-    price: 7.50,
+    price: 1.50,
     variationId: 'var-2',
     variationTitle: '500ml',
     addons: [],
     quantity: 1
+  },
+  {
+    key: 'cart-item-3',
+    id: 'product-3',
+    title: 'Mango Juice',
+    description: 'Fresh mangoes',
+    image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=300&h=300&fit=crop',
+    price: 1.00,
+    variationId: 'var-3',
+    variationTitle: '500ml',
+    addons: [],
+    quantity: 4
   }
 ];
 

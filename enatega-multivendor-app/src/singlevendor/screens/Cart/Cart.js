@@ -15,6 +15,7 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault';
 
 import CartItem from '../../components/Cart/CartItem';
 import EmptyCart from '../../components/Cart/EmptyCart';
+import OrderProgressBanner from '../../components/Cart/OrderProgressBanner';
 import RecommendedProducts from '../../components/Cart/RecommendedProducts';
 import { mockCartItems, mockRecommendedProducts } from '../../assets/cartMockData';
 import styles from './Styles';
@@ -34,6 +35,9 @@ const Cart = (props) => {
   const [cartItems, setCartItems] = useState(mockCartItems);
   const [recommendedProducts] = useState(mockRecommendedProducts);
   
+  const minimumOrder = 10; // Minimum order to place
+  const lowOrderFeeThreshold = 15; // Threshold to avoid low-order fee
+  const lowOrderFee = 2; // Low-order fee amount
   const currencySymbol = configuration?.currencySymbol || '€';
 
   // Calculate total from cart items
@@ -151,6 +155,14 @@ const Cart = (props) => {
   // Cart with items view
   return (
     <SafeAreaView style={styles(currentTheme).mainContainer}>
+      <OrderProgressBanner
+        currentTotal={total}
+        minimumOrder={minimumOrder}
+        lowOrderFeeThreshold={lowOrderFeeThreshold}
+        lowOrderFee={lowOrderFee}
+        currencySymbol={currencySymbol}
+      />
+      
       <ScrollView 
         showsVerticalScrollIndicator={false}
         style={styles().scrollView}
