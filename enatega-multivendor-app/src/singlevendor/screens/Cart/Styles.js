@@ -14,10 +14,11 @@ const styles = (props = null) =>
     contentContainer: {
       paddingHorizontal: scale(16),
       paddingTop: scale(16)
+      
     },
     recommendedSection: {
       paddingHorizontal: scale(16),
-      paddingVertical: scale(20),
+      paddingBottom: scale(20),
       // borderTopWidth: 1,
       // borderTopColor: props !== null ? props.gray200 : '#E5E7EB',
       paddingBottom: scale(100), // Add padding for sticky button
