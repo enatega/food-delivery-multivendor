@@ -4,7 +4,7 @@ import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 
-const SectionHeader = ({ title, onSeeAll }) => {
+const SectionHeader = ({ title, onSeeAll, showSeeAll=true }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
@@ -12,9 +12,10 @@ const SectionHeader = ({ title, onSeeAll }) => {
   return (
     <View style={styles(currentTheme).header}>
       <Text style={styles(currentTheme).title}>{title}</Text>
+      {showSeeAll && 
       <TouchableOpacity onPress={onSeeAll} style={styles(currentTheme).seeAllButton}>
         <Text style={styles(currentTheme).seeAllText}>See all</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </View>
   )
 }

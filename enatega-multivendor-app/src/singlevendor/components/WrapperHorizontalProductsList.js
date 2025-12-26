@@ -1,22 +1,19 @@
-import { View, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import HorizontalProductsList from './HorizontalProductsList'
 import useHomeProducts from '../screens/Home/useHomeProducts'
-import LoadingSkeleton from './LoadingSkeleton'
+import SearchModal from './ProductExplorer/SearchModal'
 
 const WrapperHorizontalProductsList = ({ data = [], listTitle = '' }) => {
   const { loading, data: productsData } = useHomeProducts({ categoryId: data?.id })
   const products = productsData?.getCategoryItemsSingleVendor.items
+  const [searchVisible, setSearchVisible] = useState(false)
 
-  return <HorizontalProductsList listTitle={listTitle} ListData={products} isLoading={loading} />
+  return (
+    <>
+      <HorizontalProductsList listTitle={listTitle} viewType={data.viewType} ListData={products} isLoading={loading} setSearchVisible={setSearchVisible} />
+      <SearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} items={products} />
+    </>
+  )
 }
-
-const styles = () =>
-  StyleSheet.create({
-    scrollContent: {
-      paddingHorizontal: 20,
-      paddingRight: 10
-    }
-  })
 
 export default WrapperHorizontalProductsList

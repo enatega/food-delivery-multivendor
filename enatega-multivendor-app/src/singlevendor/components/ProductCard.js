@@ -4,16 +4,17 @@ import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import ProductImageOverlay from './ProductImageOverlay'
+import ConfigurationContext from '../../context/Configuration'
 
 const ProductCard = ({ product, onAddToCart ,onCardPress,containerStyles}) => {
     const { i18n } = useTranslation()
     const themeContext = useContext(ThemeContext)
     const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+    const configuration = useContext(ConfigurationContext)
 
-    console.log("product card:",product)
 
     return (
-        <Pressable onPress={onCardPress} style={[styles(currentTheme).card,containerStyles]}>
+        <Pressable onPress={()=>onCardPress(product?.id)} style={[styles(currentTheme).card,containerStyles]}>
             <ImageBackground 
                 source={{uri:typeof product?.image == 'number'?'':product?.image}} 
                 style={styles(currentTheme).imageContainer}
@@ -27,12 +28,14 @@ const ProductCard = ({ product, onAddToCart ,onCardPress,containerStyles}) => {
                 />
             </ImageBackground>
             <View style={styles(currentTheme).contentContainer}>
-            <Text style={styles(currentTheme).price}>€ {product?.price?.toFixed(2)}</Text>
-            <Text style={styles(currentTheme).productName}>{product?.title}</Text>
-            <View style={styles(currentTheme).volumeContainer}>
+                {/* Todo: currently showing 1st varations price. */}
+            <Text style={styles(currentTheme).price}>{configuration?.currencySymbol ?? null} {product?.variations[0]?.price}</Text>
+                <Text style={styles(currentTheme).productName}>{product?.title}</Text>
+                {/* Todo: can show variations specific price and product size. */}
+            {/* <View style={styles(currentTheme).volumeContainer}>
                 <Text style={styles(currentTheme).volume}>{product?.volume}</Text>
                 <Text style={styles(currentTheme).pricePerLiter}>€ {product?.pricePerLiter?.toFixed(1)}/l</Text>
-            </View>
+            </View> */}
             </View>
         </Pressable>
     )

@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 import LoadingSkeleton from './LoadingSkeleton'
 import HorizontalProductsEmptyView from './HorizontalProductsEmptyView'
 
-const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, isError, refetch }) => {
+const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, showSeeAll = true, viewType, setSearchVisible }) => {
   const { i18n, t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
@@ -18,7 +18,11 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
   const handleSeeAll = () => {
     // Handle see all action
     console.log(`See all ${listTitle.toLowerCase()}`)
-    navigation.navigate('ProductExplorer')
+    if (viewType === 'see-all') {
+      navigation.navigate('ProductExplorer')
+    } else {
+      setSearchVisible(true)
+    }
   }
 
   const handleAddToCart = (drink) => {
@@ -26,13 +30,15 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
     console.log('Add to cart:', drink.name)
   }
 
-  const onProductPress = () => {
-    
+  const onProductPress = (id) => {
+    navigation.navigate('ProductDetails', {
+      productId: id
+    })
   }
 
   return (
     <View style={styles(currentTheme).container}>
-      <SectionHeader title={listTitle} onSeeAll={handleSeeAll} />
+      <SectionHeader title={listTitle} onSeeAll={handleSeeAll} showSeeAll={showSeeAll} />
       {isLoading ? (
         <View style={styles().skeletonContainer}>
           <LoadingSkeleton width='45%' height={200} borderRadius={10} />

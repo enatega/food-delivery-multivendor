@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client'
-import { Get_Category_Items_Single_Vendor } from '../../apollo/queries'
+import { GET_CATEGORY_ITEMS_SINGLE_VENDOR } from '../../apollo/queries'
 
 const useHomeProducts = ({categoryId}) => {
 
   // Todo: fix product card information as per design, e.g price
-  const {data, loading, error, refetch} = useQuery(Get_Category_Items_Single_Vendor, {
+  const {data, loading, error, refetch} = useQuery(GET_CATEGORY_ITEMS_SINGLE_VENDOR, {
     variables: {
       categoryId: categoryId,
       skip: 0,

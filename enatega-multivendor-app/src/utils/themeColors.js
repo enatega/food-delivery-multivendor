@@ -128,13 +128,13 @@ export const theme = {
     customBorder: '#E5E7EB',
     radiusBorder: '#fe0000',
     radiusFill: 'rgba(0, 255, 0, 0.2)',
-    toggler:"#fff",
+    toggler: '#fff',
     headerMainFontColor: '#006189',
     singlevendorcolor: '#0090CD',
     colorBgTertiary: '#F4F4F5',
     colorBgSecondary: '#CCE9F5',
-    colorTextPrimary: '##006189'
-
+    colorTextPrimary: '##006189',
+    colorRextMuted: '#71717A'
   },
   Dark: {
     toggler: '#000',
@@ -262,5 +262,6 @@ export const theme = {
     singlevendorcolor: '#0090CD',
     colorBgTertiary: '#1F1F22',
     colorBgSecondary: '#CCE9F5',
+    colorRextMuted: '#71717A'
   }
 }
