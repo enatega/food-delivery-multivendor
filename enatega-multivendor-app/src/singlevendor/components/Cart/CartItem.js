@@ -144,9 +144,8 @@ const CartItem = ({
           </View>
 
           <TextDefault
-            textColor={currentTheme.fontMainColor}
-            bolder
-            H5
+            textColor={currentTheme.gray}
+            bold
             isRTL
           >
             {currencySymbol} {itemTotal}
