@@ -83,10 +83,9 @@ const styles = (props = null) =>
     },
     cartBadge: {
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      borderRadius: scale(12),
-      paddingHorizontal: scale(8),
-      paddingVertical: scale(2),
-      minWidth: scale(24),
+      borderRadius: scale(16),
+      width: scale(16),
+      height: scale(16),
       alignItems: 'center',
       justifyContent: 'center'
     }

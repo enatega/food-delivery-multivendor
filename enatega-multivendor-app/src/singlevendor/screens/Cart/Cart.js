@@ -206,8 +206,8 @@ const Cart = (props) => {
               </TextDefault>
             </View>
             <TextDefault 
-              textColor={currentTheme.fontMainColor} 
-              bolder 
+              textColor={currentTheme. gray300} 
+              bold
               H5
             >
               {t('goToCheckout') || 'Go to checkout'} {currencySymbol}{total}

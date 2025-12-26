@@ -51,14 +51,17 @@ const styles = (props = null) =>
     quantityControls: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(12),
+      gap: scale(4),
       flexShrink: 0
     },
     quantityButton: {
-      width: scale(28),
-      height: scale(28),
+      width: scale(20),
+      height: scale(20),
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      borderRadius: scale(14), // 50% of width/height
+      borderWidth: 1,
+      borderColor: props !== null ? props?.gray200 : '#E5E7EB'
     },
     quantityText: {
       minWidth: scale(20),

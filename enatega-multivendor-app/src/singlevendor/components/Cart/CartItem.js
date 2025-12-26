@@ -108,20 +108,20 @@ const CartItem = ({
               {item?.quantity < 2 ? (
                 <AntDesign
                   name='delete'
-                  size={20}
+                  size={16}
                   color={currentTheme.fontMainColor}
                 />
               ) : (
                 <AntDesign
                   name='minus'
-                  size={20}
+                  size={16}
                   color={currentTheme.fontMainColor}
                 />
               )}
             </TouchableOpacity>
 
             <TextDefault 
-              H4 
+              H5 
               bold 
               textColor={currentTheme.fontMainColor} 
               isRTL
@@ -137,7 +137,7 @@ const CartItem = ({
             >
               <AntDesign 
                 name='plus' 
-                size={20} 
+                size={16} 
                 color={currentTheme.fontMainColor} 
               />
             </TouchableOpacity>
