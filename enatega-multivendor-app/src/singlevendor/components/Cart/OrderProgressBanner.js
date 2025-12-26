@@ -122,7 +122,7 @@ const OrderProgressBanner = ({
           </TextDefault>
         </View>
         <TouchableOpacity onPress={() => setShowModal(true)} activeOpacity={0.7}>
-          <Feather name="info" size={16} color={currentTheme.fontSecondColor} />
+          <Feather name="info" size={16} color={currentTheme.fontMainColor} />
         </TouchableOpacity>
       </View>
       
@@ -184,15 +184,15 @@ const styles = (currentTheme = null) =>
       backgroundColor: currentTheme ? currentTheme.themeBackground : '#fff',
       paddingHorizontal: scale(16),
       paddingVertical: scale(12),
-      borderBottomWidth: 1,
-      borderBottomColor: currentTheme ? currentTheme.gray200 : '#E5E7EB'
+    //   borderBottomWidth: 1,
+    //   borderBottomColor: currentTheme ? currentTheme.gray200 : '#E5E7EB'
     },
     content: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: scale(8),
-      gap: scale(4)
+      gap: scale(8)
     },
     textWrapper: {
       flexShrink: 1
@@ -208,7 +208,7 @@ const styles = (currentTheme = null) =>
     progressSegment: {
       flex: 1,
       height: scale(4),
-      backgroundColor: currentTheme ? currentTheme.gray200 : '#E5E7EB',
+      backgroundColor: currentTheme ? currentTheme.colorBgSecondary : '#E5E7EB',
       borderRadius: scale(2),
       overflow: 'hidden'
     },
@@ -217,7 +217,7 @@ const styles = (currentTheme = null) =>
     },
     progressFill: {
       height: '100%',
-      backgroundColor: '#0EA5E9',
+      backgroundColor: currentTheme ? currentTheme.headerMainFontColor : '#0EA5E9',
       borderRadius: scale(2)
     }
   });

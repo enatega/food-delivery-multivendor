@@ -18,8 +18,8 @@ const styles = (props = null) =>
     recommendedSection: {
       paddingHorizontal: scale(16),
       paddingVertical: scale(20),
-      borderTopWidth: 1,
-      borderTopColor: props !== null ? props.gray200 : '#E5E7EB',
+      // borderTopWidth: 1,
+      // borderTopColor: props !== null ? props.gray200 : '#E5E7EB',
       paddingBottom: scale(100), // Add padding for sticky button
       overflow: 'visible'
     },

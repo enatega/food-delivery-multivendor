@@ -135,6 +135,14 @@ const Cart = (props) => {
   if (cartItems.length === 0) {
     return (
       <SafeAreaView style={styles(currentTheme).mainContainer}>
+        <OrderProgressBanner
+          currentTotal={total}
+          minimumOrder={minimumOrder}
+          lowOrderFeeThreshold={lowOrderFeeThreshold}
+          lowOrderFee={lowOrderFee}
+          currencySymbol={currencySymbol}
+        />
+        
         <ScrollView showsVerticalScrollIndicator={false}>
           <EmptyCart onStartShopping={handleStartShopping} />
           
