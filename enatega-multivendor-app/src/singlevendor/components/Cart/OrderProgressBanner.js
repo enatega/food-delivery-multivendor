@@ -30,7 +30,8 @@ const OrderProgressBanner = ({
     if (currentTotal < minimumOrder) {
       const progress = (currentTotal / minimumOrder) * 33.33;
       return {
-        text: `You can't place order below ${currencySymbol}${minimumOrder}`,
+        text: `You can't place order below `,
+        boldText: `${currencySymbol}${minimumOrder}`,
         progress1: Math.min(progress, 33.33),
         progress2: 0,
         progress3: 0
@@ -40,6 +41,7 @@ const OrderProgressBanner = ({
     else if (currentTotal >= minimumOrder && currentTotal < minimumOrder + 0.5) {
       return {
         text: "You've reached minimum spend limit",
+        boldText: null,
         progress1: 33.33,
         progress2: 0,
         progress3: 0
@@ -49,7 +51,9 @@ const OrderProgressBanner = ({
     else if (currentTotal >= minimumOrder && currentTotal < lowOrderFeeThreshold - 2) {
       const progress = ((currentTotal - minimumOrder) / (lowOrderFeeThreshold - minimumOrder)) * 33.33;
       return {
-        text: `A ${currencySymbol}${lowOrderFee} low-order fee applies`,
+        text: `A `,
+        boldText: `${currencySymbol}${lowOrderFee}`,
+        text2: ` low-order fee applies`,
         progress1: 33.33,
         progress2: Math.min(progress, 33.33),
         progress3: 0
@@ -60,7 +64,11 @@ const OrderProgressBanner = ({
       const remaining = (lowOrderFeeThreshold - currentTotal).toFixed(2);
       const progress = ((currentTotal - minimumOrder) / (lowOrderFeeThreshold - minimumOrder)) * 33.33;
       return {
-        text: `Add ${currencySymbol}${remaining} more to avoid the ${currencySymbol}${lowOrderFee} low-order fee`,
+        text: `Add `,
+        boldText: `${currencySymbol}${remaining}`,
+        text2: ` more to avoid the `,
+        boldText2: `${currencySymbol}${lowOrderFee}`,
+        text3: ` low-order fee`,
         progress1: 33.33,
         progress2: Math.min(progress, 33.33),
         progress3: 0
@@ -70,6 +78,7 @@ const OrderProgressBanner = ({
     else {
       return {
         text: 'No low-order fee applied',
+        boldText: null,
         progress1: 33.33,
         progress2: 33.33,
         progress3: 33.33
@@ -82,14 +91,36 @@ const OrderProgressBanner = ({
   return (
     <View style={styles(currentTheme).container}>
       <View style={styles().content}>
-        <TextDefault
-          textColor={currentTheme.fontMainColor}
-          small
-          isRTL
-          style={styles().text}
-        >
-          {state.text}
-        </TextDefault>
+        <View style={styles().textWrapper}>
+          <TextDefault
+            textColor={currentTheme.fontMainColor}
+            small
+            isRTL
+            style={styles().text}
+          >
+            {state.text}
+            {state.boldText && (
+              <TextDefault
+                textColor={currentTheme.fontMainColor}
+                bolder
+                small
+              >
+                {state.boldText}
+              </TextDefault>
+            )}
+            {state.text2 && state.text2}
+            {state.boldText2 && (
+              <TextDefault
+                textColor={currentTheme.fontMainColor}
+                bolder
+                small
+              >
+                {state.boldText2}
+              </TextDefault>
+            )}
+            {state.text3 && state.text3}
+          </TextDefault>
+        </View>
         <TouchableOpacity onPress={() => setShowModal(true)} activeOpacity={0.7}>
           <Feather name="info" size={16} color={currentTheme.fontSecondColor} />
         </TouchableOpacity>
@@ -159,12 +190,15 @@ const styles = (currentTheme = null) =>
     content: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      marginBottom: scale(8)
+      justifyContent: 'center',
+      marginBottom: scale(8),
+      gap: scale(4)
+    },
+    textWrapper: {
+      flexShrink: 1
     },
     text: {
-      flex: 1,
-      marginRight: scale(8)
+      textAlign: 'center'
     },
     progressContainer: {
       flexDirection: 'row',
