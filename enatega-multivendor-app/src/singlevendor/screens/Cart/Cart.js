@@ -212,13 +212,20 @@ const Cart = (props) => {
       <View style={styles(currentTheme).stickyCheckoutContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
-          style={styles(currentTheme).checkoutButton}
-          onPress={handleCheckout}
+          style={[
+            styles(currentTheme).checkoutButton,
+            total < minimumOrder && styles(currentTheme).checkoutButtonDisabled
+          ]}
+          onPress={total >= minimumOrder ? handleCheckout : null}
+          disabled={total < minimumOrder}
         >
           <View style={styles().checkoutButtonContent}>
-            <View style={styles().cartBadge}>
+            <View style={[
+              styles().cartBadge,
+              total >= minimumOrder && styles().cartBadgeActive
+            ]}>
               <TextDefault 
-                textColor={currentTheme.fontMainColor} 
+                textColor={total >= minimumOrder ? currentTheme.primaryBlue : currentTheme.gray300} 
                 bold
                 small
               >
@@ -226,8 +233,8 @@ const Cart = (props) => {
               </TextDefault>
             </View>
             <TextDefault 
-              textColor={currentTheme. gray300} 
-              bold
+              textColor={total >= minimumOrder ? currentTheme.white : currentTheme.gray300} 
+              bolder
               H5
             >
               {t('goToCheckout') || 'Go to checkout'} {currencySymbol}{total}

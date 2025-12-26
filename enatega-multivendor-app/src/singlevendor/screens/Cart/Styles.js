@@ -67,15 +67,15 @@ const styles = (props = null) =>
       marginBottom: scale(12)
     },
     checkoutButton: {
-      backgroundColor: '#F4F4F5',
-      paddingVertical: scale(14),
+      backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9',
+      paddingVertical: scale(12),
       paddingHorizontal: scale(20),
       borderRadius: scale(8),
       alignItems: 'center',
       justifyContent: 'center'
     },
     checkoutButtonDisabled: {
-      opacity: 0.6
+      backgroundColor: '#F4F4F5'
     },
     checkoutButtonContent: {
       flexDirection: 'row',
@@ -85,10 +85,13 @@ const styles = (props = null) =>
     cartBadge: {
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
       borderRadius: scale(16),
-      width: scale(16),
-      height: scale(16),
+      width: scale(18),
+      height: scale(18),
       alignItems: 'center',
       justifyContent: 'center'
+    },
+    cartBadgeActive: {
+      backgroundColor: '#fff'
     }
   });
 
