@@ -49,8 +49,12 @@ const OrderFeesModal = ({
             >
               Order fees & minimum spend
             </TextDefault>
-            <TouchableOpacity onPress={onClose} activeOpacity={0.7}>
-              <AntDesign name="close" size={24} color={currentTheme.fontMainColor} />
+            <TouchableOpacity 
+              onPress={onClose} 
+              activeOpacity={0.7}
+              style={styles(currentTheme).closeButton}
+            >
+              <AntDesign name="close" size={20} color={currentTheme.fontMainColor} />
             </TouchableOpacity>
           </View>
 
@@ -167,6 +171,9 @@ const OrderFeesModal = ({
             </TextDefault>
           </View>
 
+          {/* Separator Line */}
+          <View style={styles(currentTheme).separator} />
+
           {/* OK Button */}
           <TouchableOpacity
             activeOpacity={0.7}
@@ -209,37 +216,45 @@ const styles = (currentTheme = null) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: scale(16)
+      marginBottom: scale(12)
       
     },
     headerSpacer: {
-      width: 24
+      width: 36
+    },
+    closeButton: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: currentTheme ? currentTheme.gray100 : '#F3F4F6',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     headerTitle: {
       flex: 1,
       textAlign: 'center'
     },
     descriptionContainer: {
-      marginBottom: scale(24),
+      marginBottom: scale(16),
       alignItems: 'center'
     },
     descriptionText: {
       textAlign: 'center'
     },
     description: {
-      marginBottom: scale(24),
+      marginBottom: scale(16),
       textAlign: "center"
     },
     table: {
-      marginBottom: scale(20)
+      marginBottom: scale(12)
     },
     tableRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: scale(12)
+      paddingVertical: scale(8)
     },
     tableRowData: {
-      borderTopWidth: 1,
+      // borderTopWidth: 1,
       borderTopColor: currentTheme ? currentTheme.gray200 : '#E5E7EB'
     },
     tableCell: {
@@ -250,16 +265,22 @@ const styles = (currentTheme = null) =>
       textAlign: 'right'
     },
     footerNoteContainer: {
-      marginBottom: scale(24),
+      marginBottom: scale(16),
       alignItems: 'center'
     },
     footerNote: {
       lineHeight: scale(20),
-      textAlign: 'center'
+      textAlign: 'center',
+    },
+    separator: {
+      height: 1,
+      backgroundColor: currentTheme ? currentTheme.gray200 : '#E5E7EB',
+      marginHorizontal: -scale(20),
+      marginBottom: scale(16)
     },
     okButton: {
       backgroundColor: '#0EA5E9',
-      paddingVertical: scale(16),
+      paddingVertical: scale(12),
       borderRadius: scale(12),
       alignItems: 'center',
       justifyContent: 'center'
