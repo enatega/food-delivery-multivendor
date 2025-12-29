@@ -133,10 +133,13 @@ export const theme = {
     singlevendorcolor: '#0090CD',
     colorBgTertiary: '#F4F4F5',
     colorBgSecondary: '#CCE9F5',
-    colorTextPrimary: '##006189'
+    colorTextPrimary: '##006189',
+    lightBlue: '#CCE9F5',
+    gray300: '#A1A1AA',
 
   },
   Dark: {
+    lightBlue: '#CCE9F5',
     toggler: '#000',
     statusBgColor: '#E4FFD9',
     placeholderColor: '#fff',
@@ -175,6 +178,7 @@ export const theme = {
     buttonTextPink: '#FFF',
     fontWhite: '#FFF',
     gray100: '#F9F9F9',
+    gray300: '#A1A1AA',
     fontSecondColor: '#F9F9F9',
     fontThirdColor: '#F9F9F9',
     fontFourthColor: '#fff',

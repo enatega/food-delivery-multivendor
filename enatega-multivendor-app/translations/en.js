@@ -674,4 +674,10 @@ export const en = {
   "The code you entered is incorrect.": "The code you entered is incorrect.",
   "Set new password": "Set new password",
   "There is no items for this category": "There is no items for this category",
+  recommendedForYou: "Recommended for you",
+  yourItems: "Your items",
+  yourCartIsEmpty: "Your cart is empty",
+  emptyCartDescription: "When you add items from a store, your order will be right here. so you can make changes whenever you want.",
+  startShopping: "Start shopping",
+  goToCheckout: "Go to checkout"
 }
