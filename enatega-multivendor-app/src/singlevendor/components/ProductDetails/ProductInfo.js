@@ -32,6 +32,7 @@ const ProductInfo = ({t, productInfoData, currentTheme }) => {
         <View style={[styles().flex, { alignItems: 'center', gap: 12 }]}>
           <TextDefault H4 bold textColor={currentTheme.primaryBlue}>
             {config?.currencySymbol}
+            {'\u00A0'}
             {productInfoData?.price}
           </TextDefault>
           {productInfoData?.isPopular && (

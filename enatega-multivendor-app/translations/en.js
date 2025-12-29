@@ -675,4 +675,10 @@ export const en = {
   "Set new password": "Set new password",
   "There is no items for this category": "There is no items for this category",
   "Product details": "Product details",
+  "Nutrition facts": "Nutrition facts",
+  "Energy": "Energy",
+  "Proteins": "Proteins",
+  "Fats": "Fats",
+  "Carbohydrates": "Carbohydrates",
+  "Sugars": "Sugars",
 }

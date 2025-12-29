@@ -15,6 +15,7 @@ const useProductDetails = ({ foodId }) => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   const productInfoData = {
+    id: data?.getFoodDetails?.id,
     image: data?.getFoodDetails?.image,
     title: data?.getFoodDetails?.title,
     description: data?.getFoodDetails?.description,
@@ -23,8 +24,19 @@ const useProductDetails = ({ foodId }) => {
     price: data?.getFoodDetails?.variations[0].price
   }
 
+  // Todo need to get the required data from backend.
   const productOtherDetails = {
     description: data?.getFoodDetails?.description,
+    ingredients: ["Golden Delicious Apples", "Filter Water", "Ascorbic Acid"],
+    usage: "Keep refrigerated. Best served chilled.",
+    nutritionFacts: {
+      size: "Amount per 100ml",
+      energy: "89kJ/50kcal",
+      fat: "20g",
+      carbohydrates: "34g",
+      protein: "0g",
+      sugar: "50g",
+    }
   }
   return { data, loading, error, currentTheme, t, productInfoData, productOtherDetails }
 }

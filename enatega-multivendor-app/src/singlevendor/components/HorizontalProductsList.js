@@ -59,7 +59,8 @@ const styles = (currentTheme) =>
     },
     scrollContent: {
       paddingHorizontal: 20,
-      paddingRight: 10
+      paddingRight: 10,
+      paddingVertical: 10
     },
     skeletonContainer: {
       display: 'flex',
