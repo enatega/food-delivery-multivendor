@@ -5,12 +5,12 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { AntDesign, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import ConfigurationContext from '../../../context/Configuration'
 import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
+import ToggleFavorite from '../ToggleFavorite'
 
-const ProductInfo = ({t, productInfoData, currentTheme }) => {
+const ProductInfo = ({ t, productInfoData, currentTheme }) => {
   const config = useContext(ConfigurationContext)
 
   // Todo: temp states for handling fav and item count
-  const [fav, setFav] = useState(false)
   const [itemCount, setItemCount] = useState(0)
 
   return (
@@ -24,9 +24,7 @@ const ProductInfo = ({t, productInfoData, currentTheme }) => {
           <TextDefault B700 H3>
             {productInfoData?.title}
           </TextDefault>
-          <Pressable onPress={() => setFav(!fav)} style={styles(currentTheme).pressableContainer}>
-            {fav ? <FontAwesome name='heart' size={20} color={currentTheme?.newIconColor} /> : <FontAwesome name='heart-o' size={20} color={currentTheme?.newIconColor} />}
-          </Pressable>
+          <ToggleFavorite id={productInfoData?.id} />
         </View>
 
         <View style={[styles().flex, { alignItems: 'center', gap: 12 }]}>
