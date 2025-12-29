@@ -52,6 +52,7 @@ import PhoneNumber from '../screens/PhoneNumber/PhoneNumber'
 import { useApolloClient, gql } from '@apollo/client'
 import { myOrders } from '../apollo/queries'
 import Checkout from '../screens/Checkout/Checkout'
+import SingleVendorCheckout from '../singlevendor/screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -190,6 +191,7 @@ function MainNavigator() {
 
       {/* Single Vendor Routes */}
       <NavigationStack.Screen name='ProductExplorer' component={ProductExplorer} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='SingleVendorCheckout' component={SingleVendorCheckout} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='ProductDetails' component={ProductDetails} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
     </NavigationStack.Navigator>
   )

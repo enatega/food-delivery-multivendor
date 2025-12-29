@@ -5,7 +5,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext';
 import { theme } from '../../../utils/themeColors';
 import TextDefault from '../../../components/Text/TextDefault/TextDefault';
 import { useTranslation } from 'react-i18next';
-import EmptyCartSVG from '../../../assets/SVG/imageComponents/EmptyCart';
+// import EmptyCartSVG from '../../../assets/SVG/imageComponents/EmptyCart';
 
 const EmptyCart = ({ onStartShopping }) => {
   const { t, i18n } = useTranslation();
@@ -21,7 +21,7 @@ const EmptyCart = ({ onStartShopping }) => {
         {/* <EmptyCartSVG width={scale(200)} height={scale(200)} /> */}
         <Image 
           style={{ width: scale(200), height: scale(200) }}
-          source={require('../../../assets/images/emptycartnew.png')}
+          source={require('../../assets/images/emptycartnew.png')}
         />
       </View>
       

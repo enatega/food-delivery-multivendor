@@ -686,5 +686,6 @@ export const en = {
   yourCartIsEmpty: "Your cart is empty",
   emptyCartDescription: "When you add items from a store, your order will be right here. so you can make changes whenever you want.",
   startShopping: "Start shopping",
-  goToCheckout: "Go to checkout"
+  goToCheckout: "Go to checkout",
+  Promo_Code: "Promo code"
 }

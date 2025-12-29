@@ -99,8 +99,7 @@ const Cart = (props) => {
   };
 
   const handleCheckout = () => {
-    // TODO: Navigate to checkout screen
-    console.log('Navigate to checkout');
+    navigation.navigate('SingleVendorCheckout');
   };
 
   const handleAddQuantity = (itemKey) => {
