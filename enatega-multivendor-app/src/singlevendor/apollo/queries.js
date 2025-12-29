@@ -133,3 +133,13 @@ export const GET_SIMILAR_FOODS = gql`
     }
   }
 `
+
+export const GET_FAVORITE_FOODS_STATUS = gql`
+  query GetFavoriteFoodsStatus($foodId: String) {
+    getFavoriteFoodsStatus(foodId: $foodId) {
+      success
+      message
+      isFavorite
+    }
+  }
+`
