@@ -49,7 +49,7 @@ export const GET_ALL_CATEGORIES_WITH_SUBCATEGORIES_DATA = gql`
   }
 `
 
-export const Get_Restaurant_Categories_Single_Vendor = gql`
+export const GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR = gql`
   query GetRestaurantCategoriesSingleVendor {
     getRestaurantCategoriesSingleVendor {
       id
@@ -58,11 +58,12 @@ export const Get_Restaurant_Categories_Single_Vendor = gql`
       image
       description
       itemCount
+      viewType
     }
   }
 `
 
-export const Get_Category_Items_Single_Vendor = gql`
+export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
   query GetCategoryItemsSingleVendor($categoryId: ID!, $skip: Int, $limit: Int, $search: String) {
     getCategoryItemsSingleVendor(categoryId: $categoryId, skip: $skip, limit: $limit, search: $search) {
       categoryId
@@ -90,6 +91,55 @@ export const Get_Category_Items_Single_Vendor = gql`
         hasMore
         totalPages
       }
+    }
+  }
+`
+
+export const GET_FOOD_DETAILS = gql`
+  query GetFoodDetails($foodId: ID!) {
+    getFoodDetails(foodId: $foodId) {
+      id
+      title
+      description
+      image
+      isPopular
+      variations {
+        id
+        title
+        price
+      }
+    }
+  }
+`
+
+export const GET_SIMILAR_FOODS = gql`
+  query GetSimilarFoods($foodId: ID!, $skip: Int, $limit: Int) {
+    getSimilarFoods(foodId: $foodId, skip: $skip, limit: $limit) {
+      items {
+        id
+        title
+        description
+        image
+        variations {
+          id
+          title
+          price
+        }
+      }
+      pagination {
+        totalItems
+        hasMore
+      }
+    }
+  }
+`
+
+export const GET_FAVORITE_FOODS_STATUS = gql`
+  query GetFavoriteFoodsStatus($foodId: String) {
+    getFavoriteFoodsStatus(foodId: $foodId) {
+      success
+      message
+      isFavorite
     }
   }
 `

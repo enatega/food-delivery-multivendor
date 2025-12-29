@@ -72,6 +72,7 @@ import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENT
 import * as LocationImport from 'expo-location'
 import BottomTabNavigator from './BottomTabNavigator'
 import ProductExplorer from '../singlevendor/components/ProductExplorer/ProductExplorer'
+import ProductDetails from '../singlevendor/screens/ProductDetails/ProductDetails'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -191,6 +192,7 @@ function MainNavigator() {
       {/* Single Vendor Routes */}
       <NavigationStack.Screen name='ProductExplorer' component={ProductExplorer} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='SingleVendorCheckout' component={SingleVendorCheckout} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='ProductDetails' component={ProductDetails} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
     </NavigationStack.Navigator>
   )
 }

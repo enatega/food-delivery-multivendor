@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client'
-import { Get_Restaurant_Categories_Single_Vendor } from '../../apollo/queries'
+import { GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR } from '../../apollo/queries'
 
 const useHome = () => {
-  const { loading, data, error } = useQuery(Get_Restaurant_Categories_Single_Vendor)
+  const { loading, data, error } = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR)
   return {
     loading,
     data,

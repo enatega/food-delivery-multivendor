@@ -9,6 +9,7 @@ import { FlatList } from 'react-native-gesture-handler'
 const Home = () => {
   const { data } = useHome()
   const categoriesData = data?.getRestaurantCategoriesSingleVendor
+  console.log("🚀 ~ Home ~ categoriesData:", categoriesData)
   return (
     <View>
       <FlatList data={categoriesData} renderItem={({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />} keyExtractor={(item) => item.id} ListHeaderComponent={<HomeBanner />} ListFooterComponent={<HorizontalCategoriesList categoriesData={categoriesData} />} />
