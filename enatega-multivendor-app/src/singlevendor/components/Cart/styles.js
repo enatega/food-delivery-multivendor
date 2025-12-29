@@ -4,73 +4,65 @@ import { scale } from '../../../utils/scaling';
 const styles = (props = null) =>
   StyleSheet.create({
     itemContainer: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'flex-start',
-      gap: scale(12),
-      marginBottom: scale(20),
-      paddingBottom: scale(16),
+      flexDirection: 'row',
+      paddingVertical: scale(16),
       borderBottomWidth: 1,
-      borderBottomColor: props !== null ? props?.gray200 : '#F3F4F6'
+      borderBottomColor: props !== null ? props.gray200 : '#E5E7EB'
     },
     itemContainerLast: {
       borderBottomWidth: 0
     },
     imageContainer: {
-      width: scale(56),
-      height: scale(49),
-      backgroundColor: '#F9F9F9',
-      borderRadius: scale(12),
-      overflow: 'hidden',
-      flexShrink: 0
+      marginRight: scale(12)
     },
     productImage: {
-      width: '100%',
-      height: '100%',
-      resizeMode: 'cover'
+      width: scale(60),
+      height: scale(60),
+      borderRadius: scale(8)
     },
     mainContent: {
-      flex: 1,
-      minWidth: 0
-    },
-    descriptionRow: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'center',
-      marginTop: scale(8),
-      marginBottom: scale(8),
-      gap: scale(6)
-    },
-    descriptionText: {
       flex: 1
     },
-    bottomRow: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      justifyContent: 'space-between',
+    descriptionRow: {
+      flexDirection: 'row',
       alignItems: 'center',
-      // marginTop: scale(6)
+      marginTop: scale(4),
+      marginBottom: scale(8)
     },
-    quantityControls: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'center',
-      gap: scale(4),
-      flexShrink: 0
-    },
-    quantityButton: {
-      width: scale(20),
-      height: scale(20),
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: scale(14), // 50% of width/height
-      borderWidth: 1,
-      borderColor: props !== null ? props?.gray200 : '#E5E7EB'
-    },
-    quantityText: {
-      minWidth: scale(20),
-      textAlign: 'center'
+    descriptionText: {
+      flex: 1,
+      marginRight: scale(8)
     },
     itemsDropdown: {
-      marginTop: scale(4),
+      marginTop: scale(8),
       marginBottom: scale(8),
-      paddingLeft: scale(12)
+      paddingLeft: scale(8)
+    },
+    bottomRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: scale(8)
+    },
+    quantityControls: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: props !== null ? props.gray100 : '#F3F4F6',
+      borderRadius: scale(8),
+      paddingHorizontal: scale(4),
+      paddingVertical: scale(4)
+    },
+    quantityButton: {
+      width: scale(28),
+      height: scale(28),
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: scale(6)
+    },
+    quantityText: {
+      marginHorizontal: scale(12),
+      minWidth: scale(20),
+      textAlign: 'center'
     }
   });
 
