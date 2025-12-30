@@ -28,12 +28,12 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
       visible={visible}
       onHide={onHide}
       header={`Order # ${restaurantData.orderId}`}
-      className="custom-modal" // Added custom class for CSS override
+      className="custom-modal border border-dark-600" // Added custom class for CSS override
     >
-      <div className="order-details-container">
+      <div className="order-details-container dark:bg-dark-900 dark:text-white ">
         {/* Items Section */}
-        <div className="order-section">
-          <h3 className="section-header">Items</h3>
+        <div className="order-section dark:bg-dark-600">
+          <h3 className="section-header dark:text-primary-dark">Items</h3>
           {restaurantData.items && restaurantData.items.length > 0 ? (
             <div className="item-list">
               {restaurantData.items.map((item, index) => (
@@ -41,7 +41,7 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
                   <span>
                     {index + 1}. {item.title}
                   </span>
-                  <span className="item-price">
+                  <span className="item-price dark:text-white">
                     {item.quantity} &#215; $
                     {(item.variation?.price ?? 0).toFixed(2)}
                   </span>
@@ -54,8 +54,8 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
         </div>
 
         {/* Charges Section */}
-        <div className="order-section">
-          <h3 className="section-header">Charges</h3>
+        <div className="order-section dark:bg-dark-600">
+          <h3 className="section-header dark:text-primary-dark">Charges</h3>
           <div className="charges-table">
             <div className="charges-row">
               <span>Subtotal</span>
@@ -81,8 +81,10 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
         </div>
 
         {/* Payment Method Section */}
-        <div className="order-section">
-          <h3 className="section-header">Payment Method</h3>
+        <div className="order-section dark:bg-dark-600">
+          <h3 className="section-header dark:text-primary-dark">
+            Payment Method
+          </h3>
           <div className="payment-section">
             <span className="payment-type">{restaurantData.paymentMethod}</span>
           </div>
@@ -95,8 +97,10 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
         </div>
 
         {/* Delivery Address Section */}
-        <div className="order-section">
-          <h3 className="section-header">Delivery Address</h3>
+        <div className="order-section dark:bg-dark-600">
+          <h3 className="section-header dark:text-primary-dark">
+            Delivery Address
+          </h3>
           <p>{restaurantData.deliveryAddress.deliveryAddress}</p>
         </div>
       </div>
