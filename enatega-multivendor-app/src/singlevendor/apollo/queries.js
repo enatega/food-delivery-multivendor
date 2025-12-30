@@ -143,3 +143,54 @@ export const GET_FAVORITE_FOODS_STATUS = gql`
     }
   }
 `
+
+export const GET_WEEKLY_FOODS_DEALS = gql`
+query GetWeeklyFoodsDeals {
+  getWeeklyFoodsDeals {
+      items {
+          id
+          title
+          description
+          image
+          variations {
+              id
+              title
+              price
+              outofstock
+              deal {
+                  id
+                  title
+                  discountType
+                  discountValue
+                  isActive
+              }
+          }
+      }
+  }
+}`
+
+
+export const GET_WEEKLY_FOODS_DEALS_WITH_DEAL = gql`
+query GetWeeklyFoodsDealsWithDeal {
+  getWeeklyFoodsDeals {
+      items {
+          id
+          title
+          description
+          image
+          variations {
+              id
+              title
+              price
+              outofstock
+              deal {
+                  id
+                  title
+                  discountType
+                  discountValue
+                  isActive
+              }
+          }
+      }
+  }
+}`
