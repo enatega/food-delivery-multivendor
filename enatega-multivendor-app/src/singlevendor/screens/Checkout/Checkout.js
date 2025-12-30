@@ -20,6 +20,7 @@ import DeliveryTimeOptions from '../../components/Checkout/DeliveryTimeOptions';
 import PaymentSection from '../../components/Checkout/PaymentSection';
 import TipSection from '../../components/Checkout/TipSection';
 import OrderSummary from '../../components/Checkout/OrderSummary';
+import useScheduleStore from '../../stores/scheduleStore';
 import styles from './Styles';
 
 const Checkout = (props) => {
@@ -28,6 +29,9 @@ const Checkout = (props) => {
   const configuration = useContext(ConfigurationContext);
   const themeContext = useContext(ThemeContext);
   const { cart, cartCount } = useContext(UserContext);
+  
+  // Get schedule from Zustand store
+  const { selectedSchedule } = useScheduleStore();
   
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -42,21 +46,51 @@ const Checkout = (props) => {
   const [leaveAtDoor, setLeaveAtDoor] = useState(false);
   const [callOnArrival, setCallOnArrival] = useState(false);
   const [courierInstructions, setCourierInstructions] = useState('');
-  const [deliveryTime, setDeliveryTime] = useState('standard'); // 'priority', 'standard', 'schedule'
+  const [deliveryTime, setDeliveryTime] = useState(selectedSchedule ? 'schedule' : 'standard'); // 'priority', 'standard', 'schedule'
   const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' or 'voucher'
   const [selectedCard, setSelectedCard] = useState('**** 9432');
   const [selectedVoucher, setSelectedVoucher] = useState('');
   const [tipAmount, setTipAmount] = useState(1);
   const [summaryExpanded, setSummaryExpanded] = useState(false);
 
-  useFocusEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar);
+  // Console log when fulfillment mode changes
+  React.useEffect(() => {
+    console.log('📦 Fulfillment Mode Changed:', fulfillmentMode);
+  }, [fulfillmentMode]);
+
+  // Console log when delivery time changes
+  React.useEffect(() => {
+    console.log('⏰ Delivery Time Changed:', deliveryTime);
+    if (deliveryTime === 'schedule' && selectedSchedule) {
+      console.log('📅 Scheduled Details:', {
+        date: selectedSchedule.dateLabel,
+        time: selectedSchedule.timeSlot.time,
+        timeSlotId: selectedSchedule.timeSlot.id,
+        startTime: selectedSchedule.timeSlot.startTime,
+        endTime: selectedSchedule.timeSlot.endTime
+      });
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    );
-  });
+  }, [deliveryTime, selectedSchedule]);
+
+  // Update delivery time when returning from schedule screen
+  useFocusEffect(
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(currentTheme.menuBar);
+      }
+      StatusBar.setBarStyle(
+        themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+      );
+      
+      // Update delivery time based on schedule
+      if (selectedSchedule) {
+        setDeliveryTime('schedule');
+      } else if (deliveryTime === 'schedule') {
+        // If schedule was cleared but deliveryTime is still 'schedule', reset to standard
+        setDeliveryTime('standard');
+      }
+    }, [currentTheme, themeContext, selectedSchedule])
+  );
 
   useLayoutEffect(() => {
     props?.navigation.setOptions({
@@ -123,15 +157,50 @@ const Checkout = (props) => {
   const total = subtotal + deliveryFee + tipAmountToAdd;
 
   const handlePlaceOrder = () => {
-    // TODO: Implement order placement logic
-    console.log('Place order', {
+    // Prepare order data with complete delivery information
+    const orderData = {
       fulfillmentMode,
       deliveryAddress,
       deliveryTime,
       paymentMethod,
       tipAmount,
-      total
-    });
+      total,
+      // Delivery preferences (only for delivery mode)
+      ...(fulfillmentMode === 'delivery' && {
+        deliveryPreferences: {
+          leaveAtDoor,
+          callOnArrival,
+          courierInstructions
+        }
+      }),
+      // Include scheduled delivery details if schedule is selected
+      ...(deliveryTime === 'schedule' && selectedSchedule && {
+        scheduledDelivery: {
+          date: selectedSchedule.date,
+          dateLabel: selectedSchedule.dateLabel,
+          dayName: selectedSchedule.dayName,
+          timeSlot: {
+            id: selectedSchedule.timeSlot.id,
+            time: selectedSchedule.timeSlot.time,
+            startTime: selectedSchedule.timeSlot.startTime,
+            endTime: selectedSchedule.timeSlot.endTime
+          }
+        }
+      })
+    };
+    
+    console.log('🛒 PLACE ORDER - Complete Order Data:', orderData);
+    
+    // Log specific details for easy tracking
+    console.log('📦 Fulfillment:', fulfillmentMode);
+    console.log('⏰ Delivery Time:', deliveryTime);
+    if (deliveryTime === 'schedule' && selectedSchedule) {
+      console.log('🆔 Time Slot ID:', selectedSchedule.timeSlot.id);
+      console.log('📅 Scheduled For:', selectedSchedule.dateLabel, selectedSchedule.timeSlot.time);
+    }
+    console.log('💰 Total:', currencySymbol, total.toFixed(2));
+    
+    // TODO: Implement order placement logic
   };
 
   const isOrderValid = () => {
@@ -173,6 +242,7 @@ const Checkout = (props) => {
           selectedTime={deliveryTime}
           onSelectTime={setDeliveryTime}
           mode={fulfillmentMode}
+          scheduledTime={selectedSchedule}
         />
 
         {/* Payment Section */}
