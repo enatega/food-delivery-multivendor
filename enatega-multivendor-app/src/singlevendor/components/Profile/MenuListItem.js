@@ -30,6 +30,7 @@ const MenuListItem = ({ icon, iconType = 'Ionicons', title, onPress }) => {
         <TextDefault
           textColor={currentTheme.fontMainColor}
           style={styles(currentTheme).title}
+          bold
         >
           {title}
         </TextDefault>
@@ -49,7 +50,7 @@ const styles = (currentTheme) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingVertical: verticalScale(16),
+      paddingVertical: verticalScale(12),
       paddingHorizontal: scale(16),
       backgroundColor: currentTheme?.cardBackground || '#FFFFFF'
     },
