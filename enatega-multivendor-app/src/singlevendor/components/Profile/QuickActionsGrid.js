@@ -106,7 +106,7 @@ const styles = (currentTheme) =>
     actionLabel: {
       marginTop: verticalScale(8),
       fontSize: scale(12),
-      textAlign: 'center'
+      textAlign: 'center',
     }
   })
 
