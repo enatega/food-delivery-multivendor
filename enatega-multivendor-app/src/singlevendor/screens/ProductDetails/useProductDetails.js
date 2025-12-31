@@ -14,6 +14,7 @@ const useProductDetails = ({ foodId }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
+  console.log('useProductDetails data', data,error,foodId)
   const productInfoData = {
     id: data?.getFoodDetails?.id,
     image: data?.getFoodDetails?.image,
@@ -21,7 +22,9 @@ const useProductDetails = ({ foodId }) => {
     description: data?.getFoodDetails?.description,
     isPopular: data?.getFoodDetails?.isPopular,
     // Todo: need to change this price, according to variations.
-    price: data?.getFoodDetails?.variations[0].price
+    price: data?.getFoodDetails?.variations[0].price,
+    variations: data?.getFoodDetails?.variations,
+    addons: data?.getFoodDetails?.addons || [],
   }
 
   // Todo need to get the required data from backend.
