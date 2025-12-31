@@ -21,7 +21,7 @@ const styles = (props = null) =>
       gap: 8,
       width: '100%',
       // paddingHorizontal: scale(16),
-      paddingVertical: scale(12),
+      // paddingVertical: scale(12),
       backgroundColor: props !== null ? props.gray50 : '#F9FAFB',
       borderRadius: scale(8)
     },
