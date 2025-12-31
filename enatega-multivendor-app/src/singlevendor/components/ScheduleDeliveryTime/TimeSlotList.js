@@ -31,8 +31,8 @@ const TimeSlotList = ({ timeSlots, selectedTimeSlot, onSelectTimeSlot }) => {
           >
             <TextDefault
               textColor={isSelected ? (currentTheme.singlevendorcolor || '#0090CD') : currentTheme.fontSecondColor}
-              bold
-              bolder={isSelected}
+              bolder
+              // bolder={isSelected}
               center
               isRTL
             >
