@@ -144,6 +144,31 @@ export const GET_FAVORITE_FOODS_STATUS = gql`
   }
 `
 
+export const GET_LIMITED_TIME_FOODS_DEALS = gql`
+query GetLimitedTimeFoodsDeals {
+    getLimitedTimeFoodsDeals {
+        items {
+            id
+            title
+            description
+            image
+            variations {
+                id
+                title
+                price
+                outofstock
+                deal {
+                    id
+                    title
+                    discountType
+                    discountValue
+                    isActive
+                }
+            }
+        }
+    }
+}
+`
 export const GET_WEEKLY_FOODS_DEALS = gql`
 query GetWeeklyFoodsDeals {
   getWeeklyFoodsDeals {
@@ -169,10 +194,9 @@ query GetWeeklyFoodsDeals {
   }
 }`
 
-
-export const GET_WEEKLY_FOODS_DEALS_WITH_DEAL = gql`
-query GetWeeklyFoodsDealsWithDeal {
-  getWeeklyFoodsDeals {
+export const GET_NEW_OFFERS_FOODS_DEALS = gql`
+query GetNewOffersFoodsDeals {
+  getNewOffersFoodsDeals {
       items {
           id
           title

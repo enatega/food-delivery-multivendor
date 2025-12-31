@@ -1,5 +1,6 @@
-import { View, FlatList, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React, { useContext, useMemo, useCallback } from 'react'
+import { MaterialIcons } from '@expo/vector-icons'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
@@ -8,54 +9,13 @@ import ProductCard from './ProductCard'
 import SectionHeader from './SectionHeader'
 import LoadingSkeleton from './LoadingSkeleton'
 
-const SectionList = ({ title = 'Limited time deals', data = [], loading = false }) => {
+const SectionList = ({ title = 'Limited time deals', data = [], loading = false, error = null, onRetry = null }) => {
   console.log('data of the section list',JSON.stringify(data,null,2));
   
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
-
-  // Transform data to match ProductCard's expected format using optimized approach
-  const transformedData = useMemo(() => {
-    const result = []
-    const dataLength = data.length
-    
-    for (let i = 0; i < dataLength; i++) {
-      const item = data[i]
-      const variation = item?.variations
-      const deal = variation?.deal
-      const hasDeal = !!deal && deal?.isActive !== false
-      
-      // Calculate deal text
-      let dealText = 'Deal'
-      if (hasDeal && deal?.discountType === 'PERCENTAGE' && deal?.discountValue) {
-        dealText = `${deal.discountValue}% Off`
-      } else if (hasDeal && deal?.discountType === 'FIXED' && deal?.discountValue) {
-        dealText = `€${deal.discountValue} Off`
-      }
-
-      // Calculate discounted price if needed
-      // let finalPrice = variation?.price || 0
-      // if (hasDeal && deal?.discountType === 'PERCENTAGE' && deal?.discountValue) {
-      //   finalPrice = finalPrice * (1 - deal.discountValue / 100)
-      // } else if (hasDeal && deal?.discountType === 'FIXED' && deal?.discountValue) {
-      //   finalPrice = Math.max(0, finalPrice - deal.discountValue)
-      // }
-
-      result.push({
-        ...item,
-        variations: [{
-          ...variation,
-          price: variation?.price
-        }],
-        hasDeal,
-        dealText
-      })
-    }
-    
-    return result
-  }, [data])
 
   const handleAddToCart = useCallback((product) => {
     // Handle add to cart action
@@ -133,11 +93,39 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false 
     )
   }
 
+  if (error) {
+    return (
+      <View style={styles(currentTheme).container}>
+        <SectionHeader title={title} showSeeAll={false} />
+        <View style={styles(currentTheme).errorContainer}>
+          <MaterialIcons 
+            name="error-outline" 
+            size={48} 
+            color={currentTheme.textErrorColor} 
+          />
+          <Text style={styles(currentTheme).errorText}>
+            {error?.message || 'Failed to load data'}
+          </Text>
+          {onRetry && (
+            <TouchableOpacity 
+              style={styles(currentTheme).retryButton}
+              onPress={onRetry}
+            >
+              <Text style={styles(currentTheme).retryButtonText}>
+                Retry to get data
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    )
+  }
+
   return (
     <View style={styles(currentTheme).container}>
       <SectionHeader title={title} showSeeAll={false} />
       <FlatList
-        data={transformedData || []}
+        data={data || []}
         numColumns={2}
         keyExtractor={keyExtractor}
         renderItem={renderProduct}
@@ -182,6 +170,37 @@ const styles = (currentTheme) =>
     skeletonSpacing: {
       marginTop: 8,
       gap: 6
+    },
+    errorContainer: {
+      paddingHorizontal: 20,
+      paddingVertical: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: currentTheme.errorInputBack || '#F7E7E5',
+      borderRadius: 12,
+      marginHorizontal: 20,
+      marginTop: 10,
+      borderWidth: 1,
+      borderColor: currentTheme.errorInputBorder || '#DB4A39'
+    },
+    errorText: {
+      marginTop: 16,
+      fontSize: 14,
+      color: currentTheme.textErrorColor,
+      textAlign: 'center',
+      marginBottom: 20
+    },
+    retryButton: {
+      backgroundColor: currentTheme.textErrorColor,
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderRadius: 8,
+      marginTop: 8
+    },
+    retryButtonText: {
+      color: currentTheme.white,
+      fontSize: 14,
+      fontWeight: '600'
     }
   })
 
