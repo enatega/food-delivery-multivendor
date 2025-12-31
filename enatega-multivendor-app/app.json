@@ -40,6 +40,8 @@
       },
       "usesAppleSignIn": true,
       "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "Bluetooth access is required to connect to thermal printers.",
+        "NSBluetoothPeripheralUsageDescription": "Bluetooth access is required to connect to thermal printers.",
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
         "UIBackgroundModes": ["remote-notification", "remote-notification"],
         "NSUserTrackingUsageDescription": "Allow this app to collect app-related data that can be used for tracking you or your device.",
@@ -73,7 +75,13 @@
           "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
         }
       },
-      "permissions": ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.FOREGROUND_SERVICE", "com.google.android.gms.permission.AD_ID"],
+      "permissions": ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.FOREGROUND_SERVICE", "com.google.android.gms.permission.AD_ID",
+    
+       "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH_SCAN"
+    ],
       "icon": "./assets/appIcon.png",
       "queries": {
         "packages": ["com.whatsapp", "com.whatsapp.w4b"]

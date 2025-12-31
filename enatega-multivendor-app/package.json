@@ -118,6 +118,7 @@
     "react-native-star-rating": "^1.1.0",
     "react-native-svg": "15.11.2",
     "react-native-swiper-flatlist": "^3.2.3",
+    "react-native-thermal-pos-printer": "^1.6.6",
     "react-native-webview": "13.13.5",
     "react-navigation-collapsible": "^6.3.0",
     "rn-placeholder": "^3.0.1",
