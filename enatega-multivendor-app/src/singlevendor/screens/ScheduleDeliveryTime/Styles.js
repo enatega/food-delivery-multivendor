@@ -57,16 +57,16 @@ const styles = (props = null) =>
       paddingHorizontal: scale(16),
       paddingTop: scale(8),
       paddingBottom: scale(30),
-      borderTopWidth: 1,
-      borderTopColor: props !== null ? props.gray200 : '#E5E7EB',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: -2
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 5
+      // borderTopWidth: 1,
+      // borderTopColor: props !== null ? props.gray200 : '#E5E7EB',
+      // shadowColor: '#000',
+      // shadowOffset: {
+      //   width: 0,
+      //   height: -2
+      // },
+      // shadowOpacity: 0.1,
+      // shadowRadius: 2,
+      // elevation: 5
     },
     confirmButton: {
       backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9',
