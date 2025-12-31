@@ -15,6 +15,7 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault';
 
 import TimeSlotList from '../../components/ScheduleDeliveryTime/TimeSlotList';
 import DateTabs from '../../components/ScheduleDeliveryTime/DateTabs';
+import ScheduleDeliveryTimeSkeleton from '../../components/ScheduleDeliveryTime/ScheduleDeliveryTimeSkeleton';
 import { GET_SCHEDULE_BY_DAY } from '../../apollo/queries';
 import useScheduleStore from '../../stores/scheduleStore';
 import styles from './Styles';
@@ -290,17 +291,7 @@ const ScheduleDeliveryTime = (props) => {
   return (
     <View style={styles(currentTheme).mainContainer}>
       {loading && !data ? (
-        <View style={styles(currentTheme).loadingContainer}>
-          <ActivityIndicator size="large" color={currentTheme.singlevendorcolor || '#0090CD'} />
-          <TextDefault
-            textColor={currentTheme.fontSecondColor}
-            center
-            isRTL
-            style={{ marginTop: scale(16) }}
-          >
-            {t('Loading schedule...') || 'Loading schedule...'}
-          </TextDefault>
-        </View>
+        <ScheduleDeliveryTimeSkeleton />
       ) : error && !data ? (
         <View style={styles(currentTheme).errorContainer}>
           <AntDesign 
