@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect } from 'react';
+import React, { useState, useContext, useLayoutEffect, useRef } from 'react';
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -20,6 +20,7 @@ import DeliveryTimeOptions from '../../components/Checkout/DeliveryTimeOptions';
 import PaymentSection from '../../components/Checkout/PaymentSection';
 import TipSection from '../../components/Checkout/TipSection';
 import OrderSummary from '../../components/Checkout/OrderSummary';
+import VoucherBottomSheet from '../../components/Checkout/VoucherBottomSheet';
 import useScheduleStore from '../../stores/scheduleStore';
 import styles from './Styles';
 
@@ -32,6 +33,9 @@ const Checkout = (props) => {
   
   // Get schedule from Zustand store
   const { selectedSchedule } = useScheduleStore();
+  
+  // Ref for voucher bottom sheet
+  const voucherBottomSheetRef = useRef(null);
   
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -210,6 +214,12 @@ const Checkout = (props) => {
     return cart.length > 0;
   };
 
+  const handleApplyVoucher = (voucherCode) => {
+    console.log('🎟️ Applying voucher:', voucherCode);
+    setSelectedVoucher(voucherCode);
+    // TODO: Implement voucher validation and discount calculation
+  };
+
   return (
     <View style={styles(currentTheme).mainContainer}>
       <ScrollView 
@@ -253,6 +263,7 @@ const Checkout = (props) => {
           selectedVoucher={selectedVoucher}
           onChangeCard={() => {/* TODO: Navigate to payment methods */}}
           onChangeVoucher={() => {/* TODO: Navigate to vouchers */}}
+          voucherBottomSheetRef={voucherBottomSheetRef}
         />
 
         {/* Tip Section (only for delivery mode) */}
@@ -300,6 +311,12 @@ const Checkout = (props) => {
           </TextDefault>
         </TouchableOpacity>
       </View>
+
+      {/* Voucher Bottom Sheet */}
+      <VoucherBottomSheet
+        ref={voucherBottomSheetRef}
+        onApplyVoucher={handleApplyVoucher}
+      />
     </View>
   );
 };
