@@ -71,16 +71,18 @@ const ScheduleDeliveryTime = (props) => {
         const scheduleDate = new Date(schedule.date);
         scheduleDate.setHours(0, 0, 0, 0);
         
+        // Format as "Day Month" (e.g., "1 Jan")
+        const day = scheduleDate.getDate();
+        const monthName = scheduleDate.toLocaleString('en-US', { month: 'short' });
+        const dateFormat = `${day} ${monthName}`;
+        
         let label = '';
         if (scheduleDate.getTime() === today.getTime()) {
-          label = t('Today') || 'Today';
+          label = `${t('Today') || 'Today'}, ${dateFormat}`;
         } else if (scheduleDate.getTime() === tomorrow.getTime()) {
-          label = t('Tomorrow') || 'Tomorrow';
+          label = `${t('Tomorrow') || 'Tomorrow'}, ${dateFormat}`;
         } else {
-          // Format as "Day Month" (e.g., "1 Jan")
-          const day = scheduleDate.getDate();
-          const month = scheduleDate.toLocaleString('en-US', { month: 'short' });
-          label = `${day} ${month}`;
+          label = dateFormat;
         }
 
         return {
