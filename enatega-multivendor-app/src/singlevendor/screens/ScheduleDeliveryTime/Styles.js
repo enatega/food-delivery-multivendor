@@ -40,6 +40,7 @@ const styles = (props = null) =>
     },
     infoIcon: {
       // marginRight: scale(8)
+      fontWeight: "bold"
     },
     infoText: {
       textAlign: "center",

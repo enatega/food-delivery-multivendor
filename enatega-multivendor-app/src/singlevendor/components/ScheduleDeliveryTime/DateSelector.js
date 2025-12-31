@@ -30,7 +30,8 @@ const DateSelector = ({ dates, selectedDate, onSelectDate }) => {
           >
             <TextDefault
               textColor={isSelected ? currentTheme.fontMainColor : currentTheme.fontSecondColor}
-              bold={isSelected}
+              bold
+              bolder={isSelected}
               isRTL
             >
               {date.label}, {date.date}

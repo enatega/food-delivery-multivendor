@@ -30,8 +30,9 @@ const TimeSlotList = ({ timeSlots, selectedTimeSlot, onSelectTimeSlot }) => {
             activeOpacity={0.7}
           >
             <TextDefault
-              textColor={isSelected ? (currentTheme.singlevendorcolor || '#0090CD') : currentTheme.fontMainColor}
-              bold={isSelected}
+              textColor={isSelected ? (currentTheme.singlevendorcolor || '#0090CD') : currentTheme.fontSecondColor}
+              bold
+              bolder={isSelected}
               center
               isRTL
             >

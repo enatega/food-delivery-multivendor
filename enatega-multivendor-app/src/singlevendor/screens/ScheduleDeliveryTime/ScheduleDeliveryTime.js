@@ -391,7 +391,7 @@ const ScheduleDeliveryTime = (props) => {
                 small
                 isRTL
                 center
-                bold
+                bolder
                 style={styles().infoText}
               >
                 {t('Pre-order not available on Sundays & holidays.') || 
