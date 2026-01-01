@@ -267,6 +267,6 @@ export const theme = {
     singlevendorcolor: '#0090CD',
     colorBgTertiary: '#1F1F22',
     colorBgSecondary: '#CCE9F5',
-    colorRextMuted: '#71717A'
+    colorTextMuted: '#71717A'
   }
 }

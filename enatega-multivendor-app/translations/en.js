@@ -688,5 +688,11 @@ export const en = {
   emptyCartDescription: "When you add items from a store, your order will be right here. so you can make changes whenever you want.",
   startShopping: "Start shopping",
   goToCheckout: "Go to checkout",
-  voucher: "Voucher"
+  voucher: "Voucher",
+  "All Categories": "All Categories",
+  "Recent": "Recent",
+  "Clear All": "Clear All",
+  "No results found for your search. Please try a different query": "No results found for your search. Please try a different query.",
+  "found": "found",
+  "No recent searches found, Search your taste": "No recent searches found, Search your taste"
 }

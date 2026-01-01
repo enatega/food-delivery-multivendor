@@ -12,7 +12,19 @@ const Home = () => {
   console.log("🚀 ~ Home ~ categoriesData:", categoriesData)
   return (
     <View>
-      <FlatList data={categoriesData} renderItem={({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />} keyExtractor={(item) => item.id} ListHeaderComponent={<HomeBanner />} ListFooterComponent={<HorizontalCategoriesList categoriesData={categoriesData} />} />
+      <FlatList
+        data={categoriesData}
+        renderItem={({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={() => {
+          return (
+            <>
+              <HomeBanner />
+              <HorizontalCategoriesList categoriesData={categoriesData} />
+            </>
+          )
+        }}
+      />
     </View>
   )
 }
