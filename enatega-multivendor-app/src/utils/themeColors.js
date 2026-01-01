@@ -133,7 +133,7 @@ export const theme = {
     singlevendorcolor: '#0090CD',
     colorBgTertiary: '#F4F4F5',
     colorBgSecondary: '#CCE9F5',
-    colorTextPrimary: '##006189',
+    colorTextPrimary: '#006189',
     colorTextMuted: '#71717A',
     lightBlue: '#CCE9F5',
     gray300: '#A1A1AA',
