@@ -75,7 +75,7 @@ const styles = (currentTheme) =>
     container: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingHorizontal: scale(16),
+      paddingHorizontal: scale(12),
       marginBottom: verticalScale(20),
       position: 'relative'
       
