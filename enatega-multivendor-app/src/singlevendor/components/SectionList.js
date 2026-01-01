@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { View, FlatList, StyleSheet } from 'react-native'
 import React, { useContext, useMemo, useCallback } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import { theme } from '../../utils/themeColors'
@@ -8,6 +8,11 @@ import { useNavigation } from '@react-navigation/native'
 import ProductCard from './ProductCard'
 import SectionHeader from './SectionHeader'
 import LoadingSkeleton from './LoadingSkeleton'
+import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import Button from '../../components/Button/Button'
+import { scale, verticalScale } from '../../utils/scaling'
+import { alignment } from '../../utils/alignment'
+import { textStyles } from '../../utils/textStyles'
 
 const SectionList = ({ title = 'Limited time deals', data = [], loading = false, error = null, onRetry = null }) => {
   console.log('data of the section list',JSON.stringify(data,null,2));
@@ -103,18 +108,17 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false,
             size={48} 
             color={currentTheme.textErrorColor} 
           />
-          <Text style={styles(currentTheme).errorText}>
-            {error?.message || 'Failed to load data'}
-          </Text>
+          <TextDefault style={styles(currentTheme).errorText}>
+            {/* {error?.message || 'Failed to load data'} */}
+            “Oops! We couldn’t load the data. Tap ‘Retry’ to try again.”
+          </TextDefault>
           {onRetry && (
-            <TouchableOpacity 
-              style={styles(currentTheme).retryButton}
-              onPress={onRetry}
-            >
-              <Text style={styles(currentTheme).retryButtonText}>
-                Retry to get data
-              </Text>
-            </TouchableOpacity>
+            <Button
+              text="Retry"
+              buttonStyles={styles(currentTheme).retryButton}
+              textStyles={styles(currentTheme).retryButtonText}
+              buttonProps={{ onPress: onRetry }}
+            />
           )}
         </View>
       </View>
@@ -145,17 +149,18 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false,
 const styles = (currentTheme) =>
   StyleSheet.create({
     container: {
-      marginTop: 20,
-      marginBottom: 10
+      ...alignment.MTlarge,
+      ...alignment.MBsmall
     },
     listContent: {
-      paddingHorizontal: 20,
-      paddingBottom: 10,
+      ...alignment.PLlarge,
+      ...alignment.PRlarge,
+      ...alignment.PBsmall
     },
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 16
+      marginBottom: scale(16)
     },
     productCard: {
       width: '48%',
@@ -168,38 +173,40 @@ const styles = (currentTheme) =>
       marginLeft: 0
     },
     skeletonSpacing: {
-      marginTop: 8,
-      gap: 6
+      marginTop: scale(8),
+      gap: scale(6)
     },
     errorContainer: {
-      paddingHorizontal: 20,
-      paddingVertical: 40,
+      ...alignment.PLlarge,
+      ...alignment.PRlarge,
+      paddingVertical: verticalScale(40),
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: currentTheme.errorInputBack || '#F7E7E5',
-      borderRadius: 12,
-      marginHorizontal: 20,
-      marginTop: 10,
+      backgroundColor: currentTheme.errorInputBack,
+      borderRadius: scale(12),
+      ...alignment.MLlarge,
+      ...alignment.MRlarge,
+      ...alignment.MTsmall,
       borderWidth: 1,
-      borderColor: currentTheme.errorInputBorder || '#DB4A39'
+      borderColor: currentTheme.errorInputBorder
     },
     errorText: {
-      marginTop: 16,
-      fontSize: 14,
+      marginTop: scale(16),
+      ...textStyles.H5,
       color: currentTheme.textErrorColor,
-      textAlign: 'center',
-      marginBottom: 20
+      ...textStyles.Center,
+      ...alignment.MBlarge
     },
     retryButton: {
       backgroundColor: currentTheme.textErrorColor,
-      paddingHorizontal: 24,
-      paddingVertical: 12,
-      borderRadius: 8,
-      marginTop: 8
+      paddingHorizontal: scale(24),
+      paddingVertical: scale(12),
+      borderRadius: scale(8),
+      ...alignment.MTxSmall
     },
     retryButtonText: {
       color: currentTheme.white,
-      fontSize: 14,
+      ...textStyles.H5,
       fontWeight: '600'
     }
   })
