@@ -64,10 +64,10 @@ const styles = (currentTheme) =>
       marginBottom: verticalScale(24)
     },
     banner: {
-      borderRadius: scale(12),
+      borderRadius: scale(6),
       padding: scale(20),
       overflow: 'hidden',
-      height: verticalScale(160),
+      height: verticalScale(140),
       justifyContent: 'space-between'
     },
     bannerImage: {
@@ -75,7 +75,7 @@ const styles = (currentTheme) =>
     },
     textContainer: {
       flex: 1,
-      justifyContent: 'center'
+      justifyContent: 'top'
     },
     title: {
       fontSize: scale(20),
@@ -89,9 +89,9 @@ const styles = (currentTheme) =>
     },
     button: {
       backgroundColor: currentTheme.singlevendorcolor,
-      paddingVertical: verticalScale(12),
-      paddingHorizontal: scale(24),
-      borderRadius: scale(12),
+      paddingVertical: verticalScale(8),
+      paddingHorizontal: scale(12),
+      borderRadius: scale(6),
       alignSelf: 'flex-start',
       shadowColor: '#000',
       shadowOffset: {

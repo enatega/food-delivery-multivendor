@@ -447,6 +447,7 @@ export const en = {
   paymentSummary: 'Payment Summary',
   voucherDiscount: 'Voucher Discount',
   addVoucher: 'Add Voucher Code',
+  enterVoucher: 'Enter voucher',
   signUpDiscount: 'Sign up to get your discount',
   foodDelivery: 'Food Delivery',
   OrderfoodLove: 'Order food you love',
@@ -687,5 +688,5 @@ export const en = {
   emptyCartDescription: "When you add items from a store, your order will be right here. so you can make changes whenever you want.",
   startShopping: "Start shopping",
   goToCheckout: "Go to checkout",
-  Promo_Code: "Promo code"
+  voucher: "Voucher"
 }

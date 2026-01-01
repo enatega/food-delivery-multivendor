@@ -143,3 +143,21 @@ export const GET_FAVORITE_FOODS_STATUS = gql`
     }
   }
 `
+
+export const GET_SCHEDULE_BY_DAY = gql`
+  query GetScheduleByDay {
+    getScheduleByDay {
+      date
+      day
+      timings {
+        id
+        times {
+          id
+          startTime
+          endTime
+          maxOrder
+        }
+      }
+    }
+  }
+`

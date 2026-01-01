@@ -14,6 +14,11 @@ const FulfillmentTabs = ({ selectedMode, onSelectMode }) => {
     ...theme[themeContext.ThemeValue]
   };
 
+  const handleModeSelect = (mode) => {
+    console.log('🚚 Fulfillment Mode Selected:', mode === 'delivery' ? 'Delivery' : 'Click & Collect');
+    onSelectMode(mode);
+  };
+
   return (
     <View style={styles(currentTheme).container}>
       <View style={styles(currentTheme).tabsContainer}>
@@ -22,7 +27,7 @@ const FulfillmentTabs = ({ selectedMode, onSelectMode }) => {
             styles(currentTheme).tab,
             selectedMode === 'delivery' && styles(currentTheme).tabSelected
           ]}
-          onPress={() => onSelectMode('delivery')}
+          onPress={() => handleModeSelect('delivery')}
           activeOpacity={0.7}
         >
           <TextDefault
@@ -40,7 +45,7 @@ const FulfillmentTabs = ({ selectedMode, onSelectMode }) => {
             styles(currentTheme).tab,
             selectedMode === 'collection' && styles(currentTheme).tabSelected
           ]}
-          onPress={() => onSelectMode('collection')}
+          onPress={() => handleModeSelect('collection')}
           activeOpacity={0.7}
         >
           <TextDefault
