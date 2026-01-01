@@ -19,13 +19,13 @@ const OptionList = ({
   const onPressItem = (id) => {
     if (isVariation) {
       // Radio selection
-      onChange([id]);
+      onChange([id],id);
     } else {
       // Checkbox selection
       if (selectedIds.includes(id)) {
-        onChange(selectedIds.filter(x => x !== id));
+        onChange(selectedIds.filter(x => x !== id), id);
       } else {
-        onChange([...selectedIds, id]);
+        onChange([...selectedIds, id], id);
       }
     }
   };

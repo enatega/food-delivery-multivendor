@@ -8,3 +8,12 @@ mutation ToggleFavoriteFoodSingleVendor($toggleFavoriteFoodSingleVendorId: ID!) 
     isFavorite
   }
 }`
+
+
+export const UPDATE_USER_CART = gql`
+mutation UserCartData($input: CartInput!) {
+  userCartData(input: $input) {
+    message
+    success
+  }
+}`

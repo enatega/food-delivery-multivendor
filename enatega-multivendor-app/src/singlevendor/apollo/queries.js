@@ -119,6 +119,7 @@ export const GET_FOOD_DETAILS = gql`query GetFoodDetails($foodId: ID!) {
         description
         image
         isPopular
+        categoryId
         variations {
             id
             title
