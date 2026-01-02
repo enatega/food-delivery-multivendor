@@ -5,6 +5,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { UPDATE_USER_CART } from '../../apollo/mutations'
+import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 
 const useProductDetails = ({ foodId }) => {
   // Todo: need to fix variations related data.
@@ -15,6 +16,7 @@ const useProductDetails = ({ foodId }) => {
   const [updateUserCart, { loading: updateUserCartLoading, error: updateUserCartError }] = useMutation(UPDATE_USER_CART, {
     onCompleted: (data) => {
       console.log('Cart updated:', data)
+      FlashMessage({ message: t('itemAddedToCart') })
     },
     onError: (error) => {
       console.error('Error updating cart:', error)

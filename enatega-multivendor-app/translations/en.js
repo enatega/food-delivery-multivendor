@@ -719,5 +719,6 @@ export const en = {
   "Clear All": "Clear All",
   "No results found for your search. Please try a different query": "No results found for your search. Please try a different query.",
   "found": "found",
-  "No recent searches found, Search your taste": "No recent searches found, Search your taste"
+  "No recent searches found, Search your taste": "No recent searches found, Search your taste",
+  "itemAddedToCart": "Item added to cart"
 }

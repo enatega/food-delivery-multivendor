@@ -25,7 +25,7 @@ const Browse = () => {
 
         <BrowseModal visible={modalVisible} onClose={handleModalClose} inputRef={inputRef} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleClearSearch={handleClearSearch} currentTheme={currentTheme} t={t} insets={insets} data={data} loading={loading} debouncedSearch={debouncedSearch} onProductPress={onProductPress} handleAddToCart={handleAddToCart} isSearched={isSearched} />
 
-        <SearchModal visible={isCategoryModalVisible} onClose={() => setisCategoryModalVisible(false)} items={products} />
+        <SearchModal visible={isCategoryModalVisible} onClose={() => setisCategoryModalVisible(false)} items={products} isPaginated={true} categoryId={categoryId} />
       </View>
     </TouchableWithoutFeedback>
   )

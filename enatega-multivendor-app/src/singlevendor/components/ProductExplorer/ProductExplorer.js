@@ -68,9 +68,9 @@ const ProductExplorer = () => {
 
     // ✅ Unique + flat
     return Array.from(map.values())
-  }, [categories])
+  }, [categories])  
 
-  if (!loading) return <ProductExplorerSkeleton />
+  if (loading) return <ProductExplorerSkeleton />
 
   return (
     <>
