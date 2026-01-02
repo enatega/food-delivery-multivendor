@@ -1,10 +1,11 @@
 import { View } from 'react-native'
 import React from 'react'
 import HorizontalCategoriesList from '../../components/HorizontalCategoriesList'
-import HomeBanner from '../../components/Home/HomeBanner'
+// import HomeBanner from '../../components/Home/HomeBanner'
 import useHome from './useHome'
 import WrapperHorizontalProductsList from '../../components/WrapperHorizontalProductsList'
 import { FlatList } from 'react-native-gesture-handler'
+import PromoBanner from '../../components/Profile/PromoBanner'
 
 const Home = () => {
   const { data } = useHome()
@@ -18,10 +19,10 @@ const Home = () => {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={() => {
           return (
-            <>
-              <HomeBanner />
+            <View style={{marginTop: 30}}>
+             <PromoBanner/>
               <HorizontalCategoriesList categoriesData={categoriesData} />
-            </>
+            </View>
           )
         }}
       />
