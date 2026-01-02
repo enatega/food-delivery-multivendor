@@ -18,7 +18,7 @@ const SectionHeader = ({ title }) => {
     <View style={styles(currentTheme).container}>
       <TextDefault
         H4
-        bold
+        bolder
         textColor={currentTheme.fontMainColor}
         style={styles(currentTheme).title}
       >

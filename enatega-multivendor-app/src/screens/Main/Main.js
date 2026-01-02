@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback, useMemo } from 'react'
 import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, FlatList, Image, RefreshControl, ActivityIndicator } from 'react-native'
-import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
+import { AntDesign, Entypo, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
@@ -246,11 +246,21 @@ function Main(props) {
       refresh: Date.now()
     })
   }
+  
+  // todo2: temp useeffect for modal open.
+  useEffect(() => {
+    modalRef.current.open()
+  },[])
 
   const modalHeader = () => (
     <View style={[styles().addNewAddressbtn]}>
       <View style={styles(currentTheme).addressContainer}>
-        <TouchableOpacity style={[styles(currentTheme).addButton]} activeOpacity={0.7} onPress={setCurrentLocation} disabled={busy}>
+        <TextDefault H3 bolder>{t('Location')}</TextDefault>
+        <TouchableOpacity hitSlop={10} onPress={() => modalRef.current.close()} style={{ width: '15', opacity: 0.7 }}>
+          <Entypo name='cross' size={20} color={currentTheme?.colorTextMuted} />
+        </TouchableOpacity>
+        {/* Todo2: need discussion - multivendor old design */}
+        {/* <TouchableOpacity style={[styles(currentTheme).addButton]} activeOpacity={0.7} onPress={setCurrentLocation} disabled={busy}>
           <View style={styles(currentTheme).addressSubContainer}>
             {busy ? (
               <Spinner size='small' />
@@ -264,7 +274,7 @@ function Main(props) {
               </>
             )}
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   )
@@ -302,7 +312,6 @@ function Main(props) {
       <View style={styles().addressTick}></View>
     </View>
   )
-
 
   // const filterCusinies = () => {
   //   if (data !== undefined) {
@@ -345,7 +354,6 @@ function Main(props) {
   const groceryCuisines = useCuisinesData('grocery', allCuisines)
 
   if (error) return <ErrorView />
-
 
   return (
     <>

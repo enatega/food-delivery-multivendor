@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { View, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -7,11 +8,16 @@ import { theme } from '../../../utils/themeColors'
 import { scale, verticalScale } from '../../../utils/scaling'
 
 const PromoBanner = () => {
+  const navigation = useNavigation()
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
+  }
+
+  const handleJoinNow = () => {
+    navigation.navigate('Membership')
   }
 
   return (
@@ -42,6 +48,7 @@ const PromoBanner = () => {
         </View>
         <TouchableOpacity
           style={styles(currentTheme).button}
+          onPress={handleJoinNow}
           activeOpacity={0.8}
         >
           <TextDefault
@@ -64,10 +71,10 @@ const styles = (currentTheme) =>
       marginBottom: verticalScale(24)
     },
     banner: {
-      borderRadius: scale(12),
+      borderRadius: scale(6),
       padding: scale(20),
       overflow: 'hidden',
-      height: verticalScale(160),
+      height: verticalScale(140),
       justifyContent: 'space-between'
     },
     bannerImage: {
@@ -75,7 +82,7 @@ const styles = (currentTheme) =>
     },
     textContainer: {
       flex: 1,
-      justifyContent: 'center'
+      justifyContent: 'top'
     },
     title: {
       fontSize: scale(20),
@@ -89,9 +96,9 @@ const styles = (currentTheme) =>
     },
     button: {
       backgroundColor: currentTheme.singlevendorcolor,
-      paddingVertical: verticalScale(12),
-      paddingHorizontal: scale(24),
-      borderRadius: scale(12),
+      paddingVertical: verticalScale(8),
+      paddingHorizontal: scale(12),
+      borderRadius: scale(6),
       alignSelf: 'flex-start',
       shadowColor: '#000',
       shadowOffset: {

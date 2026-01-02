@@ -13,7 +13,8 @@ const PaymentSection = ({
   selectedCard,
   selectedVoucher,
   onChangeCard,
-  onChangeVoucher
+  onChangeVoucher,
+  voucherBottomSheetRef
 }) => {
   const { t, i18n } = useTranslation();
   const themeContext = useContext(ThemeContext);
@@ -73,7 +74,7 @@ const PaymentSection = ({
       {/* Voucher Option */}
       <TouchableOpacity
         style={styles(currentTheme).paymentRow}
-        onPress={onChangeVoucher}
+        onPress={() => voucherBottomSheetRef?.current?.open()}
         activeOpacity={0.7}
       >
         <View style={styles().paymentLeft}>
@@ -88,7 +89,7 @@ const PaymentSection = ({
               bold
               isRTL
             >
-              {selectedVoucher || (t('Promo_Code') || 'Promo Code')}
+              {selectedVoucher || (t('voucher') || 'Voucher')}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontSecondColor}

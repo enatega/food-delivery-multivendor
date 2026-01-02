@@ -27,6 +27,7 @@ import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
 import useGeocoding from '../../ui/hooks/useGeocoding'
 import blackmarker from '../../assets/images/user.png'
+import CustomMarker from '../../assets/SVG/imageComponents/CustomMarker'
 
 // Default location if current location can't be retrieved
 const DEFAULT_LATITUDE = 33.95
@@ -253,14 +254,11 @@ export default function AddNewAddress(props) {
           
           {/* Marker overlay with pointer events disabled */}
           <View style={styles().mainContainer} pointerEvents='none'>
-            <Image
-              source={blackmarker}
-              style={{
-                width: 40,
-                height: 40,
-                resizeMode: 'contain',
-                transform: [{ translateY: -20 }]
-              }}
+            <CustomMarker
+              width={40}
+              height={40}
+              transform={[{ translateY: -20 }]}
+              translateY={-20}
             />
           </View>
           
@@ -340,7 +338,7 @@ export default function AddNewAddress(props) {
             onPress={onSelectLocation}
             disabled={!selectedValue.address || !selectedValue.city}
           >
-            <TextDefault textColor={currentTheme.buttonText} center H5>
+            <TextDefault textColor={currentTheme.white} bold center H5>
               {t('saveBtn')}
             </TextDefault>
           </TouchableOpacity>

@@ -66,7 +66,7 @@ const styles = (currentTheme) =>
       borderRadius: 12,
       marginHorizontal: 16,
       marginTop: verticalScale(16),
-      paddingVertical: verticalScale(16),
+      paddingVertical: verticalScale(10),
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 1,

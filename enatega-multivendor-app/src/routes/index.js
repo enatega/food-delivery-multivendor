@@ -73,6 +73,9 @@ import * as LocationImport from 'expo-location'
 import BottomTabNavigator from './BottomTabNavigator'
 import ProductExplorer from '../singlevendor/components/ProductExplorer/ProductExplorer'
 import ProductDetails from '../singlevendor/screens/ProductDetails/ProductDetails'
+import ScheduleDeliveryTime from '../singlevendor/screens/ScheduleDeliveryTime/ScheduleDeliveryTime'
+import ReferAFriend from '../singlevendor/screens/ReferAFriend/ReferAFriend'
+import Membership from '../singlevendor/screens/Membership/Membership'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -192,7 +195,10 @@ function MainNavigator() {
       {/* Single Vendor Routes */}
       <NavigationStack.Screen name='ProductExplorer' component={ProductExplorer} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='SingleVendorCheckout' component={SingleVendorCheckout} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='ScheduleDeliveryTime' component={ScheduleDeliveryTime} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='ProductDetails' component={ProductDetails} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='ReferAFriend' component={ReferAFriend} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='Membership' component={Membership} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     </NavigationStack.Navigator>
   )
 }

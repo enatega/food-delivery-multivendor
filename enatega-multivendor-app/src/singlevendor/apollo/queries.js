@@ -144,6 +144,43 @@ export const GET_FAVORITE_FOODS_STATUS = gql`
   }
 `
 
+export const GET_SCHEDULE_BY_DAY = gql`
+  query GetScheduleByDay {
+    getScheduleByDay {
+      date
+      day
+      timings {
+        id
+        times {
+          id
+          startTime
+          endTime
+          maxOrder
+        }
+      }
+    }
+  }
+`
+
+export const SEARCH_FOOD = gql`
+  query SearchFood($search: String) {
+    searchFood(search: $search) {
+      id
+      title
+      description
+      subCategory
+      image
+      isOutOfStock
+      isFavourite
+      variations {
+        id
+        name
+        price
+      }
+    }
+  }
+`
+
 export const GET_LIMITED_TIME_FOODS_DEALS = gql`
 query GetLimitedTimeFoodsDeals {
     getLimitedTimeFoodsDeals {

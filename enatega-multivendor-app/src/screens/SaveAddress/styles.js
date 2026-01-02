@@ -151,7 +151,7 @@ const styles = (props = null) =>
       borderRadius: 30,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props?.newheaderColor : 'transparent',
+      backgroundColor: props !== null ? props?.primaryBlue : 'transparent',
       alignSelf: 'center',
       marginTop: 20,
       marginBottom: 15

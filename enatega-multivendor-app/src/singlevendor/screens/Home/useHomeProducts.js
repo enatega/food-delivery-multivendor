@@ -9,7 +9,8 @@ const useHomeProducts = ({categoryId}) => {
       categoryId: categoryId,
       skip: 0,
       limit: 10
-    }
+    },
+    skip: !categoryId,
   })
   return {
     loading,

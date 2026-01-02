@@ -34,7 +34,7 @@ const QuickActionsGrid = () => {
       id: 3,
       icon: 'gift-outline',
       label: t('Refer a friend'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('ReferAFriend')
     }
   ]
 
@@ -52,13 +52,14 @@ const QuickActionsGrid = () => {
           <Ionicons
             name={action.icon}
             size={scale(28)}
-            color={currentTheme.iconColor}
+            color={action.id === 3 ? currentTheme.singlevendorcolor : currentTheme.iconColor}
           />
           <TextDefault
-            textColor={currentTheme.fontMainColor}
+            textColor={action.id === 3 ? currentTheme.singlevendorcolor : currentTheme.fontMainColor}
             style={styles(currentTheme).actionLabel}
             numberOfLines={2}
             center
+            bold
           >
             {action.label}
           </TextDefault>
@@ -74,7 +75,7 @@ const styles = (currentTheme) =>
     container: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingHorizontal: scale(16),
+      paddingHorizontal: scale(12),
       marginBottom: verticalScale(20),
       position: 'relative'
       
@@ -106,7 +107,7 @@ const styles = (currentTheme) =>
     actionLabel: {
       marginTop: verticalScale(8),
       fontSize: scale(12),
-      textAlign: 'center'
+      textAlign: 'center',
     }
   })
 

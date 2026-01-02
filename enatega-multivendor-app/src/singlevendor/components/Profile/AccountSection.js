@@ -80,7 +80,8 @@ const AccountSection = () => {
 const styles = (currentTheme) =>
   StyleSheet.create({
     container: {
-      marginBottom: verticalScale(16)
+      marginBottom: verticalScale(16),
+
     },
     menuContainer: {
       backgroundColor: currentTheme?.cardBackground || '#FFFFFF',

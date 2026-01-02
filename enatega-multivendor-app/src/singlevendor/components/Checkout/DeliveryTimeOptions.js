@@ -1,17 +1,32 @@
 import React, { useContext } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext';
 import { theme } from '../../../utils/themeColors';
 import { scale } from '../../../utils/scaling';
 import TextDefault from '../../../components/Text/TextDefault/TextDefault';
+import useScheduleStore from '../../stores/scheduleStore';
 
-const DeliveryTimeOptions = ({ selectedTime, onSelectTime, mode = 'delivery' }) => {
+const DeliveryTimeOptions = ({ selectedTime, onSelectTime, mode = 'delivery', scheduledTime = null }) => {
+  const { clearSchedule } = useScheduleStore();
   const { t, i18n } = useTranslation();
+  const navigation = useNavigation();
   const themeContext = useContext(ThemeContext);
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
+  };
+
+  // Format scheduled time display
+  const getScheduleSubtitle = () => {
+    if (scheduledTime && scheduledTime.dateLabel && scheduledTime.timeSlot) {
+      return `${scheduledTime.dateLabel}, ${scheduledTime.timeSlot.time}`;
+    }
+    return mode === 'delivery'
+      ? (t('Choose a delivery time') || 'Choose a delivery time')
+      : (t('Choose a collection time') || 'Choose a collection time');
   };
 
   const timeOptions = [
@@ -30,11 +45,25 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, mode = 'delivery' }) 
     {
       id: 'schedule',
       title: t('Schedule') || 'Schedule',
-      subtitle: mode === 'delivery'
-        ? (t('Choose a delivery time') || 'Choose a delivery time')
-        : (t('Choose a collection time') || 'Choose a collection time')
+      subtitle: getScheduleSubtitle()
     }
   ];
+
+  const handleTimeSelect = (optionId) => {
+    console.log('🕐 Time Option Selected:', optionId);
+    
+    if (optionId === 'schedule') {
+      // Always navigate to schedule screen, even if already selected
+      // This allows users to change their scheduled time
+      console.log('📅 Navigating to Schedule Delivery Time screen');
+      navigation.navigate('ScheduleDeliveryTime');
+    } else {
+      // When selecting priority or standard, clear the schedule and update the time
+      console.log('🗑️ Clearing schedule, switching to:', optionId);
+      clearSchedule();
+      onSelectTime(optionId);
+    }
+  };
 
   return (
     <View style={styles(currentTheme).container}>
@@ -57,7 +86,7 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, mode = 'delivery' }) 
             styles(currentTheme).optionCard,
             selectedTime === option.id && styles(currentTheme).optionCardSelected
           ]}
-          onPress={() => onSelectTime(option.id)}
+          onPress={() => handleTimeSelect(option.id)}
           activeOpacity={0.7}
         >
           <View style={styles().radioButton}>
@@ -87,7 +116,27 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, mode = 'delivery' }) 
             >
               {option.subtitle}
             </TextDefault>
+            {option.id === 'schedule' && scheduledTime && selectedTime === 'schedule' && (
+              <TextDefault
+                textColor={currentTheme.primaryBlue || '#0EA5E9'}
+                small
+                isRTL
+                style={{ marginTop: scale(2) }}
+              >
+                {t('Tap to change') || 'Tap to change'}
+              </TextDefault>
+            )}
           </View>
+
+          {/* Checkmark icon for selected option */}
+          {selectedTime === option.id && (
+            <Feather
+              name="check-circle"
+              size={20}
+              color={currentTheme.primaryBlue || '#0EA5E9'}
+              style={styles().checkIcon}
+            />
+          )}
         </TouchableOpacity>
       ))}
     </View>
@@ -116,7 +165,8 @@ const styles = (props = null) =>
     },
     optionCardSelected: {
       borderColor: props !== null ? props.primaryBlue : '#0EA5E9',
-      borderWidth: 2
+      borderWidth: 2,
+      backgroundColor: props !== null ? (props.colorBgSecondary || 'rgba(14, 165, 233, 0.08)') : 'rgba(14, 165, 233, 0.08)'
     },
     radioButton: {
       marginRight: scale(12)
@@ -141,6 +191,9 @@ const styles = (props = null) =>
     },
     optionContent: {
       flex: 1
+    },
+    checkIcon: {
+      marginLeft: scale(8)
     }
   });
 
