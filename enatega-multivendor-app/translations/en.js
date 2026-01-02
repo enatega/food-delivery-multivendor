@@ -713,4 +713,11 @@ export const en = {
   "More questions? See our": "More questions? See our",
   "FAQ": "FAQ",
   "Join me on this amazing food delivery app! Use my referral code {{code}} and get 1 free delivery. Download now: {{url}}": "Join me on this amazing food delivery app! Use my referral code {{code}} and get 1 free delivery. Download now: {{url}}"
+  voucher: "Voucher",
+  "All Categories": "All Categories",
+  "Recent": "Recent",
+  "Clear All": "Clear All",
+  "No results found for your search. Please try a different query": "No results found for your search. Please try a different query.",
+  "found": "found",
+  "No recent searches found, Search your taste": "No recent searches found, Search your taste"
 }
