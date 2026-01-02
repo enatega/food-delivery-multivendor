@@ -200,6 +200,7 @@ import { theme } from '../../../utils/themeColors'
 import SearchHeader from './SearchHeader'
 import ProductCard from '../ProductCard'
 import useHomeProducts from '../../screens/Home/useHomeProducts'
+import ProductsList from './ProductsList'
 
 const PAGE_LIMIT = 10
 
