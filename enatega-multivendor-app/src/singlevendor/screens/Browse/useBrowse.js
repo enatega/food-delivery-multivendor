@@ -85,15 +85,19 @@ const useBrowse = () => {
     console.log('Add to cart:', item.name)
   }
 
-  const handleSeeAll = (viewType, id) => {
+   const handleSeeAll = (viewType, id) => {
     if (viewType === 'see-all') {
       navigation.navigate('ProductExplorer')
     } else {
-      setCategoryId(id)
-      setModalVisible(false)
-      setTimeout(() => {
-        setisCategoryModalVisible(true)
-      }, 100)
+      // setCategoryId(id)
+      // setModalVisible(false)
+      // setTimeout(() => {
+      //   setisCategoryModalVisible(true)
+      // }, 100)
+      navigation.navigate('ProductsList', {
+        categoryId: id
+
+      })
     }
   }
 
