@@ -6,6 +6,7 @@ import SearchHeader from './SearchHeader'
 import ProductCard from '../ProductCard'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
+import HorizontalProductsEmptyView from '../HorizontalProductsEmptyView'
 
 const SearchModal = ({ visible, onClose, items }) => {
   const insets = useSafeAreaInsets()
@@ -42,22 +43,25 @@ const SearchModal = ({ visible, onClose, items }) => {
           style={{ paddingHorizontal: 10 }}
           data={filteredItems}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ProductCard
-              product={item}
-              onCardPress={onProductPress}
-              onAddToCart={handleAddToCart}
-              containerStyles={{
-                width: '94%',
-                marginBottom: 10,
-                marginLeft: 6,
-                marginRight: 6
-              }}
-            />
-          )}
+          renderItem={({ item }) => {
+            return (
+              <ProductCard
+                product={item}
+                onCardPress={onProductPress}
+                onAddToCart={handleAddToCart}
+                containerStyles={{
+                  width: '94%',
+                  marginBottom: 10,
+                  marginLeft: 6,
+                  marginRight: 6
+                }}
+              />
+            )
+          }}
           numColumns={2}
           estimatedItemSize={190}
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={<HorizontalProductsEmptyView />}
         />
       </View>
     </Modal>

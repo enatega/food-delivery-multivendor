@@ -161,3 +161,22 @@ export const GET_SCHEDULE_BY_DAY = gql`
     }
   }
 `
+
+export const SEARCH_FOOD = gql`
+  query SearchFood($search: String) {
+    searchFood(search: $search) {
+      id
+      title
+      description
+      subCategory
+      image
+      isOutOfStock
+      isFavourite
+      variations {
+        id
+        name
+        price
+      }
+    }
+  }
+`
