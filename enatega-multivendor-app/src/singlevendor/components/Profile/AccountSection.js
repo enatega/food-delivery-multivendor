@@ -34,7 +34,7 @@ const AccountSection = () => {
       id: 3,
       icon: 'ticket-outline',
       title: t('Vouchers'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('Vouchers')
     },
     {
       id: 4,
