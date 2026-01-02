@@ -73,7 +73,8 @@ export default function App() {
   // useWatchLocation()
 
   // Use system theme
-  const systemTheme = useColorScheme()
+  const systemTheme = 'Light'
+  // const systemTheme = useColorScheme()
   const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
   useEffect(() => {
     try {
