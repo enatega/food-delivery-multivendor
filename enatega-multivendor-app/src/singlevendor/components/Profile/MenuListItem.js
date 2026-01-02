@@ -51,7 +51,7 @@ const styles = (currentTheme) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingVertical: verticalScale(12),
-      paddingHorizontal: scale(16),
+      paddingHorizontal: scale(6),
       backgroundColor: currentTheme?.cardBackground || '#FFFFFF'
     },
     leftContent: {

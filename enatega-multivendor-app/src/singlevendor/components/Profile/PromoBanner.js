@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { View, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -7,11 +8,16 @@ import { theme } from '../../../utils/themeColors'
 import { scale, verticalScale } from '../../../utils/scaling'
 
 const PromoBanner = () => {
+  const navigation = useNavigation()
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
+  }
+
+  const handleJoinNow = () => {
+    navigation.navigate('Membership')
   }
 
   return (
@@ -42,6 +48,7 @@ const PromoBanner = () => {
         </View>
         <TouchableOpacity
           style={styles(currentTheme).button}
+          onPress={handleJoinNow}
           activeOpacity={0.8}
         >
           <TextDefault

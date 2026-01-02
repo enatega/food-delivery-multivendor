@@ -34,7 +34,7 @@ const QuickActionsGrid = () => {
       id: 3,
       icon: 'gift-outline',
       label: t('Refer a friend'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('ReferAFriend')
     }
   ]
 
@@ -75,7 +75,7 @@ const styles = (currentTheme) =>
     container: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingHorizontal: scale(16),
+      paddingHorizontal: scale(12),
       marginBottom: verticalScale(20),
       position: 'relative'
       
