@@ -1,12 +1,24 @@
-import { View, StyleSheet } from 'react-native'
-import React, { useEffect, useState, useRef, useMemo } from 'react'
+import { SafeAreaView, Platform, StatusBar } from 'react-native'
+import React, { useEffect, useState, useRef, useMemo, useContext } from 'react'
 import { useQuery } from '@apollo/client'
+import { useFocusEffect } from '@react-navigation/native'
+import { useTranslation } from 'react-i18next'
 import { GET_LIMITED_TIME_FOODS_DEALS ,GET_WEEKLY_FOODS_DEALS ,GET_NEW_OFFERS_FOODS_DEALS} from '../../apollo/queries'
 import SectionList from '../../components/SectionList'
 import { FlashList } from '@shopify/flash-list'
 import HorizontalSubCategoriesList from '../../components/HorizontalSubCategoriesList'
+import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../../utils/themeColors'
+import styles from './Styles'
 
 const Deals = () => {
+  const { i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
+
   const [activeSubCategoryIndex, setActiveSubCategoryIndex] = useState(0)
   const activeSubCategoryIndexRef = useRef(0)
   console.log('activeSubCategoryIndex',activeSubCategoryIndex);
@@ -14,6 +26,15 @@ const Deals = () => {
   const dealsListRef = useRef(null)
   const subCatListRef = useRef(null)
   const isAutoScrollingRef = useRef(false)
+
+  useFocusEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(currentTheme.themeBackground)
+    }
+    StatusBar.setBarStyle(
+      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+    )
+  })
 
   // Dummy data array for subcategories
   const dummySubCategories = [
@@ -134,7 +155,7 @@ const Deals = () => {
   const keyExtractor = (item) => item.id
 
   return (
-    <>
+    <SafeAreaView style={styles(currentTheme).container}>
       <HorizontalSubCategoriesList
         data={dummySubCategories}
         activeIndex={activeSubCategoryIndex}
@@ -163,7 +184,7 @@ const Deals = () => {
           })
         }}
       />
-    </>
+    </SafeAreaView>
   )
 }
 
