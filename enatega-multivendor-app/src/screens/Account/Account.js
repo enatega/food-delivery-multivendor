@@ -497,7 +497,7 @@ function Account(props) {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
+                  {/* <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
                     <View>
                       <CheckboxBtn checked={themeContext.ThemeValue === 'Dark'} onPress={() => toggleTheme()} />
                     </View>
@@ -509,7 +509,7 @@ function Account(props) {
                         </TextDefault>
                       </View>
                     </TouchableOpacity>
-                  </View>
+                  </View> */}
                 </View>
 
                 <View>

@@ -180,3 +180,78 @@ export const SEARCH_FOOD = gql`
     }
   }
 `
+
+export const GET_LIMITED_TIME_FOODS_DEALS = gql`
+query GetLimitedTimeFoodsDeals {
+    getLimitedTimeFoodsDeals {
+        items {
+            id
+            title
+            description
+            image
+            variations {
+                id
+                title
+                price
+                outofstock
+                deal {
+                    id
+                    title
+                    discountType
+                    discountValue
+                    isActive
+                }
+            }
+        }
+    }
+}
+`
+export const GET_WEEKLY_FOODS_DEALS = gql`
+query GetWeeklyFoodsDeals {
+  getWeeklyFoodsDeals {
+      items {
+          id
+          title
+          description
+          image
+          variations {
+              id
+              title
+              price
+              outofstock
+              deal {
+                  id
+                  title
+                  discountType
+                  discountValue
+                  isActive
+              }
+          }
+      }
+  }
+}`
+
+export const GET_NEW_OFFERS_FOODS_DEALS = gql`
+query GetNewOffersFoodsDeals {
+  getNewOffersFoodsDeals {
+      items {
+          id
+          title
+          description
+          image
+          variations {
+              id
+              title
+              price
+              outofstock
+              deal {
+                  id
+                  title
+                  discountType
+                  discountValue
+                  isActive
+              }
+          }
+      }
+  }
+}`
