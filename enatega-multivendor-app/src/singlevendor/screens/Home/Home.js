@@ -3,13 +3,14 @@ import React, { useContext } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import HorizontalCategoriesList from '../../components/HorizontalCategoriesList'
-import HomeBanner from '../../components/Home/HomeBanner'
+// import HomeBanner from '../../components/Home/HomeBanner'
 import useHome from './useHome'
 import WrapperHorizontalProductsList from '../../components/WrapperHorizontalProductsList'
 import { FlatList } from 'react-native-gesture-handler'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import styles from './Styles'
+import PromoBanner from '../../components/Profile/PromoBanner'
 
 const Home = () => {
   const { data } = useHome()
@@ -39,10 +40,10 @@ const Home = () => {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={() => {
           return (
-            <>
-              <HomeBanner />
+            <View style={{marginTop: 30}}>
+             <PromoBanner/>
               <HorizontalCategoriesList categoriesData={categoriesData} />
-            </>
+            </View>
           )
         }}
       />
