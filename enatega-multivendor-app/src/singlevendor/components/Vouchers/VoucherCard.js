@@ -144,7 +144,7 @@ const styles = (props = null) =>
       borderColor: '#E5E7EB'
     },
     discountBadge: {
-      width: scale(90),
+      width: scale(80),
       backgroundColor: '#CCE9F5',
       alignItems: 'center',
       justifyContent: 'center',
@@ -214,13 +214,13 @@ const styles = (props = null) =>
     },
     topNotch: {
       position: 'absolute',
-      left: scale(90) - scale(8),
+      left: scale(80) - scale(8),
       top: -scale(8),
       zIndex: 10
     },
     bottomNotch: {
       position: 'absolute',
-      left: scale(90) - scale(8),
+      left: scale(80) - scale(8),
       bottom: -scale(8),
       zIndex: 10
     },
@@ -229,7 +229,7 @@ const styles = (props = null) =>
     },
     dashedLineContainer: {
       position: 'absolute',
-      left: scale(90) - scale(1),
+      left: scale(80) - scale(1),
       top: scale(8),
       bottom: scale(8),
       width: scale(2),
