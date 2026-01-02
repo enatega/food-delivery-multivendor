@@ -84,6 +84,7 @@
     "react-native-screens": "~4.16.0",
     "react-native-svg": "15.12.1",
     "react-native-switch": "^1.5.1",
+    "react-native-thermal-pos-printer": "^1.6.6",
     "react-native-thermal-printer": "^2.3.6",
     "react-native-thermal-receipt-printer-image-qr": "^0.1.12",
     "react-native-vector-icons": "^10.2.0",

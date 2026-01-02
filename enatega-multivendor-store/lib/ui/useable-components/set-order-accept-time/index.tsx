@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import CustomContinueButton from "../custom-continue-button";
 import { CircleCrossIcon } from "../svg";
 import usePrintOrder from "@/lib/hooks/usePrintOrder";
+import { router } from "expo-router";
 
 const SetTimeScreenAndAcceptOrder = ({
   id,
@@ -76,6 +77,14 @@ const SetTimeScreenAndAcceptOrder = ({
     } finally {
       setIsAcceptingOrder(false);
       handleDismissModal();
+    }
+  };
+
+  const onPrintPress = async () => {
+    try {
+      router.push({ pathname: "/home/print-order" , params: { orderId: id } });
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -137,6 +146,17 @@ const SetTimeScreenAndAcceptOrder = ({
           />
         </View>
       )}
+      {
+        // Platform.OS === "android" &&
+        <View>
+          <CustomContinueButton
+            isLoading={(loadingAcceptOrder || loadingRing) && isAcceptingOrder}
+            style={{ backgroundColor: appTheme.primary }}
+            onPress={onPrintPress}
+            title={t("Print")}
+          />
+        </View>
+      }
     </View>
   );
 };

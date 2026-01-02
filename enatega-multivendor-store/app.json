@@ -54,10 +54,13 @@
       "versionCode": 67,
       "googleServicesFile": "./google-services.json",
       "permissions": [
-        "BLUETOOTH",
-        "BLUETOOTH_ADMIN",
-        "BLUETOOTH_CONNECT",
-        "BLUETOOTH_SCAN",
+        
+
+          "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH_SCAN",
+
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
       ],
