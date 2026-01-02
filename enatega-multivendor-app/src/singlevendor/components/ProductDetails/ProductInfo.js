@@ -7,7 +7,7 @@ import ConfigurationContext from '../../../context/Configuration'
 import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
 import ToggleFavorite from '../ToggleFavorite'
 
-const ProductInfo = ({ t, productInfoData, currentTheme }) => {
+const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingToCart}) => {
   const config = useContext(ConfigurationContext)
 
   // Todo: temp states for handling fav and item count
@@ -56,7 +56,7 @@ const ProductInfo = ({ t, productInfoData, currentTheme }) => {
             </Pressable>
           </View>
           <View style={{ width: '65%' }}>
-            <ContinueWithPhoneButton title='addToCart' onPress={() => console.log('Add to Cart called.')} />
+            <ContinueWithPhoneButton isLoading={isAddingToCart} isDisabled={isAddingToCart || itemCount === 0} title='addToCart' onPress={() => onAddToCart(itemCount)} />
           </View>
         </View>
       </View>
