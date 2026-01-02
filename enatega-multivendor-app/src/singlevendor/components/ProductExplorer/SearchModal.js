@@ -192,6 +192,7 @@ import { View, StyleSheet, Modal, ActivityIndicator } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
+import HorizontalProductsEmptyView from '../HorizontalProductsEmptyView'
 
 import SearchHeader from './SearchHeader'
 import ProductCard from '../ProductCard'
