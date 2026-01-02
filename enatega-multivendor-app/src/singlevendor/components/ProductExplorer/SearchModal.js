@@ -197,7 +197,6 @@ import HorizontalProductsEmptyView from '../HorizontalProductsEmptyView'
 import SearchHeader from './SearchHeader'
 import ProductCard from '../ProductCard'
 import useHomeProducts from '../../screens/Home/useHomeProducts'
-import HorizontalProductsEmptyView from '../HorizontalProductsEmptyView'
 
 const PAGE_LIMIT = 10
 

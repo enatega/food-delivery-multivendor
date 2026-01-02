@@ -76,6 +76,7 @@ import ProductDetails from '../singlevendor/screens/ProductDetails/ProductDetail
 import ScheduleDeliveryTime from '../singlevendor/screens/ScheduleDeliveryTime/ScheduleDeliveryTime'
 import ReferAFriend from '../singlevendor/screens/ReferAFriend/ReferAFriend'
 import Membership from '../singlevendor/screens/Membership/Membership'
+import Vouchers from '../singlevendor/screens/Vouchers/Vouchers'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -199,6 +200,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='ProductDetails' component={ProductDetails} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='ReferAFriend' component={ReferAFriend} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Membership' component={Membership} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='Vouchers' component={Vouchers} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     </NavigationStack.Navigator>
   )
 }
