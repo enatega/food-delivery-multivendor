@@ -101,7 +101,7 @@ const TipSection = ({ selectedTip, onSelectTip, currencySymbol = '€' }) => {
           <View style={styles(currentTheme).modalContent}>
             <TextDefault
               textColor={currentTheme.fontMainColor}
-              bold
+              bolder
               H5
               isRTL
               style={styles().modalTitle}
@@ -129,7 +129,7 @@ const TipSection = ({ selectedTip, onSelectTip, currencySymbol = '€' }) => {
               >
                 <TextDefault
                   textColor={currentTheme.fontMainColor}
-                  bold
+                  bolder
                   isRTL
                 >
                   {t('Cancel') || 'Cancel'}
@@ -143,7 +143,7 @@ const TipSection = ({ selectedTip, onSelectTip, currencySymbol = '€' }) => {
               >
                 <TextDefault
                   textColor="#fff"
-                  bold
+                  bolder
                   isRTL
                 >
                   {t('Confirm') || 'Confirm'}
@@ -211,7 +211,7 @@ const styles = (props = null) =>
       borderWidth: 1,
       borderColor: props !== null ? props.gray300 : '#D1D5DB',
       borderRadius: scale(8),
-      paddingVertical: scale(12),
+      paddingVertical: scale(8),
       paddingHorizontal: scale(16),
       fontSize: scale(16),
       color: props !== null ? props.fontMainColor : '#000',
