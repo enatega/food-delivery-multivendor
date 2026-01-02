@@ -199,7 +199,7 @@ const styles = (props = null) =>
     useButton: {
       backgroundColor: '#0090CD',
       borderRadius: scale(8),
-      paddingHorizontal: scale(18),
+      paddingHorizontal: scale(12),
       paddingVertical: verticalScale(6),
       minWidth: '51px',
       alignItems: 'center',
