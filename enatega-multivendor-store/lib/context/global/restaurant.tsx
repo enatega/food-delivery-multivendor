@@ -37,6 +37,8 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
       },
     });
 
+    console.log("grapghgql querey errorororo :",data)
+
   let unsubscribe = null;
 
   useEffect(() => {

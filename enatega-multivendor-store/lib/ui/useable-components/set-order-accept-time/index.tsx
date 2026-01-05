@@ -61,16 +61,17 @@ const SetTimeScreenAndAcceptOrder = ({
   const onAcceptAndPrintOrderHandler = async () => {
     try {
       setIsAcceptingOrder(true);
-      const status = await printOrder(id);
+      // const status = await printOrder(id);
 
-      if (status) {
+      // if (status) {
         // null means it's ioS so ignore printing and true mean print wa successfull
-        await acceptOrder(id, selectedTime?.toString() || "0");
-        await muteRing(orderId);
-      }
+        await acceptOrder(id, selectedTime?.toString() || "0").catch((err)=>{console.log("accept order error:",err)});
+        await muteRing(orderId).catch((err)=>{console.log("mute ring error",err)});
+      // }
 
       setIsAcceptingOrder(false);
       handleDismissModal();
+      router.push({ pathname: "/home/print-order" , params: { orderId: id } });
     } catch (err) {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
       console.log(err);
@@ -148,14 +149,14 @@ const SetTimeScreenAndAcceptOrder = ({
       )}
       {
         // Platform.OS === "android" &&
-        <View>
-          <CustomContinueButton
-            isLoading={(loadingAcceptOrder || loadingRing) && isAcceptingOrder}
-            style={{ backgroundColor: appTheme.primary }}
-            onPress={onPrintPress}
-            title={t("Print")}
-          />
-        </View>
+        // <View>
+        //   <CustomContinueButton
+        //     isLoading={(loadingAcceptOrder || loadingRing) && isAcceptingOrder}
+        //     style={{ backgroundColor: appTheme.primary }}
+        //     onPress={onPrintPress}
+        //     title={t("Print")}
+        //   />
+        // </View>
       }
     </View>
   );
