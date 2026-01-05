@@ -655,5 +655,7 @@ export const te = {
     "noMatchingResultsDesc": "మీరు శోధిస్తున్నది కనుగొనడానికి మీ ఫిల్టర్‌లను సర్దుబాటు చేయండి లేదా ఇతర ఎంపికలను అన్వేషించండి.",
     "Applied Filters": 'వర్తింపజేసిన ఫిల్టర్లు',
     "WhatsApp is not installed on the device": "వాట్సాప్ డివైస్‌లో ఇన్‌స్టాల్ చేయబడలేదు",
-    "Install it": "దీన్ని ఇన్‌స్టాల్ చేయండి"
+    "Install it": "దీన్ని ఇన్‌స్టాల్ చేయండి",
+    "You are all up to date": "మీరు అన్నీ నవీకరించబడ్డారు",
+    "No new notifications - come back soon": "కొత్త నోటిఫికేషన్‌లు లేవు - త్వరలో తిరిగి రండి"
   }

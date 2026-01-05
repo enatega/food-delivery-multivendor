@@ -620,6 +620,8 @@ export const ko = {
     "noMatchingResultsDesc": "필터를 조정하거나 다른 옵션을 탐색하여 원하는 항목을 찾으세요.",
     "Applied Filters": '적용된 필터',
     "WhatsApp is not installed on the device": "디바이스에 WhatsApp이 설치되어 있지 않습니다",
-    "Install it": "설치하세요"
+    "Install it": "설치하세요",
+    "You are all up to date": "모두 최신 상태입니다",
+    "No new notifications - come back soon": "새 알림이 없습니다 - 곧 다시 확인하세요"
   }
   

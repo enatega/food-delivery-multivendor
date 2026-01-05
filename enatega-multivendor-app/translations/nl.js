@@ -658,4 +658,6 @@ export const nl = {
     "Applied Filters": 'Toegepaste Filters',
     "WhatsApp is not installed on the device": "WhatsApp is niet geïnstalleerd op het apparaat",
     "Install it": "Installeer het",
+    "You are all up to date": "Je bent helemaal bij",
+    "No new notifications - come back soon": "Geen nieuwe meldingen - kom binnenkort terug"
   }

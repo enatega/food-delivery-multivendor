@@ -5,6 +5,7 @@ import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
+import NotificationsScreen from '../singlevendor/screens/Notifications/Notifications'
 import Login from '../screens/Login/Login'
 import PhoneAuth from '../screens/Login/ContinueWithPhone/screens/PhoneAuth/PhoneAuth'
 import VerifyPhoneNumber from '../screens/Login/ContinueWithPhone/screens/PhoneAuth/VerifyPhoneNumber'
@@ -204,6 +205,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='ProductsList' component={ProductList} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     
       <NavigationStack.Screen name='Vouchers' component={Vouchers} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='NotificationScreen' component={NotificationsScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     </NavigationStack.Navigator>
   )
 }

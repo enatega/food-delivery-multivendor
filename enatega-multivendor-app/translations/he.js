@@ -642,5 +642,6 @@ loginRequired: 'נדרש התחברות',
   "Applied Filters": "המסננים הוחלו",
   "WhatsApp is not installed on the device": "וואטסאפ אינו מותקן במכשיר",
   "Install it": "התקן אותו",
-
+  "You are all up to date": "הכל מעודכן",
+  "No new notifications - come back soon": "אין התראות חדשות - חזור בקרוב"
 }

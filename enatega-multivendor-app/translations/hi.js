@@ -658,4 +658,6 @@ export const hi = {
     "Applied Filters": 'लागू फिल्टर',
     "WhatsApp is not installed on the device": "डिवाइस पर WhatsApp इंस्टॉल नहीं है",
     "Install it": "इसे इंस्टॉल करें",
+    "You are all up to date": "आप सभी अपडेट हैं",
+    "No new notifications - come back soon": "कोई नई सूचनाएं नहीं - जल्दी वापस आएं"
   }

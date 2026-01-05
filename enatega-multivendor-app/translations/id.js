@@ -620,6 +620,8 @@ export const id = {
     "noMatchingResultsDesc": "Sesuaikan filter Anda atau jelajahi opsi lain untuk menemukan apa yang Anda cari.",
     "Applied Filters": 'Filter yang Diterapkan',
     "WhatsApp is not installed on the device": "WhatsApp tidak diinstal pada perangkat",
-    "Install it": "Instal"
+    "Install it": "Instal",
+    "You are all up to date": "Anda sudah terbarui",
+    "No new notifications - come back soon": "Tidak ada notifikasi baru - kembali lagi nanti"
   }
   

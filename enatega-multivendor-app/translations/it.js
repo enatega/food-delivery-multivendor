@@ -620,5 +620,7 @@ export const it = {
   noMatchingResultsDesc: 'Prova a modificare i filtri o esplora altre opzioni per trovare ciò che stai cercando.',
   'Applied Filters': 'Filtri Applicati',
   'WhatsApp is not installed on the device': 'WhatsApp non è installato sul dispositivo',
-  'Install it': 'Installalo'
+  'Install it': 'Installalo',
+  'You are all up to date': 'Sei aggiornato',
+  'No new notifications - come back soon': 'Nessuna nuova notifica - torna presto'
 }

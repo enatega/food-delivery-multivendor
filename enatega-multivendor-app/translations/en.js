@@ -720,5 +720,7 @@ export const en = {
   "No results found for your search. Please try a different query": "No results found for your search. Please try a different query.",
   "found": "found",
   "No recent searches found, Search your taste": "No recent searches found, Search your taste",
-  "itemAddedToCart": "Item added to cart"
+  "itemAddedToCart": "Item added to cart",
+  "You are all up to date": "You are all up to date",
+  "No new notifications - come back soon": "No new notifications - come back soon"
 }

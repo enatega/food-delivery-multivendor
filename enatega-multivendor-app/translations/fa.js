@@ -621,5 +621,7 @@ export const fa = {
     "Applied Filters": 'فیلترهای اعمال شده',
     "WhatsApp is not installed on the device": 'واتس اپ روی دستگاه نصب نیست',
     "Install it": 'آن را نصب کنید',
+    "You are all up to date": "همه چیز به‌روز است",
+    "No new notifications - come back soon": "هیچ اعلان جدیدی وجود ندارد - به زودی برگردید"
   }
   

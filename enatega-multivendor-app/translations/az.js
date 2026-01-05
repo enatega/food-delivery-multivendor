@@ -657,4 +657,6 @@ export const az = {
     "Applied Filters": 'Tətbiq Edilmiş Filtrlər',
     "WhatsApp is not installed on the device": "WhatsApp cihazda quraşdırılmayıb",
     "Install it": "Quraşdır",
+    "You are all up to date": "Hamısı yenilənib",
+    "No new notifications - come back soon": "Yeni bildiriş yoxdur - tezliklə qayıdın"
   }

@@ -783,5 +783,7 @@ export const pt = {
     "Applied Filters": 'Filtros Aplicados',
     "WhatsApp is not installed on the device": 'WhatsApp não está instalado no dispositivo',
     "Install it": 'Instale-o',
+    "You are all up to date": "Você está atualizado",
+    "No new notifications - come back soon": "Nenhuma nova notificação - volte em breve"
   }
   

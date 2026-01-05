@@ -619,6 +619,8 @@ export const th = {
     "noMatchingResultsDesc": "ลองปรับตัวกรองของคุณหรือสำรวจตัวเลือกอื่นๆ เพื่อหาสิ่งที่คุณกำลังมองหา",
     "Applied Filters": 'ตัวกรองที่ใช้',
     "WhatsApp is not installed on the device": "WhatsApp ยังไม่ได้ถูกติดตั้งบนอุปกรณ์",
-    "Install it": "ติดตั้ง"
+    "Install it": "ติดตั้ง",
+    "You are all up to date": "คุณอัปเดตแล้วทั้งหมด",
+    "No new notifications - come back soon": "ไม่มีการแจ้งเตือนใหม่ - กลับมาอีกครั้งเร็วๆ นี้"
 }  
   

@@ -630,5 +630,6 @@ welcomeText: '欢迎来到Enatega',
   "Applied Filters": "已应用筛选器",
   "WhatsApp is not installed on the device": "设备上未安装 WhatsApp",
   "Install it": "安装它",
-
+  "You are all up to date": "您已全部更新",
+  "No new notifications - come back soon": "没有新通知 - 请稍后再来"
 }

@@ -662,5 +662,6 @@ loginRequired: 'Connexion requise',
   "Applied Filters": "Filtres appliqués",
   "WhatsApp is not installed on the device": "WhatsApp n'est pas installé sur l'appareil",
   "Install it": "Installez-le",
-  
+  "You are all up to date": "Vous êtes à jour",
+  "No new notifications - come back soon": "Aucune nouvelle notification - revenez bientôt"
 }

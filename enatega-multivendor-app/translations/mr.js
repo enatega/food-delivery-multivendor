@@ -656,4 +656,6 @@ export const mr = {
     "Applied Filters": 'लागू केलेले फिल्टर्स',
     "WhatsApp is not installed on the device": "व्हॉट्सअॅप डिव्हाइसवर स्थापित नाही",
     "Install it": "स्थापित करा",
+    "You are all up to date": "तुम्ही सर्व अद्ययावत आहात",
+    "No new notifications - come back soon": "नवीन सूचना नाहीत - लवकर परत या"
   }

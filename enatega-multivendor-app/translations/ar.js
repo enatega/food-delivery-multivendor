@@ -653,6 +653,6 @@ loginRequired: 'مطلوب تسجيل الدخول',
   "Applied Filters": "تم تطبيق الفلاتر",
   "WhatsApp is not installed on the device": "لم يتم تثبيت واتساب على الجهاز",
   "Install it": "قم بتثبيته",
-
-
+  "You are all up to date": "أنت محدث بالكامل",
+  "No new notifications - come back soon": "لا توجد إشعارات جديدة - عد قريباً"
 }

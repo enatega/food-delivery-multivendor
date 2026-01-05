@@ -621,5 +621,7 @@ export const bn = {
   noMatchingResultsDesc: 'আপনার ফিল্টার সাজানোর মাধ্যমে বা অন্যান্য বিকল্প অন্বেষণ করে আপনি যা খুঁজছেন তা পাওয়ার চেষ্টা করুন।',
   'Applied Filters': 'প্রয়োগ করা ফিল্টার',
   'WhatsApp is not installed on the device': 'ডিভাইসে হোয়াটসঅ্যাপ ইনস্টল করা নেই',
-  'Install it': 'এটি ইনস্টল করুন'
+  'Install it': 'এটি ইনস্টল করুন',
+  'You are all up to date': 'আপনি সব আপডেট',
+  'No new notifications - come back soon': 'কোন নতুন বিজ্ঞপ্তি নেই - শীঘ্রই ফিরে আসুন'
 }

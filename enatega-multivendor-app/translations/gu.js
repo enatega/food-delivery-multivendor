@@ -655,5 +655,7 @@ export const gu = {
   "noMatchingResultsDesc": "તમે જે શોધી રહ્યા છો તે શોધવા માટે તમારા ફિલ્ટર્સને સમાયોજિત કરો અથવા અન્ય વિકલ્પો શોધો.",
   "Applied Filters": 'લાગુ કરેલ ફિલ્ટર્સ',
   "WhatsApp is not installed on the device": "વોટ્સએપ ડિવાઇસ પર ઇન્સ્ટોલ નથી",
-  "Install it": "તેને ઇન્સ્ટોલ કરો"
+  "Install it": "તેને ઇન્સ્ટોલ કરો",
+  "You are all up to date": "તમે બધા અપડેટ છો",
+  "No new notifications - come back soon": "નવી સૂચનાઓ નથી - ટૂંક સમયમાં પાછા આવો"
 }

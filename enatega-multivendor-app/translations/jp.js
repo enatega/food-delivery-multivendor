@@ -620,6 +620,8 @@ export const jp = {
     "noMatchingResultsDesc": "フィルターを調整するか、他のオプションを探索して、お探しのものを見つけてください。",
     "Applied Filters": '適用されたフィルター',
     "WhatsApp is not installed on the device": "デバイスにWhatsAppがインストールされていません",
-    "Install it": "インストールする"
+    "Install it": "インストールする",
+    "You are all up to date": "すべて最新です",
+    "No new notifications - come back soon": "新しい通知はありません - また後で来てください"
   }
   

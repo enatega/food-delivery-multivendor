@@ -620,6 +620,8 @@ export const ur = {
     "noMatchingResultsDesc": "فلٹرز کو ایڈجسٹ کر کے یا دیگر آپشنز کی تلاش کر کے اپنی تلاش کو بہتر بنائیں۔",
     "Applied Filters": 'لاگو فلٹرز',
     "WhatsApp is not installed on the device": "ڈیوائس پر واٹس ایپ انسٹال نہیں ہے",
-    "Install it": "اسے انسٹال کریں"
+    "Install it": "اسے انسٹال کریں",
+    "You are all up to date": "آپ سب اپ ڈیٹ ہیں",
+    "No new notifications - come back soon": "نئی اطلاعات نہیں - جلد واپس آئیں"
   }
   

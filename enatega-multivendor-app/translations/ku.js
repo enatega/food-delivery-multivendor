@@ -621,4 +621,6 @@ export const ku = {
     "Applied Filters": 'فیلتەرە جێبەجێکراوەکان',
     "WhatsApp is not installed on the device": "واتسئاپ لەسەر ئامێرەکە دانەمەزراوە",
     "Install it": "دامەzrێنە",
+    "You are all up to date": "هەمووتان بەدواداچوون",
+    "No new notifications - come back soon": "ئاگاداری نوێ نییە - بەزوویی بگەڕێوە"
   };

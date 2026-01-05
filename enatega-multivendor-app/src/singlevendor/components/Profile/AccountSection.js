@@ -40,7 +40,7 @@ const AccountSection = () => {
       id: 4,
       icon: 'notifications-outline',
       title: t('Notifications'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('NotificationScreen')
     },
     {
       id: 5,
