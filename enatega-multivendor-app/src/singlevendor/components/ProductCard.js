@@ -14,7 +14,9 @@ const ProductCard = ({ product, onAddToCart, onCardPress, containerStyles }) => 
 
   return (
     <Pressable onPress={() => {onCardPress && onCardPress(product?.id)}} style={[styles(currentTheme).card, containerStyles]}>
-      <ImageBackground source={{ uri: typeof product?.image == 'number' ? '' : product?.image }} style={styles(currentTheme).imageContainer} imageStyle={styles(currentTheme).productImage}>
+      <ImageBackground onError={(err)=>{
+        // console.log("Error loading images",err)
+      }} source={{ uri: typeof product?.image == 'number' ? '' : product?.image }} style={styles(currentTheme).imageContainer} imageStyle={styles(currentTheme).productImage}>
         <ProductImageOverlay hasDeal={product?.hasDeal} onAddToCart={onAddToCart ? onAddToCart : () => {}} product={product} dealText={product?.dealText || 'Deal'} />
       </ImageBackground>
       <View style={styles(currentTheme).contentContainer}>
