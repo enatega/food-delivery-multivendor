@@ -28,7 +28,7 @@ const QuickActionsGrid = () => {
       id: 2,
       icon: 'time-outline',
       label: t('Order History'),
-      onPress: () => navigation.navigate('MyOrders')
+      onPress: () => navigation.navigate('OrderHistory')
     },
     {
       id: 3,

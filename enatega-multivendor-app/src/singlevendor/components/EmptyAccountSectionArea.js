@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, StyleSheet } from 'react-native'
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 // import { alignment } from '../../../utils/alignment'
 import { alignment } from '../../utils/alignment'
@@ -10,7 +10,9 @@ const EmptyAccountSectionArea = ({
   currentTheme,
   imageSource,
   title,
-  description
+  description,
+  buttonTitle,
+  onButtonPress
 }) => {
   return (
     <View style={styles(currentTheme).container}>
@@ -39,6 +41,22 @@ const EmptyAccountSectionArea = ({
       >
         {description}
       </TextDefault>
+
+      {onButtonPress && (
+        <TouchableOpacity
+          style={styles(currentTheme).button}
+          onPress={onButtonPress}
+          activeOpacity={0.7}
+        >
+          <TextDefault
+            textColor={currentTheme.fontMainColor}
+            style={styles(currentTheme).buttonText}
+            bolder
+          >
+            {buttonTitle}
+          </TextDefault>
+        </TouchableOpacity>
+      )}
     </View>
   )
 }
@@ -69,6 +87,20 @@ const styles = (props = null) =>
       fontSize: scale(14),
       lineHeight: scale(20),
       ...alignment.PHlarge
+    },
+    button: {
+      backgroundColor: props?.colorBgSecondary,
+      paddingHorizontal: scale(32),
+      paddingVertical: verticalScale(14),
+      borderRadius: scale(8),
+      marginTop: verticalScale(32),
+      minWidth: scale(300),
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    buttonText: {
+      fontSize: scale(16),
+      fontWeight: '600'
     }
   })
 
