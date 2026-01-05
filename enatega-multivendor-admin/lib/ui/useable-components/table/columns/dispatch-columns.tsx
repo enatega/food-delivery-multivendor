@@ -85,24 +85,24 @@ export const DISPATCH_TABLE_COLUMNS = () => {
       body: () => <Tag value={t('PENDING')} severity="secondary" rounded />,
     },
     {
-      label: t('ASSIGNED'),
-      code: 'ASSIGNED',
-      body: () => <Tag value={t('ASSIGNED')} severity="warning" rounded />,
-    },
-    {
       label: t('ACCEPTED'),
       code: 'ACCEPTED',
       body: () => <Tag value={t('ACCEPTED')} severity="info" rounded />,
     },
     {
-      label: t('DELIVERED'),
-      code: 'DELIVERED',
-      body: () => <Tag value={t('DELIVERED')} severity="success" rounded />,
+      label: t('ASSIGNED'),
+      code: 'ASSIGNED',
+      body: () => <Tag value={t('ASSIGNED')} severity="warning" rounded />,
     },
     {
       label: t('PICKED'),
       code: 'PICKED',
       body: () => <Tag value={t('PICKED')} severity="contrast" rounded />,
+    },
+    {
+      label: t('DELIVERED'),
+      code: 'DELIVERED',
+      body: () => <Tag value={t('DELIVERED')} severity="success" rounded />,
     },
     {
       label: t('CANCELLED'),
@@ -160,7 +160,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   };
   const OrderSubscription = ({ rowData }: { rowData: IActiveOrders }) => {
     useOrderSubscription(rowData);
-    return <p>{rowData.isPickedUp === false ? "Delivery" : "Picked"}</p>;
+    return <p>{rowData.isPickedUp === false ? 'Delivery' : 'Pick Up'}</p>;
   };
 
   // Mutations
@@ -226,6 +226,12 @@ export const DISPATCH_TABLE_COLUMNS = () => {
         },
       });
       if (data) {
+        await updateStatus({
+          variables: {
+            id: rowData._id,
+            orderStatus: 'ASSIGNED',
+          },
+        });
         showToast({
           type: 'success',
           title: t('Assign Rider'),
@@ -398,13 +404,20 @@ export const DISPATCH_TABLE_COLUMNS = () => {
       headerName: t('Status'),
       body: (rowData: IActiveOrders) => {
         // CHANGE 2: Filter status options based on whether it's a pickup order
-        const availableStatuses = rowData.isPickedUp
-          ? actionStatusOptions.filter((status) =>
-            ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
-              status.code
-            )
-          )
-          : actionStatusOptions;
+        const availableStatuses = (
+          rowData.isPickedUp
+            ? actionStatusOptions.filter((status) =>
+                ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
+                  status.code
+                )
+              )
+            : actionStatusOptions
+        ).map((status) => {
+          if (status.code === 'ASSIGNED' && !rowData.rider) {
+            return { ...status, disabled: true };
+          }
+          return status;
+        });
 
         const currentStatus = availableStatuses.find(
           (status: IDropdownSelectItem) => status.code === rowData?.orderStatus
@@ -425,6 +438,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                 isStatusUpdating.bool && isStatusUpdating._id === rowData._id
               }
               className="outline outline-1 outline-gray-300"
+              optionDisabled="disabled"
               disabled={isDelivered} // CHANGE 5: Disable dropdown if delivered
             />
           </>

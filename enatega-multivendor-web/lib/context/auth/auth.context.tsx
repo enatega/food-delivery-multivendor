@@ -235,7 +235,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       const userData = await createUser({
         variables: {
           ...user,
-          isReset: user.isReset,
+          isPhoneExists: user.isPhoneExists,
         },
       });
       if (userData.data?.createUser && userData.data.createUser.userId) {
@@ -333,9 +333,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   function onLoginError(error: ApolloError) {
     console.error("Error while logging in:", error);
-    if (
-      error.message
-    ) {
+    if (error.message) {
       showToast({
         type: "error",
         title: t("login_error"),

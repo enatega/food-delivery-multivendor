@@ -18,7 +18,7 @@ layer(primereact);
 :root {
   --primary-color: #b1c748;
   --primary-dark: #5ac12f;
-  --secondary-color: #d8e3a3;
+  --secondary-color: #bac973;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
@@ -40,7 +40,7 @@ body,
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+  box-sizing: border-box; 
 }
 
 body {
@@ -51,6 +51,9 @@ body {
 
 }
 
+.dark .p-datatable-scrollable .p-datatable-thead {
+  top: -3px;
+}
 /* Screen Container */
 /* Start Generation Here */
 .screen-container {
@@ -158,6 +161,38 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   background-color: white;
+}
+
+.dark .p-card, .dark .card {
+  background-color: var(--dark-900);
+}
+
+.dark .p-card-header {
+  background-color: var(--dark-900);
+  border-radius: 0.9rem 0.9rem 0 0;
+}
+
+.dark .p-card-body {
+  background-color: var(--dark-900);
+  border-radius: 0.9rem 0.9rem 0.9rem 0.9rem;
+} 
+
+.dark .p-tabview-panels , .dark .p-tabview-nav {
+  background-color: var(--dark-900);
+}
+
+.dark .p-unselectable-text{
+  background-color: var(--dark-600);
+}
+
+.dark .p-dialog-header{
+  background-color: var(--dark-900);
+  color: white;
+  border-bottom: 1px solid white
+}
+
+.dark .p-dialog-content{
+  background-color: var(--dark-900);
 }
 
 .card-h1 {
@@ -890,6 +925,7 @@ body {
 
 .dark .p-fieldset {
   border: 1px dashed var(--dark-600);
+  background-color: var(--dark-900);
 }
 
 .p-fieldset-legend {
