@@ -40,12 +40,17 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {} }) => {
   };
 
   const getStatusText = (status, state) => {
-    const time = statusTimes[status.key];
-    if (time) return time;
+    // Only show time for completed statuses
+    if (state === 'completed') {
+      const time = statusTimes[status.key];
+      if (time) return time;
+    }
+    // Show progress text for active status
     if (state === 'active') {
       if (status.key === ORDER_STATUSES.PACKED) return t('Packing...') || 'Packing...';
       if (status.key === ORDER_STATUSES.PICKED_UP) return t('Picking...') || 'Picking...';
     }
+    // Pending statuses show nothing
     return '';
   };
 
@@ -103,7 +108,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {} }) => {
               {!isLast && (
                 <View style={[
                   styles().connector,
-                  state === 'completed' && { backgroundColor: currentTheme.primaryBlue || '#0EA5E9' }
+                  state === 'completed' && { backgroundColor: currentTheme.singlevendorcolor || '#0090CD' }
                 ]} />
               )}
             </View>
@@ -121,6 +126,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {} }) => {
                 textColor={currentTheme.gray500}
                 small
                 isRTL
+                bold
               >
                 {statusText}
               </TextDefault>

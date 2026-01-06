@@ -55,7 +55,6 @@ const OrderConfirmation = (props) => {
   });
 
   const isDelivered = orderStatus === ORDER_STATUSES.DELIVERED;
-  // const isDelivered = true;
 
   // Mock locations - replace with actual data
   const customerLocation = {

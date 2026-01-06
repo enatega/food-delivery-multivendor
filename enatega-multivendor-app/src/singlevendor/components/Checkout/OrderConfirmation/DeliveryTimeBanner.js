@@ -18,8 +18,9 @@ const DeliveryTimeBanner = ({ minTime = 15, maxTime = 25 }) => {
     <View style={styles(currentTheme).container}>
       <TextDefault
         textColor="#fff"
-        small
+        h5
         isRTL
+        bold
       >
         {t('Estimated delivery time') || 'Estimated delivery time'}
       </TextDefault>
@@ -39,7 +40,7 @@ const DeliveryTimeBanner = ({ minTime = 15, maxTime = 25 }) => {
 const styles = (props = null) =>
   StyleSheet.create({
     container: {
-      backgroundColor: props?.primaryBlue || '#0EA5E9',
+      backgroundColor: props?.singlevendorcolor || '#0090CD',
       paddingVertical: scale(16),
       paddingHorizontal: scale(16),
       alignItems: 'center',

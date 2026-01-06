@@ -417,7 +417,7 @@ export const en = {
   frequentlyBoughtTogether: 'Frequently Bought Together',
   estimatedDeliveryTime: 'Estimated delivery time',
   details: 'Details',
-  mins: 'minutes',
+  mins: 'mins',
   mostOrderedNow: 'Most ordered right now',
   'Order it again': 'Order it again',
   topBrands: 'Top Brands',

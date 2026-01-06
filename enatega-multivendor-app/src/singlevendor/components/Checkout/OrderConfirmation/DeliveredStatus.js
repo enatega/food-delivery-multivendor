@@ -17,8 +17,11 @@ const DeliveredStatus = ({ appName = 'FAST' }) => {
 
   return (
     <View style={styles(currentTheme).container}>
-      <View style={styles(currentTheme).iconContainer}>
-        <Feather name="check" size={48} color="#fff" />
+      <View style={styles(currentTheme).iconWrapper}>
+        <View style={styles(currentTheme).blurCircle} />
+        <View style={styles(currentTheme).iconContainer}>
+          <Feather name="check" size={48} color="#fff" />
+        </View>
       </View>
       <TextDefault
         textColor={currentTheme.fontMainColor}
@@ -30,17 +33,19 @@ const DeliveredStatus = ({ appName = 'FAST' }) => {
         {t('Delivered') || 'Delivered'}
       </TextDefault>
       <TextDefault
-        textColor={currentTheme.gray500}
+        textColor={currentTheme.colorTextMuted}
         isRTL
         center
+        bolder
         style={styles().subtitle}
       >
         {t('Your grocery has been delivered.') || 'Your grocery has been delivered.'}
       </TextDefault>
       <TextDefault
-        textColor={currentTheme.gray500}
+        textColor={currentTheme.colorTextMuted}
         isRTL
         center
+        bolder
       >
         {t('Thanks for using') || 'Thanks for using'} {appName}.
       </TextDefault>
@@ -55,14 +60,26 @@ const styles = (props = null) =>
       paddingVertical: scale(32),
       paddingHorizontal: scale(16)
     },
-    iconContainer: {
-      width: scale(96),
-      height: scale(96),
-      borderRadius: scale(48),
-      backgroundColor: props?.primaryBlue || '#0EA5E9',
+    iconWrapper: {
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: scale(16)
+    },
+    blurCircle: {
+      position: 'absolute',
+      width: scale(85),
+      height: scale(85),
+      borderRadius: scale(50),
+      backgroundColor: props?.headerMainFontColor || '#006189',
+      opacity: 0.2
+    },
+    iconContainer: {
+      width: scale(70),
+      height: scale(70),
+      borderRadius: scale(48),
+      backgroundColor: props?.headerMainFontColor || '#006189',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     title: {
       marginBottom: scale(8)
