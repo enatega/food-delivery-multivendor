@@ -23,10 +23,13 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { HeaderBackButton } from '@react-navigation/elements'
 import UserContext from '../../../context/User'
+import { useVendorModeStore } from '../../../singlevendor'
 
 const rippleColor = '#6FCF97'
 function BackButton(props) {
   const navigation = useNavigation()
+  const { vendorMode } = useVendorModeStore.getState()
+
   if (props?.icon === 'leftArrow') {
     return (
       <Ionicons
@@ -37,6 +40,8 @@ function BackButton(props) {
         onPress={() => {
           if (props?.prevScreen) {
             navigation.navigate(props?.prevScreen)
+          } else if (vendorMode === 'SINGLE') {
+            navigation.goBack();
           } else {
             console.warn('No prevScreen prop provided')
           }
