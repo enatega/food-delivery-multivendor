@@ -4,15 +4,25 @@ import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import RenderCategoryCard from './RenderCategoryCard'
+import { useNavigation } from '@react-navigation/native'
 
 const HorizontalCategoriesList = ({ categoriesData = [] }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
-
-  const handleCategoryPress = (category) => {
+  const navigation = useNavigation()
+  const handleCategoryPress = (categoryViewType,categoryId) => {
     // Handle category press action
-    console.log('Category pressed:', category.name)
+    console.log('Category pressed:',categoryViewType, categoryId)
+
+    if (categoryViewType === 'see-all') {
+      navigation.navigate('ProductExplorer')
+    } else {
+      navigation.navigate('ProductsList', {
+        categoryId: categoryId
+
+      })
+    }
   }
 
   return (

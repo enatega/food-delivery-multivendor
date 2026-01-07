@@ -95,22 +95,50 @@ export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
   }
 `
 
-export const GET_FOOD_DETAILS = gql`
-  query GetFoodDetails($foodId: ID!) {
+// export const GET_FOOD_DETAILS = gql`
+//   query GetFoodDetails($foodId: ID!) {
+//     getFoodDetails(foodId: $foodId) {
+//       id
+//       title
+//       description
+//       image
+//       isPopular
+//       variations {
+//         id
+//         title
+//         price
+//       }
+//     }
+//   }
+// `
+
+export const GET_FOOD_DETAILS = gql`query GetFoodDetails($foodId: ID!) {
     getFoodDetails(foodId: $foodId) {
-      id
-      title
-      description
-      image
-      isPopular
-      variations {
         id
         title
-        price
-      }
+        description
+        image
+        isPopular
+        categoryId
+        variations {
+            id
+            title
+            price
+            addons {
+                id
+                title
+                description
+                options {
+                    id
+                    title
+                    description
+                    price
+                }
+            }
+        }
     }
-  }
-`
+}`
+
 
 export const GET_SIMILAR_FOODS = gql`
   query GetSimilarFoods($foodId: ID!, $skip: Int, $limit: Int) {
@@ -180,3 +208,78 @@ export const SEARCH_FOOD = gql`
     }
   }
 `
+
+export const GET_LIMITED_TIME_FOODS_DEALS = gql`
+query GetLimitedTimeFoodsDeals {
+    getLimitedTimeFoodsDeals {
+        items {
+            id
+            title
+            description
+            image
+            variations {
+                id
+                title
+                price
+                outofstock
+                deal {
+                    id
+                    title
+                    discountType
+                    discountValue
+                    isActive
+                }
+            }
+        }
+    }
+}
+`
+export const GET_WEEKLY_FOODS_DEALS = gql`
+query GetWeeklyFoodsDeals {
+  getWeeklyFoodsDeals {
+      items {
+          id
+          title
+          description
+          image
+          variations {
+              id
+              title
+              price
+              outofstock
+              deal {
+                  id
+                  title
+                  discountType
+                  discountValue
+                  isActive
+              }
+          }
+      }
+  }
+}`
+
+export const GET_NEW_OFFERS_FOODS_DEALS = gql`
+query GetNewOffersFoodsDeals {
+  getNewOffersFoodsDeals {
+      items {
+          id
+          title
+          description
+          image
+          variations {
+              id
+              title
+              price
+              outofstock
+              deal {
+                  id
+                  title
+                  discountType
+                  discountValue
+                  isActive
+              }
+          }
+      }
+  }
+}`

@@ -6,9 +6,12 @@ import { AntDesign, FontAwesome, MaterialCommunityIcons } from '@expo/vector-ico
 import ConfigurationContext from '../../../context/Configuration'
 import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
 import ToggleFavorite from '../ToggleFavorite'
+import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 
-const ProductInfo = ({ t, productInfoData, currentTheme }) => {
+const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingToCart}) => {
   const config = useContext(ConfigurationContext)
+  const themeContext = useContext(ThemeContext)
+  const iconColor = themeContext.ThemeValue === 'Dark' ? 'white' : 'black'
 
   // Todo: temp states for handling fav and item count
   const [itemCount, setItemCount] = useState(0)
@@ -46,17 +49,17 @@ const ProductInfo = ({ t, productInfoData, currentTheme }) => {
         <View style={[styles().flex, { justifyContent: 'space-between', width: '100%' }]}>
           <View style={[styles().flex, { gap: 8, alignItems: 'center', width: '30%' }]}>
             <Pressable style={[styles().pressableContainer, { borderWidth: 1.5, borderColor: currentTheme.borderColor }]} disabled={itemCount == 0} onPress={() => setItemCount((prev) => prev - 1)}>
-              <AntDesign name='minus' size={16} color='black' />
+              <AntDesign name='minus' size={16} color={iconColor} />
             </Pressable>
             <TextDefault B700 H3>
               {itemCount}
             </TextDefault>
             <Pressable style={[styles().pressableContainer, { borderWidth: 1.5, borderColor: currentTheme.borderColor }]} onPress={() => setItemCount((prev) => prev + 1)}>
-              <AntDesign name='plus' size={16} color='black' />
+              <AntDesign name='plus' size={16} color={iconColor} />
             </Pressable>
           </View>
           <View style={{ width: '65%' }}>
-            <ContinueWithPhoneButton title='addToCart' onPress={() => console.log('Add to Cart called.')} />
+            <ContinueWithPhoneButton isLoading={isAddingToCart} isDisabled={isAddingToCart || itemCount === 0} title='addToCart' onPress={() => onAddToCart(itemCount)} />
           </View>
         </View>
       </View>

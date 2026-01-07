@@ -15,6 +15,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import SearchModal from './SearchModal'
+import ProductExplorerSkeleton from './ProductExplorerSkeleton'
 
 const ProductExplorer = () => {
   const navigation = useNavigation()
@@ -67,9 +68,9 @@ const ProductExplorer = () => {
 
     // ✅ Unique + flat
     return Array.from(map.values())
-  }, [categories])
+  }, [categories])  
 
-  if (loading) return null
+  if (loading) return <ProductExplorerSkeleton />
 
   return (
     <>

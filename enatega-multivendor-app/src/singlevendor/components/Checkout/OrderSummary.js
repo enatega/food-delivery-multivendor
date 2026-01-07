@@ -14,7 +14,8 @@ const OrderSummary = ({
   total,
   currencySymbol = '€',
   expanded,
-  onToggleExpanded
+  onToggleExpanded,
+  orderNumber = null
 }) => {
   const { t, i18n } = useTranslation();
   const themeContext = useContext(ThemeContext);
@@ -60,13 +61,31 @@ const OrderSummary = ({
       {/* Expanded Details */}
       {expanded && (
         <View style={styles().summaryDetails}>
+          {orderNumber && (
+            <View style={styles().summaryRow}>
+              <TextDefault
+                textColor={currentTheme.fontSecondColor}
+                isRTL
+                bold
+              >
+                {t('Order number') || 'Order number'}
+              </TextDefault>
+              <TextDefault
+                textColor={currentTheme.fontMainColor}
+                isRTL
+              >
+                {orderNumber}
+              </TextDefault>
+            </View>
+          )}
+
           <View style={styles().summaryRow}>
             <TextDefault
               textColor={currentTheme.fontSecondColor}
               isRTL
               bold
             >
-              {t('Subtotal') || 'Subtotal'}
+              {t('Item subtotal') || 'Item subtotal'}
             </TextDefault>
             <TextDefault
               textColor={currentTheme.fontMainColor}

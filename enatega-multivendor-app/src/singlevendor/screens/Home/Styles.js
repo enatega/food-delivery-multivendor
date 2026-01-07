@@ -2,8 +2,12 @@ import { StyleSheet } from 'react-native'
 import { scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
 
-const styles = (props = null) =>
+const styles = (currentTheme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: currentTheme?.themeBackground || '#F5F5F5'
+    },
     image: {
       width: '100%',
       height: 200,

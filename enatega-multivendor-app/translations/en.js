@@ -12,8 +12,10 @@ export const en = {
   subtitle3: 'Icecream',
   description3: 'Age does not diminish the extreme disappointment of having a scoop of ice cream fall from the cone',
   getStarted: 'Get Started!',
-  welcome: "Welcome to Yalla, sometimes all you need is love. But a little food now and then doesn't hurt.",
-  welcomeScreen: 'Welcome to Enatega',
+ 
+  welcome:
+    "Welcome to Fast, sometimes all you need is love. But a little food now and then doesn't hurt.",
+  welcomeScreen: 'Welcome to Fast',
   loginBtn: 'Login',
   registerBtn: 'Register',
   name: 'Name',
@@ -395,7 +397,7 @@ export const en = {
   frequentlyBoughtTogether: 'Frequently Bought Together',
   estimatedDeliveryTime: 'Estimated delivery time',
   details: 'Details',
-  mins: 'minutes',
+  mins: 'mins',
   mostOrderedNow: 'Most ordered right now',
   'Order it again': 'Order it again',
   topBrands: 'Top Brands',
@@ -546,7 +548,7 @@ export const en = {
   none: 'none',
   yourEmail: 'Log in easily by entering your email!',
   yourEmailPassword: 'Please enter your passwords now for access!',
-  brandName: 'Enatega',
+  brandName: 'Fast',
   welcomeText: 'Fresh Groceries, Delivered to Your Door',
   createAccountDesc: 'Sign in to order fresh groceries, track your delivery, and get special offers from Fruito.',
   phoneNumber: 'Phone Number',
@@ -606,7 +608,7 @@ export const en = {
   Done: 'Done',
   addMessage: 'Add Message',
   kindlyBeAdvisedText: 'Kindly be advised that your message could also be visible to the courier partner responsible for delivering your order to the venue.',
-  exploreYallaCities: 'Explore Enatega Cities',
+  exploreYallaCities: 'Explore Fast Cities',
   Card: 'Card',
   lebelAlreadyExist: "The label '{{selectedLabel}}' already exists. Please choose a different one.",
   UpdateAvailable: 'Update Available',
@@ -690,5 +692,6 @@ export const en = {
   'Address details': 'Address details',
   'Your location': 'Your location',
   'Choose on Map': 'Choose on Map',
-  'Save address': 'Save address'
+  'Save address': 'Save address',
+  "itemAddedToCart": "Item added to cart"
 }

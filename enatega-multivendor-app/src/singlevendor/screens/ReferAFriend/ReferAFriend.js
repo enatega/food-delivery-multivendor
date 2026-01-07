@@ -75,7 +75,7 @@ const ReferAFriend = () => {
         onBack={() => navigation.goBack()}
       />
 
-      {!hasOrders ? (
+      {hasOrders ? (
         <ShopNowState
           currentTheme={currentTheme}
           onStartShopping={handleStartShopping}
