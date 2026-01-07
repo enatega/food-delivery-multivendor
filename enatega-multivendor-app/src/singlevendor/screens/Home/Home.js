@@ -1,8 +1,7 @@
-import { Pressable, TouchableOpacity, View ,SafeAreaView, Platform, StatusBar} from 'react-native'
-import React, { useLayoutEffect, useRef,useContext } from 'react'
+import { Pressable, TouchableOpacity, View, SafeAreaView, Platform, StatusBar } from 'react-native'
+import React, { useLayoutEffect, useRef, useContext } from 'react'
 
-
-import { useFocusEffect ,useNavigation} from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import HorizontalCategoriesList from '../../components/HorizontalCategoriesList'
 // import HomeBanner from '../../components/Home/HomeBanner'
@@ -26,21 +25,18 @@ const Home = () => {
   const categoriesData = data?.getRestaurantCategoriesSingleVendor
 
   const navigation = useNavigation()
-  
-  const {  i18n } = useTranslation()
+
+  const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
- 
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.themeBackground)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
 
-  console.log("🚀 ~ Home ~ categoriesData:", categoriesData)
+  console.log('🚀 ~ Home ~ categoriesData:', categoriesData)
 
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -81,7 +77,7 @@ const Home = () => {
         } else {
           const modal = modalRef.current
           modal?.close()
-          props?.navigation.navigate({
+          navigation.navigate({
             name: 'CreateAccount'
           })
         }
@@ -97,8 +93,6 @@ const Home = () => {
     </Pressable>
   )
 
-
-  
   return (
     <SafeAreaView style={styles(currentTheme).container}>
       <FlatList
@@ -107,8 +101,8 @@ const Home = () => {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={() => {
           return (
-            <View style={{marginTop: 30}}>
-             <PromoBanner/>
+            <View style={{ marginTop: 30 }}>
+              <PromoBanner />
               <HorizontalCategoriesList categoriesData={categoriesData} />
             </View>
           )
@@ -116,7 +110,6 @@ const Home = () => {
       />
 
       <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
-    
     </SafeAreaView>
   )
 }

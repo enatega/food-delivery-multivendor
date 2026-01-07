@@ -10,8 +10,6 @@ import SearchModal from '../../components/ProductExplorer/SearchModal'
 
 const Browse = () => {
   const { dismissKeyboard, modalVisible, setModalVisible, handleClearSearch, handleModalClose, t, currentTheme, insets, inputRef, searchTerm, setSearchTerm, data, loading, debouncedSearch, onProductPress, handleAddToCart, handleSeeAll, isCategoryModalVisible, setisCategoryModalVisible, categoryId, isSearched } = useBrowse()
-  const { data: productsData } = useHomeProducts({ categoryId: categoryId })
-  const products = productsData?.getCategoryItemsSingleVendor.items ?? []
 
   return (
     <TouchableWithoutFeedback onPress={() => dismissKeyboard()}>
@@ -25,7 +23,7 @@ const Browse = () => {
 
         <BrowseModal visible={modalVisible} onClose={handleModalClose} inputRef={inputRef} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleClearSearch={handleClearSearch} currentTheme={currentTheme} t={t} insets={insets} data={data} loading={loading} debouncedSearch={debouncedSearch} onProductPress={onProductPress} handleAddToCart={handleAddToCart} isSearched={isSearched} />
 
-        <SearchModal visible={isCategoryModalVisible} onClose={() => setisCategoryModalVisible(false)} items={products} isPaginated={true} categoryId={categoryId} />
+        {/* <SearchModal visible={isCategoryModalVisible} onClose={() => setisCategoryModalVisible(false)} items={products} isPaginated={true} categoryId={categoryId} /> */}
       </View>
     </TouchableWithoutFeedback>
   )

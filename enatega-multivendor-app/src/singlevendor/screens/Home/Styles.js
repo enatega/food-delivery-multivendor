@@ -47,7 +47,7 @@ const styles = (currentTheme) =>
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 100,
-      backgroundColor: props?.colorBgTertiary || '#f0f0f0'
+      backgroundColor: currentTheme?.colorBgTertiary || '#f0f0f0'
     },
     addButton: {
       width: '100%',
@@ -60,7 +60,7 @@ const styles = (currentTheme) =>
     addressSubContainer: {
       width: '90%',
       alignSelf: 'center',
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center'
     },
     mL5p: {
