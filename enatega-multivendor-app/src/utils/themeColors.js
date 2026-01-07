@@ -137,7 +137,8 @@ export const theme = {
     colorTextMuted: '#71717A',
     lightBlue: '#CCE9F5',
     gray300: '#A1A1AA',
-
+    newBorderColor2: '#E4E4E7',
+    lowOpacityBlue:'rgba(14, 165, 233, 0.2)'
   },
   Dark: {
     lightBlue: '#CCE9F5',
@@ -267,6 +268,8 @@ export const theme = {
     singlevendorcolor: '#0090CD',
     colorBgTertiary: '#1F1F22',
     colorBgSecondary: '#CCE9F5',
-    colorTextMuted: '#71717A'
+    colorTextMuted: '#71717A',
+    newBorderColor2: '#E4E4E7',
+    lowOpacityBlue:'rgba(14, 165, 233, 0.20)'
   }
 }
