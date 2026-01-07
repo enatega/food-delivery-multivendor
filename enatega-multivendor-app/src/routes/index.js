@@ -78,6 +78,7 @@ import ReferAFriend from '../singlevendor/screens/ReferAFriend/ReferAFriend'
 import Membership from '../singlevendor/screens/Membership/Membership'
 import ProductList from '../singlevendor/screens/ProductsList.js/ProductList'
 import Vouchers from '../singlevendor/screens/Vouchers/Vouchers'
+import OrderConfirmation from '../singlevendor/screens/Checkout/OrderConfirmation'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -204,6 +205,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='ProductsList' component={ProductList} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     
       <NavigationStack.Screen name='Vouchers' component={Vouchers} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='OrderConfirmation' component={OrderConfirmation} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
     </NavigationStack.Navigator>
   )
 }
