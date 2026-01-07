@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "Sign in credentials",
   "Sign in": "Sign in",
   "CustomerSupport": "Customer Support",
@@ -55,7 +56,6 @@
   "Users": "Users",
   "Phone": "Phone",
   "Address": "Address",
-  "2019": "2019",
   "About Us": "About Us",
   "Blog": "Blog",
   "Welcome": "Welcome",
@@ -892,6 +892,7 @@
   "Subscription": "Subscription",
   "Shop Types": "Shop Types",
   "Shop Type": "Shop Type",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Are you sure you want to delete this Shop?",
   "Subscription Plan": "Subscription Plan",
   "Account": "Account",
   "Drivers": "Drivers",
@@ -1098,9 +1099,9 @@
   "show_detail": "Show Details",
   "hide_detail": "Hide Details",
   "No_differences_found_in_data": "No differences found in data.",
-   "read more": "Read More",
+  "read more": "Read More",
   "read less": "Read Less",
-  "enter_password":{
+  "enter_password": {
     "enter_a_password": "Enter a password",
     "weak": "Weak",
     "medium": "Medium",

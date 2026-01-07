@@ -434,10 +434,9 @@ export default function OrderCheckoutScreen() {
     if (savedCoupon) {
       const parsed = JSON.parse(savedCoupon);
       setCoupon(parsed);
-      setIsCouponApplied(true);  // ← VERY IMPORTANT
+      setIsCouponApplied(true); // ← VERY IMPORTANT
     }
   }, []);
-
 
   const onInitDirectionCacheSet = () => {
     try {
@@ -491,9 +490,9 @@ export default function OrderCheckoutScreen() {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-            _id,
-            options: options.map(({ _id }) => _id),
-          }))
+              _id,
+              options: options.map(({ _id }) => _id),
+            }))
           : [],
         specialInstructions: food.specialInstructions,
       };
@@ -526,11 +525,10 @@ export default function OrderCheckoutScreen() {
 
   // API Handlers
   const onApplyCoupon = () => {
-    verifyCoupon({ variables: { coupon: couponText, restaurantId: restaurantId } });
+    verifyCoupon({
+      variables: { coupon: couponText, restaurantId: restaurantId },
+    });
   };
-
-
-
 
   // function validateOrder() {
   //   if (!restaurantData.restaurant.isAvailable || !onCheckIsOpen()) {
@@ -784,7 +782,7 @@ export default function OrderCheckoutScreen() {
           orderInput: items,
           instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
-          couponCode: isCouponApplied ? coupon ? coupon.title : null : null,
+          couponCode: isCouponApplied ? (coupon ? coupon.title : null) : null,
           tipping: +selectedTip,
           taxationAmount: +taxCalculation(),
           // address: {
@@ -1046,10 +1044,11 @@ export default function OrderCheckoutScreen() {
             {/* <!-- Delivery and Pickup Toggle --> */}
             <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full p-2 mb-6">
               <button
-                className={`w-1/2 ${deliveryType === "Delivery"
-                  ? "bg-primary-color"
-                  : "bg-gray-100 dark:bg-gray-700"
-                  } text-white py-2 rounded-full flex items-center justify-center`}
+                className={`w-1/2 ${
+                  deliveryType === "Delivery"
+                    ? "bg-primary-color"
+                    : "bg-gray-100 dark:bg-gray-700"
+                } text-white py-2 rounded-full flex items-center justify-center`}
                 onClick={() => {
                   setDeliveryType("Delivery");
                   setIsPickUp(false);
@@ -1065,10 +1064,11 @@ export default function OrderCheckoutScreen() {
               </button>
 
               <button
-                className={`w-1/2 ${deliveryType === "Pickup"
-                  ? "bg-primary-color"
-                  : "bg-gray-100 dark:bg-gray-700"
-                  } px-6 py-2 rounded-full mx-2 flex items-center justify-center`}
+                className={`w-1/2 ${
+                  deliveryType === "Pickup"
+                    ? "bg-primary-color"
+                    : "bg-gray-100 dark:bg-gray-700"
+                } px-6 py-2 rounded-full mx-2 flex items-center justify-center`}
                 onClick={() => {
                   setDeliveryType("Pickup");
                   setIsPickUp(true);
@@ -1254,10 +1254,9 @@ export default function OrderCheckoutScreen() {
                       className="text-gray-600 dark:text-gray-300 flex items-center text-sm sm:text-base md:text-[12px] lg:text-[12px] xl:text-[14px]"
                       htmlFor="card"
                     >
-                      <FontAwesomeIcon
-                        icon={paymentMethodItem.icon}
-                        className="text-gray-900 mr-2 dark:text-gray-100 rtl:ml-2"
-                      />
+                      <span className="font-medium pr-1">
+                        {CURRENCY_SYMBOL}
+                      </span>
                       {t(paymentMethodItem.label)}
                     </label>
                     <input
@@ -1289,10 +1288,11 @@ export default function OrderCheckoutScreen() {
                       (tip: string, index: number) => (
                         <button
                           key={index}
-                          className={`text-[12px] ${selectedTip === tip
-                            ? "text-white bg-secondary-color"
-                            : "text-secondary-color bg-white dark:bg-gray-800 dark:text-secondary-color"
-                            } border border-secondary-color px-4 py-2 rounded-full w-full`}
+                          className={`text-[12px] ${
+                            selectedTip === tip
+                              ? "text-white bg-secondary-color"
+                              : "text-secondary-color bg-white dark:bg-gray-800 dark:text-secondary-color"
+                          } border border-secondary-color px-4 py-2 rounded-full w-full`}
                           onClick={() => {
                             if (selectedTip === tip) {
                               setSelectedTip("");
@@ -1360,8 +1360,10 @@ export default function OrderCheckoutScreen() {
                       disabled={couponLoading}
                     />
                     <button
-                      className="bg-primary-color rtl:mr-2 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium text-gray-900 dark:text-gray-900  tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
+                      className="bg-primary-color rtl:mr-2 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium text-gray-900 dark:text-gray-900  tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full
+                      disabled:opacity-60 disabled:cursor-not-allowed"
                       onClick={onApplyCoupon}
+                      disabled={cart.length === 0}
                     >
                       {couponLoading ? (
                         <FontAwesomeIcon icon={faSpinner} spin />
@@ -1479,8 +1481,9 @@ export default function OrderCheckoutScreen() {
               </div>
 
               <button
-                className="bg-primary-color text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px]"
+                className="bg-primary-color text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={onPlaceOrder}
+                disabled={cart.length === 0}
               >
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />

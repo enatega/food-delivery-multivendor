@@ -30,7 +30,6 @@ import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
 import ShopTypesTableHeader from '../header/table-header';
 import Table from '@/lib/ui/useable-components/table';
 
-
 // Constants
 import { generateDummyShopTypes } from '@/lib/utils/dummy';
 
@@ -56,7 +55,7 @@ export default function ShopTypesMain({
       __typename: '',
       _id: '',
       name: '',
-      image: "",
+      image: '',
       isActive: false,
     },
   });
@@ -113,7 +112,7 @@ export default function ShopTypesMain({
         __typename: '',
         _id: '',
         isActive: false,
-        image:"",
+        image: '',
         name: '',
       },
     });
@@ -170,7 +169,10 @@ export default function ShopTypesMain({
     <div className="p-3">
       <Table
         columns={SHOP_TYPES_TABLE_COLUMNS({ menuItems })}
-        data={data?.fetchShopTypes?.data || (isLoading ? generateDummyShopTypes() : [])}
+        data={
+          data?.fetchShopTypes?.data ||
+          (isLoading ? generateDummyShopTypes() : [])
+        }
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e)}
         loading={isLoading}
@@ -191,14 +193,14 @@ export default function ShopTypesMain({
               __typename: '',
               _id: '',
               isActive: false,
-              image:"",
+              image: '',
               name: '',
             },
           })
         }
         visible={isDeleting.bool}
         loading={deleteShopTypeLoading}
-        message={t('Are you sure to delete the coupon?')}
+        message={t('are_you_sure_you_want_to_delete_this_shoptype')}
       />
     </div>
   );
