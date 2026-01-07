@@ -142,7 +142,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     container: {
       paddingHorizontal: scale(16),
-      paddingVertical: scale(16)
+      paddingTop: scale(16)
     },
     statusItem: {
       flexDirection: 'row',

@@ -39,6 +39,7 @@ const ContactCourierCard = ({ onPress, contactlessDelivery = true }) => {
             <TextDefault
               textColor={currentTheme.gray500}
               small
+              bold
               isRTL
             >
               {t('Ask for contactless delivery') || 'Ask for contactless delivery'}
@@ -72,7 +73,8 @@ const styles = (props = null) =>
       flex: 1
     },
     content: {
-      marginLeft: scale(12)
+      marginLeft: scale(12),
+      gap: scale(6)
     }
   });
 

@@ -34,6 +34,7 @@ const OrderItemRow = ({ item, currencySymbol, currentTheme, isExpanded }) => {
         <TextDefault
           textColor={currentTheme.gray500}
           small
+          bold
           isRTL
           numberOfLines={showDetails ? undefined : 1}
         >
@@ -42,6 +43,7 @@ const OrderItemRow = ({ item, currencySymbol, currentTheme, isExpanded }) => {
         <TextDefault
           textColor={currentTheme.gray500}
           small
+          bold
           isRTL
         >
           Qty {item.quantity}
@@ -133,6 +135,7 @@ const OrderItemsSection = ({
             isRTL
             numberOfLines={1}
             style={styles().summaryText}
+            bold
           >
             {getItemsSummary()}
           </TextDefault>
@@ -167,8 +170,8 @@ const styles = (props = null) =>
     container: {
       paddingHorizontal: scale(16),
       paddingVertical: scale(16),
-      borderBottomWidth: 1,
-      borderBottomColor: props?.gray200 || '#E5E7EB'
+      // borderBottomWidth: 1,
+      // borderBottomColor: props?.gray200 || '#E5E7EB'
     },
     sectionTitle: {
       marginBottom: scale(12)
@@ -200,10 +203,12 @@ const styles = (props = null) =>
     },
     summaryContent: {
       flex: 1,
-      marginLeft: scale(12)
+      // marginLeft: scale(12),
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     summaryText: {
-      flex: 1
+      textAlign: 'center'
     },
     itemsList: {
       marginTop: scale(16)
@@ -212,7 +217,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       paddingVertical: scale(12),
       borderTopWidth: 1,
-      borderTopColor: props?.gray100 || '#F3F4F6'
+      borderTopColor: props?.gray100 || '#F3F4F6',
     },
     itemImage: {
       width: scale(48),
@@ -221,7 +226,8 @@ const styles = (props = null) =>
     },
     itemContent: {
       flex: 1,
-      marginLeft: scale(12)
+      marginLeft: scale(12),
+      gap: scale(6)
     },
     itemRight: {
       alignItems: 'flex-end'

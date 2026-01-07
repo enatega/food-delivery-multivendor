@@ -10,7 +10,7 @@ import ConfigurationContext from '../../../context/Configuration';
 import { theme } from '../../../utils/themeColors';
 import { scale } from '../../../utils/scaling';
 import { textStyles } from '../../../utils/textStyles';
-import TextDefault from '../../../components/Text/TextDefault/TextDefault';
+// import TextDefault from '../../../components/Text/TextDefault/TextDefault';
 import OrderSummary from '../../components/Checkout/OrderSummary';
 
 import {

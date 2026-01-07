@@ -62,6 +62,7 @@ const DeliveryDetailsCard = ({
             <TextDefault
               textColor={currentTheme.gray500}
               small
+              bold
               isRTL
               numberOfLines={1}
             >
@@ -108,7 +109,9 @@ const styles = (props = null) =>
     },
     addressContent: {
       marginLeft: scale(12),
-      flex: 1
+      flex: 1,
+      gap: scale(6)
+
     },
     mapContainer: {
       marginTop: scale(16),
