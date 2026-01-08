@@ -784,6 +784,22 @@ export const ru ={
     "WhatsApp is not installed on the device": 'WhatsApp не установлен на устройстве',
     "Install it": 'Установите его',
     "You are all up to date": "Вы в курсе всех событий",
-    "No new notifications - come back soon": "Нет новых уведомлений - заходите скоро"
+    "No new notifications - come back soon": "Нет новых уведомлений - заходите скоро",
+    "Payments": "Платежи",
+    "Vouchers": "Ваучеры",
+    "App supports & FAQs": "Поддержка приложения и часто задаваемые вопросы",
+    "Feedback": "Обратная связь",
+    "My conversations": "Мои разговоры",
+    "Change phone number": "Изменить номер телефона",
+    "Change email address": "Изменить адрес электронной почты",
+    "Change profile name": "Изменить имя профиля",
+    "Change or delete address": "Изменить или удалить адрес",
+    "Delete account": "Удалить аккаунт",
+    "Reset Password": "Сбросить пароль",
+    "Login issue": "Проблема со входом",
+    "How do you rate our products?": "Как вы оцениваете наши продукты?",
+    "Your feedback helps us serve you better.": "Ваш отзыв помогает нам лучше обслуживать вас.",
+    "Write your experience here...": "Напишите свой опыт здесь...",
+    "Submit": "Отправить"
   }
   

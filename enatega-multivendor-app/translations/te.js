@@ -657,5 +657,21 @@ export const te = {
     "WhatsApp is not installed on the device": "వాట్సాప్ డివైస్‌లో ఇన్‌స్టాల్ చేయబడలేదు",
     "Install it": "దీన్ని ఇన్‌స్టాల్ చేయండి",
     "You are all up to date": "మీరు అన్నీ నవీకరించబడ్డారు",
-    "No new notifications - come back soon": "కొత్త నోటిఫికేషన్‌లు లేవు - త్వరలో తిరిగి రండి"
+    "No new notifications - come back soon": "కొత్త నోటిఫికేషన్‌లు లేవు - త్వరలో తిరిగి రండి",
+    "Payments": "చెల్లింపులు",
+    "Vouchers": "వౌచర్లు",
+    "App supports & FAQs": "అనువర్తన మద్దతు మరియు తరచుగా అడిగే ప్రశ్నలు",
+    "Feedback": "ప్రతిస్పందన",
+    "My conversations": "నా సంభాషణలు",
+    "Change phone number": "ఫోన్ నంబర్ మార్చండి",
+    "Change email address": "ఇమెయిల్ చిరునామా మార్చండి",
+    "Change profile name": "ప్రొఫైల్ పేరు మార్చండి",
+    "Change or delete address": "చిరునామాను మార్చండి లేదా తొలగించండి",
+    "Delete account": "ఖాతాను తొలగించండి",
+    "Reset Password": "పాస్‌వర్డ్ రీసెట్ చేయండి",
+    "Login issue": "లాగిన్ సమస్య",
+    "How do you rate our products?": "మీరు మా ఉత్పత్తులను ఎలా రేట్ చేస్తారు?",
+    "Your feedback helps us serve you better.": "మీ అభిప్రాయం మాకు మీకు మంచి సేవ చేయడంలో సహాయపడుతుంది.",
+    "Write your experience here...": "మీ అనుభవాన్ని ఇక్కడ వ్రాయండి...",
+    "Submit": "సమర్పించండి"
   }

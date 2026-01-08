@@ -622,5 +622,21 @@ export const ku = {
     "WhatsApp is not installed on the device": "واتسئاپ لەسەر ئامێرەکە دانەمەزراوە",
     "Install it": "دامەzrێنە",
     "You are all up to date": "هەمووتان بەدواداچوون",
-    "No new notifications - come back soon": "ئاگاداری نوێ نییە - بەزوویی بگەڕێوە"
+    "No new notifications - come back soon": "ئاگاداری نوێ نییە - بەزوویی بگەڕێوە",
+    "Payments": "پارەدان",
+    "Vouchers": "کوپۆنەکان",
+    "App supports & FAQs": "پشتگیری ئەپ و پرسیارە باوەکان",
+    "Feedback": "بەڕاواردان",
+    "My conversations": "گفتوگۆکانم",
+    "Change phone number": "ژمارەی تەلەفۆن بگۆڕە",
+    "Change email address": "ناونیشانی ئیمەیڵ بگۆڕە",
+    "Change profile name": "ناوی پڕۆفایل بگۆڕە",
+    "Change or delete address": "ناونیشان بگۆڕە یان بیسڕەوە",
+    "Delete account": "هەژمار بسڕەوە",
+    "Reset Password": "تێپەڕەوشە دووبارە دابنێ",
+    "Login issue": "کێشەی چوونەژوورەوە",
+    "How do you rate our products?": "چۆن بەرهەمەکانمان هەڵدەسەنگێنیت؟",
+    "Your feedback helps us serve you better.": "فیدباکەکەت یارمەتیمان دەدات باشتر خزمەتت بکەین.",
+    "Write your experience here...": "ئەزموونەکەت لێرە بنووسە...",
+    "Submit": "ناردن"
   };

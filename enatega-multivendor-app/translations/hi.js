@@ -659,5 +659,21 @@ export const hi = {
     "WhatsApp is not installed on the device": "डिवाइस पर WhatsApp इंस्टॉल नहीं है",
     "Install it": "इसे इंस्टॉल करें",
     "You are all up to date": "आप सभी अपडेट हैं",
-    "No new notifications - come back soon": "कोई नई सूचनाएं नहीं - जल्दी वापस आएं"
+    "No new notifications - come back soon": "कोई नई सूचनाएं नहीं - जल्दी वापस आएं",
+    "Payments": "भुगतान",
+    "Vouchers": "वाउचर",
+    "App supports & FAQs": "ऐप सपोर्ट और अक्सर पूछे जाने वाले प्रश्न",
+    "Feedback": "प्रतिक्रिया",
+    "My conversations": "मेरी बातचीत",
+    "Change phone number": "फोन नंबर बदलें",
+    "Change email address": "ईमेल पता बदलें",
+    "Change profile name": "प्रोफ़ाइल नाम बदलें",
+    "Change or delete address": "पता बदलें या हटाएं",
+    "Delete account": "खाता हटाएं",
+    "Reset Password": "पासवर्ड रीसेट करें",
+    "Login issue": "लॉगिन समस्या",
+    "How do you rate our products?": "आप हमारे उत्पादों को कैसे रेट करते हैं?",
+    "Your feedback helps us serve you better.": "आपकी प्रतिक्रिया हमें आपकी बेहतर सेवा करने में मदद करती है।",
+    "Write your experience here...": "अपना अनुभव यहाँ लिखें...",
+    "Submit": "जमा करें"
   }

@@ -622,6 +622,22 @@ export const jp = {
     "WhatsApp is not installed on the device": "デバイスにWhatsAppがインストールされていません",
     "Install it": "インストールする",
     "You are all up to date": "すべて最新です",
-    "No new notifications - come back soon": "新しい通知はありません - また後で来てください"
+    "No new notifications - come back soon": "新しい通知はありません - また後で来てください",
+    "Payments": "支払い",
+    "Vouchers": "バウチャー",
+    "App supports & FAQs": "アプリサポートとよくある質問",
+    "Feedback": "フィードバック",
+    "My conversations": "私の会話",
+    "Change phone number": "電話番号を変更",
+    "Change email address": "メールアドレスを変更",
+    "Change profile name": "プロフィール名を変更",
+    "Change or delete address": "住所を変更または削除",
+    "Delete account": "アカウントを削除",
+    "Reset Password": "パスワードをリセット",
+    "Login issue": "ログインの問題",
+    "How do you rate our products?": "当社の製品をどのように評価しますか？",
+    "Your feedback helps us serve you better.": "あなたのフィードバックは、私たちがより良いサービスを提供するのに役立ちます。",
+    "Write your experience here...": "あなたの経験をここに書いてください...",
+    "Submit": "送信"
   }
   

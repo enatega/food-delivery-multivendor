@@ -622,6 +622,27 @@ export const ur = {
     "WhatsApp is not installed on the device": "ڈیوائس پر واٹس ایپ انسٹال نہیں ہے",
     "Install it": "اسے انسٹال کریں",
     "You are all up to date": "آپ سب اپ ڈیٹ ہیں",
-    "No new notifications - come back soon": "نئی اطلاعات نہیں - جلد واپس آئیں"
+    "No new notifications - come back soon": "نئی اطلاعات نہیں - جلد واپس آئیں",
+    "Payments": "ادائیگیاں",
+    "Vouchers": "واؤچرز",
+    "App supports & FAQs": "ایپ سپورٹ اور اکثر پوچھے جانے والے سوالات",
+    "Feedback": "فیڈ بیک",
+    "My conversations": "میری گفتگو",
+    "Change phone number": "فون نمبر تبدیل کریں",
+    "Change email address": "ای میل ایڈریس تبدیل کریں",
+    "Change profile name": "پروفائل کا نام تبدیل کریں",
+    "Change or delete address": "ایڈریس تبدیل یا حذف کریں",
+    "Delete account": "اکاؤنٹ حذف کریں",
+    "Reset Password": "پاس ورڈ ری سیٹ کریں",
+    "Login issue": "لاگ ان مسئلہ",
+    "How do you rate our products?": "آپ ہمارے مصنوعات کی درجہ بندی کیسا لگتے ہیں؟",
+    "Your feedback helps us serve you better.": "آپ کی رائے ہمیں آپ کی بہتر خدمت کرنے میں مدد کرتی ہے۔",
+    "Write your experience here...": "اپنا تجربہ یہاں لکھیں...",
+    "Submit": "جمع کریں",
+    "My courier hasn't arrived yet": "میرا کورئیر ابھی تک نہیں آیا",
+    "I need help with my delivery": "مجھے اپنی ڈیلیوری کے بارے میں مدد چاہیے",
+    "I was overcharged": "مجھ سے زیادہ چارج کیا گیا",
+    "I can't contact my courier": "میں اپنے کورئیر سے رابطہ نہیں کر سکتا",
+    "How can we help you? [Automessage]": "ہم آپ کی کس طرح مدد کر سکتے ہیں؟ [خودکار پیغام]"
   }
   

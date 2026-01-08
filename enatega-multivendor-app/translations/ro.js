@@ -657,5 +657,21 @@ export const ro = {
     "WhatsApp is not installed on the device": "WhatsApp nu este instalat pe dispozitiv",
     "Install it": "Instalați-l",
     "You are all up to date": "Ești la zi cu toate",
-    "No new notifications - come back soon": "Nu există notificări noi - reveniți în curând"
+    "No new notifications - come back soon": "Nu există notificări noi - reveniți în curând",
+    "Payments": "Plăți",
+    "Vouchers": "Vouchere",
+    "App supports & FAQs": "Suport aplicație și întrebări frecvente",
+    "Feedback": "Feedback",
+    "My conversations": "Conversațiile mele",
+    "Change phone number": "Schimbă numărul de telefon",
+    "Change email address": "Schimbă adresa de e-mail",
+    "Change profile name": "Schimbă numele profilului",
+    "Change or delete address": "Schimbă sau șterge adresa",
+    "Delete account": "Șterge contul",
+    "Reset Password": "Resetează parola",
+    "Login issue": "Problema de conectare",
+    "How do you rate our products?": "Cum evaluați produsele noastre?",
+    "Your feedback helps us serve you better.": "Feedback-ul dvs. ne ajută să vă servim mai bine.",
+    "Write your experience here...": "Scrieți experiența dvs. aici...",
+    "Submit": "Trimite"
   }

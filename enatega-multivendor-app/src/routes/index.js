@@ -80,6 +80,9 @@ import Membership from '../singlevendor/screens/Membership/Membership'
 import ProductList from '../singlevendor/screens/ProductsList.js/ProductList'
 import Vouchers from '../singlevendor/screens/Vouchers/Vouchers'
 import OrderHistory from '../singlevendor/screens/OrderHistory'
+import { FastHelpSupport, AccountHelp, HelpConversation } from '../singlevendor/screens/FastHelpSupport/index'
+import FAQS from '../singlevendor/screens/FAQS'
+import FeedBack from '../singlevendor/screens/FeedBack'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -162,8 +165,13 @@ function MainNavigator() {
       <NavigationStack.Screen name='Settings' component={Settings} />
       <NavigationStack.Screen name='MyOrders' component={MyOrders} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='OrderHistory' component={OrderHistory} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}/>
+      <NavigationStack.Screen name='FAQS' component={FAQS} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='FeedBack' component={FeedBack} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reorder' component={Reorder} />
       <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='FastHelpSupport' component={FastHelpSupport} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='AccountHelp' component={AccountHelp} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='HelpConversation' component={HelpConversation} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reviews' component={Reviews} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />

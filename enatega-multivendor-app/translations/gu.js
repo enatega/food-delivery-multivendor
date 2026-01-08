@@ -657,5 +657,21 @@ export const gu = {
   "WhatsApp is not installed on the device": "વોટ્સએપ ડિવાઇસ પર ઇન્સ્ટોલ નથી",
   "Install it": "તેને ઇન્સ્ટોલ કરો",
   "You are all up to date": "તમે બધા અપડેટ છો",
-  "No new notifications - come back soon": "નવી સૂચનાઓ નથી - ટૂંક સમયમાં પાછા આવો"
+  "No new notifications - come back soon": "નવી સૂચનાઓ નથી - ટૂંક સમયમાં પાછા આવો",
+  "Payments": "પેમેન્ટ્સ",
+  "Vouchers": "વાઉચર્સ",
+  "App supports & FAQs": "એપ સપોર્ટ અને વારંવાર પૂછાયેલા પ્રશ્નો",
+  "Feedback": "પ્રતિસાદ",
+  "My conversations": "મારી વાતચીતો",
+  "Change phone number": "ફોન નંબર બદલો",
+  "Change email address": "ઇમેઇલ સરનામું બદલો",
+  "Change profile name": "પ્રોફાઇલ નામ બદલો",
+  "Change or delete address": "સરનામું બદલો અથવા કાઢી નાખો",
+  "Delete account": "એકાઉન્ટ કાઢી નાખો",
+  "Reset Password": "પાસવર્ડ રીસેટ કરો",
+  "Login issue": "લૉગિન સમસ્યા",
+  "How do you rate our products?": "તમે અમારા ઉત્પાદનોનું મૂલ્યાંકન કેવી રીતે કરો છો?",
+  "Your feedback helps us serve you better.": "તમારો પ્રતિસાદ અમને તમારી સેવા વધુ સારી રીતે કરવામાં મદદ કરે છે.",
+  "Write your experience here...": "તમારો અનુભવ અહીં લખો...",
+  "Submit": "સબમિટ કરો"
 }

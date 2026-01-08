@@ -622,6 +622,22 @@ export const id = {
     "WhatsApp is not installed on the device": "WhatsApp tidak diinstal pada perangkat",
     "Install it": "Instal",
     "You are all up to date": "Anda sudah terbarui",
-    "No new notifications - come back soon": "Tidak ada notifikasi baru - kembali lagi nanti"
+    "No new notifications - come back soon": "Tidak ada notifikasi baru - kembali lagi nanti",
+    "Payments": "Pembayaran",
+    "Vouchers": "Voucher",
+    "App supports & FAQs": "Dukungan aplikasi & FAQ",
+    "Feedback": "Umpan balik",
+    "My conversations": "Percakapan saya",
+    "Change phone number": "Ubah nomor telepon",
+    "Change email address": "Ubah alamat email",
+    "Change profile name": "Ubah nama profil",
+    "Change or delete address": "Ubah atau hapus alamat",
+    "Delete account": "Hapus akun",
+    "Reset Password": "Atur ulang kata sandi",
+    "Login issue": "Masalah masuk",
+    "How do you rate our products?": "Bagaimana Anda menilai produk kami?",
+    "Your feedback helps us serve you better.": "Masukan Anda membantu kami melayani Anda dengan lebih baik.",
+    "Write your experience here...": "Tulis pengalaman Anda di sini...",
+    "Submit": "Kirim"
   }
   

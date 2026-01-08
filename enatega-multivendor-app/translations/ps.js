@@ -624,5 +624,21 @@ export const ps = {
   "WhatsApp is not installed on the device": "واټساپ په وسیله نصب شوی نه دی",
   "Install it": "نصب یې کړئ",
   "You are all up to date": "تاسو ټول تازه یاست",
-  "No new notifications - come back soon": "نوي خبرتیاوې نشته - ژر راګرځئ"
+  "No new notifications - come back soon": "نوي خبرتیاوې نشته - ژر راګرځئ",
+  "Payments": "تادیات",
+  "Vouchers": "واوچرونه",
+  "App supports & FAQs": "د اپلیکیشن ملاتړ او ډیرو پوښتل شویو پوښتنو",
+  "Feedback": "بیرته راګرځونه",
+  "My conversations": "زما خبرې اترې",
+  "Change phone number": "د تلیفون شمیره بدل کړئ",
+  "Change email address": "د بریښنالیک پته بدل کړئ",
+  "Change profile name": "د پروفایل نوم بدل کړئ",
+  "Change or delete address": "پته بدل کړئ یا حذف کړئ",
+  "Delete account": "حساب حذف کړئ",
+  "Reset Password": "پاسورډ بیا تنظیم کړئ",
+  "Login issue": "د ننوتلو ستونزه",
+  "How do you rate our products?": "تاسو زموږ محصولات څنګه ارزولی؟",
+  "Your feedback helps us serve you better.": "ستاسو نظر زموږ سره مرسته کوي چې تاسو ته غوره خدمت وړاندې کړو.",
+  "Write your experience here...": "خپل تجربه دلته ولیکئ...",
+  "Submit": "سپارل"
 }

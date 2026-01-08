@@ -622,6 +622,22 @@ export const ko = {
     "WhatsApp is not installed on the device": "디바이스에 WhatsApp이 설치되어 있지 않습니다",
     "Install it": "설치하세요",
     "You are all up to date": "모두 최신 상태입니다",
-    "No new notifications - come back soon": "새 알림이 없습니다 - 곧 다시 확인하세요"
+    "No new notifications - come back soon": "새 알림이 없습니다 - 곧 다시 확인하세요",
+    "Payments": "결제",
+    "Vouchers": "바우처",
+    "App supports & FAQs": "앱 지원 및 자주 묻는 질문",
+    "Feedback": "피드백",
+    "My conversations": "내 대화",
+    "Change phone number": "전화번호 변경",
+    "Change email address": "이메일 주소 변경",
+    "Change profile name": "프로필 이름 변경",
+    "Change or delete address": "주소 변경 또는 삭제",
+    "Delete account": "계정 삭제",
+    "Reset Password": "비밀번호 재설정",
+    "Login issue": "로그인 문제",
+    "How do you rate our products?": "저희 제품을 어떻게 평가하시나요?",
+    "Your feedback helps us serve you better.": "귀하의 피드백은 저희가 더 나은 서비스를 제공하는 데 도움이 됩니다.",
+    "Write your experience here...": "여기에 경험을 작성하세요...",
+    "Submit": "제출"
   }
   

@@ -657,5 +657,21 @@ export const tr = {
     "WhatsApp is not installed on the device": "WhatsApp cihazda yüklü değil",
     "Install it": "Yükle",
     "You are all up to date": "Her şey güncel",
-    "No new notifications - come back soon": "Yeni bildirim yok - yakında tekrar gelin"
+    "No new notifications - come back soon": "Yeni bildirim yok - yakında tekrar gelin",
+    "Payments": "Ödemeler",
+    "Vouchers": "Kuponlar",
+    "App supports & FAQs": "Uygulama desteği ve SSS",
+    "Feedback": "Geri bildirim",
+    "My conversations": "Konuşmalarım",
+    "Change phone number": "Telefon numarasını değiştir",
+    "Change email address": "E-posta adresini değiştir",
+    "Change profile name": "Profil adını değiştir",
+    "Change or delete address": "Adresi değiştir veya sil",
+    "Delete account": "Hesabı sil",
+    "Reset Password": "Şifreyi sıfırla",
+    "Login issue": "Giriş sorunu",
+    "How do you rate our products?": "Ürünlerimizi nasıl değerlendiriyorsunuz?",
+    "Your feedback helps us serve you better.": "Geri bildiriminiz bize daha iyi hizmet vermemize yardımcı olur.",
+    "Write your experience here...": "Deneyiminizi buraya yazın...",
+    "Submit": "Gönder"
   }

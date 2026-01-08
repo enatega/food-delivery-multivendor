@@ -659,5 +659,21 @@ export const nl = {
     "WhatsApp is not installed on the device": "WhatsApp is niet geïnstalleerd op het apparaat",
     "Install it": "Installeer het",
     "You are all up to date": "Je bent helemaal bij",
-    "No new notifications - come back soon": "Geen nieuwe meldingen - kom binnenkort terug"
+    "No new notifications - come back soon": "Geen nieuwe meldingen - kom binnenkort terug",
+    "Payments": "Betalingen",
+    "Vouchers": "Vouchers",
+    "App supports & FAQs": "App-ondersteuning en veelgestelde vragen",
+    "Feedback": "Feedback",
+    "My conversations": "Mijn gesprekken",
+    "Change phone number": "Telefoonnummer wijzigen",
+    "Change email address": "E-mailadres wijzigen",
+    "Change profile name": "Profilnaam wijzigen",
+    "Change or delete address": "Adres wijzigen of verwijderen",
+    "Delete account": "Account verwijderen",
+    "Reset Password": "Wachtwoord opnieuw instellen",
+    "Login issue": "Inlogprobleem",
+    "How do you rate our products?": "Hoe beoordeelt u onze producten?",
+    "Your feedback helps us serve you better.": "Uw feedback helpt ons u beter te bedienen.",
+    "Write your experience here...": "Schrijf hier uw ervaring...",
+    "Submit": "Verzenden"
   }

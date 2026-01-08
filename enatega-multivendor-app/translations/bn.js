@@ -623,5 +623,21 @@ export const bn = {
   'WhatsApp is not installed on the device': 'ডিভাইসে হোয়াটসঅ্যাপ ইনস্টল করা নেই',
   'Install it': 'এটি ইনস্টল করুন',
   'You are all up to date': 'আপনি সব আপডেট',
-  'No new notifications - come back soon': 'কোন নতুন বিজ্ঞপ্তি নেই - শীঘ্রই ফিরে আসুন'
+  'No new notifications - come back soon': 'কোন নতুন বিজ্ঞপ্তি নেই - শীঘ্রই ফিরে আসুন',
+  'Payments': 'পেমেন্ট',
+  'Vouchers': 'ভাউচার',
+  'App supports & FAQs': 'অ্যাপ সমর্থন এবং প্রায়শই জিজ্ঞাসিত প্রশ্ন',
+  'Feedback': 'ফিডব্যাক',
+  'My conversations': 'আমার কথোপকথন',
+  'Change phone number': 'ফোন নম্বর পরিবর্তন করুন',
+  'Change email address': 'ইমেইল ঠিকানা পরিবর্তন করুন',
+  'Change profile name': 'প্রোফাইল নাম পরিবর্তন করুন',
+  'Change or delete address': 'ঠিকানা পরিবর্তন বা মুছে ফেলুন',
+  'Delete account': 'অ্যাকাউন্ট মুছে ফেলুন',
+  'Reset Password': 'পাসওয়ার্ড রিসেট করুন',
+  'Login issue': 'লগইন সমস্যা',
+  'How do you rate our products?': 'আপনি আমাদের পণ্যগুলি কীভাবে রেট করবেন?',
+  'Your feedback helps us serve you better.': 'আপনার মতামত আমাদের আপনাকে আরও ভালো সেবা দিতে সাহায্য করে।',
+  'Write your experience here...': 'আপনার অভিজ্ঞতা এখানে লিখুন...',
+  'Submit': 'জমা দিন'
 }

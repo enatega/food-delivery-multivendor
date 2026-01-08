@@ -622,6 +622,22 @@ export const fa = {
     "WhatsApp is not installed on the device": 'واتس اپ روی دستگاه نصب نیست',
     "Install it": 'آن را نصب کنید',
     "You are all up to date": "همه چیز به‌روز است",
-    "No new notifications - come back soon": "هیچ اعلان جدیدی وجود ندارد - به زودی برگردید"
+    "No new notifications - come back soon": "هیچ اعلان جدیدی وجود ندارد - به زودی برگردید",
+    "Payments": "پرداخت‌ها",
+    "Vouchers": "کوپن‌ها",
+    "App supports & FAQs": "پشتیبانی برنامه و سوالات متداول",
+    "Feedback": "بازخورد",
+    "My conversations": "مکالمات من",
+    "Change phone number": "تغییر شماره تلفن",
+    "Change email address": "تغییر آدرس ایمیل",
+    "Change profile name": "تغییر نام پروفایل",
+    "Change or delete address": "تغییر یا حذف آدرس",
+    "Delete account": "حذف حساب کاربری",
+    "Reset Password": "بازنشانی رمز عبور",
+    "Login issue": "مشکل ورود",
+    "How do you rate our products?": "شما محصولات ما را چگونه ارزیابی می‌کنید؟",
+    "Your feedback helps us serve you better.": "نظرات شما به ما کمک می‌کند تا بهتر به شما خدمت کنیم.",
+    "Write your experience here...": "تجربه خود را اینجا بنویسید...",
+    "Submit": "ارسال"
   }
   

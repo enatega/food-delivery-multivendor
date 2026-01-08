@@ -657,5 +657,21 @@ export const mr = {
     "WhatsApp is not installed on the device": "व्हॉट्सअॅप डिव्हाइसवर स्थापित नाही",
     "Install it": "स्थापित करा",
     "You are all up to date": "तुम्ही सर्व अद्ययावत आहात",
-    "No new notifications - come back soon": "नवीन सूचना नाहीत - लवकर परत या"
+    "No new notifications - come back soon": "नवीन सूचना नाहीत - लवकर परत या",
+    "Payments": "पेमेंट्स",
+    "Vouchers": "व्हाउचर्स",
+    "App supports & FAQs": "अॅप समर्थन आणि वारंवार विचारले जाणारे प्रश्न",
+    "Feedback": "अभिप्राय",
+    "My conversations": "माझ्या संभाषणे",
+    "Change phone number": "फोन नंबर बदला",
+    "Change email address": "ईमेल पत्ता बदला",
+    "Change profile name": "प्रोफाइल नाव बदला",
+    "Change or delete address": "पत्ता बदला किंवा हटवा",
+    "Delete account": "खाते हटवा",
+    "Reset Password": "पासवर्ड रीसेट करा",
+    "Login issue": "लॉगिन समस्या",
+    "How do you rate our products?": "आपण आमच्या उत्पादनांचे मूल्यांकन कसे करता?",
+    "Your feedback helps us serve you better.": "आपला अभिप्राय आम्हाला आपली चांगली सेवा करण्यात मदत करतो.",
+    "Write your experience here...": "आपला अनुभव येथे लिहा...",
+    "Submit": "सबमिट करा"
   }

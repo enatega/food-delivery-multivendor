@@ -657,5 +657,21 @@ export const vi = {
     "WhatsApp is not installed on the device": "WhatsApp chưa được cài đặt trên thiết bị",
     "Install it": "Cài đặt",
     "You are all up to date": "Bạn đã cập nhật đầy đủ",
-    "No new notifications - come back soon": "Không có thông báo mới - hãy quay lại sau"
+    "No new notifications - come back soon": "Không có thông báo mới - hãy quay lại sau",
+    "Payments": "Thanh toán",
+    "Vouchers": "Phiếu giảm giá",
+    "App supports & FAQs": "Hỗ trợ ứng dụng và Câu hỏi thường gặp",
+    "Feedback": "Phản hồi",
+    "My conversations": "Cuộc trò chuyện của tôi",
+    "Change phone number": "Thay đổi số điện thoại",
+    "Change email address": "Thay đổi địa chỉ email",
+    "Change profile name": "Thay đổi tên hồ sơ",
+    "Change or delete address": "Thay đổi hoặc xóa địa chỉ",
+    "Delete account": "Xóa tài khoản",
+    "Reset Password": "Đặt lại mật khẩu",
+    "Login issue": "Vấn đề đăng nhập",
+    "How do you rate our products?": "Bạn đánh giá sản phẩm của chúng tôi như thế nào?",
+    "Your feedback helps us serve you better.": "Phản hồi của bạn giúp chúng tôi phục vụ bạn tốt hơn.",
+    "Write your experience here...": "Viết kinh nghiệm của bạn ở đây...",
+    "Submit": "Gửi"
   }

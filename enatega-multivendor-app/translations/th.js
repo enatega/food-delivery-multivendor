@@ -621,6 +621,22 @@ export const th = {
     "WhatsApp is not installed on the device": "WhatsApp ยังไม่ได้ถูกติดตั้งบนอุปกรณ์",
     "Install it": "ติดตั้ง",
     "You are all up to date": "คุณอัปเดตแล้วทั้งหมด",
-    "No new notifications - come back soon": "ไม่มีการแจ้งเตือนใหม่ - กลับมาอีกครั้งเร็วๆ นี้"
+    "No new notifications - come back soon": "ไม่มีการแจ้งเตือนใหม่ - กลับมาอีกครั้งเร็วๆ นี้",
+    "Payments": "การชำระเงิน",
+    "Vouchers": "คูปอง",
+    "App supports & FAQs": "การสนับสนุนแอปและคำถามที่พบบ่อย",
+    "Feedback": "ความคิดเห็น",
+    "My conversations": "การสนทนาของฉัน",
+    "Change phone number": "เปลี่ยนหมายเลขโทรศัพท์",
+    "Change email address": "เปลี่ยนที่อยู่อีเมล",
+    "Change profile name": "เปลี่ยนชื่อโปรไฟล์",
+    "Change or delete address": "เปลี่ยนหรือลบที่อยู่",
+    "Delete account": "ลบบัญชี",
+    "Reset Password": "รีเซ็ตรหัสผ่าน",
+    "Login issue": "ปัญหาการเข้าสู่ระบบ",
+    "How do you rate our products?": "คุณให้คะแนนผลิตภัณฑ์ของเราอย่างไร?",
+    "Your feedback helps us serve you better.": "ความคิดเห็นของคุณช่วยให้เราบริการคุณได้ดีขึ้น",
+    "Write your experience here...": "เขียนประสบการณ์ของคุณที่นี่...",
+    "Submit": "ส่ง"
 }  
   

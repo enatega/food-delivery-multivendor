@@ -658,5 +658,21 @@ export const az = {
     "WhatsApp is not installed on the device": "WhatsApp cihazda quraşdırılmayıb",
     "Install it": "Quraşdır",
     "You are all up to date": "Hamısı yenilənib",
-    "No new notifications - come back soon": "Yeni bildiriş yoxdur - tezliklə qayıdın"
+    "No new notifications - come back soon": "Yeni bildiriş yoxdur - tezliklə qayıdın",
+    "Payments": "Ödənişlər",
+    "Vouchers": "Vauçerlər",
+    "App supports & FAQs": "Tətbiq dəstəyi və tez-tez verilən suallar",
+    "Feedback": "Rəy",
+    "My conversations": "Söhbətlərim",
+    "Change phone number": "Telefon nömrəsini dəyişdir",
+    "Change email address": "E-poçt ünvanını dəyişdir",
+    "Change profile name": "Profil adını dəyişdir",
+    "Change or delete address": "Ünvanı dəyişdir və ya sil",
+    "Delete account": "Hesabı sil",
+    "Reset Password": "Şifrəni sıfırla",
+    "Login issue": "Giriş problemi",
+    "How do you rate our products?": "Məhsullarımızı necə qiymətləndirirsiniz?",
+    "Your feedback helps us serve you better.": "Rəyiniz bizə sizə daha yaxşı xidmət göstərməyə kömək edir.",
+    "Write your experience here...": "Təcrübənizi buraya yazın...",
+    "Submit": "Təqdim et"
   }

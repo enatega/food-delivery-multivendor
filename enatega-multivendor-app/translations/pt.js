@@ -784,6 +784,22 @@ export const pt = {
     "WhatsApp is not installed on the device": 'WhatsApp não está instalado no dispositivo',
     "Install it": 'Instale-o',
     "You are all up to date": "Você está atualizado",
-    "No new notifications - come back soon": "Nenhuma nova notificação - volte em breve"
+    "No new notifications - come back soon": "Nenhuma nova notificação - volte em breve",
+    "Payments": "Pagamentos",
+    "Vouchers": "Vales",
+    "App supports & FAQs": "Suporte do aplicativo e perguntas frequentes",
+    "Feedback": "Feedback",
+    "My conversations": "Minhas conversas",
+    "Change phone number": "Alterar número de telefone",
+    "Change email address": "Alterar endereço de e-mail",
+    "Change profile name": "Alterar nome do perfil",
+    "Change or delete address": "Alterar ou excluir endereço",
+    "Delete account": "Excluir conta",
+    "Reset Password": "Redefinir senha",
+    "Login issue": "Problema de login",
+    "How do you rate our products?": "Como você avalia nossos produtos?",
+    "Your feedback helps us serve you better.": "Seu feedback nos ajuda a servi-lo melhor.",
+    "Write your experience here...": "Escreva sua experiência aqui...",
+    "Submit": "Enviar"
   }
   
