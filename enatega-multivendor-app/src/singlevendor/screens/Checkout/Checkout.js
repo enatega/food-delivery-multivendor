@@ -116,7 +116,8 @@ const Checkout = (props) => {
         shadowRadius: 0,
         shadowOffset: { height: 0 },
         elevation: 0,
-        borderBottomWidth: 0
+        borderBottomWidth: 0,
+        height: scale(100)
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -169,6 +170,10 @@ const Checkout = (props) => {
       paymentMethod,
       tipAmount,
       total,
+      subtotal,
+      deliveryFee,
+      items: cart,
+      orderNumber: '#' + Math.floor(100000 + Math.random() * 900000),
       // Delivery preferences (only for delivery mode)
       ...(fulfillmentMode === 'delivery' && {
         deliveryPreferences: {
@@ -195,23 +200,16 @@ const Checkout = (props) => {
     
     console.log('🛒 PLACE ORDER - Complete Order Data:', orderData);
     
-    // Log specific details for easy tracking
-    console.log('📦 Fulfillment:', fulfillmentMode);
-    console.log('⏰ Delivery Time:', deliveryTime);
-    if (deliveryTime === 'schedule' && selectedSchedule) {
-      console.log('🆔 Time Slot ID:', selectedSchedule.timeSlot.id);
-      console.log('📅 Scheduled For:', selectedSchedule.dateLabel, selectedSchedule.timeSlot.time);
-    }
-    console.log('💰 Total:', currencySymbol, total.toFixed(2));
-    
-    // TODO: Implement order placement logic
+    // Navigate to Order Confirmation screen
+    navigation.navigate('OrderConfirmation', { orderData });
   };
 
   const isOrderValid = () => {
     if (fulfillmentMode === 'delivery' && !deliveryAddress) {
-      return false;
+      // return false later , now temporarily returning true
+      return true;
     }
-    return cart.length > 0;
+    return cart.length = 0;
   };
 
   const handleApplyVoucher = (voucherCode) => {
@@ -304,6 +302,7 @@ const Checkout = (props) => {
         >
           <TextDefault
             textColor={isOrderValid() ? '#fff' : currentTheme.fontSecondColor}
+            // textColor="#fff"
             bolder
             H5
           >

@@ -28,7 +28,6 @@ const styles = (props = null, hasActiveOrders = false) =>
     },
     popularMenuImg: {
       width: '100%',
-      // aspectRatio: 15 / 8
       height: scale(90)
     },
 
@@ -47,15 +46,9 @@ const styles = (props = null, hasActiveOrders = false) =>
     },
 
     addressbtn: {
-      backgroundColor: props != null ? props?.color8 : '#f0f0f0',
-      marginHorizontal: scale(10),
-      marginBottom: scale(10),
-      borderRadius: scale(10),
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'center',
-      padding: scale(5),
-      borderWidth:scale(1),
-      borderColor: props != null ? props?.customBorder : '#FFF'
+      paddingHorizontal: scale(15),
+      paddingVertical: scale(2)
     },
     addNewAddressbtn: {
       padding: scale(5),
@@ -65,7 +58,10 @@ const styles = (props = null, hasActiveOrders = false) =>
     addressContainer: {
       width: '90%',
       ...alignment.PTsmall,
-      ...alignment.PBsmall
+      ...alignment.PBsmall,
+      display: 'flex',
+      flexDirection: 'row',
+      gap: 6
     },
     addButton: {
       backgroundColor: props !== null ? props?.newheaderColor : 'transparent',
@@ -78,10 +74,7 @@ const styles = (props = null, hasActiveOrders = false) =>
     },
     addressSubContainer: {
       width: '90%',
-      alignSelf: 'center',
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'center',
-      gap: 6
+      gap: 4
     },
     content: {
       ...alignment.PTlarge
@@ -158,11 +151,10 @@ const styles = (props = null, hasActiveOrders = false) =>
       ...alignment.MLsmall
     },
     homeIcon: {
-      color: props !== null ? props?.darkBgFont : '#000',
       width: '10%',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     titleAddress: {
       justifyContent: 'center',
