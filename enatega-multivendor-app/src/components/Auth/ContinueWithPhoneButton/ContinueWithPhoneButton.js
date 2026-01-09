@@ -7,7 +7,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const ContinueWithPhoneButton = ({ title, onPress, isLoading, isDisabled }) => {
+const ContinueWithPhoneButton = ({ title, onPress, isLoading, isDisabled, containerStyles }) => {
   const { t } = useTranslation()
 
   const themeContext = useContext(ThemeContext)
@@ -20,15 +20,16 @@ const ContinueWithPhoneButton = ({ title, onPress, isLoading, isDisabled }) => {
         styles(currentTheme).viaPhoneButton,
         {
           backgroundColor: isDisabled ? currentTheme.colorBgTertiary : currentTheme.primaryBlue
-        }
+        },
+        containerStyles && containerStyles
       ]}
       onPress={() => onPress()}
       disabled={isDisabled ? isDisabled : false}
     >
       {isLoading ? (
-        <Spinner spinnerColor={currentTheme.white} backColor={currentTheme.backgroundColor} />
+        <Spinner spinnerColor={currentTheme?.primaryBlue} backColor={currentTheme.backgroundColor} />
       ) : (
-        <TextDefault H4 textColor={currentTheme.gray100} center bold style={{color: isDisabled ? currentTheme.horizontalLine : currentTheme.white}}>
+        <TextDefault H4 textColor={currentTheme.gray100} center bold style={{ color: isDisabled ? currentTheme.horizontalLine : currentTheme.white }}>
           {t(title)}
         </TextDefault>
       )}

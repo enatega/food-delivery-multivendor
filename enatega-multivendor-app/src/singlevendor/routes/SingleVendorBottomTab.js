@@ -6,7 +6,6 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { RightButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 import { useTranslation } from 'react-i18next'
 
-
 import CreateAccount from '../../screens/CreateAccount/CreateAccount'
 import Profile from '../screens/Profile/Profile'
 import Home from '../screens/Home/Home'
@@ -24,18 +23,18 @@ import BottomTabIcon from '../../components/BottomTabIcon/BottomTabIcon'
 const Tab = createBottomTabNavigator()
 
 const SingleVendorBottomTab = () => {
-      const { t, i18n } = useTranslation()
-      const themeContext = useContext(ThemeContext)
-    const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
-    const { profile: userProfile } = useContext(UserContext)
-    const navigation = useNavigation()
-    
-    const handleLocationModal = () => {
-      navigation.navigate('SelectLocation')
-    }
-    
+  const { t, i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  const { profile: userProfile } = useContext(UserContext)
+  const navigation = useNavigation()
+
+  const handleLocationModal = () => {
+    navigation.navigate('SelectLocation')
+  }
+
   return (
-   <Tab.Navigator
+    <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: route.name === 'Discovery',
         tabBarIcon: ({ focused, color, size }) => {
@@ -55,34 +54,7 @@ const SingleVendorBottomTab = () => {
         headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
       })}
     >
-      <Tab.Screen
-        name='Discovery'
-        component={Home}
-        options={{
-          tabBarLabel: 'Home',
-          headerStyle: {
-            shadowColor: 'transparent',
-            shadowRadius: 0,
-            backgroundColor: currentTheme.themeBackground
-          },
-          headerTitleStyle: {
-            color: currentTheme.darkBgFont,
-            ...alignment.PTlarge
-          },
-          headerTitleContainerStyle: {
-            alignItems: 'flex-start',
-            ...alignment.MLxSmall
-          },
-          headerTitleAlign: 'left',
-          headerTitle: (headerProp) => (
-            <SelectedLocation
-              {...headerProp}
-              modalOn={handleLocationModal}
-              navigation={navigation}
-            />
-          )
-        }}
-      />
+      <Tab.Screen name='Discovery' component={Home} />
       <Tab.Screen
         name='Deals'
         component={Deals}
@@ -98,7 +70,7 @@ const SingleVendorBottomTab = () => {
         name='cart'
         component={Cart}
         options={{
-          tabBarLabel:'Cart'
+          tabBarLabel: 'Cart'
         }}
         initialParams={{
           selectedType: 'grocery',
