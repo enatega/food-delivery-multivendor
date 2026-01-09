@@ -283,3 +283,35 @@ query GetNewOffersFoodsDeals {
       }
   }
 }`
+
+
+export const GET_FAVORITE_FOODS_SINGLE_VENDOR = gql`
+query GetFavoriteFoodsSingleVendor {
+  getFavoriteFoodsSingleVendor(limit: 2, skip: 2) {
+      success
+      message
+      data {
+          _id
+          title
+          description
+          image
+          subCategory
+          isFavourite
+          isActive
+          createdAt
+          updatedAt
+          isOutOfStock
+          variations {
+              _id
+              title
+              price
+              discounted
+              addons
+              isOutOfStock
+              id
+              name
+          }
+      }
+  }
+}
+`

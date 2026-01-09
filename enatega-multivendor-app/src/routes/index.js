@@ -83,6 +83,7 @@ import OrderHistory from '../singlevendor/screens/OrderHistory'
 import { FastHelpSupport, AccountHelp, HelpConversation } from '../singlevendor/screens/FastHelpSupport/index'
 import FAQS from '../singlevendor/screens/FAQS'
 import FeedBack from '../singlevendor/screens/FeedBack'
+import MyFavorites from '../singlevendor/screens/MyFavorites/MyFavorites'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -216,6 +217,7 @@ function MainNavigator() {
     
       <NavigationStack.Screen name='Vouchers' component={Vouchers} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='NotificationScreen' component={NotificationsScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='MyFavorites' component={MyFavorites} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     </NavigationStack.Navigator>
   )
 }
