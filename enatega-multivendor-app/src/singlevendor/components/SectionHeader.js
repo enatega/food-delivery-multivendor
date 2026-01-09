@@ -4,13 +4,13 @@ import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 
-const SectionHeader = ({ title, onSeeAll, showSeeAll=true }) => {
+const SectionHeader = ({ title, onSeeAll, containerStyles, showSeeAll=true }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   return (
-    <View style={styles(currentTheme).header}>
+    <View style={[styles(currentTheme).header, containerStyles]}>
       <Text style={styles(currentTheme).title}>{title}</Text>
       {showSeeAll && 
       <TouchableOpacity onPress={onSeeAll} style={styles(currentTheme).seeAllButton}>
