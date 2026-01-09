@@ -222,7 +222,8 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
         <div className="flex items-center gap-1 rounded-lg border border-gray-300 p-2 mb-2 text-sm">
           <span>{t('Min Order')}</span>
           <span>
-            {configuration?.currencySymbol} {restaurant?.minimumOrder}
+            {CURRENT_SYMBOL || '$'}
+            {restaurant?.minimumOrder}
           </span>
         </div>
       </div>

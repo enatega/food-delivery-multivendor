@@ -116,7 +116,7 @@ export const ItemDetailSection = <
                 )}{" "}
               </span>
               <span className="text-sm text-gray-700 dark:text-gray-300">
-                {CURRENCY_SYMBOL}
+                {CURRENCY_SYMBOL || "$"}
                 {option.price}
               </span>
             </div>

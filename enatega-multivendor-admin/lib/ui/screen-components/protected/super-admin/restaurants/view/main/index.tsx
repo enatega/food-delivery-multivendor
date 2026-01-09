@@ -103,10 +103,6 @@ export default function RestaurantsMain() {
     }
   ) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
 
-  useEffect(() => {
-    console.log('🚀 Store Screen Rendered');
-  });
-
   // API
   const [hardDeleteRestaurant, { loading: isHardDeleting }] = useMutation(
     HARD_DELETE_RESTAURANT,
