@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SafeAreaView, View, StyleSheet, FlatList } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
@@ -22,51 +22,44 @@ const MyFavorites = () => {
   }
 
   const { data: favoriteFoodsData, loading: favoriteFoodsLoading, error: favoriteFoodsError } = useQuery(GET_FAVORITE_FOODS_SINGLE_VENDOR)
-  console.log('Favorite Foods Data:HERE', JSON.stringify(favoriteFoodsData, null, 2))
-  // Dummy data for now
-  const [favoriteItems, setFavoriteItems] = useState([
-    {
-      key: '1',
-      title: 'Veggie Spring Rolls',
-      description: 'Carrots, bell peppers, cucumbers, and cabbages wrapped in rice paper',
-      price: 12.40,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400',
-      addons: ['Dipping sauce', 'Peanut sauce']
-    },
-    {
-      key: '2',
-      title: 'Apple Juice',
-      description: 'Golden Delicious Apples, Filter Water, Ascorbic Acid',
-      price: 8.74,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400',
-      addons: []
-    },
-    {
-      key: '3',
-      title: 'Veggie Spring Rolls',
-      description: 'Carrots, bell peppers, cucumbers, and cabbages wrapped in rice paper',
-      price: 12.40,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400',
-      addons: ['Dipping sauce', 'Peanut sauce']
-    },
-    {
-      key: '4',
-      title: 'Apple Juice',
-      description: 'Golden Delicious Apples, Filter Water, Ascorbic Acid',
-      price: 8.74,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400',
-      addons: []
+  
+  const [favoriteItems, setFavoriteItems] = useState([])
+
+  useEffect(() => {
+    if (favoriteFoodsData?.getFavoriteFoodsSingleVendor?.data) {
+      const transformedItems = favoriteFoodsData.getFavoriteFoodsSingleVendor.data.map((food) => {
+        // Get the first available variation (not out of stock) or the first variation
+        const availableVariation = food.variations?.find(v => !v.isOutOfStock) || food.variations?.[0]
+        
+        // Collect all addons from all variations
+        const allAddons = food.variations?.flatMap(variation => 
+          variation.addons?.map(addon => addon.name || addon) || []
+        ) || []
+        
+        // Remove duplicate addons
+        const uniqueAddons = [...new Set(allAddons)]
+        
+        return {
+          key: food._id,
+          _id: food._id,
+          title: food.title,
+          description: food.description || '',
+          price: availableVariation?.price || 0,
+          quantity: 1,
+          image: food.image || '',
+          addons: uniqueAddons,
+          variations: food.variations,
+          isOutOfStock: food.isOutOfStock,
+          subCategory: food.subCategory
+        }
+      })
+      setFavoriteItems(transformedItems)
     }
-  ])
+  }, [favoriteFoodsData])
 
   const currencySymbol = configuration?.currencySymbol || '€'
 
   const handleAddQuantity = (itemKey) => {
-    // TODO: Replace with your actual add quantity logic
     setFavoriteItems(prevItems =>
       prevItems.map(item =>
         item.key === itemKey ? { ...item, quantity: item.quantity + 1 } : item
@@ -75,7 +68,6 @@ const MyFavorites = () => {
   }
 
   const handleRemoveQuantity = (itemKey) => {
-    // TODO: Replace with your actual remove quantity logic
     setFavoriteItems(prevItems =>
       prevItems.map(item =>
         item.key === itemKey ? { ...item, quantity: Math.max(0, item.quantity - 1) } : item
