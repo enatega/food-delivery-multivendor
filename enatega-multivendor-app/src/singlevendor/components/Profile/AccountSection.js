@@ -52,7 +52,7 @@ const AccountSection = () => {
       id: 6,
       icon: 'settings-outline',
       title: t('Security and settings'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('SecuritySettings')
     }
   ]
 
