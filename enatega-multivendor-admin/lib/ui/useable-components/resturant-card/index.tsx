@@ -38,7 +38,6 @@ import CustomLoader from '../custom-progress-indicator';
 import { CarSVG } from '@/lib/utils/assets/svgs/Car';
 import { FrameSVG } from '@/lib/utils/assets/svgs/Frame';
 import { useTranslations } from 'next-intl';
-import { config } from 'process';
 
 export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   // Props

@@ -15,6 +15,7 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
   onHide,
   restaurantData,
 }) => {
+  const { CURRENT_SYMBOL } = useConfiguration();
   const calculateSubtotal = (items: Items[]) => {
     let Subtotal = 0;
     for (let i = 0; i < items.length; i++) {
@@ -31,8 +32,6 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
     return Subtotal.toFixed(2);
   };
   if (!restaurantData) return null;
-
-  const { CURRENT_SYMBOL } = useConfiguration();
 
   return (
     <Dialog

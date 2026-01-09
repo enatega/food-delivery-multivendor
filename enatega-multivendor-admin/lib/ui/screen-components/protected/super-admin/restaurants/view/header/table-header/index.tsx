@@ -44,7 +44,7 @@ export default function RestaurantsTableHeader({
             name="shop_category"
             options={shopCategoryOptions}
             selectedItems={[]}
-            setSelectedItems={(key, items) => []}
+            setSelectedItems={() => []}
             placeholder={t('Shop Category')}
             className=" w-min border dark:border-dark-600 rounded-md py-1"
             multiSelectClassName="border-none"
@@ -55,7 +55,7 @@ export default function RestaurantsTableHeader({
             name="shop_status"
             options={shopStatusOptions}
             selectedItems={[]}
-            setSelectedItems={(key, items) => []}
+            setSelectedItems={() => []}
             placeholder={t('Shop Status')}
             className=" w-min border dark:border-dark-600 rounded-md py-1"
             multiSelectClassName="border-none"
