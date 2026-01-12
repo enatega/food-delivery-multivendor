@@ -284,6 +284,63 @@ query GetNewOffersFoodsDeals {
   }
 }`
 
+export const GET_USER_CART = gql`query GetUserCart {
+    getUserCart {
+        success
+        message
+        grandTotal
+        cartId
+        foods {
+            categoryId
+            foodId
+            foodTitle
+            foodTotal
+            variations {
+                variationId
+                variationTitle
+                unitPrice
+                quantity
+                addonsTotal
+                itemTotal
+                addons {
+                    addonId
+                    optionId
+                    title
+                    price
+                }
+            }
+        }
+    }
+}`
+
+
+
+export const GET_RECOMMENDED_FOODS = gql`query GetRecommendedFoods($foodId: ID!, $skip: Int, $limit: Int) {
+  getRecommendedFoods(foodId: $foodId, skip: $skip, limit: $limit) {
+    pagination {
+      totalItems
+      hasMore
+    }
+    items {
+      variations {
+        title
+        price
+        id
+        deal {
+          isActive
+          id
+          discountValue
+          discountType
+        }
+      }
+      title
+      image
+      id
+      description
+    }
+  }
+}`
+
 
 export const GET_FAVORITE_FOODS_SINGLE_VENDOR = gql`
 query GetFavoriteFoodsSingleVendor {

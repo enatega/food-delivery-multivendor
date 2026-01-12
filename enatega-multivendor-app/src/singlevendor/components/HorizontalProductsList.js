@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 import LoadingSkeleton from './LoadingSkeleton'
 import HorizontalProductsEmptyView from './HorizontalProductsEmptyView'
 
-const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, showSeeAll = true, viewType, setSearchVisible }) => {
+const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, showSeeAll = true, viewType, setSearchVisible,containerStyles }) => {
   const { i18n, t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
@@ -37,15 +37,15 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
   }
 
   return (
-    <View style={styles(currentTheme).container}>
-      <SectionHeader title={listTitle} onSeeAll={handleSeeAll} showSeeAll={showSeeAll} />
+    <View style={[styles(currentTheme).container, containerStyles]}>
+      <SectionHeader title={listTitle} onSeeAll={handleSeeAll} showSeeAll={showSeeAll} containerStyles={containerStyles} />
       {isLoading ? (
         <View style={styles().skeletonContainer}>
           <LoadingSkeleton width='45%' height={200} borderRadius={10} />
           <LoadingSkeleton width='45%' height={200} borderRadius={10} />
         </View>
       ) : (
-        <FlatList ListEmptyComponent={<HorizontalProductsEmptyView />} data={ListData} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles(currentTheme).scrollContent} keyExtractor={(item) => item.id.toString()} renderItem={({ item: drink }) => <ProductCard product={drink} onAddToCart={handleAddToCart} onCardPress={onProductPress} />} />
+        <FlatList ListEmptyComponent={<HorizontalProductsEmptyView />} data={ListData} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles(currentTheme).scrollContent,containerStyles]} keyExtractor={(item) => item.id.toString()} renderItem={({ item: drink }) => <ProductCard product={drink} onAddToCart={handleAddToCart} onCardPress={onProductPress} />} />
       )}
     </View>
   )
