@@ -86,6 +86,8 @@ import { FastHelpSupport, AccountHelp, HelpConversation } from '../singlevendor/
 import FAQS from '../singlevendor/screens/FAQS'
 import FeedBack from '../singlevendor/screens/FeedBack'
 import MyFavorites from '../singlevendor/screens/MyFavorites/MyFavorites'
+import PaymentMethod from '../singlevendor/screens/PaymentMethod/PaymentMethod'
+import AddPaymentMethod from '../singlevendor/screens/PaymentMethod/AddPaymentMethod'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -222,6 +224,8 @@ function MainNavigator() {
       <NavigationStack.Screen name='OrderConfirmation' component={OrderConfirmation} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='NotificationScreen' component={NotificationsScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='MyFavorites' component={MyFavorites} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='PaymentMethod' component={PaymentMethod} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='AddPaymentMethod' component={AddPaymentMethod} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     </NavigationStack.Navigator>
   )
 }
