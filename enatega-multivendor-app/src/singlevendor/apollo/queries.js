@@ -343,14 +343,13 @@ export const GET_RECOMMENDED_FOODS = gql`query GetRecommendedFoods($foodId: ID!,
 
 
 export const GET_FAVORITE_FOODS_SINGLE_VENDOR = gql`
-query GetFavoriteFoodsSingleVendor {
-    getFavoriteFoodsSingleVendor(limit: 2, skip: 0) {
+query GetFavoriteFoodsSingleVendor($limit: Int, $skip: Int) {
+    getFavoriteFoodsSingleVendor(limit: $limit, skip: $skip) {
         success
         message
         data {
             _id
             title
-            description
             image
             subCategory
             isFavourite

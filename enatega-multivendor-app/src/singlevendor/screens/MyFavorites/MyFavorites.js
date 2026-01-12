@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { SafeAreaView, View, StyleSheet, FlatList } from 'react-native'
+import { SafeAreaView, View, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -8,8 +8,8 @@ import ConfigurationContext from '../../../context/Configuration'
 import AccountSectionHeader from '../../components/AccountSectionHeader'
 import CartItem from '../../components/Cart/CartItem'
 import { scale, verticalScale } from '../../../utils/scaling'
-import { GET_FAVORITE_FOODS_SINGLE_VENDOR } from '../../apollo/queries'
-import { useQuery } from '@apollo/client'
+import useFavoriteProducts from './useFavoriteProducts'
+const PAGE_LIMIT = 10
 
 const MyFavorites = () => {
   const navigation = useNavigation()
@@ -21,68 +21,86 @@ const MyFavorites = () => {
     ...theme[themeContext.ThemeValue]
   }
 
-  const { data: favoriteFoodsData, loading: favoriteFoodsLoading, error: favoriteFoodsError } = useQuery(GET_FAVORITE_FOODS_SINGLE_VENDOR)
-  
+  const [page, setPage] = useState(0)
+  const { data: favoriteFoodsData, loading: favoriteFoodsLoading, error: favoriteFoodsError, refetch } = useFavoriteProducts({
+    skip: 0,
+    limit: PAGE_LIMIT,
+    skipQuery: false
+  })
+
+
   const [favoriteItems, setFavoriteItems] = useState([])
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   useEffect(() => {
     if (favoriteFoodsData?.getFavoriteFoodsSingleVendor?.data) {
+      console.log('favoriteFoodsData', JSON.stringify(favoriteFoodsData?.getFavoriteFoodsSingleVendor?.data, null, 2));
+
       const transformedItems = favoriteFoodsData.getFavoriteFoodsSingleVendor.data.map((food) => {
-        // Get the first available variation (not out of stock) or the first variation
-        const availableVariation = food.variations?.find(v => !v.isOutOfStock) || food.variations?.[0]
-        
-        // Collect all addons from all variations
-        const allAddons = food.variations?.flatMap(variation => 
-          variation.addons?.map(addon => addon.name || addon) || []
-        ) || []
-        
-        // Remove duplicate addons
-        const uniqueAddons = [...new Set(allAddons)]
-        
+        // Transform variations to include quantity property
+        const transformedVariations = food.variations?.map(variation => ({
+          ...variation,
+          quantity: 1 // Default quantity for each variation
+        })) || []
+
+        // Calculate total price based on first available variation
+        const availableVariation = transformedVariations.find(v => !v.isOutOfStock) || transformedVariations[0]
+        const foodTotal = availableVariation ? (availableVariation.price * availableVariation.quantity).toFixed(2) : '0.00'
+
         return {
           key: food._id,
           _id: food._id,
-          title: food.title,
+          foodId: food._id,
+          foodTitle: food.title,
           description: food.description || '',
-          price: availableVariation?.price || 0,
-          quantity: 1,
           image: food.image || '',
-          addons: uniqueAddons,
-          variations: food.variations,
+          variations: transformedVariations,
+          foodTotal: foodTotal,
           isOutOfStock: food.isOutOfStock,
           subCategory: food.subCategory
         }
       })
-      setFavoriteItems(transformedItems)
+
+      if (page === 0) {
+        setFavoriteItems(transformedItems)
+      } else {
+        setFavoriteItems(prev => [...prev, ...transformedItems])
+      }
+      setIsLoadingMore(false)
     }
-  }, [favoriteFoodsData])
+  }, [favoriteFoodsData, page])
 
   const currencySymbol = configuration?.currencySymbol || '€'
 
-  const handleAddQuantity = (itemKey) => {
-    setFavoriteItems(prevItems =>
-      prevItems.map(item =>
-        item.key === itemKey ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    )
+  const handleLoadMore = async () => {
+    if (isLoadingMore || favoriteFoodsLoading) return
+
+    setIsLoadingMore(true)
+    const nextPage = page + 1
+    setPage(nextPage)
+
+    const { data } = await refetch({
+      skip: nextPage * PAGE_LIMIT,
+      limit: PAGE_LIMIT
+    })
   }
 
-  const handleRemoveQuantity = (itemKey) => {
-    setFavoriteItems(prevItems =>
-      prevItems.map(item =>
-        item.key === itemKey ? { ...item, quantity: Math.max(0, item.quantity - 1) } : item
-      ).filter(item => item.quantity > 0)
-    )
+  const handleAddToCart = (item) => {
+    // Navigate to ProductDetails screen to add item to cart
+    console.log('Navigating to ProductDetails for item:', item)
+    navigation.navigate('ProductDetails', {
+      productId: item.foodId || item._id
+    })
   }
 
   const renderItem = ({ item, index }) => (
     <CartItem
       key={item.key || index}
       item={item}
-      onAddQuantity={() => handleAddQuantity(item.key)}
-      onRemoveQuantity={() => handleRemoveQuantity(item.key)}
       currencySymbol={currencySymbol}
       isLastItem={index === favoriteItems.length - 1}
+      isFavourite={true}
+      onAddToCart={handleAddToCart}
     />
   )
 
@@ -101,6 +119,9 @@ const MyFavorites = () => {
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles(currentTheme).listContent}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.4}
+        ListFooterComponent={isLoadingMore ? <ActivityIndicator style={{ marginVertical: 20 }} color={currentTheme?.main} /> : null}
       />
     </SafeAreaView>
   )
