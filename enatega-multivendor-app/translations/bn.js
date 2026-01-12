@@ -639,5 +639,17 @@ export const bn = {
   'How do you rate our products?': 'আপনি আমাদের পণ্যগুলি কীভাবে রেট করবেন?',
   'Your feedback helps us serve you better.': 'আপনার মতামত আমাদের আপনাকে আরও ভালো সেবা দিতে সাহায্য করে।',
   'Write your experience here...': 'আপনার অভিজ্ঞতা এখানে লিখুন...',
-  'Submit': 'জমা দিন'
+  'Submit': 'জমা দিন',
+  "Payment Methods": "পেমেন্ট পদ্ধতি",
+  "Add or Update your saved payment methods.": "আপনার সংরক্ষিত পেমেন্ট পদ্ধতি যোগ বা আপডেট করুন।",
+  "Default": "ডিফল্ট",
+  "Add payment method": "পেমেন্ট পদ্ধতি যোগ করুন",
+  "Add payment methods": "পেমেন্ট পদ্ধতি যোগ করুন",
+  "Add a credit or debit card to quickly complete purchases.": "দ্রুত কেনাকাটা সম্পূর্ণ করতে একটি ক্রেডিট বা ডেবিট কার্ড যোগ করুন।",
+  "Card number": "কার্ড নম্বর",
+  "Expiration date": "মেয়াদ উত্তীর্ণের তারিখ",
+  "Expiration date (MM / YY)": "মেয়াদ উত্তীর্ণের তারিখ (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "নিরাপত্তা কোড",
+  "Save": "সংরক্ষণ করুন",
 }

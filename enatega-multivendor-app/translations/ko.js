@@ -638,6 +638,18 @@ export const ko = {
     "How do you rate our products?": "저희 제품을 어떻게 평가하시나요?",
     "Your feedback helps us serve you better.": "귀하의 피드백은 저희가 더 나은 서비스를 제공하는 데 도움이 됩니다.",
     "Write your experience here...": "여기에 경험을 작성하세요...",
-    "Submit": "제출"
-  }
+    "Submit": "제출",
+    "Payment Methods": "결제 방법",
+  "Add or Update your saved payment methods.": "저장된 결제 방법을 추가하거나 업데이트하세요.",
+  "Default": "기본",
+  "Add payment method": "결제 방법 추가",
+  "Add payment methods": "결제 수단 추가",
+  "Add a credit or debit card to quickly complete purchases.": "빠른 구매를 위해 신용카드 또는 직불카드를 추가하세요.",
+  "Card number": "카드 번호",
+  "Expiration date": "유효 기간",
+  "Expiration date (MM / YY)": "유효 기간 (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "보안 코드",
+  "Save": "저장",
+}
   

@@ -800,6 +800,18 @@ export const pt = {
     "How do you rate our products?": "Como você avalia nossos produtos?",
     "Your feedback helps us serve you better.": "Seu feedback nos ajuda a servi-lo melhor.",
     "Write your experience here...": "Escreva sua experiência aqui...",
-    "Submit": "Enviar"
-  }
+    "Submit": "Enviar",
+    "Payment Methods": "Métodos de Pagamento",
+  "Add or Update your saved payment methods.": "Adicione ou atualize seus métodos de pagamento salvos.",
+  "Default": "Padrão",
+  "Add payment method": "Adicionar método de pagamento",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+}
   

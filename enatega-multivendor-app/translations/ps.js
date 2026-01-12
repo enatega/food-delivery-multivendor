@@ -640,5 +640,17 @@ export const ps = {
   "How do you rate our products?": "تاسو زموږ محصولات څنګه ارزولی؟",
   "Your feedback helps us serve you better.": "ستاسو نظر زموږ سره مرسته کوي چې تاسو ته غوره خدمت وړاندې کړو.",
   "Write your experience here...": "خپل تجربه دلته ولیکئ...",
-  "Submit": "سپارل"
+  "Submit": "سپارل",
+  "Payment Methods": "د تادیې میتودونه",
+  "Add or Update your saved payment methods.": "خپل خوندي شوي د تادیې میتودونه اضافه یا نوي کړئ.",
+  "Default": "ڈیفالٹ",
+  "Add payment method": "د تادیې میتود اضافه کړئ",
+  "Add payment methods": "د تادیې میتودونه اضافه کړئ",
+  "Add a credit or debit card to quickly complete purchases.": "د پیرودلو چټک بشپړولو لپاره کریډیټ یا ډیبټ کارت اضافه کړئ.",
+  "Card number": "د کارت شمیره",
+  "Expiration date": "د پای نیټه",
+  "Expiration date (MM / YY)": "د پای نیټه (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "امنیتي کوډ",
+  "Save": "خوندي کړئ",
 }

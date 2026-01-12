@@ -674,5 +674,17 @@ export const az = {
     "How do you rate our products?": "Məhsullarımızı necə qiymətləndirirsiniz?",
     "Your feedback helps us serve you better.": "Rəyiniz bizə sizə daha yaxşı xidmət göstərməyə kömək edir.",
     "Write your experience here...": "Təcrübənizi buraya yazın...",
-    "Submit": "Təqdim et"
-  }
+    "Submit": "Təqdim et",
+    "Payment Methods": "Ödəniş üsulları",
+  "Add or Update your saved payment methods.": "Yadda saxlanılan ödəniş üsullarınızı əlavə edin və ya yeniləyin.",
+  "Default": "Varsayılan",
+  "Add payment method": "Ödəniş üsulu əlavə edin",
+  "Add payment methods": "Ödəniş üsulları əlavə edin",
+  "Add a credit or debit card to quickly complete purchases.": "Alış-verişi tez tamamlamaq üçün kredit və ya debet kartı əlavə edin.",
+  "Card number": "Kart nömrəsi",
+  "Expiration date": "Bitmə tarixi",
+  "Expiration date (MM / YY)": "Bitmə tarixi (AA / İİ)",
+  "CVV": "CVV",
+  "Security code": "Təhlükəsizlik kodu",
+  "Save": "Yadda saxla",
+}

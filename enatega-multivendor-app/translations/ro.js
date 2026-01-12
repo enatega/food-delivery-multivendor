@@ -673,5 +673,17 @@ export const ro = {
     "How do you rate our products?": "Cum evaluați produsele noastre?",
     "Your feedback helps us serve you better.": "Feedback-ul dvs. ne ajută să vă servim mai bine.",
     "Write your experience here...": "Scrieți experiența dvs. aici...",
-    "Submit": "Trimite"
-  }
+    "Submit": "Trimite",
+    "Payment Methods": "Metode de plată",
+  "Add or Update your saved payment methods.": "Adăugați sau actualizați metodele de plată salvate.",
+  "Default": "Implicit",
+  "Add payment method": "Adăugați metodă de plată",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+}

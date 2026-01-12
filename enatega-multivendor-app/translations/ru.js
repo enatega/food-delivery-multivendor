@@ -800,6 +800,18 @@ export const ru ={
     "How do you rate our products?": "Как вы оцениваете наши продукты?",
     "Your feedback helps us serve you better.": "Ваш отзыв помогает нам лучше обслуживать вас.",
     "Write your experience here...": "Напишите свой опыт здесь...",
-    "Submit": "Отправить"
-  }
+    "Submit": "Отправить",
+    "Payment Methods": "Способы оплаты",
+  "Add or Update your saved payment methods.": "Добавьте или обновите сохраненные способы оплаты.",
+  "Default": "По умолчанию",
+  "Add payment method": "Добавить способ оплаты",
+  "Add payment methods": "Добавить способы оплаты",
+  "Add a credit or debit card to quickly complete purchases.": "Добавьте кредитную или дебетовую карту для быстрой оплаты покупок.",
+  "Card number": "Номер карты",
+  "Expiration date": "Срок действия",
+  "Expiration date (MM / YY)": "Срок действия (ММ / ГГ)",
+  "CVV": "CVV",
+  "Security code": "Код безопасности",
+  "Save": "Сохранить",
+}
   

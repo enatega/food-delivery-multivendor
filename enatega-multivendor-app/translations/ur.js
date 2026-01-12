@@ -682,6 +682,18 @@ export const ur = {
     "We may update this FAQ section periodically. If significant changes occur, we will notify you through the app or by email. Please check back regularly to stay informed.": "ہم اس FAQ سیکشن کو وقتاً فوقتاً اپ ڈیٹ کر سکتے ہیں۔ اگر اہم تبدیلیاں ہوتی ہیں، تو ہم آپ کو ایپ کے ذریعے یا ای میل کے ذریعے مطلع کریں گے۔ براہ کرم باخبر رہنے کے لیے باقاعدگی سے چیک کریں۔",
     "How can you contact us?": "آپ ہم سے کیسے رابطہ کر سکتے ہیں؟",
     "If you have any questions or concerns regarding this FAQ, please reach out to us at:": "اگر آپ کے اس FAQ کے بارے میں کوئی سوالات یا خدشات ہیں، تو براہ کرم ہم سے رابطہ کریں:",
-    "Email: support@fastapp.com": "ای میل: support@fastapp.com"
-  }
+    "Email: support@fastapp.com": "ای میل: support@fastapp.com",
+    "Payment Methods": "ادائیگی کے طریقے",
+  "Add or Update your saved payment methods.": "اپنے محفوظ کردہ ادائیگی کے طریقے شامل کریں یا اپ ڈیٹ کریں۔",
+  "Default": "ڈیفالٹ",
+  "Add payment method": "ادائیگی کا طریقہ شامل کریں",
+  "Add payment methods": "ادائیگی کے طریقے شامل کریں",
+  "Add a credit or debit card to quickly complete purchases.": "خریداری مکمل کرنے کے لیے کریڈٹ یا ڈیبٹ کارڈ شامل کریں۔",
+  "Card number": "کارڈ نمبر",
+  "Expiration date": "میعاد ختم ہونے کی تاریخ",
+  "Expiration date (MM / YY)": "میعاد ختم ہونے کی تاریخ (MM / YY)",
+  "CVV": "سی وی وی",
+  "Security code": "سیکیورٹی کوڈ",
+  "Save": "محفوظ کریں",
+}
   

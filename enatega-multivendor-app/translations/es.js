@@ -639,5 +639,17 @@ export const es = {
   "I need help with my delivery": "Necesito ayuda con mi entrega",
   "I was overcharged": "Me cobraron de más",
   "I can't contact my courier": "No puedo contactar a mi mensajero",
-  "How can we help you? [Automessage]": "¿Cómo podemos ayudarte? [Mensaje automático]"
+  "How can we help you? [Automessage]": "¿Cómo podemos ayudarte? [Mensaje automático]",
+  "Payment Methods": "Métodos de pago",
+  "Add or Update your saved payment methods.": "Añada o actualice sus métodos de pago guardados.",
+  "Default": "Predeterminado",
+  "Add payment method": "Añadir método de pago",
+  "Add payment methods": "Añadir métodos de pago",
+  "Add a credit or debit card to quickly complete purchases.": "Añada una tarjeta de crédito o débito para completar compras rápidamente.",
+  "Card number": "Número de tarjeta",
+  "Expiration date": "Fecha de vencimiento",
+  "Expiration date (MM / YY)": "Fecha de vencimiento (MM / AA)",
+  "CVV": "CVV",
+  "Security code": "Código de seguridad",
+  "Save": "Guardar",
 };

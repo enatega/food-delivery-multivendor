@@ -673,5 +673,17 @@ export const gu = {
   "How do you rate our products?": "તમે અમારા ઉત્પાદનોનું મૂલ્યાંકન કેવી રીતે કરો છો?",
   "Your feedback helps us serve you better.": "તમારો પ્રતિસાદ અમને તમારી સેવા વધુ સારી રીતે કરવામાં મદદ કરે છે.",
   "Write your experience here...": "તમારો અનુભવ અહીં લખો...",
-  "Submit": "સબમિટ કરો"
+  "Submit": "સબમિટ કરો",
+  "Payment Methods": "ચુકવણી પદ્ધતિઓ",
+  "Add or Update your saved payment methods.": "તમારી સાચવેલી ચુકવણી પદ્ધતિઓ ઉમેરો અથવા અપડેટ કરો.",
+  "Default": "ડિફૉલ્ટ",
+  "Add payment method": "ચુકવણી પદ્ધતિ ઉમેરો",
+  "Add payment methods": "ચુકવણી પદ્ધતિઓ ઉમેરો",
+  "Add a credit or debit card to quickly complete purchases.": "ઝડપથી ખરીદી પૂર્ણ કરવા માટે ક્રેડિટ અથવા ડેબિટ કાર્ડ ઉમેરો.",
+  "Card number": "કાર્ડ નંબર",
+  "Expiration date": "સમાપ્તિ તારીખ",
+  "Expiration date (MM / YY)": "સમાપ્તિ તારીખ (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "સુરક્ષા કોડ",
+  "Save": "સાચવો",
 }

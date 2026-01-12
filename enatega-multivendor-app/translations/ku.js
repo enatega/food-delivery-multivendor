@@ -638,5 +638,17 @@ export const ku = {
     "How do you rate our products?": "چۆن بەرهەمەکانمان هەڵدەسەنگێنیت؟",
     "Your feedback helps us serve you better.": "فیدباکەکەت یارمەتیمان دەدات باشتر خزمەتت بکەین.",
     "Write your experience here...": "ئەزموونەکەت لێرە بنووسە...",
-    "Submit": "ناردن"
-  };
+    "Submit": "ناردن",
+    "Payment Methods": "Rêbazên dayinê",
+  "Add or Update your saved payment methods.": "Rêbazên dayina xwe yên tomarkirî zêde bikin an nûve bikin.",
+  "Default": "Standard",
+  "Add payment method": "Rêbaza dayinê zêde bikin",
+  "Add payment methods": "Rêbazên dayinê zêde bikin",
+  "Add a credit or debit card to quickly complete purchases.": "Ji bo kirîna bilez qerta krediyê an debitê zêde bikin.",
+  "Card number": "Hejmara qertê",
+  "Expiration date": "Dîroka qedandinê",
+  "Expiration date (MM / YY)": "Dîroka qedandinê (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Koda ewlehiyê",
+  "Save": "Tomar bike",
+};

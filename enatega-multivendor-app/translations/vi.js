@@ -673,5 +673,17 @@ export const vi = {
     "How do you rate our products?": "Bạn đánh giá sản phẩm của chúng tôi như thế nào?",
     "Your feedback helps us serve you better.": "Phản hồi của bạn giúp chúng tôi phục vụ bạn tốt hơn.",
     "Write your experience here...": "Viết kinh nghiệm của bạn ở đây...",
-    "Submit": "Gửi"
-  }
+    "Submit": "Gửi",
+    "Payment Methods": "Phương thức thanh toán",
+  "Add or Update your saved payment methods.": "Thêm hoặc Cập nhật các phương thức thanh toán đã lưu của bạn.",
+  "Default": "Mặc định",
+  "Add payment method": "Thêm phương thức thanh toán",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+}

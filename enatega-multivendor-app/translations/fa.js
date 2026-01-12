@@ -638,6 +638,18 @@ export const fa = {
     "How do you rate our products?": "شما محصولات ما را چگونه ارزیابی می‌کنید؟",
     "Your feedback helps us serve you better.": "نظرات شما به ما کمک می‌کند تا بهتر به شما خدمت کنیم.",
     "Write your experience here...": "تجربه خود را اینجا بنویسید...",
-    "Submit": "ارسال"
-  }
+    "Submit": "ارسال",
+    "Payment Methods": "روش‌های پرداخت",
+  "Add or Update your saved payment methods.": "روش‌های پرداخت ذخیره شده خود را اضافه یا به‌روزرسانی کنید.",
+  "Default": "پیش‌فرض",
+  "Add payment method": "افزودن روش پرداخت",
+  "Add payment methods": "افزودن روش‌های پرداخت",
+  "Add a credit or debit card to quickly complete purchases.": "یک کارت اعتباری یا نقدی برای تکمیل سریع خریدها اضافه کنید.",
+  "Card number": "شماره کارت",
+  "Expiration date": "تاریخ انقضا",
+  "Expiration date (MM / YY)": "تاریخ انقضا (ماه / سال)",
+  "CVV": "CVV",
+  "Security code": "کد امنیتی",
+  "Save": "ذخیره",
+}
   

@@ -639,6 +639,18 @@ export const pl = {
     "How do you rate our products?": "Jak oceniasz nasze produkty?",
     "Your feedback helps us serve you better.": "Twoja opinia pomaga nam lepiej Ci służyć.",
     "Write your experience here...": "Napisz tutaj swoje doświadczenie...",
-    "Submit": "Prześlij"
-  }
+    "Submit": "Prześlij",
+    "Payment Methods": "Metody płatności",
+  "Add or Update your saved payment methods.": "Dodaj lub zaktualizuj zapisane metody płatności.",
+  "Default": "Domyślny",
+  "Add payment method": "Dodaj metodę płatności",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+}
   

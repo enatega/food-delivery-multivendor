@@ -673,5 +673,17 @@ export const te = {
     "How do you rate our products?": "మీరు మా ఉత్పత్తులను ఎలా రేట్ చేస్తారు?",
     "Your feedback helps us serve you better.": "మీ అభిప్రాయం మాకు మీకు మంచి సేవ చేయడంలో సహాయపడుతుంది.",
     "Write your experience here...": "మీ అనుభవాన్ని ఇక్కడ వ్రాయండి...",
-    "Submit": "సమర్పించండి"
-  }
+    "Submit": "సమర్పించండి",
+    "Payment Methods": "చెల్లింపు పద్ధతులు",
+  "Add or Update your saved payment methods.": "మీ సేవ్ చేసిన చెల్లింపు పద్ధతులను జోడించండి లేదా నవీకరించండి.",
+  "Default": "డిఫాల్ట్",
+  "Add payment method": "చెల్లింపు పద్ధతిని జోడించండి",
+  "Add payment methods": "చెల్లింపు పద్ధతులను జోడించండి",
+  "Add a credit or debit card to quickly complete purchases.": "రక్షణగా కొనుగోలు పూర్తి చేయడానికి క్రెడిట్ లేదా డెబిట్ కార్డ్ ని జోడించండి.",
+  "Card number": "కార్డ్ నంబర్",
+  "Expiration date": "గడువు తేదీ",
+  "Expiration date (MM / YY)": "గడువు తేదీ (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "రక్షణ కోడ్",
+  "Save": "సేవ్ చేయండి",
+}

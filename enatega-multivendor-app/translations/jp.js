@@ -638,6 +638,18 @@ export const jp = {
     "How do you rate our products?": "当社の製品をどのように評価しますか？",
     "Your feedback helps us serve you better.": "あなたのフィードバックは、私たちがより良いサービスを提供するのに役立ちます。",
     "Write your experience here...": "あなたの経験をここに書いてください...",
-    "Submit": "送信"
-  }
+    "Submit": "送信",
+    "Payment Methods": "支払い方法",
+  "Add or Update your saved payment methods.": "保存された支払い方法を追加または更新します。",
+  "Default": "デフォルト",
+  "Add payment method": "支払い方法を追加",
+  "Add payment methods": "支払い方法を追加",
+  "Add a credit or debit card to quickly complete purchases.": "クレジットカードまたはデビットカードを追加して、購入を素早く完了します。",
+  "Card number": "カード番号",
+  "Expiration date": "有効期限",
+  "Expiration date (MM / YY)": "有効期限 (月/年)",
+  "CVV": "CVV",
+  "Security code": "セキュリティコード",
+  "Save": "保存",
+}
   

@@ -673,5 +673,17 @@ export const tr = {
     "How do you rate our products?": "Ürünlerimizi nasıl değerlendiriyorsunuz?",
     "Your feedback helps us serve you better.": "Geri bildiriminiz bize daha iyi hizmet vermemize yardımcı olur.",
     "Write your experience here...": "Deneyiminizi buraya yazın...",
-    "Submit": "Gönder"
-  }
+    "Submit": "Gönder",
+    "Payment Methods": "Ödeme Yöntemleri",
+  "Add or Update your saved payment methods.": "Kayıtlı ödeme yöntemlerinizi ekleyin veya güncelleyin.",
+  "Default": "Varsayılan",
+  "Add payment method": "Ödeme yöntemi ekle",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+}

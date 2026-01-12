@@ -675,5 +675,17 @@ export const hi = {
     "How do you rate our products?": "आप हमारे उत्पादों को कैसे रेट करते हैं?",
     "Your feedback helps us serve you better.": "आपकी प्रतिक्रिया हमें आपकी बेहतर सेवा करने में मदद करती है।",
     "Write your experience here...": "अपना अनुभव यहाँ लिखें...",
-    "Submit": "जमा करें"
-  }
+    "Submit": "जमा करें",
+    "Payment Methods": "भुगतान विधियां",
+  "Add or Update your saved payment methods.": "अपनी सहेजी गई भुगतान विधियों को जोड़ें या अपडेट करें।",
+  "Default": "डिफ़ॉल्ट",
+  "Add payment method": "भुगतान विधि जोड़ें",
+  "Add payment methods": "भुगतान विधियां जोड़ें",
+  "Add a credit or debit card to quickly complete purchases.": "खरीदारी जल्दी पूरी करने के लिए क्रेडिट या डेबिट कार्ड जोड़ें।",
+  "Card number": "कार्ड नंबर",
+  "Expiration date": "समाप्ति तिथि",
+  "Expiration date (MM / YY)": "समाप्ति तिथि (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "सुरक्षा कोड",
+  "Save": "सहेजें",
+}

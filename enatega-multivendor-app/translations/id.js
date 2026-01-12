@@ -638,6 +638,18 @@ export const id = {
     "How do you rate our products?": "Bagaimana Anda menilai produk kami?",
     "Your feedback helps us serve you better.": "Masukan Anda membantu kami melayani Anda dengan lebih baik.",
     "Write your experience here...": "Tulis pengalaman Anda di sini...",
-    "Submit": "Kirim"
-  }
+    "Submit": "Kirim",
+    "Payment Methods": "Metode Pembayaran",
+  "Add or Update your saved payment methods.": "Tambahkan atau Perbarui metode pembayaran tersimpan Anda.",
+  "Default": "Default",
+  "Add payment method": "Tambahkan metode pembayaran",
+  "Add payment methods": "Tambahkan metode pembayaran",
+  "Add a credit or debit card to quickly complete purchases.": "Tambahkan kartu kredit atau debit untuk menyelesaikan pembelian dengan cepat.",
+  "Card number": "Nomor kartu",
+  "Expiration date": "Tanggal kedaluwarsa",
+  "Expiration date (MM / YY)": "Tanggal kedaluwarsa (BB / TT)",
+  "CVV": "CVV",
+  "Security code": "Kode keamanan",
+  "Save": "Simpan",
+}
   

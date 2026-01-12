@@ -673,5 +673,17 @@ export const uz = {
     "How do you rate our products?": "Bizning mahsulotlarimizni qanday baholaysiz?",
     "Your feedback helps us serve you better.": "Sizning fikr-mulohazangiz bizga sizga yaxshiroq xizmat ko'rsatishga yordam beradi.",
     "Write your experience here...": "Tajribangizni bu yerga yozing...",
-    "Submit": "Yuborish"
-  }
+    "Submit": "Yuborish",
+    "Payment Methods": "To'lov usullari",
+  "Add or Update your saved payment methods.": "Saqlangan to'lov usullaringizni qo'shing yoki yangilang.",
+  "Default": "Standart",
+  "Add payment method": "To'lov usulini qo'shish",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+}

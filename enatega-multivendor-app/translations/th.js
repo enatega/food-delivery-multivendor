@@ -637,6 +637,18 @@ export const th = {
     "How do you rate our products?": "คุณให้คะแนนผลิตภัณฑ์ของเราอย่างไร?",
     "Your feedback helps us serve you better.": "ความคิดเห็นของคุณช่วยให้เราบริการคุณได้ดีขึ้น",
     "Write your experience here...": "เขียนประสบการณ์ของคุณที่นี่...",
-    "Submit": "ส่ง"
+    "Submit": "ส่ง",
+  "Payment Methods": "วิธีการชำระเงิน",
+  "Add or Update your saved payment methods.": "เพิ่มหรืออัปเดตวิธีการชำระเงินที่บันทึกไว้ของคุณ",
+  "Default": "ค่าเริ่มต้น",
+  "Add payment method": "เพิ่มวิธีการชำระเงิน",
+  "Add payment methods": "เพิ่มวิธีการชำระเงิน",
+  "Add a credit or debit card to quickly complete purchases.": "เพิ่มบัตรเครดิตหรือเดบิตเพื่อชำระเงินอย่างรวดเร็ว",
+  "Card number": "หมายเลขบัตร",
+  "Expiration date": "วันหมดอายุ",
+  "Expiration date (MM / YY)": "วันหมดอายุ (ดด / ปป)",
+  "CVV": "CVV",
+  "Security code": "รหัสความปลอดภัย",
+  "Save": "บันทึก",
 }  
   

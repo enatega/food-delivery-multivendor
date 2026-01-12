@@ -675,5 +675,17 @@ export const nl = {
     "How do you rate our products?": "Hoe beoordeelt u onze producten?",
     "Your feedback helps us serve you better.": "Uw feedback helpt ons u beter te bedienen.",
     "Write your experience here...": "Schrijf hier uw ervaring...",
-    "Submit": "Verzenden"
-  }
+    "Submit": "Verzenden",
+    "Payment Methods": "Betaalmethoden",
+  "Add or Update your saved payment methods.": "Voeg uw opgeslagen betaalmethoden toe of werk ze bij.",
+  "Default": "Standaard",
+  "Add payment method": "Betaalmethode toevoegen",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+}
