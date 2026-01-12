@@ -1144,3 +1144,14 @@ export const GET_SUB_CATEGORIES_BY_PARENT_ID = gql`
     }
   }
 `
+
+export const COUPONS_BY_RESTAURANT = gql`
+  query CouponsbyRestaurant {
+    couponsbyRestaurant {
+      _id
+      title
+      discount
+      enabled
+    }
+  }
+`

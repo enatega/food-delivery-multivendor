@@ -16,6 +16,16 @@ const styles = (props = null) =>
       paddingTop: verticalScale(16),
       paddingBottom: verticalScale(24),
       paddingHorizontal: scale(16)
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    errorContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   })
 

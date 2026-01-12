@@ -1,48 +1,36 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { SafeAreaView, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@apollo/client'
 
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import {
   VouchersHeader,
   VoucherCard,
-  EmptyVouchers
+  EmptyVouchers,
+  VoucherSkeleton
 } from '../../components/Vouchers'
+import { COUPONS_BY_RESTAURANT } from '../../../apollo/queries'
 
 import styles from './styles'
 
 const Vouchers = () => {
   const navigation = useNavigation()
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
 
-  // TODO: Get from backend
-  const [vouchers] = useState([
-    {
-      id: '1',
-      title: 'Black Friday',
-      description: 'Use during black Friday week',
-      discountAmount: '€10',
-      discountLabel: 'Off',
-      badge: 'Limited time',
-      badgeType: 'warning'
-    },
-     {
-      id: '2',
-      title: 'Special Discount',
-      description: 'For new customers',
-      discountAmount: '€20',
-      discountLabel: 'Off',
-      badge: '',
-      badgeType: 'warning'
-    }
-  ])
+  // Fetch coupons from backend
+  const { data, loading, error } = useQuery(COUPONS_BY_RESTAURANT, {
+    fetchPolicy: 'network-only'
+  })
+
+  const vouchers = data?.couponsbyRestaurant?.filter(coupon => coupon.enabled) || []
 
   const handleUseVoucher = (voucherId) => {
     // TODO: Implement voucher usage logic
@@ -61,13 +49,28 @@ const Vouchers = () => {
         contentContainerStyle={styles(currentTheme).scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {vouchers.length > 0 ? (
+        {loading ? (
+          <>
+            <VoucherSkeleton currentTheme={currentTheme} />
+            <VoucherSkeleton currentTheme={currentTheme} />
+          </>
+        ) : error ? (
+          <EmptyVouchers currentTheme={currentTheme} />
+        ) : vouchers.length > 0 ? (
           vouchers.map((voucher) => (
             <VoucherCard
-              key={voucher.id}
-              voucher={voucher}
+              key={voucher._id}
+              voucher={{
+                id: voucher._id,
+                title: voucher.title,
+                description: t('Save on your order'),
+                discountAmount: `${voucher.discount}%`,
+                discountLabel: t('Off'),
+                badge: 'Limited time',
+                badgeType: 'warning'
+              }}
               currentTheme={currentTheme}
-              onUse={() => handleUseVoucher(voucher.id)}
+              onUse={() => handleUseVoucher(voucher._id)}
             />
           ))
         ) : (
