@@ -89,12 +89,19 @@
           "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
-        "adaptiveIcon": {
+      "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#000000"
       }
     },
     "plugins": [
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "false",
+          "enableGooglePay": "false"
+        }
+      ],
       [
         "expo-tracking-transparency",
         {

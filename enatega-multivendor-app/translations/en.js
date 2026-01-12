@@ -693,5 +693,7 @@ export const en = {
   'Your location': 'Your location',
   'Choose on Map': 'Choose on Map',
   'Save address': 'Save address',
-  "itemAddedToCart": "Item added to cart"
+  "itemAddedToCart": "Item added to cart",
+  "Subscription subscribed successfully": "Subscription subscribed successfully",
+  "Currently Active": "Currently Active"
 }
