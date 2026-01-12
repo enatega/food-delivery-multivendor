@@ -1,12 +1,65 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+// import { useQuery } from '@apollo/client'
+// import { GET_USER_CART } from '../../apollo/queries'
+
+// const useCart = ({} = {}) => {
+//   const { data, loading, error, refetch } = useQuery(GET_USER_CART, {
+//     variables: {}
+//   })
+
+//   const cartData = {
+//     cartItems: data?.getUserCart?.foods || [],
+//     totalAmount: data?.getUserCart?.grandTotal || 0,
+//     isCartEmpty: data?.getUserCart?.foods?.length === 0
+//   }
+
+//   return {
+//     loading,
+//     cartData,
+//     error,
+//     refetch
+//   }
+// }
+
+// export default useCart
+
+
+import { useEffect } from 'react'
+import { useQuery } from '@apollo/client'
+import { GET_USER_CART } from '../../apollo/queries'
+import useCartStore from '../../stores/useCartStore'
 
 const useCart = () => {
-  return (
-    <View>
-      <Text>useCart</Text>
-    </View>
-  )
+  const {
+    setCartFromServer,
+    setLoading,
+    setError
+  } = useCartStore()
+
+  const { data, loading, error, refetch } = useQuery(GET_USER_CART)
+
+  useEffect(() => {
+    setLoading(loading)
+  }, [loading])
+
+  useEffect(() => {
+    if (data?.getUserCart?.success) {
+      setCartFromServer({
+        cartId: data.getUserCart.cartId,
+        foods: data.getUserCart.foods,
+        grandTotal: data.getUserCart.grandTotal
+      })
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (error) {
+      setError(error.message)
+    }
+  }, [error])
+
+  return {
+    refetch
+  }
 }
 
 export default useCart

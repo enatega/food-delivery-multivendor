@@ -17,7 +17,7 @@ const styles = (props = null) =>
       
     },
     recommendedSection: {
-      paddingHorizontal: scale(16),
+      paddingHorizontal: scale(0),
       paddingBottom: scale(20),
       // borderTopWidth: 1,
       // borderTopColor: props !== null ? props.gray200 : '#E5E7EB',

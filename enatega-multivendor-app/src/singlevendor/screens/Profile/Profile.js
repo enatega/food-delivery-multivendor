@@ -22,6 +22,7 @@ import HelpSection from '../../components/Profile/HelpSection'
 import AccountManagement from '../../components/Profile/AccountManagement'
 
 import styles from './styles'
+import AuthContext from '../../../context/Auth'
 
 const Profile = () => {
   const Analytics = analytics()
@@ -33,6 +34,8 @@ const Profile = () => {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+ const { token, setToken } = useContext(AuthContext)
+  console.log("Profile Data::", token);
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {

@@ -23,3 +23,17 @@ mutation UserCartData($input: CartInput!) {
     success
   }
 }`
+
+
+export const UPDATE_USER_CART_COUNT = gql`
+  mutation UpdateUserCartCount($input: UpdateCartCountInput!) {
+    updateUserCartCount(input: $input) {
+      success
+      message
+      quantity
+      itemTotal
+      foodTotal
+      grandTotal
+    }
+  }
+`
