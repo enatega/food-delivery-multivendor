@@ -707,6 +707,8 @@ export const en = {
   passwordMismatch: 'Passwords do not match',
   passwordTooShort: 'Password must be at least 6 characters',
   incorrectPassword: 'Current password is incorrect',
+  oauthLoginDetected: 'Signed in with {{provider}}',
+  oauthPasswordChangeMessage: 'You are signed in using {{provider}}. you cannot change password if logged in By {{provider}}.',
   success: 'Success',
   ok: 'OK',
   // Privacy Policy Content

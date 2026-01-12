@@ -333,6 +333,7 @@ export const profile = `
             email
             emailIsVerified
             notificationToken
+            userType
             isActive
             isOrderNotification
             isOfferNotification

@@ -2,11 +2,13 @@ import React, { useContext, useState } from 'react'
 import { SafeAreaView, ScrollView, View, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
-import { useMutation, gql } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { CHANGE_PASSWORD } from '../../apollo/mutations'
+import { useUserContext } from '../../../context/User'
+import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import {
   ChangePasswordHeader,
   PasswordInput,
@@ -19,6 +21,7 @@ const ChangePassword = () => {
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
+  const { profile } = useUserContext()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
@@ -27,6 +30,12 @@ const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+
+  // Check if user is logged in via OAuth
+  const isOAuthUser = profile?.userType && profile.userType !== 'default'
+  const oAuthProvider = profile?.userType
+    ? profile.userType.charAt(0).toUpperCase() + profile.userType.slice(1)
+    : ''
 
   const [changePassword, { loading }] = useMutation(CHANGE_PASSWORD, {
     onCompleted: (data) => {
@@ -85,41 +94,61 @@ const ChangePassword = () => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles(currentTheme).formContainer}>
-          <PasswordInput
-            label={t('currentPassword')}
-            placeholder={t('enterCurrentPassword')}
-            value={currentPassword}
-            onChangeText={setCurrentPassword}
-            currentTheme={currentTheme}
-          />
+        {isOAuthUser ? (
+          <View style={styles(currentTheme).oauthNoticeContainer}>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              style={styles(currentTheme).oauthNoticeTitle}
+              bolder
+            >
+              {t('oauthLoginDetected', { provider: oAuthProvider })}
+            </TextDefault>
+            <TextDefault
+              textColor={currentTheme.fontSecondColor}
+              style={styles(currentTheme).oauthNoticeText}
+            >
+              {t('oauthPasswordChangeMessage', { provider: oAuthProvider })}
+            </TextDefault>
+          </View>
+        ) : (
+          <View style={styles(currentTheme).formContainer}>
+            <PasswordInput
+              label={t('currentPassword')}
+              placeholder={t('enterCurrentPassword')}
+              value={currentPassword}
+              onChangeText={setCurrentPassword}
+              currentTheme={currentTheme}
+            />
 
-          <PasswordInput
-            label={t('newPassword')}
-            placeholder={t('enterNewPassword')}
-            value={newPassword}
-            onChangeText={setNewPassword}
-            currentTheme={currentTheme}
-          />
+            <PasswordInput
+              label={t('newPassword')}
+              placeholder={t('enterNewPassword')}
+              value={newPassword}
+              onChangeText={setNewPassword}
+              currentTheme={currentTheme}
+            />
 
-          <PasswordInput
-            label={t('confirmNewPassword')}
-            placeholder={t('enterConfirmNewPassword')}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
+            <PasswordInput
+              label={t('confirmNewPassword')}
+              placeholder={t('enterConfirmNewPassword')}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              currentTheme={currentTheme}
+            />
+          </View>
+        )}
+      </ScrollView>
+
+      {!isOAuthUser && (
+        <View style={styles(currentTheme).buttonContainer}>
+          <UpdateButton
+            onPress={handleUpdate}
+            disabled={!isFormValid() || loading}
+            loading={loading}
             currentTheme={currentTheme}
           />
         </View>
-      </ScrollView>
-
-      <View style={styles(currentTheme).buttonContainer}>
-        <UpdateButton
-          onPress={handleUpdate}
-          disabled={!isFormValid() || loading}
-          loading={loading}
-          currentTheme={currentTheme}
-        />
-      </View>
+      )}
     </SafeAreaView>
   )
 }
