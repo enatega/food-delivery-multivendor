@@ -31,7 +31,7 @@ const LanguageItem = ({ name, subtitle, isSelected, onPress, currentTheme }) => 
 const styles = (props = null) =>
   StyleSheet.create({
     container: {
-      paddingVertical: verticalScale(16),
+      paddingVertical: verticalScale(8),
       borderBottomWidth: 0
     },
     name: {
