@@ -7,8 +7,10 @@ import { theme } from '../../../utils/themeColors'
 import ConfigurationContext from '../../../context/Configuration'
 import AccountSectionHeader from '../../components/AccountSectionHeader'
 import CartItem from '../../components/Cart/CartItem'
+import CartSkeleton from './FavoriteCartSkeleton'
 import { scale, verticalScale } from '../../../utils/scaling'
 import useFavoriteProducts from './useFavoriteProducts'
+import FavoriteCartSkeleton from './FavoriteCartSkeleton'
 const PAGE_LIMIT = 10
 
 const MyFavorites = () => {
@@ -27,6 +29,7 @@ const MyFavorites = () => {
     limit: PAGE_LIMIT,
     skipQuery: false
   })
+  console.log('favoriteFoodsData_outSide____', JSON.stringify(favoriteFoodsData, null, 2));
 
 
   const [favoriteItems, setFavoriteItems] = useState([])
@@ -93,6 +96,23 @@ const MyFavorites = () => {
     })
   }
 
+  if (favoriteFoodsLoading && page === 0) {
+    return (
+      <SafeAreaView style={styles(currentTheme).container}>
+        <AccountSectionHeader
+          currentTheme={currentTheme}
+          onBack={() => navigation.goBack()}
+          headerText={t('My Favorites') || 'My Favorites'}
+        />
+        <View style={styles(currentTheme).listContent}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <FavoriteCartSkeleton key={index} />
+          ))}
+        </View>
+      </SafeAreaView>
+    )
+  }
+
   const renderItem = ({ item, index }) => (
     <CartItem
       key={item.key || index}
@@ -113,16 +133,16 @@ const MyFavorites = () => {
         onBack={() => navigation.goBack()}
         headerText={t('My Favorites') || 'My Favorites'}
       />
-      <FlatList
-        data={favoriteItems}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles(currentTheme).listContent}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.4}
-        ListFooterComponent={isLoadingMore ? <ActivityIndicator style={{ marginVertical: 20 }} color={currentTheme?.main} /> : null}
-      />
+        <FlatList
+          data={favoriteItems}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles(currentTheme).listContent}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.4}
+          ListFooterComponent={isLoadingMore ? <ActivityIndicator style={{ marginVertical: 20 }} color={currentTheme?.main} /> : null}
+        />
     </SafeAreaView>
   )
 }
