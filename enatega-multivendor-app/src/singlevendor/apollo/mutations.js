@@ -28,6 +28,7 @@ export const UPDATE_USER_CART_COUNT = gql`
       itemTotal
       foodTotal
       grandTotal
+      isBelowMinimumOrder
     }
   }
 `

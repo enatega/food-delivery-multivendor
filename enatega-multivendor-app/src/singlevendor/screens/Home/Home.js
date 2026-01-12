@@ -19,9 +19,11 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 
 import PromoBanner from '../../components/Profile/PromoBanner'
+import useCart from '../Cart/useCart'
 
 const Home = () => {
   const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef } = useHome()
+  const {} = useCart()
   const categoriesData = data?.getRestaurantCategoriesSingleVendor
 
   const navigation = useNavigation()

@@ -6,6 +6,10 @@ const useCartStore = create((set) => ({
   grandTotal: 0,
   loading: false,
   error: null,
+  maxOrderAmount: 0,
+  minOrderAmount: 0,
+  isBelowMinimumOrder: false,
+  lowOrderFees: 0,
 
   // Set full cart from server (initial load / refetch)
   setCartFromServer: (cart) =>
@@ -14,7 +18,11 @@ const useCartStore = create((set) => ({
       items: cart.foods || [],
       grandTotal: cart.grandTotal || 0,
       loading: false,
-      error: null
+      error: null,
+      maxOrderAmount: cart.maxOrderAmount || 0,
+      minOrderAmount: cart.minOrderAmount || 0,
+      isBelowMinimumOrder: cart.isBelowMinimumOrder || false,
+      lowOrderFees: cart.lowOrderFees || 0
     }),
 
   // Update a single food item after API response
@@ -28,20 +36,24 @@ const useCartStore = create((set) => ({
       cartId: null,
       items: [],
       grandTotal: 0,
-      error: null
+      error: null,
+      maxOrderAmount: 0,
+      minOrderAmount: 0,
+      isBelowMinimumOrder: false,
+      lowOrderFees: 0
     }),
 
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
 
-  updateCartItemQuantity: ({ foodId, variationId, quantity, foodTotal, itemTotal, grandTotal }) => {
+  updateCartItemQuantity: ({ foodId, variationId, quantity, foodTotal, itemTotal, grandTotal, isBelowMinimumOrder }) => {
     set((state) => {
       // 1️⃣ Create new items array
       const newItems = state.items
         .map((item) => {
           if (item.foodId !== foodId) return item
 
-          const updatedVariations = item.variations.map((v) => (v.variationId === variationId ? { ...v, quantity,itemTotal } : v)).filter((v) => v.quantity > 0)
+          const updatedVariations = item.variations.map((v) => (v.variationId === variationId ? { ...v, quantity, itemTotal } : v)).filter((v) => v.quantity > 0)
 
           // Remove food if no variations left
           if (updatedVariations.length === 0) return null
@@ -57,7 +69,8 @@ const useCartStore = create((set) => ({
       // 2️⃣ Set new state
       return {
         items: newItems,
-        grandTotal
+        grandTotal,
+        isBelowMinimumOrder
       }
     })
   }

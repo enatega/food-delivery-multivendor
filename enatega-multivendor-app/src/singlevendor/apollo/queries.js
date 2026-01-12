@@ -289,6 +289,10 @@ export const GET_USER_CART = gql`query GetUserCart {
         success
         message
         grandTotal
+        lowOrderFees
+        maxOrderAmount
+        minOrderAmount
+        isBelowMinimumOrder
         cartId
         foods {
             categoryId
@@ -311,7 +315,8 @@ export const GET_USER_CART = gql`query GetUserCart {
             }
         }
     }
-}`
+}
+`
 
 
 
@@ -338,5 +343,51 @@ export const GET_RECOMMENDED_FOODS = gql`query GetRecommendedFoods($foodId: ID!,
       id
       description
     }
+  }
+}`
+
+
+export const CALCULATE_CHECKOUT = gql`query CalculateCheckout($isPickup: Boolean, $latDestination: Float, $longDestination: Float) {
+  calculateCheckout(isPickup: $isPickup, latDestination: $latDestination, longDestination: $longDestination) {
+    success
+    message
+    cartId
+    items {
+      foodId
+      foodTitle
+      categoryId
+      variationId
+      variationTitle
+      quantity
+      unitPrice
+      addons {
+        id
+        title
+        price
+        addonId
+      }
+      addonsTotal
+      itemTotal
+    }
+    subtotal
+    deliveryCharges
+    originalDeliveryCharges
+    deliveryDiscount
+    serviceFee
+    minimumOrderFee
+    taxAmount
+    taxPercentage
+    grandTotal
+    totalDiscount
+    discountDetails {
+      subscriptionDiscount
+      freeDeliveryApplied
+      couponDiscount
+    }
+    hasActiveSubscription
+    freeDeliveriesRemaining
+    appliedFreeDelivery
+    minimumOrderAmount
+    isBelowMinimumOrder
   }
 }`
