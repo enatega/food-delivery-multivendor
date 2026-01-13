@@ -31,3 +31,23 @@ export const UPDATE_USER_CART_COUNT = gql`
     }
   }
 `
+export const CREATE_SUBSCRIPTION = gql`
+mutation CreateSubscription($input: CreateSubscriptionInput!) {
+  createSubscription(input: $input) {
+    message
+  }
+}`
+
+export const CANCEL_SUBSCRIPTION = gql`
+mutation CancelSubscription {
+  cancelSubscription {
+    message
+  }
+}`
+
+export const UPDATE_SUBSCRIPTION = gql`
+mutation UpdateSubscription($input: UpdateSubscriptionInput!) {
+  updateSubscription(input: $input) {
+    message
+  }
+}`

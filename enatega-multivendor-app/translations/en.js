@@ -770,4 +770,7 @@ export const en = {
   "CVV": "CVV",
   "Security code": "Security code",
   "Save": "Save",
+  "itemAddedToCart": "Item added to cart",
+  "Subscription subscribed successfully": "Subscription subscribed successfully",
+  "Currently Active": "Currently Active"
 }
