@@ -81,6 +81,10 @@ const styles = (props = null) =>
       shadowOpacity: 0.1,
       shadowRadius: 3,
       elevation: 3
+    },
+    orderHistoryQuantity: {
+      fontSize: scale(12),
+      fontWeight: '400'
     }
   });
 

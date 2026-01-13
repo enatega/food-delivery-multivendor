@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const OrderHistoryItem = ({ orders, currentTheme }) => {
+const OrderHistoryItem = ({ orders, currentTheme, onOrderPress }) => {
   const themedStyles = styles(currentTheme)
 console.log('orders__Images', JSON.stringify(orders,null,2))
   // Render section header rows
@@ -51,6 +51,7 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
     <TouchableOpacity
       style={themedStyles.orderContainer}
       activeOpacity={0.7}
+      onPress={() => onOrderPress && onOrderPress(orders)}
     >
       <View style={themedStyles.orderContent}>
         {orders.image && (

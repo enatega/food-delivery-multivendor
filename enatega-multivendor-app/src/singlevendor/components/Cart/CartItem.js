@@ -10,7 +10,7 @@ import styles from './styles'
 import CartItemDescription from './CartItemDescription'
 import CartItemController from './CartItemController'
 
-const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€', onEdit, isLastItem = false, isFavourite = false, onAddToCart }) => {
+const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€', onEdit, isLastItem = false, isFavourite = false, onAddToCart, isOrderHistory = false }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
@@ -24,7 +24,10 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
     <View style={[styles(currentTheme).itemContainer, isLastItem && styles().itemContainerLast]}>
       {/* Left side: Image */}
       <View style={styles().imageContainer}>
-        <Image source={{ uri: typeof item?.image == 'number' ? '' : item?.image }} style={styles().productImage} />
+        <Image 
+          source={typeof item?.image == 'number' ? item?.image : { uri: item?.image }} 
+          style={styles().productImage} 
+        />
       </View>
 
       {/* Middle and Right: Content */}
@@ -57,7 +60,11 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
         {/* Bottom Row: Quantity Controls (left) and Price (right) */}
         <View style={styles().bottomRow}>
 
-          {isFavourite ? (
+          {isOrderHistory ? (
+            <TextDefault textColor={currentTheme.fontSecondColor} style={styles().orderHistoryQuantity}>
+              Qty {item?.quantity || item?.variations?.[0]?.quantity || 1}
+            </TextDefault>
+          ) : isFavourite ? (
             <TouchableOpacity 
               style={styles(currentTheme).addToCartButton}
               onPress={() => {
@@ -75,7 +82,7 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
           )}
 
           <TextDefault textColor={currentTheme.gray} bold isRTL>
-            {currencySymbol} {item?.foodTotal}
+            {currencySymbol} {item?.foodTotal || itemTotal}
           </TextDefault>
         </View>
       </View>

@@ -88,6 +88,7 @@ import FeedBack from '../singlevendor/screens/FeedBack'
 import MyFavorites from '../singlevendor/screens/MyFavorites/MyFavorites'
 import PaymentMethod from '../singlevendor/screens/PaymentMethod/PaymentMethod'
 import AddPaymentMethod from '../singlevendor/screens/PaymentMethod/AddPaymentMethod'
+import OrderHistoryDetails from '../singlevendor/screens/OrderHistory/OrderHistoryDetails'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -170,6 +171,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='Settings' component={Settings} />
       <NavigationStack.Screen name='MyOrders' component={MyOrders} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='OrderHistory' component={OrderHistory} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}/>
+      <NavigationStack.Screen name='OrderHistoryDetails' component={OrderHistoryDetails} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}/>
       <NavigationStack.Screen name='FAQS' component={FAQS} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='FeedBack' component={FeedBack} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reorder' component={Reorder} />
