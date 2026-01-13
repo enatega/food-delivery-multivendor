@@ -50,7 +50,7 @@ const styles = (currentTheme) =>
       paddingVertical: verticalScale(10),
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: verticalScale(24)
+      minHeight: verticalScale(36)
     },
     updateButtonDisabled: {
       backgroundColor: currentTheme?.gray200 || currentTheme?.horizontalLine || '#E5E5E5',
