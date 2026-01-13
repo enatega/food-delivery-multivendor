@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const styles = (currentTheme) =>
+const styles = (currentTheme, isDisable) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -133,7 +133,7 @@ const styles = (currentTheme) =>
     },
     subscribeButton: {
       width: '100%',
-      backgroundColor: currentTheme?.singlevendorcolor || '#0090CD',
+      backgroundColor: isDisable ? currentTheme?.colorBgTertiary : currentTheme?.singlevendorcolor || '#0090CD',
       borderRadius: scale(8),
       paddingVertical: verticalScale(10),
       alignItems: 'center',
@@ -141,6 +141,17 @@ const styles = (currentTheme) =>
     },
     subscribeButtonText: {
       fontSize: scale(16)
+    },
+    cancelButton: {
+      backgroundColor: currentTheme?.red600 || '#DC2626',
+      paddingHorizontal: scale(12),
+      paddingVertical: verticalScale(6),
+      borderRadius: scale(8),
+      width: '50%',
+      marginTop: 10
+    },
+    verticalMargin: {
+      marginVertical: '50%'
     }
   })
 

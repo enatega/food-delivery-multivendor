@@ -63,6 +63,24 @@ const styles = (props = null) =>
       marginHorizontal: scale(12),
       minWidth: scale(20),
       textAlign: 'center'
+    },
+    addToCartButton: {
+      width: scale(25),
+      height: scale(25),
+      borderRadius: scale(20),
+      backgroundColor: props !== null ? props.white : '#FFFFFF',
+      borderWidth: 2,
+      borderColor: props !== null ? props.newBorderColor2 : '#D1D5DB',
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      elevation: 3
     }
   });
 

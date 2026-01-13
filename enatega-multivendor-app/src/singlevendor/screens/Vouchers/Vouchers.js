@@ -9,10 +9,11 @@ import { theme } from '../../../utils/themeColors'
 import {
   VouchersHeader,
   VoucherCard,
-  EmptyVouchers,
-  VoucherSkeleton
+  EmptyVouchers
 } from '../../components/Vouchers'
 import { COUPONS_BY_RESTAURANT } from '../../../apollo/queries'
+import AccountSectionHeader from '../../components/AccountSectionHeader'
+import EmptyAccountSectionArea from '../../components/EmptyAccountSectionArea'
 
 import styles from './styles'
 
@@ -39,9 +40,10 @@ const Vouchers = () => {
 
   return (
     <SafeAreaView style={styles(currentTheme).container}>
-      <VouchersHeader
+      <AccountSectionHeader
         currentTheme={currentTheme}
         onBack={() => navigation.goBack()}
+        headerText={t('Vouchers')}
       />
 
       <ScrollView
@@ -74,7 +76,12 @@ const Vouchers = () => {
             />
           ))
         ) : (
-          <EmptyVouchers currentTheme={currentTheme} />
+          <EmptyAccountSectionArea
+            currentTheme={currentTheme}
+            imageSource={require('../../assets/images/empty-vouchers.png')}
+            title={t('No vouchers available')}
+            description={t('Check back soon — exciting offers might appear here!')}
+          />
         )}
       </ScrollView>
     </SafeAreaView>

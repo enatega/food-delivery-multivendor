@@ -1,0 +1,207 @@
+import React from 'react'
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import { scale, verticalScale } from '../../../utils/scaling'
+
+const OrderHistoryItem = ({ orders, currentTheme }) => {
+  const themedStyles = styles(currentTheme)
+console.log('orders__Images', JSON.stringify(orders,null,2))
+  // Render section header rows
+  if (orders.type === 'header') {
+    return (
+      <View style={themedStyles.sectionHeader}>
+        <TextDefault
+          textColor={currentTheme.fontMainColor}
+          style={themedStyles.sectionHeaderText}
+          bolder
+        >
+          {orders.title}
+        </TextDefault>
+      </View>
+    )
+  }
+
+  // Render regular order rows
+  const isOngoing = orders.status === 'Ongoing'
+
+  const getStatusBadgeStyle = (status) => {
+    switch (status) {
+      case 'Ongoing':
+        return themedStyles.statusBadgeOngoing
+      case 'Order Delivered':
+        return themedStyles.statusBadgeDelivered
+      case 'Order Cancelled':
+        return themedStyles.statusBadgeCancelled
+      default:
+        return themedStyles.statusBadgeDefault
+    }
+  }
+
+  const getStatusTextColor = (status) => {
+    const colorMap = {
+      'Ongoing': '#B8860B',
+      'Order Delivered': '#28A745',
+      'Order Cancelled': '#DC3545'
+    }
+    return colorMap[status] || currentTheme.fontMainColor
+  }
+
+  return (
+    <TouchableOpacity
+      style={themedStyles.orderContainer}
+      activeOpacity={0.7}
+    >
+      <View style={themedStyles.orderContent}>
+        {orders.image && (
+          <Image
+            source={orders.image}
+            style={themedStyles.orderImage}
+            resizeMode="cover"
+          />
+        )}
+        <View style={themedStyles.orderDetails}>
+          <TextDefault
+            textColor={currentTheme.fontMainColor}
+            style={themedStyles.orderName}
+          >
+            {orders.name}
+          </TextDefault>
+          <TextDefault
+            textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
+            style={themedStyles.orderDate}
+          >
+            {orders.date}
+          </TextDefault>
+          <View style={themedStyles.orderFooter}>
+            <View
+              style={[
+                themedStyles.statusBadgeBase,
+                getStatusBadgeStyle(orders.status)
+              ]}
+            >
+              <TextDefault
+                textColor={getStatusTextColor(orders.status)}
+                style={themedStyles.statusText}
+              >
+                {orders.status}
+              </TextDefault>
+            </View>
+          </View>
+        </View>
+        <View style={themedStyles.orderRight}>
+          <View style={themedStyles.priceRow}>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              style={themedStyles.orderPrice}
+            >
+              {orders.price}
+            </TextDefault>
+            {!isOngoing && (
+              <Ionicons
+                name="chevron-forward"
+                size={scale(20)}
+                color={currentTheme.fontSecondColor}
+                style={themedStyles.chevron}
+              />
+            )}
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  )
+}
+
+const styles = (props = null) =>
+  StyleSheet.create({
+    sectionHeader: {
+      paddingHorizontal: scale(16),
+      paddingTop: verticalScale(16),
+      paddingBottom: verticalScale(8),
+      backgroundColor: props?.themeBackground
+    },
+    sectionHeaderText: {
+      fontSize: scale(16),
+      fontWeight: '600',
+      lineHeight: scale(20)
+    },
+    orderContainer: {
+      backgroundColor: props?.themeBackground,
+      paddingHorizontal: scale(16),
+      paddingVertical: verticalScale(12)
+    },
+    orderContent: {
+      flexDirection: 'row',
+      alignItems: 'flex-start'
+    },
+    orderImage: {
+      width: scale(60),
+      height: scale(60),
+      borderRadius: scale(8),
+      marginRight: scale(12),
+      backgroundColor: props?.colorBgTertiary || '#F5F5F5'
+    },
+    orderDetails: {
+      flex: 1,
+      marginRight: scale(8)
+    },
+    orderName: {
+      fontWeight: '600',
+      fontSize: scale(16),
+      lineHeight: scale(22),
+      marginBottom: verticalScale(4)
+    },
+    orderDate: {
+      fontSize: scale(12),
+      lineHeight: scale(16),
+      marginBottom: verticalScale(8)
+    },
+    orderFooter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flexWrap: 'wrap'
+    },
+    statusBadgeBase: {
+      paddingHorizontal: scale(8),
+      paddingVertical: verticalScale(4),
+      borderRadius: scale(4),
+      marginRight: scale(8)
+    },
+    statusBadgeOngoing: {
+      backgroundColor: '#FFF9E6'
+    },
+    statusBadgeDelivered: {
+      backgroundColor: '#E6F7E6'
+    },
+    statusBadgeCancelled: {
+      backgroundColor: '#FFE6E6'
+    },
+    statusBadgeDefault: {
+      backgroundColor: '#F5F5F5'
+    },
+    statusText: {
+      fontSize: scale(11),
+      fontWeight: '600'
+    },
+    orderRight: {
+      alignItems: 'flex-end',
+      justifyContent: 'flex-start',
+      minHeight: scale(60)
+    },
+    priceRow: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    orderPrice: {
+      fontWeight: '600',
+      fontSize: scale(16),
+      lineHeight: scale(22)
+    },
+    chevron: {
+      marginLeft: scale(4)
+    }
+  })
+
+export default OrderHistoryItem
+
+

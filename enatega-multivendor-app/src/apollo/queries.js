@@ -346,6 +346,7 @@ export const profile = `
               selected
             }
             favourite
+            stripe_plan_id
           }
         }`
 
