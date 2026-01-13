@@ -47,10 +47,10 @@ const styles = (currentTheme) =>
     updateButton: {
       backgroundColor: currentTheme?.singlevendorcolor || currentTheme?.main || '#0EA5E9',
       borderRadius: 8,
-      paddingVertical: verticalScale(14),
+      paddingVertical: verticalScale(10),
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: verticalScale(50)
+      minHeight: verticalScale(24)
     },
     updateButtonDisabled: {
       backgroundColor: currentTheme?.gray200 || currentTheme?.horizontalLine || '#E5E5E5',

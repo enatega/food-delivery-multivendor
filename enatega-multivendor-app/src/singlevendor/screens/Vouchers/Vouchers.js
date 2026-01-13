@@ -3,11 +3,11 @@ import { SafeAreaView, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@apollo/client'
+import VoucherSkeleton from '../../components/Vouchers/VoucherSkeleton'
 
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import {
-  VouchersHeader,
   VoucherCard,
   EmptyVouchers
 } from '../../components/Vouchers'
