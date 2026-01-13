@@ -28,7 +28,7 @@ const AccountSection = () => {
       id: 2,
       icon: 'card-outline',
       title: t('Payment methods'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('PaymentMethod')
     },
     {
       id: 3,
@@ -40,7 +40,7 @@ const AccountSection = () => {
       id: 4,
       icon: 'notifications-outline',
       title: t('Notifications'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('NotificationScreen')
     },
     {
       id: 5,

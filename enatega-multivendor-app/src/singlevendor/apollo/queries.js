@@ -354,3 +354,32 @@ query GetAllSubscriptionPlans {
     }
   }
 }`
+
+export const GET_FAVORITE_FOODS_SINGLE_VENDOR = gql`
+query GetFavoriteFoodsSingleVendor($limit: Int, $skip: Int) {
+    getFavoriteFoodsSingleVendor(limit: $limit, skip: $skip) {
+        success
+        message
+        data {
+            _id
+            title
+            image
+            subCategory
+            isFavourite
+            isActive
+            createdAt
+            updatedAt
+            isOutOfStock
+            variations {
+                _id
+                title
+                price
+                discounted
+                addons
+                isOutOfStock
+                name
+            }
+        }
+    }
+}
+`

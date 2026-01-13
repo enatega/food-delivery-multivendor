@@ -22,13 +22,14 @@ const QuickActionsGrid = () => {
       id: 1,
       icon: 'heart-outline',
       label: t('My Favorites'),
-      onPress: () => navigation.navigate('Favourite')
+      // onPress: () => navigation.navigate('Favourite')
+      onPress: () => navigation.navigate('MyFavorites')
     },
     {
       id: 2,
       icon: 'time-outline',
       label: t('Order History'),
-      onPress: () => navigation.navigate('MyOrders')
+      onPress: () => navigation.navigate('OrderHistory')
     },
     {
       id: 3,

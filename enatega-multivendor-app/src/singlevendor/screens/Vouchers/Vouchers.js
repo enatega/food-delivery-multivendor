@@ -5,17 +5,15 @@ import { useTranslation } from 'react-i18next'
 
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import {
-  VouchersHeader,
-  VoucherCard,
-  EmptyVouchers
-} from '../../components/Vouchers'
+import { VoucherCard } from '../../components/Vouchers'
+import AccountSectionHeader from '../../components/AccountSectionHeader'
+import EmptyAccountSectionArea from '../../components/EmptyAccountSectionArea'
 
 import styles from './styles'
 
 const Vouchers = () => {
   const navigation = useNavigation()
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -51,9 +49,10 @@ const Vouchers = () => {
 
   return (
     <SafeAreaView style={styles(currentTheme).container}>
-      <VouchersHeader
+      <AccountSectionHeader
         currentTheme={currentTheme}
         onBack={() => navigation.goBack()}
+        headerText={t('Vouchers')}
       />
 
       <ScrollView
@@ -71,7 +70,12 @@ const Vouchers = () => {
             />
           ))
         ) : (
-          <EmptyVouchers currentTheme={currentTheme} />
+          <EmptyAccountSectionArea
+            currentTheme={currentTheme}
+            imageSource={require('../../assets/images/empty-vouchers.png')}
+            title={t('No vouchers available')}
+            description={t('Check back soon — exciting offers might appear here!')}
+          />
         )}
       </ScrollView>
     </SafeAreaView>

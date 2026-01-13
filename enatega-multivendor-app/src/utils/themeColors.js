@@ -4,6 +4,7 @@ export const theme = {
     placeholderColor: '#000000',
     placeholderColorMsg: '#000000',
     black: '#000',
+    CharcoalBlack:'#18181B',
     CustomLoadingBG: '#FFF',
     white: '#FFF',
     radioOuterColor: '#fff',

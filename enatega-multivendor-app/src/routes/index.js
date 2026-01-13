@@ -5,6 +5,7 @@ import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
+import NotificationsScreen from '../singlevendor/screens/Notifications/Notifications'
 import Login from '../screens/Login/Login'
 import PhoneAuth from '../screens/Login/ContinueWithPhone/screens/PhoneAuth/PhoneAuth'
 import VerifyPhoneNumber from '../screens/Login/ContinueWithPhone/screens/PhoneAuth/VerifyPhoneNumber'
@@ -80,6 +81,13 @@ import AddAddress from '../singlevendor/screens/AddAddress/AddAddress'
 import ProductList from '../singlevendor/screens/ProductsList.js/ProductList'
 import Vouchers from '../singlevendor/screens/Vouchers/Vouchers'
 import OrderConfirmation from '../singlevendor/screens/Checkout/OrderConfirmation'
+import OrderHistory from '../singlevendor/screens/OrderHistory'
+import { FastHelpSupport, AccountHelp, HelpConversation } from '../singlevendor/screens/FastHelpSupport/index'
+import FAQS from '../singlevendor/screens/FAQS'
+import FeedBack from '../singlevendor/screens/FeedBack'
+import MyFavorites from '../singlevendor/screens/MyFavorites/MyFavorites'
+import PaymentMethod from '../singlevendor/screens/PaymentMethod/PaymentMethod'
+import AddPaymentMethod from '../singlevendor/screens/PaymentMethod/AddPaymentMethod'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -161,8 +169,14 @@ function MainNavigator() {
       />
       <NavigationStack.Screen name='Settings' component={Settings} />
       <NavigationStack.Screen name='MyOrders' component={MyOrders} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='OrderHistory' component={OrderHistory} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}/>
+      <NavigationStack.Screen name='FAQS' component={FAQS} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='FeedBack' component={FeedBack} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reorder' component={Reorder} />
       <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='FastHelpSupport' component={FastHelpSupport} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='AccountHelp' component={AccountHelp} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='HelpConversation' component={HelpConversation} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reviews' component={Reviews} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
@@ -208,6 +222,10 @@ function MainNavigator() {
     
       <NavigationStack.Screen name='Vouchers' component={Vouchers} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='OrderConfirmation' component={OrderConfirmation} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='NotificationScreen' component={NotificationsScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='MyFavorites' component={MyFavorites} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='PaymentMethod' component={PaymentMethod} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='AddPaymentMethod' component={AddPaymentMethod} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     </NavigationStack.Navigator>
   )
 }
