@@ -37,11 +37,14 @@ export default function CustomPasswordTextField({
         feedback={feedback}
         footer={feedback ? <PasswordFeedback /> : null}
         {...props}
-        onChange={(e) => {
-          if (props.onChange) {
-            e.target.value = e.target.value.trim();
-            props.onChange(e);
-          }
+        onBlur={(e) => {
+          props.onChange?.({
+            ...e,
+            target: {
+              ...e.target,
+              value: e.target.value.trim(),
+            },
+          });
         }}
       />
     </div>

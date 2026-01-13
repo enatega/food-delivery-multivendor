@@ -139,7 +139,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                 </p>
                 <p className="font-medium">
                   {CURRENT_SYMBOL || '$'}
-                  {transaction?.rider?.currentWalletAmount.toFixed(2)}
+                  {(transaction?.rider?.currentWalletAmount ?? 0).toFixed(2)}
                 </p>
               </div>
               <div>
@@ -148,7 +148,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                 </p>
                 <p className="font-medium">
                   {CURRENT_SYMBOL || '$'}
-                  {transaction?.rider?.totalWalletAmount.toFixed(2)}
+                  {(transaction?.rider?.totalWalletAmount ?? 0).toFixed(2)}
                 </p>
               </div>
             </div>
