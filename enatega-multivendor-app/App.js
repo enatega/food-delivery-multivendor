@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import 'react-native-get-random-values';
+import 'react-native-get-random-values'
 // import 'expo-dev-client'
 import * as Device from 'expo-device'
 import * as Font from 'expo-font'
@@ -34,8 +34,8 @@ import './i18next'
 import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
-import * as Clarity from '@microsoft/react-native-clarity';
-
+import * as Clarity from '@microsoft/react-native-clarity'
+import { StripeProvider } from '@stripe/stripe-react-native'
 
 // LogBox.ignoreLogs([
 //   // 'Warning: ...',
@@ -135,7 +135,7 @@ export default function App() {
   }, [location])
 
   // For Permission
-/*   useEffect(() => {
+  /*   useEffect(() => {
     requestTrackingPermissions()
   }, []) */
 
@@ -260,39 +260,42 @@ export default function App() {
   }
 
   return (
-    <ErrorBoundary>
-    <AnimatedSplashScreen>
-      <ApolloProvider client={client}>
-        <ThemeContext.Provider
-          // use default theme
-          value={{ ThemeValue: theme, dispatch: themeSetter }}
-          // use stored theme
-          // value={{
-          //   ThemeValue: theme,
-          //   dispatch: (action) => {
-          //     themeSetter(action)
-          //     setStoredTheme(action.type) // Save the theme in AsyncStorage when it changes
-          //   }
-          // }}
-        >
-          <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
-          <LocationProvider>
-            <ConfigurationProvider>
-              <AuthProvider>
-                <UserProvider>
-                  <OrdersProvider>
-                    <AppContainer />
-                    <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
-                  </OrdersProvider>
-                </UserProvider>
-              </AuthProvider>
-            </ConfigurationProvider>
-          </LocationProvider>
-          <FlashMessage MessageComponent={MessageComponent} />
-        </ThemeContext.Provider>
-      </ApolloProvider>
-    </AnimatedSplashScreen>
-    </ErrorBoundary>
+    // todo8: need to get the pub key from env
+    <StripeProvider publishableKey='pk_test_51KzHQhFBYDQXlVQ056EYyEkYNWSwJtf2RVvDxOkCZQaTJnRI4TEkxD6jfn0xubKxpswKmV1COGboHG2skAQVoA2V00u5W5ycxC'>
+      <ErrorBoundary>
+        <AnimatedSplashScreen>
+          <ApolloProvider client={client}>
+            <ThemeContext.Provider
+              // use default theme
+              value={{ ThemeValue: theme, dispatch: themeSetter }}
+              // use stored theme
+              // value={{
+              //   ThemeValue: theme,
+              //   dispatch: (action) => {
+              //     themeSetter(action)
+              //     setStoredTheme(action.type) // Save the theme in AsyncStorage when it changes
+              //   }
+              // }}
+            >
+              <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
+              <LocationProvider>
+                <ConfigurationProvider>
+                  <AuthProvider>
+                    <UserProvider>
+                      <OrdersProvider>
+                        <AppContainer />
+                        <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
+                      </OrdersProvider>
+                    </UserProvider>
+                  </AuthProvider>
+                </ConfigurationProvider>
+              </LocationProvider>
+              <FlashMessage MessageComponent={MessageComponent} />
+            </ThemeContext.Provider>
+          </ApolloProvider>
+        </AnimatedSplashScreen>
+      </ErrorBoundary>
+    </StripeProvider>
   )
 }
 
