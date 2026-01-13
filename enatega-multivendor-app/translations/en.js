@@ -695,8 +695,6 @@ export const en = {
   "Clear All": "Clear All",
   "No results found for your search. Please try a different query": "No results found for your search. Please try a different query.",
   "found": "found",
-  "No recent searches found, Search your taste": "No recent searches found, Search your taste",
-  "itemAddedToCart": "Item added to cart",
   "You are all up to date": "You are all up to date",
   "No new notifications - come back soon": "No new notifications - come back soon",
   "Payments": "Payments",
@@ -770,7 +768,6 @@ export const en = {
   "CVV": "CVV",
   "Security code": "Security code",
   "Save": "Save",
-  "itemAddedToCart": "Item added to cart",
   "Subscription subscribed successfully": "Subscription subscribed successfully",
   "Currently Active": "Currently Active"
 }
