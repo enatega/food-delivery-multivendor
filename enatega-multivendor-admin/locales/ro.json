@@ -1,4 +1,6 @@
-{ "audit_log_header_desc": "Urmăriți toate acțiunile și modificările administrative din sistem.",
+{
+  "2019": "2019",
+  "audit_log_header_desc": "Urmăriți toate acțiunile și modificările administrative din sistem.",
   "Performed_by": "Realizat de",
   "show_detail": "Afișează detalii",
   "hide_detail": "Ascunde detalii",
@@ -11,7 +13,6 @@
     "medium": "Mediu",
     "strong": "Puternică"
   },
-  
   "Sign in credentials": "Credențiale de autentificare",
   "Sign in": "Autentificare",
   "CustomerSupport": "Suport clienți",
@@ -20,6 +21,7 @@
   "Description": "Descriere",
   "Add": "Adăugați",
   "Remove": "Eliminați",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Sigur doriți să ștergeți acest magazin?",
   "Add/Remove": "Adăugați/Eliminați",
   "Success": "Succes",
   "危险": "Pericol",
@@ -69,7 +71,6 @@
   "Users": "Utilizatori",
   "Phone": "Telefon",
   "Address": "Adresă",
-  "2019": "2019",
   "About Us": "Despre noi",
   "Blog": "Blog",
   "Welcome": "Bine ați venit",

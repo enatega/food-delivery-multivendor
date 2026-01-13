@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "لاگ ان کی اسناد",
   "Sign in": "لاگ ان",
   "CustomerSupport": "کسٹمر سپورٹ",
@@ -18,6 +19,7 @@
   "Edit": "ترمیم",
   "Delete": "حذف",
   "Edit Category": "زمرہ ترمیم کریں",
+  "are_you_sure_you_want_to_delete_this_shoptype": "کیا آپ واقعی اس شاپ کو حذف کرنا چاہتے ہیں؟",
   "Save": "محفوظ کریں",
   "OrderID prefix": "آرڈر ID کا سابقہ",
   "Order": "آرڈر",
@@ -57,7 +59,6 @@
   "Users": "صارفین",
   "Phone": "فون",
   "Address": "پتہ",
-  "2019": "2019",
   "About Us": "ہمارے بارے میں",
   "Blog": "بلاگ",
   "Welcome": "خوش آمدید",
@@ -1100,7 +1101,6 @@
   "Payment Required": "ادائیگی درکار",
   "Please complete your purchase to gain full access to the product": "پروڈکٹ تک مکمل رسائی حاصل کرنے کے لیے اپنی خریداری مکمل کریں",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "چونکہ کمیشن کی شرح ایک فیصد قدر ہے اس لیے یہ 100 کی زیادہ سے زیادہ قدر سے زیادہ نہیں ہو سکتی",
-  
   "audit_log_header_desc": "نظام کے اندر تمام انتظامی کارروائیوں اور تبدیلیوں کا سراغ لگائیں۔",
   "Performed_by": "کی طرف سے انجام دیا گیا",
   "show_detail": "تفصیلات دکھائیں",
@@ -1113,7 +1113,5 @@
     "weak": "کمزور",
     "medium": "درمیانہ",
     "strong": "مضبوط"
-  
-}
-
+  }
 }

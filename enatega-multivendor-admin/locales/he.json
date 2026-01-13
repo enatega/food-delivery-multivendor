@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "פרטי כניסה",
   "Sign in": "התחבר",
   "Add Category": "הוסף קטגוריה",
@@ -16,6 +17,7 @@
   "Loading": "טוען",
   "Error": "שגיאה",
   "Edit": "ערוך",
+  "are_you_sure_you_want_to_delete_this_shoptype": "האם אתה בטוח שברצונך למחוק חנות זו?",
   "Delete": "מחק",
   "Edit Category": "ערוך קטגוריה",
   "Save": "שמור",
@@ -57,7 +59,6 @@
   "Users": "משתמשים",
   "Phone": "טלפון",
   "Address": "כתובת",
-  "2019": "2019",
   "About Us": "אודותינו",
   "Blog": "בלוג",
   "Welcome": "ברוך הבא",
@@ -1100,17 +1101,16 @@
   "ShopType": "סוג חנות",
   "Audit Logs": "יומני ביקורת",
   "audit_log_header_desc": "עקבו אחר כל הפעולות והשינויים המנהליים במערכת.",
-"Performed_by": "בוצע על ידי",
-"show_detail": "הצג פרטים",
-"hide_detail": "הסתר פרטים",
-"No_differences_found_in_data": "לא נמצאו הבדלים בנתונים.",
-"read more": "קרא עוד",
-"read less": "קרא פחות",
-"enter_password": {
-  "enter_a_password": "הזן סיסמה",
-  "weak": "חלשה",
-  "medium": "בינונית",
-  "strong": "חזקה"
-}
-
+  "Performed_by": "בוצע על ידי",
+  "show_detail": "הצג פרטים",
+  "hide_detail": "הסתר פרטים",
+  "No_differences_found_in_data": "לא נמצאו הבדלים בנתונים.",
+  "read more": "קרא עוד",
+  "read less": "קרא פחות",
+  "enter_password": {
+    "enter_a_password": "הזן סיסמה",
+    "weak": "חלשה",
+    "medium": "בינונית",
+    "strong": "חזקה"
+  }
 }
