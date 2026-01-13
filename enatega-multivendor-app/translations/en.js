@@ -740,5 +740,7 @@ export const en = {
   termsGoverningLawContent: 'These Terms are governed by the laws of Qatar. Any dispute arising from the use of Fast will be handled exclusively in the courts of Qatar.',
   termsContactContent: 'If you have questions about these terms, please contact us: Email: contact@fruito.com Address: Doha, Qatar',
   termsIntroText: 'These Terms of Use ("Terms") govern your access to and use of Fast. By creating an account or using the app, you agree to follow these Terms. If you do not agree, please do not use Fast.',
-  viewFullDocument: 'View full document'
+  viewFullDocument: 'View full document',
+  edit_name_subtitle: 'This is the name you would like other people to use when referring you',
+  verification_code_msg: 'A verification code will be sent to this number'
 }

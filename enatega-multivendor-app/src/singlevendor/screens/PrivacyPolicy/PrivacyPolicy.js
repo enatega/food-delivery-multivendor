@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import useEnvVars from '../../../../environment'
+// import useEnvVars from '../../../../environment'
 import {
   LegalHeader,
   LegalContent
@@ -16,7 +16,7 @@ import styles from './styles'
 const PrivacyPolicy = () => {
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
-  const { PRIVACY_POLICY } = useEnvVars()
+  // const { PRIVACY_POLICY } = useEnvVars()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
       >
         <LegalContent
           type="privacy"
-          url={PRIVACY_POLICY}
+          // url={PRIVACY_POLICY}
           currentTheme={currentTheme}
         />
       </ScrollView>

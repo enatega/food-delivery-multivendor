@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import useEnvVars from '../../../../environment'
+// import useEnvVars from '../../../../environment'
 import {
   LegalHeader,
   LegalContent
@@ -16,7 +16,7 @@ import styles from './styles'
 const TermsOfUse = () => {
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
-  const { TERMS_AND_CONDITIONS } = useEnvVars()
+  // const { TERMS_AND_CONDITIONS } = useEnvVars()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -38,7 +38,7 @@ const TermsOfUse = () => {
       >
         <LegalContent
           type="terms"
-          url={TERMS_AND_CONDITIONS}
+          // url={TERMS_AND_CONDITIONS}
           currentTheme={currentTheme}
         />
       </ScrollView>

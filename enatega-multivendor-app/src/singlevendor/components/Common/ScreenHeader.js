@@ -1,13 +1,10 @@
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import { useTranslation } from 'react-i18next'
 import { AntDesign } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const ChangePasswordHeader = ({ currentTheme, onBack }) => {
-  const { t } = useTranslation()
-
+const ScreenHeader = ({ currentTheme, onBack, title, subtitle }) => {
   return (
     <View style={styles(currentTheme).header}>
       <TouchableOpacity
@@ -29,15 +26,17 @@ const ChangePasswordHeader = ({ currentTheme, onBack }) => {
           style={styles(currentTheme).headerTitle}
           bolder
         >
-          {t('changePassword')}
+          {title}
         </TextDefault>
-        <TextDefault
-          textColor={currentTheme.fontSecondColor}
-          style={styles(currentTheme).headerSubtitle}
-          bold
-        >
-          {t('changePasswordDescription')}
-        </TextDefault>
+        {subtitle && (
+          <TextDefault
+            textColor={currentTheme.colorTextMuted}
+            style={styles(currentTheme).headerSubtitle}
+            bold
+          >
+            {subtitle}
+          </TextDefault>
+        )}
       </View>
     </View>
   )
@@ -82,4 +81,4 @@ const styles = (props = null) =>
     }
   })
 
-export default ChangePasswordHeader
+export default ScreenHeader

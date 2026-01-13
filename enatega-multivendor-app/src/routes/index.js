@@ -85,6 +85,9 @@ import ChangePassword from '../singlevendor/screens/ChangePassword/ChangePasswor
 import LanguageSelection from '../singlevendor/screens/LanguageSelection/LanguageSelection'
 import TermsOfUse from '../singlevendor/screens/TermsOfUse/TermsOfUse'
 import PrivacyPolicy from '../singlevendor/screens/PrivacyPolicy/PrivacyPolicy'
+import AccountDetails from '../singlevendor/screens/AccountDetails/AccountDetails'
+import EditNameSingleVendor from '../singlevendor/screens/EditName/EditName'
+import EditPhoneSingleVendor from '../singlevendor/screens/EditPhone/EditPhone'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -218,6 +221,9 @@ function MainNavigator() {
       <NavigationStack.Screen name='LanguageSelection' component={LanguageSelection} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='TermsOfUse' component={TermsOfUse} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='PrivacyPolicy' component={PrivacyPolicy} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='AccountDetails' component={AccountDetails} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='EditNameSingleVendor' component={EditNameSingleVendor} options={{ header: () => null}} />
+      <NavigationStack.Screen name='EditPhoneSingleVendor' component={EditPhoneSingleVendor} options={{ header: () => null }} />
     </NavigationStack.Navigator>
   )
 }

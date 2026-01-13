@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const ChangePasswordHeader = ({ currentTheme, onBack }) => {
+const EditPhoneHeader = ({ currentTheme, onBack }) => {
   const { t } = useTranslation()
 
   return (
@@ -29,14 +29,13 @@ const ChangePasswordHeader = ({ currentTheme, onBack }) => {
           style={styles(currentTheme).headerTitle}
           bolder
         >
-          {t('changePassword')}
+          {t('Phone number')}
         </TextDefault>
         <TextDefault
           textColor={currentTheme.fontSecondColor}
           style={styles(currentTheme).headerSubtitle}
-          bold
         >
-          {t('changePasswordDescription')}
+          {t('Update your phone number. You will need to verify it after updating.')}
         </TextDefault>
       </View>
     </View>
@@ -82,4 +81,4 @@ const styles = (props = null) =>
     }
   })
 
-export default ChangePasswordHeader
+export default EditPhoneHeader
