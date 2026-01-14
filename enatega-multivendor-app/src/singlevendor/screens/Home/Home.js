@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useRef, useContext } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import HorizontalCategoriesList from '../../components/HorizontalCategoriesList'
-// import HomeBanner from '../../components/Home/HomeBanner'
+import HomeBanner from '../../components/Home/HomeBanner'
 import useHome from './useHome'
 import WrapperHorizontalProductsList from '../../components/WrapperHorizontalProductsList'
 import { FlatList } from 'react-native-gesture-handler'
@@ -17,8 +17,6 @@ import { AntDesign, Entypo } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-
-import PromoBanner from '../../components/Profile/PromoBanner'
 
 const Home = () => {
   const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef } = useHome()
@@ -102,7 +100,7 @@ const Home = () => {
         ListHeaderComponent={() => {
           return (
             <View style={{ marginTop: 30 }}>
-              <PromoBanner />
+              <HomeBanner />
               <HorizontalCategoriesList categoriesData={categoriesData} />
             </View>
           )
