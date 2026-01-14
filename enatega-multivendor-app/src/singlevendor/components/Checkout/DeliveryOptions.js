@@ -51,7 +51,7 @@ const DeliveryOptions = ({
             small
             isRTL
           >
-            {deliveryAddress || (t('Tap here to continue') || 'Tap here to continue')}
+            {deliveryAddress?.deliveryAddress || (t('Tap here to continue') || 'Tap here to continue')}
           </TextDefault>
         </View>
         <Feather

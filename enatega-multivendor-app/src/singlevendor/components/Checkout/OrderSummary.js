@@ -22,7 +22,12 @@ const OrderSummary = ({
   currencySymbol = '€',
   expanded,
   onToggleExpanded,
-  orderNumber = null
+  freeDeliveriesRemaining,
+  minimumOrderFee,
+  couponDiscountAmount,
+  priorityDeliveryFee = 0,
+  orderNumber = null,
+  isCheckout
 }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
@@ -31,7 +36,7 @@ const OrderSummary = ({
     ...theme[themeContext.ThemeValue]
   }
 
-  const totalPlusTip = total + tipAmount;
+  const totalPlusTip = total + (isCheckout ? tipAmount + priorityDeliveryFee : 0)
 
   return (
     <View style={styles(currentTheme).container}>
@@ -82,7 +87,29 @@ const OrderSummary = ({
             </View>
           )}
 
-          {deliveryFee > 0 && (
+          {minimumOrderFee > 0 && (
+            <View style={styles().summaryRow}>
+              <TextDefault textColor={currentTheme.fontSecondColor} isRTL>
+                {t('Low order fee') || 'Low order fee'}
+              </TextDefault>
+              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+                {currencySymbol} {minimumOrderFee.toFixed(2)}
+              </TextDefault>
+            </View>
+          )}
+
+          {priorityDeliveryFee > 0 && (
+            <View style={styles().summaryRow}>
+              <TextDefault textColor={currentTheme.fontSecondColor} isRTL>
+                {t('Priority order fee') || 'Priority order fee'}
+              </TextDefault>
+              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+                {currencySymbol} {priorityDeliveryFee.toFixed(2)}
+              </TextDefault>
+            </View>
+          )}
+
+          {/* {deliveryFee > 0 && (
             <View style={styles().summaryRow}>
               <TextDefault textColor={currentTheme.fontSecondColor} isRTL>
                 {t('Delivery fee') || 'Delivery fee'}
@@ -91,7 +118,7 @@ const OrderSummary = ({
                 {currencySymbol} {deliveryFee.toFixed(2)}
               </TextDefault>
             </View>
-          )}
+          )} */}
 
           {originalDeliveryCharges > 0 && (
             <View style={styles().summaryRow}>
@@ -111,6 +138,17 @@ const OrderSummary = ({
               </TextDefault>
               <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
                 -{currencySymbol} {deliveryDiscount.toFixed(2)}
+              </TextDefault>
+            </View>
+          )}
+
+          {couponDiscountAmount > 0 && (
+            <View style={styles().summaryRow}>
+              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+                {t('Coupon Amount') || 'Coupon Amount'}
+              </TextDefault>
+              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+                -{currencySymbol} {couponDiscountAmount.toFixed(2)}
               </TextDefault>
             </View>
           )}
@@ -142,6 +180,12 @@ const OrderSummary = ({
       <TextDefault textColor={currentTheme.fontSecondColor} small isRTL bolder style={styles().taxNote}>
         {t('incl. taxes (if applicable)') || 'incl. taxes (if applicable)'}
       </TextDefault>
+
+      {freeDeliveriesRemaining > 0 && (
+        <TextDefault textColor={currentTheme.fontSecondColor} small isRTL bolder style={styles().taxNote}>
+          {t('free delivery applied') || 'free delivery applied'}
+        </TextDefault>
+      )}
     </View>
   )
 }

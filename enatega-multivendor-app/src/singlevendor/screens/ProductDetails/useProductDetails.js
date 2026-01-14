@@ -64,16 +64,9 @@ const useProductDetails = ({ foodId }) => {
   // Todo need to get the required data from backend.
   const productOtherDetails = {
     description: data?.getFoodDetails?.description,
-    ingredients: ['Golden Delicious Apples', 'Filter Water', 'Ascorbic Acid'],
-    usage: 'Keep refrigerated. Best served chilled.',
-    nutritionFacts: {
-      size: 'Amount per 100ml',
-      energy: '89kJ/50kcal',
-      fat: '20g',
-      carbohydrates: '34g',
-      protein: '0g',
-      sugar: '50g'
-    }
+    ingredients: null,
+    usage: null,
+    nutritionFacts: null
   }
 
   return { data, loading, error, currentTheme, t, productInfoData, productOtherDetails, updateUserCartLoading,addItemToCart }

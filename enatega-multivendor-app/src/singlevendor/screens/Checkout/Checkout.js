@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect, useRef } from 'react'
+import React, { useState, useContext, useLayoutEffect, useRef, useCallback } from 'react'
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -25,10 +25,21 @@ import useScheduleStore from '../../stores/scheduleStore'
 import styles from './Styles'
 import useCheckout from './useCheckout'
 import { LocationContext } from '../../../context/Location'
+import MainModalize from '../../../components/Main/Modalize/MainModalize'
+import AddressModalHeader from '../../components/Home/AddressModalHeader'
+import AddressModalFooter from '../../components/Home/AddressModalFooter'
+import CustomHomeIcon from '../../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomWorkIcon from '../../../assets/SVG/imageComponents/CustomWorkIcon'
+import CustomApartmentIcon from '../../../assets/SVG/imageComponents/CustomApartmentIcon'
+import CustomOtherIcon from '../../../assets/SVG/imageComponents/CustomOtherIcon'
+import { PLACE_ORDER } from '../../apollo/mutations'
+import { useMutation } from '@apollo/client'
+import { ActivityIndicator } from 'react-native-paper'
+import OrderSummaryError from '../../components/Checkout/OrderSummaryError'
 
 const Checkout = (props) => {
-  const { location } = useContext(LocationContext)
-
+  const { location, setLocation } = useContext(LocationContext)
+  const { isLoggedIn, profile } = useContext(UserContext)
   console.log('Location Checkout Data:', location)
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
@@ -41,6 +52,13 @@ const Checkout = (props) => {
 
   // Ref for voucher bottom sheet
   const voucherBottomSheetRef = useRef(null)
+  const modalRef = useRef()
+  const addressIcons = {
+    House: CustomHomeIcon,
+    Office: CustomWorkIcon,
+    Apartment: CustomApartmentIcon,
+    Other: CustomOtherIcon
+  }
 
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -56,22 +74,23 @@ const Checkout = (props) => {
   const [callOnArrival, setCallOnArrival] = useState(false)
   const [courierInstructions, setCourierInstructions] = useState('')
   const [deliveryTime, setDeliveryTime] = useState(selectedSchedule ? 'schedule' : 'standard') // 'priority', 'standard', 'schedule'
-  const [paymentMethod, setPaymentMethod] = useState('card') // 'card' or 'voucher'
+  const [paymentMethod, setPaymentMethod] = useState('COD') // 'card' or 'voucher'
   const [selectedCard, setSelectedCard] = useState('**** 9432')
   const [selectedVoucher, setSelectedVoucher] = useState('')
   const [tipAmount, setTipAmount] = useState(1)
   const [summaryExpanded, setSummaryExpanded] = useState(false)
-  const { loading, subtotal, deliveryFee, serviceFee, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount ,originalDeliveryCharges} = useCheckout({
+  const { loading, subtotal, deliveryFee, serviceFee, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount, originalDeliveryCharges, freeDeliveriesRemaining, isBelowMaximumOrder, placeOrder, placingOrder, refetch, error, couponDiscountAmount, couponApplied, recalculateSummary, priorityDeliveryFee } = useCheckout({
     fulfillmentMode,
-    deliveryAddress: location
+    deliveryAddress: location,
+ 
+    selectedVoucher
   })
-  // Console log when fulfillment mode changes
-  console.log('checkout hook data:', loading, subtotal, deliveryFee, serviceFee, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount)
+
+  console.log('checkout hook data:', location, loading, subtotal, deliveryFee, serviceFee, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount)
   React.useEffect(() => {
     console.log('📦 Fulfillment Mode Changed:', fulfillmentMode)
   }, [fulfillmentMode])
 
-  // Console log when delivery time changes
   React.useEffect(() => {
     console.log('⏰ Delivery Time Changed:', deliveryTime)
     if (deliveryTime === 'schedule' && selectedSchedule) {
@@ -85,19 +104,15 @@ const Checkout = (props) => {
     }
   }, [deliveryTime, selectedSchedule])
 
-  // Update delivery time when returning from schedule screen
   useFocusEffect(
     React.useCallback(() => {
       if (Platform.OS === 'android') {
         StatusBar.setBackgroundColor(currentTheme.menuBar)
       }
       StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
-
-      // Update delivery time based on schedule
       if (selectedSchedule) {
         setDeliveryTime('schedule')
       } else if (deliveryTime === 'schedule') {
-        // If schedule was cleared but deliveryTime is still 'schedule', reset to standard
         setDeliveryTime('standard')
       }
     }, [currentTheme, themeContext, selectedSchedule])
@@ -170,7 +185,7 @@ const Checkout = (props) => {
     // Prepare order data with complete delivery information
     const orderData = {
       fulfillmentMode,
-      deliveryAddress,
+      deliveryAddress: location,
       deliveryTime,
       paymentMethod,
       tipAmount,
@@ -204,38 +219,89 @@ const Checkout = (props) => {
         })
     }
 
-    console.log('🛒 PLACE ORDER - Complete Order Data:', orderData)
+    const modifiedLocation = {
+      _id: location?._id,
+      deliveryAddress: location?.deliveryAddress,
+      details: location?.details,
+      label: location?.label,
+      latitude: location?.latitude?.toString(),
+      longitude: location?.longitude?.toString()
+    }
+
+    const orderVariables = {
+      paymentMethod: paymentMethod,
+      address: modifiedLocation,
+      tipping: tipAmount,
+      orderDate: `${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}`,
+      isPickedUp: fulfillmentMode === 'collection',
+      specialInstructions: orderData?.deliveryPreferences?.courierInstructions || '',
+      couponCode: selectedVoucher?._id || '',
+      instructions: orderData?.deliveryPreferences?.courierInstructions || '',
+      scheduleData: {
+        scheduleTimeId: selectedSchedule?.timeSlot?.id || null,
+        isScheduled: deliveryTime === 'schedule' ? true : false,
+        dayId: selectedSchedule?.dayId || null
+      },
+
+      isPriority: deliveryTime === 'priority' ? true : false
+    }
+    console.log('🛒 PLACE ORDER - Complete Order Data:', selectedSchedule, orderData, orderVariables)
+    placeOrder({
+      variables: orderVariables
+    })
 
     // Navigate to Order Confirmation screen
-    navigation.navigate('OrderConfirmation', { orderData })
+
+    // navigation.navigate('OrderConfirmation', { orderData })
   }
 
   const isOrderValid = () => {
+    if (error) return false
     if (loading) return false
     if (isBelowMinimumOrder) return false
-    if (fulfillmentMode === 'delivery' && !deliveryAddress) return false
+    if (fulfillmentMode === 'delivery' && !location) return false
     return true
   }
 
-  const handleApplyVoucher = (voucherCode) => {
-    console.log('🎟️ Applying voucher:', voucherCode)
-    setSelectedVoucher(voucherCode)
+  const handleApplyVoucher = (voucher) => {
+    console.log('🎟️ Applying voucher:', voucher)
+    setSelectedVoucher(voucher)
+    recalculateSummary({ coupon: voucher?._id })
+
     // TODO: Implement voucher validation and discount calculation
   }
+
+  const modalHeader = () => <AddressModalHeader onClose={() => modalRef.current.close()}></AddressModalHeader>
+
+  const modalFooter = () => <AddressModalFooter onClose={() => modalRef.current.close()}></AddressModalFooter>
+
+  const setAddressLocation = async (address) => {
+    if (modalRef?.current) {
+      modalRef?.current?.close()
+    }
+    setLocation({
+      _id: address._id,
+      label: address.label,
+      latitude: Number(address.location.coordinates[1]),
+      longitude: Number(address.location.coordinates[0]),
+      deliveryAddress: address.deliveryAddress,
+      details: address.details
+    })
+    mutate({ variables: { id: address._id } })
+  }
+  const onOpen = useCallback(() => {
+    console.log('open')
+    if (modalRef.current) {
+      modalRef.current.open()
+    }
+  }, [])
 
   return (
     <View style={styles(currentTheme).mainContainer}>
       <ScrollView style={styles().scrollView} contentContainerStyle={styles().contentContainer} showsVerticalScrollIndicator={false}>
-        {/* Fulfillment Mode Tabs */}
         <FulfillmentTabs selectedMode={fulfillmentMode} onSelectMode={setFulfillmentMode} />
-
-        {/* Delivery Options (only for delivery mode) */}
-        {fulfillmentMode === 'delivery' && <DeliveryOptions deliveryAddress={deliveryAddress} onSelectAddress={() => navigation.navigate('Addresses')} leaveAtDoor={leaveAtDoor} onToggleLeaveAtDoor={setLeaveAtDoor} callOnArrival={callOnArrival} onToggleCallOnArrival={setCallOnArrival} courierInstructions={courierInstructions} onChangeCourierInstructions={setCourierInstructions} />}
-
-        {/* Delivery/Collection Time Options */}
-        <DeliveryTimeOptions selectedTime={deliveryTime} onSelectTime={setDeliveryTime} mode={fulfillmentMode} scheduledTime={selectedSchedule} />
-
-        {/* Payment Section */}
+        {fulfillmentMode === 'delivery' && <DeliveryOptions deliveryAddress={location} onSelectAddress={() => onOpen()} leaveAtDoor={leaveAtDoor} onToggleLeaveAtDoor={setLeaveAtDoor} callOnArrival={callOnArrival} onToggleCallOnArrival={setCallOnArrival} courierInstructions={courierInstructions} onChangeCourierInstructions={setCourierInstructions} />}
+        <DeliveryTimeOptions priorityDeliveryFee={priorityDeliveryFee} selectedTime={deliveryTime} onSelectTime={setDeliveryTime} mode={fulfillmentMode} scheduledTime={selectedSchedule} />
         <PaymentSection
           paymentMethod={paymentMethod}
           onSelectPaymentMethod={setPaymentMethod}
@@ -249,34 +315,23 @@ const Checkout = (props) => {
           }}
           voucherBottomSheetRef={voucherBottomSheetRef}
         />
-
-        {/* Tip Section (only for delivery mode) */}
         {fulfillmentMode === 'delivery' && <TipSection selectedTip={tipAmount} onSelectTip={setTipAmount} currencySymbol={currencySymbol} />}
-
-        {/* Spacer for sticky bottom section */}
         <View style={{ height: scale(180) }} />
       </ScrollView>
-
-      {/* Sticky Bottom Section: Summary + Place Order Button */}
       <View style={styles(currentTheme).stickyBottomContainer}>
-        {/* Order Summary */}
-       
-        <OrderSummary subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={fulfillmentMode === 'delivery' ? tipAmount : 0} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />
-        {/* Place Order Button */}
+        {loading ? <></> : error ? <OrderSummaryError onRetry={recalculateSummary} /> : <OrderSummary isCheckout={true} priorityDeliveryFee={deliveryTime == 'priority' ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={isBelowMaximumOrder ? minimumOrderFee : 0} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={fulfillmentMode === 'delivery' ? tipAmount : 0} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />}
         <TouchableOpacity style={[styles(currentTheme).placeOrderButton, !isOrderValid() && styles(currentTheme).placeOrderButtonDisabled]} onPress={handlePlaceOrder} disabled={!isOrderValid()} activeOpacity={0.7}>
-          <TextDefault
-            textColor={isOrderValid() ? '#fff' : currentTheme.fontSecondColor}
-            // textColor="#fff"
-            bolder
-            H5
-          >
-            {t('Place order') || 'Place order'}
-          </TextDefault>
+          {placingOrder ? (
+            <ActivityIndicator size='small' color={currentTheme.white} />
+          ) : (
+            <TextDefault textColor={isOrderValid() ? '#fff' : currentTheme.fontSecondColor} bolder H5>
+              {t('Place order') || 'Place order'}
+            </TextDefault>
+          )}
         </TouchableOpacity>
       </View>
-
-      {/* Voucher Bottom Sheet */}
       <VoucherBottomSheet ref={voucherBottomSheetRef} onApplyVoucher={handleApplyVoucher} />
+      <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
     </View>
   )
 }

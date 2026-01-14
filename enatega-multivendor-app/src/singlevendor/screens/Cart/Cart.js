@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect } from 'react'
+import React, { useState, useContext, useLayoutEffect, useRef } from 'react'
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform, SafeAreaView, FlatList } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -22,22 +22,40 @@ import styles from './Styles'
 import useCart from './useCart'
 import CartSkeleton from '../../components/Cart/CartSkeleton'
 import useCartStore from '../../stores/useCartStore'
-
+import MainModalize from '../../../components/Main/Modalize/MainModalize'
+import UserContext from '../../../context/User'
+import CustomHomeIcon from '../../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomWorkIcon from '../../../assets/SVG/imageComponents/CustomWorkIcon'
+import CustomApartmentIcon from '../../../assets/SVG/imageComponents/CustomApartmentIcon'
+import CustomOtherIcon from '../../../assets/SVG/imageComponents/CustomOtherIcon'
+import AddressModalHeader from '../../components/Home/AddressModalHeader'
+import AddressModalFooter from '../../components/Home/AddressModalFooter'
+import { LocationContext } from '../../../context/Location'
+import { selectAddress } from '../../../apollo/mutations'
+import { gql, useMutation } from '@apollo/client'
+const SELECT_ADDRESS = gql`
+  ${selectAddress}
+`
 const Cart = (props) => {
- 
   const { items, grandTotal, loading, error, maxOrderAmount, minOrderAmount, isBelowMinimumOrder, lowOrderFees } = useCartStore()
   // const items = [] // For testing empty cart
+  const [mutate] = useMutation(SELECT_ADDRESS, {
+    onError: () => {}
+  })
   console.log('Cart Data::', items, grandTotal, maxOrderAmount, minOrderAmount, isBelowMinimumOrder, loading, error)
-
+  
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
+ 
 
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+
+ 
 
   const minimumOrder = 10 // Minimum order to place
   const lowOrderFeeThreshold = 15 // Threshold to avoid low-order fee
@@ -105,13 +123,12 @@ const Cart = (props) => {
     // TODO: Navigate to product detail
     console.log('Product pressed:', product)
   }
-
+  
   //Cart Skeleton loading
   if (loading) {
     return <CartSkeleton />
   }
 
-  
   return (
     <SafeAreaView style={styles(currentTheme).mainContainer}>
       {/* Top progress banner */}
@@ -141,7 +158,7 @@ const Cart = (props) => {
 
       {/* Sticky Checkout Button */}
       <View style={styles(currentTheme).stickyCheckoutContainer}>
-        <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).checkoutButton, isBelowMinimumOrder && styles(currentTheme).checkoutButtonDisabled]} onPress={isBelowMinimumOrder ?null :handleCheckout } disabled={isBelowMinimumOrder}>
+        <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).checkoutButton, isBelowMinimumOrder && styles(currentTheme).checkoutButtonDisabled]} onPress={isBelowMinimumOrder ? null : handleCheckout} disabled={isBelowMinimumOrder}>
           <View style={styles().checkoutButtonContent}>
             <View style={[styles().cartBadge, !isBelowMinimumOrder && styles().cartBadgeActive]}>
               <TextDefault textColor={isBelowMinimumOrder ? currentTheme.gray300 : currentTheme.primaryBlue} bold small>
@@ -155,6 +172,7 @@ const Cart = (props) => {
           </View>
         </TouchableOpacity>
       </View>
+      
     </SafeAreaView>
   )
 }

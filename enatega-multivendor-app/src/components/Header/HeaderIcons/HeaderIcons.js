@@ -1,29 +1,18 @@
 import React, { useState, useContext } from 'react'
-import {
-  Ionicons,
-  EvilIcons,
-  MaterialIcons,
-  MaterialCommunityIcons,
-  AntDesign,
-  Feather,
-  SimpleLineIcons
-} from '@expo/vector-icons'
+import { Ionicons, EvilIcons, MaterialIcons, MaterialCommunityIcons, AntDesign, Feather, SimpleLineIcons } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
 import { TouchableOpacity, View } from 'react-native'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
-import {
-  useNavigation,
-  CommonActions,
-  useRoute
-} from '@react-navigation/native'
+import { useNavigation, CommonActions, useRoute } from '@react-navigation/native'
 import navigationService from '../../../routes/navigationService'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { HeaderBackButton } from '@react-navigation/elements'
 import UserContext from '../../../context/User'
 import { useVendorModeStore } from '../../../singlevendor'
+import useCartStore from '../../../singlevendor/stores/useCartStore'
 
 const rippleColor = '#6FCF97'
 function BackButton(props) {
@@ -41,7 +30,7 @@ function BackButton(props) {
           if (props?.prevScreen) {
             navigation.navigate(props?.prevScreen)
           } else if (vendorMode === 'SINGLE') {
-            navigation.goBack();
+            navigation.goBack()
           } else {
             console.warn('No prevScreen prop provided')
           }
@@ -49,37 +38,15 @@ function BackButton(props) {
       />
     )
   } else if (props?.icon === 'menu') {
-    return (
-      <SimpleLineIcons
-        name='menu'
-        size={20}
-        color={props?.iconColorDark}
-        style={styles().leftIconPadding}
-      />
-    )
+    return <SimpleLineIcons name='menu' size={20} color={props?.iconColorDark} style={styles().leftIconPadding} />
   } else if (props?.icon === 'dots') {
-    return (
-      <MaterialCommunityIcons
-        name='dots-vertical'
-        size={25}
-        color={props?.iconColor}
-      />
-    )
+    return <MaterialCommunityIcons name='dots-vertical' size={25} color={props?.iconColor} />
   } else if (props?.icon === 'target') {
-    return (
-      <MaterialIcons name='my-location' size={16} color={props?.iconColor} />
-    )
+    return <MaterialIcons name='my-location' size={16} color={props?.iconColor} />
   } else if (props?.icon === 'fav') {
     return <AntDesign name='hearto' size={20} color={props?.iconColorDark} />
   } else {
-    return (
-      <EvilIcons
-        name='close'
-        size={16}
-        style={styles().leftIconPadding}
-        color={props?.newIconColor}
-      />
-    )
+    return <EvilIcons name='close' size={16} style={styles().leftIconPadding} color={props?.newIconColor} />
   }
 }
 
@@ -89,9 +56,7 @@ function LeftButton(props) {
     return (
       <HeaderBackButton
         truncatedLabel=''
-        backImage={() =>
-          BackButton({ iconColor: props?.newIconColor, icon: 'leftArrow' })
-        }
+        backImage={() => BackButton({ iconColor: props?.newIconColor, icon: 'leftArrow' })}
         onPress={() => {
           navigationService.goBack()
         }}
@@ -103,9 +68,7 @@ function LeftButton(props) {
         truncatedLabel=''
         pressColorAndroid={rippleColor}
         labelVisible={false}
-        backImage={() =>
-          BackButton({ iconColor: props?.newIconColor, icon: 'close' })
-        }
+        backImage={() => BackButton({ iconColor: props?.newIconColor, icon: 'close' })}
         onPress={() => {
           navigation.dispatch((state) => {
             const routes = state.routes.filter((r) => r.name === 'Main')
@@ -129,25 +92,11 @@ function LeftButton(props) {
             icon: props?.toggleValue ? 'leftArrow' : 'close'
           })
         }
-        onPress={() =>
-          props?.toggleValue
-            ? navigation.goBack()
-            : props?.toggleView((prev) => !prev)
-        }
+        onPress={() => (props?.toggleValue ? navigation.goBack() : props?.toggleView((prev) => !prev))}
       />
     )
   } else {
-    return (
-      <HeaderBackButton
-        truncatedLabel=''
-        pressColorAndroid={rippleColor}
-        labelVisible={false}
-        backImage={() =>
-          BackButton({ iconColor: props?.newIconColor, icon: 'menu' })
-        }
-        onPress={() => navigation.toggleDrawer()}
-      />
-    )
+    return <HeaderBackButton truncatedLabel='' pressColorAndroid={rippleColor} labelVisible={false} backImage={() => BackButton({ iconColor: props?.newIconColor, icon: 'menu' })} onPress={() => navigation.toggleDrawer()} />
   }
 }
 
@@ -158,7 +107,14 @@ function RightButton(props) {
   const route = useRoute()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const { cartCount, isLoggedIn, profile } = useContext(UserContext)
+
+  const { cartCount: multiVendorCartCount, isLoggedIn, profile } = useContext(UserContext)
+  const { vendorMode } = useVendorModeStore()
+  const { items } = useCartStore()
+  const singleVendorCartCount = items?.length
+  const cartCount = vendorMode === 'MULTI' ? multiVendorCartCount : singleVendorCartCount
+  // const showBadge = name === 'cart' && cartCount > 0
+
   function showPasswordButton() {
     props?.titlePosition((prev) => !prev)
     setPassword((prev) => !prev)
@@ -172,69 +128,44 @@ function RightButton(props) {
   function cartIcon() {
     return (
       <View style={styles().rightContainer}>
-        <MaterialCommunityIcons name="cart-outline" size={28} color={currentTheme.iconColor} />
-        {
-          cartCount > 0 && (
-            <View
-              style={
-                styles(route.name === 'Main' ? 'black' : currentTheme.white)
-                  .absoluteContainer
-              }
-            >
-              <TextDefault
-                textColor={currentTheme.white}
-                style={{ fontSize: scale(10) }}
-                center
-                bolder
-              >
-                {cartCount}
-              </TextDefault>
-            </View>
-          )
-        }
+        <MaterialCommunityIcons name='cart-outline' size={28} color={currentTheme.iconColor} />
+        {cartCount > 0 && (
+          <View style={styles(route.name === 'Main' ? 'black' : currentTheme.white).absoluteContainer}>
+            <TextDefault textColor={currentTheme.white} style={{ fontSize: scale(10) }} center bolder>
+              {cartCount}
+            </TextDefault>
+          </View>
+        )}
       </View>
     )
   }
 
   function navigateCart() {
-    if (cartCount > 0) {
-      navigation.navigate('Cart')
+    if (vendorMode === 'SINGLE') {
+      navigation.navigate('cart')
     } else {
-      FlashMessage({
-        message: t('cartIsEmpty')
-      })
+      if (cartCount > 0) {
+        navigation.navigate('Cart')
+      } else {
+        FlashMessage({
+          message: t('cartIsEmpty')
+        })
+      }
     }
   }
   if (props?.icon === 'dots') {
     return (
       <View>
         {password ? (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[styles().rightContainer, styles().passwordContainer]}
-            onPress={clickPasswordButton}
-          >
+          <TouchableOpacity activeOpacity={0.7} style={[styles().rightContainer, styles().passwordContainer]} onPress={clickPasswordButton}>
             <View style={styles(currentTheme.cartContainer).titlePasswordText}>
-              <TextDefault
-                style={{ fontSize: scale(11) }}
-                textColor={currentTheme.fontMainColor}
-                bold
-              >
+              <TextDefault style={{ fontSize: scale(11) }} textColor={currentTheme.fontMainColor} bold>
                 {t('changePassword')}
               </TextDefault>
             </View>
           </TouchableOpacity>
         ) : (
-          <HeaderBackButton
-            truncatedLabel=''
-            labelVisible={false}
-            backImage={() => (
-              <View style={styles().rightContainer}>
-                {BackButton({ iconColor: props?.textColor, icon: 'dots' })}
-              </View>
-            )}
-            onPress={showPasswordButton}
-          />
+          <HeaderBackButton truncatedLabel='' labelVisible={false} backImage={() => <View style={styles().rightContainer}>{BackButton({ iconColor: props?.textColor, icon: 'dots' })}</View>} onPress={showPasswordButton} />
         )}
       </View>
     )
@@ -257,31 +188,11 @@ function RightButton(props) {
               : navigation.navigate('CreateAccount')
           }
         /> */}
-        {cartCount >= 0 && (
-          <HeaderBackButton
-            truncatedLabel=''
-            pressColorAndroid={route.name === 'Main' && rippleColor}
-            labelVisible={false}
-            backImage={cartIcon}
-            onPress={navigateCart}
-          />
-        )}
+        {cartCount >= 0 && <HeaderBackButton truncatedLabel='' pressColorAndroid={route.name === 'Main' && rippleColor} labelVisible={false} backImage={cartIcon} onPress={navigateCart} />}
       </View>
     )
   } else if (props?.icon === 'target') {
-    return (
-      <HeaderBackButton
-        truncatedLabel=''
-        pressColorAndroid={rippleColor}
-        labelVisible={false}
-        backImage={() => (
-          <View style={[styles().rightContainer]}>
-            {BackButton({ iconColor: props?.iconColor, icon: 'target' })}
-          </View>
-        )}
-        onPress={props?.onPressRight}
-      />
-    )
+    return <HeaderBackButton truncatedLabel='' pressColorAndroid={rippleColor} labelVisible={false} backImage={() => <View style={[styles().rightContainer]}>{BackButton({ iconColor: props?.iconColor, icon: 'target' })}</View>} onPress={props?.onPressRight} />
   } else {
     return null
   }
@@ -293,16 +204,10 @@ function DarkBackButton(props) {
     <View
       style={{
         backgroundColor: props?.themeBackground,
-        borderRadius: 5,
-    
+        borderRadius: 5
       }}
     >
-      <Ionicons
-        name='close-circle-outline'
-        size={20}
-        style={styles().darkBackArrow}
-        color={currentTheme.newIconColor}
-      />
+      <Ionicons name='close-circle-outline' size={20} style={styles().darkBackArrow} color={currentTheme.newIconColor} />
     </View>
   )
 }

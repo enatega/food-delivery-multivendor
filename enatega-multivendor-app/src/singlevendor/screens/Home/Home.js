@@ -20,6 +20,8 @@ import { theme } from '../../../utils/themeColors'
 
 import PromoBanner from '../../components/Profile/PromoBanner'
 import useCart from '../Cart/useCart'
+import AddressModalHeader from '../../components/Home/AddressModalHeader'
+import AddressModalFooter from '../../components/Home/AddressModalFooter'
 
 const Home = () => {
   const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef } = useHome()
@@ -53,46 +55,12 @@ const Home = () => {
   }, [navigation, currentTheme])
 
   const modalHeader = () => (
-    <View style={styles(currentTheme).addressContainer}>
-      <View style={styles(currentTheme).centerTitleContainer}>
-        <TextDefault H3 bolder>
-          {t('location')}
-        </TextDefault>
-      </View>
-
-      <TouchableOpacity hitSlop={10} onPress={() => modalRef.current.close()} style={styles(currentTheme).closeButton}>
-        <Entypo name='cross' size={22} color={currentTheme?.colorTextMuted} />
-      </TouchableOpacity>
-    </View>
+    <AddressModalHeader onClose={() => modalRef.current.close()}></AddressModalHeader>
   )
 
   const modalFooter = () => (
-    <Pressable
-      activeOpacity={0.5}
-      style={styles(currentTheme).addButton}
-      onPress={() => {
-        if (isLoggedIn) {
-          navigation.navigate('AddAddress', {
-            // prevScreen: 'Home',
-            // ...location
-          })
-        } else {
-          const modal = modalRef.current
-          modal?.close()
-          navigation.navigate({
-            name: 'CreateAccount'
-          })
-        }
-      }}
-    >
-      <View style={styles(currentTheme).addressSubContainer}>
-        <AntDesign name='plus' size={scale(20)} color={currentTheme.darkBgFont} />
-        <View style={styles().mL5p} textColor={currentTheme.black} />
-        <TextDefault bold H5 textColor={currentTheme.darkBgFont}>
-          {t('addAddress')}
-        </TextDefault>
-      </View>
-    </Pressable>
+   
+    <AddressModalFooter onClose={() => modalRef.current.close()}></AddressModalFooter>
   )
 
   return (
