@@ -111,7 +111,7 @@ function About(props) {
               {todayOpeningTimes && (
                 <View style={styles(currentTheme).timingRow}>
                   <View>
-                    <AntDesign name='clockcircle' size={12} color={!IsOpen ? currentTheme.red600 : currentTheme.main} />
+                    <AntDesign name='clock-circle' size={12} color={!IsOpen ? currentTheme.red600 : currentTheme.main} />
                   </View>
                   <TextDefault
                     isRTL

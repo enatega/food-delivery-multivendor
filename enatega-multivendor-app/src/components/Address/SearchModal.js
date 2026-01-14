@@ -431,7 +431,7 @@ export default function SearchModal({
         <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
           <TouchableOpacity style={styles().modalTextBtn} onPress={close}>
             <AntDesign
-              name='arrowleft'
+              name='left'
               size={24}
               color={currentTheme.newIconColor}
             />

@@ -177,7 +177,7 @@ export default function MapSection() {
                       style={styles().deliveryTime}
                     >
                       <AntDesign
-                        name='clockcircleo'
+                        name='clock-circle'
                         size={14}
                         color={currentTheme.editProfileButton}
                       />

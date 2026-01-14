@@ -95,7 +95,7 @@ function HypCheckout(props) {
           truncatedLabel=''
           backImage={() => (
             <View style={{ ...alignment.PLxSmall, width: scale(30) }}>
-              <AntDesign name='arrowleft' size={22} color={currentTheme.fontFourthColor} />
+              <AntDesign name='left' size={22} color={currentTheme.fontFourthColor} />
             </View>
           )}
           onPress={() => {

@@ -156,7 +156,7 @@ function Cart(props) {
                 alignItems: 'center'
               }}
             >
-              <AntDesign name='arrowleft' size={22} color={currentTheme.newIconColor} />
+              <AntDesign name='left' size={22} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {

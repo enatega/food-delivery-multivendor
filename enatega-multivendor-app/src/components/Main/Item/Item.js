@@ -88,7 +88,7 @@ function Item(props) {
                   <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} />
                 ) : (
                   <AntDesign
-                    name={heart ? 'heart' : 'hearto'}
+                    name={heart ? 'heart' : 'heart'}
                     size={scale(15)}
                     color="black"
                   />
@@ -181,7 +181,7 @@ function Item(props) {
                   justifyContent: 'center',
                   marginRight: 18
                 }}>
-                <AntDesign name="clockcircleo" size={16}
+                <AntDesign name="clock-circle" size={16}
                 color={currentTheme.fontNewColor} />
                 <TextDefault
                   textColor={currentTheme.fontNewColor}

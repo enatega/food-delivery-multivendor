@@ -1,6 +1,7 @@
 'use client';
 
 import { GoogleMapsProvider } from '@/lib/context/global/google-maps.context';
+import { LoyaltyProvider } from '@/lib/context/super-admin/loyalty-referral.context';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
 // Layout
 import GlobalLayout from '@/lib/ui/layouts/protected/global';
@@ -12,11 +13,15 @@ export default function RootLayout({
 }>) {
   const { GOOGLE_MAPS_KEY, LIBRARIES } = useConfiguration();
 
-  return GOOGLE_MAPS_KEY ? (
-    <GoogleMapsProvider apiKey={GOOGLE_MAPS_KEY} libraries={LIBRARIES}>
-      <GlobalLayout>{children}</GlobalLayout>
-    </GoogleMapsProvider>
-  ) : (
-    <GlobalLayout>{children}</GlobalLayout>
+  return (
+    <LoyaltyProvider>
+      {GOOGLE_MAPS_KEY ? (
+        <GoogleMapsProvider apiKey={GOOGLE_MAPS_KEY} libraries={LIBRARIES}>
+          <GlobalLayout>{children}</GlobalLayout>
+        </GoogleMapsProvider>
+      ) : (
+        <GlobalLayout>{children}</GlobalLayout>
+      )}
+    </LoyaltyProvider>
   );
 }

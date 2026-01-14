@@ -162,7 +162,7 @@ function NewRestaurantCard(props) {
             <View style={styles().border} />
             <View style={styles(currentTheme).deliveryInfo}>
               <View style={styles(currentTheme).deliveryTime}>
-                <AntDesign name='clockcircleo' size={14} color={currentTheme.editProfileButton} />
+                <AntDesign name='clock-circle' size={14} color={currentTheme.editProfileButton} />
                 <TextDefault textColor={currentTheme.editProfileButton} numberOfLines={1} bold Normal>
                   {props?.deliveryTime + ' '}
                   {t('min')}
@@ -206,7 +206,7 @@ function NewRestaurantCard(props) {
         }}
       >
         <View style={styles(currentTheme).favouriteOverlay}>
-          {loadingMutation ? <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} /> : <AntDesign name={heart ? 'heart' : 'hearto'} size={scale(15)} color={currentTheme.iconColor} />}
+          {loadingMutation ? <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} /> : <AntDesign name={heart ? 'heart' : 'heart'} size={scale(15)} color={currentTheme.iconColor} />}
         </View>
       </TouchableOpacity>
     </View>

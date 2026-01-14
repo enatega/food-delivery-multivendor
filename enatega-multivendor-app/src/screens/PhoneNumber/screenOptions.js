@@ -9,7 +9,7 @@ const navigationOptions = props => {
     headerRight: () => (
       <AntDesign
         onPress={() => props?.navigation.goBack()}
-        name="closecircleo"
+        name="close-circle"
         size={24}
         color={props?.iconColor}
         style={styles().headerRightIcon}
@@ -19,7 +19,7 @@ const navigationOptions = props => {
     headerLeft: () => (
       <AntDesign
         onPress={() => props?.navigation.goBack()}
-        name="arrowleft"
+        name="left"
         size={24}
         color={props?.iconColor}
         style={styles().headerLeftIcon}

@@ -24,6 +24,7 @@ const useRegister = () => {
   const [email, setEmail] = useState(route.params?.email || '')
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
+  const [referralCode, setReferralCode] = useState(route.params?.referralCode || '')
   const [showPassword, setShowPassword] = useState(true)
   const [firstnameError, setFirstnameError] = useState(null)
   const [lastnameError, setLastnameError] = useState(null)
@@ -139,7 +140,8 @@ const useRegister = () => {
                   phone: '+'.concat(country.callingCode[0]).concat(phone),
                   email: email.toLowerCase().trim(),
                   password: password,
-                  name: firstname + ' ' + lastname
+                  name: firstname + ' ' + lastname,
+                  referralCode: referralCode.trim()
                 },
                 isPhoneExists: true
               })
@@ -154,7 +156,8 @@ const useRegister = () => {
           phone: '+'.concat(country.callingCode[0]).concat(phone),
           email: email.toLowerCase().trim(),
           password: password,
-          name: firstname + ' ' + lastname
+          name: firstname + ' ' + lastname,
+          referralCode: referralCode.trim()
         }
       })
     }
@@ -216,7 +219,9 @@ const useRegister = () => {
     themeContext,
     currentTheme,
     setPhoneError,
-    isCountryLoading
+    isCountryLoading,
+    referralCode,
+    setReferralCode
   }
 }
 

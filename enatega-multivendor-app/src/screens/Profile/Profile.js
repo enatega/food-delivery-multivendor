@@ -294,6 +294,13 @@ function Profile(props) {
                   currentTheme={currentTheme}
                 />
                 <ButtonContainer
+                  icon={'wallet-outline'}
+                  iconType={'Ionicons'}
+                  onPress={() => navigation.navigate('Wallet')}
+                  title="My Wallet"
+                  currentTheme={currentTheme}
+                />
+                <ButtonContainer
                   icon={'people-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('Help')}

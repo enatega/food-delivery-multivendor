@@ -87,7 +87,7 @@ function Item(props) {
                   <Spinner size={'small'} backColor={'transparent'} />
                 ) : (
                   <AntDesign
-                    name={heart ? 'heart' : 'hearto'}
+                    name={heart ? 'heart' : 'heart'}
                     size={scale(15)}
                     color="black"
                   />

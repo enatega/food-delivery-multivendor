@@ -8,5 +8,5 @@ export const LOYALTY_TIER = [
   { label: 'Bronze', code: 'bronze' },
   { label: 'Silver', code: 'silver' },
   { label: 'Gold', code: 'gold' },
-  { label: 'Platinum', code: 'platfinum' },
+  { label: 'Platinum', code: 'platinum' },
 ];

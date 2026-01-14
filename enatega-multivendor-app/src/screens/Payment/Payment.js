@@ -97,7 +97,7 @@ function Payment(props) {
           backImage={() => (
             <View style={{ ...alignment.PLxSmall }}>
               <AntDesign
-                name='arrowleft'
+                name='left'
                 size={22}
                 color={currentTheme.newIconColor}
               />

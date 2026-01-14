@@ -11,6 +11,7 @@ import QRCode from 'react-native-qrcode-svg'
 import { Ionicons } from '@expo/vector-icons'
 import { createReferralLink } from '../../utils/branch.io'
 import { useUserContext } from '../../context/User'
+import QRScanner from '../../components/QRScanner/QRScanner'
 
 function QRAndReferral(props) {
   const themeContext = useContext(ThemeContext)
@@ -144,10 +145,12 @@ function QRAndReferral(props) {
             </View>
           </>
         ) : (
-          <View style={styles.scanPlaceholder}>
-            <Ionicons name='camera' size={64} color='#ccc' />
-            <Text style={styles.scanPlaceholderText}>Camera Scanner</Text>
-          </View>
+          <QRScanner onScanSuccess={(code) => {
+            Alert.alert('QR Code Scanned', `Referral code: ${code}`, [
+              { text: 'Cancel' },
+              { text: 'Apply', onPress: () => navigationService.navigate('ReferralCodeEntry', { referralCode: code }) }
+            ])
+          }} />
         )}
       </ScrollView>
     </SafeAreaView>

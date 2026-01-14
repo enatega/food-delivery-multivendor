@@ -1176,3 +1176,38 @@ export const FETCH_LOYALTY_REFERRAL_HISTORY = gql`
     }
   }
 `
+
+export const FETCH_WALLET_BALANCE = gql`
+  query FetchWalletBalance {
+    fetchWalletBalance
+  }
+`
+
+export const FETCH_WALLET_TRANSACTIONS = gql`
+  query FetchWalletTransactions {
+    fetchWalletTransactions {
+      _id
+      type
+      amount
+      pointsUsed
+      description
+      createdAt
+    }
+  }
+`
+
+export const GET_REFERRAL_ACTIVITIES = gql`
+  query GetReferralActivities {
+    getReferralActivities {
+      _id
+      points
+      type
+      createdAt
+      orderId
+      referredUser {
+        _id
+        name
+      }
+    }
+  }
+`

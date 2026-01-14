@@ -18,8 +18,8 @@ export const sendChatMessage = `mutation SendChatMessage($orderId: ID!, $message
   `
 
 export const placeOrder = `
-  mutation PlaceOrder($restaurant:String!,$orderInput:[OrderInput!]!,$paymentMethod:String!,$couponCode:String,$tipping:Float!, $taxationAmount: Float!,$address:AddressInput!, $orderDate: String!,$isPickedUp: Boolean!, $deliveryCharges: Float!, $instructions: String){
-    placeOrder(restaurant:$restaurant,orderInput: $orderInput,paymentMethod:$paymentMethod,couponCode:$couponCode,tipping:$tipping, taxationAmount: $taxationAmount, address:$address, orderDate: $orderDate,isPickedUp: $isPickedUp, deliveryCharges:$deliveryCharges, instructions: $instructions) {
+  mutation PlaceOrder($restaurant:String!,$orderInput:[OrderInput!]!,$paymentMethod:String!,$couponCode:String,$tipping:Float!, $taxationAmount: Float!,$address:AddressInput!, $orderDate: String!,$isPickedUp: Boolean!, $deliveryCharges: Float!, $instructions: String, $walletAmount: Float){
+    placeOrder(restaurant:$restaurant,orderInput: $orderInput,paymentMethod:$paymentMethod,couponCode:$couponCode,tipping:$tipping, taxationAmount: $taxationAmount, address:$address, orderDate: $orderDate,isPickedUp: $isPickedUp, deliveryCharges:$deliveryCharges, instructions: $instructions, walletAmount: $walletAmount) {
       _id
       orderId
       restaurant{
@@ -423,4 +423,25 @@ export const VERIFY_OTP = gql`
         result
     }
 }
+`
+
+export const CONVERT_POINTS_TO_WALLET = gql`
+  mutation ConvertPointsToWallet($input: ConvertPointsInput!) {
+    convertPointsToWallet(input: $input)
+  }
+`
+
+export const REDEEM_WALLET_FOR_ORDER = gql`
+  mutation RedeemWalletForOrder($input: RedeemWalletInput!) {
+    redeemWalletForOrder(input: $input)
+  }
+`
+
+export const APPLY_REFERRAL_CODE = gql`
+  mutation ApplyReferralCode($referralCode: String!) {
+    applyReferralCode(referralCode: $referralCode) {
+      success
+      message
+    }
+  }
 `

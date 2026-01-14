@@ -5,6 +5,7 @@ import { StatusBar, Platform } from 'react-native'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
 import Constants from 'expo-constants'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import useEnvVars from '../../../environment' // Adjust path if necessary
 import gql from 'graphql-tag'
 import { login } from '../../apollo/mutations' // Adjust path if necessary
@@ -174,7 +175,8 @@ export const useCreateAccount = () => {
         console.log('🔐 [Login Debug] ℹ️ Not a physical device, skipping notification token')
       }
 
-      const { code: referralCode } = await getStoredReferralCode()
+      const referralData = await getStoredReferralCode()
+      const referralCode = referralData?.code || null
 
       mutate({
         variables: {
@@ -208,6 +210,9 @@ export const useCreateAccount = () => {
 
   // --- Common Login Success Handler ---
   async function onCompleted(data) {
+    console.log('✅ [Login Debug] Login mutation completed successfully')
+    console.log('✅ [Login Debug] Response data:', data)
+    
     if (data.login.isActive === false) {
       FlashMessage({ message: t('accountDeactivated') })
       setLoading(false)
@@ -216,14 +221,31 @@ export const useCreateAccount = () => {
     }
 
     try {
-      setTokenAsync(data.login.token)
+      console.log('✅ [Login Debug] Setting auth token...')
+      await setTokenAsync(data.login.token)
+      
+      // Verify token was saved
+      const savedToken = await AsyncStorage.getItem('token')
+      console.log('✅ [Login Debug] Token saved successfully:', savedToken ? 'YES' : 'NO')
+      
+      // Small delay to ensure token is available for Apollo client
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Clear any existing navigation state
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
+            params: data?.login?.phone === '' ? {
+              name: googleUser,
+              phone: ''
+            } : undefined
+          }
+        ]
+      })
+      
       FlashMessage({ message: 'Successfully logged in' })
-
-      if (data?.login?.phone === '') {
-        navigateToPhone()
-      } else {
-        navigateToMain()
-      }
     } catch (error) {
       console.error('❌ [Login Debug] Error in onCompleted:', error)
     } finally {

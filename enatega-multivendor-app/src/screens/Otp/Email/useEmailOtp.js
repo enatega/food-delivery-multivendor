@@ -125,7 +125,8 @@ const useEmailOtp = (isPhoneExists) => {
       }
       console.log('mutation variables: create user', isPhoneExists)
 
-      const {code: referralCode} = await getStoredReferralCode()
+      const referralData = await getStoredReferralCode()
+      const referralCode = referralData?.code || null
 
       
     
@@ -150,10 +151,22 @@ const useEmailOtp = (isPhoneExists) => {
 
   const onCodeFilled = async (otp_code) => {
     if (configuration?.skipEmailVerification) {
-      await mutateRegister()
-      return
+      // If email verification is skipped, check if entered OTP matches test OTP
+      if (TEST_OTP && otp_code === TEST_OTP) {
+        await mutateRegister()
+        return
+      } else if (!TEST_OTP) {
+        // If no test OTP is set, just proceed with registration
+        await mutateRegister()
+        return
+      } else {
+        // Wrong test OTP entered
+        setOtpError(true)
+        return
+      }
     }
 
+    // Normal OTP verification flow
     const { data } = await verifyOTP({
       variables: { otp: otp_code, email: user.email }
     })
@@ -196,7 +209,7 @@ const useEmailOtp = (isPhoneExists) => {
   useEffect(() => {
     let timer = null
     if (!configuration) return
-    if (configuration.skipEmailVerification) {
+    if (configuration.skipEmailVerification && TEST_OTP) {
       setOtp(TEST_OTP)
       timer = setTimeout(async () => {
         await onCodeFilled(TEST_OTP)

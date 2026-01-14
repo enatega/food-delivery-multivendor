@@ -14,7 +14,7 @@ const navigationOptions = props => {
             merge: true
           })
         }
-        name='closecircleo'
+        name='close-circle'
         size={24}
         color={props?.fontColor}
         style={styles().headerRightIcon}

@@ -49,7 +49,7 @@ function Search(props) {
                   props?.setSearch('')
                 }}>
                 <AntDesign
-                  name="closecircleo"
+                  name="close-circle"
                   size={15}
                   color={currentTheme.fontSecondColor}
                 />

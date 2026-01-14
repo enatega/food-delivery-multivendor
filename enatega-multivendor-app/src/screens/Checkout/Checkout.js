@@ -89,6 +89,9 @@ function Checkout(props) {
   const [voucherCode, setVoucherCode] = useState('')
   const [tip, setTip] = useState(null)
   const [tipAmount, setTipAmount] = useState('')
+  const [walletAmount, setWalletAmount] = useState(0)
+  const [walletInputAmount, setWalletInputAmount] = useState('')
+  const walletModalRef = useRef(null)
   const calenderModalRef = useRef(null)
   const [paymentMode, setPaymentMode] = useState('COD')
 
@@ -279,7 +282,7 @@ function Checkout(props) {
           truncatedLabel=''
           backImage={() => (
             <View style={{ ...alignment.PLxSmall, width: scale(30) }}>
-              <AntDesign name='arrowleft' size={22} color={currentTheme.fontFourthColor} />
+              <AntDesign name='left' size={22} color={currentTheme.fontFourthColor} />
             </View>
           )}
           onPress={() => {
@@ -475,7 +478,8 @@ function Checkout(props) {
     total += +calculatePrice(delivery, true)
     total += +taxCalculation()
     total += +calculateTip()
-    return parseFloat(total).toFixed(2)
+    total -= +walletAmount // Subtract wallet amount as discount
+    return parseFloat(Math.max(0, total)).toFixed(2) // Ensure total doesn't go negative
   }
 
   function validateOrder() {
@@ -528,6 +532,7 @@ function Checkout(props) {
     if (paymentMode === 'PAYPAL') {
       return paypalCurrencies.find((val) => val.currency === currency)
     }
+
     return true
   }
 
@@ -561,7 +566,8 @@ function Checkout(props) {
           orderDate: orderDate,
           isPickedUp: isPickup,
           deliveryCharges: isPickup ? 0 : deliveryCharges,
-          instructions
+          instructions,
+          walletAmount: walletAmount > 0 ? walletAmount : null
         }
 
         if (isPickup) {
@@ -792,11 +798,53 @@ function Checkout(props) {
                             }}
                           />
                         )}
+
                       </View>
                     </View>
                   </>
                 )}
                 <View style={[styles(currentTheme).horizontalLine2, { width: '92%', alignSelf: 'center' }]} />
+
+                {/* Wallet Section */}
+                {profile?.walletBalance > 0 && (
+                  <View style={styles().voucherSec}>
+                    {walletAmount === 0 ? (
+                      <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).voucherSecInner} onPress={() => onModalOpen(walletModalRef)}>
+                        <MaterialCommunityIcons name='wallet' size={24} color={currentTheme.lightBlue} />
+                        <TextDefault H4 bolder textColor={currentTheme.lightBlue} center>
+                          Use Wallet Balance (${configuration.currencySymbol}{profile?.walletBalance?.toFixed(2)})
+                        </TextDefault>
+                        <Feather name='chevron-right' size={20} color={currentTheme.lightBlue} />
+                      </TouchableOpacity>
+                    ) : (
+                      <>
+                        <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
+                          Wallet
+                        </TextDefault>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: scale(8), gap: scale(5) }}>
+                            <MaterialCommunityIcons name='wallet' size={24} color={currentTheme.main} />
+                            <View>
+                              <TextDefault numberOfLines={1} tnormal bold textColor={currentTheme.fontFourthColor}>
+                                ${configuration.currencySymbol}{walletAmount.toFixed(2)} applied
+                              </TextDefault>
+                              <TextDefault small bold textColor={currentTheme.fontFourthColor}>
+                                Wallet discount
+                              </TextDefault>
+                            </View>
+                          </View>
+                          <View style={styles(currentTheme).changeBtn}>
+                            <TouchableOpacity activeOpacity={0.7} onPress={() => setWalletAmount(0)}>
+                              <TextDefault small bold textColor={currentTheme.darkBgFont} center>
+                                Remove
+                              </TextDefault>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </>
+                    )}
+                  </View>
+                )}
 
                 <View style={styles().voucherSec}>
                   {!coupon ? (
@@ -956,6 +1004,21 @@ function Checkout(props) {
                       </View>
                     </View>
                   )}
+
+                  {walletAmount > 0 && (
+                    <View>
+                      <View style={styles(currentTheme).horizontalLine2} />
+                      <View style={styles(currentTheme).billsec}>
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                          Wallet Discount
+                        </TextDefault>
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                          -{configuration.currencySymbol}
+                          {walletAmount.toFixed(2)}
+                        </TextDefault>
+                      </View>
+                    </View>
+                  )}
                   <View style={styles(currentTheme).horizontalLine2} />
                   <View style={styles(currentTheme).billsec}>
                     <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} H4 bolder>
@@ -1043,6 +1106,73 @@ function Checkout(props) {
             </TouchableOpacity>
           </View>
         </Modalize>
+        
+        {/* Wallet Modal */}
+        <Modalize
+          ref={walletModalRef}
+          modalStyle={[styles(currentTheme).modal]}
+          overlayStyle={styles(currentTheme).overlay}
+          handleStyle={styles(currentTheme).handle}
+          modalHeight={550}
+          handlePosition='inside'
+          openAnimationConfig={{
+            timing: { duration: 400 },
+            spring: { speed: 20, bounciness: 10 }
+          }}
+          closeAnimationConfig={{
+            timing: { duration: 400 },
+            spring: { speed: 20, bounciness: 10 }
+          }}
+        >
+          <View style={styles().modalContainer}>
+            <View style={styles(currentTheme).modalHeader}>
+              <View activeOpacity={0.7} style={styles(currentTheme).modalheading}>
+                <MaterialCommunityIcons name='wallet' size={20} color={currentTheme.newIconColor} />
+                <TextDefault H4 bolder textColor={currentTheme.newFontcolor} center>
+                  Use Wallet Balance
+                </TextDefault>
+              </View>
+              <Feather name='x-circle' size={24} color={currentTheme.newIconColor} onPress={() => onModalClose(walletModalRef)} />
+            </View>
+            <View style={{ gap: 8, marginBottom: 16 }}>
+              <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
+                Available Balance: {configuration.currencySymbol}{profile?.walletBalance?.toFixed(2)}
+              </TextDefault>
+              <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
+                Enter Amount to Use
+              </TextDefault>
+              <TextInput 
+                keyboardType='numeric' 
+                placeholder={`Max: ${profile?.walletBalance?.toFixed(2)}`}
+                placeholderTextColor={currentTheme.inputPlaceHolder} 
+                value={walletInputAmount} 
+                onChangeText={(text) => setWalletInputAmount(text)} 
+                style={styles(currentTheme).modalInput} 
+              />
+            </View>
+            <TouchableOpacity 
+              disabled={!walletInputAmount || parseFloat(walletInputAmount) <= 0} 
+              activeOpacity={0.7} 
+              onPress={() => {
+                const amount = parseFloat(walletInputAmount)
+                const maxAmount = Math.min(profile?.walletBalance || 0, parseFloat(calculateTotal()) + amount)
+                if (amount > maxAmount) {
+                  FlashMessage({ message: `Maximum amount you can use is ${configuration.currencySymbol}${maxAmount.toFixed(2)}` })
+                  return
+                }
+                setWalletAmount(amount)
+                setWalletInputAmount('')
+                onModalClose(walletModalRef)
+              }} 
+              style={[styles(currentTheme).button, { height: scale(40) }]}
+            >
+              <TextDefault textColor={currentTheme.black} style={styles().checkoutBtn} bold H4>
+                Apply
+              </TextDefault>
+            </TouchableOpacity>
+          </View>
+        </Modalize>
+        
         {/* Voucher Modal */}
         <Modalize
           ref={voucherModalRef}

@@ -70,6 +70,8 @@ import * as LocationImport from 'expo-location'
 import QRAndReferral from '../screens/QR-And-Referral/QR-And-Referral'
 import ReferralAndLoyaltyRecentActivity from '../screens/Referral-And-Loyalty-Recent-Activity/Referral-And-Loyalty-Recent-Activity'
 import LoyaltyPoints from '../screens/Loyalty-Points/Loyalty-Points'
+import Wallet from '../screens/Wallet/Wallet'
+import ReferralCodeEntry from '../screens/ReferralCodeEntry/ReferralCodeEntry'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -158,6 +160,8 @@ function MainNavigator() {
       <NavigationStack.Screen name='LoyaltyPoints' component={LoyaltyPoints} />
       <NavigationStack.Screen name='QRAndReferral' component={QRAndReferral} />
       <NavigationStack.Screen name='ReferralAndLoyaltyRecentActivity' component={ReferralAndLoyaltyRecentActivity} />
+      <NavigationStack.Screen name='Wallet' component={Wallet} />
+      <NavigationStack.Screen name='ReferralCodeEntry' component={ReferralCodeEntry} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reviews' component={Reviews} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />

@@ -189,7 +189,7 @@ export default function MakeSidebar() {
         },
            {
           text: 'Loyalty and Referrals',
-          label: t('Orders'),
+          label: t('Loyalty and Referrals'),
           route: '/management/loyalty-referrals',
           isParent: false,
         },

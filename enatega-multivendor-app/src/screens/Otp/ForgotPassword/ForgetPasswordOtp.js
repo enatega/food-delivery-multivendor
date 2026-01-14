@@ -89,23 +89,21 @@ function ForgotPasswordOtp(props) {
             </TextDefault> */}
           </View>
           <View>
-            <OTPInputView
-              pinCount={6}
+            <OtpInput
+              numberOfDigits={6}
               style={styles().otpInput}
-              codeInputFieldStyle={[
-                styles(currentTheme).otpBox,
-                otpError && styles(currentTheme).errorInput
-              ]}
-              codeInputHighlightStyle={{
-                borderColor: currentTheme.main
+              textInputProps={{
+                style: [
+                  styles(currentTheme).otpBox,
+                  otpError && styles(currentTheme).errorInput
+                ]
               }}
-              autoFocusOnLoad
-              code={otp}
-              onCodeChanged={(code) => setOtp(code)}
-              onCodeFilled={(code) => {
+              focusColor={currentTheme.main}
+              autoFocus
+              onTextChange={(code) => setOtp(code)}
+              onFilled={(code) => {
                 onCodeFilled(code)
               }}
-              editable
             />
             {otpError && (
               <TextDefault

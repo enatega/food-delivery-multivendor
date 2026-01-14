@@ -1,6 +1,8 @@
-import { useLayoutEffect, useContext } from 'react'
-import { View, Text, StyleSheet, SafeAreaView, FlatList } from 'react-native'
+import { useLayoutEffect, useContext, useState, useEffect } from 'react'
+import { View, Text, StyleSheet, SafeAreaView, FlatList, ActivityIndicator } from 'react-native'
 import { MaterialCommunityIcons, Feather, Ionicons } from '@expo/vector-icons'
+import { useQuery } from '@apollo/client'
+import { GET_REFERRAL_ACTIVITIES } from '../../apollo/queries'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -8,74 +10,31 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import { scale } from '../../utils/scaling'
 import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
-
-const activities = [
-  {
-    id: '1',
-    title: '+120 pts from new order',
-    description: 'Sofia joined using your code #4532',
-    points: 120,
-    time: '10:42 AM · Today',
-    icon: 'shopping'
-  },
-  {
-    id: '2',
-    title: '+250 pts from referral',
-    description: 'Sofia joined using your code',
-    points: 250,
-    time: 'Yesterday',
-    icon: 'share',
-    isNegative: false
-  },
-  {
-    id: '3',
-    title: '-400 pts redeemed',
-    description: 'Used points for discount on your last order',
-    points: -400,
-    time: '2 days ago',
-    icon: 'gift',
-    isNegative: true
-  },
-  {
-    id: '4',
-    title: '+80 pts from in-store purchase',
-    description: 'Earned by scanning QR at checkout',
-    points: 80,
-    time: '3 days ago',
-    icon: 'shop',
-    isNegative: false
-  },
-  {
-    id: '5',
-    title: '+80 pts from in-store purchase',
-    description: 'Earned by scanning QR at checkout',
-    points: 80,
-    time: '3 days ago',
-    icon: 'shop',
-    isNegative: false
-  },
-  {
-    id: '6',
-    title: '+80 pts from in-store purchase',
-    description: 'Earned by scanning QR at checkout',
-    points: 80,
-    time: '3 days ago',
-    icon: 'shop',
-    isNegative: false
-  },
-  {
-    id: '7',
-    title: '+8990 pts from in-store purchase',
-    description: 'Earned by scanning QR at checkout',
-    points: 80,
-    time: '3 days ago',
-    icon: 'shop',
-    isNegative: false
-  }
-]
 function ReferralAndLoyaltyRecentActivity(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const [activities, setActivities] = useState([])
+  
+  const { data, loading, error } = useQuery(GET_REFERRAL_ACTIVITIES, {
+    fetchPolicy: 'cache-and-network'
+  })
+
+  useEffect(() => {
+    if (data?.getReferralActivities) {
+      const formattedActivities = data.getReferralActivities.map(activity => ({
+        id: activity._id,
+        title: `+${activity.points} pts from ${activity.type === 'REFERRAL_SIGNUP' ? 'referral' : 'order'}`,
+        description: activity.type === 'REFERRAL_SIGNUP' 
+          ? `${activity.referredUser?.name || 'Someone'} joined using your code`
+          : `Earned from order #${activity.orderId || 'N/A'}`,
+        points: activity.points,
+        time: new Date(activity.createdAt).toLocaleDateString(),
+        icon: activity.type === 'REFERRAL_SIGNUP' ? 'share' : 'shopping',
+        isNegative: false
+      }))
+      setActivities(formattedActivities)
+    }
+  }, [data])
 
   // Handlers
   const renderActivityIcon = (iconType) => {
@@ -165,6 +124,29 @@ function ReferralAndLoyaltyRecentActivity(props) {
     })
   }, [props?.navigation])
 
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={currentTheme.main} />
+          <Text style={styles.loadingText}>Loading activities...</Text>
+        </View>
+      </SafeAreaView>
+    )
+  }
+
+  if (error || activities.length === 0) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.emptyContainer}>
+          <Feather name="activity" size={48} color="#9ca3af" />
+          <Text style={styles.emptyText}>No referral activities yet</Text>
+          <Text style={styles.emptySubText}>Start referring friends to see your activity here!</Text>
+        </View>
+      </SafeAreaView>
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList data={activities} renderItem={renderActivity} keyExtractor={(item) => item.id} scrollEnabled={true} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }} />
@@ -246,6 +228,35 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 8
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#6b7280'
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#374151',
+    marginTop: 16,
+    textAlign: 'center'
+  },
+  emptySubText: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginTop: 8,
+    textAlign: 'center'
   }
 })
 export default ReferralAndLoyaltyRecentActivity

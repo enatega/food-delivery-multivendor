@@ -81,7 +81,7 @@ const FavoriteButton = ({ restaurantId, iconSize }) => {
         />
       ) : (
         <AntDesign
-          name={heart ? 'heart' : 'hearto'}
+          name={heart ? 'heart' : 'heart'}
           size={iconSize}
           color={currentTheme.newIconColor}
         />
