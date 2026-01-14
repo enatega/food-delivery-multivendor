@@ -20,30 +20,33 @@ const styles = (props = null) =>
     },
     walletTitle: {
       fontSize: scale(28),
-      fontWeight: '700',
+      fontWeight: '800',
       lineHeight: scale(34),
       marginBottom: verticalScale(12)
     },
     walletDescription: {
+      fontWeight: '500',
       fontSize: scale(14),
       lineHeight: scale(20),
       marginTop: verticalScale(4)
     },
     balanceCard: {
-      backgroundColor: props?.cardBackground || props?.themeBackground || '#FFFFFF',
+      backgroundColor: props?.colorBgTertiary ,
+      borderWidth: 1,
+      borderColor: props?.newBorderColor2 ,
       marginHorizontal: scale(16),
       marginBottom: verticalScale(24),
       paddingHorizontal: scale(20),
       paddingVertical: verticalScale(24),
       borderRadius: scale(12),
-      shadowColor: props?.shadowColor || '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 3
+      // shadowColor: props?.shadowColor || '#000',
+      // shadowOffset: {
+      //   width: 0,
+      //   height: 2
+      // },
+      // shadowOpacity: 0.1,
+      // shadowRadius: 8,
+      // elevation: 0.1
     },
     balanceLabel: {
       fontSize: scale(14),
@@ -59,8 +62,10 @@ const styles = (props = null) =>
     buttonContainer: {
       position: 'relative',
       flexDirection: 'row',
-      alignItems: 'center',
-      paddingLeft: scale(12)
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      // paddingLeft: scale(12),
+      // backgroundColor: 'red'
     },
     buttonDecorator: {
       position: 'absolute',
@@ -82,18 +87,16 @@ const styles = (props = null) =>
       opacity: 0.3
     },
     browseButton: {
-      backgroundColor: props?.primaryBlue || props?.primary || '#0EA5E9',
-      paddingHorizontal: scale(24),
-      paddingVertical: verticalScale(14),
+      backgroundColor: props?.singlevendorcolor ,
+      paddingVertical: verticalScale(10),
       borderRadius: scale(8),
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center'
+      alignSelf: 'flex-start',  
     },
     browseButtonText: {
       fontSize: scale(16),
-      fontWeight: '600',
-      lineHeight: scale(22)
+      fontWeight: '500',
+      lineHeight: scale(22),
+      paddingHorizontal: scale(12),
     },
     refundHistoryContainer: {
       paddingHorizontal: scale(16)

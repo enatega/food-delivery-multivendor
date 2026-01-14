@@ -51,7 +51,7 @@ const WalletScreen = () => {
   ]
 
   const handleBrowseProducts = () => {
-    navigation.navigate('Main')
+    navigation.navigate('Search')
   }
 
   const handleRefundPress = (refund) => {
@@ -90,37 +90,35 @@ const WalletScreen = () => {
             style={styles(currentTheme).walletTitle}
             bolder
           >
-            Wallet
+             {t('Wallet') }
           </TextDefault>
           <TextDefault
             textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
             style={styles(currentTheme).walletDescription}
           >
-            Your refunded amounts are credited here and can be used for future orders. No cash withdrawals or chargebacks.
+           {t('Your refunded amounts are credited here and can be used for future orders. No cash withdrawals or chargebacks.')}
           </TextDefault>
         </View>
 
-        {/* Balance Card */}
+
         <View style={styles(currentTheme).balanceCard}>
           <TextDefault
             textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
             style={styles(currentTheme).balanceLabel}
           >
-            Your balance
+           {t('You have number of free deliveries')}
           </TextDefault>
           <TextDefault
             textColor={currentTheme.fontMainColor}
             style={styles(currentTheme).balanceAmount}
             bolder
           >
-            € 32.49
+           1
           </TextDefault>
           
-          {/* Browse Products Button with decorative element */}
-          <View style={styles(currentTheme).buttonContainer}>
-            <View style={styles(currentTheme).buttonDecorator}>
 
-            </View>
+          <View style={styles(currentTheme).buttonContainer}>
+
             <TouchableOpacity
               style={styles(currentTheme).browseButton}
               onPress={handleBrowseProducts}
@@ -131,23 +129,22 @@ const WalletScreen = () => {
                 style={styles(currentTheme).browseButtonText}
                 bolder
               >
-                Browse Products
+               {t('Browse Products')}
               </TextDefault>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Refund History Section */}
-        <View style={styles(currentTheme).refundHistoryContainer}>
+        {/* <View style={styles(currentTheme).refundHistoryContainer}>
           <TextDefault
             textColor={currentTheme.fontMainColor}
             style={styles(currentTheme).refundHistoryTitle}
             bolder
           >
-            Refund History
-          </TextDefault>
+           {t('Refund History')}
+          </TextDefault>    
 
-          {/* Filter Buttons */}
           <View style={styles(currentTheme).filterContainer}>
             {filterOptions.map((filter) => (
               <TouchableOpacity
@@ -174,7 +171,6 @@ const WalletScreen = () => {
             ))}
           </View>
 
-          {/* Refund List */}
           <View style={styles(currentTheme).listContainer}>
             <FlashList
               data={dummyRefunds}
@@ -185,7 +181,7 @@ const WalletScreen = () => {
               scrollEnabled={false}
             />
           </View>
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   )

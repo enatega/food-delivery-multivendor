@@ -383,3 +383,9 @@ query GetFavoriteFoodsSingleVendor($limit: Int, $skip: Int) {
     }
 }
 `
+
+export const GET_MY_REFERRAL_CODE = gql`
+query GetMyReferralCode {
+  getMyReferralCode
+}
+`
