@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4
   },
   paginationDotActive: {
-    backgroundColor: '#0891B2',
+    backgroundColor: '#006189',
     width: 24
   },
   paginationDotInactive: {
