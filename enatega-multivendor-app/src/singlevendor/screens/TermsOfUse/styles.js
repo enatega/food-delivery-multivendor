@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { alignment } from '../../../utils/alignment'
 import { scale, verticalScale } from '../../../utils/scaling'
 
 const styles = (props = null) =>
@@ -14,18 +13,8 @@ const styles = (props = null) =>
     scrollContent: {
       flexGrow: 1,
       paddingTop: verticalScale(16),
-      paddingBottom: verticalScale(24),
-      paddingHorizontal: scale(16)
-    },
-    loadingContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    errorContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
+      paddingHorizontal: scale(16),
+      paddingBottom: verticalScale(24)
     }
   })
 

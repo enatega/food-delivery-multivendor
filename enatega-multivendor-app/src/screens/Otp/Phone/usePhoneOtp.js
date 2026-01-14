@@ -97,11 +97,13 @@ const usePhoneOtp = () => {
   })
 
   const onCodeFilled = async (otp_code) => {
+    const phoneToUse = phone ?? profile?.phone
+    
     if (configuration?.skipMobileVerification) {
       mutateUser({
         variables: {
           name: name ?? profile?.name,
-          phone: phone ?? profile?.phone,
+          phone: phoneToUse,
           phoneIsVerified: true
         }
       })
@@ -110,7 +112,7 @@ const usePhoneOtp = () => {
     const { data } = await verifyOTP({
       variables: {
         otp: otp_code,
-        phone: phone ?? profile?.phone
+        phone: phoneToUse
       }
     })
 
@@ -118,7 +120,7 @@ const usePhoneOtp = () => {
       mutateUser({
         variables: {
           name: name ?? profile?.name,
-          phone: phone ?? profile?.phone,
+          phone: phoneToUse,
           phoneIsVerified: true
         }
       })
@@ -136,7 +138,7 @@ const usePhoneOtp = () => {
         return
       }
 
-      sendOTPToPhone({ variables: { phone: profile?.phone ?? phone } })
+      sendOTPToPhone({ variables: { phone: phone ?? profile?.phone } })
     } catch (err) {
       FlashMessage({
         message: t('somethingWentWrong')
