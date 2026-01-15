@@ -57,3 +57,33 @@ mutation UpdateSubscription($input: UpdateSubscriptionInput!) {
     message
   }
 }`
+
+export const CREATE_SUPPORT_TICKET = gql`
+mutation CreateSupportTicket($ticketInput: SupportTicketInput!) {
+  createSupportTicket(ticketInput: $ticketInput) {
+    _id
+    title
+    description
+    status
+    category
+    orderId
+    otherDetails
+    createdAt
+    updatedAt
+    userType
+  }
+}
+`
+
+export const CREATE_MESSAGE = gql`
+mutation CreateMessage($messageInput: MessageInput!) {
+  createMessage(messageInput: $messageInput) {
+    _id
+    senderType
+    content
+    isRead
+    ticket
+    createdAt
+    updatedAt
+  }
+}`

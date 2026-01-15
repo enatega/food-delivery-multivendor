@@ -820,6 +820,9 @@ export const en = {
   "Security code": "Security code",
   "Save": "Save",
   "Subscription subscribed successfully": "Subscription subscribed successfully",
-  "Currently Active": "Currently Active"
+  "Currently Active": "Currently Active",
+  "Last updated at": "Last updated at",
+  "Created at": "Created at",
+  "Continue Conversation": "Continue Conversation"
 
 }
