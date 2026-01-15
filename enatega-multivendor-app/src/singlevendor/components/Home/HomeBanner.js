@@ -7,10 +7,10 @@ import { verticalScale } from '../../../utils/scaling'
 const { width } = Dimensions.get('window')
 
 /**
- * HomeBanner Component functionalities
+ * HomeBanner Component functionalities for better visibility. 
  * 
- * Displays a banner slider with PromoBanner as the first slide,
- * followed by banners from the backend (or default placeholders).
+ *  Displays a banner slider with PromoBanner as the first slide,
+ *  followed by banners from the backend (or default placeholders).
  *  onBannerPress - Callback when a banner is pressed
  *  autoplay - Enable/disable autoplay (default: true)
  *  autoplayDelay - Delay between slides in seconds (default: 3)
