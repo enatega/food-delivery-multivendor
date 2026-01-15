@@ -322,7 +322,7 @@ const Checkout = (props) => {
         {loading ? <></> : error ? <OrderSummaryError onRetry={recalculateSummary} /> : <OrderSummary isCheckout={true} priorityDeliveryFee={deliveryTime == 'priority' ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={isBelowMaximumOrder ? minimumOrderFee : 0} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={fulfillmentMode === 'delivery' ? tipAmount : 0} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />}
         <TouchableOpacity style={[styles(currentTheme).placeOrderButton, !isOrderValid() && styles(currentTheme).placeOrderButtonDisabled]} onPress={handlePlaceOrder} disabled={!isOrderValid()} activeOpacity={0.7}>
           {placingOrder ? (
-            <ActivityIndicator size='small' color={currentTheme.white} />
+            <ActivityIndicator size={18} color={currentTheme.white} />
           ) : (
             <TextDefault textColor={isOrderValid() ? '#fff' : currentTheme.fontSecondColor} bolder H5>
               {t('Place order') || 'Place order'}

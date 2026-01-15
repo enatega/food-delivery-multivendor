@@ -20,7 +20,7 @@ const useOrderConfirmation = ({ orderId }) => {
 
   const confirmation = data?.orderDetailsPage?.data
 
-  console.log('Checkout Data:', data, error)
+  console.log('Checkout Data:', data,confirmation?.items, error)
   return {
     loading,
     error,
@@ -41,7 +41,7 @@ const useOrderConfirmation = ({ orderId }) => {
     isBelowMinimumOrder: confirmation?.isBelowMinimumOrder ?? false,
     isBelowMaximumOrder: confirmation?.isBelowMaximumOrder ?? false,
     deliveryDiscount: confirmation?.deliveryDiscount ?? 0,
-    items: confirmation?.items ?? [],
+    
 
     // deliveryCharges: confirmation?.deliveryCharges ?? 0,
     originalDeliveryCharges: confirmation?.deliveryCharges ?? 0,
@@ -50,7 +50,12 @@ const useOrderConfirmation = ({ orderId }) => {
     couponApplied: confirmation?.couponDiscountApplied ?? false,
     priorityDeliveryFee: confirmation?.priorityDeliveryFees,
     isPriority: confirmation?.isPriority,
-    tipAmount:confirmation?.tipping
+    tipAmount:confirmation?.tipping,
+    orderStatus:confirmation?.orderStatus,
+    addressLabel:confirmation?.deliveryAddress?.label,
+    address:confirmation?.deliveryAddress?.deliveryAddress,
+    customerLocation: {longitude:confirmation?.deliveryAddress?.location?.coordinates[0],latitude:confirmation?.deliveryAddress?.location?.coordinates[1]},
+    orderItems: confirmation?.items ?? [],
     // deliveryDiscount: confirmation?.deliveryDiscount ?? 0,
   }
 }

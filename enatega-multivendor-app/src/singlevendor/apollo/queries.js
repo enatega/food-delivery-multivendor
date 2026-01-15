@@ -112,33 +112,33 @@ export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
 //   }
 // `
 
-export const GET_FOOD_DETAILS = gql`
-  query GetFoodDetails($foodId: ID!) {
-    getFoodDetails(foodId: $foodId) {
+export const GET_FOOD_DETAILS = gql`query GetFoodDetails($foodId: ID!) {
+  getFoodDetails(foodId: $foodId) {
+    id
+    title
+    description
+    image
+    isPopular
+    categoryId
+    variations {
       id
       title
-      description
-      image
-      isPopular
-      categoryId
-      variations {
+      price
+      addons {
         id
         title
-        price
-        addons {
+        description
+        options {
           id
           title
           description
-          options {
-            id
-            title
-            description
-            price
-          }
+          price
         }
       }
+      cartQuantity
     }
   }
+}
 `
 
 export const GET_SIMILAR_FOODS = gql`
@@ -294,6 +294,7 @@ export const GET_USER_CART = gql`
       success
       message
       grandTotal
+      actualGrandTotal
       lowOrderFees
       maxOrderAmount
       minOrderAmount

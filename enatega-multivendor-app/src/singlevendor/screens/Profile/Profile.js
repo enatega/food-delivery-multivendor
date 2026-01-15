@@ -51,7 +51,7 @@ const Profile = () => {
       <ScrollView style={styles(currentTheme).scrollView} contentContainerStyle={styles(currentTheme).scrollContent} showsVerticalScrollIndicator={false}>
         {/* Header with Welcome Message */}
         <ProfileHeader userName={profile?.name || 'User'} />
-        <VendorModeToggle></VendorModeToggle>
+        {/* <VendorModeToggle></VendorModeToggle> */}
         {/* Quick Actions Grid */}
         <QuickActionsGrid />
 

@@ -21,8 +21,8 @@ import useOrderConfirmation from './useOrderConfirmation'
 const OrderConfirmation = (props) => {
   const orderData = props?.route?.params?.orderData || {}
   const orderId = props?.route?.params?.orderId || ''
-  const { loading, subtotal, deliveryFee, serviceFee, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount, originalDeliveryCharges, freeDeliveriesRemaining, isBelowMaximumOrder, refetch, error, couponDiscountAmount, couponApplied, priorityDeliveryFee, isPriority, tipAmount } = useOrderConfirmation({ orderId })
-  console.log("tipping::",tipAmount,"Order Amound:",total)
+  const { loading, subtotal, deliveryFee, serviceFee, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount, originalDeliveryCharges, freeDeliveriesRemaining, isBelowMaximumOrder, refetch, error, couponDiscountAmount, couponApplied, priorityDeliveryFee, isPriority, tipAmount, orderStatus,addressLabel,address ,customerLocation,orderItems} = useOrderConfirmation({ orderId })
+  console.log('tipping::', tipAmount, 'Order Amound:', total)
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
@@ -42,53 +42,52 @@ const OrderConfirmation = (props) => {
   const [showMap, setShowMap] = useState(false)
 
   // Mock data - replace with actual order data
-  const [orderStatus, setOrderStatus] = useState(orderData.status || ORDER_STATUSES.PICKED_UP)
+  // const [orderStatus, setOrderStatus] = useState(orderData.status || ORDER_STATUSES.PICKED_UP)
   const [statusTimes] = useState({
     confirmed: '8:00 pm',
     packed: '8:10 pm',
     picked_up: '8:15 pm'
   })
 
-  const isDelivered = orderStatus === ORDER_STATUSES.DELIVERED
+  const isDelivered = orderStatus === ORDER_STATUSES.DELIVERED || orderStatus === ORDER_STATUSES.COMPLETED
+
+  const isCancelled = orderStatus === ORDER_STATUSES.CANCELLED || orderStatus === ORDER_STATUSES.CANCELLEDBYREST
 
   // Mock locations - replace with actual data
-  const customerLocation = {
-    latitude: 25.2945,
-    longitude: 51.5058
-  }
+  // const customerLocation = {
+  //   latitude: 25.2945,
+  //   longitude: 51.5058
+  // }
 
-  const riderLocation = {
-    latitude: 25.2852,
-    longitude: 51.5196
-  }
+  const riderLocation = null
 
   // Dummy order items for testing
-  const orderItems = [
-    {
-      id: '1',
-      title: 'Apple Juice',
-      description: 'Golden Delicious Apples, Filter Water, Ascorbic Acid',
-      price: 8.74,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=100&h=100&fit=crop'
-    },
-    {
-      id: '2',
-      title: 'Veggie Spring Roll',
-      description: 'Fresh vegetables, rice paper wrapper, sweet chili sauce',
-      price: 3.66,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=100&h=100&fit=crop'
-    },
-    {
-      id: '3',
-      title: 'Mango Smoothie',
-      description: 'Fresh mango, yogurt, honey',
-      price: 5.5,
-      quantity: 2,
-      image: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=100&h=100&fit=crop'
-    }
-  ]
+  // const orderItems = [
+  //   {
+  //     id: '1',
+  //     title: 'Apple Juice',
+  //     description: 'Golden Delicious Apples, Filter Water, Ascorbic Acid',
+  //     price: 8.74,
+  //     quantity: 1,
+  //     image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=100&h=100&fit=crop'
+  //   },
+  //   {
+  //     id: '2',
+  //     title: 'Veggie Spring Roll',
+  //     description: 'Fresh vegetables, rice paper wrapper, sweet chili sauce',
+  //     price: 3.66,
+  //     quantity: 1,
+  //     image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=100&h=100&fit=crop'
+  //   },
+  //   {
+  //     id: '3',
+  //     title: 'Mango Smoothie',
+  //     description: 'Fresh mango, yogurt, honey',
+  //     price: 5.5,
+  //     quantity: 2,
+  //     image: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=100&h=100&fit=crop'
+  //   }
+  // ]
 
   // Calculate totals
   // const subtotal = orderData.subtotal || orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -138,7 +137,7 @@ const OrderConfirmation = (props) => {
               <View style={styles(currentTheme).backButton}>{isDelivered ? <Feather name='x' size={20} color={currentTheme.fontMainColor} /> : <AntDesign name='arrowleft' size={20} color={currentTheme.fontMainColor} />}</View>
             </View>
           )}
-          onPress={() => navigation.goBack()}
+          onPress={() =>  {if(navigation.canGoBack()){navigation.goBack()}else{navigation.navigate('cart')} }}
         />
       )
     })
@@ -153,7 +152,7 @@ const OrderConfirmation = (props) => {
   return (
     <View style={styles(currentTheme).mainContainer}>
       <ScrollView style={styles().scrollView} contentContainerStyle={styles().contentContainer} showsVerticalScrollIndicator={false}>
-        {isDelivered ? (
+        {/* {isDelivered ? (
           // Delivered State
           <DeliveredStatus appName='FAST' />
         ) : (
@@ -162,10 +161,21 @@ const OrderConfirmation = (props) => {
             <DeliveryTimeBanner minTime={15} maxTime={25} />
             <OrderStatusTimeline currentStatus={orderStatus} statusTimes={statusTimes} />
           </>
+        )} */}
+
+        {isCancelled ? (
+          <DeliveredStatus appName='FAST' title={t('Order cancelled')} subtitle={t('Your order has been cancelled')} error />
+        ) : isDelivered ? (
+          <DeliveredStatus appName='FAST' />
+        ) : (
+          <>
+            {/* <DeliveryTimeBanner minTime={15} maxTime={25} /> */}
+            <OrderStatusTimeline currentStatus={orderStatus} statusTimes={statusTimes} />
+          </>
         )}
 
         {/* Delivery Details */}
-        <DeliveryDetailsCard addressLabel='Home' address='45 Al Jazeera Street, Doha, Qatar' showMap={showMap} onToggleMap={setShowMap} mapComponent={<DeliveryMap customerLocation={customerLocation} riderLocation={riderLocation} showRoute={!isDelivered} />} />
+        <DeliveryDetailsCard addressLabel={addressLabel} address={address} showMap={showMap} onToggleMap={setShowMap} mapComponent={<DeliveryMap customerLocation={customerLocation} riderLocation={riderLocation} showRoute={!isDelivered} />} />
 
         {/* Contact Courier - only show when not delivered */}
         {!isDelivered && <ContactCourierCard onPress={handleContactCourier} contactlessDelivery={true} />}

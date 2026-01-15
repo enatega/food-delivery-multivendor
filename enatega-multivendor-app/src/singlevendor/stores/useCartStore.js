@@ -73,7 +73,40 @@ const useCartStore = create((set) => ({
         isBelowMinimumOrder
       }
     })
-  }
+  },
+
+  addOrUpdateCartFoodFromServer: (food) =>
+    set((state) => {
+      const existingFoodIndex = state.items.findIndex((f) => f.foodId === food.foodId)
+
+      let newItems = [...state.items]
+
+      if (existingFoodIndex !== -1) {
+        // Replace entire food (server is source of truth)
+        newItems[existingFoodIndex] = food
+      } else {
+        // Add new food
+        newItems.push(food)
+      }
+
+      return {
+        items: newItems
+      }
+    }),
+
+  removeCartFood: (foodId) =>
+    set((state) => ({
+      items: state.items.filter((f) => f.foodId !== foodId)
+    })),
+
+  updateCartMetaFromServer: ({ grandTotal, isBelowMinimumOrder, lowOrderFees, maxOrderAmount, minOrderAmount }) =>
+    set({
+      grandTotal,
+      isBelowMinimumOrder,
+      lowOrderFees,
+      maxOrderAmount,
+      minOrderAmount
+    })
 }))
 
 export default useCartStore

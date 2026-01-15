@@ -10,13 +10,64 @@ export const TOGGLE_FAVORITE_ITEM_SINGLE_VENDOR = gql`
   }
 `
 
-export const UPDATE_USER_CART = gql`
-  mutation UserCartData($input: CartInput!) {
-    userCartData(input: $input) {
-      message
-      success
+export const UPDATE_USER_CART = gql`mutation UserCartData($input: CartInput!) {
+  userCartData(input: $input) {
+    success
+    message
+    actualGrandTotal
+    discountedGrandTotal
+    totalDiscount
+    hasDeals
+    isBelowMinimumOrder
+    lowOrderFees
+    maxOrderAmount
+    minOrderAmount
+    cartId
+    foods {
+      categoryId
+      foodId
+      foodTitle
+      foodImage
+      variations {
+        variationId
+        variationTitle
+        unitPrice
+        quantity
+        addons {
+          addonId
+          optionId
+          title
+          price
+        }
+        addonsTotal
+        actualUnitPrice
+        discountedUnitPrice
+        actualItemTotal
+        discountedItemTotal
+        itemTotal
+        dealId
+        dealInfo {
+          dealId
+          dealTitle
+          discountValue
+          discountType
+          id
+          title
+        }
+        addons {
+          addonId
+          optionId
+          title
+          price
+        }
+      }
+      actualFoodTotal
+      discountedFoodTotal
+      foodTotal
     }
   }
+}
+
 `
 
 export const UPDATE_USER_CART_COUNT = gql`

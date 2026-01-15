@@ -47,7 +47,8 @@ const useCart = () => {
       setCartFromServer({
         cartId: data.getUserCart.cartId,
         foods: data.getUserCart.foods,
-        grandTotal: data.getUserCart.grandTotal,
+        // grandTotal: data.getUserCart.grandTotal,
+        grandTotal: data.getUserCart.actualGrandTotal,
         maxOrderAmount: data.getUserCart.maxOrderAmount,
         minOrderAmount: data.getUserCart.minOrderAmount,
         isBelowMinimumOrder: data.getUserCart.isBelowMinimumOrder,

@@ -3,18 +3,31 @@ import { CALCULATE_CHECKOUT } from '../../apollo/queries'
 import { COUPON, PLACE_ORDER } from '../../apollo/mutations'
 import { Alert } from 'react-native'
 import { CommonActions, useNavigation } from '@react-navigation/native'
+import useCartStore from '../../stores/useCartStore'
 
 const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher }) => {
   const navigation = useNavigation()
+  const { clearCart } = useCartStore()
   const [placeOrder, { loading: placingOrder }] = useMutation(PLACE_ORDER, {
     onCompleted: (data) => {
       console.log('Order placed successfully', data?.placeOrder?._id)
       // navigation.navigate('OrderConfirmation', { data })
       // navigation.replace('OrderConfirmation', { data })
+
+      //empty cart
+
+      
       navigation.dispatch(
         CommonActions.reset({
-          index: 0,
+          index: 1,
           routes: [
+            {
+              name: 'Main',
+              state: {
+                index: 0,
+                routes: [{ name: 'Discovery' }]
+              }
+            },
             {
               name: 'OrderConfirmation',
               params: { orderData: data?.placeOrder, orderId: data?.placeOrder?._id }
@@ -22,6 +35,8 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher }) => {
           ]
         })
       )
+
+      clearCart()
     },
     onError: (err) => {
       console.log('Error placing order', err)

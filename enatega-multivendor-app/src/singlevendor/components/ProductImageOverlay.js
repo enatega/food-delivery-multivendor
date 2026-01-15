@@ -18,12 +18,12 @@ const ProductImageOverlay = ({ hasDeal, onAddToCart, product, dealText = 'Deal' 
           <Text style={styles(currentTheme).dealText}>{dealText}</Text>
         </View>
       )}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles(currentTheme).addButton}
         onPress={() => onAddToCart(product)}
       >
         <AntDesign name="plus" size={16}  />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </>
   )
 }
