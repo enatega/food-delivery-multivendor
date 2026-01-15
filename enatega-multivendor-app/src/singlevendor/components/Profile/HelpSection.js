@@ -22,19 +22,19 @@ const HelpSection = () => {
       id: 1,
       icon: 'help-circle-outline',
       title: t('Help Centers'),
-      onPress: () => navigation.navigate('Help')
+      onPress: () => navigation.navigate('FastHelpSupport')
     },
     {
       id: 2,
       icon: 'chatbubble-outline',
       title: t('FAQ'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('FAQS')
     },
     {
       id: 3,
       icon: 'star-outline',
       title: t('Give feedback'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('FeedBack')
     }
   ]
 

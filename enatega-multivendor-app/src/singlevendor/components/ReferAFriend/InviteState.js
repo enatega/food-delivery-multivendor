@@ -1,12 +1,35 @@
 import React from 'react'
-import { View, TouchableOpacity, Image } from 'react-native'
+import { View, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@apollo/client'
 import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import { GET_MY_REFERRAL_CODE } from '../../apollo/queries'
 import styles from '../../screens/ReferAFriend/styles'
 
-const InviteState = ({ currentTheme, referralCode, onCopyCode, onShare }) => {
+const InviteState = ({ currentTheme, referralCode: propReferralCode, onCopyCode, onShare }) => {
   const { t } = useTranslation()
+  
+  const { data, loading, error, refetch } = useQuery(GET_MY_REFERRAL_CODE)
+
+  
+  const referralCode = data?.getMyReferralCode  || ''
+  
+  const handleRetry = () => {
+    refetch()
+  }
+  
+  const handleCopyCodePress = () => {
+    if (referralCode && !loading && !error) {
+      onCopyCode(referralCode)
+    }
+  }
+  
+  const handleSharePress = () => {
+    if (referralCode && !loading && !error) {
+      onShare(referralCode)
+    }
+  }
 
   return (
     <View style={styles(currentTheme).contentContainer}>
@@ -37,30 +60,60 @@ const InviteState = ({ currentTheme, referralCode, onCopyCode, onShare }) => {
 
       <View style={styles(currentTheme).codeContainer}>
         <TouchableOpacity
-          style={styles(currentTheme).codeBox}
-          onPress={onCopyCode}
+          style={[
+            styles(currentTheme).codeBox,
+            error && { backgroundColor: '#ffebee' }
+          ]}
+          onPress={error ? handleRetry : handleCopyCodePress}
           activeOpacity={0.7}
+          disabled={loading}
         >
-          <Ionicons
-            name="copy-outline"
-            size={20}
-            color={currentTheme.colorTextPrimary}
-            style={styles(currentTheme).codeIcon}
-          />
-          <TextDefault
-            textColor={currentTheme.colorTextPrimary}
-            style={styles(currentTheme).codeText}
-            bold
-          >
-            {referralCode}
-          </TextDefault>
+          {loading ? (
+            <ActivityIndicator 
+              size="small" 
+              color={currentTheme.colorTextPrimary} 
+            />
+          ) : error ? (
+            <>
+              <Ionicons
+                name="alert-circle-outline"
+                size={20}
+                color="#d32f2f"
+                style={styles(currentTheme).codeIcon}
+              />
+              <TextDefault
+                textColor="#d32f2f"
+                style={styles(currentTheme).codeText}
+                bold
+              >
+                {t('Try again')}
+              </TextDefault>
+            </>
+          ) : (
+            <>
+              <Ionicons
+                name="copy-outline"
+                size={20}
+                color={currentTheme.colorTextPrimary}
+                style={styles(currentTheme).codeIcon}
+              />
+              <TextDefault
+                textColor={currentTheme.colorTextPrimary}
+                style={styles(currentTheme).codeText}
+                bold
+              >
+                {referralCode}
+              </TextDefault>
+            </>
+          )}
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity
         style={styles(currentTheme).shareButton}
-        onPress={onShare}
+        onPress={handleSharePress}
         activeOpacity={0.7}
+        disabled={loading || error || !referralCode}
       >
         <Ionicons
           name="share-social-outline"

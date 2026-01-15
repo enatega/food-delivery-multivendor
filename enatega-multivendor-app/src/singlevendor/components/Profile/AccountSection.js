@@ -22,13 +22,13 @@ const AccountSection = () => {
       id: 1,
       icon: 'person-outline',
       title: t('Account details'),
-      onPress: () => navigation.navigate('Account')
+      onPress: () => navigation.navigate('AccountDetails')
     },
     {
       id: 2,
       icon: 'card-outline',
       title: t('Payment methods'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('PaymentMethod')
     },
     {
       id: 3,
@@ -40,19 +40,19 @@ const AccountSection = () => {
       id: 4,
       icon: 'notifications-outline',
       title: t('Notifications'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('NotificationScreen')
     },
     {
       id: 5,
       icon: 'wallet-outline',
       title: t('Wallet'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('WalletScreen')
     },
     {
       id: 6,
       icon: 'settings-outline',
       title: t('Security and settings'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('SecuritySettings')
     }
   ]
 

@@ -91,13 +91,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   subtitle: {
+    fontSize: 16,
+    fontWeight: '500',
     color: '#777',
-    marginTop: 2,
+    marginTop: 12,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 6,
   },
   selector: {
     width: 22,
@@ -128,6 +130,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
+    fontWeight: '500',
   },
   badge: {
     fontSize: 12,

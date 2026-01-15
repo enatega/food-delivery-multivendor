@@ -6,7 +6,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const SectionHeader = ({ title }) => {
+const SectionHeader = ({ title, containerStyle ,textStyle}) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
@@ -15,12 +15,12 @@ const SectionHeader = ({ title }) => {
   }
 
   return (
-    <View style={styles(currentTheme).container}>
+    <View style={[styles(currentTheme).container, containerStyle]}>
       <TextDefault
         H4
         bolder
         textColor={currentTheme.fontMainColor}
-        style={styles(currentTheme).title}
+        style={[styles(currentTheme).title, textStyle]}
       >
         {title}
       </TextDefault>

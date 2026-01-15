@@ -10,7 +10,7 @@ import styles from './styles'
 import CartItemDescription from './CartItemDescription'
 import CartItemController from './CartItemController'
 
-const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€', onEdit, isLastItem = false }) => {
+const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€', onEdit, isLastItem = false, isFavourite = false, onAddToCart, isOrderHistory = false }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
@@ -58,17 +58,30 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
 
         {/* Bottom Row: Quantity Controls (left) and Price (right) */}
         <View style={styles().bottomRow}>
-          {/* <CartItemController
-            defaultCount={item?.variations[0]?.quantity || 1}
-            onAddQuantity={onAddQuantity}
-            onRemoveQuantity={onRemoveQuantity}
-            item = {item}
-          /> */}
 
-          <CartItemController item={item}  />
+          {isOrderHistory ? (
+            <TextDefault textColor={currentTheme.fontSecondColor} style={styles().orderHistoryQuantity}>
+              Qty {item?.quantity || item?.variations?.[0]?.quantity || 1}
+            </TextDefault>
+          ) : isFavourite ? (
+            <TouchableOpacity 
+              style={styles(currentTheme).addToCartButton}
+              onPress={() => {
+                if (onAddToCart) {
+                  onAddToCart(item)
+                } else {
+                  console.log('Add to cart:', item)
+                }
+              }}
+            >
+              <AntDesign name="plus" size={scale(20)} color={currentTheme.fontMainColor} />
+            </TouchableOpacity>
+          ) : (
+            <CartItemController item={item} />
+          )}
 
           <TextDefault textColor={currentTheme.gray} bold isRTL>
-            {currencySymbol} {item?.foodTotal}
+            {currencySymbol} {item?.foodTotal || itemTotal}
           </TextDefault>
         </View>
       </View>

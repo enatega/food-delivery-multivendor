@@ -19,7 +19,7 @@ const ContinueWithPhoneButton = ({ title, onPress, isLoading, isDisabled, contai
       style={[
         styles(currentTheme).viaPhoneButton,
         {
-          backgroundColor: isDisabled ? currentTheme.colorBgTertiary : currentTheme.primaryBlue
+          backgroundColor: isDisabled ? currentTheme.colorBgTertiary : currentTheme.singlevendorcolor
         },
         containerStyles && containerStyles
       ]}
@@ -27,7 +27,7 @@ const ContinueWithPhoneButton = ({ title, onPress, isLoading, isDisabled, contai
       disabled={isDisabled ? isDisabled : false}
     >
       {isLoading ? (
-        <Spinner spinnerColor={currentTheme?.primaryBlue} backColor={currentTheme.backgroundColor} />
+        <Spinner spinnerColor={currentTheme?.singlevendorcolor} backColor={currentTheme.backgroundColor} />
       ) : (
         <TextDefault H4 textColor={currentTheme.gray100} center bold style={{ color: isDisabled ? currentTheme.horizontalLine : currentTheme.white }}>
           {t(title)}

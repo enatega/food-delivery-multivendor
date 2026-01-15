@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useRef, useContext } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import HorizontalCategoriesList from '../../components/HorizontalCategoriesList'
-// import HomeBanner from '../../components/Home/HomeBanner'
+import HomeBanner from '../../components/Home/HomeBanner'
 import useHome from './useHome'
 import WrapperHorizontalProductsList from '../../components/WrapperHorizontalProductsList'
 import { FlatList } from 'react-native-gesture-handler'
@@ -24,7 +24,7 @@ import AddressModalHeader from '../../components/Home/AddressModalHeader'
 import AddressModalFooter from '../../components/Home/AddressModalFooter'
 
 const Home = () => {
-  const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef } = useHome()
+  const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef, bannersData } = useHome()
   const {} = useCart()
   const categoriesData = data?.getRestaurantCategoriesSingleVendor
 
@@ -54,14 +54,9 @@ const Home = () => {
     )
   }, [navigation, currentTheme])
 
-  const modalHeader = () => (
-    <AddressModalHeader onClose={() => modalRef.current.close()}></AddressModalHeader>
-  )
+  const modalHeader = () => <AddressModalHeader onClose={() => modalRef.current.close()}></AddressModalHeader>
 
-  const modalFooter = () => (
-   
-    <AddressModalFooter onClose={() => modalRef.current.close()}></AddressModalFooter>
-  )
+  const modalFooter = () => <AddressModalFooter onClose={() => modalRef.current.close()}></AddressModalFooter>
 
   return (
     <SafeAreaView style={styles(currentTheme).container}>
@@ -72,7 +67,7 @@ const Home = () => {
         ListHeaderComponent={() => {
           return (
             <View style={{ marginTop: 30 }}>
-              <PromoBanner />
+              <HomeBanner banners={bannersData?.banners || []} />
               <HorizontalCategoriesList categoriesData={categoriesData} />
             </View>
           )

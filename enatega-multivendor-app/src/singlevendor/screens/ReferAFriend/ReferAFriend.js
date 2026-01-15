@@ -16,6 +16,7 @@ const ReferAFriend = () => {
   const { t, i18n } = useTranslation()
   const { profile } = useContext(UserContext)
   const { orders } = useContext(OrdersContext)
+  console.log("Orders in refer friend:",orders)
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -25,17 +26,18 @@ const ReferAFriend = () => {
   const referralCode = profile?.referralCode || 'ASD32F' // TODO: Get from backend
   const hasOrders = orders && orders.length > 0
 
-  const handleCopyCode = async () => {
+  const handleCopyCode = async (code) => {
     // Direct copy using Share API
+    const referralCodeToUse = code 
     try {
       await Share.share({
-        message: referralCode
+        message: referralCodeToUse
       })
     } catch (error) {
       // If share is cancelled, show alert
       Alert.alert(
         t('Referral Code'),
-        referralCode,
+        referralCodeToUse,
         [{ text: t('OK') }]
       )
     }
@@ -76,17 +78,18 @@ const ReferAFriend = () => {
       />
 
       {hasOrders ? (
+        <InviteState
+        currentTheme={currentTheme}
+        referralCode={referralCode}
+        onCopyCode={handleCopyCode}
+        onShare={handleShare}
+      />
+      ) : (
         <ShopNowState
           currentTheme={currentTheme}
           onStartShopping={handleStartShopping}
         />
-      ) : (
-        <InviteState
-          currentTheme={currentTheme}
-          referralCode={referralCode}
-          onCopyCode={handleCopyCode}
-          onShare={handleShare}
-        />
+        
       )}
     </SafeAreaView>
   )

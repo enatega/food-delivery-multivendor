@@ -485,4 +485,123 @@ export const ORDER_DETAILS_PAGE = gql`
       }
     }
   }
+}`
+
+export const GET_ALL_SUBSCRIPTION_PLANS = gql`
+query GetAllSubscriptionPlans {
+  getAllSubscriptionPlans {
+    plans {
+      id
+      amount
+      interval
+      intervalCount
+      productName
+      productId
+    }
+  }
+}`
+
+export const GET_FAVORITE_FOODS_SINGLE_VENDOR = gql`
+query GetFavoriteFoodsSingleVendor($limit: Int, $skip: Int) {
+    getFavoriteFoodsSingleVendor(limit: $limit, skip: $skip) {
+        success
+        message
+        data {
+            _id
+            title
+            image
+            subCategory
+            isFavourite
+            isActive
+            createdAt
+            updatedAt
+            isOutOfStock
+            variations {
+                _id
+                title
+                price
+                discounted
+                addons
+                isOutOfStock
+                name
+            }
+        }
+    }
+}
+`
+
+export const GET_SINGLE_USER_SUPPORT_TICKETS = gql`
+query GetSingleUserSupportTickets($input: SingleUserSupportTicketsInput) {
+  getSingleUserSupportTickets(input: $input) {
+    tickets {
+      _id
+      title
+      description
+      status
+      category
+      orderId
+      otherDetails
+      createdAt
+      updatedAt
+      userType
+    }
+    docsCount
+    totalPages
+    currentPage
+  }
+}
+`
+
+export const GET_TICKET_MESSAGES = gql`
+query GetTicketMessages($input: TicketMessagesInput!) {
+  getTicketMessages(input: $input) {
+    messages {
+      _id
+      senderType
+      content
+      isRead
+      ticket
+      createdAt
+      updatedAt
+    }
+    ticket {
+      _id
+      title
+      description
+      status
+      category
+      orderId
+      otherDetails
+      createdAt
+      updatedAt
+      userType
+      user {
+        _id
+      }
+    }
+    page
+    totalPages
+    docsCount
+  }
+}
+`
+
+export const GET_BANNERS = gql`
+  query Banners {
+    banners {
+      _id
+      title
+      description
+      action
+      screen
+      file
+      parameters
+    }
+  }
+`
+
+export const GET_MY_REFERRAL_CODE = gql`
+query GetMyReferralCode {
+  getMyReferralCode
+}
 `
