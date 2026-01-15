@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client'
-import { GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR } from '../../apollo/queries'
+import { GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR, GET_BANNERS } from '../../apollo/queries'
 import { useTranslation } from 'react-i18next'
 import { useCallback, useContext, useMemo, useRef } from 'react'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -25,6 +25,8 @@ const useHome = () => {
   const { location, setLocation } = useContext(LocationContext)
 
   const { loading, data, error } = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR)
+  const { loading: bannersLoading, data: bannersData, error: bannersError } = useQuery(GET_BANNERS)
+  
   const [mutate] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -64,6 +66,9 @@ const onOpen = useCallback(() => {
     loading,
     data,
     error,
+    bannersLoading,
+    bannersData,
+    bannersError,
     t,
     currentTheme,
     isLoggedIn,

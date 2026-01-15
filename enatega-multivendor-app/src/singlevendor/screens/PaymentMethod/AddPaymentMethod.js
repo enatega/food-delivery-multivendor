@@ -35,14 +35,14 @@ const AddPaymentMethod = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles(currentTheme).content}>
-          <TextDefault style={styles(currentTheme).title}>
+          <TextDefault h1 bolder style={styles(currentTheme).title}>
             {t('Add payment methods') || 'Add payment methods'}
           </TextDefault>
-          <TextDefault style={styles(currentTheme).subtitle}>
+          <TextDefault bold style={styles(currentTheme).subtitle}>
             {t('Add a credit or debit card to quickly complete purchases.') || 'Add a credit or debit card to quickly complete purchases.'}
           </TextDefault>
 
-          <TextDefault style={styles(currentTheme).label}>
+          <TextDefault bold style={styles(currentTheme).label}>
             {t('Card number') || 'Card number'}
           </TextDefault>
           <View style={styles(currentTheme).inputContainer}>
@@ -57,7 +57,7 @@ const AddPaymentMethod = () => {
             <Feather name="lock" size={20} color="#6B7280" />
           </View>
 
-          <TextDefault style={styles(currentTheme).label}>
+          <TextDefault bold style={styles(currentTheme).label}>
             {t('Expiration date') || 'Expiration date'}
           </TextDefault>
           <View style={styles(currentTheme).inputContainer}>
@@ -70,7 +70,7 @@ const AddPaymentMethod = () => {
             />
           </View>
 
-          <TextDefault style={styles(currentTheme).label}>
+          <TextDefault bold style={styles(currentTheme).label}>
             {t('CVV') || 'CVV'}
           </TextDefault>
           <View style={styles(currentTheme).inputContainer}>

@@ -383,3 +383,17 @@ query GetFavoriteFoodsSingleVendor($limit: Int, $skip: Int) {
     }
 }
 `
+
+export const GET_BANNERS = gql`
+  query Banners {
+    banners {
+      _id
+      title
+      description
+      action
+      screen
+      file
+      parameters
+    }
+  }
+`

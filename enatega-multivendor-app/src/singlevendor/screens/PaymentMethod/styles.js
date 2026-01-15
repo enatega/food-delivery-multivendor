@@ -15,7 +15,7 @@ export const styles = (currentTheme) =>
       paddingTop: verticalScale(8)
     },
     title: {
-      fontSize: scale(16),
+      fontSize: scale(24),
       fontWeight: '800',
       color: currentTheme?.fontMainColor || '#000',
       marginBottom: verticalScale(8)
@@ -24,7 +24,7 @@ export const styles = (currentTheme) =>
       fontSize: scale(14),
       color: currentTheme?.colorTextMuted || '#6B7280',
       marginBottom: verticalScale(24),
-      lineHeight: scale(20)
+      lineHeight: scale(20),
     },
     paymentMethodsList: {
       marginBottom: verticalScale(20)
@@ -35,7 +35,7 @@ export const styles = (currentTheme) =>
       justifyContent: 'space-between',
       backgroundColor: currentTheme?.cardBackground || '#FFFFFF',
       paddingVertical: verticalScale(12),
-      paddingHorizontal: scale(16),
+      // paddingHorizontal: scale(16),
       borderRadius: 12,
     //   marginBottom: verticalScale(12),
     //   borderWidth: 1,
@@ -112,19 +112,19 @@ export const styles = (currentTheme) =>
     },
     cardNumber: {
       fontSize: scale(15),
-      fontWeight: '500',
+      // fontWeight: '500',
       color: currentTheme?.fontMainColor || '#000',
       marginRight: scale(8)
     },
     defaultBadge: {
       backgroundColor: currentTheme?.colorBgSecondary || 'rgba(14, 165, 233, 0.2)',
-      paddingHorizontal: scale(8),
-      paddingVertical: verticalScale(4),
-      borderRadius: 4
+      paddingHorizontal: scale(10),
+      paddingVertical: verticalScale(6),
+      borderRadius: 8
     },
     defaultText: {
-      fontSize: scale(12),
-      fontWeight: '500',
+      fontSize: scale(14),
+      // fontWeight: '500',
       color: currentTheme?.headerMainFontColor 
     },
     cardRight: {
@@ -135,7 +135,7 @@ export const styles = (currentTheme) =>
     },
     footer: {
       position: 'absolute',
-      bottom: 0,
+      bottom: 30,
       left: 0,
       right: 0,
       paddingHorizontal: scale(16),
