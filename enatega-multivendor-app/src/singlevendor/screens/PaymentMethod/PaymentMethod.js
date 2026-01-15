@@ -67,21 +67,21 @@ const PaymentMethod = () => {
       case 'visa':
         return (
           <View style={styles(currentTheme).iconContainer}>
-            <TextDefault style={styles(currentTheme).visaText}>VISA</TextDefault>
+            <TextDefault bolder style={styles(currentTheme).visaText}>VISA</TextDefault>
           </View>
         )
       case 'mastercard':
         return (
           <View style={styles(currentTheme).mastercardContainer}>
             <View style={[styles(currentTheme).mastercardCircle, { backgroundColor: '#EB001B' }]} />
-            <View style={[styles(currentTheme).mastercardCircle, styles(currentTheme).mastercardCircleRight, { backgroundColor: '#F79E1B' }]} />
+            <View bold style={[styles(currentTheme).mastercardCircle, styles(currentTheme).mastercardCircleRight, { backgroundColor: '#F79E1B' }]} />
           </View>
         )
       case 'applepay':
         return (
           <View style={styles(currentTheme).applePayContainer}>
             <Ionicons name="logo-apple" size={24} color="#000" />
-            <TextDefault style={styles(currentTheme).applePayText}>Pay</TextDefault>
+            <TextDefault bold style={styles(currentTheme).applePayText}>Pay</TextDefault>
           </View>
         )
       default:
@@ -101,10 +101,10 @@ const PaymentMethod = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles(currentTheme).content}>
-        <TextDefault style={styles(currentTheme).title}>
+        <TextDefault bolder style={styles(currentTheme).title}>
           {t('Payment Methods') || 'Payment Methods'}
         </TextDefault>
-          <TextDefault style={styles(currentTheme).subtitle}>
+          <TextDefault bold style={styles(currentTheme).subtitle}>
             {t('Add or Update your saved payment methods.') || 'Add or Update your saved payment methods.'}
           </TextDefault>
 
@@ -122,12 +122,12 @@ const PaymentMethod = () => {
                   
                   <View style={styles(currentTheme).cardInfo}>
                     <View style={styles(currentTheme).cardNumberRow}>
-                      <TextDefault style={styles(currentTheme).cardNumber}>
+                      <TextDefault bold style={styles(currentTheme).cardNumber}>
                         **** {method.lastFourDigits}
                       </TextDefault>
                       {method.isDefault && (
                         <View style={styles(currentTheme).defaultBadge}>
-                          <TextDefault style={styles(currentTheme).defaultText}>
+                          <TextDefault bold style={styles(currentTheme).defaultText}>
                             {t('Default') || 'Default'}
                           </TextDefault>
                         </View>
@@ -161,9 +161,9 @@ const PaymentMethod = () => {
           <Ionicons 
             name="add" 
             size={24} 
-            color={currentTheme.headerMainFontColor} 
+            color={currentTheme.headerMainFontColor}
           />
-          <TextDefault style={styles(currentTheme).addButtonText}>
+          <TextDefault bold style={styles(currentTheme).addButtonText}>
             {t('Add payment method') || 'Add payment method'}
           </TextDefault>
         </TouchableOpacity>

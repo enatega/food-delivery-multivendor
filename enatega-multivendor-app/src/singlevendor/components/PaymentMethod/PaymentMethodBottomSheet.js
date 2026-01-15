@@ -72,6 +72,7 @@ const PaymentMethodBottomSheet = React.forwardRef(({ onSetDefault, onRemove }, r
               textColor={currentTheme.CharcoalBlack}
               H5
               style={styles().optionText}
+              bold
             >
               {t('Set as default') || 'Set as default'}
             </TextDefault>
@@ -91,6 +92,7 @@ const PaymentMethodBottomSheet = React.forwardRef(({ onSetDefault, onRemove }, r
               textColor={currentTheme.red600}
               H5
               style={styles().optionText}
+              bold
             >
               {t('Remove payment method') || 'Remove payment method'}
             </TextDefault>
