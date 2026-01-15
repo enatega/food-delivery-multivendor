@@ -19,7 +19,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 
 const Home = () => {
-  const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef } = useHome()
+  const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef, bannersData } = useHome()
   const categoriesData = data?.getRestaurantCategoriesSingleVendor
 
   const navigation = useNavigation()
@@ -100,7 +100,7 @@ const Home = () => {
         ListHeaderComponent={() => {
           return (
             <View style={{ marginTop: 30 }}>
-              <HomeBanner />
+              <HomeBanner banners={bannersData?.banners || []} />
               <HorizontalCategoriesList categoriesData={categoriesData} />
             </View>
           )

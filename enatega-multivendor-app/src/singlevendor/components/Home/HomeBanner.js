@@ -6,23 +6,40 @@ import { verticalScale } from '../../../utils/scaling'
 
 const { width } = Dimensions.get('window')
 
+/**
+ * HomeBanner Component functionalities
+ * 
+ * Displays a banner slider with PromoBanner as the first slide,
+ * followed by banners from the backend (or default placeholders).
+ *  onBannerPress - Callback when a banner is pressed
+ *  autoplay - Enable/disable autoplay (default: true)
+ *  autoplayDelay - Delay between slides in seconds (default: 3)
+ */
+
 const HomeBanner = ({ banners = [], onBannerPress, autoplay = true, autoplayDelay = 3 }) => {
   const defaultBanners = [
     {
       id: '1',
-      image: 'https://cdn.pixabay.com/photo/2025/08/26/00/35/tiger-9797048_1280.png'
+      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=300&fit=crop'
     },
     {
       id: '2',
-      image: 'https://cdn.pixabay.com/photo/2025/08/25/23/23/tree-9797010_1280.png'
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=300&fit=crop'
     },
-    {
-      id: '3',
-      image: 'https://cdn.pixabay.com/photo/2024/10/18/05/31/ai-generated-9129418_1280.jpg'
-    }
   ]
 
-  const bannersToDisplay = banners.length > 0 ? banners : defaultBanners
+  // Transform backend banners to match our format
+  const transformedBanners = banners.map(banner => ({
+    id: banner._id,
+    image: banner.file,
+    title: banner.title,
+    description: banner.description,
+    action: banner.action,
+    screen: banner.screen,
+    parameters: banner.parameters
+  }))
+
+  const bannersToDisplay = transformedBanners.length > 0 ? transformedBanners : defaultBanners
 
   const handleBannerPress = (banner) => {
     if (onBannerPress) {
@@ -52,6 +69,12 @@ const HomeBanner = ({ banners = [], onBannerPress, autoplay = true, autoplayDela
             source={typeof item.image === 'string' ? { uri: item.image } : item.image}
             style={styles.bannerImage}
             resizeMode="cover"
+            onError={(error) => {
+              console.log('❌ Image load error for banner:', item.id, error.nativeEvent.error)
+            }}
+            onLoad={() => {
+              console.log('✅ Image loaded successfully for banner:', item.id)
+            }}
           />
         </View>
       </TouchableOpacity>
