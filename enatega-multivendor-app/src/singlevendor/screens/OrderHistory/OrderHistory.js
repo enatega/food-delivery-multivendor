@@ -72,10 +72,16 @@ const OrderHistory = () => {
     <OrderHistoryItem
       orders={item}
       currentTheme={currentTheme}
+      onOrderPress={handleOrderPress}
     />
   )
 
   const keyExtractor = (item) => item.id
+
+  const handleOrderPress = (orderItem) => {
+    console.log('orderItem',JSON.stringify(orderItem,null,2));
+    navigation.navigate('OrderHistoryDetails');
+  }
 
   const handleStartShopping = () => {
 

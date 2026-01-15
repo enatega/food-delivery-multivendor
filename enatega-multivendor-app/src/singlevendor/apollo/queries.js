@@ -397,3 +397,9 @@ export const GET_BANNERS = gql`
     }
   }
 `
+
+export const GET_MY_REFERRAL_CODE = gql`
+query GetMyReferralCode {
+  getMyReferralCode
+}
+`

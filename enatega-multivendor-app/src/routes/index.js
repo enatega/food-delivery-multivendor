@@ -96,6 +96,8 @@ import FeedBack from '../singlevendor/screens/FeedBack'
 import MyFavorites from '../singlevendor/screens/MyFavorites/MyFavorites'
 import PaymentMethod from '../singlevendor/screens/PaymentMethod/PaymentMethod'
 import AddPaymentMethod from '../singlevendor/screens/PaymentMethod/AddPaymentMethod'
+import OrderHistoryDetails from '../singlevendor/screens/OrderHistory/OrderHistoryDetails'
+import WalletScreen from '../singlevendor/screens/Wallet/index'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -178,6 +180,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='Settings' component={Settings} />
       <NavigationStack.Screen name='MyOrders' component={MyOrders} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='OrderHistory' component={OrderHistory} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}/>
+      <NavigationStack.Screen name='OrderHistoryDetails' component={OrderHistoryDetails} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}/>
       <NavigationStack.Screen name='FAQS' component={FAQS} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='FeedBack' component={FeedBack} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reorder' component={Reorder} />
@@ -239,6 +242,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='EditNameSingleVendor' component={EditNameSingleVendor} options={{ header: () => null}} />
       <NavigationStack.Screen name='EditPhoneSingleVendor' component={EditPhoneSingleVendor} options={{ header: () => null }} />
       <NavigationStack.Screen name='NotificationScreen' component={NotificationsScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='WalletScreen' component={WalletScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='MyFavorites' component={MyFavorites} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='PaymentMethod' component={PaymentMethod} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='AddPaymentMethod' component={AddPaymentMethod} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />

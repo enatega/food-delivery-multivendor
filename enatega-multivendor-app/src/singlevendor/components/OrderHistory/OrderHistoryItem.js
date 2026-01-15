@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const OrderHistoryItem = ({ orders, currentTheme }) => {
+const OrderHistoryItem = ({ orders, currentTheme, onOrderPress }) => {
   const themedStyles = styles(currentTheme)
 console.log('orders__Images', JSON.stringify(orders,null,2))
   // Render section header rows
@@ -33,6 +33,8 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
         return themedStyles.statusBadgeDelivered
       case 'Order Cancelled':
         return themedStyles.statusBadgeCancelled
+      case 'Refunded':
+        return themedStyles.statusBadgeRefunded
       default:
         return themedStyles.statusBadgeDefault
     }
@@ -42,7 +44,8 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
     const colorMap = {
       'Ongoing': '#B8860B',
       'Order Delivered': '#28A745',
-      'Order Cancelled': '#DC3545'
+      'Order Cancelled': '#DC3545',
+      'Refunded': currentTheme.primaryBlue || currentTheme.primary || '#0EA5E9'
     }
     return colorMap[status] || currentTheme.fontMainColor
   }
@@ -51,6 +54,7 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
     <TouchableOpacity
       style={themedStyles.orderContainer}
       activeOpacity={0.7}
+      onPress={() => onOrderPress && onOrderPress(orders)}
     >
       <View style={themedStyles.orderContent}>
         {orders.image && (
@@ -175,6 +179,9 @@ const styles = (props = null) =>
     },
     statusBadgeCancelled: {
       backgroundColor: '#FFE6E6'
+    },
+    statusBadgeRefunded: {
+      backgroundColor: props?.lowOpacityBlue || 'rgba(14, 165, 233, 0.2)'
     },
     statusBadgeDefault: {
       backgroundColor: '#F5F5F5'

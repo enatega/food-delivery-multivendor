@@ -46,7 +46,7 @@ const AccountSection = () => {
       id: 5,
       icon: 'wallet-outline',
       title: t('Wallet'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('WalletScreen')
     },
     {
       id: 6,
