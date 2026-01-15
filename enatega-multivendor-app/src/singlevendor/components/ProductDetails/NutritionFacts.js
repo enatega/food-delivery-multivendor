@@ -4,13 +4,13 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 
 const NutritionFacts = ({ t, title, currentTheme, productOtherDetails }) => {
   return (
-    <View style={{ gap: 5, paddingVertical: 12, paddingHorizontal: 15 }}>
-      <TextDefault bolder H4>
+    <View style={{ gap: 5, paddingVertical: 4, paddingHorizontal: 15 }}>
+      <TextDefault bold H4>
         {t(title)}
       </TextDefault>
 
-      <View style={{ gap: 8 }}>
-        <TextDefault H5 bold textColor={currentTheme.colorRextMuted}>
+      <View style={{ gap: 16, marginTop:4 }}>
+        <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
           {productOtherDetails.size}
         </TextDefault>
 
@@ -18,7 +18,7 @@ const NutritionFacts = ({ t, title, currentTheme, productOtherDetails }) => {
           <TextDefault H5 bold>
             {t('Energy')}
           </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorRextMuted}>
+          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
             {productOtherDetails.energy}
           </TextDefault>
         </View>
@@ -27,7 +27,7 @@ const NutritionFacts = ({ t, title, currentTheme, productOtherDetails }) => {
           <TextDefault H5 bold>
             {t('Fat')}
           </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorRextMuted}>
+          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
             {productOtherDetails.fat}
           </TextDefault>
         </View>
@@ -36,7 +36,7 @@ const NutritionFacts = ({ t, title, currentTheme, productOtherDetails }) => {
           <TextDefault H5 bold>
             {t('Carbohydrates')}
           </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorRextMuted}>
+          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
             {productOtherDetails.carbohydrates}
           </TextDefault>
         </View>
@@ -45,7 +45,7 @@ const NutritionFacts = ({ t, title, currentTheme, productOtherDetails }) => {
           <TextDefault H5 bold>
             {t('Protein')}
           </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorRextMuted}>
+          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
             {productOtherDetails.protein}
           </TextDefault>
         </View>
@@ -54,7 +54,7 @@ const NutritionFacts = ({ t, title, currentTheme, productOtherDetails }) => {
           <TextDefault H5 bold>
             {t('Sugar')}
           </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorRextMuted}>
+          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
             {productOtherDetails.sugar}
           </TextDefault>
         </View>
