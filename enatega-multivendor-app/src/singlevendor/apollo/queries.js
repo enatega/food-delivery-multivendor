@@ -384,6 +384,20 @@ query GetFavoriteFoodsSingleVendor($limit: Int, $skip: Int) {
 }
 `
 
+export const GET_BANNERS = gql`
+  query Banners {
+    banners {
+      _id
+      title
+      description
+      action
+      screen
+      file
+      parameters
+    }
+  }
+`
+
 export const GET_MY_REFERRAL_CODE = gql`
 query GetMyReferralCode {
   getMyReferralCode

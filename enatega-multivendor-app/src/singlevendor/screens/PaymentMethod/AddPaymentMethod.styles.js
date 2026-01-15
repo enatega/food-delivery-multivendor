@@ -12,7 +12,8 @@ export const styles = (currentTheme) =>
     },
     content: {
       paddingHorizontal: scale(16),
-      paddingTop: verticalScale(20)
+      paddingTop: verticalScale(20),
+      paddingBottom: verticalScale(100)
     },
     title: {
       fontSize: scale(20),
@@ -50,6 +51,10 @@ export const styles = (currentTheme) =>
       height: '100%'
     },
     footer: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
       padding: scale(16),
       paddingBottom: verticalScale(32),
       backgroundColor: currentTheme?.themeBackground || '#FFFFFF',

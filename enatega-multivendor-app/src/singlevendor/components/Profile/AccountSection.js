@@ -22,7 +22,7 @@ const AccountSection = () => {
       id: 1,
       icon: 'person-outline',
       title: t('Account details'),
-      onPress: () => navigation.navigate('Account')
+      onPress: () => navigation.navigate('AccountDetails')
     },
     {
       id: 2,
@@ -52,7 +52,7 @@ const AccountSection = () => {
       id: 6,
       icon: 'settings-outline',
       title: t('Security and settings'),
-      onPress: () => {}
+      onPress: () => navigation.navigate('SecuritySettings')
     }
   ]
 

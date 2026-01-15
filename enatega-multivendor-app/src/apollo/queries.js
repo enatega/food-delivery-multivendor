@@ -333,6 +333,7 @@ export const profile = `
             email
             emailIsVerified
             notificationToken
+            userType
             isActive
             isOrderNotification
             isOfferNotification
@@ -1141,6 +1142,17 @@ export const GET_SUB_CATEGORIES_BY_PARENT_ID = gql`
       _id
       title
       parentCategoryId
+    }
+  }
+`
+
+export const COUPONS_BY_RESTAURANT = gql`
+  query CouponsbyRestaurant {
+    couponsbyRestaurant {
+      _id
+      title
+      discount
+      enabled
     }
   }
 `
