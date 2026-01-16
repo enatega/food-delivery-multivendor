@@ -124,19 +124,20 @@ const CartItemController = ({ item }) => {
   }
 
   // Zustand actions
-  const { updateCartItemQuantity} = useCartStore()
+  const { updateCartItemQuantity } = useCartStore()
 
   // Quantity ALWAYS from server → Zustand
   const quantity = item?.variations?.[0]?.quantity || 1
 
   const [updateUserCartCount, { loading }] = useMutation(UPDATE_USER_CART_COUNT, {
     onCompleted: (data) => {
-      console.log("updateCartItemQuantity",updateCartItemQuantity);
-      console.log('Cart count updated:', data,item)
+      console.log('updateCartItemQuantity', updateCartItemQuantity)
+      console.log('Cart count updated:', JSON.stringify(data), item)
       const result = data?.updateUserCartCount
       if (!result?.success) return
-
+      console.log('item.variations[0]._id:', item.variations[0])
       updateCartItemQuantity({
+        _id: item.variations[0]._id,
         foodId: item.foodId,
         variationId: item.variations[0].variationId,
         quantity: result.quantity,
@@ -152,9 +153,12 @@ const CartItemController = ({ item }) => {
   })
 
   const handleAddQuantity = () => {
+    console.log('handleAddQuantity', item, item.variations[0]._id)
+
     updateUserCartCount({
       variables: {
         input: {
+          variation_id: item.variations[0]._id,
           foodId: item.foodId,
           categoryId: item.categoryId,
           variationId: item.variations[0].variationId,
@@ -168,6 +172,7 @@ const CartItemController = ({ item }) => {
     updateUserCartCount({
       variables: {
         input: {
+          variation_id: item.variations[0]._id,
           foodId: item.foodId,
           categoryId: item.categoryId,
           variationId: item.variations[0].variationId,

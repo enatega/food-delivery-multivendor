@@ -89,7 +89,7 @@ const useProductDetails = ({ foodId }) => {
     })
   }
 
-  console.log('useProductDetails data', data, error, foodId)
+  console.log('useProductDetails data',data?.getFoodDetails?.variations, error, foodId)
   const productInfoData = {
     id: data?.getFoodDetails?.id,
     image: data?.getFoodDetails?.image,

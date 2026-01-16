@@ -23,7 +23,9 @@ const ProductDetails = ({ route }) => {
   const variations = productInfoData.variations || []
   const selectedAddons = productInfoData.selectedAddons || []
   console.log('productInfoData', variations)
-  const [selectedVariationId, setSelectedVariationId] = useState(productInfoData?.selectedVariations?.length > 0 ? productInfoData?.selectedVariations : variations?.length ? [variations[0].id] : [])
+  const [selectedVariationId, setSelectedVariationId] = useState(
+    // productInfoData?.selectedVariations?.length > 0 ? productInfoData?.selectedVariations : 
+    variations?.length ? [variations[0].id] : [])
   const [selectedAddonIds, setSelectedAddonIds] = useState([])
   const [totalPrice, setTotalPrice] = useState(variations?.[0]?.price || 0)
   const selectedAddonsRef = useRef([])
@@ -48,33 +50,33 @@ const ProductDetails = ({ route }) => {
     setSelectedVariationId([variations[0]?.id])
   }, [variations])
 
-  useEffect(() => {
-    console.log('selectedAddons::', selectedAddons)
-    if (selectedAddons.length > 0) {
-      const optionIds = []
-      const optionIdsRef = []
-      selectedAddons.map((addOn) => {
-        optionIdsRef.push({
-          _id: addOn._id,
-          options: addOn.options
-        })
-        addOn.options.map((opt) => {
-          optionIds.push(opt)
-        })
-      })
+  // useEffect(() => {
+  //   console.log('selectedAddons::', selectedAddons)
+  //   if (selectedAddons.length > 0) {
+  //     const optionIds = []
+  //     const optionIdsRef = []
+  //     selectedAddons.map((addOn) => {
+  //       optionIdsRef.push({
+  //         _id: addOn._id,
+  //         options: addOn.options
+  //       })
+  //       addOn.options.map((opt) => {
+  //         optionIds.push(opt)
+  //       })
+  //     })
 
-      // for (let i = 0; i < selectedAddons.length - 1; i++) {
-      //   for (let j = 0; j < selectedAddons[i].options - 1; j++) {
-      //     optionIds.push(selectedAddons[i].options[j])
-      //   }
-      // }
-      selectedAddonsRef.current = optionIdsRef
-      setSelectedAddonIds(optionIds)
-      console.log('selected addon Ids:', optionIds, optionIdsRef)
-    }
+  //     // for (let i = 0; i < selectedAddons.length - 1; i++) {
+  //     //   for (let j = 0; j < selectedAddons[i].options - 1; j++) {
+  //     //     optionIds.push(selectedAddons[i].options[j])
+  //     //   }
+  //     // }
+  //     selectedAddonsRef.current = optionIdsRef
+  //     setSelectedAddonIds(optionIds)
+  //     console.log('selected addon Ids:', optionIds, optionIdsRef)
+  //   }
 
-    return () => {}
-  }, [selectedAddons])
+  //   return () => {}
+  // }, [selectedAddons])
 
   useEffect(() => {
     if (!selectedVariation) return

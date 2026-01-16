@@ -36,6 +36,7 @@ export const UPDATE_USER_CART = gql`
         foodTitle
         foodImage
         variations {
+          _id
           variationId
           variationTitle
           unitPrice

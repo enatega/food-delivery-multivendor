@@ -145,6 +145,9 @@ export const GET_FOOD_DETAILS = gql`query GetFoodDetails($foodId: ID!) {
       }
       cartQuantity
       isSelected
+      
+      actualUnitPrice
+      discountedUnitPrice
     }
   }
 }
@@ -318,6 +321,7 @@ export const GET_USER_CART = gql`
       foodTitle
       foodImage
       variations {
+      _id
         variationId
         variationTitle
         unitPrice
