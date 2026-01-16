@@ -19,7 +19,7 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.themeBackground : '#F9FAFB'
     },
     sectionHeaderText: {
-      fontSize: scale(16),
+      fontSize: scale(18),
       fontWeight: '600',
       lineHeight: scale(20)
     }
