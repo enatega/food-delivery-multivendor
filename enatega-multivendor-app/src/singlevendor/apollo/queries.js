@@ -65,34 +65,34 @@ export const GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR = gql`
 
 export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
   query GetCategoryItemsSingleVendor($categoryId: ID!, $skip: Int, $limit: Int, $search: String) {
-    getCategoryItemsSingleVendor(categoryId: $categoryId, skip: $skip, limit: $limit, search: $search) {
-      categoryId
-      categoryName
-      items {
+  getCategoryItemsSingleVendor(categoryId: $categoryId, skip: $skip, limit: $limit, search: $search) {
+    categoryId
+    categoryName
+    items {
+      id
+      title
+      description
+      image
+      variations {
         id
         title
-        description
-        image
-        variations {
+        price
+        deal {
           id
-          title
-          price
-          deal {
-            id
-            discountType
-            discountValue
-            isActive
-          }
+          discountType
+          discountValue
+          isActive
         }
       }
-      pagination {
-        currentPage
-        totalItems
-        hasMore
-        totalPages
-      }
+    }
+    pagination {
+      currentPage
+      totalPages
+      totalItems
+      hasMore
     }
   }
+}
 `
 
 // export const GET_FOOD_DETAILS = gql`
