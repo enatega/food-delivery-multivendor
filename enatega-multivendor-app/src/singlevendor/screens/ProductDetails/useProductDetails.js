@@ -11,7 +11,7 @@ import useCartStore from '../../stores/useCartStore'
 const useProductDetails = ({ foodId }) => {
   // Todo: need to fix variations related data.
   const { data, loading, error } = useQuery(GET_FOOD_DETAILS, {
-    variables: { foodId }
+    variables: { foodId },fetchPolicy:'network-only'
   })
   console.log('products details:', data)
 

@@ -17,6 +17,7 @@ import { buildOrderHistoryList } from '../../utils/orderHistoryHelpers'
 import styles from './styles'
 import OrderHistoryItem from '../../components/OrderHistory/OrderHistoryItem'
 import OrderHistorySkeleton from './OrderHistorySkeleton'
+import { pathToArray } from 'graphql/jsutils/Path'
 
 const ORDERS_LIST_QUERY = gql`
   ${myOrders}
@@ -37,7 +38,7 @@ const OrderHistory = () => {
   })
 
   useEffect(() => {
-    console.log('Orders API Data:', JSON.stringify(data,null,2))
+    console.log('Orders API Data:', JSON.stringify(data, null, 2))
     console.log('Orders Loading:', loading)
     console.log('Orders Error:', error)
     if (data?.orders?.length) {
@@ -58,62 +59,43 @@ const OrderHistory = () => {
   if (loading) {
     return (
       <SafeAreaView style={styles(currentTheme).container}>
-        <AccountSectionHeader
-          currentTheme={currentTheme}
-          onBack={() => navigation.goBack()}
-          headerText={t('My Orders') || 'My Orders'}
-        />
+        <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
         <OrderHistorySkeleton currentTheme={currentTheme} />
       </SafeAreaView>
     )
   }
 
-  const renderItem = ({ item }) => (
-    <OrderHistoryItem
-      orders={item}
-      currentTheme={currentTheme}
-      onOrderPress={handleOrderPress}
-    />
-  )
+  const renderItem = ({ item }) => <OrderHistoryItem orders={item} currentTheme={currentTheme} onOrderPress={handleOrderPress} />
 
   const keyExtractor = (item) => item.id
 
   const handleOrderPress = (orderItem) => {
-    console.log('orderItem',JSON.stringify(orderItem,null,2));
-    navigation.navigate('OrderHistoryDetails');
+    console.log('orderItem', JSON.stringify(orderItem, null, 2))
+    console.log("order Confirmation:",orderItem)
+    navigation.navigate('OrderConfirmation', { orderId: orderItem?.id })
   }
 
   const handleStartShopping = () => {
-
     navigation.navigate('Main')
   }
 
   return (
     <SafeAreaView style={styles(currentTheme).container}>
-      <AccountSectionHeader
-        currentTheme={currentTheme}
-        onBack={() => navigation.goBack()}
-        headerText={t('My Orders') || 'My Orders'}
-      />
+      <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
 
-        <FlashList
-          data={orderListData}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          estimatedItemSize={80}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles(currentTheme).listContent}
-          ListEmptyComponent={ <View style={styles(currentTheme).emptyContainer}>
-          <EmptyAccountSectionArea
-            currentTheme={currentTheme}
-            imageSource={require('../../assets/images/empty_OrderHistory.png')}
-            title={t('No orders yet') || 'No orders yet'}
-            description={t('You haven\'t made any order. It will show here when you made one.') || 'You haven\'t made any order. It will show here when you made one.'}
-            buttonTitle={t('Start shopping') || 'Start shopping'}
-            onButtonPress={handleStartShopping}
-          />
-        </View>}
-        />
+      <FlashList
+        data={orderListData}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        estimatedItemSize={80}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles(currentTheme).listContent}
+        ListEmptyComponent={
+          <View style={styles(currentTheme).emptyContainer}>
+            <EmptyAccountSectionArea currentTheme={currentTheme} imageSource={require('../../assets/images/empty_OrderHistory.png')} title={t('No orders yet') || 'No orders yet'} description={t("You haven't made any order. It will show here when you made one.") || "You haven't made any order. It will show here when you made one."} buttonTitle={t('Start shopping') || 'Start shopping'} onButtonPress={handleStartShopping} />
+          </View>
+        }
+      />
     </SafeAreaView>
   )
 }
