@@ -19,7 +19,7 @@ const TipBottomSheet = React.forwardRef(({ onTipSelected, currencySymbol = '€'
   const [tipAmount, setTipAmount] = useState('');
   const [selectedPredefinedTip, setSelectedPredefinedTip] = useState(null);
 
-  const predefinedTips = [1, 2, 3, 5];
+  const predefinedTips = [1, 3, 5];
 
   useEffect(() => {
     if (currentTip > 0) {
@@ -248,8 +248,8 @@ const styles = (props = null) =>
     },
     tipButton: {
       flex: 1,
-      height: scale(40),
-      borderRadius: scale(8),
+      height: scale(30),
+      borderRadius: scale(6),
       borderWidth: 1,
       borderColor: props !== null ? props.gray200 : '#E5E7EB',
       backgroundColor: props !== null ? props.themeBackground : '#fff',
@@ -266,8 +266,8 @@ const styles = (props = null) =>
     },
     customTipButton: {
       flex: 1,
-      height: scale(40),
-      borderRadius: scale(8),
+      height: scale(30),
+      borderRadius: scale(6),
       borderWidth: 1,
       borderColor: props !== null ? props.gray200 : '#E5E7EB',
       backgroundColor: '#FFFFFF',

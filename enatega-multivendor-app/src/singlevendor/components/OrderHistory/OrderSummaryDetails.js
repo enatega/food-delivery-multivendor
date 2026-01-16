@@ -38,9 +38,10 @@ const OrderSummaryDetails = ({
 
       {/* Tax Note */}
       <TextDefault
-        textColor={currentTheme.fontSecondColor}
+        textColor={currentTheme.colorTextMuted}
         style={themedStyles.taxNote}
-        small
+        bold
+        
       >
         {t('incl. taxes (if applicable)') || 'incl. taxes (if applicable)'}
       </TextDefault>
@@ -51,14 +52,16 @@ const OrderSummaryDetails = ({
         {orderNumber && (
           <View style={themedStyles.detailRow}>
             <TextDefault
-              textColor={currentTheme.fontSecondColor}
+              textColor={currentTheme.colorTextMuted}
               style={themedStyles.detailLabel}
+              bold
             >
               {t('Order number') || 'Order number'}
             </TextDefault>
             <TextDefault
-              textColor={currentTheme.fontSecondColor}
+              textColor={currentTheme.colorTextMuted}
               style={themedStyles.detailValue}
+              bold
             >
               {orderNumber}
             </TextDefault>
@@ -69,14 +72,16 @@ const OrderSummaryDetails = ({
         {deliveryAddress && (
           <View style={themedStyles.detailRow}>
             <TextDefault
-              textColor={currentTheme.fontSecondColor}
+              textColor={currentTheme.colorTextMuted}
               style={themedStyles.detailLabel}
+              bold
             >
               {t('Delivery address') || 'Delivery address'}
             </TextDefault>
             <TextDefault
-              textColor={currentTheme.fontSecondColor}
+              textColor={currentTheme.colorTextMuted}
               style={themedStyles.detailValue}
+              bold
               numberOfLines={0}
             >
               {deliveryAddress}
@@ -87,14 +92,16 @@ const OrderSummaryDetails = ({
         {/* Item Subtotal */}
         <View style={themedStyles.detailRow}>
           <TextDefault
-            textColor={currentTheme.fontSecondColor}
+            textColor={currentTheme.colorTextMuted}
             style={themedStyles.detailLabel}
+            bold
           >
             {t('Item subtotal') || 'Item subtotal'}
           </TextDefault>
           <TextDefault
-            textColor={currentTheme.fontSecondColor}
+            textColor={currentTheme.colorTextMuted}
             style={themedStyles.detailValue}
+            bold
           >
             {currencySymbol} {itemSubtotal.toFixed(2)}
           </TextDefault>
@@ -103,14 +110,16 @@ const OrderSummaryDetails = ({
         {/* Delivery */}
         <View style={themedStyles.detailRow}>
           <TextDefault
-            textColor={currentTheme.fontSecondColor}
+            textColor={currentTheme.colorTextMuted}
             style={themedStyles.detailLabel}
+            bold
           >
             {t('Delivery') || 'Delivery'} {deliveryDistance ? `(${deliveryDistance})` : ''}
           </TextDefault>
           <TextDefault
-            textColor={currentTheme.fontSecondColor}
+            textColor={currentTheme.colorTextMuted}
             style={themedStyles.detailValue}
+            bold
           >
             {currencySymbol} {deliveryFee.toFixed(2)}
           </TextDefault>
@@ -119,14 +128,16 @@ const OrderSummaryDetails = ({
         {/* Courier Tip */}
         <View style={themedStyles.detailRow}>
           <TextDefault
-            textColor={currentTheme.fontSecondColor}
+            textColor={currentTheme.colorTextMuted}
             style={themedStyles.detailLabel}
+            bold
           >
             {t('Courier tip') || 'Courier tip'}
           </TextDefault>
           <TextDefault
-            textColor={currentTheme.fontSecondColor}
+            textColor={currentTheme.colorTextMuted}
             style={themedStyles.detailValue}
+            bold
           >
             {currencySymbol} {courierTip.toFixed(2)}
           </TextDefault>
@@ -168,7 +179,7 @@ const styles = (props = null) =>
       marginBottom: verticalScale(8)
     },
     taxNote: {
-      fontSize: scale(12),
+      fontSize: scale(14),
       marginBottom: verticalScale(16),
       fontWeight: '400'
     },
@@ -204,7 +215,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     totalLabel: {
-      fontSize: scale(14),
+      fontSize: scale(16),
       fontWeight: '600'
     },
     totalValue: {
