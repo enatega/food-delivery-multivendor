@@ -28,7 +28,7 @@ const ProductCard = ({ product, onAddToCart, onCardPress, containerStyles }) => 
         imageStyle={styles(currentTheme).productImage}
       >
         <ProductImageOverlay hasDeal={
-          // product.variations[0].deal ? true : 
+          product.variations[0].deal ? true : 
           false
           } onAddToCart={onAddToCart ? onAddToCart : () => {}} product={product} dealText={product?.dealText || 'Deal'} />
       </ImageBackground>

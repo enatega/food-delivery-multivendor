@@ -119,7 +119,13 @@ export const GET_FOOD_DETAILS = gql`query GetFoodDetails($foodId: ID!) {
     description
     image
     isPopular
+    cartQuantity
     categoryId
+    selectedAddonsId {
+      _id
+      options
+    }
+    selectedVariationsIds
     variations {
       id
       title
@@ -128,14 +134,17 @@ export const GET_FOOD_DETAILS = gql`query GetFoodDetails($foodId: ID!) {
         id
         title
         description
+        isSelected
         options {
           id
           title
           description
           price
+          isSelected
         }
       }
       cartQuantity
+      isSelected
     }
   }
 }
@@ -289,40 +298,73 @@ export const GET_NEW_OFFERS_FOODS_DEALS = gql`
 `
 
 export const GET_USER_CART = gql`
-  query GetUserCart {
-    getUserCart {
-      success
-      message
-      grandTotal
-      actualGrandTotal
-      lowOrderFees
-      maxOrderAmount
-      minOrderAmount
-      isBelowMinimumOrder
-      cartId
-      foods {
-        categoryId
-        foodId
-        foodTitle
-        foodTotal
-        foodImage
-        variations {
-          variationId
-          variationTitle
-          unitPrice
-          quantity
-          addonsTotal
-          itemTotal
-          addons {
-            addonId
-            optionId
-            title
-            price
-          }
+ query GetUserCart {
+  getUserCart {
+    success
+    message
+    grandTotal
+    actualGrandTotal
+    discountedGrandTotal
+    totalDiscount
+    hasDeals
+    lowOrderFees
+    maxOrderAmount
+    minOrderAmount
+    isBelowMinimumOrder
+    cartId
+    foods {
+      categoryId
+      foodId
+      foodTitle
+      foodImage
+      variations {
+        variationId
+        variationTitle
+        unitPrice
+        quantity
+        addons {
+          addonId
+          optionId
+          title
+          price
+        }
+        addonsTotal
+        actualUnitPrice
+        discountedUnitPrice
+        actualItemTotal
+        discountedItemTotal
+        itemTotal
+        dealId
+        dealInfo {
+          dealId
+          dealTitle
+          discountValue
+          discountType
+          id
+          title
         }
       }
+      actualFoodTotal
+      discountedFoodTotal
+      foodTotal
+    }
+    deals {
+      variationId
+      variationTitle
+      foodId
+      foodTitle
+      quantity
+      dealId
+      dealTitle
+      discountType
+      discountValue
+      originalPrice
+      discountedPrice
+      savingsPerUnit
+      totalSavings
     }
   }
+}
 `
 
 export const GET_RECOMMENDED_FOODS = gql`
@@ -405,7 +447,7 @@ export const CALCULATE_CHECKOUT = gql`
 `
 
 export const ORDER_DETAILS_PAGE = gql`
-  query OrderDetailsPage($orderId: ID!)  {
+  query OrderDetailsPage($orderId: ID!) {
     orderDetailsPage(orderId: $orderId) {
       success
       message
@@ -485,7 +527,8 @@ export const ORDER_DETAILS_PAGE = gql`
       }
     }
   }
-}`
+`
+
 
 export const GET_ALL_SUBSCRIPTION_PLANS = gql`
 query GetAllSubscriptionPlans {

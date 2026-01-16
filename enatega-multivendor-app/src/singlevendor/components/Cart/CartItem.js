@@ -26,7 +26,7 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
       {/* Left side: Image */}
 
       <View style={styles().imageContainer}>
-        <Image source={{ uri: typeof item?.foodImage == 'number' ? '' : item?.foodImage }} style={styles().productImage} />
+        <Image source={{ uri: typeof item?.foodImage == 'number' ? '' : item?.foodImage?item?.foodImage:item?.image }} style={styles().productImage} />
       </View>
 
       {/* Middle and Right: Content */}

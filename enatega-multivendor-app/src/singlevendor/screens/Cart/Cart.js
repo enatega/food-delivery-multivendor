@@ -1,5 +1,5 @@
 import React, { useState, useContext, useLayoutEffect, useRef } from 'react'
-import { View, ScrollView, TouchableOpacity, StatusBar, Platform, SafeAreaView, FlatList } from 'react-native'
+import { View, ScrollView, TouchableOpacity, StatusBar, Platform, SafeAreaView, FlatList, ActivityIndicator } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -33,29 +33,35 @@ import AddressModalFooter from '../../components/Home/AddressModalFooter'
 import { LocationContext } from '../../../context/Location'
 import { selectAddress } from '../../../apollo/mutations'
 import { gql, useMutation } from '@apollo/client'
+import { CLEAR_CART } from '../../apollo/mutations'
 const SELECT_ADDRESS = gql`
   ${selectAddress}
 `
 const Cart = (props) => {
-  const { items, grandTotal, loading, error, maxOrderAmount, minOrderAmount, isBelowMinimumOrder, lowOrderFees } = useCartStore()
+  const { items, grandTotal, loading, error, maxOrderAmount, minOrderAmount, isBelowMinimumOrder, lowOrderFees, clearCart } = useCartStore()
   // const items = [] // For testing empty cart
   const [mutate] = useMutation(SELECT_ADDRESS, {
     onError: () => {}
   })
+
+  const [mutateClearCart, { loading: emptyingCart }] = useMutation(CLEAR_CART, {
+    onCompleted: () => {
+      clearCart()
+    },
+    onError: () => {}
+  })
+
   console.log('Cart Data::', items, grandTotal, maxOrderAmount, minOrderAmount, isBelowMinimumOrder, loading, error)
-  
+
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
- 
 
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
-
- 
 
   const minimumOrder = 10 // Minimum order to place
   const lowOrderFeeThreshold = 15 // Threshold to avoid low-order fee
@@ -123,7 +129,7 @@ const Cart = (props) => {
     // TODO: Navigate to product detail
     console.log('Product pressed:', product)
   }
-  
+
   //Cart Skeleton loading
   if (loading) {
     return <CartSkeleton />
@@ -143,9 +149,25 @@ const Cart = (props) => {
         renderItem={({ item, index }) => <CartItem item={item} currencySymbol={currencySymbol} isLastItem={index === items.length - 1} />}
         ListHeaderComponent={() =>
           items.length > 0 && (
-            <TextDefault textColor={currentTheme.fontMainColor} bolder H4 style={{ marginBottom: scale(16) }}>
-              {t('yourItems') || 'Your items'}
-            </TextDefault>
+            <View style={styles().headerRow}>
+              <TextDefault textColor={currentTheme.fontMainColor} bolder H4>
+                {t('yourItems') || 'Your items'}
+              </TextDefault>
+
+              {emptyingCart ? (
+                <ActivityIndicator size={'small'} color={currentTheme.black}></ActivityIndicator>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    mutateClearCart()
+                  }}
+                >
+                  <TextDefault textColor={currentTheme.primary} bolder>
+                    {t('Clear cart') || 'Clear'}
+                  </TextDefault>
+                </TouchableOpacity>
+              )}
+            </View>
           )
         }
         ListFooterComponent={() => (
@@ -172,7 +194,6 @@ const Cart = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-      
     </SafeAreaView>
   )
 }

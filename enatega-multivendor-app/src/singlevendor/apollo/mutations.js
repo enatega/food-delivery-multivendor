@@ -61,12 +61,6 @@ export const UPDATE_USER_CART = gql`
             id
             title
           }
-          addons {
-            addonId
-            optionId
-            title
-            price
-          }
         }
         actualFoodTotal
         discountedFoodTotal
@@ -126,17 +120,20 @@ export const PLACE_ORDER = gql`
   }
 `
 
-export const COUPON = gql`mutation Coupon($coupon: String!) {
-  coupon(coupon: $coupon) {
-    coupon {
-      _id
-      discount
-      enabled
-      title
+export const COUPON = gql`
+  mutation Coupon($coupon: String!) {
+    coupon(coupon: $coupon) {
+      success
+      message
+      coupon {
+        _id
+        title
+        discount
+        enabled
+      }
     }
-    message
-    success
-    `
+  }
+`
 
 export const CREATE_SUBSCRIPTION = gql`
   mutation CreateSubscription($input: CreateSubscriptionInput!) {
@@ -189,6 +186,14 @@ export const CREATE_MESSAGE = gql`
       ticket
       createdAt
       updatedAt
+    }
+  }
+`
+export const CLEAR_CART = gql`
+  mutation ClearCart {
+    clearCart {
+      success
+      message
     }
   }
 `

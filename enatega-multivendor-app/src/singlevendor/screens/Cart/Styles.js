@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
-import { scale } from '../../../utils/scaling';
-import { alignment } from '../../../utils/alignment';
+import { StyleSheet } from 'react-native'
+import { scale } from '../../../utils/scaling'
+import { alignment } from '../../../utils/alignment'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -14,7 +14,6 @@ const styles = (props = null) =>
     contentContainer: {
       paddingHorizontal: scale(16),
       paddingTop: scale(16)
-      
     },
     recommendedSection: {
       paddingHorizontal: scale(0),
@@ -92,7 +91,13 @@ const styles = (props = null) =>
     },
     cartBadgeActive: {
       backgroundColor: '#fff'
+    },
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: scale(16)
     }
-  });
+  })
 
-export default styles;
+export default styles

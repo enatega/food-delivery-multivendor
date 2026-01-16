@@ -4,12 +4,13 @@ import { AntDesign } from '@expo/vector-icons'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
+import { useNavigation } from '@react-navigation/native'
 
 const ProductImageOverlay = ({ hasDeal, onAddToCart, product, dealText = 'Deal' }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
-
+  const navigation = useNavigation();
   return (
     <>
       {hasDeal && (
@@ -18,12 +19,17 @@ const ProductImageOverlay = ({ hasDeal, onAddToCart, product, dealText = 'Deal' 
           <Text style={styles(currentTheme).dealText}>{dealText}</Text>
         </View>
       )}
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={styles(currentTheme).addButton}
-        onPress={() => onAddToCart(product)}
+        onPress={
+          () => {
+            // onAddToCart(product)
+            navigation
+          }
+        }
       >
         <AntDesign name="plus" size={16}  />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </>
   )
 }

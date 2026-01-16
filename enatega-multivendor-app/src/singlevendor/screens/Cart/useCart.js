@@ -42,7 +42,7 @@ const useCart = () => {
   }, [loading])
 
   useEffect(() => {
-    console.log('Cart data from server:', data)
+    console.log('Cart data from server:', data,error)
     if (data?.getUserCart?.success) {
       setCartFromServer({
         cartId: data.getUserCart.cartId,

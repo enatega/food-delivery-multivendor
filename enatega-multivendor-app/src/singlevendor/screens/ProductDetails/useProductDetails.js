@@ -13,7 +13,7 @@ const useProductDetails = ({ foodId }) => {
   const { data, loading, error } = useQuery(GET_FOOD_DETAILS, {
     variables: { foodId }
   })
-  console.log("products details:",data)
+  console.log('products details:', data)
 
   const { setCartFromServer } = useCartStore()
 
@@ -100,7 +100,10 @@ const useProductDetails = ({ foodId }) => {
     price: data?.getFoodDetails?.variations[0].price,
     variations: data?.getFoodDetails?.variations,
     addons: data?.getFoodDetails?.addons || [],
-    categoryId: data?.getFoodDetails?.categoryId
+    categoryId: data?.getFoodDetails?.categoryId,
+    cartQuantity: data?.getFoodDetails?.cartQuantity || 0,
+    selectedAddons: data?.getFoodDetails?.selectedAddonsId || [],
+    selectedVariations: data?.getFoodDetails?.selectedVariationsIds || []
   }
 
   // Todo need to get the required data from backend.
