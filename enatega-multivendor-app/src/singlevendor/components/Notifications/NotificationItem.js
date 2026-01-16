@@ -48,12 +48,14 @@ const NotificationItem = ({ notification, currentTheme, itemType = 'notification
         <TextDefault
           textColor={currentTheme.fontMainColor}
           style={themedStyles.description}
+          bold
         >
           {notification.description}
         </TextDefault>
         <TextDefault
           textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
           style={themedStyles.timestamp}
+          bold
         >
           {notification.timestamp}
         </TextDefault>

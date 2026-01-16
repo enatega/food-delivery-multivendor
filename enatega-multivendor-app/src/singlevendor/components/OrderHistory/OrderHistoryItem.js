@@ -68,12 +68,14 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
           <TextDefault
             textColor={currentTheme.fontMainColor}
             style={themedStyles.orderName}
+            bold
           >
             {orders.name}
           </TextDefault>
           <TextDefault
             textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
             style={themedStyles.orderDate}
+            bold
           >
             {orders.date}
           </TextDefault>
@@ -87,6 +89,7 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
               <TextDefault
                 textColor={getStatusTextColor(orders.status)}
                 style={themedStyles.statusText}
+                bold
               >
                 {orders.status}
               </TextDefault>
@@ -96,8 +99,10 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
         <View style={themedStyles.orderRight}>
           <View style={themedStyles.priceRow}>
             <TextDefault
+              h4
               textColor={currentTheme.fontMainColor}
               style={themedStyles.orderPrice}
+              bolder
             >
               {orders.price}
             </TextDefault>
@@ -105,7 +110,7 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
               <Ionicons
                 name="chevron-forward"
                 size={scale(20)}
-                color={currentTheme.fontSecondColor}
+                color={currentTheme.fontMainColor}
                 style={themedStyles.chevron}
               />
             )}
@@ -125,7 +130,7 @@ const styles = (props = null) =>
       backgroundColor: props?.themeBackground
     },
     sectionHeaderText: {
-      fontSize: scale(16),
+      fontSize: scale(18),
       fontWeight: '600',
       lineHeight: scale(20)
     },
@@ -201,7 +206,7 @@ const styles = (props = null) =>
     },
     orderPrice: {
       fontWeight: '600',
-      fontSize: scale(16),
+      // fontSize: scale(16),
       lineHeight: scale(22)
     },
     chevron: {

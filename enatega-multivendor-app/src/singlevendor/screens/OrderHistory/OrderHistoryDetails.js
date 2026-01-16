@@ -118,6 +118,7 @@ const OrderHistoryDetails = () => {
             textColor={currentTheme.fontMainColor}
             style={themedStyles.sectionTitle}
             bolder
+            h4
           >
             {t('Order status') || 'Order status'}
           </TextDefault>
