@@ -142,7 +142,8 @@ const CartItemController = ({ item }) => {
         quantity: result.quantity,
         foodTotal: result.foodTotal,
         itemTotal: result.itemTotal,
-        grandTotal: result.grandTotal
+        grandTotal: result.grandTotal,
+        isBelowMinimumOrder: result.isBelowMinimumOrder
       })
     },
     onError: (error) => {

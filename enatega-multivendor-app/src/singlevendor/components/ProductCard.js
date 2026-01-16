@@ -11,13 +11,26 @@ const ProductCard = ({ product, onAddToCart, onCardPress, containerStyles }) => 
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const configuration = useContext(ConfigurationContext)
-
+  console.log('product:::::', product.variations[0].deal)
   return (
-    <Pressable onPress={() => {onCardPress && onCardPress(product?.id)}} style={[styles(currentTheme).card, containerStyles]}>
-      <ImageBackground onError={(err)=>{
-        // console.log("Error loading images",err)
-      }} source={{ uri: typeof product?.image == 'number' ? '' : product?.image }} style={styles(currentTheme).imageContainer} imageStyle={styles(currentTheme).productImage}>
-        <ProductImageOverlay hasDeal={product?.hasDeal} onAddToCart={onAddToCart ? onAddToCart : () => {}} product={product} dealText={product?.dealText || 'Deal'} />
+    <Pressable
+      onPress={() => {
+        onCardPress && onCardPress(product?.id)
+      }}
+      style={[styles(currentTheme).card, containerStyles]}
+    >
+      <ImageBackground
+        onError={(err) => {
+          // console.log("Error loading images",err)
+        }}
+        source={{ uri: typeof product?.image == 'number' ? '' : product?.image }}
+        style={styles(currentTheme).imageContainer}
+        imageStyle={styles(currentTheme).productImage}
+      >
+        <ProductImageOverlay hasDeal={
+          product.variations[0].deal ? true : 
+          false
+          } onAddToCart={onAddToCart ? onAddToCart : () => {}} product={product} dealText={product?.dealText || 'Deal'} />
       </ImageBackground>
       <View style={styles(currentTheme).contentContainer}>
         {/* Todo: currently showing 1st varations price. */}

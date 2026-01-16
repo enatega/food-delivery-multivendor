@@ -42,11 +42,17 @@ const useCart = () => {
   }, [loading])
 
   useEffect(() => {
+    console.log('Cart data from server:', data,error)
     if (data?.getUserCart?.success) {
       setCartFromServer({
         cartId: data.getUserCart.cartId,
         foods: data.getUserCart.foods,
-        grandTotal: data.getUserCart.grandTotal
+        // grandTotal: data.getUserCart.grandTotal,
+        grandTotal: data.getUserCart.actualGrandTotal,
+        maxOrderAmount: data.getUserCart.maxOrderAmount,
+        minOrderAmount: data.getUserCart.minOrderAmount,
+        isBelowMinimumOrder: data.getUserCart.isBelowMinimumOrder,
+        lowOrderFees: data.getUserCart.lowOrderFees
       })
     }
   }, [data])

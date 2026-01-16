@@ -20,14 +20,13 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
 
   const itemTotal = (parseFloat(item.price) * item.quantity).toFixed(2)
 
+  console.log('CartItem Rendered:', item)
   return (
     <View style={[styles(currentTheme).itemContainer, isLastItem && styles().itemContainerLast]}>
       {/* Left side: Image */}
+
       <View style={styles().imageContainer}>
-        <Image 
-          source={typeof item?.image == 'number' ? item?.image : { uri: item?.image }} 
-          style={styles().productImage} 
-        />
+        <Image source={{ uri: typeof item?.foodImage == 'number' ? '' : item?.foodImage?item?.foodImage:item?.image }} style={styles().productImage} />
       </View>
 
       {/* Middle and Right: Content */}

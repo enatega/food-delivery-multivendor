@@ -8,13 +8,13 @@ import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneB
 import ToggleFavorite from '../ToggleFavorite'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 
-const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingToCart}) => {
+const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart, isAddingToCart }) => {
   const config = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const iconColor = themeContext.ThemeValue === 'Dark' ? 'white' : 'black'
 
   // Todo: temp states for handling fav and item count
-  const [itemCount, setItemCount] = useState(0)
+  const [itemCount, setItemCount] = useState(productInfoData?.cartQuantity)
 
   return (
     <>
@@ -24,9 +24,7 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingTo
 
       <View style={[styles().containerPadding, { gap: 18 }]}>
         <View style={styles().titleContainer}>
-          <TextDefault
-           bolder
-           H2>
+          <TextDefault bolder H2>
             {productInfoData?.title}
           </TextDefault>
           <ToggleFavorite id={productInfoData?.id} />
@@ -53,7 +51,7 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingTo
             <Pressable style={[styles().pressableContainer, { borderWidth: 1.5, borderColor: currentTheme.borderColor }]} disabled={itemCount == 0} onPress={() => setItemCount((prev) => prev - 1)}>
               <AntDesign name='minus' size={16} color={iconColor} />
             </Pressable>
-            <TextDefault  H4 bolder>
+            <TextDefault H4 bolder>
               {itemCount}
             </TextDefault>
             <Pressable style={[styles().pressableContainer, { borderWidth: 1.5, borderColor: currentTheme.borderColor }]} onPress={() => setItemCount((prev) => prev + 1)}>

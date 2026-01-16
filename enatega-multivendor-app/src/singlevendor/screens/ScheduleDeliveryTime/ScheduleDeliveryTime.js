@@ -88,6 +88,7 @@ const ScheduleDeliveryTime = (props) => {
 
         return {
           id: schedule.day + '_' + index,
+          dayId: schedule?.dayId,
           label: label,
           date: schedule.date,
           dayName: schedule.day,
@@ -262,7 +263,9 @@ const ScheduleDeliveryTime = (props) => {
 
   const handleConfirm = () => {
     if (selectedTimeSlot) {
+      console.log('🚀 Confirming Schedule Selection...',selectedDate);
       const scheduleData = {
+        dayId: selectedDate.dayId,
         date: selectedDate.date,
         dateLabel: selectedDate.label,
         dayName: selectedDate.dayName,

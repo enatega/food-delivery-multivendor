@@ -33,6 +33,10 @@ const SingleVendorBottomTab = () => {
     navigation.navigate('SelectLocation')
   }
 
+  
+
+
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

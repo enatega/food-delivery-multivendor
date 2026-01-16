@@ -113,32 +113,42 @@ export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
 // `
 
 export const GET_FOOD_DETAILS = gql`query GetFoodDetails($foodId: ID!) {
-    getFoodDetails(foodId: $foodId) {
+  getFoodDetails(foodId: $foodId) {
+    id
+    title
+    description
+    image
+    isPopular
+    cartQuantity
+    categoryId
+    selectedAddonsId {
+      _id
+      options
+    }
+    selectedVariationsIds
+    variations {
+      id
+      title
+      price
+      addons {
         id
         title
         description
-        image
-        isPopular
-        categoryId
-        variations {
-            id
-            title
-            price
-            addons {
-                id
-                title
-                description
-                options {
-                    id
-                    title
-                    description
-                    price
-                }
-            }
+        isSelected
+        options {
+          id
+          title
+          description
+          price
+          isSelected
         }
+      }
+      cartQuantity
+      isSelected
     }
-}`
-
+  }
+}
+`
 
 export const GET_SIMILAR_FOODS = gql`
   query GetSimilarFoods($foodId: ID!, $skip: Int, $limit: Int) {
@@ -177,6 +187,7 @@ export const GET_SCHEDULE_BY_DAY = gql`
     getScheduleByDay {
       date
       day
+      dayId
       timings {
         id
         times {
@@ -210,136 +221,314 @@ export const SEARCH_FOOD = gql`
 `
 
 export const GET_LIMITED_TIME_FOODS_DEALS = gql`
-query GetLimitedTimeFoodsDeals {
+  query GetLimitedTimeFoodsDeals {
     getLimitedTimeFoodsDeals {
-        items {
+      items {
+        id
+        title
+        description
+        image
+        variations {
+          id
+          title
+          price
+          outofstock
+          deal {
             id
             title
-            description
-            image
-            variations {
-                id
-                title
-                price
-                outofstock
-                deal {
-                    id
-                    title
-                    discountType
-                    discountValue
-                    isActive
-                }
-            }
+            discountType
+            discountValue
+            isActive
+          }
         }
+      }
     }
-}
+  }
 `
 export const GET_WEEKLY_FOODS_DEALS = gql`
-query GetWeeklyFoodsDeals {
-  getWeeklyFoodsDeals {
+  query GetWeeklyFoodsDeals {
+    getWeeklyFoodsDeals {
       items {
+        id
+        title
+        description
+        image
+        variations {
           id
           title
-          description
-          image
-          variations {
-              id
-              title
-              price
-              outofstock
-              deal {
-                  id
-                  title
-                  discountType
-                  discountValue
-                  isActive
-              }
+          price
+          outofstock
+          deal {
+            id
+            title
+            discountType
+            discountValue
+            isActive
           }
+        }
       }
+    }
   }
-}`
+`
 
 export const GET_NEW_OFFERS_FOODS_DEALS = gql`
-query GetNewOffersFoodsDeals {
-  getNewOffersFoodsDeals {
+  query GetNewOffersFoodsDeals {
+    getNewOffersFoodsDeals {
       items {
+        id
+        title
+        description
+        image
+        variations {
           id
+          title
+          price
+          outofstock
+          deal {
+            id
+            title
+            discountType
+            discountValue
+            isActive
+          }
+        }
+      }
+    }
+  }
+`
+
+export const GET_USER_CART = gql`
+ query GetUserCart {
+  getUserCart {
+    success
+    message
+    grandTotal
+    actualGrandTotal
+    discountedGrandTotal
+    totalDiscount
+    hasDeals
+    lowOrderFees
+    maxOrderAmount
+    minOrderAmount
+    isBelowMinimumOrder
+    cartId
+    foods {
+      categoryId
+      foodId
+      foodTitle
+      foodImage
+      variations {
+        variationId
+        variationTitle
+        unitPrice
+        quantity
+        addons {
+          addonId
+          optionId
+          title
+          price
+        }
+        addonsTotal
+        actualUnitPrice
+        discountedUnitPrice
+        actualItemTotal
+        discountedItemTotal
+        itemTotal
+        dealId
+        dealInfo {
+          dealId
+          dealTitle
+          discountValue
+          discountType
+          id
+          title
+        }
+      }
+      actualFoodTotal
+      discountedFoodTotal
+      foodTotal
+    }
+    deals {
+      variationId
+      variationTitle
+      foodId
+      foodTitle
+      quantity
+      dealId
+      dealTitle
+      discountType
+      discountValue
+      originalPrice
+      discountedPrice
+      savingsPerUnit
+      totalSavings
+    }
+  }
+}
+`
+
+export const GET_RECOMMENDED_FOODS = gql`
+  query GetRecommendedFoods($foodId: ID!, $skip: Int, $limit: Int) {
+    getRecommendedFoods(foodId: $foodId, skip: $skip, limit: $limit) {
+      pagination {
+        totalItems
+        hasMore
+      }
+      items {
+        variations {
+          title
+          price
+          id
+          deal {
+            isActive
+            id
+            discountValue
+            discountType
+          }
+        }
+        title
+        image
+        id
+        description
+      }
+    }
+  }
+`
+
+export const CALCULATE_CHECKOUT = gql`
+  query CalculateCheckout($isPickup: Boolean, $latDestination: Float, $longDestination: Float, $coupon: String) {
+    calculateCheckout(isPickup: $isPickup, latDestination: $latDestination, longDestination: $longDestination, coupon: $coupon) {
+      success
+      message
+      cartId
+      items {
+        foodId
+        foodTitle
+        categoryId
+        variationId
+        variationTitle
+        quantity
+        unitPrice
+        addons {
+          id
+          title
+          price
+          addonId
+        }
+        addonsTotal
+        itemTotal
+      }
+      subtotal
+      deliveryCharges
+      originalDeliveryCharges
+      deliveryDiscount
+      serviceFee
+      minimumOrderFee
+      taxAmount
+      taxPercentage
+      grandTotal
+      totalDiscount
+      discountDetails {
+        subscriptionDiscount
+        freeDeliveryApplied
+        couponDiscount
+      }
+      hasActiveSubscription
+      freeDeliveriesRemaining
+      appliedFreeDelivery
+      minimumOrderAmount
+      isBelowMinimumOrder
+      isBelowMaximumOrder
+      couponDiscountAmount
+      couponApplied
+      priorityDeliveryFees
+    }
+  }
+`
+
+export const ORDER_DETAILS_PAGE = gql`
+  query OrderDetailsPage($orderId: ID!) {
+    orderDetailsPage(orderId: $orderId) {
+      success
+      message
+      data {
+        _id
+        orderId
+        paidAmount
+        orderAmount
+        orderStatus
+        paymentStatus
+        deliveryCharges
+        deliveryDiscount
+        couponDiscount
+        tipping
+        taxationAmount
+        orderDate
+        isPriority
+        isPickedUp
+        completionTime
+        instructions
+        itemsSubTotal
+        minimumOrderFee
+        minimumOrderAmount
+        isBelowMinimumOrder
+        isBelowMaximumOrder
+        freeDeliveriesRemaining
+        priorityDeliveryFees
+        deliverChargesAmount
+        deliveryAddress {
+          _id
+          deliveryAddress
+          details
+          label
+          id
+          location {
+            coordinates
+          }
+        }
+        items {
+          _id
+          food
           title
           description
           image
-          variations {
-              id
-              title
-              price
-              outofstock
-              deal {
-                  id
-                  title
-                  discountType
-                  discountValue
-                  isActive
-              }
-          }
-      }
-  }
-}`
-
-export const GET_USER_CART = gql`query GetUserCart {
-    getUserCart {
-        success
-        message
-        grandTotal
-        cartId
-        foods {
-            categoryId
-            foodId
-            foodTitle
-            foodTotal
-            variations {
-                variationId
-                variationTitle
-                unitPrice
-                quantity
-                addonsTotal
-                itemTotal
-                addons {
-                    addonId
-                    optionId
-                    title
-                    price
-                }
-            }
-        }
-    }
-}`
-
-
-
-export const GET_RECOMMENDED_FOODS = gql`query GetRecommendedFoods($foodId: ID!, $skip: Int, $limit: Int) {
-  getRecommendedFoods(foodId: $foodId, skip: $skip, limit: $limit) {
-    pagination {
-      totalItems
-      hasMore
-    }
-    items {
-      variations {
-        title
-        price
-        id
-        deal {
+          quantity
+          specialInstructions
           isActive
-          id
-          discountValue
-          discountType
+          foodImage
+          foodTitle
+          variationImage
+          variationTitle
+          variationTotal
+          foodQuantity
+          variation {
+            title
+            image
+            price
+            discounted
+            _id
+            createdAt
+            updatedAt
+          }
+          addons {
+            title
+            description
+            quantityMinimum
+            quantityMaximum
+            isActive
+            options {
+              title
+              description
+              price
+              isActive
+            }
+          }
         }
       }
-      title
-      image
-      id
-      description
     }
   }
-}`
+`
+
 
 export const GET_ALL_SUBSCRIPTION_PLANS = gql`
 query GetAllSubscriptionPlans {

@@ -6,16 +6,56 @@ import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { UPDATE_USER_CART } from '../../apollo/mutations'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
+import useCartStore from '../../stores/useCartStore'
 
 const useProductDetails = ({ foodId }) => {
   // Todo: need to fix variations related data.
   const { data, loading, error } = useQuery(GET_FOOD_DETAILS, {
     variables: { foodId }
   })
+  console.log('products details:', data)
+
+  const { setCartFromServer } = useCartStore()
 
   const [updateUserCart, { loading: updateUserCartLoading, error: updateUserCartError }] = useMutation(UPDATE_USER_CART, {
     onCompleted: (data) => {
-      console.log('Cart updated:', data)
+      console.log('Cart updated:', data?.userCartData)
+      const response = data?.userCartData
+      console.log('response:response', response)
+
+      if (!response?.success) {
+        if (response?.message) {
+          FlashMessage({ message: response?.message })
+        }
+        return
+      }
+
+      // if (response?.foods && response?.foods?.length > 0) {
+      // console.log('response?.foods:', response?.foods)
+      // const latestCartItem = response?.foods[response?.foods?.length - 1] ?? null
+      // if (latestCartItem) {
+      //   console.log('latest item in cart', latestCartItem)
+      //   addOrUpdateCartFoodFromServer(latestCartItem)
+      // }
+      setCartFromServer({
+        cartId: response.cartId,
+        foods: response.foods,
+        grandTotal: response.actualGrandTotal,
+        maxOrderAmount: response.maxOrderAmount,
+        minOrderAmount: response.minOrderAmount,
+        isBelowMinimumOrder: response.isBelowMinimumOrder,
+        lowOrderFees: response.lowOrderFees
+      })
+      // }
+
+      // updateCartMetaFromServer({
+      //   grandTotal: response?.actualGrandTotal,
+      //   isBelowMinimumOrder: response?.isBelowMinimumOrder,
+      //   lowOrderFees: response?.lowOrderFees,
+      //   maxOrderAmount: response?.maxOrderAmount,
+      //   minOrderAmount: response?.minOrderAmount
+      // })
+
       FlashMessage({ message: t('itemAddedToCart') })
     },
     onError: (error) => {
@@ -27,23 +67,25 @@ const useProductDetails = ({ foodId }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
-  const addItemToCart = (foodId,categoryId,variationId,addons,count) => {
-    updateUserCart({
-      variables: {
-        input: {
-          food: [
-            {
-              _id: foodId,
-              categoryId: categoryId,
-              variation: {
-                _id: variationId,
-                addons: addons,
-                count: count
-              }
+  const addItemToCart = (foodId, categoryId, variationId, addons, count) => {
+    const addItemsToCartVariable = {
+      input: {
+        food: [
+          {
+            _id: foodId,
+            categoryId: categoryId,
+            variation: {
+              _id: variationId,
+              addons: addons,
+              count: count
             }
-          ]
-        }
+          }
+        ]
       }
+    }
+    console.log('add Item To Cart:', JSON.stringify(addItemsToCartVariable))
+    updateUserCart({
+      variables: addItemsToCartVariable
     })
   }
 
@@ -58,25 +100,21 @@ const useProductDetails = ({ foodId }) => {
     price: data?.getFoodDetails?.variations[0].price,
     variations: data?.getFoodDetails?.variations,
     addons: data?.getFoodDetails?.addons || [],
-    categoryId: data?.getFoodDetails?.categoryId
+    categoryId: data?.getFoodDetails?.categoryId,
+    cartQuantity: data?.getFoodDetails?.cartQuantity || 0,
+    selectedAddons: data?.getFoodDetails?.selectedAddonsId || [],
+    selectedVariations: data?.getFoodDetails?.selectedVariationsIds || []
   }
 
   // Todo need to get the required data from backend.
   const productOtherDetails = {
     description: data?.getFoodDetails?.description,
-    ingredients: ['Golden Delicious Apples', 'Filter Water', 'Ascorbic Acid'],
-    usage: 'Keep refrigerated. Best served chilled.',
-    nutritionFacts: {
-      size: 'Amount per 100ml',
-      energy: '89kJ/50kcal',
-      fat: '20g',
-      carbohydrates: '34g',
-      protein: '0g',
-      sugar: '50g'
-    }
+    ingredients: null,
+    usage: null,
+    nutritionFacts: null
   }
 
-  return { data, loading, error, currentTheme, t, productInfoData, productOtherDetails, updateUserCartLoading,addItemToCart }
+  return { data, loading, error, currentTheme, t, productInfoData, productOtherDetails, updateUserCartLoading, addItemToCart }
 }
 
 export default useProductDetails
