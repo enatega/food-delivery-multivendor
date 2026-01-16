@@ -5,20 +5,7 @@ export const formatOrderDate = (dateString) => {
   const date = new Date(dateString)
   if (Number.isNaN(date.getTime())) return ''
 
-  const months = [
-    'Jan',
-    'Feb',
-    'Feb',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ]
+  const months = ['Jan', 'Feb', 'Feb', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
   const day = date.getDate()
   const month = months[date.getMonth()]
@@ -32,23 +19,15 @@ export const formatOrderDate = (dateString) => {
   return `${formattedDay} ${month}, ${formattedHours}:${formattedMinutes}`
 }
 
-export const buildOrderHistoryList = ({
-  orders,
-  currencySymbol,
-  t
-}) => {
+export const buildOrderHistoryList = ({ orders, currencySymbol, t }) => {
   if (!orders || !Array.isArray(orders)) return []
 
   const ongoingOrders = []
   const pastOrders = []
 
-  orders.forEach(order => {
-    const isCancelled =
-      order.orderStatus === ORDER_STATUS_ENUM.CANCELLED ||
-      order.orderStatus === ORDER_STATUS_ENUM.CANCELLEDBYREST
-    const isDelivered =
-      order.orderStatus === ORDER_STATUS_ENUM.DELIVERED ||
-      order.orderStatus === ORDER_STATUS_ENUM.COMPLETED
+  orders.forEach((order) => {
+    const isCancelled = order.orderStatus === ORDER_STATUS_ENUM.CANCELLED || order.orderStatus === ORDER_STATUS_ENUM.CANCELLEDBYREST
+    const isDelivered = order.orderStatus === ORDER_STATUS_ENUM.DELIVERED || order.orderStatus === ORDER_STATUS_ENUM.COMPLETED
 
     let section = 'ongoing'
     let statusLabel = 'Ongoing'
@@ -61,19 +40,14 @@ export const buildOrderHistoryList = ({
       statusLabel = 'Order Delivered'
     }
 
-    const dateSource =
-      order.deliveredAt ||
-      order.completionTime ||
-      order.expectedTime ||
-      order.orderDate ||
-      order.createdAt
+    const dateSource = order.deliveredAt || order.completionTime || order.expectedTime || order.orderDate || order.createdAt
 
     const amount = Number.parseFloat(order.orderAmount || 0)
 
     const baseItem = {
       id: order._id,
       type: 'item',
-      name: order.restaurant?.name || order.orderId,
+      name: order.orderId || order.restaurant?.name,
       date: formatOrderDate(dateSource),
       status: statusLabel,
       price: `${currencySymbol} ${amount.toFixed(2)}`,
@@ -96,7 +70,7 @@ export const buildOrderHistoryList = ({
       id: 'header-ongoing',
       title: t('Ongoing order') || 'Ongoing order'
     })
-    ongoingOrders.forEach(item => {
+    ongoingOrders.forEach((item) => {
       items.push(item)
     })
   }
@@ -107,12 +81,10 @@ export const buildOrderHistoryList = ({
       id: 'header-past',
       title: t('Past Orders') || 'Past Orders'
     })
-    pastOrders.forEach(item => {
+    pastOrders.forEach((item) => {
       items.push(item)
     })
   }
 
   return items
 }
-
-

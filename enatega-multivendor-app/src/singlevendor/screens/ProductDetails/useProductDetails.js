@@ -25,7 +25,7 @@ const useProductDetails = ({ foodId }) => {
 
       if (!response?.success) {
         if (response?.message) {
-          FlashMessage({ message: response?.message })
+          FlashMessage({ message: response?.message || 'Failed to Add item in cart' })
         }
         return
       }
@@ -40,7 +40,7 @@ const useProductDetails = ({ foodId }) => {
       setCartFromServer({
         cartId: response.cartId,
         foods: response.foods,
-        grandTotal: response.actualGrandTotal,
+        grandTotal: response.discountedGrandTotal,
         maxOrderAmount: response.maxOrderAmount,
         minOrderAmount: response.minOrderAmount,
         isBelowMinimumOrder: response.isBelowMinimumOrder,
