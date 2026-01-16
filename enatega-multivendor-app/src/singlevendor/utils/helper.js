@@ -49,3 +49,23 @@ export const normalizeCatalogData = (apiData) => {
     categoryIndexMap,
   };
 };
+
+
+export const getDealPricing = (price, deal) => {
+  if (!deal) return { finalPrice: price, discountAmount: 0 }
+
+  let discountAmount = 0
+
+  if (deal.discountType === 'FIXED') {
+    discountAmount = deal.discountValue
+  } else if (deal.discountType === 'PERCENTAGE') {
+    discountAmount = (price * deal.discountValue) / 100
+  }
+
+  const finalPrice = Math.max(price - discountAmount, 0)
+
+  return {
+    finalPrice: Number(finalPrice.toFixed(2)),
+    discountAmount: Number(discountAmount.toFixed(2))
+  }
+}
