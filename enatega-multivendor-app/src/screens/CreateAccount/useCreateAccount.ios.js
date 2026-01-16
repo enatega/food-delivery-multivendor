@@ -52,9 +52,9 @@ export const useCreateAccount = () => {
   // Google Auth Request for iOS (using expo-auth-session)
   // Hardcoded client IDs as per your provided iOS code block
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com", // Web client ID for Expo
-    androidClientId: "650001300965-ii3nafver2uiu4qat9gbde9rkmhmvj0j.apps.googleusercontent.com", // Android client ID
-    iosClientId: "650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7.apps.googleusercontent.com", // iOS client ID
+    clientId: "756039622157-tfukdfcu22keu8vcen8atkbvptvd0jdp.apps.googleusercontent.com", // Web client ID for Expo
+    androidClientId: "756039622157-uvii3hb3tr8eleopl448dj8hrikrnv2i.apps.googleusercontent.com", // Android client ID
+    iosClientId: "756039622157-n6rqegdvm03s1m85rne57akl3rkr5dv8.apps.googleusercontent.com", // iOS client ID
     scopes: ['profile', 'email', 'openid'],
   });
 

@@ -90,6 +90,7 @@ import PaymentMethod from '../singlevendor/screens/PaymentMethod/PaymentMethod'
 import AddPaymentMethod from '../singlevendor/screens/PaymentMethod/AddPaymentMethod'
 import OrderHistoryDetails from '../singlevendor/screens/OrderHistory/OrderHistoryDetails'
 import WalletScreen from '../singlevendor/screens/Wallet/index'
+import RefralScreen from '../screens/RefralScreen/RefralScreen'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -190,6 +191,7 @@ function MainNavigator() {
 
       {/* Authentication Login */}
       <NavigationStack.Screen name='CreateAccount' component={CreateAccount} />
+      <NavigationStack.Screen name='RefralScreen' component={RefralScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }}/>
       <NavigationStack.Screen name='Login' component={Login} />
       <NavigationStack.Screen name='PhoneAuth' component={PhoneAuth} />
       <NavigationStack.Screen name='VerifyPhoneNumber' component={VerifyPhoneNumber} />
