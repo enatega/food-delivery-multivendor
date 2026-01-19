@@ -6,6 +6,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { alignment } from '../../utils/alignment'
+import { useRoute } from '@react-navigation/native'
 import styles from './style'
 
 const { height } = Dimensions.get('window')
@@ -15,6 +16,8 @@ const RefralScreen = ({ navigation }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [referralCode, setReferralCode] = useState('')
+  const route = useRoute()
+  const { onContinue, onSkip } = route.params || {}
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -23,14 +26,33 @@ const RefralScreen = ({ navigation }) => {
   }, [navigation])
 
   const handleSkip = () => {
-    // Handle skip action
-    navigation.goBack()
+    console.log('⏭️ Skipping referral code')
+    if (onSkip) {
+      onSkip()
+    } else {
+      // Fallback: navigate back with skip flag
+      navigation.navigate({
+        name: 'CreateAccount',
+        params: { referralSkipped: true },
+        merge: true
+      })
+    }
   }
 
   const handleContinue = () => {
-    if (referralCode.trim()) {
-      console.log('Referral code:', referralCode)
-      navigation.goBack()
+    const trimmedCode = referralCode.trim()
+    if (trimmedCode) {
+      console.log('✅ Continuing with referral code:', trimmedCode)
+      if (onContinue) {
+        onContinue(trimmedCode)
+      } else {
+        // Fallback: navigate back with referral code
+        navigation.navigate({
+          name: 'CreateAccount',
+          params: { referralCode: trimmedCode },
+          merge: true
+        })
+      }
     }
   }
 
