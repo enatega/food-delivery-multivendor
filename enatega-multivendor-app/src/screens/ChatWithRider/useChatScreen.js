@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import { Ionicons, FontAwesome5, Entypo } from '@expo/vector-icons'
+import { Ionicons, AntDesign } from '@expo/vector-icons'
 import { callNumber } from '../../utils/callNumber'
 import gql from 'graphql-tag'
 import { chat } from '../../apollo/queries'
@@ -13,13 +13,15 @@ import { useUserContext } from '../../context/User'
 import { useTranslation } from 'react-i18next'
 import { alignment } from '../../utils/alignment'
 import { useFocusEffect } from '@react-navigation/native'
+import { HeaderBackButton } from '@react-navigation/elements'
+import styles from './styles'
 
 export const useChatScreen = ({ navigation, route }) => {
-  const { id: orderId, orderNo, total, riderPhone } = route.params
+  const { id: orderId, orderNo, total, riderPhone } = route?.params
 
   const { t } = useTranslation()
   const { profile } = useUserContext()
-  const { subscribeToMore: subscribeToMessages, data: chatData } = useQuery(
+  const { subscribeToMore: subscribeToMessages, data: chatData, loading } = useQuery(
     gql`
       ${chat}
     `,
@@ -41,7 +43,7 @@ export const useChatScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (chatData) {
       setMessages(
-        chatData.chat.map(message => ({
+        chatData.chat.map((message) => ({
           _id: message.id,
           text: message.message,
           createdAt: message.createdAt,
@@ -71,9 +73,7 @@ export const useChatScreen = ({ navigation, route }) => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.themeBackground)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -86,32 +86,23 @@ export const useChatScreen = ({ navigation, route }) => {
         color: currentTheme.fontFourthColor
       },
       headerLeft: () => (
-        <View
-          style={{
-            borderRadius: 30,
-            borderWidth: 1,
-            borderColor: currentTheme.fontFourthColor,
-            ...alignment.MLmedium
-          }}>
-          <Entypo
-            name="cross"
-            size={20}
-            color={currentTheme.fontFourthColor}
-            onPress={() => navigation.goBack()}
-          />
-        </View>
+        <HeaderBackButton
+          truncatedLabel=''
+          backImage={() => (
+            <View style={styles(currentTheme).backButton}>
+              <AntDesign name='arrowleft' size={20} color={currentTheme.fontMainColor} />
+            </View>
+          )}
+          onPress={() => navigation.goBack()}
+        />
       ),
       headerRight: () => (
         <View
           style={{
             ...alignment.MRmedium
-          }}>
-          <Ionicons
-            name="call-outline"
-            size={24}
-            color={currentTheme.fontFourthColor}
-            onPress={() => callNumber(riderPhone)}
-          />
+          }}
+        >
+          <Ionicons name='call-outline' size={24} color={currentTheme.fontFourthColor} onPress={() => callNumber(riderPhone)} />
         </View>
       ),
       headerTitle: t('contactYourRider')
@@ -135,7 +126,7 @@ export const useChatScreen = ({ navigation, route }) => {
   })
   const onSend = () => {
     if (!inputMessage?.trim()) return
-    
+
     const newMessage = {
       _id: Date.now().toString(),
       text: inputMessage.trim(),
@@ -145,10 +136,10 @@ export const useChatScreen = ({ navigation, route }) => {
         name: profile.name
       }
     }
-    
+
     // Optimistically update messages
-    setMessages(previousMessages => [newMessage, ...previousMessages])
-    
+    setMessages((previousMessages) => [newMessage, ...previousMessages])
+
     send({
       variables: {
         orderId: orderId,
@@ -175,6 +166,7 @@ export const useChatScreen = ({ navigation, route }) => {
     setInputMessage,
     profile,
     orderNo,
-    total
+    total,
+    loading
   }
 }

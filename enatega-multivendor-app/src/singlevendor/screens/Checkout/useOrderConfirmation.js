@@ -56,6 +56,9 @@ const useOrderConfirmation = ({ orderId }) => {
     address:confirmation?.deliveryAddress?.deliveryAddress,
     customerLocation: {longitude:confirmation?.deliveryAddress?.location?.coordinates[0],latitude:confirmation?.deliveryAddress?.location?.coordinates[1]},
     orderItems: confirmation?.items ?? [],
+    orderNo: confirmation?.orderId,
+    riderPhone: confirmation?.rider?.phone
+
     // deliveryDiscount: confirmation?.deliveryDiscount ?? 0,
   }
 }
