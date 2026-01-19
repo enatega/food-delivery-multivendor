@@ -81,6 +81,14 @@ import AddAddress from '../singlevendor/screens/AddAddress/AddAddress'
 import ProductList from '../singlevendor/screens/ProductsList.js/ProductList'
 import Vouchers from '../singlevendor/screens/Vouchers/Vouchers'
 import OrderConfirmation from '../singlevendor/screens/Checkout/OrderConfirmation'
+import SecuritySettings from '../singlevendor/screens/SecuritySettings/SecuritySettings'
+import ChangePassword from '../singlevendor/screens/ChangePassword/ChangePassword'
+import LanguageSelection from '../singlevendor/screens/LanguageSelection/LanguageSelection'
+import TermsOfUse from '../singlevendor/screens/TermsOfUse/TermsOfUse'
+import PrivacyPolicy from '../singlevendor/screens/PrivacyPolicy/PrivacyPolicy'
+import AccountDetails from '../singlevendor/screens/AccountDetails/AccountDetails'
+import EditNameSingleVendor from '../singlevendor/screens/EditName/EditName'
+import EditPhoneSingleVendor from '../singlevendor/screens/EditPhone/EditPhone'
 import OrderHistory from '../singlevendor/screens/OrderHistory'
 import { FastHelpSupport, AccountHelp, HelpConversation } from '../singlevendor/screens/FastHelpSupport/index'
 import FAQS from '../singlevendor/screens/FAQS'
@@ -227,6 +235,14 @@ function MainNavigator() {
     
       <NavigationStack.Screen name='Vouchers' component={Vouchers} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='OrderConfirmation' component={OrderConfirmation} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='SecuritySettings' component={SecuritySettings} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='ChangePassword' component={ChangePassword} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='LanguageSelection' component={LanguageSelection} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='TermsOfUse' component={TermsOfUse} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='PrivacyPolicy' component={PrivacyPolicy} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='AccountDetails' component={AccountDetails} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='EditNameSingleVendor' component={EditNameSingleVendor} options={{ header: () => null}} />
+      <NavigationStack.Screen name='EditPhoneSingleVendor' component={EditPhoneSingleVendor} options={{ header: () => null }} />
       <NavigationStack.Screen name='NotificationScreen' component={NotificationsScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='WalletScreen' component={WalletScreen} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='MyFavorites' component={MyFavorites} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />

@@ -49,7 +49,7 @@ const EmptyAccountSectionArea = ({
           activeOpacity={0.7}
         >
           <TextDefault
-            textColor={currentTheme.fontMainColor}
+            textColor={currentTheme.headerMainFontColor}
             style={styles(currentTheme).buttonText}
             bolder
           >
@@ -86,7 +86,8 @@ const styles = (props = null) =>
     description: {
       fontSize: scale(14),
       lineHeight: scale(20),
-      ...alignment.PHlarge
+      ...alignment.PHlarge,
+      paddingHorizontal: 12
     },
     button: {
       backgroundColor: props?.colorBgSecondary,

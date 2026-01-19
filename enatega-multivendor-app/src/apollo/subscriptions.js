@@ -70,6 +70,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       rider{
         _id
         name
+        phone
       }
       review{
         _id

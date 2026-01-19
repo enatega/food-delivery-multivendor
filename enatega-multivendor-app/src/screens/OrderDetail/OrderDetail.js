@@ -115,7 +115,6 @@ function OrderDetail(props) {
       const initialTime = calulateRemainingTime(order)
       setRemainingTimeState(initialTime)
 
-
       const intervalId = setInterval(() => {
         const updatedTime = calulateRemainingTime(order)
         setRemainingTimeState(updatedTime)
@@ -276,7 +275,6 @@ function OrderDetail(props) {
         <View style={{ margin: scale(20) }}>
           <Button disabled={isOrderCancelable ? false : true} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
         </View>
-
       </View>
       <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle} cancelOrder={cancelOrder} loading={loadingCancel} orderStatus={order?.orderStatus} />
     </View>

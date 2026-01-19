@@ -1,5 +1,5 @@
-import React, { useState, useContext, useLayoutEffect } from 'react'
-import { View, ScrollView, TouchableOpacity, StatusBar, Platform, SafeAreaView, FlatList } from 'react-native'
+import React, { useState, useContext, useLayoutEffect, useRef } from 'react'
+import { View, ScrollView, TouchableOpacity, StatusBar, Platform, SafeAreaView, FlatList, ActivityIndicator } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -22,12 +22,36 @@ import styles from './Styles'
 import useCart from './useCart'
 import CartSkeleton from '../../components/Cart/CartSkeleton'
 import useCartStore from '../../stores/useCartStore'
-
+import MainModalize from '../../../components/Main/Modalize/MainModalize'
+import UserContext from '../../../context/User'
+import CustomHomeIcon from '../../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomWorkIcon from '../../../assets/SVG/imageComponents/CustomWorkIcon'
+import CustomApartmentIcon from '../../../assets/SVG/imageComponents/CustomApartmentIcon'
+import CustomOtherIcon from '../../../assets/SVG/imageComponents/CustomOtherIcon'
+import AddressModalHeader from '../../components/Home/AddressModalHeader'
+import AddressModalFooter from '../../components/Home/AddressModalFooter'
+import { LocationContext } from '../../../context/Location'
+import { selectAddress } from '../../../apollo/mutations'
+import { gql, useMutation } from '@apollo/client'
+import { CLEAR_CART } from '../../apollo/mutations'
+const SELECT_ADDRESS = gql`
+  ${selectAddress}
+`
 const Cart = (props) => {
-  const {} = useCart()
-  const {  items,grandTotal, loading, error } = useCartStore()
+  const { items, grandTotal, loading, error, maxOrderAmount, minOrderAmount, isBelowMinimumOrder, lowOrderFees, clearCart } = useCartStore()
   // const items = [] // For testing empty cart
-  console.log('Cart Data::', items, grandTotal, loading, error)
+  const [mutate] = useMutation(SELECT_ADDRESS, {
+    onError: () => {}
+  })
+
+  const [mutateClearCart, { loading: emptyingCart }] = useMutation(CLEAR_CART, {
+    onCompleted: () => {
+      clearCart()
+    },
+    onError: () => {}
+  })
+
+  console.log('Cart Data::', items, grandTotal, maxOrderAmount, minOrderAmount, isBelowMinimumOrder, loading, error)
 
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
@@ -111,67 +135,10 @@ const Cart = (props) => {
     return <CartSkeleton />
   }
 
-  // Empty cart view
-  // if (items.length === 0) {
-  //   return (
-  //     <SafeAreaView style={styles(currentTheme).mainContainer}>
-  //       <OrderProgressBanner currentTotal={grandTotal} minimumOrder={minimumOrder} lowOrderFeeThreshold={lowOrderFeeThreshold} lowOrderFee={lowOrderFee} currencySymbol={currencySymbol} />
-
-  //       <ScrollView showsVerticalScrollIndicator={false}>
-  //         <EmptyCart onStartShopping={handleStartShopping} />
-
-  //         <View style={styles().recommendedSection}>
-  //           <RecommendedProducts cartItemId={items && items?.length > 0 ? items[0]?.foodId : null} />
-  //         </View>
-  //       </ScrollView>
-  //     </SafeAreaView>
-  //   )
-  // }
-
-  // Cart with items view
-  // return (
-  //   <SafeAreaView style={styles(currentTheme).mainContainer}>
-  //     <OrderProgressBanner currentTotal={grandTotal} minimumOrder={minimumOrder} lowOrderFeeThreshold={lowOrderFeeThreshold} lowOrderFee={lowOrderFee} currencySymbol={currencySymbol} />
-
-  //     <ScrollView showsVerticalScrollIndicator={false} style={styles().scrollView}>
-  //       <View style={styles().contentContainer}>
-  //         <TextDefault textColor={currentTheme.fontMainColor} bolder H4 style={{ marginBottom: scale(16) }}>
-  //           {t('yourItems') || 'Your items'}
-  //         </TextDefault>
-
-  //         {items.map((item, index) => (
-  //           <CartItem key={item.key || index} item={item} currencySymbol={currencySymbol} isLastItem={index === items.length - 1} />
-  //         ))}
-  //       </View>
-
-  //       <View style={styles().recommendedSection}>
-  //         <RecommendedProducts cartItemId={items && items?.length > 0 ? items[0]?.foodId : null} />
-  //       </View>
-  //     </ScrollView>
-
-  //     {/* Sticky Checkout Button */}
-  //     <View style={styles(currentTheme).stickyCheckoutContainer}>
-  //       <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).checkoutButton, grandTotal < minimumOrder && styles(currentTheme).checkoutButtonDisabled]} onPress={grandTotal >= minimumOrder ? handleCheckout : null} disabled={grandTotal < minimumOrder}>
-  //         <View style={styles().checkoutButtonContent}>
-  //           <View style={[styles().cartBadge, grandTotal >= minimumOrder && styles().cartBadgeActive]}>
-  //             <TextDefault textColor={grandTotal >= minimumOrder ? currentTheme.primaryBlue : currentTheme.gray300} bold small>
-  //               {cartCount}
-  //             </TextDefault>
-  //           </View>
-  //           <TextDefault textColor={grandTotal >= minimumOrder ? currentTheme.white : currentTheme.gray300} bolder H5>
-  //             {t('goToCheckout') || 'Go to checkout'} {currencySymbol}
-  //             {grandTotal}
-  //           </TextDefault>
-  //         </View>
-  //       </TouchableOpacity>
-  //     </View>
-  //   </SafeAreaView>
-  // )
-
   return (
     <SafeAreaView style={styles(currentTheme).mainContainer}>
       {/* Top progress banner */}
-      <OrderProgressBanner currentTotal={grandTotal} minimumOrder={minimumOrder} lowOrderFeeThreshold={lowOrderFeeThreshold} lowOrderFee={lowOrderFee} currencySymbol={currencySymbol} />
+      <OrderProgressBanner currentTotal={grandTotal} minimumOrder={minOrderAmount} lowOrderFeeThreshold={maxOrderAmount} lowOrderFee={lowOrderFees} currencySymbol={currencySymbol} />
 
       <FlatList
         data={items}
@@ -180,30 +147,47 @@ const Cart = (props) => {
         style={styles().scrollView}
         contentContainerStyle={styles().contentContainer}
         renderItem={({ item, index }) => <CartItem item={item} currencySymbol={currencySymbol} isLastItem={index === items.length - 1} />}
-        ListHeaderComponent={() => (
-          items.length > 0 &&
-          <TextDefault textColor={currentTheme.fontMainColor} bolder H4 style={{ marginBottom: scale(16) }}>
-            {t('yourItems') || 'Your items'}
-          </TextDefault>
-        )}
+        ListHeaderComponent={() =>
+          items.length > 0 && (
+            <View style={styles().headerRow}>
+              <TextDefault textColor={currentTheme.fontMainColor} bolder H4>
+                {t('yourItems') || 'Your items'}
+              </TextDefault>
+
+              {emptyingCart ? (
+                <ActivityIndicator size={'small'} color={currentTheme.black}></ActivityIndicator>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    mutateClearCart()
+                  }}
+                >
+                  <TextDefault textColor={currentTheme.primary} bolder>
+                    {t('Clear cart') || 'Clear'}
+                  </TextDefault>
+                </TouchableOpacity>
+              )}
+            </View>
+          )
+        }
         ListFooterComponent={() => (
           <View style={styles().recommendedSection}>
             <RecommendedProducts cartItemId={items?.length > 0 ? items[0]?.foodId : null} />
           </View>
         )}
-        ListEmptyComponent={()=><EmptyCart onStartShopping={handleStartShopping} />}
+        ListEmptyComponent={() => <EmptyCart onStartShopping={handleStartShopping} />}
       />
 
       {/* Sticky Checkout Button */}
       <View style={styles(currentTheme).stickyCheckoutContainer}>
-        <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).checkoutButton, grandTotal < minimumOrder && styles(currentTheme).checkoutButtonDisabled]} onPress={grandTotal >= minimumOrder ? handleCheckout : null} disabled={grandTotal < minimumOrder}>
+        <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).checkoutButton, isBelowMinimumOrder && styles(currentTheme).checkoutButtonDisabled]} onPress={isBelowMinimumOrder ? null : handleCheckout} disabled={isBelowMinimumOrder}>
           <View style={styles().checkoutButtonContent}>
-            <View style={[styles().cartBadge, grandTotal >= minimumOrder && styles().cartBadgeActive]}>
-              <TextDefault textColor={grandTotal >= minimumOrder ? currentTheme.primaryBlue : currentTheme.gray300} bold small>
+            <View style={[styles().cartBadge, !isBelowMinimumOrder && styles().cartBadgeActive]}>
+              <TextDefault textColor={isBelowMinimumOrder ? currentTheme.gray300 : currentTheme.primaryBlue} bold small>
                 {cartCount}
               </TextDefault>
             </View>
-            <TextDefault textColor={grandTotal >= minimumOrder ? currentTheme.white : currentTheme.gray300} bolder H5>
+            <TextDefault textColor={isBelowMinimumOrder ? currentTheme.gray300 : currentTheme.white} bolder H5>
               {t('goToCheckout') || 'Go to checkout'} {currencySymbol}
               {grandTotal}
             </TextDefault>

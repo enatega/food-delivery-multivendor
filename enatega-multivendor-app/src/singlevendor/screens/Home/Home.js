@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useRef, useContext } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import HorizontalCategoriesList from '../../components/HorizontalCategoriesList'
-// import HomeBanner from '../../components/Home/HomeBanner'
+import HomeBanner from '../../components/Home/HomeBanner'
 import useHome from './useHome'
 import WrapperHorizontalProductsList from '../../components/WrapperHorizontalProductsList'
 import { FlatList } from 'react-native-gesture-handler'
@@ -19,9 +19,13 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 
 import PromoBanner from '../../components/Profile/PromoBanner'
+import useCart from '../Cart/useCart'
+import AddressModalHeader from '../../components/Home/AddressModalHeader'
+import AddressModalFooter from '../../components/Home/AddressModalFooter'
 
 const Home = () => {
-  const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef } = useHome()
+  const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef, bannersData } = useHome()
+  const {} = useCart()
   const categoriesData = data?.getRestaurantCategoriesSingleVendor
 
   const navigation = useNavigation()
@@ -50,48 +54,9 @@ const Home = () => {
     )
   }, [navigation, currentTheme])
 
-  const modalHeader = () => (
-    <View style={styles(currentTheme).addressContainer}>
-      <View style={styles(currentTheme).centerTitleContainer}>
-        <TextDefault H3 bolder>
-          {t('location')}
-        </TextDefault>
-      </View>
+  const modalHeader = () => <AddressModalHeader onClose={() => modalRef.current.close()}></AddressModalHeader>
 
-      <TouchableOpacity hitSlop={10} onPress={() => modalRef.current.close()} style={styles(currentTheme).closeButton}>
-        <Entypo name='cross' size={22} color={currentTheme?.colorTextMuted} />
-      </TouchableOpacity>
-    </View>
-  )
-
-  const modalFooter = () => (
-    <Pressable
-      activeOpacity={0.5}
-      style={styles(currentTheme).addButton}
-      onPress={() => {
-        if (isLoggedIn) {
-          navigation.navigate('AddAddress', {
-            // prevScreen: 'Home',
-            // ...location
-          })
-        } else {
-          const modal = modalRef.current
-          modal?.close()
-          navigation.navigate({
-            name: 'CreateAccount'
-          })
-        }
-      }}
-    >
-      <View style={styles(currentTheme).addressSubContainer}>
-        <AntDesign name='plus' size={scale(20)} color={currentTheme.darkBgFont} />
-        <View style={styles().mL5p} textColor={currentTheme.black} />
-        <TextDefault bold H5 textColor={currentTheme.darkBgFont}>
-          {t('addAddress')}
-        </TextDefault>
-      </View>
-    </Pressable>
-  )
+  const modalFooter = () => <AddressModalFooter onClose={() => modalRef.current.close()}></AddressModalFooter>
 
   return (
     <SafeAreaView style={styles(currentTheme).container}>
@@ -102,7 +67,7 @@ const Home = () => {
         ListHeaderComponent={() => {
           return (
             <View style={{ marginTop: 30 }}>
-              <PromoBanner />
+              <HomeBanner banners={bannersData?.banners || []} />
               <HorizontalCategoriesList categoriesData={categoriesData} />
             </View>
           )

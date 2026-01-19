@@ -66,7 +66,7 @@ const useBrowse = () => {
     setisSearched(false)
   }
 
-    const handleModalClose = () => {
+  const handleModalClose = () => {
     setSearchTerm('')
     dismissKeyboard()
     setisSearched(false)
@@ -79,13 +79,16 @@ const useBrowse = () => {
     navigation.navigate('ProductDetails', {
       productId: id
     })
+    setTimeout(() => {
+      setModalVisible(false)
+    }, 100)
   }
 
   const handleAddToCart = (item) => {
     console.log('Add to cart:', item.name)
   }
 
-   const handleSeeAll = (viewType, id) => {
+  const handleSeeAll = (viewType, id) => {
     if (viewType === 'see-all') {
       navigation.navigate('ProductExplorer')
     } else {
@@ -96,7 +99,6 @@ const useBrowse = () => {
       // }, 100)
       navigation.navigate('ProductsList', {
         categoryId: id
-
       })
     }
   }

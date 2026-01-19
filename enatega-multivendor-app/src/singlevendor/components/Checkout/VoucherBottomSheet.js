@@ -1,99 +1,88 @@
-import React, { useState, useContext } from 'react';
-import { View, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
-import { Modalize } from 'react-native-modalize';
-import { AntDesign } from '@expo/vector-icons';
-import { useTranslation } from 'react-i18next';
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext';
-import { theme } from '../../../utils/themeColors';
-import { scale } from '../../../utils/scaling';
-import TextDefault from '../../../components/Text/TextDefault/TextDefault';
+import React, { useState, useContext } from 'react'
+import { View, TouchableOpacity, StyleSheet, TextInput, ActivityIndicator } from 'react-native'
+import { Modalize } from 'react-native-modalize'
+import { AntDesign } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
+import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../../utils/themeColors'
+import { scale } from '../../../utils/scaling'
+import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import { useMutation } from '@apollo/client'
+import { COUPON } from '../../apollo/mutations'
 
 const VoucherBottomSheet = React.forwardRef(({ onApplyVoucher }, ref) => {
-  const { t, i18n } = useTranslation();
-  const themeContext = useContext(ThemeContext);
+  const [applyCoupon, { loading: applyingCoupon }] = useMutation(COUPON, {
+    onCompleted: (data) => {
+      console.log('coupon applied successfully')
+      if (!data?.coupon?.success) {
+        Alert.alert('Coupon Error', data?.coupon?.message || 'Failed to apply coupon')
+      } else {
+        console.log('Applied Coupon:', data?.coupon?.title)
+
+        onApplyVoucher(data?.coupon?.coupon)
+        setVoucherCode('')
+        ref?.current?.close()
+      }
+    },
+    onError: (err) => {
+      console.log('Error applying coupon', err)
+    }
+  })
+
+  const { t, i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
-  };
+  }
 
-  const [voucherCode, setVoucherCode] = useState('');
+  const [voucherCode, setVoucherCode] = useState('')
 
   const handleApply = () => {
     if (voucherCode.trim()) {
-      onApplyVoucher(voucherCode.trim());
-      setVoucherCode('');
-      ref?.current?.close();
+      applyCoupon({
+        variables: { coupon: voucherCode.trim() }
+      })
     }
-  };
+  }
 
   const handleClose = () => {
-    setVoucherCode('');
-    ref?.current?.close();
-  };
+    setVoucherCode('')
+    ref?.current?.close()
+  }
 
   return (
-    <Modalize
-      ref={ref}
-      adjustToContentHeight
-      handlePosition="inside"
-      modalStyle={styles(currentTheme).modalStyle}
-      handleStyle={styles(currentTheme).handleStyle}
-    >
+    <Modalize ref={ref} adjustToContentHeight handlePosition='inside' modalStyle={styles(currentTheme).modalStyle} handleStyle={styles(currentTheme).handleStyle} keyboardAvoidingOffset={100}>
       <View style={styles(currentTheme).container}>
         {/* Header */}
         <View style={styles().header}>
-          <TextDefault
-            textColor={currentTheme.fontMainColor}
-            bolder
-            H3
-            
-          >
+          <TextDefault textColor={currentTheme.fontMainColor} bolder H3>
             {t('enterVoucher')}
           </TextDefault>
-          <TouchableOpacity
-            onPress={handleClose}
-            style={styles(currentTheme).closeButton}
-            activeOpacity={0.7}
-          >
-            <AntDesign name="close" size={18} color={currentTheme.fontMainColor} />
+          <TouchableOpacity onPress={handleClose} style={styles(currentTheme).closeButton} activeOpacity={0.7}>
+            <AntDesign name='close' size={18} color={currentTheme.fontMainColor} />
           </TouchableOpacity>
         </View>
 
         {/* Input Field */}
         <View style={styles(currentTheme).inputContainer}>
-          <TextInput
-            style={styles(currentTheme).input}
-            placeholder={t('voucherCode')}
-            placeholderTextColor={currentTheme.fontSecondColor}
-            value={voucherCode}
-            onChangeText={setVoucherCode}
-            autoCapitalize="characters"
-            autoCorrect={false}
-          />
+          <TextInput style={styles(currentTheme).input} placeholder={t('voucherCode')} placeholderTextColor={currentTheme.fontSecondColor} value={voucherCode} onChangeText={setVoucherCode} autoCapitalize='characters' autoCorrect={false} />
         </View>
 
         {/* Apply Button */}
-        <TouchableOpacity
-          style={[
-            styles(currentTheme).applyButton,
-            !voucherCode.trim() && styles(currentTheme).applyButtonDisabled
-          ]}
-          onPress={handleApply}
-          disabled={!voucherCode.trim()}
-          activeOpacity={0.7}
-        >
-          <TextDefault
-            textColor={voucherCode.trim() ? '#fff' : currentTheme.fontSecondColor}
-            bolder
-            H5
-          >
-            {t('apply')}
-          </TextDefault>
+        <TouchableOpacity style={[styles(currentTheme).applyButton, !voucherCode.trim() && styles(currentTheme).applyButtonDisabled]} onPress={handleApply} disabled={!voucherCode.trim()} activeOpacity={0.7}>
+          {applyingCoupon ? (
+            <ActivityIndicator size='small' color={currentTheme.white} />
+          ) : (
+            <TextDefault textColor={voucherCode.trim() ? '#fff' : currentTheme.fontSecondColor} bolder H5>
+              {t('apply')}
+            </TextDefault>
+          )}
         </TouchableOpacity>
       </View>
     </Modalize>
-  );
-});
+  )
+})
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -153,6 +142,6 @@ const styles = (props = null) =>
     applyButtonDisabled: {
       backgroundColor: props !== null ? props.gray200 : '#E5E7EB'
     }
-  });
+  })
 
-export default VoucherBottomSheet;
+export default VoucherBottomSheet

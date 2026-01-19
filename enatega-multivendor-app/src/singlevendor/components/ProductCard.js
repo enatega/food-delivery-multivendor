@@ -5,25 +5,62 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import ProductImageOverlay from './ProductImageOverlay'
 import ConfigurationContext from '../../context/Configuration'
+import { getDealPricing } from '../utils/helper'
 
 const ProductCard = ({ product, onAddToCart, onCardPress, containerStyles }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const configuration = useContext(ConfigurationContext)
+  console.log('product:::::', product.variations[0])
+
+  const variation = product?.variations?.[0]
+  const deal = variation?.deal
+
+  const { finalPrice, discountAmount } = getDealPricing(variation?.price, deal)
+
+  const hasDeal = Boolean(deal)
 
   return (
-    <Pressable onPress={() => {onCardPress && onCardPress(product?.id)}} style={[styles(currentTheme).card, containerStyles]}>
-      <ImageBackground onError={(err)=>{
-        // console.log("Error loading images",err)
-      }} source={{ uri: typeof product?.image == 'number' ? '' : product?.image }} style={styles(currentTheme).imageContainer} imageStyle={styles(currentTheme).productImage}>
-        <ProductImageOverlay hasDeal={product?.hasDeal} onAddToCart={onAddToCart ? onAddToCart : () => {}} product={product} dealText={product?.dealText || 'Deal'} />
+    <Pressable
+      onPress={() => {
+        onCardPress && onCardPress(product?.id)
+      }}
+      style={[styles(currentTheme).card, containerStyles]}
+    >
+      <ImageBackground
+        onError={(err) => {
+          // console.log("Error loading images",err)
+        }}
+        source={{ uri: typeof product?.image == 'number' ? '' : product?.image }}
+        style={styles(currentTheme).imageContainer}
+        imageStyle={styles(currentTheme).productImage}
+      >
+        {hasDeal && (
+          <View style={styles(currentTheme).dealBadge}>
+            <Text style={styles(currentTheme).dealBadgeText}>{deal.discountType === 'PERCENTAGE' ? `${deal.discountValue}% OFF` : `${configuration?.currencySymbol}${deal.discountValue} OFF`}</Text>
+          </View>
+        )}
+        <ProductImageOverlay hasDeal={product.variations[0].deal ? true : false} onAddToCart={onAddToCart ? onAddToCart : () => {}} product={product} dealText={product?.dealText || 'Deal'} />
       </ImageBackground>
       <View style={styles(currentTheme).contentContainer}>
-        {/* Todo: currently showing 1st varations price. */}
-        <Text style={styles(currentTheme).price}>
-          {configuration?.currencySymbol ?? null} {product?.variations[0]?.price}
-        </Text>
+        <View style={styles(currentTheme).priceContainer}>
+          {hasDeal ? (
+            <>
+              <Text style={styles(currentTheme).finalPrice}>
+                {configuration?.currencySymbol} {finalPrice}
+              </Text>
+
+              <Text style={styles(currentTheme).originalPrice}>
+                {configuration?.currencySymbol} {variation?.price}
+              </Text>
+            </>
+          ) : (
+            <Text style={styles(currentTheme).finalPrice}>
+              {configuration?.currencySymbol} {variation?.price}
+            </Text>
+          )}
+        </View>
         <Text style={styles(currentTheme).productName} numberOfLines={5} ellipsizeMode='tail'>
           {product?.title}
         </Text>
@@ -94,6 +131,40 @@ const styles = (currentTheme) =>
     pricePerLiter: {
       fontSize: 12,
       color: currentTheme.fontSecondColor
+    },
+    priceContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 4
+    },
+
+    finalPrice: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: currentTheme.primaryBlue,
+      marginRight: 6
+    },
+
+    originalPrice: {
+      fontSize: 13,
+      color: currentTheme.fontSecondColor,
+      textDecorationLine: 'line-through'
+    },
+
+    dealBadge: {
+      position: 'absolute',
+      top: 8,
+      left: 8,
+      backgroundColor: currentTheme.primaryBlue,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 6
+    },
+
+    dealBadgeText: {
+      fontSize: 11,
+      fontWeight: '700',
+      color: '#fff'
     }
   })
 

@@ -10,7 +10,7 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import SectionHeader from '../../components/Profile/SectionHeader'
 import { scale } from '../../../utils/scaling'
 
-const SectionedHelpList = ({ data, currentTheme, sectionHeaderContainerStyle, sectionHeaderTextStyle, listItemStyle, itemTitleStyle, separatorStyle, listContentStyle, estimatedItemSize = 50 }) => {
+const SectionedHelpList = ({ data, currentTheme, sectionHeaderContainerStyle, sectionHeaderTextStyle, listItemStyle, itemTitleStyle, separatorStyle, listContentStyle, estimatedItemSize = 50, isLoading }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const themeValue = currentTheme || {
@@ -36,8 +36,9 @@ const SectionedHelpList = ({ data, currentTheme, sectionHeaderContainerStyle, se
       <View>
         {showSeparator && <View style={separatorStyle} />}
         <TouchableOpacity
+          disabled={isLoading}
           style={listItemStyle}
-          onPress={item.onPress}
+          onPress={item?.onPress}
           activeOpacity={0.7}
         >
           <TextDefault

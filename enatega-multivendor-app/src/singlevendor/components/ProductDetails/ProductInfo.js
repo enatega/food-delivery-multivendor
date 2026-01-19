@@ -8,13 +8,13 @@ import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneB
 import ToggleFavorite from '../ToggleFavorite'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 
-const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingToCart}) => {
+const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart, isAddingToCart }) => {
   const config = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const iconColor = themeContext.ThemeValue === 'Dark' ? 'white' : 'black'
 
   // Todo: temp states for handling fav and item count
-  const [itemCount, setItemCount] = useState(0)
+  const [itemCount, setItemCount] = useState(productInfoData?.cartQuantity)
 
   return (
     <>
@@ -24,14 +24,14 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingTo
 
       <View style={[styles().containerPadding, { gap: 18 }]}>
         <View style={styles().titleContainer}>
-          <TextDefault B700 H3>
+          <TextDefault bolder H2>
             {productInfoData?.title}
           </TextDefault>
           <ToggleFavorite id={productInfoData?.id} />
         </View>
 
         <View style={[styles().flex, { alignItems: 'center', gap: 12 }]}>
-          <TextDefault H4 bold textColor={currentTheme.primaryBlue}>
+          <TextDefault H4 bolder textColor={currentTheme.singlevendorcolor}>
             {config?.currencySymbol}
             {'\u00A0'}
             {productInfoData?.price}
@@ -39,7 +39,7 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingTo
           {productInfoData?.isPopular && (
             <View style={[styles(currentTheme).popular, styles().flexCenter]}>
               <MaterialCommunityIcons name='fire' size={18} color={currentTheme.white} />
-              <TextDefault H4 bold textColor={currentTheme.white}>
+              <TextDefault H5 bold textColor={currentTheme.white}>
                 {t('Popular')}
               </TextDefault>
             </View>
@@ -51,7 +51,7 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart ,isAddingTo
             <Pressable style={[styles().pressableContainer, { borderWidth: 1.5, borderColor: currentTheme.borderColor }]} disabled={itemCount == 0} onPress={() => setItemCount((prev) => prev - 1)}>
               <AntDesign name='minus' size={16} color={iconColor} />
             </Pressable>
-            <TextDefault B700 H3>
+            <TextDefault H4 bolder>
               {itemCount}
             </TextDefault>
             <Pressable style={[styles().pressableContainer, { borderWidth: 1.5, borderColor: currentTheme.borderColor }]} onPress={() => setItemCount((prev) => prev + 1)}>
@@ -85,7 +85,7 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     imageContainer: {
-      height: 200,
+      height: 300,
       width: '100%',
       borderTopLeftRadius: scale(10),
       borderTopRightRadius: scale(10),
@@ -111,11 +111,12 @@ const styles = (props = null) =>
       width: 32
     },
     popular: {
-      backgroundColor: props !== null ? props?.primaryBlue : '#0EA5E9',
+      backgroundColor: props !== null ? props?.primaryBlue : '#0090CD',
       minWidth: 80,
       maxWidth: 120,
       gap: 4,
-      padding: 4,
+      paddingVertical: 6,
+      paddingHorizontal: 8,
       borderRadius: 6
     }
   })
