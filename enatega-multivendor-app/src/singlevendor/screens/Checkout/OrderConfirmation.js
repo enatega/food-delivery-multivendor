@@ -221,7 +221,9 @@ const OrderConfirmation = (props) => {
     addressLabel,
     address,
     customerLocation,
-    orderItems
+    orderItems,
+    orderNo,
+    riderPhone
   } = useOrderConfirmation({ orderId })
 
   // ----------------------------------
@@ -308,7 +310,7 @@ const OrderConfirmation = (props) => {
   }, [currentTheme, isDelivered])
 
   const handleContactCourier = () => {
-    console.log('Contact courier clicked')
+    navigation.navigate('ChatWithRider', { id: orderId, orderNo, total, riderPhone })
   }
 
   // ----------------------------------
@@ -333,7 +335,7 @@ const OrderConfirmation = (props) => {
         <DeliveryDetailsCard addressLabel={addressLabel} address={address} showMap={showMap} onToggleMap={setShowMap} mapComponent={<DeliveryMap customerLocation={customerLocation} riderLocation={riderLocation} showRoute={!isDelivered} />} />
 
         {/* CONTACT COURIER */}
-        {!isDelivered && <ContactCourierCard onPress={handleContactCourier} contactlessDelivery />}
+        {rider && !isDelivered && !isCancelled && <ContactCourierCard onPress={()=> handleContactCourier()} contactlessDelivery />}
 
         {/* ORDER ITEMS */}
         <OrderItemsSection items={orderItems} currencySymbol={currencySymbol} initialExpanded={false} />
