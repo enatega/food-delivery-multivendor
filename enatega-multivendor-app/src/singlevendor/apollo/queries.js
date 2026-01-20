@@ -65,34 +65,34 @@ export const GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR = gql`
 
 export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
   query GetCategoryItemsSingleVendor($categoryId: ID!, $skip: Int, $limit: Int, $search: String) {
-  getCategoryItemsSingleVendor(categoryId: $categoryId, skip: $skip, limit: $limit, search: $search) {
-    categoryId
-    categoryName
-    items {
-      id
-      title
-      description
-      image
-      variations {
+    getCategoryItemsSingleVendor(categoryId: $categoryId, skip: $skip, limit: $limit, search: $search) {
+      categoryId
+      categoryName
+      items {
         id
         title
-        price
-        deal {
+        description
+        image
+        variations {
           id
-          discountType
-          discountValue
-          isActive
+          title
+          price
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
         }
       }
-    }
-    pagination {
-      currentPage
-      totalPages
-      totalItems
-      hasMore
+      pagination {
+        currentPage
+        totalPages
+        totalItems
+        hasMore
+      }
     }
   }
-}
 `
 
 // export const GET_FOOD_DETAILS = gql`
@@ -112,45 +112,46 @@ export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
 //   }
 // `
 
-export const GET_FOOD_DETAILS = gql`query GetFoodDetails($foodId: ID!) {
-  getFoodDetails(foodId: $foodId) {
-    id
-    title
-    description
-    image
-    isPopular
-    cartQuantity
-    categoryId
-    selectedAddonsId {
-      _id
-      options
-    }
-    selectedVariationsIds
-    variations {
+export const GET_FOOD_DETAILS = gql`
+  query GetFoodDetails($foodId: ID!) {
+    getFoodDetails(foodId: $foodId) {
       id
       title
-      price
-      addons {
+      description
+      image
+      isPopular
+      cartQuantity
+      categoryId
+      selectedAddonsId {
+        _id
+        options
+      }
+      selectedVariationsIds
+      variations {
         id
         title
-        description
-        isSelected
-        options {
+        price
+        addons {
           id
           title
           description
-          price
           isSelected
+          options {
+            id
+            title
+            description
+            price
+            isSelected
+          }
         }
+        cartQuantity
+        isSelected
+
+        actualUnitPrice
+        discountedUnitPrice
       }
-      cartQuantity
-      isSelected
-      
-      actualUnitPrice
-      discountedUnitPrice
     }
   }
-}
 `
 
 export const GET_SIMILAR_FOODS = gql`
@@ -301,74 +302,74 @@ export const GET_NEW_OFFERS_FOODS_DEALS = gql`
 `
 
 export const GET_USER_CART = gql`
- query GetUserCart {
-  getUserCart {
-    success
-    message
-    grandTotal
-    actualGrandTotal
-    discountedGrandTotal
-    totalDiscount
-    hasDeals
-    lowOrderFees
-    maxOrderAmount
-    minOrderAmount
-    isBelowMinimumOrder
-    cartId
-    foods {
-      categoryId
-      foodId
-      foodTitle
-      foodImage
-      variations {
-      _id
+  query GetUserCart {
+    getUserCart {
+      success
+      message
+      grandTotal
+      actualGrandTotal
+      discountedGrandTotal
+      totalDiscount
+      hasDeals
+      lowOrderFees
+      maxOrderAmount
+      minOrderAmount
+      isBelowMinimumOrder
+      cartId
+      foods {
+        categoryId
+        foodId
+        foodTitle
+        foodImage
+        variations {
+          _id
+          variationId
+          variationTitle
+          unitPrice
+          quantity
+          addons {
+            addonId
+            optionId
+            title
+            price
+          }
+          addonsTotal
+          actualUnitPrice
+          discountedUnitPrice
+          actualItemTotal
+          discountedItemTotal
+          itemTotal
+          dealId
+          dealInfo {
+            dealId
+            dealTitle
+            discountValue
+            discountType
+            id
+            title
+          }
+        }
+        actualFoodTotal
+        discountedFoodTotal
+        foodTotal
+      }
+      deals {
         variationId
         variationTitle
-        unitPrice
+        foodId
+        foodTitle
         quantity
-        addons {
-          addonId
-          optionId
-          title
-          price
-        }
-        addonsTotal
-        actualUnitPrice
-        discountedUnitPrice
-        actualItemTotal
-        discountedItemTotal
-        itemTotal
         dealId
-        dealInfo {
-          dealId
-          dealTitle
-          discountValue
-          discountType
-          id
-          title
-        }
+        dealTitle
+        discountType
+        discountValue
+        originalPrice
+        discountedPrice
+        savingsPerUnit
+        totalSavings
       }
-      actualFoodTotal
-      discountedFoodTotal
-      foodTotal
-    }
-    deals {
-      variationId
-      variationTitle
-      foodId
-      foodTitle
-      quantity
-      dealId
-      dealTitle
-      discountType
-      discountValue
-      originalPrice
-      discountedPrice
-      savingsPerUnit
-      totalSavings
     }
   }
-}
 `
 
 export const GET_RECOMMENDED_FOODS = gql`
@@ -455,6 +456,87 @@ export const ORDER_DETAILS_PAGE = gql`
     orderDetailsPage(orderId: $orderId) {
       success
       message
+      rawOrder {
+        _id
+        orderId
+        restaurant {
+          _id
+          name
+          image
+          address
+          location {
+            coordinates
+          }
+        }
+        deliveryAddress {
+          location {
+            coordinates
+          }
+          deliveryAddress
+          id
+        }
+        items {
+          _id
+          title
+          food
+          description
+          quantity
+          variation {
+            _id
+            title
+            price
+            discounted
+          }
+          addons {
+            _id
+            options {
+              _id
+              title
+              description
+              price
+            }
+            title
+            description
+            quantityMinimum
+            quantityMaximum
+          }
+        }
+        user {
+          _id
+          name
+          phone
+        }
+        rider {
+          _id
+          name
+          phone
+          location {
+            coordinates
+          }
+        }
+        review {
+          _id
+        }
+        paymentMethod
+        paidAmount
+        orderAmount
+        orderStatus
+        tipping
+        taxationAmount
+        createdAt
+        completionTime
+        preparationTime
+        orderDate
+        expectedTime
+        isPickedUp
+        deliveryCharges
+        acceptedAt
+        pickedAt
+        deliveredAt
+        cancelledAt
+        assignedAt
+        instructions
+      }
       data {
         _id
         orderId
@@ -533,104 +615,104 @@ export const ORDER_DETAILS_PAGE = gql`
   }
 `
 
-
 export const GET_ALL_SUBSCRIPTION_PLANS = gql`
-query GetAllSubscriptionPlans {
-  getAllSubscriptionPlans {
-    plans {
-      id
-      amount
-      interval
-      intervalCount
-      productName
-      productId
+  query GetAllSubscriptionPlans {
+    getAllSubscriptionPlans {
+      plans {
+        id
+        amount
+        interval
+        intervalCount
+        productName
+        productId
+      }
     }
   }
-}`
+`
 
 export const GET_FAVORITE_FOODS_SINGLE_VENDOR = gql`
-query GetFavoriteFoodsSingleVendor($limit: Int, $skip: Int) {
+  query GetFavoriteFoodsSingleVendor($limit: Int, $skip: Int) {
     getFavoriteFoodsSingleVendor(limit: $limit, skip: $skip) {
-        success
-        message
-        data {
-            _id
-            title
-            image
-            subCategory
-            isFavourite
-            isActive
-            createdAt
-            updatedAt
-            isOutOfStock
-            variations {
-                _id
-                title
-                price
-                discounted
-                addons
-                isOutOfStock
-                name
-            }
+      success
+      message
+      data {
+        _id
+        title
+        image
+        subCategory
+        isFavourite
+        isActive
+        createdAt
+        updatedAt
+        isOutOfStock
+        variations {
+          _id
+          title
+          price
+          discounted
+          addons
+          isOutOfStock
+          name
         }
+      }
     }
-}
+  }
 `
 
 export const GET_SINGLE_USER_SUPPORT_TICKETS = gql`
-query GetSingleUserSupportTickets($input: SingleUserSupportTicketsInput) {
-  getSingleUserSupportTickets(input: $input) {
-    tickets {
-      _id
-      title
-      description
-      status
-      category
-      orderId
-      otherDetails
-      createdAt
-      updatedAt
-      userType
+  query GetSingleUserSupportTickets($input: SingleUserSupportTicketsInput) {
+    getSingleUserSupportTickets(input: $input) {
+      tickets {
+        _id
+        title
+        description
+        status
+        category
+        orderId
+        otherDetails
+        createdAt
+        updatedAt
+        userType
+      }
+      docsCount
+      totalPages
+      currentPage
     }
-    docsCount
-    totalPages
-    currentPage
   }
-}
 `
 
 export const GET_TICKET_MESSAGES = gql`
-query GetTicketMessages($input: TicketMessagesInput!) {
-  getTicketMessages(input: $input) {
-    messages {
-      _id
-      senderType
-      content
-      isRead
-      ticket
-      createdAt
-      updatedAt
-    }
-    ticket {
-      _id
-      title
-      description
-      status
-      category
-      orderId
-      otherDetails
-      createdAt
-      updatedAt
-      userType
-      user {
+  query GetTicketMessages($input: TicketMessagesInput!) {
+    getTicketMessages(input: $input) {
+      messages {
         _id
+        senderType
+        content
+        isRead
+        ticket
+        createdAt
+        updatedAt
       }
+      ticket {
+        _id
+        title
+        description
+        status
+        category
+        orderId
+        otherDetails
+        createdAt
+        updatedAt
+        userType
+        user {
+          _id
+        }
+      }
+      page
+      totalPages
+      docsCount
     }
-    page
-    totalPages
-    docsCount
   }
-}
 `
 
 export const GET_BANNERS = gql`
@@ -648,7 +730,7 @@ export const GET_BANNERS = gql`
 `
 
 export const GET_MY_REFERRAL_CODE = gql`
-query GetMyReferralCode {
-  getMyReferralCode
-}
+  query GetMyReferralCode {
+    getMyReferralCode
+  }
 `

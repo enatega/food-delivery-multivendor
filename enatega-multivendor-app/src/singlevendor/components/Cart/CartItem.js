@@ -18,9 +18,9 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
     ...theme[themeContext.ThemeValue]
   }
 
-  const itemTotal = (parseFloat(item.variations[0]?.discountedItemTotal) * item.variations[0]?.quantity).toFixed(2)
+  const itemTotal = (parseFloat(item.variations[0]?.discountedUnitPrice) * item.variations[0]?.quantity).toFixed(2)
 
-  console.log('CartItem Rendered:', item)
+  console.log('CartItem Rendered:', item.variations[0])
   return (
     <View style={[styles(currentTheme).itemContainer, isLastItem && styles().itemContainerLast]}>
       {/* Left side: Image */}

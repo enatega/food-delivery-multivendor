@@ -14,10 +14,12 @@ import WrapperProductOtherDetails from '../../components/ProductDetails/WrapperP
 import Addons from './Addons'
 import Variations from './Variations'
 import OptionList from './OptionsList'
+import useAddToCart from './useAddToCart'
 
 const ProductDetails = ({ route }) => {
   const { productId } = route?.params
-  const { t, loading, currentTheme, productInfoData, productOtherDetails, addItemToCart, updateUserCartLoading } = useProductDetails({ foodId: productId })
+  const {  loading, productInfoData, productOtherDetails } = useProductDetails({ foodId: productId })
+  const {t,currentTheme,addItemToCart,updateUserCartLoading} = useAddToCart({foodId: productId})
   const navigation = useNavigation()
 
   const variations = productInfoData.variations || []

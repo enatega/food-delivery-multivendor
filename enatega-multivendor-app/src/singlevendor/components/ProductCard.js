@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next'
 import ProductImageOverlay from './ProductImageOverlay'
 import ConfigurationContext from '../../context/Configuration'
 import { getDealPricing } from '../utils/helper'
+import useAddToCart from '../screens/ProductDetails/useAddToCart'
 
-const ProductCard = ({ product, onAddToCart, onCardPress, containerStyles }) => {
+const ProductCard = ({ product, onCardPress, containerStyles }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
@@ -18,8 +19,14 @@ const ProductCard = ({ product, onAddToCart, onCardPress, containerStyles }) => 
   const deal = variation?.deal
 
   const { finalPrice, discountAmount } = getDealPricing(variation?.price, deal)
-
+  const { t, addItemToCart, updateUserCartLoading } = useAddToCart({ foodId: product?.id })
   const hasDeal = Boolean(deal)
+
+  const onAddToCart = () => {
+    console.log('on Add to Cart:', product)
+    //Needs Category Id Here
+    addItemToCart(productInfoData?.id, productInfoData?.categoryId, product?.variations?.[0], [], 1)
+  }
 
   return (
     <Pressable
@@ -41,7 +48,7 @@ const ProductCard = ({ product, onAddToCart, onCardPress, containerStyles }) => 
             <Text style={styles(currentTheme).dealBadgeText}>{deal.discountType === 'PERCENTAGE' ? `${deal.discountValue}% OFF` : `${configuration?.currencySymbol}${deal.discountValue} OFF`}</Text>
           </View>
         )}
-        <ProductImageOverlay hasDeal={product.variations[0].deal ? true : false} onAddToCart={onAddToCart ? onAddToCart : () => {}} product={product} dealText={product?.dealText || 'Deal'} />
+        <ProductImageOverlay isAddingToCart={updateUserCartLoading} hasDeal={product.variations[0].deal ? true : false} onAddToCart={onAddToCart ? onAddToCart : () => {}} product={product} dealText={product?.dealText || 'Deal'} />
       </ImageBackground>
       <View style={styles(currentTheme).contentContainer}>
         <View style={styles(currentTheme).priceContainer}>

@@ -11,6 +11,7 @@ const useGeocoding = () => {
       )
 
       // Check if the response is successful and contains results
+      console.log("get Address response::",response)
       if (
         response.data &&
         response.data.results &&

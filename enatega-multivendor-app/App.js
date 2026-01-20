@@ -36,6 +36,7 @@ import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
 import * as Clarity from '@microsoft/react-native-clarity'
 import { StripeProvider } from '@stripe/stripe-react-native'
+import RootAppContainer from './src/routes/RootAppContainer'
 
 // LogBox.ignoreLogs([
 //   // 'Warning: ...',
@@ -283,7 +284,7 @@ export default function App() {
                   <AuthProvider>
                     <UserProvider>
                       <OrdersProvider>
-                        <AppContainer />
+                        <RootAppContainer/>
                         <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
                       </OrdersProvider>
                     </UserProvider>
