@@ -92,12 +92,11 @@ function Main(props) {
   })
 
   let filteredCuisines
-  const { data: banners, refetch: refetchBanners } = useQuery(GET_BANNERS, {
+  const { data: banners, refetch: refetchBanners, loading: bannersLoading } = useQuery(GET_BANNERS, {
     fetchPolicy: 'network-only'
   })
-  const { data: allCuisines } = useQuery(GET_CUISINES)
+  const { data: allCuisines, loading: cuisinesLoading } = useQuery(GET_CUISINES)
 
-  const cus = new Set()
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
 
   function onError(error) {
@@ -112,7 +111,7 @@ function Main(props) {
   const { restaurantData: mostOrderedGroceryStores, loading: mostOrderedGroceryLoading, error: mostOrderedGroceryError } = useRestaurantQueries('topPicks', location, 'grocery')
 
   const { restaurantData: nearByGroceryStores, loading: nearByGroceryStoresLoading, error: nearByGroceryStoresError } = useRestaurantQueries('grocery', location, 'grocery')
-  const { restaurantData: restaurantorders } = useRestaurantQueries('restaurant', location, 'restaurant')
+  const { restaurantData: restaurantorders, loading: restaurantLoading } = useRestaurantQueries('restaurant', location, 'restaurant')
 
   const handleActiveOrdersChange = (activeOrdersExist) => {
     setHasActiveOrders(activeOrdersExist)
@@ -303,7 +302,6 @@ function Main(props) {
     </View>
   )
 
-  if (error) return <ErrorView />
 
   // const filterCusinies = () => {
   //   if (data !== undefined) {
@@ -345,6 +343,22 @@ function Main(props) {
   const restaurantCuisines = useCuisinesData('restaurant', allCuisines)
   const groceryCuisines = useCuisinesData('grocery', allCuisines)
 
+  const isAnyDataLoading = () => {
+    return (
+      loading ||
+      bannersLoading ||
+      restaurantLoading ||
+      mostOrderedGroceryLoading ||
+      nearByGroceryStoresLoading ||
+      cuisinesLoading ||
+      orderLoading
+    )
+  }
+
+  if (error) {
+    return <ErrorView refetchFunctions={[refetchRestaurants, refetchBanners]} />
+  }
+
   return (
     <>
       {!connect ? (
@@ -355,7 +369,7 @@ function Main(props) {
             <View style={styles().flex}>
               <View style={styles().mainContentContainer}>
                 <View style={[styles().flex, styles().subContainer]}>
-                  {loading ? (
+                  {isAnyDataLoading() ? (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
                       <ActivityIndicator size='large' color={currentTheme.spinnerColor} />
                     </View>

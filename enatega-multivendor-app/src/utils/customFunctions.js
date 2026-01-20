@@ -143,4 +143,96 @@ const truncateText = (limit, text) => {
   if (text.length <= limit) return text;
   return text.slice(0, limit) + "...";
 }
-export { calculateDistance, calulateRemainingTime, calculateDaysAgo, groupAndCount, sortReviews, calculateAmount, isOpen, sortRestaurantsByOpenStatus, truncateText }
+
+
+/**
+* Helper function to find the best result from Google Maps API response
+* Filters out Plus Codes and prioritizes results with actual addresses
+*/
+const findBestResult = (results) => {
+  if (!results || results.length === 0) {
+    return null
+  }
+
+  // Filter out Plus Code results - they have minimal address info
+  const validResults = results.filter(result => {
+    const types = result.types || []
+    return !types.includes('plus_code')
+  })
+
+  if (validResults.length === 0) {
+    // If only Plus Codes available, use the first one as last resort
+    return results[0]
+  }
+
+  // Priority order for result types (most specific to least specific)
+  const typePriority = [
+    'street_address',           // Most specific
+    'premise',
+    'subpremise',
+    'route',
+    'intersection',
+    'neighborhood',
+    'locality',                 // City level
+    'sublocality',
+    'administrative_area_level_3',
+    'administrative_area_level_2',
+    'administrative_area_level_1', // State/Province level
+    'postal_code',
+    'country'                   // Least specific
+  ]
+
+  // Find the result with the highest priority type
+  for (const priorityType of typePriority) {
+    const foundResult = validResults.find(result =>
+      result.types && result.types.includes(priorityType)
+    )
+    if (foundResult) {
+      return foundResult
+    }
+  }
+
+  // If no priority match, return the first valid result
+  return validResults[0]
+}
+
+
+
+/**
+ * Extract city name from address components
+ * Tries multiple component types to find the city
+ */
+const extractCity = (addressComponents) => {
+  if (!addressComponents || addressComponents.length === 0) {
+    return 'Unknown City'
+  }
+
+  // Priority order for city extraction
+  const cityTypes = [
+    'locality',                      // Standard city
+    'postal_town',                   // UK-style postal town
+    'sublocality',                   // Subdivision of city
+    'administrative_area_level_3',   // Small administrative area
+    'administrative_area_level_2',   // Larger administrative area (county/district)
+    'administrative_area_level_1'    // State/Province (fallback)
+  ]
+
+  for (const cityType of cityTypes) {
+    const component = addressComponents.find(comp =>
+      comp.types && comp.types.includes(cityType)
+    )
+    if (component) {
+      return component.long_name
+    }
+  }
+
+  // Last resort: return the first component that's not a country
+  const fallback = addressComponents.find(comp =>
+    comp.types && !comp.types.includes('country')
+  )
+
+  return fallback ? fallback.long_name : 'Unknown City'
+}
+
+
+export { calculateDistance, calulateRemainingTime, calculateDaysAgo, groupAndCount, sortReviews, calculateAmount, isOpen, sortRestaurantsByOpenStatus, truncateText, extractCity, findBestResult }
