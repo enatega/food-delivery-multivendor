@@ -301,6 +301,7 @@ export const emailExist = `
       userType
       _id
       email
+      referral_code
     }
   }`
 
@@ -349,7 +350,7 @@ export const login = `
   }
   `
 export const createUser = `
-    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean){
+    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean, $referralCode:String){
         createUser(userInput:{
             phone:$phone,
             email:$email,
@@ -357,8 +358,9 @@ export const createUser = `
             name:$name,
             notificationToken:$notificationToken,
             appleId:$appleId,
-            emailIsVerified:$emailIsVerified
-            isPhoneExists:$isPhoneExists
+            emailIsVerified:$emailIsVerified,
+            isPhoneExists:$isPhoneExists,
+            referralCode:$referralCode
         }){
             userId
             token

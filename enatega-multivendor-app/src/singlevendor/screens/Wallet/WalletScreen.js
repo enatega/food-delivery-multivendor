@@ -4,12 +4,15 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { FlashList } from '@shopify/flash-list'
+import { useQuery } from '@apollo/client'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import AccountSectionHeader from '../../components/AccountSectionHeader'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import OrderHistoryItem from '../../components/OrderHistory/OrderHistoryItem'
 import { scale, verticalScale } from '../../../utils/scaling'
+import { GET_MY_FREE_DELIVERIES } from '../../apollo/queries'
+import FreeDeliveriesSkeleton from './FreeDeliveriesSkeleton'
 import styles from './style'
 
 const WalletScreen = () => {
@@ -21,6 +24,12 @@ const WalletScreen = () => {
   }
 
   const [selectedFilter, setSelectedFilter] = useState('All')
+
+  const { data: freeDeliveriesData, loading: freeDeliveriesLoading } = useQuery(
+    GET_MY_FREE_DELIVERIES
+  )
+
+  const freeDeliveriesCount = freeDeliveriesData?.getMyFreeDeliveries ?? 0
 
   // Dummy refund data
   const dummyRefunds = [
@@ -100,40 +109,41 @@ const WalletScreen = () => {
           </TextDefault>
         </View>
 
-
-        <View style={styles(currentTheme).balanceCard}>
-          <TextDefault
-            textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
-            style={styles(currentTheme).balanceLabel}
-          >
-           {t('You have number of free deliveries')}
-          </TextDefault>
-          <TextDefault
-            textColor={currentTheme.fontMainColor}
-            style={styles(currentTheme).balanceAmount}
-            bolder
-          >
-           1
-          </TextDefault>
-          
-
-          <View style={styles(currentTheme).buttonContainer}>
-
-            <TouchableOpacity
-              style={styles(currentTheme).browseButton}
-              onPress={handleBrowseProducts}
-              activeOpacity={0.7}
+        {freeDeliveriesLoading ? (
+          <FreeDeliveriesSkeleton currentTheme={currentTheme} styles={styles} />
+        ) : (
+          <View style={styles(currentTheme).balanceCard}>
+            <TextDefault
+              textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
+              style={styles(currentTheme).balanceLabel}
             >
-              <TextDefault
-                textColor={currentTheme.white}
-                style={styles(currentTheme).browseButtonText}
-                bolder
+              {t('You have number of free deliveries')}
+            </TextDefault>
+            <TextDefault
+              textColor={currentTheme.fontMainColor}
+              style={styles(currentTheme).balanceAmount}
+              bolder
+            >
+              {freeDeliveriesCount}
+            </TextDefault>
+
+            <View style={styles(currentTheme).buttonContainer}>
+              <TouchableOpacity
+                style={styles(currentTheme).browseButton}
+                onPress={handleBrowseProducts}
+                activeOpacity={0.7}
               >
-               {t('Browse Products')}
-              </TextDefault>
-            </TouchableOpacity>
+                <TextDefault
+                  textColor={currentTheme.white}
+                  style={styles(currentTheme).browseButtonText}
+                  bolder
+                >
+                  {t('Browse Products')}
+                </TextDefault>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        )}
 
         {/* Refund History Section */}
         {/* <View style={styles(currentTheme).refundHistoryContainer}>

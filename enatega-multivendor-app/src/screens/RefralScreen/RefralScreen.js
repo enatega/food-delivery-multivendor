@@ -17,7 +17,7 @@ const RefralScreen = ({ navigation }) => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [referralCode, setReferralCode] = useState('')
   const route = useRoute()
-  const { onContinue, onSkip, userData, phoneAuthData } = route.params || {}
+  const { onContinue, onSkip, userData, phoneAuthData, emailAuthData } = route.params || {}
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -32,7 +32,7 @@ const RefralScreen = ({ navigation }) => {
       onSkip()
     } else {
       // Fallback: navigate back with skip flag
-      // Check if it's Google login or Phone auth
+      // Check if it's Google login, Phone auth, or Email auth
       if (userData) {
         navigation.navigate({
           name: 'CreateAccount',
@@ -45,6 +45,20 @@ const RefralScreen = ({ navigation }) => {
           params: { referralSkipped: true },
           merge: true
         })
+      } else if (emailAuthData) {
+        if (emailAuthData.isLogin) {
+          navigation.navigate({
+            name: 'Login',
+            params: { referralSkipped: true },
+            merge: true
+          })
+        } else {
+          navigation.navigate({
+            name: 'Register',
+            params: { email: emailAuthData.email, referralSkipped: true },
+            merge: true
+          })
+        }
       }
     }
   }
@@ -58,7 +72,7 @@ const RefralScreen = ({ navigation }) => {
         onContinue(trimmedCode)
       } else {
         // Fallback: navigate back with referral code
-        // Check if it's Google login or Phone auth
+        // Check if it's Google login, Phone auth, or Email auth
         if (userData) {
           navigation.navigate({
             name: 'CreateAccount',
@@ -71,6 +85,20 @@ const RefralScreen = ({ navigation }) => {
             params: { referralCode: trimmedCode },
             merge: true
           })
+        } else if (emailAuthData) {
+          if (emailAuthData.isLogin) {
+            navigation.navigate({
+              name: 'Login',
+              params: { referralCode: trimmedCode },
+              merge: true
+            })
+          } else {
+            navigation.navigate({
+              name: 'Register',
+              params: { email: emailAuthData.email, referralCode: trimmedCode },
+              merge: true
+            })
+          }
         }
       }
     }
