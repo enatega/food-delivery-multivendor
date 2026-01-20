@@ -434,8 +434,8 @@ export const loginWithPhoneFirstStep = gql`
 `
 
 export const loginWithPhoneFinalStep = gql`
-  mutation LoginWithPhoneFinalStep($otp: String!, $phone: String!) {
-    loginWithPhoneFinalStep(otp: $otp, phone: $phone) {
+  mutation LoginWithPhoneFinalStep($otp: String!, $phone: String!, $referralCode:String) {
+    loginWithPhoneFinalStep(otp: $otp, phone: $phone, referralCode: $referralCode) {
       userId
       token
       tokenExpiration

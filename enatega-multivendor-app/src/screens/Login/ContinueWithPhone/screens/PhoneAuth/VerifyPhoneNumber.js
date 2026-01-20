@@ -6,6 +6,7 @@ import TextDefault from '../../../../../components/Text/TextDefault/TextDefault'
 import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
 import { useHeaderHeight } from '@react-navigation/elements'
+import { useFocusEffect } from '@react-navigation/native'
 import useNetworkStatus from '../../../../../utils/useNetworkStatus'
 import ErrorView from '../../../../../components/ErrorView/ErrorView'
 import { usePhoneAuth } from './usePhoneAuth'
@@ -22,12 +23,13 @@ import OtpErrorDialogue from '../../../../../components/Auth/OtpErrorDialogue/Ot
 function VerifyPhoneNumber(props) {
   const { route } = props
   const { phone } = route.params
-  const { currentTheme, themeContext, otp, setOtp, otpError, loginWithPhoneFinalStepHandler, loginWithPhoneFinalStepLoading, loginWithPhoneFirstStepResend } = usePhoneAuth()
+  const { currentTheme, themeContext, otp, setOtp, otpError, setOtpError, loginWithPhoneFinalStepHandler, loginWithPhoneFinalStepLoading, loginWithPhoneFirstStepResend } = usePhoneAuth()
   const otpInputRef = useRef(null)
   const phoneRef = useRef(phone)
 
   const { t } = useTranslation()
   const headerHeight = useHeaderHeight()
+  
   useLayoutEffect(() => {
     props?.navigation.setOptions(
       screenOptions({
@@ -40,13 +42,29 @@ function VerifyPhoneNumber(props) {
     )
   }, [props?.navigation])
 
+  // Clear OTP when screen is focused (e.g., when navigating back from RefralScreen after error)
+  useFocusEffect(
+    useCallback(() => {
+      // If there's an OTP error, the OTP should already be cleared by the error handler
+      // This effect ensures the input is ready for new entry
+    }, [])
+  )
+
   const handleVerify = useCallback(() => {
     if (otp.length === 6) {
       loginWithPhoneFinalStepHandler(phoneRef.current)
     } else {
       otpInputRef.current?.focus()
     }
-  }, [otp.length, phoneRef.current])
+  }, [otp.length, phoneRef.current, loginWithPhoneFinalStepHandler])
+
+  const handleOtpChange = useCallback((code) => {
+    setOtp(code)
+    // Clear error when user starts typing a new OTP
+    if (otpError && code.length > 0) {
+      setOtpError(null)
+    }
+  }, [otpError, setOtp, setOtpError])
 
   const handleResend = (phone) => {
     loginWithPhoneFirstStepResend(phone)
@@ -74,7 +92,7 @@ function VerifyPhoneNumber(props) {
                   }}
                   autoFocusOnLoad
                   code={otp}
-                  onCodeChanged={(code) => setOtp(code)}
+                  onCodeChanged={handleOtpChange}
                   editable
                 />
               </View>

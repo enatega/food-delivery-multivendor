@@ -17,7 +17,7 @@ const RefralScreen = ({ navigation }) => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [referralCode, setReferralCode] = useState('')
   const route = useRoute()
-  const { onContinue, onSkip } = route.params || {}
+  const { onContinue, onSkip, userData, phoneAuthData } = route.params || {}
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -28,14 +28,24 @@ const RefralScreen = ({ navigation }) => {
   const handleSkip = () => {
     console.log('⏭️ Skipping referral code')
     if (onSkip) {
+      console.log('✅ Calling onSkip callback')
       onSkip()
     } else {
       // Fallback: navigate back with skip flag
-      navigation.navigate({
-        name: 'CreateAccount',
-        params: { referralSkipped: true },
-        merge: true
-      })
+      // Check if it's Google login or Phone auth
+      if (userData) {
+        navigation.navigate({
+          name: 'CreateAccount',
+          params: { referralSkipped: true },
+          merge: true
+        })
+      } else if (phoneAuthData) {
+        navigation.navigate({
+          name: 'VerifyPhoneNumber',
+          params: { referralSkipped: true },
+          merge: true
+        })
+      }
     }
   }
 
@@ -44,14 +54,24 @@ const RefralScreen = ({ navigation }) => {
     if (trimmedCode) {
       console.log('✅ Continuing with referral code:', trimmedCode)
       if (onContinue) {
+        console.log('✅ Calling onContinue callback with code:', trimmedCode)
         onContinue(trimmedCode)
       } else {
         // Fallback: navigate back with referral code
-        navigation.navigate({
-          name: 'CreateAccount',
-          params: { referralCode: trimmedCode },
-          merge: true
-        })
+        // Check if it's Google login or Phone auth
+        if (userData) {
+          navigation.navigate({
+            name: 'CreateAccount',
+            params: { referralCode: trimmedCode },
+            merge: true
+          })
+        } else if (phoneAuthData) {
+          navigation.navigate({
+            name: 'VerifyPhoneNumber',
+            params: { referralCode: trimmedCode },
+            merge: true
+          })
+        }
       }
     }
   }
