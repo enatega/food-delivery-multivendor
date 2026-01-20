@@ -1,5 +1,6 @@
 {
-   "audit_log_header_desc": "په سیستم کې ټول اداري اقدامات او بدلونونه تعقیب کړئ.",
+  "2019": "۲۰۱۹",
+  "audit_log_header_desc": "په سیستم کې ټول اداري اقدامات او بدلونونه تعقیب کړئ.",
   "Performed_by": "اجرا شوی لخوا",
   "show_detail": "جزییات وښایئ",
   "hide_detail": "جزییات پټ کړئ",
@@ -12,13 +13,13 @@
     "medium": "منځنی",
     "strong": "قوي"
   },
-  
   "Sign in credentials": "د ننوتلو اسناد",
   "Sign in": "ننوتل",
   "CustomerSupport": "د پیرودونکي ملاتړ",
   "Add Category": "کټګوري اضافه کړ",
   "Title": "سرلیک",
   "Description": "تشریح",
+  "are_you_sure_you_want_to_delete_this_shoptype": "ایا تاسو ډاډه یاست چې غواړئ دا پلورنځی حذف کړئ؟",
   "Add": "اضافه کړئ",
   "Remove": "لېرې کړئ",
   "Add/Remove": "اضافه/لېرې کړئ",
@@ -70,7 +71,6 @@
   "Users": "کاروونکي",
   "Phone": "ټلیفون",
   "Address": "پته",
-  "2019": "۲۰۱۹",
   "About Us": "زمونږ په اړه",
   "Blog": "بلاګ",
   "Welcome": "ښه راغلاست",

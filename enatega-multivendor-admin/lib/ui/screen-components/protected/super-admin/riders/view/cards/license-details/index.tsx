@@ -13,7 +13,7 @@ const LicenseDetails = ({ loading, rider }: IRiderDetailsProps) => {
 
   return (
     <div className="flex flex-col gap-2 border rounded-lg overflow-hidden">
-      <header className="bg-[#F4F4F5] px-6 py-3 border-b-[1px] text-lg font-medium">
+      <header className="bg-[#F4F4F5] dark:bg-dark-900 px-6 py-3 border-b-[1px] text-lg font-medium">
         {t('license_details')}
       </header>
 

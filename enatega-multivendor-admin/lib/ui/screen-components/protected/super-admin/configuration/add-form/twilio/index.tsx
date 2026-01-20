@@ -125,7 +125,7 @@ const TwilioAddForm = () => {
                   <CustomPasswordTextField
                     placeholder="Account Sid"
                     name="twilioAccountSid"
-                    maxLength={20}
+                    maxLength={34}
                     feedback={false}
                     value={values.twilioAccountSid}
                     showLabel={true}
