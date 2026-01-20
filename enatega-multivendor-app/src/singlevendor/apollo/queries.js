@@ -562,6 +562,9 @@ export const ORDER_DETAILS_PAGE = gql`
         freeDeliveriesRemaining
         priorityDeliveryFees
         deliverChargesAmount
+        rider {
+          phone
+        }
         deliveryAddress {
           _id
           deliveryAddress
