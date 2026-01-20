@@ -99,6 +99,7 @@ import AddPaymentMethod from '../singlevendor/screens/PaymentMethod/AddPaymentMe
 import OrderHistoryDetails from '../singlevendor/screens/OrderHistory/OrderHistoryDetails'
 import WalletScreen from '../singlevendor/screens/Wallet/index'
 import RefralScreen from '../screens/RefralScreen/RefralScreen'
+import { useVendorModeStore } from '../singlevendor'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -271,83 +272,12 @@ function LocationStack() {
   )
 }
 
-// function BottomTabNavigator() {
-//   const themeContext = useContext(ThemeContext)
-//   const currentTheme = theme[themeContext.ThemeValue]
-//   const { t } = useTranslation()
-//   const { profile: userProfile } = useContext(UserContext)
-//   return (
-//     <Tab.Navigator
-//       screenOptions={({ route }) => ({
-//         tabBarIcon: ({ focused, color, size }) => {
-//           // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
-//           return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
-//         },
-//         tabBarStyle: {
-//           paddingHorizontal: 15,
-//           paddingVertical: 10,
-//           paddingBottom: Platform.OS === 'ios' ? 25 : 15,
-//           height: Platform.OS === 'ios' ? 90 : 70,
-//           backgroundColor: currentTheme.cardBackground
-//         },
-//         tabBarActiveTintColor: '#0EA5E9',
-//         tabBarInactiveTintColor: currentTheme.fontNewColor,
-//         tabBarLabelStyle: { fontSize: 12 },
-//         headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
-//       })}
-//     >
-//       <Tab.Screen
-//         name='Discovery'
-//         component={Main}
-//         options={{
-//           tabBarLabel: t('Discovery')
-//         }}
-//       />
-//       <Tab.Screen
-//         name='Restaurants'
-//         component={Menu}
-//         options={{
-//           tabBarLabel: t('Restaurants')
-//         }}
-//         initialParams={{
-//           selectedType: 'restaurant',
-//           queryType: 'restaurant'
-//         }}
-//       />
-//       <Tab.Screen
-//         name='Store'
-//         component={Menu}
-//         options={{
-//           tabBarLabel: t('Store')
-//         }}
-//         initialParams={{
-//           selectedType: 'grocery',
-//           queryType: 'grocery'
-//         }}
-//       />
-//       <Tab.Screen
-//         name='Search'
-//         component={SearchScreen}
-//         options={{
-//           tabBarLabel: t('search')
-//         }}
-//       />
-//       <Tab.Screen
-//         name='Profile'
-//         component={userProfile ? Profile : CreateAccount}
-//         options={{
-//           tabBarLabel: t('titleProfile')
-//         }}
-//       />
-//     </Tab.Navigator>
-//   )
-// }
 
 function AppContainer() {
   const client = useApolloClient()
   const { permissionState, setPermissionState, location } = useContext(LocationContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
-
+const { vendorMode } = useVendorModeStore.getState()
   const [isLoadingPermission, setIsLoadingPermission] = React.useState(true)
 
   const handleNotification = useCallback(
@@ -397,6 +327,10 @@ function AppContainer() {
   console.log('-------------')
   console.log({ permissionState, location })
 
+
+
+
+
   if (isLoadingPermission) return
 
   return (
@@ -406,7 +340,10 @@ function AppContainer() {
           navigationService.setGlobalRef(ref)
         }}
       >
-        {!permissionState?.granted || !location ? <LocationStack /> : <MainNavigator />}
+        {
+        (!permissionState?.granted || !location) && (vendorMode !== 'SINGLE')  ? <LocationStack /> : 
+        
+        <MainNavigator />}
 
         {/* {<LocationStack />}
         <MainNavigator /> */}

@@ -14,7 +14,19 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart, isAddingTo
   const iconColor = themeContext.ThemeValue === 'Dark' ? 'white' : 'black'
 
   // Todo: temp states for handling fav and item count
-  const [itemCount, setItemCount] = useState(productInfoData?.cartQuantity)
+  const [itemCount, setItemCount] = useState(
+    1
+    // productInfoData?.cartQuantity
+  )
+
+  const actualPrice = productInfoData?.price
+  const discountPrice = productInfoData?.variations?.[0].discountedUnitPrice
+
+  console.log('actualUnitPrice', actualPrice)
+  console.log('discountedUnitPrice', discountPrice)
+
+  const hasDeal = discountPrice < actualPrice
+  console.log('hasDeal', hasDeal)
 
   return (
     <>
@@ -31,11 +43,26 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart, isAddingTo
         </View>
 
         <View style={[styles().flex, { alignItems: 'center', gap: 12 }]}>
-          <TextDefault H4 bolder textColor={currentTheme.singlevendorcolor}>
-            {config?.currencySymbol}
-            {'\u00A0'}
-            {productInfoData?.price}
-          </TextDefault>
+          {hasDeal ? (
+            <>
+              <TextDefault style={styles(currentTheme).finalPrice} H4 bolder textColor={currentTheme.singlevendorcolor}>
+                {config?.currencySymbol}
+                {'\u00A0'}
+                {discountPrice}
+              </TextDefault>
+              <TextDefault style={styles(currentTheme).originalPrice} H4 bolder textColor={currentTheme.fontSecondColor}>
+                {config?.currencySymbol}
+                {'\u00A0'}
+                {actualPrice}
+              </TextDefault>
+            </>
+          ) : (
+            <TextDefault H4 bolder textColor={currentTheme.fontSecondColor}>
+              {config?.currencySymbol}
+              {'\u00A0'}
+              {productInfoData?.price}
+            </TextDefault>
+          )}
           {productInfoData?.isPopular && (
             <View style={[styles(currentTheme).popular, styles().flexCenter]}>
               <MaterialCommunityIcons name='fire' size={18} color={currentTheme.white} />
@@ -118,5 +145,13 @@ const styles = (props = null) =>
       paddingVertical: 6,
       paddingHorizontal: 8,
       borderRadius: 6
+    },
+    finalPrice: {
+      color: props?.primaryBlue
+    },
+
+    originalPrice: {
+      color: props?.fontSecondColor,
+      textDecorationLine: 'line-through'
     }
   })

@@ -19,6 +19,7 @@ const useOrderConfirmation = ({ orderId }) => {
   })
 
   const confirmation = data?.orderDetailsPage?.data
+  const initialOrder = data?.orderDetailsPage?.rawOrder
 
   console.log('Checkout Data:', data,confirmation?.items, error)
   return {
@@ -56,9 +57,7 @@ const useOrderConfirmation = ({ orderId }) => {
     address:confirmation?.deliveryAddress?.deliveryAddress,
     customerLocation: {longitude:confirmation?.deliveryAddress?.location?.coordinates[0],latitude:confirmation?.deliveryAddress?.location?.coordinates[1]},
     orderItems: confirmation?.items ?? [],
-    orderNo: confirmation?.orderId,
-    riderPhone: confirmation?.rider?.phone
-
+    initialOrder:initialOrder
     // deliveryDiscount: confirmation?.deliveryDiscount ?? 0,
   }
 }
