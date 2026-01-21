@@ -40,7 +40,10 @@ export const useCreateAccount = () => {
   const [googleUser, setGoogleUser] = useState(null);
   const [pendingGoogleUserData, setPendingGoogleUserData] = useState(null);
   const pendingGoogleUserDataRef = useRef(null);
+  const [pendingAppleUserData, setPendingAppleUserData] = useState(null);
+  const pendingAppleUserDataRef = useRef(null);
   const referralCallbacksRef = useRef({ onContinue: null, onSkip: null });
+  const appleReferralCallbacksRef = useRef({ onContinue: null, onSkip: null });
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] };
 
   const {
@@ -176,13 +179,51 @@ export const useCreateAccount = () => {
     setPendingGoogleUserData(null);
   }, []);
 
+  // Handle Apple referral continue with code
+  const handleAppleReferralContinue = useCallback(async (referralCode) => {
+    const userData = pendingAppleUserDataRef.current;
+    if (!userData) {
+      console.error('❌ No pending Apple user data');
+      return;
+    }
+
+    setLoading(true);
+    loginButtonSetter('Apple');
+    console.log('🍎 [Apple Debug] Logging in user with referral code:', referralCode);
+    await mutateLogin({ ...userData, referralCode });
+    // Clear pending data after use
+    pendingAppleUserDataRef.current = null;
+    setPendingAppleUserData(null);
+  }, []);
+
+  // Handle Apple referral skip
+  const handleAppleReferralSkip = useCallback(async () => {
+    const userData = pendingAppleUserDataRef.current;
+    if (!userData) {
+      console.error('❌ No pending Apple user data');
+      return;
+    }
+
+    setLoading(true);
+    loginButtonSetter('Apple');
+    console.log('🍎 [Apple Debug] Logging in user without referral code');
+    await mutateLogin(userData);
+    // Clear pending data after use
+    pendingAppleUserDataRef.current = null;
+    setPendingAppleUserData(null);
+  }, []);
+
   // Store callbacks in ref for navigation params
   useEffect(() => {
     referralCallbacksRef.current = {
       onContinue: handleReferralContinue,
       onSkip: handleReferralSkip
     };
-  }, [handleReferralContinue, handleReferralSkip]);
+    appleReferralCallbacksRef.current = {
+      onContinue: handleAppleReferralContinue,
+      onSkip: handleAppleReferralSkip
+    };
+  }, [handleReferralContinue, handleReferralSkip, handleAppleReferralContinue, handleAppleReferralSkip]);
 
   // Navigation listener to handle fallback case when callbacks don't work
   useFocusEffect(
@@ -190,9 +231,11 @@ export const useCreateAccount = () => {
       const params = navigation.getState()?.routes?.find(r => r.name === 'CreateAccount')?.params;
       if (params) {
         const { referralCode, referralSkipped } = params;
-        const userData = pendingGoogleUserDataRef.current;
+        const googleUserData = pendingGoogleUserDataRef.current;
+        const appleUserData = pendingAppleUserDataRef.current;
         
-        if (userData) {
+        // Handle Google user data
+        if (googleUserData) {
           if (referralCode) {
             console.log('🔐 Handling referral code from navigation params:', referralCode);
             handleReferralContinue(referralCode);
@@ -205,8 +248,23 @@ export const useCreateAccount = () => {
             navigation.setParams({ referralSkipped: undefined });
           }
         }
+        
+        // Handle Apple user data
+        if (appleUserData) {
+          if (referralCode) {
+            console.log('🍎 [Apple Debug] Handling referral code from navigation params:', referralCode);
+            handleAppleReferralContinue(referralCode);
+            // Clear params
+            navigation.setParams({ referralCode: undefined });
+          } else if (referralSkipped) {
+            console.log('🍎 [Apple Debug] Handling referral skip from navigation params');
+            handleAppleReferralSkip();
+            // Clear params
+            navigation.setParams({ referralSkipped: undefined });
+          }
+        }
       }
-    }, [navigation, handleReferralContinue, handleReferralSkip])
+    }, [navigation, handleReferralContinue, handleReferralSkip, handleAppleReferralContinue, handleAppleReferralSkip])
   );
 
   // --- Common Navigation Functions ---
@@ -219,8 +277,10 @@ export const useCreateAccount = () => {
   };
 
   const navigateToPhone = () => {
+    // Use Google user name if available, otherwise try to get from Apple user data
+    const userName = googleUser || pendingAppleUserDataRef.current?.name || '';
     navigation.navigate('PhoneNumber', {
-      name: googleUser,
+      name: userName,
       phone: ''
     });
   };
@@ -382,6 +442,21 @@ export const useCreateAccount = () => {
     Linking.openURL(PRIVACY_POLICY);
   };
 
+  // Function to handle Apple login and navigate to referral screen
+  const handleAppleLogin = useCallback((userData) => {
+    console.log('🍎 [Apple Debug] Storing Apple user data and navigating to RefralScreen');
+    setPendingAppleUserData(userData);
+    pendingAppleUserDataRef.current = userData;
+    setLoading(false);
+    
+    // Navigate to RefralScreen with user data and callbacks
+    navigation.navigate('RefralScreen', { 
+      userData: userData,
+      onContinue: appleReferralCallbacksRef.current.onContinue,
+      onSkip: appleReferralCallbacksRef.current.onSkip
+    });
+  }, [navigation]);
+
   return {
     enableApple,
     loginButton,
@@ -400,5 +475,6 @@ export const useCreateAccount = () => {
     signIn, // iOS-specific signIn function
     handleReferralContinue,
     handleReferralSkip,
+    handleAppleLogin, // Function to handle Apple login with referral flow
   };
 };
