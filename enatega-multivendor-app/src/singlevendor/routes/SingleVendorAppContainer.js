@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import BottomTabNavigator from '../../routes/BottomTabNavigator'
@@ -64,6 +63,10 @@ import AddPaymentMethod from '../screens/PaymentMethod/AddPaymentMethod'
 import screenOptions from '../../routes/screenOptions'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION } from '../../utils/constants'
 import navigationService from '../../routes/navigationService'
+import OrderHistory from '../screens/OrderHistory'
+import OrderHistoryDetails from '../screens/OrderHistory/OrderHistoryDetails'
+import FAQS from '../screens/FAQS'
+import FeedBack from '../screens/FeedBack'
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
 
@@ -169,14 +172,18 @@ function MainNavigator() {
       <NavigationStack.Screen name='FastHelpSupport' component={FastHelpSupport} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='AccountHelp' component={AccountHelp} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='HelpConversation' component={HelpConversation} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='OrderHistory' component={OrderHistory} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='OrderHistoryDetails' component={OrderHistoryDetails} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='FAQS' component={FAQS} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
+      <NavigationStack.Screen name='FeedBack' component={FeedBack} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
     </NavigationStack.Navigator>
   )
 }
 
 function SingleVendorAppContainer() {
-//   const client = useApolloClient()
+  //   const client = useApolloClient()
 
-//   const lastNotificationResponse = Notifications.useLastNotificationResponse()
+  //   const lastNotificationResponse = Notifications.useLastNotificationResponse()
 
   //   const handleNotification = useCallback(
   //     async (response) => {

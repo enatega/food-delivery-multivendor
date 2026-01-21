@@ -19,13 +19,15 @@ const ProductCard = ({ product, onCardPress, containerStyles }) => {
   const deal = variation?.deal
 
   const { finalPrice, discountAmount } = getDealPricing(variation?.price, deal)
-  const { t, addItemToCart, updateUserCartLoading } = useAddToCart({ foodId: product?.id })
+  const { t, addItemToCart, isItemLoading } = useAddToCart({ foodId: product?.id })
+  const updateUserCartLoading = isItemLoading(`${product.id}_${variation.id}`)
   const hasDeal = Boolean(deal)
 
   const onAddToCart = () => {
     console.log('on Add to Cart:', product)
     //Needs Category Id Here
-    addItemToCart(productInfoData?.id, productInfoData?.categoryId, product?.variations?.[0], [], 1)
+    console.log("product?.variations?.[0]?._id:",product?.variations?.[0]?.id);
+    addItemToCart(product?.id, '', product?.variations?.[0]?.id, [], 1)
   }
 
   return (
