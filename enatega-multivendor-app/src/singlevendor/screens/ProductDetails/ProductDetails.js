@@ -15,19 +15,21 @@ import Addons from './Addons'
 import Variations from './Variations'
 import OptionList from './OptionsList'
 import useAddToCart from './useAddToCart'
+import FloatingCartButton from '../../components/Cart/FloatingCartButton'
 
 const ProductDetails = ({ route }) => {
   const { productId } = route?.params
-  const {  loading, productInfoData, productOtherDetails } = useProductDetails({ foodId: productId })
-  const {t,currentTheme,addItemToCart,updateUserCartLoading} = useAddToCart({foodId: productId})
+  const { loading, productInfoData, productOtherDetails } = useProductDetails({ foodId: productId })
+  const { t, currentTheme, addItemToCart, updateUserCartLoading } = useAddToCart({ foodId: productId })
   const navigation = useNavigation()
 
   const variations = productInfoData.variations || []
   const selectedAddons = productInfoData.selectedAddons || []
   console.log('productInfoData', variations)
   const [selectedVariationId, setSelectedVariationId] = useState(
-    // productInfoData?.selectedVariations?.length > 0 ? productInfoData?.selectedVariations : 
-    variations?.length ? [variations[0].id] : [])
+    // productInfoData?.selectedVariations?.length > 0 ? productInfoData?.selectedVariations :
+    variations?.length ? [variations[0].id] : []
+  )
   const [selectedAddonIds, setSelectedAddonIds] = useState([])
   const [totalPrice, setTotalPrice] = useState(variations?.[0]?.price || 0)
   const selectedAddonsRef = useRef([])
@@ -98,69 +100,72 @@ const ProductDetails = ({ route }) => {
   }
 
   return (
-    <ScrollView style={{ backgroundColor: currentTheme.themeBackground, minHeight: '100%' }} contentContainerStyle={{ paddingBottom: 20 }}>
-      {loading ? (
-        <ProductDetailsLoader />
-      ) : (
-        <View style={{ gap: 10 }}>
-          <ProductInfo
-            t={t}
-            productInfoData={{
-              ...productInfoData,
-              price: totalPrice
-            }}
-            currentTheme={currentTheme}
-            onAddToCart={(itemCount) => {
-              onAddToCart(itemCount)
-            }}
-            isAddingToCart={updateUserCartLoading}
-          />
-          <WrapperProductOtherDetails t={t} currentTheme={currentTheme} productOtherDetails={productOtherDetails} />
-          <Variations
-            variations={variations}
-            selectedVariationId={selectedVariationId}
-            setSelectedVariationId={(ids) => {
-              setSelectedVariationId(ids)
-              setSelectedAddonIds([])
-            }}
-            setSelectedAddonIds={setSelectedAddonIds}
-          />
-          <Addons
-            selectedVariation={selectedVariation}
-            selectedAddonIds={selectedAddonIds}
-            setSelectedAddonIds={(value, optionId, addonId) => {
-              setSelectedAddonIds(value)
+    <>
+      <ScrollView style={{ backgroundColor: currentTheme.themeBackground, minHeight: '100%' }} contentContainerStyle={{ paddingBottom: 20 }}>
+        {loading ? (
+          <ProductDetailsLoader />
+        ) : (
+          <View style={{ gap: 10 }}>
+            <ProductInfo
+              t={t}
+              productInfoData={{
+                ...productInfoData,
+                price: totalPrice
+              }}
+              currentTheme={currentTheme}
+              onAddToCart={(itemCount) => {
+                onAddToCart(itemCount)
+              }}
+              isAddingToCart={updateUserCartLoading}
+            />
+            <WrapperProductOtherDetails t={t} currentTheme={currentTheme} productOtherDetails={productOtherDetails} />
+            <Variations
+              variations={variations}
+              selectedVariationId={selectedVariationId}
+              setSelectedVariationId={(ids) => {
+                setSelectedVariationId(ids)
+                setSelectedAddonIds([])
+              }}
+              setSelectedAddonIds={setSelectedAddonIds}
+            />
+            <Addons
+              selectedVariation={selectedVariation}
+              selectedAddonIds={selectedAddonIds}
+              setSelectedAddonIds={(value, optionId, addonId) => {
+                setSelectedAddonIds(value)
 
-              let updatedSelectedAddons = selectedAddonsRef.current.map((addon) => ({
-                _id: addon._id,
-                options: [...addon.options] // 👈 deep copy options
-              }))
+                let updatedSelectedAddons = selectedAddonsRef.current.map((addon) => ({
+                  _id: addon._id,
+                  options: [...addon.options] // 👈 deep copy options
+                }))
 
-              if (value.includes(optionId)) {
-                const index = updatedSelectedAddons.findIndex((a) => a._id === addonId)
+                if (value.includes(optionId)) {
+                  const index = updatedSelectedAddons.findIndex((a) => a._id === addonId)
 
-                if (index !== -1) {
-                  updatedSelectedAddons[index] = {
-                    ...updatedSelectedAddons[index],
-                    options: [...updatedSelectedAddons[index].options, optionId]
+                  if (index !== -1) {
+                    updatedSelectedAddons[index] = {
+                      ...updatedSelectedAddons[index],
+                      options: [...updatedSelectedAddons[index].options, optionId]
+                    }
+                  } else {
+                    updatedSelectedAddons.push({
+                      _id: addonId,
+                      options: [optionId]
+                    })
                   }
                 } else {
-                  updatedSelectedAddons.push({
-                    _id: addonId,
-                    options: [optionId]
-                  })
+                  updatedSelectedAddons = updatedSelectedAddons.map((addon) => (addon._id === addonId ? { ...addon, options: addon.options.filter((id) => id !== optionId) } : addon)).filter((addon) => addon.options.length > 0)
                 }
-              } else {
-                updatedSelectedAddons = updatedSelectedAddons.map((addon) => (addon._id === addonId ? { ...addon, options: addon.options.filter((id) => id !== optionId) } : addon)).filter((addon) => addon.options.length > 0)
-              }
 
-              selectedAddonsRef.current = updatedSelectedAddons
-            }}
-          />
-        </View>
-      )}
-      <SimilarProducts id={productId} />
-    </ScrollView>
+                selectedAddonsRef.current = updatedSelectedAddons
+              }}
+            />
+          </View>
+        )}
+        <SimilarProducts id={productId} />
+      </ScrollView>
+      <FloatingCartButton />
+    </>
   )
 }
 
