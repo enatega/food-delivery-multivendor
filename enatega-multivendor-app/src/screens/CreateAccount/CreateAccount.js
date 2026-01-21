@@ -19,7 +19,7 @@ import ContinueWithPhoneButton from '../../components/Auth/ContinueWithPhoneButt
 const { height } = Dimensions.get('window')
 
 const CreateAccount = (props) => {
-  const { enableApple, loginButton, loginButtonSetter, loading, themeContext, currentTheme, mutateLogin, navigateToLogin, navigation, signIn } = useCreateAccount()
+  const { enableApple, loginButton, loginButtonSetter, loading, setLoading, themeContext, currentTheme, mutateLogin, navigateToLogin, navigation, signIn, handleAppleLogin } = useCreateAccount()
 
   const { t } = useTranslation()
 
@@ -53,6 +53,9 @@ const CreateAccount = (props) => {
         style={styles().appleBtn}
         onPress={async () => {
           try {
+            loginButtonSetter('Apple')
+            setLoading(true)
+            
             const credential = await AppleAuthentication.signInAsync({
               requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL]
             })
@@ -78,13 +81,14 @@ const CreateAccount = (props) => {
               type: 'apple'
             }
 
-            mutateLogin(user)
-            loginButtonSetter('Apple')
+            // Navigate to referral screen instead of directly calling mutateLogin
+            handleAppleLogin(user)
           } catch (e) {
             if (e.code !== 'ERR_CANCELED') {
               console.error('Apple Sign In Error:', e)
             }
             loginButtonSetter(null)
+            setLoading(false)
           }
         }}
       />

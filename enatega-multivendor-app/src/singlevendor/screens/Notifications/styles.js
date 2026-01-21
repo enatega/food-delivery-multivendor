@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { scale, verticalScale } from '../../../utils/scaling'
+import { theme } from '../../../utils/themeColors'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -22,6 +23,26 @@ const styles = (props = null) =>
       fontSize: scale(18),
       fontWeight: '600',
       lineHeight: scale(20)
+    },
+    paginationRow: {
+      paddingHorizontal: scale(16),
+      paddingVertical: verticalScale(12),
+      alignItems: 'center'
+    },
+    showMoreButton: {
+      // backgroundColor: 'transparent'
+      backgroundColor: theme?.Dark?.primaryBlue,
+      borderRadius: scale(8),
+      paddingVertical: verticalScale(6),
+      paddingHorizontal: scale(16),
+    },
+    showMoreText: {
+      fontSize: scale(14),
+      fontWeight: '600'
+    },
+    endMessageText: {
+      fontSize: scale(12),
+      opacity: 0.7
     }
   })
 

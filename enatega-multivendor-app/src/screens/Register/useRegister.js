@@ -22,6 +22,7 @@ const useRegister = () => {
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
   const [email, setEmail] = useState(route.params?.email || '')
+  const referralCode = route.params?.referralCode || null
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(true)
@@ -141,7 +142,8 @@ const useRegister = () => {
                   password: password,
                   name: firstname + ' ' + lastname
                 },
-                isPhoneExists: true
+                isPhoneExists: true,
+                referralCode: referralCode
               })
             }
           }
@@ -155,7 +157,8 @@ const useRegister = () => {
           email: email.toLowerCase().trim(),
           password: password,
           name: firstname + ' ' + lastname
-        }
+        },
+        referralCode: referralCode
       })
     }
   }

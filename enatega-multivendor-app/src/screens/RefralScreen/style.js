@@ -104,7 +104,7 @@ const styles = (currentTheme) =>
     },
     skipButton: {
       width: '100%',
-      backgroundColor: currentTheme?.customBorder ,
+      backgroundColor: currentTheme?.singlevendorcolor ,
       borderRadius: scale(8),
       paddingVertical: verticalScale(16),
       alignItems: 'center',
