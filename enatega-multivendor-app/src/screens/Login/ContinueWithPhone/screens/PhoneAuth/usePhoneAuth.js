@@ -16,6 +16,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { useCountryFromIP } from '../../../../../utils/useCountryFromIP'
 import { phoneRegex } from '../../../../../utils/regex'
+import useNotifications from '../../../../../utils/useNotifications'
 
 export const usePhoneAuth = () => {
   const { t, i18n } = useTranslation()
@@ -34,6 +35,7 @@ export const usePhoneAuth = () => {
   const referralCallbacksRef = useRef({ onContinue: null, onSkip: null })
 
   const { country, setCountry, currentCountry: countryCode, setCurrentCountry: setCountryCode, isLoading: isCountryLoading } = useCountryFromIP()
+  const { registerForPushNotificationsAsync } = useNotifications()
 
   const [mutateLoginWithPhoneFirstStep, { data: loginWithPhoneFirstStepData, loading: loginWithPhoneFirstStepLoading, error: loginWithPhoneFirstStepError }] = useMutation(loginWithPhoneFirstStep, {
     onCompleted: loginWithPhoneFirstStepOnCompleted,
@@ -115,12 +117,15 @@ export const usePhoneAuth = () => {
     }
   }
 
-  function onBoardingCompleteHandler() {
+  async function onBoardingCompleteHandler() {
     try {
+      let token = null
+      token = await registerForPushNotificationsAsync()
       if (name.length) {
         mutateonBoardingComplete({
           variables: {
-            name: name
+            name: name,
+            notificationToken: token
           }
         })
       }
@@ -238,7 +243,7 @@ export const usePhoneAuth = () => {
       pendingPhoneAuthDataRef.current = null
       setOtpError(null)
       setOtp('')
-      
+      console.log("Use Phone Auth:",data)
       setTokenAsync(data.loginWithPhoneFinalStep.token)
       if (data.loginWithPhoneFinalStep.onboarding) {
         navigation.navigate({

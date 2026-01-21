@@ -40,7 +40,6 @@ const Home = () => {
     StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
 
-  console.log('🚀 ~ Home ~ categoriesData:', categoriesData)
 
   useLayoutEffect(() => {
     navigation.setOptions(
