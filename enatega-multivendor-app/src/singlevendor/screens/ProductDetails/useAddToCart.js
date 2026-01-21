@@ -17,9 +17,11 @@ const useAddToCart = ({ foodId }) => {
   const { isLoggedIn } = useContext(UserContext)
   const { setCartFromServer } = useCartStore()
   const navigation = useNavigation()
-  // const [updateUserCartLoading, setUpdateUserCartLoading] = useState(false)
-  const isItemLoading = useCartQueueStore((s) => s.isItemLoading)
-  // const updateUserCartLoading = useCartQueueStore((state) => state.isProcessing || state.queue.length > 0)
+
+   const loadingItemIds = useCartQueueStore(
+    (state) => state.loadingItemIds
+  )
+
   const [updateUserCart, { error: updateUserCartError }] = useMutation(UPDATE_USER_CART, {
     onCompleted: (data) => {
       console.log('Cart updated:', data?.userCartData)
@@ -136,7 +138,7 @@ const useAddToCart = ({ foodId }) => {
   //   }
   // }
 
-  return { currentTheme, t, isItemLoading, addItemToCart }
+  return { currentTheme, t, loadingItemIds, addItemToCart }
 }
 
 export default useAddToCart

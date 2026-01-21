@@ -1,47 +1,28 @@
-// // useCartQueueStore.js
-// import { create } from 'zustand'
-
-// const useCartQueueStore = create((set, get) => ({
-//   queue: [],
-//   isProcessing: false,
-
-//   enqueue: (task) =>
-//     set((state) => ({
-//       queue: [...state.queue, task]
-//     })),
-
-//   dequeue: () =>
-//     set((state) => ({
-//       queue: state.queue.slice(1)
-//     })),
-
-//   startProcessing: () => set({ isProcessing: true }),
-//   stopProcessing: () => set({ isProcessing: false })
-// }))
-
-// export default useCartQueueStore
-
-
-// useCartQueueStore.js
 import { create } from 'zustand'
 
 const useCartQueueStore = create((set, get) => ({
   queue: [],
   isProcessing: false,
-  loadingItemIds: new Set(), 
+
+  // 🔥 plain object instead of Set
+  loadingItemIds: {},
 
   enqueue: (task, itemId) =>
     set((state) => ({
       queue: [...state.queue, task],
-      loadingItemIds: new Set(state.loadingItemIds).add(itemId)
+      loadingItemIds: {
+        ...state.loadingItemIds,
+        [itemId]: true
+      }
     })),
 
   dequeue: () =>
     set((state) => {
       const [finished] = state.queue
-      const nextLoading = new Set(state.loadingItemIds)
+      const nextLoading = { ...state.loadingItemIds }
+
       if (finished?.__itemId) {
-        nextLoading.delete(finished.__itemId)
+        delete nextLoading[finished.__itemId]
       }
 
       return {
@@ -51,9 +32,7 @@ const useCartQueueStore = create((set, get) => ({
     }),
 
   startProcessing: () => set({ isProcessing: true }),
-  stopProcessing: () => set({ isProcessing: false }),
-
-  isItemLoading: (itemId) => get().loadingItemIds.has(itemId)
+  stopProcessing: () => set({ isProcessing: false })
 }))
 
 export default useCartQueueStore

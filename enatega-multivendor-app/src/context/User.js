@@ -49,6 +49,9 @@ export const UserProvider = (props) => {
     onCompleted,
     skip: !token
   })
+
+  console.log("data Profile Userjs:",dataProfile,loadingProfile)
+
   useEffect(() => {
     let isSubscribed = true
     ;(async () => {
@@ -200,10 +203,13 @@ export const UserProvider = (props) => {
     }
   }
 
+  const authReady = !token || (!loadingProfile && calledProfile)
+
   return (
     <UserContext.Provider
       value={{
         isLoggedIn: !!token && dataProfile && !!dataProfile?.profile,
+        authReady,
         loadingProfile: loadingProfile && calledProfile,
         errorProfile,
         profile: dataProfile && dataProfile?.profile ? dataProfile?.profile : null,
