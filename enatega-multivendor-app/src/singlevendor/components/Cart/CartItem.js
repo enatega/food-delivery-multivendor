@@ -40,9 +40,12 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
         </TextDefault>
 
         {/* Middle Row: Description with Dropdown - single line */}
-
-        {/* <CartItemDescription variations={item?.variations}></CartItemDescription> */}
-
+         {
+          !isFavourite ? (
+             <CartItemDescription variations={item?.variations}></CartItemDescription>
+          ) : null
+         }
+       
         {/* Expanded Addons */}
         {/* {isDropdownOpen && item?.addons && item.addons.length > 0 && (
           <View style={styles().itemsDropdown}>
