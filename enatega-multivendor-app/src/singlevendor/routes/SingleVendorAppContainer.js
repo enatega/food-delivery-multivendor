@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import BottomTabNavigator from '../../routes/BottomTabNavigator'
 import SingleVendorBottomTab from './SingleVendorBottomTab'
 import Profile from '../../screens/Profile/Profile'
 import Addresses from '../../screens/Addresses/Addresses'
@@ -67,15 +66,25 @@ import OrderHistory from '../screens/OrderHistory'
 import OrderHistoryDetails from '../screens/OrderHistory/OrderHistoryDetails'
 import FAQS from '../screens/FAQS'
 import FeedBack from '../screens/FeedBack'
+import UserOnboarding from '../screens/UserOnboarding/UserOnboarding'
+import UserContext from '../../context/User'
+import InitScreen from '../screens/UserOnboarding/InitScreen'
 const NavigationStack = createStackNavigator()
-const Location = createStackNavigator()
 
 function MainNavigator() {
   const themeContext = useContext(ThemeContext)
+  const { isLoggedIn, loadingProfile } = useContext(UserContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
+    // if (loadingProfile) {
+    // return null
+    // }
+  
   return (
     <NavigationStack.Navigator
+      initialRouteName={
+       'InitScreen'
+      }
       screenOptions={screenOptions({
         theme: themeContext.ThemeValue,
         headerMenuBackground: currentTheme.headerMenuBackground,
@@ -96,6 +105,8 @@ function MainNavigator() {
         }}
       />
 
+      <NavigationStack.Screen name='InitScreen'  component={InitScreen} options={{ ...SLIDE_RIGHT_WITH_CURVE_ANIM,headerShown: false}} />
+      <NavigationStack.Screen name='UserOnboarding' component={UserOnboarding} options={{ ...SLIDE_RIGHT_WITH_CURVE_ANIM,headerShown: false}} />
       <NavigationStack.Screen name='Profile' component={Profile} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='Addresses' component={Addresses} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='NewAddress' component={NewAddress} />

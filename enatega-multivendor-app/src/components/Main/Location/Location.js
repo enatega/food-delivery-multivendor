@@ -33,10 +33,13 @@ function Location({
   const translatedAddress =
     location?.deliveryAddress === 'Current Location'
       ? t('currentLocation')
+      : !location ? t('addAddress')
       : location?.deliveryAddress
+  
   const onLocationPress = (event) => {
 
     if (screenName === 'checkout') {
+      console.log("🚀 ~ onLocationPress ~ addresses:", addresses)
       if (addresses && !addresses.length) {
         navigation.navigate('AddNewAddress', {
           prevScreen: 'Checkout',
@@ -67,13 +70,15 @@ function Location({
             <View>
               <TextDefault textColor={locationParam} numberOfLines={1} H5 bolder isRTL>
                 {translatedAddress?.slice(0, 40)}
-                ...
               </TextDefault>
             </View>
-            <TextDefault textColor={locationLabel} left isRTL>
+            {translatedLabel && (
+              <TextDefault textColor={locationLabel} left isRTL>
               {''}
               {t(translatedLabel)}
             </TextDefault>
+            )}
+              
           </View>
           {forwardIcon && <Feather
             name= {currentTheme?.isRTL ? 'chevron-left' : 'chevron-right'}

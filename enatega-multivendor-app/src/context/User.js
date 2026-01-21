@@ -88,7 +88,7 @@ export const UserProvider = (props) => {
     try {
       await AsyncStorage.removeItem('token')
       setToken(null)
-      if (location._id) {
+      if (location?._id) {
         setLocation({
           label: t('selectedLocation'),
           latitude: location.latitude,

@@ -19,6 +19,8 @@ import analytics from '../../utils/analytics'; // Adjust path if necessary
 import AuthContext from '../../context/Auth'; // Adjust path if necessary
 import { useTranslation } from 'react-i18next';
 import { GoogleSignin } from '@react-native-google-signin/google-signin'; // Android-specific Google import
+import useNotifications from '../../utils/useNotifications';
+
 
 
 const LOGIN = gql`
@@ -40,6 +42,7 @@ export const useCreateAccount = () => {
   const pendingGoogleUserDataRef = useRef(null);
   const referralCallbacksRef = useRef({ onContinue: null, onSkip: null });
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] };
+  const { registerForPushNotificationsAsync }  = useNotifications()
 
   const {
     IOS_CLIENT_ID_GOOGLE,
@@ -219,46 +222,22 @@ export const useCreateAccount = () => {
       console.log('🔐 [Login Debug] Referral code:', user.referralCode || 'none');
       console.log('🔐 [Login Debug] Full user object:', user);
 
-      let notificationToken = null;
+      let token = null
+      token = await registerForPushNotificationsAsync()
+      console.log("🚀 ~ mutateLogin ~ token:", token)
 
-      if (Device.isDevice) {
-        try {
-          const { status: existingStatus } = await Notifications.getPermissionsAsync();
-          console.log('🔐 [Login Debug] Notification permission status:', existingStatus);
-
-          if (existingStatus === 'granted') {
-            try {
-              const tokenData = await Notifications.getExpoPushTokenAsync({
-                projectId: Constants.expoConfig?.extra?.eas?.projectId
-              });
-              notificationToken = tokenData.data;
-              console.log('🔐 [Login Debug] ✅ Got notification token');
-            } catch (tokenError) {
-              console.warn('🔐 [Login Debug] ⚠️ Could not get push token (this is OK):', tokenError.message);
-              notificationToken = null;
-            }
-          } else {
-            console.log('🔐 [Login Debug] ℹ️ Notification permission not granted, skipping token');
-          }
-        } catch (permissionError) {
-          console.warn('🔐 [Login Debug] ⚠️ Could not check notification permissions:', permissionError.message);
-          notificationToken = null;
-        }
-      } else {
-        console.log('🔐 [Login Debug] ℹ️ Not a physical device, skipping notification token');
-      }
 
       // Extract referralCode from user object if present
       const { referralCode, ...userWithoutReferral } = user;
       const mutationVariables = {
         ...userWithoutReferral,
-        notificationToken: notificationToken,
+        notificationToken: token,
         referralCode: referralCode || null
       };
 
       console.log('🔐 [Login Debug] About to call GraphQL mutation with variables:', {
         ...mutationVariables,
-        notificationToken: notificationToken ? 'token_present' : 'no_token'
+        notificationToken: token ? 'token_present' : 'no_token'
       });
 
       mutate({

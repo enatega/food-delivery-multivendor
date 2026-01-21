@@ -14,6 +14,7 @@ import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import useNotifications from '../../utils/useNotifications'
 
 const LOGIN = gql`
   ${login}
@@ -43,6 +44,7 @@ export const useLogin = () => {
   const pendingRegistrationDataRef = useRef(null) // { email } for signup
   const referralCallbacksRef = useRef({ onContinue: null, onSkip: null })
   const referralCodeRef = useRef(null) // Store referral code for login
+  const { registerForPushNotificationsAsync } = useNotifications()
 
   const [EmailEixst, { loading }] = useMutation(EMAIL, {
     onCompleted,
@@ -104,6 +106,8 @@ export const useLogin = () => {
           emailExist.userType !== 'google' &&
           emailExist.userType !== 'facebook'
         ) {
+          //  setRegisteredEmail(true)
+
           // User exists - store email and navigate to referral screen
           // Password will be entered after returning from referral screen
           pendingLoginDataRef.current = {
@@ -120,9 +124,7 @@ export const useLogin = () => {
           })
         } else {
           FlashMessage({
-            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t(
-              'continueWith'
-            )} ${emailExist.userType}`
+            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t('continueWith')} ${emailExist.userType}`
           })
           navigation.navigate({ name: 'Main', merge: true })
         }
@@ -200,31 +202,19 @@ export const useLogin = () => {
   async function loginAction(email, password, referralCode = null) {
     try {
       if (validateCredentials()) {
+
+        let token = null
+        token = await registerForPushNotificationsAsync()
+
         // Use stored referral code if available, otherwise use passed one
         const finalReferralCode = referralCodeRef.current !== null ? referralCodeRef.current : (referralCode || null)
-        let notificationToken = null
-          try {
-            if (Device.isDevice) {
-              const {
-                status: existingStatus
-              } = await Notifications.getPermissionsAsync()
-              if (existingStatus === 'granted') {
-                notificationToken = (await Notifications.getExpoPushTokenAsync({
-                  projectId: Constants.expoConfig.extra.eas.projectId
-                })).data
-              }
-            }
-        } catch (error) {
-          FlashMessage({
-            message: t('errorWhileGettingNotificationToken'),
-          })
-        }
+       
         LoginMutation({
           variables: {
             email,
             password,
             type: 'default',
-            notificationToken,
+            notificationToken:token,
             referralCode: finalReferralCode
           }
         })
