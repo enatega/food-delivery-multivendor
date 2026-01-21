@@ -15,6 +15,7 @@ import AuthContext from '../../../context/Auth'
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../../context/Configuration'
 import useEnvVars from '../../../../environment'
+import useNotifications from '../../../utils/useNotifications'
 
 const SEND_OTP_TO_EMAIL = gql`
   ${sendOtpToEmail}
@@ -39,6 +40,7 @@ const useEmailOtp = (isPhoneExists) => {
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { registerForPushNotificationsAsync } = useNotifications()
 
   function onError(error) {
     if (error.networkError) {
@@ -72,6 +74,7 @@ const useEmailOtp = (isPhoneExists) => {
 
   async function onCreateUserCompleted(data) {
     try {
+      console.log('🚀 ~ file: useEmailOtp.js ~ line 106 ~ onCreateUserCompleted ~ data', data)
       FlashMessage({
         message: t('accountCreated')
       })
@@ -112,17 +115,12 @@ const useEmailOtp = (isPhoneExists) => {
 
   async function mutateRegister() {
     try {
-      let notificationToken = null
-      if (Device.isDevice) {
-        try {
-          const { status } = await Notifications.requestPermissionsAsync()
-        if (status === 'granted') {
-          notificationToken = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data
-        }
-        } catch (error) {
-          console.log('Error catched in notificationToken:', error)
-        }
-      }
+       let token = null
+      token = await registerForPushNotificationsAsync()
+      console.log("🚀 ~ mutateRegister ~ token:", token)
+
+
+     
       console.log('mutation variables: create user', isPhoneExists, 'referralCode:', referralCode)
       await mutateUser({
         variables: {
@@ -131,7 +129,7 @@ const useEmailOtp = (isPhoneExists) => {
           password: user.password,
           name: user.name,
           picture: '',
-          notificationToken: notificationToken,
+          notificationToken: token,
           emailIsVerified: true,
           isPhoneExists: isPhoneExists || false,
           referralCode: referralCode || null

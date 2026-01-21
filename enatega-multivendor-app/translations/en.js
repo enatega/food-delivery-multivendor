@@ -823,6 +823,7 @@ export const en = {
   "Currently Active": "Currently Active",
   "Last updated at": "Last updated at",
   "Created at": "Created at",
-  "Continue Conversation": "Continue Conversation"
-
+  "Continue Conversation": "Continue Conversation",
+  "Sign up now and get all your favorites delivered to your door.": "Sign up now and get all your favorites delivered to your door.",
+  "Add address": "Add address",
 }

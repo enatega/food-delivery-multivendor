@@ -462,8 +462,8 @@ export const loginWithPhoneFinalStep = gql`
 `
 
 export const onBoardingComplete = gql`
-  mutation OnBoardingComplete($name: String) {
-    onBoardingComplete(name: $name) {
+  mutation OnBoardingComplete($name: String, $notificationToken: String) {
+    onBoardingComplete(name: $name, notificationToken: $notificationToken) {
       _id
       name
       email

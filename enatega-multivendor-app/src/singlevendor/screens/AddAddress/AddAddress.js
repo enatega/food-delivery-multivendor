@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import navigationOptions from './navigationOptions'
 import useAddAddress from './useAddAddress'
 import { useNavigation } from '@react-navigation/native'
@@ -7,6 +7,7 @@ import SearchingAddress from '../../components/AddAddress/SearchingAddress'
 import SelectionOnMap from '../../components/AddAddress/SelectionOnMap'
 import SearchedAddress from '../../components/AddAddress/SearchedAddress'
 import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
+import useLocationPermission from '../../../utils/useLocationPermission'
 
 const AddAddress = () => {
   const {
@@ -44,6 +45,17 @@ const AddAddress = () => {
   } = useAddAddress()
 
   const navigation = useNavigation()
+  const { requestPermission } = useLocationPermission()
+
+
+  useEffect(() => {
+  const initPermission = async () => {
+    await requestPermission()
+  }
+  initPermission()
+}, [])
+
+  
 
   useLayoutEffect(() => {
     navigation.setOptions(
