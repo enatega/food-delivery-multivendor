@@ -22,7 +22,7 @@ const useAddToCart = ({ foodId }) => {
     (state) => state.loadingItemIds
   )
 
-  const [updateUserCart, { error: updateUserCartError }] = useMutation(UPDATE_USER_CART, {
+  const [updateUserCart, { loading:updateUserCartLoading, error: updateUserCartError }] = useMutation(UPDATE_USER_CART, {
     onCompleted: (data) => {
       console.log('Cart updated:', data?.userCartData)
       const response = data?.userCartData
@@ -138,7 +138,7 @@ const useAddToCart = ({ foodId }) => {
   //   }
   // }
 
-  return { currentTheme, t, loadingItemIds, addItemToCart }
+  return { currentTheme, t, loadingItemIds, addItemToCart ,updateUserCartLoading}
 }
 
 export default useAddToCart
