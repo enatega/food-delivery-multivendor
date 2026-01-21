@@ -16,7 +16,6 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher }) => {
 
       //empty cart
 
-      
       navigation.dispatch(
         CommonActions.reset({
           index: 1,
@@ -35,8 +34,9 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher }) => {
           ]
         })
       )
-
-      clearCart()
+      setTimeout(() => {
+        clearCart()
+      }, 500)
     },
     onError: (err) => {
       console.log('Error placing order', err)

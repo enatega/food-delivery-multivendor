@@ -22,15 +22,15 @@
 
 // export default useCart
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/client'
 import { GET_USER_CART } from '../../apollo/queries'
 import useCartStore from '../../stores/useCartStore'
 
 const useCart = () => {
+  const hasFetchedCart = useRef(false)
+  const { data, loading, error, refetch } = useQuery(GET_USER_CART, { skip: hasFetchedCart.current })
   const { setCartFromServer, setLoading, setError } = useCartStore()
-
-  const { data, loading, error, refetch } = useQuery(GET_USER_CART)
 
   useEffect(() => {
     setLoading(loading)
@@ -39,6 +39,7 @@ const useCart = () => {
   useEffect(() => {
     console.log('Cart data from server:', JSON.stringify(data), error)
     if (data?.getUserCart?.success) {
+      hasFetchedCart.current = true
       setCartFromServer({
         cartId: data.getUserCart.cartId,
         foods: data.getUserCart.foods,

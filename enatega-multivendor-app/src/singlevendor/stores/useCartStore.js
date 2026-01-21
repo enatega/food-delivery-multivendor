@@ -6,23 +6,23 @@ const useCartStore = create((set) => ({
   grandTotal: 0,
   loading: false,
   error: null,
-  maxOrderAmount: 0,
-  minOrderAmount: 0,
-  isBelowMinimumOrder: false,
-  lowOrderFees: 0,
+  maxOrderAmount: 10,
+  minOrderAmount: 2,
+  isBelowMinimumOrder: true,
+  lowOrderFees: 2,
 
   // Set full cart from server (initial load / refetch)
   setCartFromServer: (cart) =>
     set({
       cartId: cart.cartId,
       items: cart.foods || [],
-      grandTotal: cart.grandTotal || 0,
+      grandTotal: cart.grandTotal,
       loading: false,
       error: null,
-      maxOrderAmount: cart.maxOrderAmount || 0,
-      minOrderAmount: cart.minOrderAmount || 0,
-      isBelowMinimumOrder: cart.isBelowMinimumOrder || false,
-      lowOrderFees: cart.lowOrderFees || 0
+      maxOrderAmount: cart.maxOrderAmount,
+      minOrderAmount: cart.minOrderAmount,
+      isBelowMinimumOrder: cart.isBelowMinimumOrder,
+      lowOrderFees: cart.lowOrderFees
     }),
 
   // Update a single food item after API response
@@ -37,10 +37,7 @@ const useCartStore = create((set) => ({
       items: [],
       grandTotal: 0,
       error: null,
-      maxOrderAmount: 0,
-      minOrderAmount: 0,
-      isBelowMinimumOrder: false,
-      lowOrderFees: 0
+      isBelowMinimumOrder: true,
     }),
 
   setLoading: (loading) => set({ loading }),

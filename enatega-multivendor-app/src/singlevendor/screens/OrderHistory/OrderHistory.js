@@ -18,10 +18,16 @@ import styles from './styles'
 import OrderHistoryItem from '../../components/OrderHistory/OrderHistoryItem'
 import OrderHistorySkeleton from './OrderHistorySkeleton'
 import { pathToArray } from 'graphql/jsutils/Path'
+import { GET_SCHEDULED_ORDERS } from '../../apollo/queries'
 
+// const ORDERS_LIST_QUERY = gql`
+//   ${myOrders}
+// `
 const ORDERS_LIST_QUERY = gql`
-  ${myOrders}
+  ${GET_SCHEDULED_ORDERS}
 `
+
+
 
 const OrderHistory = () => {
   const navigation = useNavigation()
@@ -37,24 +43,26 @@ const OrderHistory = () => {
     fetchPolicy: 'network-only'
   })
 
+  const orders = data?.scheduledOrders
+
   useEffect(() => {
     console.log('Orders API Data:', JSON.stringify(data, null, 2))
     console.log('Orders Loading:', loading)
     console.log('Orders Error:', error)
-    if (data?.orders?.length) {
-      console.log('Orders Array:', data.orders)
-      console.log('Orders Count:', data.orders.length)
+    if (orders?.length) {
+      console.log('Orders Array:', orders)
+      console.log('Orders Count:', orders.length)
     }
   }, [data, loading, error])
 
   const orderListData = useMemo(() => {
     const currencySymbol = configuration?.currencySymbol || ''
     return buildOrderHistoryList({
-      orders: data?.orders,
+      orders: orders,
       currencySymbol,
       t
     })
-  }, [configuration?.currencySymbol, data?.orders, t])
+  }, [configuration?.currencySymbol, orders, t])
 
   if (loading) {
     return (
