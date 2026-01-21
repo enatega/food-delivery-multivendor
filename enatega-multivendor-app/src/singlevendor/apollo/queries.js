@@ -737,3 +737,47 @@ export const GET_MY_REFERRAL_CODE = gql`
     getMyReferralCode
   }
 `
+export const GET_MY_FREE_DELIVERIES = gql`
+query GetMyFreeDeliveries {
+  getMyFreeDeliveries
+}
+`
+
+
+export const GET_TODAY_NOTIFICATIONS_BY_TOKEN = gql`
+query TodayNotificationsByToken($skip: Int, $limit: Int) {
+  todayNotificationsByToken(skip: $skip, limit: $limit) {
+      total
+      skip
+      limit
+      hasMore
+      notifications {
+          _id
+          title
+          body
+          creator
+          updatedAt
+          createdAt
+      }
+  }
+}
+`
+
+export const GET_PAST_NOTIFICATIONS_BY_TOKEN = gql`
+query PastNotificationsByToken($skip: Int, $limit: Int) {
+  pastNotificationsByToken(skip: $skip, limit: $limit) {
+      total
+      skip
+      limit
+      hasMore
+      notifications {
+          _id
+          title
+          body
+          creator
+          updatedAt
+          createdAt
+      }
+  }
+}
+`

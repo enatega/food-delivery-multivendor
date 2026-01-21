@@ -1,6 +1,6 @@
 // useCreateAccount.android.js
 
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback, useRef } from 'react';
 import { StatusBar, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
@@ -36,6 +36,9 @@ export const useCreateAccount = () => {
   const { setTokenAsync } = useContext(AuthContext);
   const themeContext = useContext(ThemeContext);
   const [googleUser, setGoogleUser] = useState(null);
+  const [pendingGoogleUserData, setPendingGoogleUserData] = useState(null);
+  const pendingGoogleUserDataRef = useRef(null);
+  const referralCallbacksRef = useRef({ onContinue: null, onSkip: null });
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] };
 
   const {
@@ -64,9 +67,6 @@ export const useCreateAccount = () => {
   // Google Sign-In Function for Android
   const signIn = async () => {
     try {
-      // console.log('🚀 Starting Google sign in (Android)...');
-      // navigation.navigate('RefralScreen');
-      // return;
       loginButtonSetter('Google');
       setLoading(true);
 
@@ -78,7 +78,7 @@ export const useCreateAccount = () => {
 
       const userInfo = await GoogleSignin.signIn();
       console.log('✅ Google sign-in successful!');
-      console.log('👤 User:', userInfo.user.email);
+      console.log('👤 User:', userInfo);
 
       const userData = {
         phone: '',
@@ -90,8 +90,17 @@ export const useCreateAccount = () => {
       };
 
       setGoogleUser(userInfo.user.name);
-      console.log('🔐 Logging in user...');
-      await mutateLogin(userData);
+      setPendingGoogleUserData(userData);
+      pendingGoogleUserDataRef.current = userData;
+      setLoading(false);
+      
+      // Navigate to RefralScreen with user data and callbacks
+      console.log('📱 Navigating to RefralScreen...');
+      navigation.navigate('RefralScreen', { 
+        userData: userData,
+        onContinue: referralCallbacksRef.current.onContinue,
+        onSkip: referralCallbacksRef.current.onSkip
+      });
 
     } catch (error) {
       console.error('❌ Google sign-in error:', error);
@@ -111,6 +120,73 @@ export const useCreateAccount = () => {
       loginButtonSetter(null);
     }
   };
+
+  // Handle referral continue with code
+  const handleReferralContinue = useCallback(async (referralCode) => {
+    const userData = pendingGoogleUserDataRef.current;
+    if (!userData) {
+      console.error('❌ No pending Google user data');
+      return;
+    }
+
+    setLoading(true);
+    loginButtonSetter('Google');
+    console.log('🔐 Logging in user with referral code:', referralCode);
+    const response = await mutateLogin({ ...userData, referralCode });
+    // Clear pending data after use
+    pendingGoogleUserDataRef.current = null;
+    setPendingGoogleUserData(null);
+  }, []);
+
+  // Handle referral skip
+  const handleReferralSkip = useCallback(async () => {
+    const userData = pendingGoogleUserDataRef.current;
+    if (!userData) {
+      console.error('❌ No pending Google user data');
+      return;
+    }
+
+    setLoading(true);
+    loginButtonSetter('Google');
+    console.log('🔐 Logging in user without referral code');
+    await mutateLogin(userData);
+    // Clear pending data after use
+    pendingGoogleUserDataRef.current = null;
+    setPendingGoogleUserData(null);
+  }, []);
+
+  // Store callbacks in ref for navigation params
+  useEffect(() => {
+    referralCallbacksRef.current = {
+      onContinue: handleReferralContinue,
+      onSkip: handleReferralSkip
+    };
+  }, [handleReferralContinue, handleReferralSkip]);
+
+  // Navigation listener to handle fallback case when callbacks don't work
+  useFocusEffect(
+    useCallback(() => {
+      const params = navigation.getState()?.routes?.find(r => r.name === 'CreateAccount')?.params;
+      if (params) {
+        const { referralCode, referralSkipped } = params;
+        const userData = pendingGoogleUserDataRef.current;
+        
+        if (userData) {
+          if (referralCode) {
+            console.log('🔐 Handling referral code from navigation params:', referralCode);
+            handleReferralContinue(referralCode);
+            // Clear params
+            navigation.setParams({ referralCode: undefined });
+          } else if (referralSkipped) {
+            console.log('🔐 Handling referral skip from navigation params');
+            handleReferralSkip();
+            // Clear params
+            navigation.setParams({ referralSkipped: undefined });
+          }
+        }
+      }
+    }, [navigation, handleReferralContinue, handleReferralSkip])
+  );
 
   // --- Common Navigation Functions ---
   const navigateToLogin = () => {
@@ -140,6 +216,7 @@ export const useCreateAccount = () => {
     try {
       console.log('🔐 [Login Debug] Starting login mutation for:', user.email);
       console.log('🔐 [Login Debug] User type:', user.type);
+      console.log('🔐 [Login Debug] Referral code:', user.referralCode || 'none');
       console.log('🔐 [Login Debug] Full user object:', user);
 
       let notificationToken = null;
@@ -171,16 +248,21 @@ export const useCreateAccount = () => {
         console.log('🔐 [Login Debug] ℹ️ Not a physical device, skipping notification token');
       }
 
+      // Extract referralCode from user object if present
+      const { referralCode, ...userWithoutReferral } = user;
+      const mutationVariables = {
+        ...userWithoutReferral,
+        notificationToken: notificationToken,
+        referralCode: referralCode || null
+      };
+
       console.log('🔐 [Login Debug] About to call GraphQL mutation with variables:', {
-        ...user,
+        ...mutationVariables,
         notificationToken: notificationToken ? 'token_present' : 'no_token'
       });
 
       mutate({
-        variables: {
-          ...user,
-          notificationToken: notificationToken
-        }
+        variables: mutationVariables
       });
     } catch (error) {
       console.error('🔐 [Login Debug] ❌ Error in mutateLogin:', error);
@@ -305,5 +387,7 @@ export const useCreateAccount = () => {
     navigateToMain,
     navigation,
     signIn, // Android-specific signIn function
+    handleReferralContinue,
+    handleReferralSkip,
   };
 };

@@ -34,6 +34,7 @@ const useEmailOtp = (isPhoneExists) => {
   const [otpError, setOtpError] = useState(false)
   const [seconds, setSeconds] = useState(5)
   const [user] = useState(route.params?.user)
+  const referralCode = route.params?.referralCode || null
   const { setTokenAsync } = useContext(AuthContext)
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -122,7 +123,7 @@ const useEmailOtp = (isPhoneExists) => {
           console.log('Error catched in notificationToken:', error)
         }
       }
-      console.log('mutation variables: create user', isPhoneExists)
+      console.log('mutation variables: create user', isPhoneExists, 'referralCode:', referralCode)
       await mutateUser({
         variables: {
           phone: user?.phone ?? '',
@@ -132,7 +133,8 @@ const useEmailOtp = (isPhoneExists) => {
           picture: '',
           notificationToken: notificationToken,
           emailIsVerified: true,
-          isPhoneExists: isPhoneExists || false
+          isPhoneExists: isPhoneExists || false,
+          referralCode: referralCode || null
         }
       })
     } catch (error) {

@@ -301,6 +301,7 @@ export const emailExist = `
       userType
       _id
       email
+      referral_code
     }
   }`
 
@@ -335,8 +336,8 @@ export const Deactivate = `
   }
   `
 export const login = `
-  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$name:String,$notificationToken:String){
-    login(email:$email,password:$password,type:$type,appleId:$appleId,name:$name,notificationToken:$notificationToken){
+  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$name:String,$notificationToken:String, $referralCode:String){
+    login(email:$email,password:$password,type:$type,appleId:$appleId,name:$name,notificationToken:$notificationToken, referralCode:$referralCode){
      userId
      token
      tokenExpiration
@@ -349,7 +350,7 @@ export const login = `
   }
   `
 export const createUser = `
-    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean){
+    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean, $referralCode:String){
         createUser(userInput:{
             phone:$phone,
             email:$email,
@@ -357,8 +358,9 @@ export const createUser = `
             name:$name,
             notificationToken:$notificationToken,
             appleId:$appleId,
-            emailIsVerified:$emailIsVerified
-            isPhoneExists:$isPhoneExists
+            emailIsVerified:$emailIsVerified,
+            isPhoneExists:$isPhoneExists,
+            referralCode:$referralCode
         }){
             userId
             token
@@ -434,8 +436,8 @@ export const loginWithPhoneFirstStep = gql`
 `
 
 export const loginWithPhoneFinalStep = gql`
-  mutation LoginWithPhoneFinalStep($otp: String!, $phone: String!) {
-    loginWithPhoneFinalStep(otp: $otp, phone: $phone) {
+  mutation LoginWithPhoneFinalStep($otp: String!, $phone: String!, $referralCode:String) {
+    loginWithPhoneFinalStep(otp: $otp, phone: $phone, referralCode: $referralCode) {
       userId
       token
       tokenExpiration
