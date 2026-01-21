@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { SafeAreaView, View, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
@@ -35,11 +35,22 @@ const MyFavorites = () => {
   const [favoriteItems, setFavoriteItems] = useState([])
   const [isLoadingMore, setIsLoadingMore] = useState(false)
 
+  // Refetch favorites when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      setPage(0)
+      refetch({
+        skip: 0,
+        limit: PAGE_LIMIT
+      })
+    }, [refetch])
+  )
+
   useEffect(() => {
     if (favoriteFoodsData?.getFavoriteFoodsSingleVendor?.data) {
       console.log('favoriteFoodsData', JSON.stringify(favoriteFoodsData?.getFavoriteFoodsSingleVendor?.data, null, 2));
 
-      const transformedItems = favoriteFoodsData.getFavoriteFoodsSingleVendor.data.map((food) => {
+      const transformedItems = favoriteFoodsData.getFavoriteFoodsSingleVendor.data.map((food, index) => {
         // Transform variations to include quantity property
         const transformedVariations = food.variations?.map(variation => ({
           ...variation,
@@ -51,7 +62,7 @@ const MyFavorites = () => {
         const foodTotal = availableVariation ? (availableVariation.price * availableVariation.quantity).toFixed(2) : '0.00'
 
         return {
-          key: food._id,
+          key: `${food._id}-${page}-${index}`, // Unique key combining id, page, and index
           _id: food._id,
           foodId: food._id,
           foodTitle: food.title,
@@ -67,7 +78,12 @@ const MyFavorites = () => {
       if (page === 0) {
         setFavoriteItems(transformedItems)
       } else {
-        setFavoriteItems(prev => [...prev, ...transformedItems])
+        // Filter out duplicates when loading more
+        setFavoriteItems(prev => {
+          const existingIds = new Set(prev.map(item => item._id))
+          const newItems = transformedItems.filter(item => !existingIds.has(item._id))
+          return [...prev, ...newItems]
+        })
       }
       setIsLoadingMore(false)
     }
@@ -115,7 +131,6 @@ const MyFavorites = () => {
 
   const renderItem = ({ item, index }) => (
     <CartItem
-      key={item.key || index}
       item={item}
       currencySymbol={currencySymbol}
       isLastItem={index === favoriteItems.length - 1}
@@ -124,7 +139,7 @@ const MyFavorites = () => {
     />
   )
 
-  const keyExtractor = (item) => item.key || item.id
+  const keyExtractor = (item, index) => item.key || `favorite-${item._id}-${index}`
 
   return (
     <SafeAreaView style={styles(currentTheme).container}>
