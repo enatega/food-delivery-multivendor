@@ -17,8 +17,8 @@ const FavoriteCartSkeleton = () => {
       </View>
 
       <View style={styles().mainContent}>
-        <LoadingSkeleton width="60%" height={scale(20)} style={{ marginBottom: scale(8) }} />
-        <LoadingSkeleton width="40%" height={scale(14)} style={{ marginBottom: scale(8) }} />
+        <LoadingSkeleton width="60%" height={scale(12)} style={{ marginBottom: scale(8) }} />
+        {/* <LoadingSkeleton width="40%" height={scale(14)} style={{ marginBottom: scale(8) }} /> */}
 
         <View style={styles().bottomRow}>
           <LoadingSkeleton width={scale(25)} height={scale(25)} borderRadius={scale(20)} />
