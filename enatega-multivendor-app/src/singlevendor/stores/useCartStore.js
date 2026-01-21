@@ -46,14 +46,15 @@ const useCartStore = create((set) => ({
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
 
-  updateCartItemQuantity: ({ foodId, variationId, quantity, foodTotal, itemTotal, grandTotal, isBelowMinimumOrder }) => {
+  updateCartItemQuantity: ({ _id, foodId, variationId, quantity, foodTotal, itemTotal, grandTotal, isBelowMinimumOrder }) => {
     set((state) => {
       // 1️⃣ Create new items array
+      console.log('previous items:', JSON.stringify(state.items),_id)
       const newItems = state.items
         .map((item) => {
-          if (item.foodId !== foodId) return item
+          if (item.variations[0]._id !== _id) return item
 
-          const updatedVariations = item.variations.map((v) => (v.variationId === variationId ? { ...v, quantity, itemTotal } : v)).filter((v) => v.quantity > 0)
+          const updatedVariations = item.variations.map((v) => (v._id === _id ? { ...v, quantity, itemTotal } : v)).filter((v) => v.quantity > 0)
 
           // Remove food if no variations left
           if (updatedVariations.length === 0) return null

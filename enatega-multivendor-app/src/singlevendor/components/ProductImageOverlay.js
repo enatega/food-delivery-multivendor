@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
 import React, { useContext } from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import { theme } from '../../utils/themeColors'
@@ -6,7 +6,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import { useNavigation } from '@react-navigation/native'
 
-const ProductImageOverlay = ({ hasDeal, onAddToCart, product, dealText = 'Deal' }) => {
+const ProductImageOverlay = ({ hasDeal, onAddToCart, product, isAddingToCart, dealText = 'Deal' }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
@@ -19,15 +19,18 @@ const ProductImageOverlay = ({ hasDeal, onAddToCart, product, dealText = 'Deal' 
           <Text style={styles(currentTheme).dealText}>{dealText}</Text>
         </View>
       )} */}
-      
+
       <TouchableOpacity
         style={styles(currentTheme).addButton}
-        onPress={() => {
-          // onAddToCart(product)
-          navigation
-        }}
+        onPress={
+          isAddingToCart
+            ? undefined
+            : () => {
+                onAddToCart(product)
+              }
+        }
       >
-        <AntDesign name='plus' size={16} />
+        {isAddingToCart ? <ActivityIndicator size={16}></ActivityIndicator> : <AntDesign name='plus' size={16} />}
       </TouchableOpacity>
     </>
   )
