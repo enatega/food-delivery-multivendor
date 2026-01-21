@@ -1,6 +1,6 @@
 // useCreateAccount.ios.js
 
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback, useRef } from 'react';
 import { StatusBar, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
@@ -38,6 +38,9 @@ export const useCreateAccount = () => {
   const { setTokenAsync } = useContext(AuthContext);
   const themeContext = useContext(ThemeContext);
   const [googleUser, setGoogleUser] = useState(null);
+  const [pendingGoogleUserData, setPendingGoogleUserData] = useState(null);
+  const pendingGoogleUserDataRef = useRef(null);
+  const referralCallbacksRef = useRef({ onContinue: null, onSkip: null });
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] };
 
   const {
@@ -92,10 +95,18 @@ export const useCreateAccount = () => {
         type: 'google'
       };
 
- 
-
       setGoogleUser(userData.name);
-      await mutateLogin(userData);
+      setPendingGoogleUserData(userData);
+      pendingGoogleUserDataRef.current = userData;
+      setLoading(false);
+      
+      // Navigate to RefralScreen with user data and callbacks
+      console.log('📱 Navigating to RefralScreen...');
+      navigation.navigate('RefralScreen', { 
+        userData: userData,
+        onContinue: referralCallbacksRef.current.onContinue,
+        onSkip: referralCallbacksRef.current.onSkip
+      });
 
     } catch (error) {
       console.error('❌ Google fetch user info error:', error);
@@ -131,6 +142,73 @@ export const useCreateAccount = () => {
     }
   };
 
+  // Handle referral continue with code
+  const handleReferralContinue = useCallback(async (referralCode) => {
+    const userData = pendingGoogleUserDataRef.current;
+    if (!userData) {
+      console.error('❌ No pending Google user data');
+      return;
+    }
+
+    setLoading(true);
+    loginButtonSetter('Google');
+    console.log('🔐 Logging in user with referral code:', referralCode);
+    const response = await mutateLogin({ ...userData, referralCode });
+    // Clear pending data after use
+    pendingGoogleUserDataRef.current = null;
+    setPendingGoogleUserData(null);
+  }, []);
+
+  // Handle referral skip
+  const handleReferralSkip = useCallback(async () => {
+    const userData = pendingGoogleUserDataRef.current;
+    if (!userData) {
+      console.error('❌ No pending Google user data');
+      return;
+    }
+
+    setLoading(true);
+    loginButtonSetter('Google');
+    console.log('🔐 Logging in user without referral code');
+    await mutateLogin(userData);
+    // Clear pending data after use
+    pendingGoogleUserDataRef.current = null;
+    setPendingGoogleUserData(null);
+  }, []);
+
+  // Store callbacks in ref for navigation params
+  useEffect(() => {
+    referralCallbacksRef.current = {
+      onContinue: handleReferralContinue,
+      onSkip: handleReferralSkip
+    };
+  }, [handleReferralContinue, handleReferralSkip]);
+
+  // Navigation listener to handle fallback case when callbacks don't work
+  useFocusEffect(
+    useCallback(() => {
+      const params = navigation.getState()?.routes?.find(r => r.name === 'CreateAccount')?.params;
+      if (params) {
+        const { referralCode, referralSkipped } = params;
+        const userData = pendingGoogleUserDataRef.current;
+        
+        if (userData) {
+          if (referralCode) {
+            console.log('🔐 Handling referral code from navigation params:', referralCode);
+            handleReferralContinue(referralCode);
+            // Clear params
+            navigation.setParams({ referralCode: undefined });
+          } else if (referralSkipped) {
+            console.log('🔐 Handling referral skip from navigation params');
+            handleReferralSkip();
+            // Clear params
+            navigation.setParams({ referralSkipped: undefined });
+          }
+        }
+      }
+    }, [navigation, handleReferralContinue, handleReferralSkip])
+  );
+
   // --- Common Navigation Functions ---
   const navigateToLogin = () => {
     navigation.navigate('Login');
@@ -157,13 +235,17 @@ export const useCreateAccount = () => {
   // --- Common Login Mutation Function ---
   async function mutateLogin(user) {
     try {
- 
+      console.log('🔐 [Login Debug] Starting login mutation for:', user.email);
+      console.log('🔐 [Login Debug] User type:', user.type);
+      console.log('🔐 [Login Debug] Referral code:', user.referralCode || 'none');
+      console.log('🔐 [Login Debug] Full user object:', user);
+
       let notificationToken = null;
 
       if (Device.isDevice) {
         try {
           const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      
+          console.log('🔐 [Login Debug] Notification permission status:', existingStatus);
 
           if (existingStatus === 'granted') {
             try {
@@ -171,7 +253,7 @@ export const useCreateAccount = () => {
                 projectId: Constants.expoConfig?.extra?.eas?.projectId
               });
               notificationToken = tokenData.data;
-       
+              console.log('🔐 [Login Debug] ✅ Got notification token');
             } catch (tokenError) {
               console.warn('🔐 [Login Debug] ⚠️ Could not get push token (this is OK):', tokenError.message);
               notificationToken = null;
@@ -187,11 +269,21 @@ export const useCreateAccount = () => {
         console.log('🔐 [Login Debug] ℹ️ Not a physical device, skipping notification token');
       }
 
+      // Extract referralCode from user object if present
+      const { referralCode, ...userWithoutReferral } = user;
+      const mutationVariables = {
+        ...userWithoutReferral,
+        notificationToken: notificationToken,
+        referralCode: referralCode || null
+      };
+
+      console.log('🔐 [Login Debug] About to call GraphQL mutation with variables:', {
+        ...mutationVariables,
+        notificationToken: notificationToken ? 'token_present' : 'no_token'
+      });
+
       mutate({
-        variables: {
-          ...user,
-          notificationToken: notificationToken
-        }
+        variables: mutationVariables
       });
     } catch (error) {
       console.error('🔐 [Login Debug] ❌ Error in mutateLogin:', error);
@@ -220,8 +312,14 @@ export const useCreateAccount = () => {
 
   // --- Common Login Success Handler ---
   async function onCompleted(data) {
+    console.log('✅ [Login Debug] Login mutation completed successfully');
+    console.log('✅ [Login Debug] Response data:', data);
+    console.log('✅ [Login Debug] User email:', data.login.email);
+    console.log('✅ [Login Debug] User active status:', data.login.isActive);
+    console.log('✅ [Login Debug] User phone:', data.login.phone);
 
     if (data.login.isActive === false) {
+      console.log('❌ [Login Debug] Account is deactivated');
       FlashMessage({ message: t('accountDeactivated') });
       setLoading(false);
       loginButtonSetter(null);
@@ -229,19 +327,22 @@ export const useCreateAccount = () => {
     }
 
     try {
-
+      console.log('✅ [Login Debug] Setting auth token...');
       setTokenAsync(data.login.token);
       FlashMessage({ message: 'Successfully logged in' });
 
       if (data?.login?.phone === '') {
+        console.log('✅ [Login Debug] No phone number - navigating to phone screen');
         navigateToPhone();
       } else {
+        console.log('✅ [Login Debug] Phone number exists - navigating to main app');
         navigateToMain();
       }
 
     } catch (error) {
       console.error('❌ [Login Debug] Error in onCompleted:', error);
     } finally {
+      console.log('✅ [Login Debug] Resetting loading states');
       setLoading(false);
       loginButtonSetter(null);
     }
@@ -297,5 +398,7 @@ export const useCreateAccount = () => {
     navigateToMain,
     navigation,
     signIn, // iOS-specific signIn function
+    handleReferralContinue,
+    handleReferralSkip,
   };
 };
