@@ -18,7 +18,10 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
     ...theme[themeContext.ThemeValue]
   }
 
-  const itemTotal = (parseFloat(item.variations[0]?.discountedUnitPrice) * item.variations[0]?.quantity).toFixed(2)
+  // Handle both cart items (discountedUnitPrice) and favorite items (price)
+  const unitPrice = item.variations[0]?.discountedUnitPrice ?? item.variations[0]?.price ?? 0
+  const quantity = item.variations[0]?.quantity ?? 1
+  const itemTotal = (parseFloat(unitPrice) * quantity).toFixed(2)
 
   console.log('CartItem Rendered:', item.variations[0])
   return (
@@ -37,9 +40,12 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
         </TextDefault>
 
         {/* Middle Row: Description with Dropdown - single line */}
-
-        <CartItemDescription variations={item?.variations}></CartItemDescription>
-
+         {
+          !isFavourite ? (
+             <CartItemDescription variations={item?.variations}></CartItemDescription>
+          ) : null
+         }
+       
         {/* Expanded Addons */}
         {/* {isDropdownOpen && item?.addons && item.addons.length > 0 && (
           <View style={styles().itemsDropdown}>
@@ -73,7 +79,7 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
                 }
               }}
             >
-              <AntDesign name='plus' size={scale(20)} color={currentTheme.fontMainColor} />
+              <AntDesign name='plus' size={scale(12)} color={currentTheme.fontMainColor} />
             </TouchableOpacity>
           ) : (
             <CartItemController item={item} />
