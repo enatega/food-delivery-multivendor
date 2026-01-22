@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const OrderHistoryItem = ({ orders, currentTheme, onOrderPress }) => {
+const OrderHistoryItem = ({ ordersData, currentTheme, onOrderPress }) => {
   const themedStyles = styles(currentTheme)
+  const [orders,setorders] = useState(ordersData)
 console.log('orders__Images', JSON.stringify(orders,null,2))
   // Render section header rows
   if (orders.type === 'header') {
@@ -35,6 +36,8 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
         return themedStyles.statusBadgeCancelled
       case 'Refunded':
         return themedStyles.statusBadgeRefunded
+      case 'Scheduled':
+        return themedStyles.statusBadgeScheduled
       default:
         return themedStyles.statusBadgeDefault
     }
@@ -45,7 +48,8 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
       'Ongoing': '#B8860B',
       'Order Delivered': '#28A745',
       'Order Cancelled': '#DC3545',
-      'Refunded': currentTheme.primaryBlue || currentTheme.primary || '#0EA5E9'
+      'Refunded': currentTheme.primaryBlue || currentTheme.primary || '#0EA5E9',
+      'Scheduled': '#0EA5E9'
     }
     return colorMap[status] || currentTheme.fontMainColor
   }
@@ -186,6 +190,9 @@ const styles = (props = null) =>
       backgroundColor: '#FFE6E6'
     },
     statusBadgeRefunded: {
+      backgroundColor: props?.lowOpacityBlue || 'rgba(14, 165, 233, 0.2)'
+    },
+    statusBadgeScheduled: {
       backgroundColor: props?.lowOpacityBlue || 'rgba(14, 165, 233, 0.2)'
     },
     statusBadgeDefault: {
