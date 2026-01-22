@@ -43,7 +43,7 @@ const styles = (currentTheme) =>
       fontSize: scale(15),
       lineHeight: scale(22),
       textAlign: 'center',
-      opacity: 0.7
+      // opacity: 0.7
     },
 
     // Stats Container
@@ -91,7 +91,7 @@ const styles = (currentTheme) =>
     sectionSubtitle: {
       fontSize: scale(14),
       lineHeight: scale(20),
-      opacity: 0.6
+      // opacity: 0.6
     },
 
     // Accordion
@@ -148,7 +148,7 @@ const styles = (currentTheme) =>
       fontSize: scale(14),
       lineHeight: scale(21),
       marginBottom: verticalScale(12),
-      opacity: 0.8
+      // opacity: 0.8
     },
 
     // Bullets
@@ -200,7 +200,7 @@ const styles = (currentTheme) =>
       fontSize: scale(14),
       lineHeight: scale(21),
       marginBottom: verticalScale(20),
-      opacity: 0.7
+      // opacity: 0.7
     },
 
     // Info Card
@@ -237,7 +237,7 @@ const styles = (currentTheme) =>
     infoCardDescription: {
       fontSize: scale(13),
       lineHeight: scale(18),
-      opacity: 0.7
+      // opacity: 0.7
     },
 
     // Footer
@@ -250,7 +250,7 @@ const styles = (currentTheme) =>
     },
     footerText: {
       fontSize: scale(13),
-      opacity: 0.6
+      // opacity: 0.6
     }
   })
 
