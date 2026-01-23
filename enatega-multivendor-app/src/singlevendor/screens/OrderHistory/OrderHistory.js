@@ -19,6 +19,8 @@ import OrderHistoryItem from '../../components/OrderHistory/OrderHistoryItem'
 import OrderHistorySkeleton from './OrderHistorySkeleton'
 import { pathToArray } from 'graphql/jsutils/Path'
 import { GET_SCHEDULED_ORDERS } from '../../apollo/queries'
+import OrdersList from './OrdersList'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const ORDERS_LIST_QUERY = gql`
   ${myOrders}
@@ -26,7 +28,6 @@ const ORDERS_LIST_QUERY = gql`
 const SCHEDULED_ORDERS_LIST_QUERY = gql`
   ${GET_SCHEDULED_ORDERS}
 `
-
 
 
 const OrderHistory = () => {
@@ -117,11 +118,14 @@ const OrderHistory = () => {
   }
 
   return (
-    <SafeAreaView style={styles(currentTheme).container}>
-      <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
+    // <SafeAreaView style={styles(currentTheme).container}>
+    <>
+    <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
+    <ScrollView style={styles(currentTheme).container} showsVerticalScrollIndicator={false}>
+      <OrdersList/>
 
       <FlashList
-        data={combinedOrderListData}
+        data={orderListData}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         estimatedItemSize={80}
@@ -133,7 +137,9 @@ const OrderHistory = () => {
           </View>
         }
       />
-    </SafeAreaView>
+    {/* </SafeAreaView> */}
+    </ScrollView>
+    </>
   )
 }
 
