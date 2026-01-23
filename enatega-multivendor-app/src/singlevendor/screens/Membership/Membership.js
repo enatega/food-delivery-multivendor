@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { SafeAreaView, ScrollView, View } from 'react-native'
+import { SafeAreaView, ScrollView, View, RefreshControl } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 
@@ -25,18 +25,23 @@ const Membership = () => {
   }
   const useConfigurations = useContext(ConfigurationContext)
 
-  const { data, loading, showCardModal, setShowCardModal, selectedPlan, setSelectedPlan, handleSubscribe, handleOnPay, handleCancelSubscription, activePlanId, handleUpdateSubscription, error } = useMembership()
+  const { data, loading, showCardModal, setShowCardModal, selectedPlan, setSelectedPlan, handleSubscribe, handleOnPay, handleCancelSubscription, activePlanId, handleUpdateSubscription, error, refetch, refetchProfile, isRefreshing } = useMembership()
 
   const handleFAQ = () => {
     // TODO: Navigate to FAQ or open FAQ modal
     console.log('Open FAQ')
   }  
 
+  const handleRefresh = async () => {
+    await refetch();
+    await refetchProfile()
+  }
+
   return (
     <SafeAreaView style={styles(currentTheme).container}>
       <MembershipHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} />
 
-      <ScrollView style={styles(currentTheme).scrollView} contentContainerStyle={styles(currentTheme).scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView refreshControl={<RefreshControl onRefresh={handleRefresh} refreshing={isRefreshing} />} style={styles(currentTheme).scrollView} contentContainerStyle={styles(currentTheme).scrollContent} showsVerticalScrollIndicator={false}>
         <MembershipLogo currentTheme={currentTheme} />
 
         {loading ? (
@@ -57,7 +62,7 @@ const Membership = () => {
         )}
       </ScrollView>
 
-      <CardModal currentTheme={currentTheme} visible={showCardModal} setVisible={setShowCardModal} onClose={() => setShowCardModal(!showCardModal)} onPay={() => !activePlanId ? handleOnPay() : handleOnPay(update=true)} />
+      <CardModal currentTheme={currentTheme} visible={showCardModal} setVisible={setShowCardModal} onClose={() => setShowCardModal(!showCardModal)} onPay={() => handleOnPay()} />
       <SubscribeButton currentTheme={currentTheme} title={activePlanId ? 'Update Subscription' : 'Subscribe'} onPress={!activePlanId ? handleSubscribe : handleUpdateSubscription} isDisable={!selectedPlan || selectedPlan === activePlanId || loading} />
     </SafeAreaView>
   )

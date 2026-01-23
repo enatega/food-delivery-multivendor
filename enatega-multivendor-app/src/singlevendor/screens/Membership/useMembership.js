@@ -9,40 +9,32 @@ import UserContext from '../../../context/User'
 
 const useMembership = () => {
   const { refetchProfile, loadingProfile, profile } = useContext(UserContext)
-  const { loading, data, error } = useQuery(GET_ALL_SUBSCRIPTION_PLANS)
-  console.log("my data of membership", data)
+  const { loading, data, error, refetch } = useQuery(GET_ALL_SUBSCRIPTION_PLANS)
   const [mutateSubscription, { loading: createSubscriptionLoading, error: mutateSubscriptionError }] = useMutation(CREATE_SUBSCRIPTION, {
-    onCompleted: async (data) => {
-      await refetchProfile()
-      FlashMessage({ message: t(data?.createSubscription?.message) })
-    },
+    onCompleted,
     onError
   })
 
   const [mutateCancelSubscription, { loading: cancelSubscriptionLoading, error: mutateCancelSubscriptionError }] = useMutation(CANCEL_SUBSCRIPTION, {
-    onCompleted: async (data) => {
-      await refetchProfile()
-      FlashMessage({ message: t(data?.cancelSubscription?.message) })
-    },
+    onCompleted,
     onError
   })
 
   const [mutateUpdateSubscription, { loading: updateSubscriptionLoading, error: mutateUpdateSubscriptionError }] = useMutation(UPDATE_SUBSCRIPTION, {
-    onCompleted: async (data) => {
-      await refetchProfile()
-      FlashMessage({ message: t(data?.updateSubscription?.message) })
-    },
+    onCompleted,
     onError
   })
 
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [showCardModal, setShowCardModal] = useState(false)
+  const [isLoading, setisLoading] = useState(false)
 
   const activePlanId = profile?.stripe_plan_id
 
   const { createPaymentMethod } = useStripe()
 
   async function onError(error) {
+    setisLoading(false)
     // Todo: can use flashmessage in future
     // FlashMessage({ message: t(error?.localizedMessage) ?? t('Something went wrong, please try again!') })
     Alert.alert(`${error?.code}`, `${error?.localizedMessage}`, [
@@ -52,6 +44,21 @@ const useMembership = () => {
       }
     ])
   }
+
+  function onCompleted(data) {
+    const timeOutId = setTimeout(async () => {
+      try {
+        await refetchProfile()
+        FlashMessage({ message: t(data?.createSubscription?.message) })
+        setisLoading(false)
+      } catch (error) {
+        setisLoading(false)
+      }
+    }, 1000)
+
+    return () => timeOutId()
+  }
+
   const handleSubscribe = () => {
     if (selectedPlan) {
       setShowCardModal(true)
@@ -67,7 +74,8 @@ const useMembership = () => {
       },
       {
         text: 'Yes',
-        onPress: () =>
+        onPress: () => {
+          setisLoading(true)
           mutateCancelSubscription({
             variables: {
               input: {
@@ -75,6 +83,7 @@ const useMembership = () => {
               }
             }
           })
+        }
       }
     ])
   }
@@ -99,19 +108,9 @@ const useMembership = () => {
     ])
   }
 
-  const handleOnPay = async (update = false) => {
+  const handleOnPay = async () => {
     setShowCardModal(false)
-    if (update) {
-      mutateUpdateSubscription({
-        variables: {
-          input: {
-            newStripePriceId: selectedPlan
-          }
-        }
-      })
-      return
-    }
-    console.log('i am being called bro')
+    setisLoading(true)
     const { paymentMethod, error } = await createPaymentMethod({
       paymentMethodType: 'Card'
     })
@@ -129,6 +128,7 @@ const useMembership = () => {
     }
 
     if (paymentMethod && selectedPlan) {
+      setisLoading(true)
       mutateSubscription({
         variables: {
           input: {
@@ -143,7 +143,7 @@ const useMembership = () => {
   return {
     data: data?.getAllSubscriptionPlans?.plans,
     error,
-    loading: loading || createSubscriptionLoading || cancelSubscriptionLoading || loadingProfile || updateSubscriptionLoading,
+    loading: loading || createSubscriptionLoading || cancelSubscriptionLoading || loadingProfile || updateSubscriptionLoading || isLoading,
     showCardModal,
     setShowCardModal,
     selectedPlan,
@@ -153,7 +153,10 @@ const useMembership = () => {
     handleCancelSubscription,
     activePlanId,
     handleUpdateSubscription,
-    subscriptionError: mutateSubscriptionError || mutateUpdateSubscriptionError || mutateCancelSubscriptionError
+    subscriptionError: mutateSubscriptionError || mutateUpdateSubscriptionError || mutateCancelSubscriptionError,
+    refetch,
+    refetchProfile,
+    isRefreshing: loadingProfile || loading,
   }
 }
 

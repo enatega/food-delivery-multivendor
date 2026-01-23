@@ -11,21 +11,11 @@ const useEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
   if (env === 'production' || env === 'staging') {
     return {
-      // GRAPHQL_URL: 'https://aws-server.enatega.com/graphql',
-      // WS_GRAPHQL_URL: 'wss://aws-server.enatega.com/graphql',
-      // SERVER_URL: 'https://aws-server.enatega.com/graphql',
-      // SERVER_REST_URL: 'https://aws-server.enatega.com/',
-
-      // GRAPHQL_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/graphql',
-      // WS_GRAPHQL_URL: 'wss://jrdw550n-8001.inc1.devtunnels.ms/graphql',
-      // SERVER_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/graphql',
-      // SERVER_REST_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/',
-
       GRAPHQL_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
       WS_GRAPHQL_URL: 'wss://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
       SERVER_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
       SERVER_REST_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/',
-      IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
+      IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,            
       ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
       AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
       GOOGLE_MAPS_KEY: configuration?.googleApiKey,
@@ -39,25 +29,10 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    // GRAPHQL_URL: 'http://192.168.18.107:8001/graphql',
-    // WS_GRAPHQL_URL: 'ws://192.168.18.107:8001/graphql',
-    // SERVER_URL: 'http://192.168.18.107:8001/graphql',
-    // SERVER_REST_URL: 'http://192.168.18.107:8001/',
-    // GRAPHQL_URL: 'https://aws-server.enatega.com/graphql',
-    // WS_GRAPHQL_URL: 'wss://aws-server.enatega.com/graphql',
-    // SERVER_URL: 'https://aws-server.enatega.com/graphql',
-    // SERVER_REST_URL: 'https://aws-server.enatega.com/',
     GRAPHQL_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
     SERVER_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
     SERVER_REST_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/',
-
-
-
-    // GRAPHQL_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/graphql',
-    // WS_GRAPHQL_URL: 'wss://jrdw550n-8001.inc1.devtunnels.ms/graphql',
-    // SERVER_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/graphql',
-    // SERVER_REST_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/',
     IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
     AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
