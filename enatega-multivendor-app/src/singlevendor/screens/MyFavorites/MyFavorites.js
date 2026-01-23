@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { SafeAreaView, View, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
+import { SafeAreaView, View, StyleSheet, FlatList, ActivityIndicator, Text } from 'react-native'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -139,6 +139,17 @@ const MyFavorites = () => {
     />
   )
 
+  const renderEmptyComponent = () => (
+    <View style={styles(currentTheme).emptyContainer}>
+      <Text style={styles(currentTheme).emptyText}>
+        {t('No favorite items yet') || 'No favorite items yet'}
+      </Text>
+      <Text style={styles(currentTheme).emptySubText}>
+        {t('Add items to your favorites to see them here') || 'Add items to your favorites to see them here'}
+      </Text>
+    </View>
+  )
+
   const keyExtractor = (item, index) => item.key || `favorite-${item._id}-${index}`
 
   return (
@@ -148,16 +159,20 @@ const MyFavorites = () => {
         onBack={() => navigation.goBack()}
         headerText={t('My Favorites') || 'My Favorites'}
       />
-        <FlatList
-          data={favoriteItems}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles(currentTheme).listContent}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.4}
-          ListFooterComponent={isLoadingMore ? <ActivityIndicator style={{ marginVertical: 20 }} color={currentTheme?.main} /> : null}
-        />
+      <FlatList
+        data={favoriteItems}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles(currentTheme).listContent,
+          favoriteItems.length === 0 && styles(currentTheme).emptyListContent
+        ]}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.4}
+        ListEmptyComponent={!favoriteFoodsLoading ? renderEmptyComponent : null}
+        ListFooterComponent={isLoadingMore ? <ActivityIndicator style={{ marginVertical: 20 }} color={currentTheme?.main} /> : null}
+      />
     </SafeAreaView>
   )
 }
@@ -171,6 +186,31 @@ const styles = (currentTheme) =>
     listContent: {
       paddingHorizontal: scale(16),
       paddingVertical: verticalScale(12)
+    },
+    emptyListContent: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    emptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: scale(32),
+      paddingVertical: verticalScale(40)
+    },
+    emptyText: {
+      fontSize: scale(18),
+      fontWeight: '600',
+      color: currentTheme?.fontMainColor || '#333',
+      textAlign: 'center',
+      marginBottom: verticalScale(8)
+    },
+    emptySubText: {
+      fontSize: scale(14),
+      color: currentTheme?.fontSecondColor || '#666',
+      textAlign: 'center',
+      lineHeight: scale(20)
     }
   })
 

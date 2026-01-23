@@ -20,12 +20,12 @@ import OrderHistorySkeleton from './OrderHistorySkeleton'
 import { pathToArray } from 'graphql/jsutils/Path'
 import { GET_SCHEDULED_ORDERS } from '../../apollo/queries'
 
-// const ORDERS_LIST_QUERY = gql`
-//   ${myOrders}
-// `
 const ORDERS_LIST_QUERY = gql`
-  ${GET_SCHEDULED_ORDERS}
+  ${myOrders}
 `
+// const ORDERS_LIST_QUERY = gql`
+//   ${GET_SCHEDULED_ORDERS}
+// `
 
 
 
@@ -43,7 +43,7 @@ const OrderHistory = () => {
     fetchPolicy: 'network-only'
   })
 
-  const orders = data?.scheduledOrders
+  const orders = data?.orders
 
   useEffect(() => {
     console.log('Orders API Data:', JSON.stringify(data, null, 2))
@@ -79,7 +79,7 @@ const OrderHistory = () => {
 
   const handleOrderPress = (orderItem) => {
     console.log('orderItem', JSON.stringify(orderItem, null, 2))
-    console.log("order Confirmation:",orderItem)
+    console.log("order Confirmation:", orderItem)
     navigation.navigate('OrderConfirmation', { orderId: orderItem?.id })
   }
 

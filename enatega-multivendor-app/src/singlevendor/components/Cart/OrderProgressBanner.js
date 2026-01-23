@@ -7,10 +7,11 @@ import { theme } from '../../../utils/themeColors';
 import TextDefault from '../../../components/Text/TextDefault/TextDefault';
 import { useTranslation } from 'react-i18next';
 import OrderFeesModal from './OrderFeesModal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const OrderProgressBanner = ({ 
-  currentTotal = 0, 
-  minimumOrder = 10, 
+const OrderProgressBanner = ({
+  currentTotal = 0,
+  minimumOrder = 10,
   lowOrderFeeThreshold = 15,
   lowOrderFee = 2,
   currencySymbol = '€'
@@ -24,6 +25,7 @@ const OrderProgressBanner = ({
 
   const [showModal, setShowModal] = useState(false);
 
+  const insets = useSafeAreaInsets()
   // Determine message and progress state
   const getState = () => {
     // State 1: Below minimum order
@@ -36,7 +38,7 @@ const OrderProgressBanner = ({
         progress2: 0,
         progress3: 0
       };
-    } 
+    }
     // State 2: Just reached minimum order
     else if (currentTotal >= minimumOrder && currentTotal < minimumOrder + 0.5) {
       return {
@@ -89,7 +91,7 @@ const OrderProgressBanner = ({
   const state = getState();
 
   return (
-    <View style={styles(currentTheme).container}>
+    <View style={[styles(currentTheme).container, { paddingTop: insets.top + 10 }]}>
       <View style={styles().content}>
         <View style={styles().textWrapper}>
           <TextDefault
@@ -125,42 +127,42 @@ const OrderProgressBanner = ({
           <Feather name="info" size={16} color={currentTheme.fontMainColor} />
         </TouchableOpacity>
       </View>
-      
+
       {/* Segmented Progress Bar */}
       <View style={styles().progressContainer}>
         {/* Segment 1 */}
         <View style={styles(currentTheme).progressSegment}>
-          <View 
+          <View
             style={[
               styles().progressFill,
               { width: `${(state.progress1 / 33.33) * 100}%` }
-            ]} 
+            ]}
           />
         </View>
-        
+
         {/* Gap */}
         <View style={styles().progressGap} />
-        
+
         {/* Segment 2 */}
         <View style={styles(currentTheme).progressSegment}>
-          <View 
+          <View
             style={[
               styles().progressFill,
               { width: `${(state.progress2 / 33.33) * 100}%` }
-            ]} 
+            ]}
           />
         </View>
-        
+
         {/* Gap */}
         <View style={styles().progressGap} />
-        
+
         {/* Segment 3 */}
         <View style={styles(currentTheme).progressSegment}>
-          <View 
+          <View
             style={[
               styles().progressFill,
               { width: `${(state.progress3 / 33.33) * 100}%` }
-            ]} 
+            ]}
           />
         </View>
       </View>
@@ -184,8 +186,8 @@ const styles = (currentTheme = null) =>
       backgroundColor: currentTheme ? currentTheme.themeBackground : '#fff',
       paddingHorizontal: scale(16),
       paddingVertical: scale(12),
-    //   borderBottomWidth: 1,
-    //   borderBottomColor: currentTheme ? currentTheme.gray200 : '#E5E7EB'
+      //   borderBottomWidth: 1,
+      //   borderBottomColor: currentTheme ? currentTheme.gray200 : '#E5E7EB'
     },
     content: {
       flexDirection: 'row',

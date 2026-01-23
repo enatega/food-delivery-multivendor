@@ -15,6 +15,8 @@ const useFavorite = ({ id }) => {
     ]
   })
 
+  console.log("errorr in favourite ::", error)
+
   const { data: isFav, loading: isFavLoading } = useQuery(GET_FAVORITE_FOODS_STATUS, {
     variables: { foodId: id }
   })

@@ -121,10 +121,10 @@ const OrderConfirmation = (props) => {
       headerRight: isDelivered
         ? null
         : () => (
-            <TouchableOpacity style={styles(currentTheme).helpButton}>
-              <Feather name='help-circle' size={24} color={currentTheme.fontMainColor} />
-            </TouchableOpacity>
-          ),
+          <TouchableOpacity style={styles(currentTheme).helpButton}>
+            <Feather name='help-circle' size={24} color={currentTheme.fontMainColor} />
+          </TouchableOpacity>
+        ),
 
       headerTitleAlign: 'center',
       headerTitleStyle: {
@@ -181,10 +181,11 @@ const OrderConfirmation = (props) => {
         )}
 
         {/* DELIVERY DETAILS */}
-        <DeliveryDetailsCard addressLabel={addressLabel} address={address} showMap={showMap} onToggleMap={setShowMap} mapComponent={<DeliveryMap customerLocation={customerLocation} riderLocation={riderLocation} showRoute={!isDelivered} />} />
-
+        {!liveOrder?.isPickedUp && (
+          <DeliveryDetailsCard addressLabel={addressLabel} address={address} showMap={showMap} onToggleMap={setShowMap} mapComponent={<DeliveryMap customerLocation={customerLocation} riderLocation={riderLocation} showRoute={!isDelivered} />} />
+        )}
         {/* CONTACT COURIER */}
-        {rider && !isDelivered && !isCancelled && <ContactCourierCard onPress={()=> handleContactCourier()} contactlessDelivery />}
+        {rider && !isDelivered && !isCancelled && <ContactCourierCard onPress={() => handleContactCourier()} contactlessDelivery />}
 
         {/* ORDER ITEMS */}
         <OrderItemsSection items={orderItems} currencySymbol={currencySymbol} initialExpanded={false} />
