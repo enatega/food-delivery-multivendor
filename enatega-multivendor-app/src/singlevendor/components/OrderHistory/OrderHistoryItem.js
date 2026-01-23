@@ -27,8 +27,9 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
   const isOngoing = orders.status === 'Ongoing'
 
   const getStatusBadgeStyle = (status) => {
+    console.log('orders__status',status)
     switch (status) {
-      case 'Ongoing':
+      case 'Pending':
         return themedStyles.statusBadgeOngoing
       case 'Order Delivered':
         return themedStyles.statusBadgeDelivered
@@ -46,6 +47,7 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
   const getStatusTextColor = (status) => {
     const colorMap = {
       'Ongoing': '#B8860B',
+      'Pending': '#B8860B',
       'Order Delivered': '#28A745',
       'Order Cancelled': '#DC3545',
       'Refunded': currentTheme.primaryBlue || currentTheme.primary || '#0EA5E9',

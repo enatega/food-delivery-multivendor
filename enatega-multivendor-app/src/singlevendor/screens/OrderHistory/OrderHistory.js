@@ -20,6 +20,8 @@ import OrderHistorySkeleton from './OrderHistorySkeleton'
 import { pathToArray } from 'graphql/jsutils/Path'
 import { GET_SCHEDULED_ORDERS } from '../../apollo/queries'
 import OrdersList from './OrdersList'
+import ActiveOrdersList from '../../components/OrderHistory/ActiveOrdersList'
+import PastOrdersList from '../../components/OrderHistory/PastOrdersList'
 import { ScrollView } from 'react-native-gesture-handler'
 
 const ORDERS_LIST_QUERY = gql`
@@ -126,19 +128,13 @@ const OrderHistory = () => {
     <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
     <ScrollView style={styles(currentTheme).container} showsVerticalScrollIndicator={false}>
       <OrdersList/>
-
-      <FlashList
-        data={orderListData}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        estimatedItemSize={80}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles(currentTheme).listContent}
-        ListEmptyComponent={
-          <View style={styles(currentTheme).emptyContainer}>
-            <EmptyAccountSectionArea currentTheme={currentTheme} imageSource={require('../../assets/images/empty_OrderHistory.png')} title={t('No orders yet') || 'No orders yet'} description={t("You haven't made any order. It will show here when you made one.") || "You haven't made any order. It will show here when you made one."} buttonTitle={t('Start shopping') || 'Start shopping'} onButtonPress={handleStartShopping} />
-          </View>
-        }
+      <ActiveOrdersList
+        onOrderPress={handleOrderPress}
+        currentTheme={currentTheme}
+      />
+      <PastOrdersList
+        onOrderPress={handleOrderPress}
+        currentTheme={currentTheme}
       />
     {/* </SafeAreaView> */}
     </ScrollView>

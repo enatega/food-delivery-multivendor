@@ -128,3 +128,109 @@ export const buildScheduledOrderList = ({ orders, currencySymbol, t }) => {
 
   return items
 }
+
+export const buildActiveOrderList = ({ orders, currencySymbol, t }) => {
+  if (!orders || !Array.isArray(orders) || orders.length === 0) return []
+
+  const activeOrders = []
+
+  orders.forEach((order) => {
+    const dateSource = order.createdAt || order.orderDate || order.expectedTime || null
+
+    const amount = Number.parseFloat(order.orderAmount || 0)
+
+    // Map orderStatus to display status
+    let statusLabel = 'Ongoing'
+    if (order.orderStatus === 'PENDING') {
+      statusLabel = 'Pending'
+    } else if (order.orderStatus === 'ACCEPTED') {
+      statusLabel = 'Accepted'
+    } else if (order.orderStatus === 'ASSIGNED') {
+      statusLabel = 'Assigned'
+    } else if (order.orderStatus === 'PICKED') {
+      statusLabel = 'Picked'
+    } else if (order.orderStatus === 'DELIVERED') {
+      statusLabel = 'Order Delivered'
+    } else if (order.orderStatus === 'CANCELLED') {
+      statusLabel = 'Order Cancelled'
+    }
+
+    const baseItem = {
+      id: order._id,
+      type: 'item',
+      name: order.orderId || order.restaurant?.name,
+      date: formatOrderDate(dateSource),
+      status: statusLabel,
+      price: `${currencySymbol} ${amount.toFixed(2)}`,
+      image: order.restaurant?.image ? { uri: order.restaurant.image } : null,
+      section: 'active'
+    }
+
+    activeOrders.push(baseItem)
+  })
+
+  const items = []
+
+  if (activeOrders.length > 0) {
+    items.push({
+      type: 'header',
+      id: 'header-active',
+      title: t('Active Orders') || 'Active Orders'
+    })
+    activeOrders.forEach((item) => {
+      items.push(item)
+    })
+  }
+
+  return items
+}
+
+export const buildPastOrderList = ({ orders, currencySymbol, t }) => {
+  if (!orders || !Array.isArray(orders) || orders.length === 0) return []
+
+  const pastOrders = []
+
+  orders.forEach((order) => {
+    const dateSource = order.deliveredAt || order.completionTime || order.createdAt || order.orderDate || null
+
+    const amount = Number.parseFloat(order.orderAmount || 0)
+
+    // Map orderStatus to display status
+    let statusLabel = 'Order Delivered'
+    if (order.orderStatus === 'DELIVERED' || order.orderStatus === 'COMPLETED') {
+      statusLabel = 'Order Delivered'
+    } else if (order.orderStatus === 'CANCELLED' || order.orderStatus === 'CANCELLEDBYREST') {
+      statusLabel = 'Order Cancelled'
+    } else if (order.orderStatus === 'REFUNDED') {
+      statusLabel = 'Refunded'
+    }
+
+    const baseItem = {
+      id: order._id,
+      type: 'item',
+      name: order.orderId || order.restaurant?.name,
+      date: formatOrderDate(dateSource),
+      status: statusLabel,
+      price: `${currencySymbol} ${amount.toFixed(2)}`,
+      image: order.restaurant?.image ? { uri: order.restaurant.image } : null,
+      section: 'past'
+    }
+
+    pastOrders.push(baseItem)
+  })
+
+  const items = []
+
+  if (pastOrders.length > 0) {
+    items.push({
+      type: 'header',
+      id: 'header-past',
+      title: t('Past Orders') || 'Past Orders'
+    })
+    pastOrders.forEach((item) => {
+      items.push(item)
+    })
+  }
+
+  return items
+}
