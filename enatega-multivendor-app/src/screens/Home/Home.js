@@ -252,7 +252,7 @@ function Main(props) {
   function loadingScreen() {
     return (
       <View style={styles(currentTheme).screenBackground}>
-        <Search search={''} setSearch={() => {}} placeHolder={t('searchRestaurant')} />
+        <Search search={''} setSearch={() => { }} placeHolder={t('searchRestaurant')} />
         <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
           <PlaceholderLine style={styles().height200} />
           <PlaceholderLine />

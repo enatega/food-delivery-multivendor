@@ -7,7 +7,7 @@ import { theme } from '../../../../utils/themeColors';
 import { scale } from '../../../../utils/scaling';
 import TextDefault from '../../../../components/Text/TextDefault/TextDefault';
 
-const DeliveryDetailsCard = ({ 
+const DeliveryDetailsCard = ({
   addressLabel = 'Home',
   address,
   showMap = false,
@@ -40,16 +40,16 @@ const DeliveryDetailsCard = ({
         {t('Delivery details') || 'Delivery details'}
       </TextDefault>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles().addressRow}
         onPress={handleToggle}
         activeOpacity={0.7}
       >
         <View style={styles().addressLeft}>
-          <MaterialIcons 
-            name="home" 
-            size={22} 
-            color={currentTheme.fontMainColor} 
+          <MaterialIcons
+            name="home"
+            size={22}
+            color={currentTheme.fontMainColor}
           />
           <View style={styles().addressContent}>
             <TextDefault
@@ -70,10 +70,10 @@ const DeliveryDetailsCard = ({
             </TextDefault>
           </View>
         </View>
-        <Feather 
-          name={expanded ? 'chevron-up' : 'chevron-down'} 
-          size={20} 
-          color={currentTheme.fontMainColor} 
+        <Feather
+          name={expanded ? 'chevron-up' : 'chevron-down'}
+          size={20}
+          color={currentTheme.fontMainColor}
         />
       </TouchableOpacity>
 

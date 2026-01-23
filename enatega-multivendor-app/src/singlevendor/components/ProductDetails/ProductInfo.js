@@ -75,9 +75,21 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart, isAddingTo
 
         <View style={[styles().flex, { justifyContent: 'space-between', width: '100%' }]}>
           <View style={[styles().flex, { gap: 8, alignItems: 'center', width: '30%' }]}>
-            <Pressable style={[styles().pressableContainer, { borderWidth: 1.5, borderColor: currentTheme.borderColor }]} disabled={itemCount == 0} onPress={() => setItemCount((prev) => prev - 1)}>
-              <AntDesign name='minus' size={16} color={iconColor} />
+            <Pressable
+              style={[
+                styles().pressableContainer,
+                {
+                  borderWidth: 1.5,
+                  borderColor: currentTheme.borderColor,
+                  opacity: itemCount === 1 ? 0.4 : 1
+                }
+              ]}
+              disabled={itemCount === 1}
+              onPress={() => setItemCount(prev => Math.max(0, prev - 1))}
+            >
+              <AntDesign name="minus" size={16} color={iconColor} />
             </Pressable>
+
             <TextDefault H4 bolder>
               {itemCount}
             </TextDefault>

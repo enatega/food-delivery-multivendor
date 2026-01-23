@@ -10,6 +10,7 @@ import UserContext from '../../../context/User'
 const useMembership = () => {
   const { refetchProfile, loadingProfile, profile } = useContext(UserContext)
   const { loading, data, error } = useQuery(GET_ALL_SUBSCRIPTION_PLANS)
+  console.log("my data of membership", data)
   const [mutateSubscription, { loading: createSubscriptionLoading, error: mutateSubscriptionError }] = useMutation(CREATE_SUBSCRIPTION, {
     onCompleted: async (data) => {
       await refetchProfile()
@@ -47,7 +48,7 @@ const useMembership = () => {
     Alert.alert(`${error?.code}`, `${error?.localizedMessage}`, [
       {
         text: 'Ok',
-        onPress: () => {} // dismiss only
+        onPress: () => { } // dismiss only
       }
     ])
   }
@@ -62,7 +63,7 @@ const useMembership = () => {
       {
         text: 'Cancel',
         style: 'cancel',
-        onPress: () => {} // dismiss only
+        onPress: () => { } // dismiss only
       },
       {
         text: 'Yes',
@@ -82,7 +83,7 @@ const useMembership = () => {
     Alert.alert('Subscription', 'Are you sure you want to update your active subscription', [
       {
         text: 'Cancel',
-        onPress: () => {} // dismiss only
+        onPress: () => { } // dismiss only
       },
       {
         text: 'Yes',
@@ -121,7 +122,7 @@ const useMembership = () => {
       Alert.alert(`${error?.code}`, `${error?.localizedMessage}`, [
         {
           text: 'Ok',
-          onPress: () => {} // dismiss only
+          onPress: () => { } // dismiss only
         }
       ])
       return

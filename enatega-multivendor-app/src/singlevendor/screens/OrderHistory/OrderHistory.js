@@ -28,6 +28,9 @@ const ORDERS_LIST_QUERY = gql`
 const SCHEDULED_ORDERS_LIST_QUERY = gql`
   ${GET_SCHEDULED_ORDERS}
 `
+// const ORDERS_LIST_QUERY = gql`
+//   ${GET_SCHEDULED_ORDERS}
+// `
 
 
 const OrderHistory = () => {
@@ -109,7 +112,7 @@ const OrderHistory = () => {
 
   const handleOrderPress = (orderItem) => {
     console.log('orderItem', JSON.stringify(orderItem, null, 2))
-    console.log("order Confirmation:",orderItem)
+    console.log("order Confirmation:", orderItem)
     navigation.navigate('OrderConfirmation', { orderId: orderItem?.id })
   }
 

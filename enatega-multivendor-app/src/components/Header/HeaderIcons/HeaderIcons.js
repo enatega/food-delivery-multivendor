@@ -127,16 +127,17 @@ function RightButton(props) {
 
   function cartIcon() {
     return (
-      <View style={styles().rightContainer}>
-        <MaterialCommunityIcons name='cart-outline' size={28} color={currentTheme.iconColor} />
-        {cartCount > 0 && (
-          <View style={styles(route.name === 'Main' ? 'black' : currentTheme.white).absoluteContainer}>
-            <TextDefault textColor={currentTheme.white} style={{ fontSize: scale(10) }} center bolder>
-              {cartCount}
-            </TextDefault>
-          </View>
-        )}
-      </View>
+      <></>
+      // <View style={styles().rightContainer}>
+      //   <MaterialCommunityIcons name='cart-outline' size={28} color={currentTheme.iconColor} />
+      //   {cartCount > 0 && (
+      //     <View style={styles(route.name === 'Main' ? 'black' : currentTheme.white).absoluteContainer}>
+      //       <TextDefault textColor={currentTheme.white} style={{ fontSize: scale(10) }} center bolder>
+      //         {cartCount}
+      //       </TextDefault>
+      //     </View>
+      //   )}
+      // </View>
     )
   }
 

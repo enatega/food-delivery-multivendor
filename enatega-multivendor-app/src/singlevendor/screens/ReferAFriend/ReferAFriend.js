@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { SafeAreaView, Platform, Share, Alert } from 'react-native'
+import { SafeAreaView, Platform, Share, Alert, Clipboard } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 
@@ -16,7 +16,7 @@ const ReferAFriend = () => {
   const { t, i18n } = useTranslation()
   const { profile } = useContext(UserContext)
   const { orders } = useContext(OrdersContext)
-  console.log("Orders in refer friend:",orders)
+  console.log("Orders in refer friend:", orders)
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -28,19 +28,21 @@ const ReferAFriend = () => {
 
   const handleCopyCode = async (code) => {
     // Direct copy using Share API
-    const referralCodeToUse = code 
-    try {
-      await Share.share({
-        message: referralCodeToUse
-      })
-    } catch (error) {
-      // If share is cancelled, show alert
-      Alert.alert(
-        t('Referral Code'),
-        referralCodeToUse,
-        [{ text: t('OK') }]
-      )
-    }
+    const referralCodeToUse = code
+
+    Clipboard.setString(referralCodeToUse)
+    // try {
+    //   await Share.share({
+    //     message: referralCodeToUse
+    //   })
+    // } catch (error) {
+    //   // If share is cancelled, show alert
+    //   Alert.alert(
+    //     t('Referral Code'),
+    //     referralCodeToUse,
+    //     [{ text: t('OK') }]
+    //   )
+    // }
   }
 
   const handleShare = async () => {
@@ -79,17 +81,17 @@ const ReferAFriend = () => {
 
       {hasOrders ? (
         <InviteState
-        currentTheme={currentTheme}
-        referralCode={referralCode}
-        onCopyCode={handleCopyCode}
-        onShare={handleShare}
-      />
+          currentTheme={currentTheme}
+          referralCode={referralCode}
+          onCopyCode={handleCopyCode}
+          onShare={handleShare}
+        />
       ) : (
         <ShopNowState
           currentTheme={currentTheme}
           onStartShopping={handleStartShopping}
         />
-        
+
       )}
     </SafeAreaView>
   )
