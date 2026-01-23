@@ -1,69 +1,31 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale, verticalScale } from '../../../utils/scaling'
+import { formatOrderDate } from '../../utils/orderHistoryHelpers'
 
-const OrderHistoryItem = ({ ordersData, currentTheme, onOrderPress }) => {
+const ScheduledOrderItem = ({ order, currentTheme, currencySymbol, onOrderPress }) => {
   const themedStyles = styles(currentTheme)
-  const [orders,setorders] = useState(ordersData)
-console.log('orders__Images', JSON.stringify(orders,null,2))
-  // Render section header rows
-  if (orders.type === 'header') {
-    return (
-      <View style={themedStyles.sectionHeader}>
-        <TextDefault
-          textColor={currentTheme.fontMainColor}
-          style={themedStyles.sectionHeaderText}
-          bolder
-        >
-          {orders.title}
-        </TextDefault>
-      </View>
-    )
-  }
 
-  // Render regular order rows
-  const isOngoing = orders.status === 'Ongoing'
-
-  const getStatusBadgeStyle = (status) => {
-    switch (status) {
-      case 'Ongoing':
-        return themedStyles.statusBadgeOngoing
-      case 'Order Delivered':
-        return themedStyles.statusBadgeDelivered
-      case 'Order Cancelled':
-        return themedStyles.statusBadgeCancelled
-      case 'Refunded':
-        return themedStyles.statusBadgeRefunded
-      case 'Scheduled':
-        return themedStyles.statusBadgeScheduled
-      default:
-        return themedStyles.statusBadgeDefault
-    }
-  }
-
-  const getStatusTextColor = (status) => {
-    const colorMap = {
-      'Ongoing': '#B8860B',
-      'Order Delivered': '#28A745',
-      'Order Cancelled': '#DC3545',
-      'Refunded': currentTheme.primaryBlue || currentTheme.primary || '#0EA5E9',
-      'Scheduled': '#0EA5E9'
-    }
-    return colorMap[status] || currentTheme.fontMainColor
-  }
+  // Format order data
+  const orderName = order.orderId || order.restaurant?.name || 'Order'
+  const dateSource = order.expectedTime || order.preparationTime || order.orderDate || order.createdAt
+  const formattedDate = formatOrderDate(dateSource)
+  const amount = Number.parseFloat(order.orderAmount || 0)
+  const formattedPrice = `${currencySymbol} ${amount.toFixed(2)}`
+  const orderImage = order.restaurant?.image ? { uri: order.restaurant.image } : null
 
   return (
     <TouchableOpacity
       style={themedStyles.orderContainer}
       activeOpacity={0.7}
-      onPress={() => onOrderPress && onOrderPress(orders)}
+      onPress={() => onOrderPress && onOrderPress(order)}
     >
       <View style={themedStyles.orderContent}>
-        {orders.image && (
+        {orderImage && (
           <Image
-            source={orders.image}
+            source={orderImage}
             style={themedStyles.orderImage}
             resizeMode="cover"
           />
@@ -74,28 +36,28 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
             style={themedStyles.orderName}
             bold
           >
-            {orders.name}
+            {orderName}
           </TextDefault>
           <TextDefault
             textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
             style={themedStyles.orderDate}
             bold
           >
-            {orders.date}
+            {formattedDate}
           </TextDefault>
           <View style={themedStyles.orderFooter}>
             <View
               style={[
                 themedStyles.statusBadgeBase,
-                getStatusBadgeStyle(orders.status)
+                themedStyles.statusBadgeScheduled
               ]}
             >
               <TextDefault
-                textColor={getStatusTextColor(orders.status)}
+                textColor="#0EA5E9"
                 style={themedStyles.statusText}
                 bold
               >
-                {orders.status}
+                Scheduled
               </TextDefault>
             </View>
           </View>
@@ -108,16 +70,14 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
               style={themedStyles.orderPrice}
               bolder
             >
-              {orders.price}
+              {formattedPrice}
             </TextDefault>
-            {!isOngoing && (
-              <Ionicons
-                name="chevron-forward"
-                size={scale(20)}
-                color={currentTheme.fontMainColor}
-                style={themedStyles.chevron}
-              />
-            )}
+            <Ionicons
+              name="chevron-forward"
+              size={scale(20)}
+              color={currentTheme.fontMainColor}
+              style={themedStyles.chevron}
+            />
           </View>
         </View>
       </View>
@@ -127,17 +87,6 @@ console.log('orders__Images', JSON.stringify(orders,null,2))
 
 const styles = (props = null) =>
   StyleSheet.create({
-    sectionHeader: {
-      paddingHorizontal: scale(16),
-      paddingTop: verticalScale(16),
-      paddingBottom: verticalScale(8),
-      backgroundColor: props?.themeBackground
-    },
-    sectionHeaderText: {
-      fontSize: scale(18),
-      fontWeight: '600',
-      lineHeight: scale(20)
-    },
     orderContainer: {
       backgroundColor: props?.themeBackground,
       paddingHorizontal: scale(16),
@@ -180,23 +129,8 @@ const styles = (props = null) =>
       borderRadius: scale(4),
       marginRight: scale(8)
     },
-    statusBadgeOngoing: {
-      backgroundColor: '#FFF9E6'
-    },
-    statusBadgeDelivered: {
-      backgroundColor: '#E6F7E6'
-    },
-    statusBadgeCancelled: {
-      backgroundColor: '#FFE6E6'
-    },
-    statusBadgeRefunded: {
-      backgroundColor: props?.lowOpacityBlue || 'rgba(14, 165, 233, 0.2)'
-    },
     statusBadgeScheduled: {
       backgroundColor: props?.lowOpacityBlue || 'rgba(14, 165, 233, 0.2)'
-    },
-    statusBadgeDefault: {
-      backgroundColor: '#F5F5F5'
     },
     statusText: {
       fontSize: scale(11),
@@ -213,7 +147,6 @@ const styles = (props = null) =>
     },
     orderPrice: {
       fontWeight: '600',
-      // fontSize: scale(16),
       lineHeight: scale(22)
     },
     chevron: {
@@ -221,6 +154,4 @@ const styles = (props = null) =>
     }
   })
 
-export default OrderHistoryItem
-
-
+export default ScheduledOrderItem

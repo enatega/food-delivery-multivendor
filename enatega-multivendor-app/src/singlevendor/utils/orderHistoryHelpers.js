@@ -5,7 +5,7 @@ export const formatOrderDate = (dateString) => {
   const date = new Date(dateString)
   if (Number.isNaN(date.getTime())) return ''
 
-  const months = ['Jan', 'Feb', 'Feb', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
   const day = date.getDate()
   const month = months[date.getMonth()]
@@ -82,6 +82,46 @@ export const buildOrderHistoryList = ({ orders, currencySymbol, t }) => {
       title: t('Past Orders') || 'Past Orders'
     })
     pastOrders.forEach((item) => {
+      items.push(item)
+    })
+  }
+
+  return items
+}
+
+export const buildScheduledOrderList = ({ orders, currencySymbol, t }) => {
+  if (!orders || !Array.isArray(orders) || orders.length === 0) return []
+
+  const scheduledOrders = []
+
+  orders.forEach((order) => {
+    const dateSource = order.expectedTime || order.preparationTime || order.orderDate || order.createdAt || null
+
+    const amount = Number.parseFloat(order.orderAmount || 0)
+
+    const baseItem = {
+      id: order._id,
+      type: 'item',
+      name: order.orderId || order.restaurant?.name,
+      date: formatOrderDate(dateSource),
+      status: 'Scheduled',
+      price: `${currencySymbol} ${amount.toFixed(2)}`,
+      image: order.restaurant?.image ? { uri: order.restaurant.image } : null,
+      section: 'scheduled'
+    }
+
+    scheduledOrders.push(baseItem)
+  })
+
+  const items = []
+
+  if (scheduledOrders.length > 0) {
+    items.push({
+      type: 'header',
+      id: 'header-scheduled',
+      title: t('Scheduled Orders') || 'Scheduled Orders'
+    })
+    scheduledOrders.forEach((item) => {
       items.push(item)
     })
   }

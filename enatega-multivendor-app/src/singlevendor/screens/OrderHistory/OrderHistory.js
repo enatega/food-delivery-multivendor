@@ -12,21 +12,25 @@ import ConfigurationContext from '../../../context/Configuration'
 import AccountSectionHeader from '../../components/AccountSectionHeader'
 import EmptyAccountSectionArea from '../../components/EmptyAccountSectionArea'
 import { myOrders } from '../../../apollo/queries'
-import { buildOrderHistoryList } from '../../utils/orderHistoryHelpers'
+import { buildOrderHistoryList, buildScheduledOrderList } from '../../utils/orderHistoryHelpers'
 
 import styles from './styles'
 import OrderHistoryItem from '../../components/OrderHistory/OrderHistoryItem'
 import OrderHistorySkeleton from './OrderHistorySkeleton'
 import { pathToArray } from 'graphql/jsutils/Path'
 import { GET_SCHEDULED_ORDERS } from '../../apollo/queries'
+import OrdersList from './OrdersList'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const ORDERS_LIST_QUERY = gql`
   ${myOrders}
 `
+const SCHEDULED_ORDERS_LIST_QUERY = gql`
+  ${GET_SCHEDULED_ORDERS}
+`
 // const ORDERS_LIST_QUERY = gql`
 //   ${GET_SCHEDULED_ORDERS}
 // `
-
 
 
 const OrderHistory = () => {
@@ -42,9 +46,11 @@ const OrderHistory = () => {
   const { data, loading, error } = useQuery(ORDERS_LIST_QUERY, {
     fetchPolicy: 'network-only'
   })
-
+  const { data: scheduledOrdersData, loading: scheduledOrdersLoading, error: scheduledOrdersError } = useQuery(SCHEDULED_ORDERS_LIST_QUERY, {
+    fetchPolicy: 'network-only'
+  })
+  const SCHEDULED_ORDERS = scheduledOrdersData?.scheduledOrders
   const orders = data?.orders
-
   useEffect(() => {
     console.log('Orders API Data:', JSON.stringify(data, null, 2))
     console.log('Orders Loading:', loading)
@@ -64,7 +70,28 @@ const OrderHistory = () => {
     })
   }, [configuration?.currencySymbol, orders, t])
 
-  if (loading) {
+  // console.log('orderListData____', JSON.stringify(orderListData, null, 2))
+
+  const scheduledOrderListData = useMemo(() => {
+    const currencySymbol = configuration?.currencySymbol || ''
+    return buildScheduledOrderList({
+      orders: SCHEDULED_ORDERS,
+      currencySymbol,
+      t
+    })
+  }, [configuration?.currencySymbol, SCHEDULED_ORDERS, t])
+
+  console.log('scheduledOrderListData', JSON.stringify(scheduledOrderListData, null, 2))
+
+  const combinedOrderListData = useMemo(() => {
+    // Combine scheduled orders first, then regular orders
+    return [...scheduledOrderListData, ...orderListData]
+  }, [scheduledOrderListData, orderListData])
+
+  console.log('combinedOrderListData', JSON.stringify(combinedOrderListData, null, 2))
+  
+
+  if (loading || scheduledOrdersLoading) {
     return (
       <SafeAreaView style={styles(currentTheme).container}>
         <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
@@ -73,9 +100,15 @@ const OrderHistory = () => {
     )
   }
 
-  const renderItem = ({ item }) => <OrderHistoryItem orders={item} currentTheme={currentTheme} onOrderPress={handleOrderPress} />
+  const renderItem = ({ item }) => <OrderHistoryItem ordersData={item} currentTheme={currentTheme} onOrderPress={handleOrderPress} />
 
-  const keyExtractor = (item) => item.id
+  const keyExtractor = (item, index) => {
+    // Use section prefix to ensure unique keys, especially for duplicate order IDs
+    if (item.type === 'header') {
+      return item.id
+    }
+    return `${item.section || 'item'}-${item.id || index}`
+  }
 
   const handleOrderPress = (orderItem) => {
     console.log('orderItem', JSON.stringify(orderItem, null, 2))
@@ -88,8 +121,11 @@ const OrderHistory = () => {
   }
 
   return (
-    <SafeAreaView style={styles(currentTheme).container}>
-      <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
+    // <SafeAreaView style={styles(currentTheme).container}>
+    <>
+    <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
+    <ScrollView style={styles(currentTheme).container} showsVerticalScrollIndicator={false}>
+      <OrdersList/>
 
       <FlashList
         data={orderListData}
@@ -104,7 +140,9 @@ const OrderHistory = () => {
           </View>
         }
       />
-    </SafeAreaView>
+    {/* </SafeAreaView> */}
+    </ScrollView>
+    </>
   )
 }
 
