@@ -738,8 +738,8 @@ export const GET_MY_REFERRAL_CODE = gql`
   }
 `
 
-export const GET_SCHEDULED_ORDERS = `query ScheduledOrders($offset:Int){
-  scheduledOrders(offset:$offset){
+export const GET_SCHEDULED_ORDERS = `query ScheduledOrders($offset:Int, $limit:Int){
+  scheduledOrders(offset:$offset, limit: $limit){
     _id
     orderId
       id
