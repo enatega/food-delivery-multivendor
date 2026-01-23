@@ -22,6 +22,7 @@ import {
   GET_RESTAURANT_DELIVERY_ZONE_INFO,
   GET_RESTAURANT_PROFILE,
   UPDATE_DELIVERY_BOUNDS_AND_LOCATION,
+  GET_ZONES,
 } from '@/lib/api/graphql';
 
 // Context
@@ -37,6 +38,8 @@ import {
   IRestaurantProfile,
   IRestaurantProfileResponse,
   IUpdateRestaurantDeliveryZoneVariables,
+  IZoneResponse,
+  IZonesResponse,
 } from '@/lib/utils/interfaces';
 
 // Utilities
@@ -73,8 +76,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
 > = ({ onStepChange, hideControls, height }) => {
   // Hooks
   const t = useTranslations();
-    const { theme } = useTheme();
-
+  const { theme } = useTheme();
 
   // Context
   const { restaurantContextData, onSetRestaurantContextData } =
@@ -102,6 +104,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
   const [selectedPlaceObject, setSelectedPlaceObject] =
     useState<IPlaceSelectedOption | null>(null);
   const [search, setSearch] = useState<string>('');
+  const [zones, setZones] = useState<IZoneResponse[]>([]);
 
   // Ref
   const polygonRef = useRef<google.maps.Polygon | null>(null);
@@ -144,6 +147,16 @@ const CustomGoogleMapsLocationBounds: React.FC<
       onError: onErrorLocationZoneUpdate,
     }
   );
+
+  // Get Zones
+
+  useQuery<IZonesResponse>(GET_ZONES, {
+    onCompleted: (data) => {
+      if (data) {
+        setZones(data?.zones);
+      }
+    },
+  });
 
   // Memos
   const radiusInMeter = useMemo(() => {
@@ -419,9 +432,9 @@ const CustomGoogleMapsLocationBounds: React.FC<
   //   setDistance(newDistance);
   // };
   const handleDistanceChange = (val: number) => {
-  const newDistance = Math.max(0, val); // Only ensure it's not negative
-  setDistance(newDistance);
-};
+    const newDistance = Math.max(0, val); // Only ensure it's not negative
+    setDistance(newDistance);
+  };
   const locationCallback = (error: string | null, data?: ILocation) => {
     if (error) {
       return;
@@ -664,7 +677,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
                                   key={index}
                                   style={{
                                     fontWeight: part.highlight ? 700 : 400,
-                                    
+
                                     marginRight: '2px',
                                   }}
                                 >
@@ -719,6 +732,31 @@ const CustomGoogleMapsLocationBounds: React.FC<
               deliveryZoneType === 'point' ? onClickGoogleMaps : undefined
             }
           >
+            {zones?.map(
+              (zone) =>
+                zone.location && (
+                  <Polygon
+                    onClick={
+                      deliveryZoneType === 'point'
+                        ? onClickGoogleMaps
+                        : undefined
+                    }
+                    key={zone._id}
+                    paths={zone.location.coordinates[0].map((coord) => ({
+                      lat: coord[1],
+                      lng: coord[0],
+                    }))}
+                    options={{
+                      strokeColor: 'blue',
+                      strokeOpacity: 0.8,
+                      strokeWeight: 2,
+                      fillColor: 'lightblue',
+                      fillOpacity: 0.35,
+                    }}
+                  />
+                )
+            )}
+
             <Polygon
               editable={!hideControls}
               draggable={!hideControls}
