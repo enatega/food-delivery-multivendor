@@ -18,7 +18,7 @@ const DEACTIVATE = gql`
 
 const AccountManagement = () => {
   const { t, i18n } = useTranslation()
-  const { logout } = useContext(UserContext)
+  const { logout, profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
@@ -57,7 +57,20 @@ const AccountManagement = () => {
 
   const deactivatewithemail = async () => {
     try {
-      await deactivated()
+      if (!profile?.email) {
+        Alert.alert(
+          t('Error'),
+          t('User email not found'),
+          [{ text: 'OK' }]
+        )
+        return
+      }
+      await deactivated({
+        variables: {
+          email: profile.email,
+          isActive: false
+        }
+      })
     } catch (error) {
       console.error('Deactivation error:', error)
     }

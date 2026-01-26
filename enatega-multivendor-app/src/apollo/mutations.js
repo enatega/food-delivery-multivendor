@@ -332,6 +332,8 @@ export const Deactivate = `
   mutation deactivated($isActive: Boolean!, $email: String!) {
     Deactivate(isActive: $isActive,email: $email) {
       isActive
+      name
+      _id
     }
   }
   `
