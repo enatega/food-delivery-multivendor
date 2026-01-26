@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 
 // Hooks
 import useLogin from "@/lib/hooks/useLogin";
+import { useRouter } from "expo-router";
 
 // Interface
 import setupApollo from "@/lib/apollo";
@@ -49,6 +50,7 @@ const LoginScreen = () => {
   const { t } = useTranslation();
   const { onLogin, creds } = useLogin();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
@@ -224,10 +226,7 @@ const LoginScreen = () => {
                       borderColor: appTheme.primary,
                       backgroundColor: 'transparent'
                     }}
-                    onPress={() => {
-                      // TODO: Navigate to signup screen
-                      console.log('Navigate to signup');
-                    }}
+                    onPress={() => router.push("/signup")}
                   >
                     <FontAwesome
                       name="user-plus"

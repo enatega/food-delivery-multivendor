@@ -10,6 +10,30 @@ export interface ILoginInitialValues {
   password: string;
 }
 
+export interface ISignUpInitialValues {
+  name: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+  phone: string;
+  vehicleType: string;
+  zone: string;
+}
+
+export interface IRiderInput {
+  _id?: string;
+  name: string;
+  username: string;
+  password: string;
+  phone: string;
+  available: boolean;
+  vehicleType: string;
+  zone: string;
+  madeBy: "ADMIN" | "RIDER_REQUEST";
+  riderRequestStatus: "PENDING" | "ACCEPTED";
+}
+
+
 export interface IAuthContext {
   token: string;
   setTokenAsync: (token: string) => Promise<void>;
