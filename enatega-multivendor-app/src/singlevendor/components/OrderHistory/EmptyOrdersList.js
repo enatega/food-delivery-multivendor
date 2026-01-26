@@ -6,12 +6,25 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const EmptyOrdersList = ({ currentTheme, message }) => {
+const EmptyOrdersList = ({ currentTheme, message, title }) => {
   const { t } = useTranslation()
+  const themedStyles = styles(currentTheme)
 
   return (
-    <View style={styles(currentTheme).container}>
-      <View style={styles(currentTheme).iconContainer}>
+    <View style={themedStyles.wrapper}>
+      {title && (
+        <View style={themedStyles.sectionHeader}>
+          <TextDefault
+            textColor={currentTheme.fontMainColor}
+            style={themedStyles.sectionHeaderText}
+            bolder
+          >
+            {title}
+          </TextDefault>
+        </View>
+      )}
+      <View style={themedStyles.container}>
+        <View style={themedStyles.iconContainer}>
         <MaterialIcons
           name="receipt-long"
           size={scale(80)}
@@ -20,33 +33,39 @@ const EmptyOrdersList = ({ currentTheme, message }) => {
       </View>
 
       <TextDefault
-        textColor={currentTheme?.fontMainColor}
-        style={styles(currentTheme).title}
-        bolder
-        center
-      >
-        {message || t('No orders found')}
-      </TextDefault>
-
-      <TextDefault
         textColor={currentTheme?.colorTextMuted || currentTheme?.fontSecondColor}
-        style={styles(currentTheme).description}
+        style={themedStyles.description}
         center
         bold
       >
-        {t('Your orders will appear here once you place them')}
+        {message || t('No orders found')}
       </TextDefault>
+      </View>
     </View>
   )
 }
 
 const styles = (props = null) =>
   StyleSheet.create({
+    wrapper: {
+      flex: 1
+    },
+    sectionHeader: {
+      paddingHorizontal: scale(16),
+      paddingTop: verticalScale(16),
+      paddingBottom: verticalScale(8),
+      backgroundColor: props?.themeBackground
+    },
+    sectionHeaderText: {
+      fontSize: scale(18),
+      fontWeight: '600',
+      lineHeight: scale(20)
+    },
     container: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-
+      paddingVertical: verticalScale(20)
     },
     iconContainer: {
       width: scale(80),

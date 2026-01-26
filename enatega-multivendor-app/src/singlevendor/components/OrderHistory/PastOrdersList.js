@@ -234,6 +234,7 @@ const PastOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
       ListEmptyComponent={
         <EmptyOrdersList 
           currentTheme={currentTheme} 
+          title={t('Past Orders') || 'Past Orders'}
           message={t('There is no data for past orders') || 'There is no data for past orders'}
         />
       }

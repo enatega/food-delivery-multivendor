@@ -230,6 +230,7 @@ const ScheduledOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
       ListEmptyComponent={
         <EmptyOrdersList 
           currentTheme={currentTheme} 
+          title={t('Scheduled Orders') || 'Scheduled Orders'}
           message={t('There is no data for scheduled orders') || 'There is no data for scheduled orders'}
         />
       }

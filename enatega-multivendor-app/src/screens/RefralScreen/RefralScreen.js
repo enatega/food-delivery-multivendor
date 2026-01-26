@@ -7,6 +7,9 @@ import { theme } from '../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { alignment } from '../../utils/alignment'
 import { useRoute } from '@react-navigation/native'
+import { useMutation } from '@apollo/client'
+import { CHECK_REFERRAL_CODE_EXISTS } from '../../singlevendor/apollo/mutations'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import styles from './style'
 
 const { height } = Dimensions.get('window')
@@ -16,8 +19,71 @@ const RefralScreen = ({ navigation }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [referralCode, setReferralCode] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const route = useRoute()
   const { onContinue, onSkip, userData, phoneAuthData, emailAuthData } = route.params || {}
+
+  const proceedWithReferralCode = () => {
+    const trimmedCode = referralCode.trim()
+    console.log('✅ Continuing with referral code:', trimmedCode)
+    setErrorMessage('') // Clear any previous errors
+    if (onContinue) {
+      console.log('✅ Calling onContinue callback with code:', trimmedCode)
+      onContinue(trimmedCode)
+    } else {
+      // Fallback: navigate back with referral code
+      // Check if it's Google login, Phone auth, or Email auth
+      if (userData) {
+        navigation.navigate({
+          name: 'CreateAccount',
+          params: { referralCode: trimmedCode },
+          merge: true
+        })
+      } else if (phoneAuthData) {
+        navigation.navigate({
+          name: 'VerifyPhoneNumber',
+          params: { referralCode: trimmedCode },
+          merge: true
+        })
+      } else if (emailAuthData) {
+        if (emailAuthData.isLogin) {
+          navigation.navigate({
+            name: 'Login',
+            params: { referralCode: trimmedCode },
+            merge: true
+          })
+        } else {
+          navigation.navigate({
+            name: 'Register',
+            params: { email: emailAuthData.email, referralCode: trimmedCode },
+            merge: true
+          })
+        }
+      }
+    }
+  }
+
+  const [checkReferralCode, { loading: checkingCode }] = useMutation(CHECK_REFERRAL_CODE_EXISTS, {
+    onCompleted: (data) => {
+      if (data?.checkReferralCodeExists) {
+        // Code exists, continue with existing flow
+        proceedWithReferralCode()
+      } else {
+        // Code doesn't exist, show error
+        setErrorMessage(t('Given Referral code doesn\'t exist') || 'Given Referral code doesn\'t exist')
+        FlashMessage({
+          message: t('Given Referral code doesn\'t exist') || 'Given Referral code doesn\'t exist'
+        })
+      }
+    },
+    onError: (error) => {
+      const errorMsg = error?.graphQLErrors?.[0]?.message || error?.networkError?.result?.errors?.[0]?.message || t('Something went wrong, please try again!') || 'Something went wrong, please try again!'
+      setErrorMessage(errorMsg)
+      FlashMessage({
+        message: errorMsg
+      })
+    }
+  })
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -66,45 +132,17 @@ const RefralScreen = ({ navigation }) => {
   const handleContinue = () => {
     const trimmedCode = referralCode.trim()
     if (trimmedCode) {
-      console.log('✅ Continuing with referral code:', trimmedCode)
-      if (onContinue) {
-        console.log('✅ Calling onContinue callback with code:', trimmedCode)
-        onContinue(trimmedCode)
-      } else {
-        // Fallback: navigate back with referral code
-        // Check if it's Google login, Phone auth, or Email auth
-        if (userData) {
-          navigation.navigate({
-            name: 'CreateAccount',
-            params: { referralCode: trimmedCode },
-            merge: true
-          })
-        } else if (phoneAuthData) {
-          navigation.navigate({
-            name: 'VerifyPhoneNumber',
-            params: { referralCode: trimmedCode },
-            merge: true
-          })
-        } else if (emailAuthData) {
-          if (emailAuthData.isLogin) {
-            navigation.navigate({
-              name: 'Login',
-              params: { referralCode: trimmedCode },
-              merge: true
-            })
-          } else {
-            navigation.navigate({
-              name: 'Register',
-              params: { email: emailAuthData.email, referralCode: trimmedCode },
-              merge: true
-            })
-          }
+      setErrorMessage('') // Clear previous errors
+      // Call API to check if referral code exists
+      checkReferralCode({
+        variables: {
+          referralCode: trimmedCode
         }
-      }
+      })
     }
   }
 
-  const isContinueDisabled = !referralCode.trim()
+  const isContinueDisabled = !referralCode.trim() || checkingCode
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
@@ -165,11 +203,24 @@ const RefralScreen = ({ navigation }) => {
                   placeholderTextColor={currentTheme.fontSecondColor}
                   style={styles(currentTheme).textInput}
                   value={referralCode}
-                  onChangeText={setReferralCode}
+                  onChangeText={(text) => {
+                    setReferralCode(text)
+                    setErrorMessage('') // Clear error when user types
+                  }}
                   autoCapitalize="characters"
                   autoCorrect={false}
                 />
               </View>
+              {errorMessage ? (
+                <TextDefault 
+                  H5 
+                  textColor={currentTheme.errorColor || '#FF0000'} 
+                  style={{ marginTop: 8, marginLeft: 16 }}
+                  isRTL={currentTheme.isRTL}
+                >
+                  {errorMessage}
+                </TextDefault>
+              ) : null}
             </View>
           </View>
         </ScrollView>
@@ -195,7 +246,7 @@ const RefralScreen = ({ navigation }) => {
             activeOpacity={0.7}
           >
             <TextDefault textColor={currentTheme.white} H4 bold>
-              {t('continue') || 'Continue'}
+              {checkingCode ? (t('Checking...') || 'Checking...') : (t('continue') || 'Continue')}
             </TextDefault>
           </TouchableOpacity>
 

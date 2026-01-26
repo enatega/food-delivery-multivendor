@@ -198,3 +198,8 @@ export const CLEAR_CART = gql`
     }
   }
 `
+export const CHECK_REFERRAL_CODE_EXISTS = gql`
+  mutation CheckReferralCodeExists($referralCode: String!) {
+    checkReferralCodeExists(referralCode: $referralCode)
+  }
+`
