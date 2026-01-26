@@ -45,7 +45,7 @@ const ReferAFriend = () => {
     // }
   }
 
-  const handleShare = async () => {
+  const handleShare = async (referralCode) => {
     const shareMessage = t('Join me on this amazing food delivery app! Use my referral code {{code}} and get 1 free delivery. Download now: {{url}}', {
       code: referralCode,
       url: 'https://yourapp.com/download' // TODO: Replace with actual app URL

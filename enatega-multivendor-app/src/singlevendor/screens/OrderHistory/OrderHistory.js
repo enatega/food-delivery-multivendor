@@ -19,10 +19,10 @@ import OrderHistoryItem from '../../components/OrderHistory/OrderHistoryItem'
 import OrderHistorySkeleton from './OrderHistorySkeleton'
 import { pathToArray } from 'graphql/jsutils/Path'
 import { GET_SCHEDULED_ORDERS } from '../../apollo/queries'
-import OrdersList from './OrdersList'
 import ActiveOrdersList from '../../components/OrderHistory/ActiveOrdersList'
 import PastOrdersList from '../../components/OrderHistory/PastOrdersList'
 import { ScrollView } from 'react-native-gesture-handler'
+import ScheduledOrdersList from '../../components/OrderHistory/ScheduledOrdersList'
 
 const ORDERS_LIST_QUERY = gql`
   ${myOrders}
@@ -123,11 +123,13 @@ const OrderHistory = () => {
   }
 
   return (
-    // <SafeAreaView style={styles(currentTheme).container}>
     <>
     <AccountSectionHeader currentTheme={currentTheme} onBack={() => navigation.goBack()} headerText={t('My Orders') || 'My Orders'} />
     <ScrollView style={styles(currentTheme).container} showsVerticalScrollIndicator={false}>
-      <OrdersList/>
+      <ScheduledOrdersList
+        onOrderPress={handleOrderPress}
+        currentTheme={currentTheme}
+      />
       <ActiveOrdersList
         onOrderPress={handleOrderPress}
         currentTheme={currentTheme}
@@ -136,7 +138,6 @@ const OrderHistory = () => {
         onOrderPress={handleOrderPress}
         currentTheme={currentTheme}
       />
-    {/* </SafeAreaView> */}
     </ScrollView>
     </>
   )

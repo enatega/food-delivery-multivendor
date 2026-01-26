@@ -11,6 +11,7 @@ import OrderHistoryItem from './OrderHistoryItem'
 import useScheduledOrders from './useScheduledOrders'
 import { buildScheduledOrderList } from '../../utils/orderHistoryHelpers'
 import OrderHistorySkeleton from '../../screens/OrderHistory/OrderHistorySkeleton'
+import EmptyOrdersList from './EmptyOrdersList'
 
 const PAGE_LIMIT = 10
 
@@ -27,8 +28,7 @@ const ScheduledOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
   // State for pagination
   const [offset, setOffset] = useState(0)
   const [scheduledOrders, setScheduledOrders] = useState([])
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
-
+  const [isLoadingMore, setIsLoadingMore] = useState(false)  
   // Fetch scheduled orders
   const {
     data,
@@ -52,7 +52,6 @@ const ScheduledOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
         currencySymbol,
         t
       })
-      console.log('NEWOrders__transformedItems',JSON.stringify(transformedItems,null,2))
 
       if (offset === 0) {
         // First load - include header if present
@@ -99,15 +98,12 @@ const ScheduledOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
     if(data?.scheduledOrders?.length == 0){
       setIsLoadingMore(false)
     }
-      console.log('NEWOrders__data',JSON.stringify(data,null,2))
     } catch (error) {
       console.error('Error loading more scheduled orders:', error)
       setIsLoadingMore(false)
       setOffset(previousOffset)
     }
   }, [isLoadingMore, loading, pageInfo, offset, refetch])
-  console.log('isLoadingMore',isLoadingMore)
-  console.log('pageInfo',pageInfo)
   
 
   // Flatten list data for FlashList
@@ -221,10 +217,6 @@ const ScheduledOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
     )
   }
 
-  if (flatListData.length === 0 && !loading) {
-    return null
-  }
-
   return (
     <FlashList
       data={flatListData}
@@ -235,6 +227,13 @@ const ScheduledOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
       removeClippedSubviews
       getItemType={getItemType}
       extraData={flatListData.length}
+      ListEmptyComponent={
+        <EmptyOrdersList 
+          currentTheme={currentTheme} 
+          title={t('Scheduled Orders') || 'Scheduled Orders'}
+          message={t('There is no data for scheduled orders') || 'There is no data for scheduled orders'}
+        />
+      }
     />
   )
 }
@@ -247,6 +246,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       paddingVertical: verticalScale(40)
     },
+
     paginationRow: {
       paddingVertical: verticalScale(20),
       alignItems: 'center',
