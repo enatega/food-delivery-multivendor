@@ -328,6 +328,25 @@ export const en = {
   "Account holder name": "Account holder name",
   "Tips": "Tips",
 
+  // Invite Friends
+  "Invite Friends": "Invite Friends",
+  "QR & Referral": "QR & Referral",
+  "My QR": "My QR",
+  "Invite & Earn": "Invite & Earn",
+  "You and your friend each get $2.5 when they join using your code or QR and place their first order.": "You and your friend each get $2.5 when they join using your code or QR and place their first order.",
+  "Share link": "Share link",
+  "Share your referral code with friends and earn rewards": "Share your referral code with friends and earn rewards",
+  "Scan this QR code to sign up": "Scan this QR code to sign up",
+  "Referral Code": "Referral Code",
+  "Referral Link": "Referral Link",
+  "Share via": "Share via",
+  "How it works": "How it works",
+  "Share your code with friends. When they sign up and complete their first delivery, you both earn rewards!": "Share your code with friends. When they sign up and complete their first delivery, you both earn rewards!",
+  "Join me on this amazing delivery platform!": "Join me on this amazing delivery platform!",
+  "Use my referral code": "Use my referral code",
+  "Copied!": "Copied!",
+  "Referral link copied to clipboard": "Referral link copied to clipboard",
+
   // Signup Screen
   "Become a Rider": "Become a Rider",
   "Join our delivery network and start earning today": "Join our delivery network and start earning today",

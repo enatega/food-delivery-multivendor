@@ -3,7 +3,7 @@ import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Linking, Text, TouchableOpacity, View } from "react-native";
 
 // Context
@@ -16,6 +16,7 @@ import CustomDrawerHeader from "@/lib/ui/screen-components/home/drawer/drawer-he
 import { useApptheme } from "@/lib/context/global/theme.context";
 import {
   AboutIcon,
+  InviteIcon,
   LogoutIcon,
   PageIcon,
   PrivacyIcon,
@@ -25,8 +26,6 @@ import {
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native-gesture-handler";
-import { useUserContext } from "@/lib/context/global/user.context";
-import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 export default function CustomDrawerContent(
   props: DrawerContentComponentProps
@@ -67,37 +66,72 @@ export default function CustomDrawerContent(
           const { options } = props.descriptors[route.key];
           if (route.name === "profile") {
             return (
-              <TouchableOpacity
-                key={route.key}
-                onPress={() => {
-                  router.replace("/(tabs)/profile");
-                }}
-                className={`flex-row justify-between items-center px-4 py-4 border-b-[0.5px]`}
-                style={{ borderColor: appTheme.borderLineColor }}
-              >
-                <View className="flex-row items-center gap-3">
-                  <View
-                    className="h-[30px] w-[40px] rounded-full items-center justify-center"
-                    style={{
-                      backgroundColor: appTheme.sidebarIconBackground,
-                    }}
-                  >
-                    <UserIcon
-                      width={16}
-                      height={16}
-                      color={appTheme.iconColor}
-                    />
+              <React.Fragment key={route.key}>
+                {/* INVITE FRIENDS - Above Profile */}
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push("/invite-friends");
+                  }}
+                  className="flex-row justify-between items-center px-4 py-4 border-b-[0.5px]"
+                  style={{ borderColor: appTheme.borderLineColor }}
+                >
+                  <View className="flex-row items-center gap-3">
+                    <View
+                      className="h-[30px] w-[40px] rounded-full items-center justify-center"
+                      style={{ backgroundColor: appTheme.sidebarIconBackground }}
+                    >
+                      <InviteIcon width={16} height={16} color={appTheme.iconColor} />
+                    </View>
+                    <Text
+                      className="text-sm font-semibold"
+                      style={{
+                        color: appTheme.buttonText,
+                      }}
+                    >
+                      {t("Invite Friends")}
+                    </Text>
                   </View>
-                  <Text
-                    className="text-sm font-semibold"
-                    style={{
-                      color: appTheme.buttonText,
-                    }}
-                  >
-                    {t("Profile")}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                  
+                  {/* Right Arrow Icon */}
+                  <RightArrowIcon
+                    color={appTheme.fontMainColor}
+                    height={20}
+                    width={20}
+                  />
+                </TouchableOpacity>
+
+                {/* Profile */}
+                <TouchableOpacity
+                  onPress={() => {
+                    router.replace("/(tabs)/profile");
+                  }}
+                  className={`flex-row justify-between items-center px-4 py-4 border-b-[0.5px]`}
+                  style={{ borderColor: appTheme.borderLineColor }}
+                >
+                  <View className="flex-row items-center gap-3">
+                    <View
+                      className="h-[30px] w-[40px] rounded-full items-center justify-center"
+                      style={{
+                        backgroundColor: appTheme.sidebarIconBackground,
+                      }}
+                    >
+                      <UserIcon
+                        width={16}
+                        height={16}
+                        color={appTheme.iconColor}
+                      />
+                    </View>
+                    <Text
+                      className="text-sm font-semibold"
+                      style={{
+                        color: appTheme.buttonText,
+                      }}
+                    >
+                      {t("Profile")}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </React.Fragment>
             );
           } else
             return (
