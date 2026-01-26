@@ -11,6 +11,7 @@ import OrderHistoryItem from './OrderHistoryItem'
 import useActiveOrders from './useActiveOrders'
 import { buildActiveOrderList } from '../../utils/orderHistoryHelpers'
 import OrderHistorySkeleton from '../../screens/OrderHistory/OrderHistorySkeleton'
+import EmptyOrdersList from './EmptyOrdersList'
 
 const PAGE_LIMIT = 10
 
@@ -216,9 +217,9 @@ const ActiveOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
     )
   }
 
-  if (flatListData.length === 0 && !loading) {
-    return null
-  }
+  // if (flatListData.length === 0 && !loading) {
+  //   return null
+  // }
 
   return (
     <FlashList
@@ -230,6 +231,12 @@ const ActiveOrdersList = ({ onOrderPress, currentTheme: passedTheme }) => {
       removeClippedSubviews
       getItemType={getItemType}
       extraData={flatListData.length}
+      ListEmptyComponent={
+        <EmptyOrdersList 
+          currentTheme={currentTheme} 
+          message={t('There is no data for active orders') || 'There is no data for active orders'}
+        />
+      }
     />
   )
 }
