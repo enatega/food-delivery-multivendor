@@ -17,10 +17,10 @@ import QRCode from "react-native-qrcode-svg";
 export default function InviteFriendsScreen() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { dataProfile } = useUserContext();
+  // const { dataProfile } = useUserContext();
 
   // Generate referral code or link
-  const referralCode = (dataProfile as any)?.referralCode || dataProfile?._id || "F123456";
+  const referralCode =  "F123456";
   const referralLink = `https://yourapp.com/signup?ref=${referralCode}`;
 
   const handleCopyCode = async () => {
