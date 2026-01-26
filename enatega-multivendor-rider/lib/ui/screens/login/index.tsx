@@ -32,7 +32,6 @@ import setupApollo from "@/lib/apollo";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { CustomContinueButton } from "../../useable-components";
-import { set } from "lodash";
 
 const initial: ILoginInitialValues = {
   username: "",
@@ -48,7 +47,7 @@ const LoginScreen = () => {
   const { appTheme } = useApptheme();
   const client = setupApollo();
   const { t } = useTranslation();
-  const { onLogin, creds, isLogging } = useLogin();
+  const { onLogin, creds } = useLogin();
   const [loading, setLoading] = useState(false);
 
   // Handlers
@@ -200,21 +199,48 @@ const LoginScreen = () => {
                     onPress={() => handleSubmit()}
                     className="self-center"
                   />
-                  {/* <TouchableOpacity
-                    className="h-12 rounded-3xl py-2 mt-10 w-full"
-                    style={{ backgroundColor: appTheme.primary }}
-                    onPress={() => handleSubmit()}
+
+                  {/* Sign Up Link */}
+                  <View className="mt-8 flex-row items-center justify-center">
+                    <View 
+                      className="flex-1 h-[1px] mr-3" 
+                      style={{ backgroundColor: appTheme.borderLineColor }}
+                    />
+                    <Text 
+                      className="text-xs font-medium"
+                      style={{ color: appTheme.fontSecondColor }}
+                    >
+                      {t("OR")}
+                    </Text>
+                    <View 
+                      className="flex-1 h-[1px] ml-3" 
+                      style={{ backgroundColor: appTheme.borderLineColor }}
+                    />
+                  </View>
+
+                  <TouchableOpacity 
+                    className="mt-6 py-3 px-6 rounded-lg border-2 flex-row items-center justify-center gap-2"
+                    style={{ 
+                      borderColor: appTheme.primary,
+                      backgroundColor: 'transparent'
+                    }}
+                    onPress={() => {
+                      // TODO: Navigate to signup screen
+                      console.log('Navigate to signup');
+                    }}
                   >
-                    {isLogging ?
-                      <SpinnerComponent />
-                    : <Text
-                        className="text-center text-lg font-medium"
-                        style={{ color: appTheme.black }}
-                      >
-                        {t("Login")}
-                      </Text>
-                    }
-                  </TouchableOpacity> */}
+                    <FontAwesome
+                      name="user-plus"
+                      size={16}
+                      color={appTheme.primary}
+                    />
+                    <Text 
+                      className="text-base font-semibold"
+                      style={{ color: appTheme.primary }}
+                    >
+                      {t("Not a rider? Sign up")}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               );
             }}
