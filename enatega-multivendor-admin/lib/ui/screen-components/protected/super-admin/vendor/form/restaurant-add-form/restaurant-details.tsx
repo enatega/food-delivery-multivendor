@@ -1,7 +1,7 @@
 // Core
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { Form, Formik } from 'formik';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 // Prime React
 
@@ -17,6 +17,7 @@ import {
 
 // Core
 import { RestaurantContext } from '@/lib/context/super-admin/restaurant.context';
+import { IEditState, IShopType } from '@/lib/utils/interfaces';
 
 // Components
 import CustomButton from '@/lib/ui/useable-components/button';
@@ -27,6 +28,8 @@ import CustomIconTextField from '@/lib/ui/useable-components/input-icon-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
+import ShopTypesForm from '@/lib/ui/screen-components/protected/super-admin/shop-types/form';
+import CuisineForm from '@/lib/ui/screen-components/protected/super-admin/cuisines/form';
 
 // Constants
 import {
@@ -127,12 +130,36 @@ export default function RestaurantDetails({
     update: update,
   });
 
+  const [isAddShopTypeVisible, setIsAddShopTypeVisible] = useState(false);
+  const [isEditShopType, setIsEditShopType] = useState<IEditState<IShopType>>({
+    bool: false,
+    data: {
+      __typename: '',
+      _id: '',
+      name: '',
+      isActive: true,
+      image: '',
+    },
+  });
+  const [isAddCuisineVisible, setIsAddCuisineVisible] = useState(false);
+  const [isEditCuisine, setIsEditCuisine] = useState<IEditState<ICuisine>>({
+    bool: false,
+    data: {
+      _id: '',
+      description: '',
+      image: '',
+      name: '',
+      shopType: '',
+      __typename: '',
+    },
+  });
+
   // call GET_RESTAURANTS query
 
-    const { dropdownList, loading } = useShopTypes({
-      invoke_now: true,
-      transform_to_dropdown_list: true,
-    });
+  const { dropdownList, loading } = useShopTypes({
+    invoke_now: true,
+    transform_to_dropdown_list: true,
+  });
 
   const cuisineResponse = useQueryGQL(GET_CUISINES, {
     debounceMs: 300,
@@ -178,7 +205,7 @@ export default function RestaurantDetails({
         return;
       } else {
         await createRestaurant({
-          variables: {  
+          variables: {
             owner: vendorId,
             restaurant: {
               name: data.name,
@@ -199,8 +226,6 @@ export default function RestaurantDetails({
           },
         });
       }
-
-      
     } catch (error) {
       showToast({
         type: 'error',
@@ -486,7 +511,7 @@ export default function RestaurantDetails({
                         />
                       </div>
                       <div>
-                      <CustomDropdownComponent
+                        <CustomDropdownComponent
                           name="shopType"
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
@@ -502,6 +527,10 @@ export default function RestaurantDetails({
                             )
                               ? 'red'
                               : '',
+                          }}
+                          extraFooterButton={{
+                            title: t('Add Shop Category'),
+                            onChange: () => setIsAddShopTypeVisible(true),
                           }}
                         />
                       </div>
@@ -522,6 +551,10 @@ export default function RestaurantDetails({
                             )
                               ? 'red'
                               : '',
+                          }}
+                          extraFooterButton={{
+                            title: t('Add Cuisine'),
+                            onChange: () => setIsAddCuisineVisible(true),
                           }}
                         />
                       </div>
@@ -591,6 +624,19 @@ export default function RestaurantDetails({
               }}
             </Formik>
           </div>
+          <ShopTypesForm
+            visible={isAddShopTypeVisible}
+            setVisible={setIsAddShopTypeVisible}
+            isEditing={isEditShopType}
+            setIsEditing={setIsEditShopType}
+          />
+
+          <CuisineForm
+            visible={isAddCuisineVisible}
+            setVisible={setIsAddCuisineVisible}
+            isEditing={isEditCuisine}
+            setIsEditing={setIsEditCuisine}
+          />
         </div>
       </div>
     </div>
