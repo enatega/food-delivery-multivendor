@@ -15,9 +15,10 @@ import { GET_CONFIGURATION } from '@/lib/api/graphql';
 
 // Hooks
 import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL';
+import { decryptConfigFields } from '@/lib/utils/methods/decryption/decrypt-config-fields';
 
 export const ConfigurationContext = React.createContext<
-  IConfiguration | undefined
+  IConfiguration | null | undefined
 >({
   _id: '',
   pushToken: '',
@@ -86,7 +87,7 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   children,
 }) => {
   const [configuration, setConfiguration] = useState<
-    IConfiguration | undefined
+    IConfiguration | null | undefined
   >();
   // API
 
@@ -98,7 +99,7 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   >;
 
   // Handlers
-  const onFetchConfiguration = () => {
+  const onFetchConfiguration = async () => {
     const configuration: IConfiguration | undefined =
       loading || error || !data
         ? {
@@ -163,8 +164,9 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
             enableAdminDemo: false,
           }
         : data?.configuration;
-
-    setConfiguration(configuration);
+    const decryptedConfiguration = await decryptConfigFields(configuration);
+    console.log('Decrypted Configuration:', decryptedConfiguration);
+    setConfiguration(decryptedConfiguration);
   };
 
   const fetchConfiguration = useCallback(() => {
