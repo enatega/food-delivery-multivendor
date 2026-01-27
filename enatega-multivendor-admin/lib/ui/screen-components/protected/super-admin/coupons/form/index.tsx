@@ -23,7 +23,6 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 
 // Hooks
-import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { ChangeEvent, useContext } from 'react';
 import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
@@ -39,7 +38,6 @@ export default function CouponForm({
 }: IAddCouponProps) {
   // Hooks
   const { showToast } = useContext(ToastContext);
-  const [endDateError, setEndDateError] = useState('');
   const t = useTranslations();
 
   // Initial values
@@ -318,7 +316,13 @@ export default function CouponForm({
                     type="date"
                     onChange={(e) => setFieldValue('startDate', e.target.value)}
                     style={{
-                      borderColor: endDateError ? 'red' : '',
+                      borderColor: onErrorMessageMatcher(
+                        'startDate',
+                        errors?.startDate,
+                        CouponErrors
+                      )
+                        ? 'red'
+                        : '',
                     }}
                   />
                 )}
@@ -332,7 +336,13 @@ export default function CouponForm({
                     type="date"
                     onChange={(e) => setFieldValue('endDate', e.target.value)}
                     style={{
-                      borderColor: endDateError ? 'red' : '',
+                      borderColor: onErrorMessageMatcher(
+                        'endDate',
+                        errors?.endDate,
+                        CouponErrors
+                      )
+                        ? 'red'
+                        : '',
                     }}
                   />
                 )}
