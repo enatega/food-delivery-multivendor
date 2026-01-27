@@ -52,18 +52,18 @@ export default function ReferralItem({ referral }: IReferralItemProps) {
       </View>
       <View className="items-end">
         <View
-          className="px-2 py-1 rounded mb-2"
+          className="px-3 py-1 rounded-full mb-2"
           style={{
             backgroundColor:
               referral.status === "Eligible"
-                ? "rgba(34, 197, 94, 0.1)"
-                : "rgba(59, 130, 246, 0.1)",
+                ? "rgba(249, 115, 22, 0.2)"
+                : "rgba(34, 197, 94, 0.2)",
           }}
         >
           <Text
             className="text-xs font-semibold"
             style={{
-              color: referral.status === "Eligible" ? "#22C55E" : "#3B82F6",
+              color: referral.status === "Eligible" ? "#f97316" : "#22C55E",
             }}
           >
             {t(referral.status)}

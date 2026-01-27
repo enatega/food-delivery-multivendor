@@ -38,7 +38,7 @@ export default function LevelTabs({
           className="flex-1 items-center pb-2"
           style={{
             borderBottomWidth: activeLevel === tab.value ? 2 : 0,
-            borderBottomColor: activeLevel === tab.value ? "#22C55E" : "transparent",
+            borderBottomColor: activeLevel === tab.value ? appTheme.primary : "transparent",
           }}
         >
           <Text
