@@ -106,7 +106,7 @@ export default function ReferralRewards() {
                 className="px-4 py-2"
                 style={{
                   borderBottomWidth: activeLevel === level ? 2 : 0,
-                  borderBottomColor: activeLevel === level ? "#22C55E" : "transparent",
+                  borderBottomColor: activeLevel === level ? appTheme.primary : "transparent",
                 }}
               >
                 <Text

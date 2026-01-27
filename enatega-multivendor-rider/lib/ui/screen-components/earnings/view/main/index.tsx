@@ -33,12 +33,13 @@ import EarningsTabs from "../../tabs";
 import ReferralStack from "../referrals-stack";
 import ReferralModal from "../referrals-modal";
 import ReferralRewards from "../referral-rewards";
+import ReferralEarningsCard from "../referral-earnings-card";
 
 // Helpers
 import formatNumber from "@/lib/utils/methods/num-formatter";
 
 // Mock Data
-import { mockReferralEarnings } from "@/lib/utils/dummy/referrals";
+import { mockReferralEarnings, mockReferrals } from "@/lib/utils/dummy/referrals";
 import { IReferralEarnings } from "@/lib/utils/interfaces/referral.interface";
 
 export default function EarningsMain() {
@@ -257,6 +258,11 @@ export default function EarningsMain() {
               setModalVisible={setReferralModalVisible}
             />
           ))}
+          
+          {/* Referral Earnings Card */}
+          <ReferralEarningsCard 
+            totalEarnings={mockReferrals.reduce((sum, ref) => sum + ref.amount, 0)} 
+          />
           
           {/* Referral Rewards Component */}
           <ReferralRewards />

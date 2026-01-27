@@ -316,6 +316,7 @@ export const en = {
   "Please log in to view your earnings": "Please log in to view your earnings",
   "Referral Rewards": "Referral Rewards",
   "earned so far": "earned so far",
+  "Earned from referrals": "Earned from referrals",
   "Tap to view detailed breakdown": "Tap to view detailed breakdown",
   "Joined on": "Joined on",
   "Referrals": "Referrals",
