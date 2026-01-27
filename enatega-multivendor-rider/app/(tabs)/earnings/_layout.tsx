@@ -23,9 +23,13 @@ export default function StackLayout() {
         <Stack
           screenOptions={{
             headerTitle:
-              pathname.startsWith("/earnings/earnings-detail") ?
+              pathname.includes("/referrals-list") ?
+                t("Referrals")
+              : pathname.includes("/referrals-detail") ?
+                t("Referral Summary")
+              : pathname.includes("/earnings-detail") ?
                 t("Earnings Summary")
-              : pathname.startsWith("/earnings/earnings-order-details") ?
+              : pathname.includes("/earnings-order-details") ?
                 t("Deliveries")
               : t("Earnings"),
 
@@ -47,8 +51,6 @@ export default function StackLayout() {
             name="(routes)"
             options={{
               headerShown: true,
-              headerTitle: t("Earnings Order Details"),
-              headerBackTitle: t("Earnings"),
             }}
           />
         </Stack>
