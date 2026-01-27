@@ -1,6 +1,6 @@
 // Core
 import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 // Interfaces
 import {
@@ -13,6 +13,7 @@ import { barDataItem } from "react-native-gifted-charts";
 
 // GraphQL
 import { RIDER_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
+import { FETCH_RIDER_RECENT_ACTIVITY } from "@/lib/apollo/queries/referral.query";
 
 // Hooks
 import { useApptheme } from "@/lib/context/global/theme.context";
@@ -38,9 +39,8 @@ import ReferralEarningsCard from "../referral-earnings-card";
 // Helpers
 import formatNumber from "@/lib/utils/methods/num-formatter";
 
-// Mock Data
-import { mockReferralEarnings, mockReferrals } from "@/lib/utils/dummy/referrals";
-import { IReferralEarnings } from "@/lib/utils/interfaces/referral.interface";
+// Interfaces
+import { IReferralEarnings, IRecentActivityResponse } from "@/lib/utils/interfaces/referral.interface";
 
 export default function EarningsMain() {
   // Hooks
@@ -75,6 +75,18 @@ export default function EarningsMain() {
     },
   ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>;
 
+  // Referral queries - fetch more activities to ensure we get last 5 days
+  const { loading: isReferralLoading, data: referralData } = useQuery(
+    FETCH_RIDER_RECENT_ACTIVITY,
+    {
+      variables: {
+        limit: 100, // Fetch more to ensure we get activities from last 5 days
+        offset: 0,
+      },
+      skip: activeTab !== "referrals",
+    },
+  ) as QueryResult<IRecentActivityResponse | undefined>;
+
   const barData: barDataItem[] =
     riderEarningsData?.riderEarningsGraph.earnings
       .slice(0, 5)
@@ -102,30 +114,92 @@ export default function EarningsMain() {
         },
       })) ?? ([] as barDataItem[]);
 
-  // Referral bar data (mock data)
-  const referralBarData: barDataItem[] = mockReferralEarnings
-    .slice(0, 5)
-    .map((earning: IReferralEarnings) => ({
-      value: Math.abs(earning.totalEarningsSum),
-      label: earning._id,
-      topLabelComponent: () => {
-        return (
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 10,
-              fontWeight: "600",
-              marginBottom: 0,
-            }}
-          >
-            ${formatNumber(earning.totalEarningsSum)}
-          </Text>
-        );
-      },
+  // Group referral activities by date
+  const groupedReferralActivities = useMemo(() => {
+    if (!referralData?.fetchRiderRecentActivity?.activities) return [];
+
+    // Group activities by date
+    const grouped: { [key: string]: { activities: typeof referralData.fetchRiderRecentActivity.activities; totalEarnings: number; date: Date } } = {};
+
+    referralData.fetchRiderRecentActivity.activities.forEach((activity) => {
+      if (!activity.createdAt) return;
+
+      try {
+        // Handle Unix timestamp or date string
+        const timestamp = parseInt(activity.createdAt);
+        const dateObj = isNaN(timestamp) ? new Date(activity.createdAt) : new Date(timestamp);
+
+        if (isNaN(dateObj.getTime())) return;
+
+        // Get date string for grouping (YYYY-MM-DD)
+        const dateKey = dateObj.toISOString().split('T')[0];
+
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = {
+            activities: [],
+            totalEarnings: 0,
+            date: dateObj,
+          };
+        }
+
+        grouped[dateKey].activities.push(activity);
+        grouped[dateKey].totalEarnings += activity.value;
+      } catch (error) {
+        console.log("Error parsing date:", activity.createdAt);
+      }
+    });
+
+    // Convert to array and sort by date (newest first)
+    const sortedGroups = Object.entries(grouped)
+      .map(([dateKey, data]) => ({
+        dateKey,
+        date: data.date,
+        activities: data.activities,
+        totalEarnings: data.totalEarnings,
+        totalReferrals: data.activities.length,
+      }))
+      .sort((a, b) => b.date.getTime() - a.date.getTime());
+
+    // Return last 5 days (or all if less than 5)
+    return sortedGroups.slice(0, 5);
+  }, [referralData]);
+
+  // Format date for display
+  const formatDisplayDate = (date: Date) => {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  // Referral bar data - use grouped data for last 5 days
+  const referralBarData: barDataItem[] = useMemo(() => {
+    return groupedReferralActivities.map((group) => ({
+      value: Math.abs(group.totalEarnings),
+      label: formatDisplayDate(group.date).split(',')[0], // Just "Jan 27" without year
+      topLabelComponent: () => (
+        <Text
+          style={{
+            color: appTheme.fontMainColor,
+            fontSize: 10,
+            fontWeight: "600",
+            marginBottom: 0,
+          }}
+        >
+          ${formatNumber(group.totalEarnings)}
+        </Text>
+      ),
     }));
+  }, [groupedReferralActivities, appTheme.fontMainColor]);
+
+  // Calculate total referral earnings
+  const totalReferralEarnings = referralData?.fetchRiderRecentActivity?.summary?.totalEarnings || 0;
 
   // If loading
-  if (isRiderEarningsLoading) return <EarningScreenMainLoading />;
+  if (isRiderEarningsLoading || (activeTab === "referrals" && isReferralLoading)) {
+    return <EarningScreenMainLoading />;
+  }
 
   return (
     <View style={{ backgroundColor: appTheme.screenBackground }}>
@@ -247,21 +321,23 @@ export default function EarningsMain() {
           </View>
           
           {/* Recent Referral Activity List */}
-          {mockReferralEarnings.slice(0, 3).map((item, index) => (
+          {groupedReferralActivities.map((group) => (
             <ReferralStack
-              key={index}
-              date={item.date}
-              earning={item.totalEarningsSum}
-              totalReferrals={item.totalReferrals}
-              _id={item._id}
-              referralsArray={item.referralsArray}
+              key={group.dateKey}
+              date={formatDisplayDate(group.date)}
+              earning={group.totalEarnings}
+              totalReferrals={group.totalReferrals}
+              _id={group.dateKey}
+              referralsArray={group.activities}
               setModalVisible={setReferralModalVisible}
+              activityId={group.activities[0]?._id}
+              dateKey={group.dateKey}
             />
           ))}
           
           {/* Referral Earnings Card */}
           <ReferralEarningsCard 
-            totalEarnings={mockReferrals.reduce((sum, ref) => sum + ref.amount, 0)} 
+            totalEarnings={totalReferralEarnings} 
           />
           
           {/* Referral Rewards Component */}
@@ -272,6 +348,7 @@ export default function EarningsMain() {
             totalReferrals={referralModalVisible.totalReferrals}
             modalVisible={referralModalVisible}
             setModalVisible={setReferralModalVisible}
+            activityId={referralModalVisible._id}
           />
         </ScrollView>
       )}

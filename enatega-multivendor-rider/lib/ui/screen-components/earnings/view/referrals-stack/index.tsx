@@ -1,5 +1,5 @@
 // Interfaces
-import { IReferralEarnings } from "@/lib/utils/interfaces/referral.interface";
+import { IReferralEarnings, IRecentActivityItem } from "@/lib/utils/interfaces/referral.interface";
 
 // SVG
 import { RightChevron } from "@/lib/ui/useable-components/svg";
@@ -19,7 +19,9 @@ interface IReferralStackProps {
     SetStateAction<IReferralEarnings & { bool: boolean }>
   >;
   _id: string;
-  referralsArray: IReferralEarnings["referralsArray"];
+  referralsArray: any[]; // Can be IReferral[] or IRecentActivityItem[]
+  activityId?: string;
+  dateKey?: string; // YYYY-MM-DD format for filtering
 }
 
 export default function ReferralStack({
@@ -29,6 +31,8 @@ export default function ReferralStack({
   _id,
   referralsArray,
   totalReferrals,
+  activityId,
+  dateKey,
 }: IReferralStackProps) {
   // Hooks
   const { appTheme } = useApptheme();
@@ -38,7 +42,7 @@ export default function ReferralStack({
   function handleForwardPress() {
     setModalVisible({
       bool: true,
-      _id: _id,
+      _id: dateKey || activityId || _id,
       date: date,
       referralsArray: referralsArray,
       totalEarningsSum: earning,

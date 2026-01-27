@@ -3,17 +3,18 @@ import { useApptheme } from "@/lib/context/global/theme.context";
 
 // Core
 import { useState } from "react";
-import { Text, TouchableOpacity, View, FlatList } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 // Icons
 import { Ionicons } from "@expo/vector-icons";
 
-// Mock Data
-import { mockReferrals } from "@/lib/utils/dummy/referrals";
+// GraphQL
+import { FETCH_RIDER_REFERRAL_REWARDS } from "@/lib/apollo/queries/referral.query";
+import { QueryResult, useQuery } from "@apollo/client";
 
 // Interfaces
-import { IReferral } from "@/lib/utils/interfaces/referral.interface";
+import { IReferralRewardsResponse } from "@/lib/utils/interfaces/referral.interface";
 
 export default function ReferralRewards() {
   // Hooks
@@ -24,21 +25,43 @@ export default function ReferralRewards() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeLevel, setActiveLevel] = useState<1 | 2 | 3>(1);
 
+  // Query
+  const { data: rewardsData, loading } = useQuery(
+    FETCH_RIDER_REFERRAL_REWARDS,
+    {
+      variables: {
+        level: isExpanded ? activeLevel : undefined,
+      },
+    },
+  ) as QueryResult<IReferralRewardsResponse | undefined>;
+
   // Calculate total earnings
-  const totalEarnings = mockReferrals.reduce((sum, ref) => sum + ref.amount, 0);
+  const totalEarnings = rewardsData?.fetchRiderReferralRewards?.totalEarnings || 0;
 
   // Filter by level
-  const filteredReferrals = mockReferrals.filter(
+  const filteredReferrals = rewardsData?.fetchRiderReferralRewards?.referralDetails?.filter(
     (ref) => ref.level === activeLevel
-  );
+  ) || [];
 
-  // Format date
+  // Format date - handles Unix timestamps in milliseconds
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
+    if (!dateString) return "N/A";
+    
+    try {
+      // Check if it's a Unix timestamp (numeric string)
+      const timestamp = parseInt(dateString);
+      const date = isNaN(timestamp) ? new Date(dateString) : new Date(timestamp);
+      
+      if (isNaN(date.getTime())) return "N/A";
+      
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    } catch (error) {
+      console.log("Error parsing date:", dateString);
+      return "N/A";
+    }
   };
 
   return (
@@ -126,38 +149,70 @@ export default function ReferralRewards() {
 
           {/* Referrals List */}
           <View className="px-4 pb-4">
-            {filteredReferrals.length > 0 ? (
-              filteredReferrals.map((referral, index) => (
-                <View
-                  key={referral._id}
-                  className="flex flex-row justify-between items-center py-3"
-                  style={{ 
-                    borderBottomWidth: index === filteredReferrals.length - 1 ? 0 : 1,
-                    borderBottomColor: appTheme.borderLineColor 
-                  }}
-                >
-                  <View>
-                    <Text
-                      className="text-base font-semibold mb-1"
-                      style={{ color: appTheme.fontMainColor }}
+            {loading ? (
+              <Text
+                className="text-center py-4"
+                style={{ color: appTheme.fontSecondColor }}
+              >
+                {t("Loading...")}
+              </Text>
+            ) : filteredReferrals.length > 0 ? (
+              filteredReferrals
+                .sort((a, b) => a.riderName.localeCompare(b.riderName))
+                .map((referral, index) => {
+                  // Map API status to UI status
+                  const isWithdrawn = referral.status === "WITHDRAWN" || referral.status === "COMPLETED";
+                  const statusText = isWithdrawn ? "Withdrawn" : "Eligible";
+                  const statusColor = isWithdrawn ? "#22C55E" : "#f97316";
+                  const statusBgColor = isWithdrawn 
+                    ? "rgba(34, 197, 94, 0.2)" 
+                    : "rgba(249, 115, 22, 0.2)";
+                  
+                  return (
+                    <View
+                      key={referral.riderId}
+                      className="flex flex-row justify-between items-center py-3"
+                      style={{ 
+                        borderBottomWidth: index === filteredReferrals.length - 1 ? 0 : 1,
+                        borderBottomColor: appTheme.borderLineColor 
+                      }}
                     >
-                      {referral.name}
-                    </Text>
-                    <Text
-                      className="text-xs"
-                      style={{ color: appTheme.fontSecondColor }}
-                    >
-                      {t("Joined on")} {formatDate(referral.joinedDate)}
-                    </Text>
-                  </View>
-                  <Text
-                    className="text-base font-bold"
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    QAR {referral.amount.toFixed(1)}
-                  </Text>
-                </View>
-              ))
+                      <View className="flex-1">
+                        <Text
+                          className="text-base font-semibold mb-1"
+                          style={{ color: appTheme.fontMainColor }}
+                        >
+                          {referral.riderName}
+                        </Text>
+                        <Text
+                          className="text-xs"
+                          style={{ color: appTheme.fontSecondColor }}
+                        >
+                          {t("Joined on")} {formatDate(referral.joinedAt)}
+                        </Text>
+                      </View>
+                      <View className="items-end">
+                        <View
+                          className="px-2 py-1 rounded-full mb-1"
+                          style={{ backgroundColor: statusBgColor }}
+                        >
+                          <Text
+                            className="text-xs font-semibold"
+                            style={{ color: statusColor }}
+                          >
+                            {t(statusText)}
+                          </Text>
+                        </View>
+                        <Text
+                          className="text-base font-bold"
+                          style={{ color: appTheme.fontMainColor }}
+                        >
+                          QAR {referral.earnedAmount.toFixed(1)}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })
             ) : (
               <Text
                 className="text-center py-4"

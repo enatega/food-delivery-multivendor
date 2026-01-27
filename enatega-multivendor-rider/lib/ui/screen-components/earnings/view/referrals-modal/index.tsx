@@ -25,6 +25,7 @@ interface IReferralModalProps {
   setModalVisible: Dispatch<
     SetStateAction<IReferralEarnings & { bool: boolean }>
   >;
+  activityId?: string;
 }
 
 export default function ReferralModal({
@@ -32,6 +33,7 @@ export default function ReferralModal({
   totalReferrals,
   modalVisible,
   setModalVisible,
+  activityId,
 }: IReferralModalProps) {
   // Hooks
   const { appTheme } = useApptheme();
@@ -119,7 +121,7 @@ export default function ReferralModal({
               router.push({
                 pathname: "/(tabs)/earnings/(routes)/referrals-list",
                 params: {
-                  referralsData: JSON.stringify(modalVisible.referralsArray),
+                  dateKey: activityId || modalVisible._id,
                   totalEarnings: modalVisible.totalEarningsSum,
                   totalReferrals: modalVisible.totalReferrals,
                 },

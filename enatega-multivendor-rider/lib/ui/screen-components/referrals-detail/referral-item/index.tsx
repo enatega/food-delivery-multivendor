@@ -17,14 +17,26 @@ export default function ReferralItem({ referral }: IReferralItemProps) {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
 
-  // Format date
+  // Format date - handles Unix timestamps in milliseconds
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
+    if (!dateString) return "N/A";
+    
+    try {
+      // Check if it's a Unix timestamp (numeric string)
+      const timestamp = parseInt(dateString);
+      const date = isNaN(timestamp) ? new Date(dateString) : new Date(timestamp);
+      
+      if (isNaN(date.getTime())) return "N/A";
+      
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch (error) {
+      console.log("Error parsing date:", dateString, error);
+      return "N/A";
+    }
   };
 
   return (

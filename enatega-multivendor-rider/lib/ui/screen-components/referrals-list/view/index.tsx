@@ -5,39 +5,84 @@ import { useApptheme } from "@/lib/context/global/theme.context";
 import { useMemo, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
+import { useLocalSearchParams } from "expo-router";
+
+// GraphQL
+import { FETCH_RIDER_ACTIVITIES_BY_DATE } from "@/lib/apollo/queries/referral.query";
+import { QueryResult, useQuery } from "@apollo/client";
 
 // Components
 import LevelTabs from "../../referrals-detail/level-tabs";
 import ReferralItem from "../../referrals-detail/referral-item";
 
 // Interfaces
-import { IReferral } from "@/lib/utils/interfaces/referral.interface";
+import { IReferral, IRecentActivityResponse } from "@/lib/utils/interfaces/referral.interface";
 
 // React Native Gesture
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-interface IReferralsListMainProps {
-  referralsData: IReferral[];
-  totalEarnings: number;
-  totalReferrals: number;
-}
-
-export default function ReferralsListMain({
-  referralsData,
-  totalEarnings,
-  totalReferrals,
-}: IReferralsListMainProps) {
+export default function ReferralsListMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const params = useLocalSearchParams();
 
   // States - default to Level 1
   const [activeLevel, setActiveLevel] = useState<1 | 2 | 3>(1);
 
-  // Filter referrals by level
+  // Get dateKey from params (YYYY-MM-DD format)
+  const dateKey = params.dateKey as string;
+
+  // Calculate start and end of day for the date
+  const { startDate, endDate } = useMemo(() => {
+    if (!dateKey) return { startDate: "", endDate: "" };
+    
+    const date = new Date(dateKey);
+    const start = new Date(date.setHours(0, 0, 0, 0));
+    const end = new Date(date.setHours(23, 59, 59, 999));
+    
+    return {
+      startDate: start.toISOString(),
+      endDate: end.toISOString(),
+    };
+  }, [dateKey]);
+
+  // Query - fetch activities for this specific date
+  const { data: activitiesData, loading } = useQuery(
+    FETCH_RIDER_ACTIVITIES_BY_DATE,
+    {
+      variables: {
+        startDate,
+        endDate,
+      },
+      skip: !dateKey || !startDate || !endDate,
+    },
+  ) as QueryResult<IRecentActivityResponse | undefined>;
+
+  // Group activities by level and convert to IReferral format
   const filteredReferrals = useMemo(() => {
-    return referralsData.filter((ref) => ref.level === activeLevel);
-  }, [activeLevel, referralsData]);
+    if (!activitiesData?.fetchRiderRecentActivity?.activities) return [];
+
+    // Filter activities by level and convert to IReferral format
+    return activitiesData.fetchRiderRecentActivity.activities
+      .filter((activity) => activity.level === activeLevel)
+      .map((activity) => {
+        // Use createdAt as the joined date (when the referral activity happened)
+        // createdAt is a Unix timestamp in milliseconds
+        // Keep it as string for the formatDate function to parse
+        const joinedDate = activity.createdAt ? String(activity.createdAt) : "";
+        
+        return {
+          _id: activity._id,
+          name: activity.triggeredBy || activity.user_name || "Unknown",
+          joinedDate: joinedDate,
+          amount: activity.value,
+          status: "Eligible" as const,
+          level: activeLevel,
+        } as IReferral;
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [activeLevel, activitiesData]);
 
   return (
     <GestureHandlerRootView
@@ -57,7 +102,7 @@ export default function ReferralsListMain({
               className="text-base font-semibold"
               style={{ color: appTheme.fontSecondColor }}
             >
-              {t("No referrals found")}
+              {loading ? t("Loading...") : t("No referrals found")}
             </Text>
           </View>
         }
