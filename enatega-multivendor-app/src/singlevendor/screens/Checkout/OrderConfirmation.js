@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect, useMemo } from 'react'
+import React, { useState, useContext, useLayoutEffect, useMemo, useEffect, useRef } from 'react'
 import { View, ScrollView, TouchableOpacity, Platform, StatusBar } from 'react-native'
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -26,6 +26,7 @@ const OrderConfirmation = (props) => {
   const { t, i18n } = useTranslation()
 
   const orderId = props?.route?.params?.orderId
+  console.log('orderData_data',orderId);
   const orderData = props?.route?.params?.orderData || {}
 
   const configuration = useContext(ConfigurationContext)
@@ -98,9 +99,26 @@ const OrderConfirmation = (props) => {
 
   const [summaryExpanded, setSummaryExpanded] = useState(false)
   const [showMap, setShowMap] = useState(false)
+  const hasNavigatedRef = useRef(false)
 
   // ----------------------------------
-  // 4️⃣ StatusBar handling
+  // 4️⃣ Navigate to FeedBack when delivered
+  // ----------------------------------
+  useEffect(() => {
+    if (isDelivered && !hasNavigatedRef.current) {
+      hasNavigatedRef.current = true
+      const timeoutId = setTimeout(() => {
+        navigation.navigate('FeedBack', { isDelivered, orderId })
+      }, 3000)
+
+      return () => {
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [isDelivered, navigation, orderId])
+
+  // ----------------------------------
+  // 5️⃣ StatusBar handling
   // ----------------------------------
   useFocusEffect(
     React.useCallback(() => {
@@ -112,7 +130,7 @@ const OrderConfirmation = (props) => {
   )
 
   // ----------------------------------
-  // 5️⃣ Header config
+  // 6️⃣ Header config
   // ----------------------------------
   useLayoutEffect(() => {
     props?.navigation.setOptions({
@@ -163,7 +181,7 @@ const OrderConfirmation = (props) => {
   }
 
   // ----------------------------------
-  // 6️⃣ UI
+  // 7️⃣ UI
   // ----------------------------------
   return (
     <View style={styles(currentTheme).mainContainer}>

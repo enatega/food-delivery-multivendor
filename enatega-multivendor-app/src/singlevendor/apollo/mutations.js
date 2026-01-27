@@ -203,3 +203,14 @@ export const CHECK_REFERRAL_CODE_EXISTS = gql`
     checkReferralCodeExists(referralCode: $referralCode)
   }
 `
+export const REVIEW_ORDER_SINGLE_VENDOR = gql`
+  mutation ReviewOrder($reviewInput: ReviewInput!) {
+  reviewOrder(reviewInput: $reviewInput) {
+      user {
+          _id
+          name
+          email
+          phone
+      }
+  }
+}`
