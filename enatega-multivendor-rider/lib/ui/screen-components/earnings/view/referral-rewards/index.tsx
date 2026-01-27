@@ -77,6 +77,14 @@ export default function ReferralRewards() {
             >
               QAR {totalEarnings.toFixed(0)} {t("earned so far")}
             </Text>
+            {!isExpanded && (
+              <Text
+                className="text-xs mt-1"
+                style={{ color: appTheme.fontSecondColor, opacity: 0.7 }}
+              >
+                {t("Tap to view detailed breakdown")}
+              </Text>
+            )}
           </View>
         </View>
         <Ionicons
