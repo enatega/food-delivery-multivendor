@@ -89,7 +89,6 @@ export default function LoginEmailPasswordMain() {
       type: 'success',
       title: 'Login',
       message: 'User has been logged in successfully.',
-      sticky: true,
     });
   }
   function onError({ graphQLErrors, networkError }: ApolloError) {
@@ -100,7 +99,6 @@ export default function LoginEmailPasswordMain() {
         graphQLErrors[0]?.message ??
         networkError?.message ??
         `Something went wrong. Please try again`,
-      sticky: true,
     });
   }
 
@@ -117,7 +115,6 @@ export default function LoginEmailPasswordMain() {
         type: 'error',
         title: 'Login',
         message: 'Login Failed',
-        sticky: true,
       });
     }
   };

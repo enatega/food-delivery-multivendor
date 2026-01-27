@@ -118,7 +118,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("email_check_error"),
         message: error.cause?.message || t("error_checking_email"),
-        sticky: true,
+        duration: 3000
       });
       return {} as IEmailExists;
     } finally {
@@ -150,7 +150,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("phone_check_error"),
         message: error.cause?.message || t("error_checking_phone"),
-        sticky: true,
+        duration: 3000
       });
 
       // Safer fallback: treat as "exists" so the flow stops on error
@@ -188,7 +188,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("password_reset_error"),
         message: error.cause?.message || t("error_resetting_password"),
-        sticky: true,
+        duration: 3000
       });
     } finally {
       setIsLoading(false);
@@ -283,7 +283,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("create_user_label"),
         message: t("phone_number_already_associated_with_different_account"),
-        sticky: true,
+        duration: 3000
       });
       return {} as ICreateUserData;
     } finally {
@@ -377,7 +377,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             type: "error",
             title: t("Error Sending OTP"),
             message: t("An error occurred while sending the OTP"),
-            sticky: true,
+            duration: 3000
           });
           return;
         }
@@ -389,7 +389,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("email_otp_error"),
         message: error.cause?.message || t("error_sending_otp_to_email"),
-        sticky: true,
+       duration: 3000
       });
     } finally {
       setIsLoading(false);
@@ -412,7 +412,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             type: "error",
             title: t("error_sending_otp"),
             message: t("error_sending_otp_message"),
-            sticky: true,
+            duration: 3000
           });
           return;
         } else {
@@ -433,7 +433,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         type: "error",
         title: t("phone_otp_error"),
         message: error.cause?.message || t("error_sending_otp_to_phone"),
-        sticky: true,
+        duration: 3000
       });
     } finally {
       setIsLoading(false);
