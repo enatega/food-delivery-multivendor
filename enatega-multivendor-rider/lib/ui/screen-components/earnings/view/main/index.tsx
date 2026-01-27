@@ -207,7 +207,11 @@ export default function EarningsMain() {
           </View>
         </>
       ) : (
-        <ScrollView style={{ height: "100%" }}>
+        <ScrollView 
+          style={{ height: "100%" }}
+          contentContainerStyle={{ paddingBottom: 200 }}
+          showsVerticalScrollIndicator={false}
+        >
           <EarningsBarChart
             data={referralBarData}
             width={700}

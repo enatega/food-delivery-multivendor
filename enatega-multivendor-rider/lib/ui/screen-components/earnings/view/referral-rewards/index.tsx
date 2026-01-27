@@ -43,7 +43,7 @@ export default function ReferralRewards() {
 
   return (
     <View
-      className="mx-4 my-3 rounded-lg overflow-hidden"
+      className="mx-3 my-3 rounded-lg overflow-hidden"
       style={{
         backgroundColor: appTheme.themeBackground,
         borderWidth: 1,
@@ -119,11 +119,14 @@ export default function ReferralRewards() {
           {/* Referrals List */}
           <View className="px-4 pb-4">
             {filteredReferrals.length > 0 ? (
-              filteredReferrals.map((referral) => (
+              filteredReferrals.map((referral, index) => (
                 <View
                   key={referral._id}
-                  className="flex flex-row justify-between items-center py-3 border-b"
-                  style={{ borderBottomColor: appTheme.borderLineColor }}
+                  className="flex flex-row justify-between items-center py-3"
+                  style={{ 
+                    borderBottomWidth: index === filteredReferrals.length - 1 ? 0 : 1,
+                    borderBottomColor: appTheme.borderLineColor 
+                  }}
                 >
                   <View>
                     <Text
