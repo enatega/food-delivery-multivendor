@@ -115,7 +115,8 @@ const OrderHistory = () => {
   const handleOrderPress = (orderItem) => {
     console.log('orderItem', JSON.stringify(orderItem, null, 2))
     console.log("order Confirmation:", orderItem)
-    navigation.navigate('OrderConfirmation', { orderId: orderItem?.id })
+    // navigation.navigate('OrderConfirmation', { orderId: orderItem?.id })
+    navigation.navigate('OrderHistoryDetails', { orderId: orderItem?.id })
   }
 
   const handleStartShopping = () => {
