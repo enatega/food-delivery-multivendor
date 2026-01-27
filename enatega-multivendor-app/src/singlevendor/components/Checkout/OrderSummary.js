@@ -29,6 +29,7 @@ const OrderSummary = ({
   orderNumber = null,
   isCheckout
 }) => {
+  console.log("🚀 ~ OrderSummary ~ couponDiscountAmount:", couponDiscountAmount)
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {

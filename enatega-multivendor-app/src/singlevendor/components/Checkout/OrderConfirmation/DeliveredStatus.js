@@ -106,7 +106,8 @@ const DeliveredStatus = ({
   appName = 'FAST',
   title,
   subtitle,
-  error = false
+  error = false,
+  isPickUpOrder = false
 }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
@@ -122,13 +123,13 @@ const DeliveredStatus = ({
     : currentTheme.headerMainFontColor || '#006189'
 
   const resolvedTitle =
-    title || (error ? t('Order cancelled') : t('Delivered'))
+    title || (error ? t('Order cancelled') : isPickUpOrder ? t('Collected') : t('Delivered'))
 
   const resolvedSubtitle =
     subtitle ||
     (error
       ? t('Your order has been cancelled')
-      : t('Your grocery has been delivered.'))
+      : isPickUpOrder ? t('Your grocery has been collected.') : t('Your grocery has been delivered.'))
 
   return (
     <View style={styles(currentTheme).container}>

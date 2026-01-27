@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect, useRef, useCallback } from 'react'
+import React, { useState, useContext, useLayoutEffect, useRef, useCallback, useEffect } from 'react'
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -36,6 +36,7 @@ import { PLACE_ORDER } from '../../apollo/mutations'
 import { useMutation } from '@apollo/client'
 import { ActivityIndicator } from 'react-native-paper'
 import OrderSummaryError from '../../components/Checkout/OrderSummaryError'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Checkout = (props) => {
   const { location, setLocation } = useContext(LocationContext)
@@ -82,7 +83,7 @@ const Checkout = (props) => {
   const { loading, subtotal, deliveryFee, serviceFee, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount, originalDeliveryCharges, freeDeliveriesRemaining, isBelowMaximumOrder, placeOrder, placingOrder, refetch, error, couponDiscountAmount, couponApplied, recalculateSummary, priorityDeliveryFee } = useCheckout({
     fulfillmentMode,
     deliveryAddress: location,
- 
+
     selectedVoucher
   })
 
@@ -170,6 +171,21 @@ const Checkout = (props) => {
       )
     })
   }, [props?.navigation, currentTheme])
+
+  const getAndApplySelectedVoucher = useCallback(async () => {
+    try {
+      const voucher = await AsyncStorage.getItem('selectedVoucher')
+      const parsedVoucher = JSON.parse(voucher)
+      if (!parsedVoucher) return
+      handleApplyVoucher(parsedVoucher)
+    } catch (error) {
+      console.log('🚀 ~ getAndApplySelectedVoucher ~ error:', error)
+    }
+  }, [handleApplyVoucher])
+
+  useEffect(() => {
+    getAndApplySelectedVoucher()
+  }, [getAndApplySelectedVoucher])
 
   // Calculate totals
   const calculateSubtotal = () => {

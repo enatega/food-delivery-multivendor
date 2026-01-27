@@ -13,7 +13,7 @@ const MainHeading = () => {
   }
 
   return (
-    <TextDefault H1 bolder textColor={currentTheme?.headerMainFontColor}>
+    <TextDefault H2 textColor={currentTheme?.headerMainFontColor}>
       {t('Sign up now and get all your favorites delivered to your door.')}
     </TextDefault>
   )

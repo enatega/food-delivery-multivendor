@@ -220,9 +220,23 @@ const TIMELINE_STATUSES = [
   }
 ]
 
-const OrderStatusTimeline = ({ currentStatus, statusTimes = {} }) => {
+const PICKED_UP_TIMELINE_STATUSES = [
+  {
+    key: ORDER_STATUSES.ACCEPTED,
+    labelKey: 'Order acceptedd',
+    icon: 'check'
+  },
+  {
+    key: ORDER_STATUSES.DELIVERED,
+    labelKey: 'Collected',
+    icon: 'package'
+  }
+]
+
+const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
+  const decidedStatuses = isPickUpOrder ? PICKED_UP_TIMELINE_STATUSES : TIMELINE_STATUSES
 
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -230,7 +244,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {} }) => {
   }
 
   const getCurrentIndex = () =>
-    TIMELINE_STATUSES.findIndex((s) => s.key === currentStatus)
+    decidedStatuses.findIndex((s) => s.key === currentStatus)
 
   const currentIndex = getCurrentIndex()
 
@@ -280,9 +294,9 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {} }) => {
 
   return (
     <View style={styles(currentTheme).container}>
-      {TIMELINE_STATUSES.map((status, index) => {
+      {decidedStatuses.map((status, index) => {
         const state = getState(index)
-        const isLast = index === TIMELINE_STATUSES.length - 1
+        const isLast = index === decidedStatuses.length - 1
 
         return (
           <View key={status.key} style={styles(currentTheme).row}>
