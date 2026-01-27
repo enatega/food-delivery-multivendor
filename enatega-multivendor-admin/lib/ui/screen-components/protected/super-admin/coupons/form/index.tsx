@@ -23,6 +23,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 
 // Hooks
+import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { ChangeEvent, useContext } from 'react';
 import CustomInputSwitch from '@/lib/ui/useable-components/custom-input-switch';
@@ -38,6 +39,7 @@ export default function CouponForm({
 }: IAddCouponProps) {
   // Hooks
   const { showToast } = useContext(ToastContext);
+  const [endDateError, setEndDateError] = useState('');
   const t = useTranslations();
 
   // Initial values
@@ -46,6 +48,15 @@ export default function CouponForm({
     title: isEditing.bool ? isEditing?.data?.title : '',
     discount: isEditing.bool ? isEditing?.data?.discount : 0,
     enabled: isEditing.bool ? isEditing?.data?.enabled : true,
+    lifeTimeActive: isEditing.bool ? isEditing?.data?.lifeTimeActive : false,
+    startDate:
+      isEditing.bool && isEditing?.data?.startDate
+        ? new Date(isEditing.data.startDate).toISOString().split('T')[0]
+        : '',
+    endDate:
+      isEditing.bool && isEditing?.data?.endDate
+        ? new Date(isEditing.data.endDate).toISOString().split('T')[0]
+        : '',
   };
 
   // Mutations
@@ -68,6 +79,9 @@ export default function CouponForm({
             discount: 0,
             enabled: false,
             title: '',
+            lifeTimeActive: false,
+            startDate: '',
+            endDate: '',
           },
         });
       },
@@ -88,6 +102,9 @@ export default function CouponForm({
             discount: 0,
             enabled: false,
             title: '',
+            lifeTimeActive: false,
+            startDate: '',
+            endDate: '',
           },
         });
       },
@@ -112,6 +129,9 @@ export default function CouponForm({
             discount: 0,
             enabled: false,
             title: '',
+            lifeTimeActive: false,
+            startDate: '',
+            endDate: '',
           },
         });
       },
@@ -132,6 +152,9 @@ export default function CouponForm({
             discount: 0,
             enabled: false,
             title: '',
+            lifeTimeActive: false,
+            startDate: '',
+            endDate: '',
           },
         });
       },
@@ -151,6 +174,9 @@ export default function CouponForm({
             discount: 0,
             enabled: true,
             title: '',
+            lifeTimeActive: false,
+            startDate: '',
+            endDate: '',
           },
         });
       }}
@@ -168,6 +194,9 @@ export default function CouponForm({
               title: values.title,
               discount: values.discount,
               enabled: values.enabled,
+              lifeTimeActive: values.lifeTimeActive,
+              startDate: values.startDate,
+              endDate: values.endDate,
             };
           } else {
             formData = {
@@ -175,6 +204,9 @@ export default function CouponForm({
               title: values.title,
               discount: values.discount,
               enabled: values.enabled,
+              lifeTimeActive: values.lifeTimeActive,
+              startDate: values.startDate,
+              endDate: values.endDate,
             };
           }
 
@@ -199,6 +231,9 @@ export default function CouponForm({
               discount: 0,
               enabled: true,
               title: '',
+              lifeTimeActive: false,
+              startDate: '',
+              endDate: '',
             },
           });
           setVisible(false);
@@ -265,6 +300,42 @@ export default function CouponForm({
                       : '',
                   }}
                 />
+
+                <CustomInputSwitch
+                  label={t('Lifetime Active')}
+                  isActive={values.lifeTimeActive}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setFieldValue('lifeTimeActive', e.target.checked)
+                  }
+                />
+
+                {!values.lifeTimeActive && (
+                  <CustomTextField
+                    value={values.startDate}
+                    name="startDate"
+                    showLabel={true}
+                    placeholder={t('Start Date')}
+                    type="date"
+                    onChange={(e) => setFieldValue('startDate', e.target.value)}
+                    style={{
+                      borderColor: endDateError ? 'red' : '',
+                    }}
+                  />
+                )}
+
+                {!values.lifeTimeActive && (
+                  <CustomTextField
+                    value={values.endDate}
+                    name="endDate"
+                    showLabel={true}
+                    placeholder={t('End Date')}
+                    type="date"
+                    onChange={(e) => setFieldValue('endDate', e.target.value)}
+                    style={{
+                      borderColor: endDateError ? 'red' : '',
+                    }}
+                  />
+                )}
 
                 <button
                   className="float-end h-10 w-fit rounded-md border dark:border-dark-600 border-gray-300 bg-black px-8 text-white"
