@@ -60,7 +60,7 @@ const useOrderConfirmation = ({ orderId }) => {
     orderItems: confirmation?.items ?? [],
     initialOrder: initialOrder,
     orderNo: confirmation?.orderId,
-    riderPhone: confirmation?.rider?.phone
+    // riderPhone: confirmation?.rider?.phone
     // deliveryDiscount: confirmation?.deliveryDiscount ?? 0,
   }
 }

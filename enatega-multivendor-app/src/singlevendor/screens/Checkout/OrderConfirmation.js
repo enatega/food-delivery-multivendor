@@ -69,7 +69,7 @@ const OrderConfirmation = (props) => {
     orderItems,
     initialOrder,
     orderNo,
-    riderPhone
+    // riderPhone
   } = useOrderConfirmation({ orderId })
     console.log("🚀 ~ OrderConfirmation ~ couponDiscountAmount:", couponDiscountAmount)
 
@@ -158,7 +158,7 @@ const OrderConfirmation = (props) => {
   }, [currentTheme, isDelivered])
 
   const handleContactCourier = () => {
-    navigation.navigate('ChatWithRider', { id: orderId, orderNo, total, riderPhone })
+    navigation.navigate('ChatWithRider', { id: orderId, orderNo, total, riderPhone: rider?.phone })
   }
 
   // ----------------------------------
