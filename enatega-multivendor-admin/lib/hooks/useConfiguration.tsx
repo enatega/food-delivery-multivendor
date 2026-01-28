@@ -38,7 +38,7 @@ export const useConfiguration = () => {
   const SKIP_EMAIL_VERIFICATION = configuration?.skipEmailVerification;
   const SKIP_MOBILE_VERIFICATION = configuration?.skipMobileVerification;
   const SKIP_WHATSAPP_OTP = configuration?.skipWhatsAppOTP;
-  const CURRENT_SYMBOL = configuration?.currencySymbol;
+  // const CURRENT_SYMBOL = configuration?.currencySymbol;
   const EMAIL_NAME = configuration?.emailName;
   const EMAIL = configuration?.email;
   const PASSWORD = configuration?.password;

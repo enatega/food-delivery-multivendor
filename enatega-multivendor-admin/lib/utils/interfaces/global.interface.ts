@@ -14,6 +14,7 @@ export interface IDropdownSelectItem {
   label?: string;
   code?: string;
   body?: () => void;
+  severity?: 'success' | 'info' | 'warning' | 'danger' | 'secondary' | 'contrast';
 }
 export interface IRiderDropDownSelectItem extends IDropdownSelectItem {
   assignedOrders: string[];

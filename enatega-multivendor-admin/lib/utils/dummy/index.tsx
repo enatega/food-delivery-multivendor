@@ -170,6 +170,8 @@ export const generateDummyRiders = (count: number = 10): IRiderResponse[] => {
       __typename: 'Rider',
       assigned: [''],
       vehicleType: '',
+      madeBy: 'ADMIN',
+      riderRequestStatus: 'ACCEPTED',
     });
   }
 

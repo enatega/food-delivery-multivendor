@@ -22,7 +22,7 @@ export default function LoyaltyAndReferralHeader() {
   const { CURRENCY_SYMBOL } = useConfiguration();
 
   // API
-  const [setLoyaltyConfiguration, { loading: settingLoyaltyConfiguration }] =
+  const [setLoyaltyConfiguration] =
     useSetLoyaltyConfigurationMutation();
   const { data, loading } = useFetchLoyaltyConfiguraionQuery();
   const loyaltyConfig = data?.fetchLoyaltyConfiguration;

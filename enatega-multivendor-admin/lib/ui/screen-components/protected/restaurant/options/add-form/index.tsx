@@ -65,7 +65,7 @@ export default function OptionAddForm({
   const { showToast } = useToast();
 
   // Context
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
 
@@ -223,7 +223,7 @@ export default function OptionAddForm({
                                               <div>
                                                 <CustomNumberField
                                                   name={`options[${index}].price`}
-                                                  prefix={CURRENT_SYMBOL}
+                                                  prefix={CURRENCY_SYMBOL}
                                                   min={1}
                                                   max={99999}
                                                   minFractionDigits={0}

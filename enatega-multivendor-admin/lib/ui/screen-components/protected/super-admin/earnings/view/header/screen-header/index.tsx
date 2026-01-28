@@ -12,7 +12,7 @@ const EarningsSuperAdminHeader = ({
 }: IEarningsHeaderComponentProps) => {
   // Hooks
   const t = useTranslations();
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
   // Helper function to format numbers to 2 decimal places
   const formatNumber = (value: number) => Number(value.toFixed(2));
   return (
@@ -25,7 +25,7 @@ const EarningsSuperAdminHeader = ({
           label={t('Total Platform Earning')}
           total={formatNumber(earnings?.platformTotal || 0)}
           icon={faDollarSign}
-          currencySymbol={CURRENT_SYMBOL || '$'}
+          currencySymbol={CURRENCY_SYMBOL || '$'}
           route=""
           isClickable={false}
         // loading= {loading}
@@ -34,7 +34,7 @@ const EarningsSuperAdminHeader = ({
           label={t('Total Stores Earning')}
           total={formatNumber(earnings?.storeTotal || 0)}
           icon={faDollarSign}
-          currencySymbol={CURRENT_SYMBOL || '$'}
+          currencySymbol={CURRENCY_SYMBOL || '$'}
           isClickable={false}
           route="" // loading={loading}
         />
@@ -42,7 +42,7 @@ const EarningsSuperAdminHeader = ({
           label={t('Total Riders Earnings')}
           total={formatNumber(earnings?.riderTotal || 0)}
           icon={faDollarSign}
-          currencySymbol={CURRENT_SYMBOL || '$'}
+          currencySymbol={CURRENCY_SYMBOL || '$'}
           isClickable={false}
           route="" // loading = {loading}
         />

@@ -51,14 +51,6 @@ export const RIDER_TABLE_COLUMNS = ({
   ];
 
   // Status templates
-  const valueTemplate = (option: IDropdownSelectItem) => (
-    <Tag
-      severity={option.severity}
-      value={option.label}
-      rounded
-    />
-  );
-
   const itemTemplate = (option: IDropdownSelectItem) => (
     <div className="flex items-center justify-start gap-2">
       <Tag
@@ -202,14 +194,7 @@ export const RIDER_TABLE_COLUMNS = ({
                   style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
                 />
               )}
-              placeholder={
-                <Tag
-                  severity="warning"
-                  value={t('Pending')}
-                  rounded
-                  style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
-                />
-              }
+              placeholder={t('Pending')}
               className="min-w-[120px] outline outline-1 outline-gray-300"
               disabled={acceptLoading || declineLoading}
             />
