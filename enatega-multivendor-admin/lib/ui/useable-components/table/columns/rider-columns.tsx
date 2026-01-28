@@ -4,18 +4,20 @@ import { useContext, useState } from 'react';
 // Custom Components
 import ActionMenu from '@/lib/ui/useable-components/action-menu';
 import CustomInputSwitch from '../../custom-input-switch';
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
 
 // Interfaces and Types
 import { IActionMenuProps } from '@/lib/utils/interfaces/action-menu.interface';
 import { IRiderResponse } from '@/lib/utils/interfaces/rider.interface';
+import { IDropdownSelectItem } from '@/lib/utils/interfaces';
 
 // GraphQL
-import { GET_RIDERS, TOGGLE_RIDER } from '@/lib/api/graphql';
+import { GET_RIDERS, TOGGLE_RIDER, ACCEPT_RIDER_REQUEST, DELETE_RIDER } from '@/lib/api/graphql';
 import { useMutation } from '@apollo/client';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useTranslations } from 'next-intl';
 import { toTextCase } from '@/lib/utils/methods';
-// import { toTextCase } from '@/lib/utils/methods';
 
 export const RIDER_TABLE_COLUMNS = ({
   menuItems,
@@ -34,7 +36,40 @@ export const RIDER_TABLE_COLUMNS = ({
 
   const { showToast } = useContext(ToastContext);
 
-  // GraphQL mutation hook
+  // Status options (only for dropdown - excluding PENDING)
+  const statusOptions = [
+    { 
+      label: t('Accept'), 
+      code: 'ACCEPTED',
+      severity: 'success' as const
+    },
+    { 
+      label: t('Decline'), 
+      code: 'DECLINED',
+      severity: 'danger' as const
+    }
+  ];
+
+  // Status templates
+  const valueTemplate = (option: IDropdownSelectItem) => (
+    <Tag
+      severity={option.severity}
+      value={option.label}
+      rounded
+    />
+  );
+
+  const itemTemplate = (option: IDropdownSelectItem) => (
+    <div className="flex items-center justify-start gap-2">
+      <Tag
+        severity={option.severity}
+        value={option.label}
+        rounded
+      />
+    </div>
+  );
+
+  // GraphQL mutation hooks
   const [mutateToggle, { loading }] = useMutation(TOGGLE_RIDER, {
     refetchQueries: [{ query: GET_RIDERS }],
     awaitRefetchQueries: true,
@@ -55,6 +90,53 @@ export const RIDER_TABLE_COLUMNS = ({
       });
     },
   });
+
+  const [mutateAccept, { loading: acceptLoading }] = useMutation(ACCEPT_RIDER_REQUEST, {
+    refetchQueries: [{ query: GET_RIDERS }],
+    awaitRefetchQueries: true,
+    onCompleted: () => {
+      showToast({
+        type: 'success',
+        title: t('Success'),
+        message: t('Rider request accepted successfully'),
+      });
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        title: t('Error'),
+        message: t('Failed to accept rider request'),
+      });
+    },
+  });
+
+  const [mutateDecline, { loading: declineLoading }] = useMutation(DELETE_RIDER, {
+    refetchQueries: [{ query: GET_RIDERS }],
+    awaitRefetchQueries: true,
+    onCompleted: () => {
+      showToast({
+        type: 'success',
+        title: t('Success'),
+        message: t('Rider request declined successfully'),
+      });
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        title: t('Error'),
+        message: t('Failed to decline rider request'),
+      });
+    },
+  });
+
+  // Handle status change
+  const handleStatusChange = (value: string, rider: IRiderResponse) => {
+    if (value === 'ACCEPTED') {
+      mutateAccept({ variables: { id: rider._id } });
+    } else if (value === 'DECLINED') {
+      mutateDecline({ variables: { id: rider._id } });
+    }
+  };
 
   // Handle availability toggle
   const onHandleBannerStatusChange = async (isActive: boolean, id: string) => {
@@ -88,6 +170,86 @@ export const RIDER_TABLE_COLUMNS = ({
       propertyName: 'vehicleType',
       body: (rider: IRiderResponse) =>
         toTextCase(rider.vehicleType.replaceAll('_', ' '), 'title'),
+    },
+    {
+      headerName: t('Made By'),
+      propertyName: 'madeBy',
+      body: (rider: IRiderResponse) => (
+        <span className={`px-2 py-1 rounded text-xs ${
+          rider.madeBy === 'ADMIN' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800'
+        }`}>
+          {rider.madeBy === 'ADMIN' ? t('Admin') : t('Rider Request')}
+        </span>
+      ),
+    },
+    {
+      headerName: t('Status'),
+      propertyName: 'riderRequestStatus',
+      body: (rider: IRiderResponse) => {
+        // Show dropdown only for pending rider requests
+        if (rider.madeBy === 'RIDER_REQUEST' && rider.riderRequestStatus === 'PENDING') {
+          return (
+            <Dropdown
+              value={null}
+              options={statusOptions}
+              onChange={(e) => handleStatusChange(e.value.code, rider)}
+              itemTemplate={itemTemplate}
+              valueTemplate={() => (
+                <Tag
+                  severity="warning"
+                  value={t('Pending')}
+                  rounded
+                  style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
+                />
+              )}
+              placeholder={
+                <Tag
+                  severity="warning"
+                  value={t('Pending')}
+                  rounded
+                  style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
+                />
+              }
+              className="min-w-[120px] outline outline-1 outline-gray-300"
+              disabled={acceptLoading || declineLoading}
+            />
+          );
+        }
+        
+        // Show tags for all other statuses
+        const getStatusTag = () => {
+          switch (rider.riderRequestStatus) {
+            case 'ACCEPTED':
+              return (
+                <Tag
+                  severity="success"
+                  value={t('Accepted')}
+                  rounded
+                />
+              );
+            case 'PENDING':
+              return (
+                <Tag
+                  severity="warning"
+                  value={t('Pending')}
+                  rounded
+                  style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
+                />
+              );
+            default:
+              return (
+                <Tag
+                  severity="warning"
+                  value={t('Pending')}
+                  rounded
+                  style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
+                />
+              );
+          }
+        };
+        
+        return getStatusTag();
+      },
     },
     {
       headerName: t('Available'),

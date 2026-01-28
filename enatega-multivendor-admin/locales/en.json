@@ -1105,5 +1105,21 @@
     "weak": "Weak",
     "medium": "Medium",
     "strong": "Strong"
-  }
+  },
+  "Made By": "Made By",
+  "Admin": "Admin",
+  "Rider Request": "Rider Request",
+  "Decline": "Decline",
+  "Rider request accepted successfully": "Rider request accepted successfully",
+  "Failed to accept rider request": "Failed to accept rider request",
+  "Rider request declined successfully": "Rider request declined successfully",
+  "Failed to decline rider request": "Failed to decline rider request",
+  "Rider Deleted": "Rider Deleted",
+  "Accept rider request": "Accept rider request",
+  "Decline rider request": "Decline rider request",
+  "Accept Rider Request": "Accept Rider Request",
+  "Decline Rider Request": "Decline Rider Request",
+  "Are you sure you want to accept this rider request?": "Are you sure you want to accept this rider request?",
+  "Are you sure you want to decline this rider request?": "Are you sure you want to decline this rider request?",
+  "This action will permanently remove the rider from the system.": "This action will permanently remove the rider from the system."
 }

@@ -106,6 +106,8 @@ export default function RidersMain({
     },
   ];
 
+  const riderTableColumns = RIDER_TABLE_COLUMNS({ menuItems });
+
   return (
     <div className="p-3">
       <Table
@@ -120,7 +122,7 @@ export default function RidersMain({
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         loading={loading}
-        columns={RIDER_TABLE_COLUMNS({ menuItems })}
+        columns={riderTableColumns}
       />
       <CustomDialog
         loading={mutationLoading}

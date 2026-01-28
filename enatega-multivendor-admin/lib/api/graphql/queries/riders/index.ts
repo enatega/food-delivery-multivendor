@@ -11,6 +11,8 @@ export const GET_RIDERS = gql`
       available
       vehicleType
       assigned
+      madeBy
+      riderRequestStatus
       zone {
         _id
         title

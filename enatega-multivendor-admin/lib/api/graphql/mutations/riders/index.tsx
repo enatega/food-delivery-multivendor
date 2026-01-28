@@ -34,15 +34,34 @@ export const EDIT_RIDER = gql`
 `;
 
 export const DELETE_RIDER = gql`
-  mutation DeleteRider($id: String!) {
+  mutation DeleteRider($id: ID!) {
     deleteRider(id: $id) {
       _id
     }
   }
 `;
 
+export const ACCEPT_RIDER_REQUEST = gql`
+  mutation AcceptRiderRequest($id: ID!) {
+    acceptRiderRequest(id: $id) {
+      _id
+      name
+      username
+      phone
+      available
+      vehicleType
+      madeBy
+      riderRequestStatus
+      zone {
+        _id
+        title
+      }
+    }
+  }
+`;
+
 export const TOGGLE_RIDER = gql`
-  mutation ToggleRider($id: String!) {
+  mutation ToggleRider($id: ID!) {
     toggleAvailablity(id: $id) {
       _id
       name

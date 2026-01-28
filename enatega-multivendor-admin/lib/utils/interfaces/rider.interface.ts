@@ -19,6 +19,8 @@ export interface IRiderResponse {
   vehicleType: string;
   assigned: string[];
   zone: IRiderResponseZone;
+  madeBy: 'ADMIN' | 'RIDER_REQUEST';
+  riderRequestStatus: 'PENDING' | 'ACCEPTED';
 }
 
 export interface ISingleRiderResponse {
