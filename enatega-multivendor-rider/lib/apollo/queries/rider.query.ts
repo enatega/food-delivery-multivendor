@@ -87,6 +87,7 @@ export const RIDER_PROFILE = gql`
       name
       password
       phone
+      referralCode
       totalWalletAmount
       updatedAt
       username

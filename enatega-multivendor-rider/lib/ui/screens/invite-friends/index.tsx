@@ -2,7 +2,6 @@ import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   SafeAreaView,
@@ -17,10 +16,10 @@ import QRCode from "react-native-qrcode-svg";
 export default function InviteFriendsScreen() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  // const { dataProfile } = useUserContext();
+  const { dataProfile } = useUserContext();
 
   // Generate referral code or link
-  const referralCode =  "F123456";
+  const referralCode =  dataProfile?.referralCode || "000000";
   const referralLink = `https://yourapp.com/signup?ref=${referralCode}`;
 
   const handleCopyCode = async () => {
