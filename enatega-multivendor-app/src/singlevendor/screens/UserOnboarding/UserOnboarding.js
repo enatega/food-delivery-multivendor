@@ -49,13 +49,11 @@ const UserOnboarding = () => {
 
   return (
     <SafeAreaView style={styles(currentTheme).container}>
-      <ScrollView style={styles(currentTheme).scrollView} contentContainerStyle={{ display: 'flex', justifyContent: 'space-between', flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <View style={styles(currentTheme, insets).onBoardingContainer}>
           <MainHeading />
           <MainImage />
           <Actions t={t} />
         </View>
-      </ScrollView>
     </SafeAreaView>
   )
 }

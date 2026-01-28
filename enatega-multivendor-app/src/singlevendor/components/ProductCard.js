@@ -9,6 +9,7 @@ import { getDealPricing } from '../utils/helper'
 import useAddToCart from '../screens/ProductDetails/useAddToCart'
 
 const ProductCard = ({ product, onCardPress, containerStyles }) => {
+  console.log("🚀 ~ ProductCard ~ product:", JSON.stringify(product, null, 2))
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
@@ -33,7 +34,7 @@ const ProductCard = ({ product, onCardPress, containerStyles }) => {
   return (
     <Pressable
       onPress={() => {
-        onCardPress && onCardPress(product?.id)
+        onCardPress && onCardPress(product?.id, product?.categoryId)
       }}
       style={[styles(currentTheme).card, containerStyles]}
     >

@@ -826,4 +826,7 @@ export const en = {
   "Continue Conversation": "Continue Conversation",
   "Sign up now and get all your favorites delivered to your door.": "Sign up now and get all your favorites delivered to your door.",
   "Add address": "Add address",
+  "Collected": "Collected",
+  "Your grocery has been delivered.": "Your grocery has been delivered.",
+  "Your grocery has been collected.": "Your grocery has been collected."
 }

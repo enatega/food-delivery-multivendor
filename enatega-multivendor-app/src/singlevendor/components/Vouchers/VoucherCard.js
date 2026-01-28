@@ -6,9 +6,9 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 // import { alignment } from '../../../utils/alignment'
 import { scale, verticalScale } from '../../../utils/scaling'
 
-const VoucherCard = ({ voucher, currentTheme, onUse }) => {
+const VoucherCard = ({ voucher, currentTheme, onUse, voucherInUse }) => {
   const { t } = useTranslation()
-
+  const isActive = voucherInUse === voucher?.id
   return (
     <View style={styles(currentTheme).cardWrapper}>
       <View style={styles(currentTheme).card}>
@@ -63,16 +63,17 @@ const VoucherCard = ({ voucher, currentTheme, onUse }) => {
               </View>
             )}
             <TouchableOpacity
-              style={styles(currentTheme).useButton}
+              style={[styles(currentTheme).useButton, {backgroundColor: !isActive ? currentTheme.primaryBlue : currentTheme.colorTextMuted}]}
               onPress={onUse}
               activeOpacity={0.7}
+              disabled={isActive}
             >
               <TextDefault
                 textColor="#FFFFFF"
                 style={styles(currentTheme).useButtonText}
                 bolder
               >
-                {t('Use')}
+               {isActive ? t('In use') : t('Use')}
               </TextDefault>
             </TouchableOpacity>
           </View>

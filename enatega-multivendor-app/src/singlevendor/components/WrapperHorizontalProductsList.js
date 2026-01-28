@@ -11,7 +11,7 @@ const WrapperHorizontalProductsList = ({ data = null, listTitle = '' }) => {
 
   return (
     <>
-      <HorizontalProductsList listTitle={listTitle} viewType={data.viewType} ListData={products} isLoading={loading} setSearchVisible={setSearchVisible} />
+      <HorizontalProductsList categoryId={data?.id} listTitle={listTitle} viewType={data.viewType} ListData={products} isLoading={loading} setSearchVisible={setSearchVisible} />
       <WrapperSearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} items={products} categoryId={data?.id} />
     </>
   )

@@ -67,8 +67,11 @@ const OrderConfirmation = (props) => {
     address,
     customerLocation,
     orderItems,
-    initialOrder
+    initialOrder,
+    orderNo,
+    // riderPhone
   } = useOrderConfirmation({ orderId })
+    console.log("🚀 ~ OrderConfirmation ~ couponDiscountAmount:", couponDiscountAmount)
 
   // ----------------------------------
   // 2️⃣ Real-time tracking (SUBSCRIPTION)
@@ -81,13 +84,9 @@ const OrderConfirmation = (props) => {
   const orderStatus = liveOrder?.orderStatus
   const riderLocation =
     {
-      longitude: liveOrder?.rider?.location?.coordinates[0],
-      // '72.9799622661803',
-      latitude:
-        // '33.703496283644384'
-        liveOrder?.rider?.location?.coordinates[1]
-    } || null
-  console.log('rider location:', riderLocation, customerLocation)
+      longitude: parseFloat(liveOrder?.rider?.location?.coordinates[0]) ?? undefined,
+      latitude: parseFloat(liveOrder?.rider?.location?.coordinates[1]) ?? undefined
+    }
   const rider = liveOrder?.rider || null
   // ----------------------------------
   // 3️⃣ Derived UI states
@@ -121,7 +120,7 @@ const OrderConfirmation = (props) => {
       headerRight: isDelivered
         ? null
         : () => (
-          <TouchableOpacity style={styles(currentTheme).helpButton}>
+          <TouchableOpacity onPress={()=> navigation.navigate('FastHelpSupport')} hitSlop={12} style={styles(currentTheme).helpButton}>
             <Feather name='help-circle' size={24} color={currentTheme.fontMainColor} />
           </TouchableOpacity>
         ),
@@ -159,7 +158,7 @@ const OrderConfirmation = (props) => {
   }, [currentTheme, isDelivered])
 
   const handleContactCourier = () => {
-    navigation.navigate('ChatWithRider', { id: orderId, orderNo, total, riderPhone })
+    navigation.navigate('ChatWithRider', { id: orderId, orderNo, total, riderPhone: rider?.phone })
   }
 
   // ----------------------------------
@@ -172,11 +171,11 @@ const OrderConfirmation = (props) => {
         {isCancelled ? (
           <DeliveredStatus appName='FAST' title={t('Order cancelled')} subtitle={t('Your order has been cancelled')} error />
         ) : isDelivered ? (
-          <DeliveredStatus appName='FAST' />
+          <DeliveredStatus appName='FAST' isPickUpOrder={orderData?.isPickedUp ?? liveOrder?.isPickedUp} />
         ) : (
           <>
             <DeliveryTimeBanner minTime={remainingTime} maxTime={remainingTime + 5} />
-            <OrderStatusTimeline currentStatus={orderStatus} />
+            <OrderStatusTimeline currentStatus={orderStatus} isPickUpOrder={ orderData?.isPickedUp ?? liveOrder?.isPickedUp} />
           </>
         )}
 

@@ -32,11 +32,11 @@ const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm
               contentContainerStyle={{ paddingLeft: 10, paddingBottom: 60 }}
               data={searchData}
               keyExtractor={(item) => item?.id}
-              renderItem={({ item }) => (
-                <View style={{ marginBottom: 15 }}>
+              renderItem={({ item }) => {
+                return <View style={{ marginBottom: 15 }}>
                   <ProductCard product={item} onCardPress={onProductPress} onAddToCart={handleAddToCart} />
-                </View>
-              )}
+                </View>;
+              }}
               numColumns={2}
               showsVerticalScrollIndicator={false}
               ListEmptyComponent={<EmptySearch currentTheme={currentTheme} t={t} />}
