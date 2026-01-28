@@ -1,12 +1,12 @@
-import React, { useContext, useRef } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
-import ThemeContext from '../../../../ui/ThemeContext/ThemeContext';
-import { theme } from '../../../../utils/themeColors';
-import { scale } from '../../../../utils/scaling';
-import { mapStyle } from '../../../../utils/mapStyle';
-import useEnvVars from '../../../../../environment';
+import React, { useContext, useRef } from 'react'
+import { View, StyleSheet, Image } from 'react-native'
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
+import MapViewDirections from 'react-native-maps-directions'
+import ThemeContext from '../../../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../../../utils/themeColors'
+import { scale } from '../../../../utils/scaling'
+import { mapStyle } from '../../../../utils/mapStyle'
+import useEnvVars from '../../../../../environment'
 
 const DeliveryMap = ({ 
   riderLocation,
@@ -20,17 +20,32 @@ const DeliveryMap = ({
   const mapRef = useRef(null);
 
   const initialRegion = {
-    latitude: customerLocation?.latitude || 25.2854,
-    longitude: customerLocation?.longitude || 51.5310,
+    latitude: customerLocation?.latitude ?? 25.2854,
+    longitude: customerLocation?.longitude ?? 51.531,
     latitudeDelta: 0.02,
     longitudeDelta: 0.02
-  };
+  }
 
   const fitToMarkers = (coordinates) => {
     mapRef.current?.fitToCoordinates(coordinates, {
       edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }
-    });
-  };
+    })
+  }
+
+  const DEFAULT_COORDINATE = {
+    latitude: 0,
+    longitude: 0
+  }
+
+  const hasValidCoords = riderLocation?.latitude != null && riderLocation?.longitude != null && riderLocation.latitude !== '' && riderLocation.longitude !== ''
+
+  const markerCoordinate = hasValidCoords
+    ? {
+        latitude: Number(riderLocation?.latitude),
+        longitude: Number(riderLocation?.longitude)
+      }
+    : DEFAULT_COORDINATE
+  const markerOpacity = hasValidCoords ? 1 : 0
 
   return (
     <View style={styles().container}>
@@ -63,17 +78,15 @@ const DeliveryMap = ({
         )}
 
         {/* Rider Marker */}
-        {riderLocation && (
-          <Marker coordinate={riderLocation}>
-            <View style={styles().riderMarker}>
-              <Image
-                source={require('../../../assets/images/rider-icon.png')}
-                style={styles().riderIcon}
-                resizeMode="contain"
-              />
-            </View>
-          </Marker>
-        )}
+        <Marker coordinate={markerCoordinate}>
+          <View style={[styles().riderMarker, { opacity: markerOpacity }]}>
+            <Image
+              source={require('../../../assets/images/rider-icon.png')}
+              style={styles().riderIcon}
+              resizeMode="contain"
+            />
+          </View>
+        </Marker>
 
         {/* Route */}
         {showRoute && riderLocation && customerLocation && GOOGLE_MAPS_KEY && (

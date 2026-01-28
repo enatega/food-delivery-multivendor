@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { SafeAreaView, ScrollView } from 'react-native'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { SafeAreaView, ScrollView, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@apollo/client'
@@ -7,13 +7,11 @@ import VoucherSkeleton from '../../components/Vouchers/VoucherSkeleton'
 
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import {
-  VoucherCard,
-  EmptyVouchers
-} from '../../components/Vouchers'
+import { VoucherCard, EmptyVouchers } from '../../components/Vouchers'
 import { COUPONS_BY_RESTAURANT } from '../../../apollo/queries'
 import AccountSectionHeader from '../../components/AccountSectionHeader'
 import EmptyAccountSectionArea from '../../components/EmptyAccountSectionArea'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import styles from './styles'
 
@@ -31,11 +29,50 @@ const Vouchers = () => {
     fetchPolicy: 'network-only'
   })
 
-  const vouchers = data?.couponsbyRestaurant?.filter(coupon => coupon.enabled) || []
+  const [voucherInUse, setVoucherInUse] = useState(null)
 
-  const handleUseVoucher = (voucherId) => {
-    // TODO: Implement voucher usage logic
-    console.log('Use voucher:', voucherId)
+  const vouchers = data?.couponsbyRestaurant?.filter((coupon) => coupon.enabled) || []
+
+  const getSelectedVoucher = useCallback(async () => {
+    try {
+      const voucher = await AsyncStorage.getItem('selectedVoucher')
+      const parsedVoucher = JSON.parse(voucher)
+      setVoucherInUse(() => parsedVoucher)
+    } catch (error) {
+      console.log('🚀 ~ getSelectedVoucher ~ error:', error)
+    }
+  }, [setVoucherInUse])
+
+  useEffect(() => {
+    getSelectedVoucher()
+  }, [getSelectedVoucher])
+
+  const handleUseVoucher = async (voucher) => {
+    try {
+      const stringifiedVoucher = JSON.stringify(voucher)
+      await AsyncStorage.setItem('selectedVoucher', stringifiedVoucher)
+      setVoucherInUse(voucher)
+    } catch (error) {
+      console.log('🚀 ~ handleUseVoucher ~ error:', error)
+    }
+  }
+
+  const handleUpdateVoucher = (voucher) => {
+    Alert.alert(
+      `${voucherInUse?.title} is already in use.`,
+      `Are you want to use ${voucher?.title}?`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed')
+        },
+        {
+          text: 'OK',
+          onPress: () => handleUseVoucher(voucher)
+        }
+      ],
+      { cancelable: false }
+    )
   }
 
   return (
@@ -61,6 +98,7 @@ const Vouchers = () => {
         ) : vouchers.length > 0 ? (
           vouchers.map((voucher) => (
             <VoucherCard
+              voucherInUse={voucherInUse?._id}
               key={voucher._id}
               voucher={{
                 id: voucher._id,
@@ -72,7 +110,7 @@ const Vouchers = () => {
                 badgeType: 'warning'
               }}
               currentTheme={currentTheme}
-              onUse={() => handleUseVoucher(voucher._id)}
+              onUse={() => (voucherInUse ? handleUpdateVoucher(voucher) : handleUseVoucher(voucher))}
             />
           ))
         ) : (

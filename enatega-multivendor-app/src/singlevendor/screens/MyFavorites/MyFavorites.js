@@ -71,7 +71,8 @@ const MyFavorites = () => {
           variations: transformedVariations,
           foodTotal: foodTotal,
           isOutOfStock: food.isOutOfStock,
-          subCategory: food.subCategory
+          subCategory: food.subCategory,
+          categoryId: food?.categoryId
         }
       })
 
@@ -104,11 +105,12 @@ const MyFavorites = () => {
     })
   }
 
-  const handleAddToCart = (item) => {
+  const handleAddToCart = (item, categoryId) => {
     // Navigate to ProductDetails screen to add item to cart
     console.log('Navigating to ProductDetails for item:', item)
     navigation.navigate('ProductDetails', {
-      productId: item.foodId || item._id
+      productId: item.foodId || item._id,
+      categoryId: item?.categoryId
     })
   }
 

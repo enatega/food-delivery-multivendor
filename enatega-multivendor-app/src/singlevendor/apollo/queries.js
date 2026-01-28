@@ -113,8 +113,8 @@ export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
 // `
 
 export const GET_FOOD_DETAILS = gql`
-  query GetFoodDetails($foodId: ID!) {
-    getFoodDetails(foodId: $foodId) {
+  query GetFoodDetails($foodId: ID!, $categoryId: ID!) {
+    getFoodDetails(foodId: $foodId, categoryId: $categoryId) {
       id
       title
       description
@@ -212,6 +212,7 @@ export const SEARCH_FOOD = gql`
       title
       description
       subCategory
+      categoryId
       image
       isOutOfStock
       isFavourite
@@ -245,6 +246,7 @@ export const GET_LIMITED_TIME_FOODS_DEALS = gql`
             isActive
           }
         }
+        categoryId
       }
     }
   }
@@ -270,6 +272,7 @@ export const GET_WEEKLY_FOODS_DEALS = gql`
             isActive
           }
         }
+        categoryId
       }
     }
   }
@@ -296,6 +299,7 @@ export const GET_NEW_OFFERS_FOODS_DEALS = gql`
             isActive
           }
         }
+        categoryId
       }
     }
   }
@@ -562,6 +566,7 @@ export const ORDER_DETAILS_PAGE = gql`
         freeDeliveriesRemaining
         priorityDeliveryFees
         deliverChargesAmount
+        couponDiscountApplied
         rider {
           phone
         }
@@ -643,6 +648,7 @@ export const GET_FAVORITE_FOODS_SINGLE_VENDOR = gql`
         title
         image
         subCategory
+        categoryId
         isFavourite
         isActive
         createdAt

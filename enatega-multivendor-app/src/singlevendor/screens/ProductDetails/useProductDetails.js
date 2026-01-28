@@ -2,10 +2,10 @@ import { useQuery } from '@apollo/client'
 import { GET_FOOD_DETAILS } from '../../apollo/queries'
 
 
-const useProductDetails = ({ foodId }) => {
+const useProductDetails = ({ foodId, categoryId }) => {
   // Todo: need to fix variations related data.
   const { data, loading, error } = useQuery(GET_FOOD_DETAILS, {
-    variables: { foodId },fetchPolicy:'network-only'
+    variables: { foodId, categoryId },fetchPolicy:'network-only'
   })
   console.log('products details:', JSON.stringify(data?.getFoodDetails))
 
