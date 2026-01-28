@@ -56,6 +56,9 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.singlevendorcolor : '#0EA5E9',
       borderRadius: scale(8),
       marginTop: scale(12)
+    },
+    orderAgainButtonDisabled: {
+      opacity: 0.6
     }
   });
 

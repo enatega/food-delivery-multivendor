@@ -1,5 +1,5 @@
 import React, { useState, useContext, useLayoutEffect, useMemo, useEffect, useRef } from 'react'
-import { View, ScrollView, TouchableOpacity, Platform, StatusBar } from 'react-native'
+import { View, ScrollView, TouchableOpacity, Platform, StatusBar, ActivityIndicator } from 'react-native'
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -20,6 +20,7 @@ import styles from './OrderConfirmationStyles'
 import useOrderConfirmation from './useOrderConfirmation'
 import useOrderTracking from './useOrderTracking' // ✅ NEW
 import { ORDER_STATUS_ENUM } from '../../../utils/enums'
+import useAddToCart from '../ProductDetails/useAddToCart'
 // import { ORDER_STATUS_ENUM } from '../../utils/enums'
 
 const OrderConfirmation = (props) => {
@@ -39,6 +40,13 @@ const OrderConfirmation = (props) => {
   }
 
   const currencySymbol = configuration?.currencySymbol || '€'
+
+  // Add to cart hook
+  const { addItemToCart, loadingItemIds ,updateUserCartLoading } = useAddToCart({ foodId: null })
+  console.log('addItemToCart', addItemToCart)
+  console.log('loadingItemIds', loadingItemIds)
+
+  console.log('updateUserCartLoading', updateUserCartLoading)
 
   // ----------------------------------
   // 1️⃣ Base order fetch (REST-like)
@@ -74,6 +82,8 @@ const OrderConfirmation = (props) => {
     // riderPhone
   } = useOrderConfirmation({ orderId })
     console.log("🚀 ~ OrderConfirmation ~ couponDiscountAmount:", couponDiscountAmount)
+    console.log("initialOrder", JSON.stringify(initialOrder,null,2));
+    
 
   // ----------------------------------
   // 2️⃣ Real-time tracking (SUBSCRIPTION)
@@ -181,7 +191,60 @@ const OrderConfirmation = (props) => {
   }
 
   const handleOrderAgain = () => {
-    console.log('Order again function called')
+    console.log('orderItems____Json', JSON.stringify(orderItems,null,2));
+    if (!orderItems || orderItems.length === 0) {
+      return
+    }
+
+    // Build array of items in the required format
+    const itemsArray = orderItems
+      .filter((item) => item.food && item.variation?._id)
+      .map((item) => {
+        const foodId = item.food
+        const variationId = item.variation?._id
+        const quantity = item.quantity || item.foodQuantity || 1
+        const addons = item.addons || []
+        
+        console.log(
+          'item_Json_Data',
+          JSON.stringify(
+            {
+              foodId,
+              variationId,
+              quantity,
+              addons,
+            },
+            null,
+            2
+          )
+        )
+        
+        return {
+          _id: foodId,
+          categoryId: '123',
+          variation: {
+            _id: variationId,
+            addons,
+            count: quantity
+          }
+        }
+      })
+
+    // Add all items to cart at once if we have valid items
+    if (itemsArray.length > 0) {
+      // Use the first item's data for the function signature, but pass the full array
+      const firstItem = orderItems.find((item) => item.food && item.variation?._id)
+      if (firstItem) {
+        const foodId = firstItem.food
+        const variationId = firstItem.variation?._id
+        const quantity = firstItem.quantity || firstItem.foodQuantity || 1
+        const addons = firstItem.addons || []
+        addItemToCart(foodId, '', variationId, addons, quantity, itemsArray)
+      }
+    }
+
+    // Navigate to cart screen
+    // navigation.navigate('cart')
   }
 
   // ----------------------------------
@@ -220,9 +283,10 @@ const OrderConfirmation = (props) => {
         <OrderSummary priorityDeliveryFee={isPriority ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={minimumOrderFee} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={tipAmount} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />
         {(isDelivered || isCancelled) && (
           <TouchableOpacity style={styles(currentTheme).orderAgainButton} onPress={handleOrderAgain}>
-            <TextDefault H4 textColor={currentTheme.white} center bold>
+            { updateUserCartLoading ? <ActivityIndicator size="small" color={currentTheme.white} /> :  <TextDefault H4 textColor={currentTheme.white} center bold>
               {t('Order again')}
-            </TextDefault>
+            </TextDefault> }
+           
           </TouchableOpacity>
         )}
       </View>      
