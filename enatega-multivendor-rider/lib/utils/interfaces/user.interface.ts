@@ -61,6 +61,7 @@ export interface IRiderProfile {
   vehicleType: string;
   image: string | null;
   phone: string;
+  referralCode?: string;
   licenseDetails: {
     expiryDate: string;
     image: string;
