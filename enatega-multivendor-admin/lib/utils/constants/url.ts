@@ -1,10 +1,10 @@
 export const BACKEND_URL = {
   LOCAL: {
-    SERVER_URL: 'https://62vh1vrf-8001.inc1.devtunnels.ms/',
-    WS_SERVER_URL: 'wss://62vh1vrf-8001.inc1.devtunnels.ms/',
+    SERVER_URL: 'https://enatega-multivendor-api-production-7fed.up.railway.app/',
+    WS_SERVER_URL: 'wss://enatega-multivendor-api-production-7fed.up.railway.app/',
   },
   LIVE: {
-    SERVER_URL: 'https://62vh1vrf-8001.inc1.devtunnels.ms/',
-    WS_SERVER_URL: 'wss://62vh1vrf-8001.inc1.devtunnels.ms/',
+    SERVER_URL: 'https://enatega-multivendor-api-production-7fed.up.railway.app/',
+    WS_SERVER_URL: 'wss://enatega-multivendor-api-production-7fed.up.railway.app/',
   },
 };
