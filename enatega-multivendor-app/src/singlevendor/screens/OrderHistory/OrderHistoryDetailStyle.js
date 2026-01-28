@@ -61,11 +61,24 @@ const styles = (props = null) =>
       buttonSpacer: {
         height: verticalScale(20)
       },
+      stickyBottomContainer: {
+        backgroundColor: props?.themeBackground,
+        paddingTop: scale(12),
+        paddingHorizontal: scale(16),
+        paddingBottom: scale(12),
+        borderTopWidth: 1,
+        borderTopColor: props?.gray200 || '#E5E7EB',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 5
+      },
       buttonContainer: {
         paddingHorizontal: scale(16),
         paddingVertical: verticalScale(12),
         backgroundColor: props?.themeBackground,
-        borderTopWidth: 1,
+        // borderTopWidth: 1,
         borderTopColor: props?.gray200 || '#E5E7EB'
       },
       increaseTipButton: {

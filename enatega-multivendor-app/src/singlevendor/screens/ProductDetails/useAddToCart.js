@@ -81,30 +81,41 @@ const useAddToCart = ({ foodId }) => {
     }
   }, [updateUserCart])
 
-  const addItemToCart = (foodId, categoryId, variationId, addons, count) => {
+  const addItemToCart = (foodId, categoryId, variationId, addons, count, orderItems) => {
     if (!isLoggedIn) {
       navigation.navigate('CreateAccount')
       return
     }
     const itemId = `${foodId}_${variationId}`
 
-    // useCartQueueStore.getState().enqueue(variables)
+    const singleItemList = [
+      {
+        _id: foodId,
+        categoryId: '123',
+        variation: {
+          _id: variationId,
+          addons,
+          count
+        }
+      }
+    ]
+
+    console.log('singleItemList____Json', JSON.stringify(singleItemList,null,2));
+    console.log('orderItems____Json', JSON.stringify(orderItems,null,2));
+
+    // If orderItems is provided (array case), use it; otherwise use single object case
+    const foodArray = orderItems && Array.isArray(orderItems) && orderItems.length > 0
+      ? orderItems
+      : singleItemList
+
+        console.log('foodArray____Json', JSON.stringify(foodArray,null,2));
+        
 
     useCartQueueStore.getState().enqueue(
       {
         __itemId: itemId, // 🔥 internal tracking
         input: {
-          food: [
-            {
-              _id: foodId,
-              categoryId: '123',
-              variation: {
-                _id: variationId,
-                addons,
-                count
-              }
-            }
-          ]
+          food: foodArray
         }
       },
       itemId
@@ -138,7 +149,7 @@ const useAddToCart = ({ foodId }) => {
   //   }
   // }
 
-  return { currentTheme, t, loadingItemIds, addItemToCart ,updateUserCartLoading}
+  return { currentTheme, t, loadingItemIds, addItemToCart ,updateUserCartLoading ,updateUserCartLoading}
 }
 
 export default useAddToCart
