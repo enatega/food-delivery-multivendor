@@ -697,7 +697,7 @@ body {
 .p-datatable-header .p-component {
   font-size: 14px;
   /* Adjust the font size as needed */
-  font-weight: lighter;
+  font-weight: 400;
 }
 
 .p-menuitem-content {
