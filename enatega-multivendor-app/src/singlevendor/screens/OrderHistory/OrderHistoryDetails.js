@@ -67,8 +67,9 @@ const OrderHistoryDetails = () => {
     orderItems,
     initialOrder
   } = useOrderConfirmation({ orderId })
+  console.log('orderId_from_order_history_details', orderId);
+  
 
-  console.log('initialOrder_Data:', initialOrder)
   // Transform order items to match CartItem structure
   const transformedItems = orderItems?.map((item) => ({
     foodId: item._id || item.food,
@@ -89,8 +90,12 @@ const OrderHistoryDetails = () => {
   })) || []
 
 
-  const scheduledDate = initialOrder?.preparationTime || initialOrder?.expectedTime || initialOrder?.createdAt
-  const scheduledTime = initialOrder?.preparationTime || initialOrder?.expectedTime || initialOrder?.createdAt
+  const formattedStatus =
+  initialStatus
+    ?.toLowerCase()
+    .replace(/^\w/, c => c.toUpperCase());
+
+  const scheduledDate =  initialOrder?.orderStatus=== "PENDING" ? initialOrder?.orderDate : initialOrder?.orderStatus=== "ASSIGNED" ? initialOrder?.assignedAt : initialOrder?.orderStatus ==="DELIVERED" ? initialOrder?.deliveredAt : initialOrder?.orderStatus ==="SCHEDULED" ? initialOrder?.scheduledAt : initialOrder?.orderStatus === "CANCELLED" ? initialOrder?.cancelledAt :initialOrder?.orderStatus === "PICKED" ? initialOrder?.pickedAt :initialOrder?.orderStatus === "ACCEPTED" ? initialOrder?.acceptedAt : null
 
   const handleIncreaseTip = () => {
     tipBottomSheetRef.current?.open()
@@ -186,7 +191,7 @@ const OrderHistoryDetails = () => {
               style={themedStyles.sectionTitle}
               bolder
             >
-              {t('Scheduled for') || 'Scheduled for'}
+             {formattedStatus} {t('at')}
             </TextDefault>
             <View style={themedStyles.scheduledRow}>
               <Feather
@@ -281,7 +286,7 @@ const OrderHistoryDetails = () => {
 
       {/* Action Buttons */}
       <View style={themedStyles.buttonContainer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={themedStyles.increaseTipButton}
           onPress={handleIncreaseTip}
           activeOpacity={0.7}
@@ -293,7 +298,7 @@ const OrderHistoryDetails = () => {
           >
             {t('Increase the tip') || 'Increase the tip'}
           </TextDefault>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={themedStyles.trackProgressButton}

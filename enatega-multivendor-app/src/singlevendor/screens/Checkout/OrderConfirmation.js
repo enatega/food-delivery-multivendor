@@ -14,6 +14,7 @@ import { textStyles } from '../../../utils/textStyles'
 import { OrderStatusTimeline, ORDER_STATUSES, DeliveryTimeBanner, DeliveryDetailsCard, ContactCourierCard, OrderItemsSection, DeliveryMap, DeliveredStatus } from '../../components/Checkout/OrderConfirmation'
 
 import OrderSummary from '../../components/Checkout/OrderSummary'
+import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import styles from './OrderConfirmationStyles'
 
 import useOrderConfirmation from './useOrderConfirmation'
@@ -180,6 +181,10 @@ const OrderConfirmation = (props) => {
     navigation.navigate('ChatWithRider', { id: orderId, orderNo, total, riderPhone })
   }
 
+  const handleOrderAgain = () => {
+    console.log('Order again function called')
+  }
+
   // ----------------------------------
   // 7️⃣ UI
   // ----------------------------------
@@ -214,7 +219,14 @@ const OrderConfirmation = (props) => {
       {/* STICKY SUMMARY */}
       <View style={styles(currentTheme).stickyBottomContainer}>
         <OrderSummary priorityDeliveryFee={isPriority ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={minimumOrderFee} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={tipAmount} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />
-      </View>
+        {(isDelivered || isCancelled) && (
+          <TouchableOpacity style={styles(currentTheme).orderAgainButton} onPress={handleOrderAgain}>
+            <TextDefault H4 textColor={currentTheme.white} center bold>
+              {t('Order again')}
+            </TextDefault>
+          </TouchableOpacity>
+        )}
+      </View>      
     </View>
   )
 }

@@ -47,6 +47,15 @@ const styles = (props = null) =>
     helpButton: {
       ...alignment.PRsmall,
       padding: scale(8)
+    },
+    orderAgainButton: {
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: scale(50),
+      backgroundColor: props !== null ? props.singlevendorcolor : '#0EA5E9',
+      borderRadius: scale(8),
+      marginTop: scale(12)
     }
   });
 
