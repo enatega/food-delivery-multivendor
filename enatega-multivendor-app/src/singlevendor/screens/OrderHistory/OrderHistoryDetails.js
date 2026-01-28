@@ -22,6 +22,7 @@ import styles from './OrderHistoryDetailStyle'
 import useOrderConfirmation from '../Checkout/useOrderConfirmation'
 import ConfigurationContext from '../../../context/Configuration'
 import { OrderSummary } from '../../components/Checkout'
+import { formatDateTime } from '../../../utils/formatDateTime'
 
 const OrderHistoryDetails = () => {
   const route = useRoute()
@@ -66,6 +67,8 @@ const OrderHistoryDetails = () => {
     orderItems,
     initialOrder
   } = useOrderConfirmation({ orderId })
+
+  console.log('initialOrder_Data:', initialOrder)
   // Transform order items to match CartItem structure
   const transformedItems = orderItems?.map((item) => ({
     foodId: item._id || item.food,
@@ -85,29 +88,6 @@ const OrderHistoryDetails = () => {
     ]
   })) || []
 
-  // Format date for scheduled section
-  const formatDate = (dateString) => {
-    if (!dateString) return ''
-    const date = new Date(dateString)
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    const day = days[date.getDay()]
-    const month = months[date.getMonth()]
-    const dayNum = date.getDate()
-    return `${day}, ${month} ${dayNum}`
-  }
-
-  const formatTime = (dateString) => {
-    if (!dateString) return ''
-    const date = new Date(dateString)
-    let hours = date.getHours()
-    const minutes = date.getMinutes()
-    const ampm = hours >= 12 ? 'PM' : 'AM'
-    hours = hours % 12
-    hours = hours ? hours : 12
-    const minutesStr = minutes < 10 ? '0' + minutes : minutes
-    return `${hours}:${minutesStr} ${ampm}`
-  }
 
   const scheduledDate = initialOrder?.preparationTime || initialOrder?.expectedTime || initialOrder?.createdAt
   const scheduledTime = initialOrder?.preparationTime || initialOrder?.expectedTime || initialOrder?.createdAt
@@ -219,7 +199,7 @@ const OrderHistoryDetails = () => {
                 textColor={currentTheme.fontMainColor}
                 style={themedStyles.scheduledText}
               >
-                {formatDate(scheduledDate)}. {formatTime(scheduledTime)}
+                {formatDateTime(scheduledDate)}
               </TextDefault>
             </View>
           </View>
