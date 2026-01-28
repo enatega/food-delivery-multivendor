@@ -97,7 +97,7 @@ export default function OrderCheckoutScreen() {
   const [distance, setDistance] = useState("0.0");
   const [shouldLeaveAtDoor, setShouldLeaveAtDoor] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(
-    PAYMENT_METHOD_LIST[0].value
+    PAYMENT_METHOD_LIST[0].value,
   );
   const [taxValue, setTaxValue] = useState();
   const [directions, setDirections] =
@@ -124,6 +124,8 @@ export default function OrderCheckoutScreen() {
     fetchProfile,
     loadingProfile,
   } = useUser();
+
+  console.log(cart, "cart");
   const { userAddress } = useUserAddress();
   const restaurantFromLocalStorage = localStorage.getItem("restaurant");
   const { data: restaurantData } = useRestaurant(restaurantId || "") || {
@@ -145,7 +147,7 @@ export default function OrderCheckoutScreen() {
       } catch (error) {
         console.error(
           "Error parsing restaurant data from localStorage:",
-          error
+          error,
         );
       }
     }
@@ -186,7 +188,7 @@ export default function OrderCheckoutScreen() {
         onUseLocalStorage(
           "save",
           COUPON_STORAGE_KEY,
-          JSON.stringify(coupon.coupon)
+          JSON.stringify(coupon.coupon),
         );
         onUseLocalStorage("save", COUPON_TEXT_STORAGE_KEY, couponText);
         onUseLocalStorage("save", COUPON_APPLIED_STORAGE_KEY, "true");
@@ -252,7 +254,7 @@ export default function OrderCheckoutScreen() {
       const savedCouponText = onUseLocalStorage("get", COUPON_TEXT_STORAGE_KEY);
       const savedCouponApplied = onUseLocalStorage(
         "get",
-        COUPON_APPLIED_STORAGE_KEY
+        COUPON_APPLIED_STORAGE_KEY,
       );
       const savedRestaurantId = onUseLocalStorage("get", COUPON_RESTAURANT_KEY);
 
@@ -351,7 +353,7 @@ export default function OrderCheckoutScreen() {
   const store_user_location_cache_key = `${origin?.lat},${origin?.lng}_${destination?.lat},${destination?.lng}`;
 
   const [orderInstructions, setOrderInstructions] = useState<string | null>(
-    null
+    null,
   );
   const { theme } = useTheme();
 
@@ -382,7 +384,7 @@ export default function OrderCheckoutScreen() {
     return () =>
       window.removeEventListener(
         "orderInstructionsUpdated",
-        handleCustomUpdate
+        handleCustomUpdate,
       );
   }, []);
 
@@ -394,13 +396,13 @@ export default function OrderCheckoutScreen() {
       onCompleted,
       onError,
       update,
-    }
+    },
   );
   const [verifyCoupon, { loading: couponLoading }] = useMutation(
     VERIFY_COUPON,
     {
       onCompleted: couponCompleted,
-    }
+    },
   );
 
   console.log("Tipps from admin:", tipData);
@@ -442,7 +444,7 @@ export default function OrderCheckoutScreen() {
     try {
       const stored_direction = onUseLocalStorage(
         "get",
-        store_user_location_cache_key
+        store_user_location_cache_key,
       );
       if (stored_direction) {
         setDirections(JSON.parse(stored_direction));
@@ -472,7 +474,7 @@ export default function OrderCheckoutScreen() {
     let amount = calculateAmount(
       COST_TYPE as OrderTypes.TCostType,
       DELIVERY_RATE,
-      distance
+      distance,
     );
     setDistance(distance.toFixed(2));
     setDeliveryCharges(amount > 0 ? amount : DELIVERY_RATE);
@@ -507,7 +509,7 @@ export default function OrderCheckoutScreen() {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const todaysTimings = finalRestaurantData.restaurant.openingTimes?.find(
-      (o: any) => o.day === DAYS[day]
+      (o: any) => o.day === DAYS[day],
     );
 
     if (!todaysTimings) return false;
@@ -517,7 +519,7 @@ export default function OrderCheckoutScreen() {
         hours >= Number(t.startTime[0]) &&
         minutes >= Number(t.startTime[1]) &&
         hours <= Number(t.endTime[0]) &&
-        minutes <= Number(t.endTime[1])
+        minutes <= Number(t.endTime[1]),
     );
 
     return times.length > 0;
@@ -775,6 +777,7 @@ export default function OrderCheckoutScreen() {
 
     if (checkPaymentMethod(CURRENCY, paymentMethod)) {
       const items = transformOrder(cart);
+      console.log("items", items);
 
       placeOrder({
         variables: {
@@ -827,14 +830,14 @@ export default function OrderCheckoutScreen() {
       router.replace(`/paypal?id=${data.placeOrder._id}`);
     } else if (paymentMethod === "STRIPE") {
       router.replace(
-        `${SERVER_URL}stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`
+        `${SERVER_URL}stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`,
       );
     }
   }
 
   function update(
     cache: ApolloCache<any>,
-    { data }: { data?: { placeOrder: IOrder } }
+    { data }: { data?: { placeOrder: IOrder } },
   ) {
     const placeOrder = data?.placeOrder;
 
@@ -917,13 +920,13 @@ export default function OrderCheckoutScreen() {
         onUseLocalStorage(
           "save",
           store_user_location_cache_key,
-          JSON.stringify(result)
+          JSON.stringify(result),
         );
       } else {
         console.error("Directions request failed due to", status);
       }
     },
-    []
+    [],
   );
 
   // Filter PAYMENT_METHOD_LIST based on stripeDetailsSubmitted
@@ -1189,7 +1192,7 @@ export default function OrderCheckoutScreen() {
                                   + {optionTitle}
                                 </p>
                               );
-                            }
+                            },
                           )}
                         </div>
                         <p className="text-secondary-color font-semibold text-sm sm:text-base md:text-[11px] lg:text-[12px] xl:text-[14px]">
@@ -1210,15 +1213,15 @@ export default function OrderCheckoutScreen() {
                 onClick={() => {
                   const currentShopType = onUseLocalStorage(
                     "get",
-                    "currentShopType"
+                    "currentShopType",
                   );
                   const restaurantId = onUseLocalStorage("get", "restaurant");
                   const restaurantSlug = onUseLocalStorage(
                     "get",
-                    "restaurant-slug"
+                    "restaurant-slug",
                   );
                   router.replace(
-                    `/${currentShopType}/${restaurantSlug}/${restaurantId}`
+                    `/${currentShopType}/${restaurantSlug}/${restaurantId}`,
                   );
                 }}
               >
@@ -1304,7 +1307,7 @@ export default function OrderCheckoutScreen() {
                           {tip !== "Other" ? CURRENCY_SYMBOL : ""}
                           {tip}
                         </button>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
