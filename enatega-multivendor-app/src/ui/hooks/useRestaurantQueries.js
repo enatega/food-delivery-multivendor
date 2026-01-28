@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   mostOrderedRestaurantsQuery,
   recentOrderRestaurantsQuery,
@@ -84,8 +84,8 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
   const query = getQuery(queryType)
 
   const queryVariables = {
-    longitude: location.longitude || null,
-    latitude: location.latitude || null
+    longitude: location?.longitude || null,
+    latitude: location?.latitude || null
   }
 
   if (['grocery', 'restaurant','topPicks'].includes(queryType)) {
@@ -95,11 +95,15 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
 
   const { data, refetch, networkStatus, loading, error } = useQuery(query, {
     variables: queryVariables,
-    onCompleted: (data) => {
-      getResult(queryType, data, setRestaurantData, setAllData, selectedType)
-    },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
+    skip: !location || !location.longitude || !location.latitude
   })
+
+  useEffect(() => {
+    if (data) {
+      getResult(queryType, data, setRestaurantData, setAllData, selectedType)
+    }
+  }, [data, queryType, selectedType])
 
   const handleRefresh = () => {
     if (networkStatus === 7) {

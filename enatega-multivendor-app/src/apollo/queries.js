@@ -336,6 +336,7 @@ export const profile = `
             isActive
             isOrderNotification
             isOfferNotification
+            walletBalance
             addresses{
               _id
               label
@@ -1208,6 +1209,65 @@ export const GET_REFERRAL_ACTIVITIES = gql`
         _id
         name
       }
+    }
+  }
+`
+
+export const GET_USER_LOYALTY_DATA = gql`
+  query GetUserLoyaltyData {
+    fetchUserLoyaltyData {
+      totalEarnedPoints
+      pointsBalance
+      loyaltyPoints
+      referralPoints
+      tier {
+        _id
+        name
+        points
+      }
+    }
+    fetchLoyaltyConfiguration {
+      _id
+      pointsPerDollar
+    }
+  }
+`
+
+export const GET_REFERRAL_DATA_BY_LEVELS = gql`
+  query GetReferralDataByLevels($userId: String!) {
+    fetchReferralLoyaltyHistory(filter: { userId: $userId }) {
+      _id
+      user_name
+      user_rank
+      type
+      source
+      level
+      value
+      triggeredBy
+      createdAt
+    }
+  }
+`
+
+export const FETCH_LOYALTY_TIERS = gql`
+  query FetchLoyaltyTiers {
+    fetchLoyaltyTiers {
+      _id
+      name
+      points
+    }
+  }
+`
+
+export const GET_LOYALTY_POINTS_BREAKDOWN = gql`
+  query GetLoyaltyPointsBreakdown($userId: String!) {
+    fetchReferralLoyaltyHistory(filter: { userId: $userId }) {
+      _id
+      type
+      source
+      level
+      value
+      createdAt
     }
   }
 `

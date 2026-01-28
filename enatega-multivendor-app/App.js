@@ -36,6 +36,7 @@ import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
 import * as Clarity from '@microsoft/react-native-clarity'
 import { initializeBranch } from './src/utils/branch.io'
+import ReferralManager from './src/ui/ReferralManager'
 
 // LogBox.ignoreLogs([
 //   // 'Warning: ...',
@@ -289,6 +290,7 @@ export default function App() {
                   <UserProvider>
                     <OrdersProvider>
                       <AppContainer />
+                      <ReferralManager />
                       <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
                     </OrdersProvider>
                   </UserProvider>

@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google' // iOS-specific Google import
 import { getStoredReferralCode } from '../../utils/branch.io'
+import { getReferralCode, clearReferralCode } from '../../utils/referralStorage'
 WebBrowser.maybeCompleteAuthSession() // Important for Expo Auth Session
 
 const LOGIN = gql`
@@ -176,13 +177,19 @@ export const useCreateAccount = () => {
       }
 
       const referralData = await getStoredReferralCode()
-      const referralCode = referralData?.code || null
+      const branchReferralCode = referralData?.code || null
+      const storedReferralCode = await getReferralCode()
+      const finalReferralCode = storedReferralCode || branchReferralCode
+      
+      console.log('🔗 [REFERRAL DEBUG] Branch referral code:', branchReferralCode)
+      console.log('🔗 [REFERRAL DEBUG] Stored referral code:', storedReferralCode)
+      console.log('🔗 [REFERRAL DEBUG] Final referral code to send:', finalReferralCode)
 
       mutate({
         variables: {
           ...user,
           notificationToken: notificationToken,
-          ...(referralCode && { referralCode: referralCode })
+          referralCode: finalReferralCode
         }
       })
     } catch (error) {
@@ -210,8 +217,10 @@ export const useCreateAccount = () => {
 
   // --- Common Login Success Handler ---
   async function onCompleted(data) {
-    console.log('✅ [Login Debug] Login mutation completed successfully')
-    console.log('✅ [Login Debug] Response data:', data)
+    console.log('✅ [LOGIN DEBUG] Login mutation completed successfully')
+    console.log('✅ [LOGIN DEBUG] Response data:', data)
+    console.log('✅ [LOGIN DEBUG] Is new user:', data?.login?.isNewUser)
+    console.log('✅ [LOGIN DEBUG] Current login button:', loginButton)
     
     if (data.login.isActive === false) {
       FlashMessage({ message: t('accountDeactivated') })
@@ -231,19 +240,65 @@ export const useCreateAccount = () => {
       // Small delay to ensure token is available for Apollo client
       await new Promise(resolve => setTimeout(resolve, 500))
       
-      // Clear any existing navigation state
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
-            params: data?.login?.phone === '' ? {
-              name: googleUser,
-              phone: ''
-            } : undefined
-          }
-        ]
-      })
+      // Check if user is new and from social login
+      if (data.login.isNewUser && (loginButton === 'Google' || loginButton === 'Apple')) {
+        console.log('🔗 [REFERRAL DEBUG] New user detected, checking referral flow...')
+        
+        const storedReferralCode = await getReferralCode()
+        
+        if (storedReferralCode) {
+          // User has referral code stored, proceed without showing referral screen
+          console.log('🔗 [REFERRAL DEBUG] Going directly to main (had stored referral)')
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
+                params: data?.login?.phone === '' ? {
+                  name: googleUser,
+                  phone: ''
+                } : undefined
+              }
+            ]
+          })
+        } else {
+          // No referral code stored, show entry screen
+          console.log('🔗 [REFERRAL DEBUG] Navigating to ReferralCodeEntry screen')
+          navigation.navigate('ReferralCodeEntry', { 
+            isNewUser: true,
+            onComplete: () => {
+              console.log('🔗 [REFERRAL DEBUG] ReferralCodeEntry completed, going to main')
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
+                    params: data?.login?.phone === '' ? {
+                      name: googleUser,
+                      phone: ''
+                    } : undefined
+                  }
+                ]
+              })
+            }
+          })
+        }
+      } else {
+        // Existing user login - no referral handling
+        console.log('🔗 [REFERRAL DEBUG] Existing user or non-social login, going to main')
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
+              params: data?.login?.phone === '' ? {
+                name: googleUser,
+                phone: ''
+              } : undefined
+            }
+          ]
+        })
+      }
       
       FlashMessage({ message: 'Successfully logged in' })
     } catch (error) {

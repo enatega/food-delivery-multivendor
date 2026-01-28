@@ -382,7 +382,7 @@ function Menu({ route, props }) {
           }}
         >
           <View style={styles(currentTheme).addressSubContainer}>
-            <AntDesign name='pluscircleo' size={scale(20)} color={currentTheme.black} />
+            <AntDesign name='pluscircle' size={scale(20)} color={currentTheme.black} />
             <View style={styles().mL5p} />
             <TextDefault bold textColor={currentTheme.black}>
               {t('addAddress')}
@@ -547,108 +547,110 @@ function Menu({ route, props }) {
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
-      <ScrollView style={[styles(currentTheme).container]} stickyHeaderIndices={[2]} nestedScrollEnabled={true}>
-        <View style={[styles(currentTheme).header, { paddingHorizontal: 10, paddingVertical: 6 }]}>
+      <Animated.FlatList
+        contentInset={{ top: containerPaddingTop }}
+        contentContainerStyle={{
+          paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
+          paddingBottom: HEIGHT * 0.34
+        }}
+        contentOffset={{ y: -containerPaddingTop }}
+        onScroll={onScroll}
+        scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
           <View>
-            <TextDefault bolder H2 isRTL>
-              {t(heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants')}
-            </TextDefault>
-            <TextDefault bold H5 isRTL>
-              {t('BrowseCuisines')}
-            </TextDefault>
-          </View>
-          <Ripple
-            style={styles(currentTheme).seeAllBtn}
-            activeOpacity={0.8}
-            onPress={() => {
-              navigation.navigate('Collection', {
-                collectionType: routeData?.name,
-                data: collectionData
-              })
-            }}
-          >
-            <TextDefault H5 bolder textColor={currentTheme.main}>
-              {t('SeeAll')}
-            </TextDefault>
-          </Ripple>
-        </View>
-        <View style={{ paddingLeft: 10, paddingRight: 10, paddingHorizontal: '5' }}>
-          <FlatList
-            ref={flatListRef}
-            data={collectionData ?? []}
-            renderItem={({ item, index }) => {
-              setCurrentIndex(index)
-              return (
-                <Ripple
-                  activeOpacity={0.8}
-                  onPress={() => onPressCollection(item, index)}
-                  style={[
-                    styles(currentTheme).collectionCard,
-                    activeCollection === item.name && {
-                      backgroundColor: currentTheme.newButtonBackground
-                    }
-                  ]}
-                >
-                  <View style={[styles().brandImgContainer]}>
-                    <View>
-                      <Image source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
+            <View style={[styles(currentTheme).header, { paddingHorizontal: 10, paddingVertical: 6 }]}>
+              <View>
+                <TextDefault bolder H2 isRTL>
+                  {t(heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants')}
+                </TextDefault>
+                <TextDefault bold H5 isRTL>
+                  {t('BrowseCuisines')}
+                </TextDefault>
+              </View>
+              <Ripple
+                style={styles(currentTheme).seeAllBtn}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('Collection', {
+                    collectionType: routeData?.name,
+                    data: collectionData
+                  })
+                }}
+              >
+                <TextDefault H5 bolder textColor={currentTheme.main}>
+                  {t('SeeAll')}
+                </TextDefault>
+              </Ripple>
+            </View>
+            <View style={{ paddingLeft: 10, paddingRight: 10, paddingHorizontal: '5' }}>
+              <FlatList
+                ref={flatListRef}
+                data={collectionData ?? []}
+                renderItem={({ item, index }) => (
+                  <Ripple
+                    activeOpacity={0.8}
+                    onPress={() => onPressCollection(item, index)}
+                    style={[
+                      styles(currentTheme).collectionCard,
+                      activeCollection === item.name && {
+                        backgroundColor: currentTheme.newButtonBackground
+                      }
+                    ]}
+                  >
+                    <View style={[styles().brandImgContainer]}>
+                      <View>
+                        <Image source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
+                      </View>
+                      <TextDefault Normal bolder style={{ padding: 4 }} textColor={activeCollection === item.name ? currentTheme.main : currentTheme.gray700} isRTL>
+                        {item.name}
+                      </TextDefault>
                     </View>
-                    <TextDefault Normal bolder style={{ padding: 4 }} textColor={activeCollection === item.name ? currentTheme.main : currentTheme.gray700} isRTL>
-                      {item.name}
-                    </TextDefault>
-                  </View>
-                </Ripple>
-              )
+                  </Ripple>
+                )}
+                initialScrollIndex={0}
+                keyExtractor={(item) => item?._id}
+                contentContainerStyle={styles().collectionContainer}
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                inverted={currentTheme?.isRTL ? true : false}
+                getItemLayout={getItemLayout}
+              />
+            </View>
+            <View style={{ backgroundColor: currentTheme?.toggler }}>
+              {restaurantData?.length === 0 ? null : (
+                <ActiveOrdersAndSections 
+                  menuPageHeading={heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants'} 
+                  subHeading={subHeading ? subHeading : ''} 
+                />
+              )}
+            </View>
+            {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
+          </View>
+        }
+        ListEmptyComponent={emptyView()}
+        keyExtractor={(item, index) => index.toString()}
+        refreshControl={
+          <RefreshControl
+            progressViewOffset={containerPaddingTop}
+            colors={[currentTheme.iconColorPink]}
+            refreshing={networkStatus === 4}
+            onRefresh={() => {
+              if (networkStatus === 7) {
+                refetch()
+              }
             }}
-            initialScrollIndex={0}
-            keyExtractor={(item) => item?._id}
-            contentContainerStyle={styles().collectionContainer}
-            // showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            inverted={currentTheme?.isRTL ? true : false}
-            getItemLayout={getItemLayout}
           />
-        </View>
-
-        <View style={{ backgroundColor: currentTheme?.toggler }}>{restaurantData?.length === 0 ? null : <ActiveOrdersAndSections menuPageHeading={heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants'} subHeading={subHeading ? subHeading : ''} />}</View>
-
-        {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
-        <Animated.FlatList
-          contentInset={{ top: containerPaddingTop }}
-          contentContainerStyle={{
-            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
-            paddingBottom: HEIGHT * 0.34,
-            padding: 15,
-            gap: 16
-          }}
-          contentOffset={{ y: -containerPaddingTop }}
-          onScroll={onScroll}
-          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={emptyView()}
-          keyExtractor={(item, index) => index.toString()}
-          refreshControl={
-            <RefreshControl
-              progressViewOffset={containerPaddingTop}
-              colors={[currentTheme.iconColorPink]}
-              refreshing={networkStatus === 4}
-              onRefresh={() => {
-                if (networkStatus === 7) {
-                  refetch()
-                }
-              }}
-            />
+        }
+        data={sortRestaurantsByOpenStatus(restaurantData || [])}
+        renderItem={({ item }) => {
+          if (item && item?.image && item?._id) {
+            const restaurantOpen = isOpen(item)
+            return <NewRestaurantCard {...item} fullWidth isOpen={restaurantOpen} />
           }
-          data={sortRestaurantsByOpenStatus(restaurantData || [])}
-          renderItem={({ item }) => {
-            if (item && item?.image && item?._id) {
-              const restaurantOpen = isOpen(item)
-              return <NewRestaurantCard {...item} fullWidth isOpen={restaurantOpen} />
-            }
-          }}
-        />
-      </ScrollView>
+        }}
+        style={{ padding: 15, gap: 16 }}
+      />
       <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
       <Modalize
         ref={filtersModalRef}

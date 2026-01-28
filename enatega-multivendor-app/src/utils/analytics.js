@@ -6,7 +6,7 @@ import { getTrackingPermissions } from './useAppTrackingTrasparency'
 const Analytics = () => {
   const { AMPLITUDE_API_KEY } = useEnvVars()
   let isInitialized = false
-  const apiKey = AMPLITUDE_API_KEY
+  const apiKey = null // Disabled amplitude
 
   const events = {
     USER_LOGGED_IN: 'USER_LOGGED_IN',
@@ -98,7 +98,10 @@ const Analytics = () => {
   }
 
   useEffect(() => {
-    initialize()
+    const initAnalytics = async () => {
+      await initialize()
+    }
+    initAnalytics()
   }, [])
 
   return {

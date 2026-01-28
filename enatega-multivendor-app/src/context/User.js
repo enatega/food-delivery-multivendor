@@ -96,6 +96,13 @@ export const UserProvider = (props) => {
           deliveryAddress: location.deliveryAddress
         })
       }
+      
+      // Clear referral code on logout
+      const { clearStoredReferralCode } = require('../utils/branch.io')
+      const { clearReferralCode } = require('../utils/referralStorage')
+      await clearStoredReferralCode()
+      await clearReferralCode()
+      
       client.cache.evict({
         id: `${dataProfile?.profile?.__typename}:${dataProfile?.profile?._id}`
       })

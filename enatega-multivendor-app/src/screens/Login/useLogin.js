@@ -14,6 +14,8 @@ import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import { getStoredReferralCode } from '../../utils/branch.io'
+import { getReferralCode } from '../../utils/referralStorage'
 
 const LOGIN = gql`
   ${login}
@@ -141,13 +143,18 @@ export const useLogin = () => {
           name: data.login.name,
           email: data.login.email
         })
+        
         setTokenAsync(data.login.token)
         navigation.navigate({
           name: 'Main',
           merge: true
         })
       } catch (e) {
-        console.log(e)
+        setTokenAsync(data.login.token)
+        navigation.navigate({
+          name: 'Main',
+          merge: true
+        })
       }
     }
   }
@@ -182,12 +189,15 @@ export const useLogin = () => {
             message: t('errorWhileGettingNotificationToken'),
           })
         }
+        
+        // For email login, don't send referral code (existing user)
         LoginMutation({
           variables: {
             email,
             password,
             type: 'default',
             notificationToken
+            // No referralCode for existing users
           }
         })
       }
