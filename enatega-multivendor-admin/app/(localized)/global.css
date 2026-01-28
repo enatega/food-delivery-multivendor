@@ -435,6 +435,10 @@ body {
   position: relative;
 }
 
+.dark .fa-plus {
+  color: white !important;
+}
+
 .text-icon-clickable-container>span {
   font-size: 0.2rem;
   /* equivalent to text-xs */
@@ -697,7 +701,7 @@ body {
 .p-datatable-header .p-component {
   font-size: 14px;
   /* Adjust the font size as needed */
-  font-weight: lighter;
+  font-weight: 400;
 }
 
 .p-menuitem-content {
