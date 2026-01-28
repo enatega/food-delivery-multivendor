@@ -26,7 +26,8 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false,
 
   const onProductPress = useCallback((id) => {
     navigation.navigate('ProductDetails', {
-      productId: id
+      productId: id,
+      categoryId: data?.[0]?.categoryId
     })
   }, [navigation])
 

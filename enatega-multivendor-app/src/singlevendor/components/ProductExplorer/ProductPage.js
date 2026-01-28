@@ -66,7 +66,8 @@ const ProductPage = ({ category, pageIndex }) => {
 
   const onCardPress = (itemId) => {
     navigation.navigate('ProductDetails', {
-      productId: itemId
+      productId: itemId,
+       categoryId:category?.categoryId
     })
   }
 

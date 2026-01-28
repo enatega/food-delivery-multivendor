@@ -97,7 +97,7 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
 
   const onProductPress = (id) => {
     onClose?.()
-    navigation.navigate('ProductDetails', { productId: id })
+    navigation.navigate('ProductDetails', { productId: id, categoryId })
   }
 
   const dataSource = isPaginated ? listData : filteredLocalItems

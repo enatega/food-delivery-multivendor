@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 import LoadingSkeleton from './LoadingSkeleton'
 import HorizontalProductsEmptyView from './HorizontalProductsEmptyView'
 
-const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, showSeeAll = true, viewType, setSearchVisible,containerStyles }) => {
+const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, showSeeAll = true, viewType, setSearchVisible,containerStyles, categoryId }) => {
   const { i18n, t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
@@ -32,7 +32,8 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
 
   const onProductPress = (id) => {
     navigation.navigate('ProductDetails', {
-      productId: id
+      productId: id,
+      categoryId
     })
   }
 

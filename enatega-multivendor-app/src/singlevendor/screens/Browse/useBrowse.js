@@ -75,9 +75,10 @@ const useBrowse = () => {
     }, 100)
   }
 
-  const onProductPress = (id) => {
+  const onProductPress = (id, categoryId) => {
     navigation.navigate('ProductDetails', {
-      productId: id
+      productId: id,
+      categoryId: categoryId
     })
     setTimeout(() => {
       setModalVisible(false)

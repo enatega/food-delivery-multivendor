@@ -18,8 +18,8 @@ import useAddToCart from './useAddToCart'
 import FloatingCartButton from '../../components/Cart/FloatingCartButton'
 
 const ProductDetails = ({ route }) => {
-  const { productId } = route?.params
-  const { loading, productInfoData, productOtherDetails } = useProductDetails({ foodId: productId })
+  const { productId, categoryId } = route?.params
+  const { loading, productInfoData, productOtherDetails } = useProductDetails({ foodId: productId, categoryId })
   const { t, currentTheme, addItemToCart, updateUserCartLoading } = useAddToCart({ foodId: productId })
   const navigation = useNavigation()
 

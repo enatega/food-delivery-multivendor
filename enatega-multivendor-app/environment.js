@@ -28,7 +28,12 @@ const useEnvVars = (env = Updates.channel) => {
     }
   }
 
-  return {
+  return {  
+    // GRAPHQL_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/graphql',
+    // WS_GRAPHQL_URL: 'wss://jrdw550n-8001.inc1.devtunnels.ms/graphql',
+    // SERVER_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/graphql',
+    // SERVER_REST_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/',
+      
     GRAPHQL_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
     WS_GRAPHQL_URL: 'wss://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
     SERVER_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
