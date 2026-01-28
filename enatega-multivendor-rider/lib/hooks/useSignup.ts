@@ -22,6 +22,7 @@ export default function useSignup() {
         zone: values.zone,
         madeBy: "RIDER_REQUEST",
         riderRequestStatus: "PENDING",
+        ...(values.referralCode && { referralCode: values.referralCode }),
       };
 
       const response = await createRider({

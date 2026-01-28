@@ -30,6 +30,7 @@ const initialValues: ISignUpInitialValues = {
   phone: "",
   vehicleType: "",
   zone: "",
+  referralCode: "",
 };
 
 export default function SignUpForm({
@@ -118,6 +119,16 @@ export default function SignUpForm({
             onSelect={(zoneId) => setFieldValue("zone", zoneId)}
             error={touched.zone ? errors.zone : undefined}
             loading={zonesLoading}
+          />
+
+          <FormInput
+            label={t("Referral Code (Optional)")}
+            placeholder={t("Enter referral code")}
+            value={values.referralCode}
+            onChangeText={handleChange("referralCode")}
+            onBlur={handleBlur("referralCode") as any}
+            error={touched.referralCode ? errors.referralCode : undefined}
+            icon="gift"
           />
 
           <CustomContinueButton

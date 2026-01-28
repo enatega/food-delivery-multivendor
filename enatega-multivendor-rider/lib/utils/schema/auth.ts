@@ -31,4 +31,7 @@ export const SignUpSchema = Yup.object().shape({
     .required("Phone number is required"),
   vehicleType: Yup.string().required("Vehicle type is required"),
   zone: Yup.string().required("Zone is required"),
+  referralCode: Yup.string()
+    .min(3, "Referral code must be at least 3 characters")
+    .optional(),
 });

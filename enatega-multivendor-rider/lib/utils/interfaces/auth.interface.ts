@@ -18,6 +18,7 @@ export interface ISignUpInitialValues {
   phone: string;
   vehicleType: string;
   zone: string;
+  referralCode?: string;
 }
 
 export interface IRiderInput {
@@ -31,6 +32,7 @@ export interface IRiderInput {
   zone: string;
   madeBy: "ADMIN" | "RIDER_REQUEST";
   riderRequestStatus: "PENDING" | "ACCEPTED";
+  referralCode?: string;
 }
 
 
