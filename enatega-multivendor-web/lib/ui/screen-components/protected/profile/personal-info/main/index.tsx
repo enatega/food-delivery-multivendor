@@ -88,8 +88,8 @@ export default function PersonalInfoMain() {
             <TextComponent
               text={
                 profileData?.profile?.phoneIsVerified
-                  ? t("Verified")
-                  : t("Not Verified")
+                  ? t("verified")
+                  : t("not_verified")
               }
               className={`text-sm font-medium ${profileData?.profile?.phoneIsVerified ? "text-blue-500" : "text-red-500"}`}
             />

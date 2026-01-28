@@ -368,6 +368,8 @@
   "confirm_reorder_button": "Confirm Reorder",
   "mobileNumberLabel": "Mobile Number",
   "notVerifiedButton": "Not Verified",
+  "verified": "Verified",
+  "not_verified": "Not Verified",
   "updatePhoneTitle": "Update phone number",
   "nameLabel": "Name",
   "updateNameTitle": "Update Name",
