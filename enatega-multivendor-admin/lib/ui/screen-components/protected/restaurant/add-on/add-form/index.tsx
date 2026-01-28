@@ -159,7 +159,6 @@ export default function AddonAddForm({
       type: 'error',
       title: t('Addons Fetch'),
       message: t('Addons fetch failed'),
-      duration: 2500,
     });
   }
 
