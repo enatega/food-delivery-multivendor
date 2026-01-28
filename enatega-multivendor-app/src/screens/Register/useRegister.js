@@ -10,6 +10,8 @@ import { phoneExist } from '../../apollo/mutations'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { Alert } from 'react-native'
 import { useCountryFromIP } from '../../utils/useCountryFromIP'
+import { getStoredReferralCode } from '../../utils/branch.io'
+import React from 'react'
 
 const PHONE = gql`
   ${phoneExist}
@@ -31,6 +33,29 @@ const useRegister = () => {
   const [emailError, setEmailError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
   const [phoneError, setPhoneError] = useState(null)
+  const [hasStoredReferralCode, setHasStoredReferralCode] = useState(false)
+
+  React.useEffect(() => {
+    const checkPendingReferral = async () => {
+      console.log('🔗 [REFERRAL DEBUG] Checking for pending referral code...')
+      const pendingReferral = await getStoredReferralCode()
+      
+      console.log('🔗 [REFERRAL DEBUG] Pending referral data:', pendingReferral)
+      
+      if (pendingReferral && pendingReferral.code) {
+        console.log('🔗 [REFERRAL DEBUG] Found stored referral code:', pendingReferral.code)
+        setHasStoredReferralCode(true)
+        if (!referralCode) {
+          setReferralCode(pendingReferral.code)
+          console.log('🔗 [REFERRAL DEBUG] Set referral code in state:', pendingReferral.code)
+        }
+      } else {
+        console.log('🔗 [REFERRAL DEBUG] No stored referral code found')
+      }
+    }
+    
+    checkPendingReferral()
+  }, [])
 
   const {
     country,
@@ -117,12 +142,9 @@ const useRegister = () => {
   }
 
   function onCompleted({ phoneExist }) {
-    console.log('phoneExist', phoneExist)
+    console.log('📧 [EMAIL REGISTER DEBUG] Phone check completed, navigating to OTP')
+    
     if (phoneExist  && phoneExist?.phone) {
-      // FlashMessage({
-      //   message: t('phoneNumberExist')
-      // })
-
       Alert.alert(
         '',
         t('AlreadyExsistsAlert'),
@@ -140,8 +162,7 @@ const useRegister = () => {
                   phone: '+'.concat(country.callingCode[0]).concat(phone),
                   email: email.toLowerCase().trim(),
                   password: password,
-                  name: firstname + ' ' + lastname,
-                  referralCode: referralCode.trim()
+                  name: firstname + ' ' + lastname
                 },
                 isPhoneExists: true
               })
@@ -156,8 +177,7 @@ const useRegister = () => {
           phone: '+'.concat(country.callingCode[0]).concat(phone),
           email: email.toLowerCase().trim(),
           password: password,
-          name: firstname + ' ' + lastname,
-          referralCode: referralCode.trim()
+          name: firstname + ' ' + lastname
         }
       })
     }
@@ -221,7 +241,8 @@ const useRegister = () => {
     setPhoneError,
     isCountryLoading,
     referralCode,
-    setReferralCode
+    setReferralCode,
+    hasStoredReferralCode
   }
 }
 

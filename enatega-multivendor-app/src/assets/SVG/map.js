@@ -2,23 +2,6 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import LottieView from "lottie-react-native";
 
-function MapIcon({ onPress, ...props }) {
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
-      {/* Lottie Animation */}
-      <LottieView
-        source={require("../SVG/location.json")}
-        autoPlay
-        loop
-        style={styles.lottie}
-        {...props}
-      />
-    </TouchableOpacity>
-  );
-}
-
-export default MapIcon;
-
 const styles = StyleSheet.create({
   container: {
     width: 32,
@@ -35,3 +18,20 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
+
+function MapIcon({ onPress, ...props }) {
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.container}>
+      {/* Lottie Animation */}
+      <LottieView
+        source={require("../SVG/location.json")}
+        autoPlay
+        loop
+        style={styles.lottie}
+        {...props}
+      />
+    </TouchableOpacity>
+  );
+}
+
+export default MapIcon;

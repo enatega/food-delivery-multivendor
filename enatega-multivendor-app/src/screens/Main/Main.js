@@ -83,12 +83,13 @@ function Main(props) {
     refetch: refetchRestaurants
   } = useQuery(RESTAURANTS, {
     variables: {
-      longitude: location?.longitude || null,
-      latitude: location?.latitude || null,
+      longitude: location?.longitude ?? null,
+      latitude: location?.latitude ?? null,
       shopType: null,
       ip: null
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
+    skip: !location || !location.longitude || !location.latitude
   })
 
   let filteredCuisines
@@ -186,9 +187,10 @@ function Main(props) {
     console.log('coords', coords.latitude)
     console.log('coords', coords.longitude)
 
-    if (!coords || !coords.latitude || !coords.longitude) {
-      console.error('Invalid coordinates:', coords)
+    if (error || !coords || !coords.latitude || !coords.longitude) {
+      console.error('Invalid coordinates or location error:', { error, coords })
       setBusy(false)
+      navigation.navigate('SelectLocation')
       return
     }
 
@@ -205,18 +207,14 @@ function Main(props) {
         address = address.substring(0, 21) + '...'
       }
 
-      if (error) {
-        navigation.navigate('SelectLocation')
-      } else {
-        modalRef.current?.close()
-        setLocation({
-          label: 'currentLocation',
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-          deliveryAddress: address
-        })
-        setBusy(false)
-      }
+      modalRef.current?.close()
+      setLocation({
+        label: 'currentLocation',
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        deliveryAddress: address
+      })
+      setBusy(false)
     } catch (fetchError) {
       console.error('Error fetching address using Google Maps API:', fetchError.message)
     }
@@ -291,7 +289,7 @@ function Main(props) {
           }}
         >
           <View style={styles(currentTheme).addressSubContainer}>
-            <AntDesign name='pluscircleo' size={scale(20)} color={currentTheme.black} />
+            <AntDesign name='plus-circle' size={scale(20)} color={currentTheme.black} />
             <View style={styles().mL5p} textColor={currentTheme.black} />
             <TextDefault bold textColor={currentTheme.black}>
               {t('addAddress')}

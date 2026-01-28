@@ -13,9 +13,9 @@ import {
   Platform,
   StatusBar,
   FlatList,
-  ScrollView,
-  SafeAreaView
+  ScrollView
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import gql from 'graphql-tag'
 import { scale, verticalScale } from '../../utils/scaling'
@@ -138,6 +138,7 @@ function Profile(props) {
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}
+      edges={['top', 'left', 'right']}
     >
       <ChangePassword
         modalVisible={modelVisible}
@@ -301,18 +302,17 @@ function Profile(props) {
                   currentTheme={currentTheme}
                 />
                 <ButtonContainer
-                  icon={'people-outline'}
-                  iconType={'Ionicons'}
-                  onPress={() => navigation.navigate('Help')}
-                  title={t('CustomerSupport')}
-                  currentTheme={currentTheme}
-                />
-                <View style={styles(currentTheme).line} />
-                <ButtonContainer
                   icon={'file-tray-stacked-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('MyOrders')}
                   title={t('OrderHistory')}
+                  currentTheme={currentTheme}
+                />
+                <ButtonContainer
+                  icon={'people-outline'}
+                  iconType={'Ionicons'}
+                  onPress={() => navigation.navigate('Help')}
+                  title={t('CustomerSupport')}
                   currentTheme={currentTheme}
                 />
                 <View style={styles(currentTheme).line} />

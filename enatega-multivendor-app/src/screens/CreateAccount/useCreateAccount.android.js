@@ -21,6 +21,7 @@ import AuthContext from '../../context/Auth' // Adjust path if necessary
 import { useTranslation } from 'react-i18next'
 import { GoogleSignin } from '@react-native-google-signin/google-signin' // Android-specific Google import
 import { getStoredReferralCode } from '../../utils/branch.io'
+import { getReferralCode, clearReferralCode } from '../../utils/referralStorage'
 
 const LOGIN = gql`
   ${login}
@@ -168,13 +169,15 @@ export const useCreateAccount = () => {
       })
 
       const referralData = await getStoredReferralCode()
-      const referralCode = referralData?.code || null
+      const branchReferralCode = referralData?.code || null
+      const storedReferralCode = await getReferralCode()
+      const finalReferralCode = storedReferralCode || branchReferralCode
 
       mutate({
         variables: {
           ...user,
           notificationToken: notificationToken,
-          ...(referralCode && { referralCode: referralCode })
+          referralCode: finalReferralCode
         }
       })
     } catch (error) {
@@ -239,19 +242,59 @@ export const useCreateAccount = () => {
       // Small delay to ensure token is available for Apollo client
       await new Promise(resolve => setTimeout(resolve, 500))
       
-      // Clear any existing navigation state
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
-            params: data?.login?.phone === '' ? {
-              name: googleUser,
-              phone: ''
-            } : undefined
-          }
-        ]
-      })
+      // Check if user is new and from social login, show referral screen
+      if (data.login.isNewUser && (loginButton === 'Google' || loginButton === 'Apple')) {
+        const storedReferralCode = await getReferralCode()
+        
+        if (storedReferralCode) {
+          // User has referral code stored, proceed without showing referral screen
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
+                params: data?.login?.phone === '' ? {
+                  name: googleUser,
+                  phone: ''
+                } : undefined
+              }
+            ]
+          })
+        } else {
+          // No referral code stored, show referral entry screen
+          navigation.navigate('ReferralCodeEntry', { 
+            isNewUser: true,
+            onComplete: () => {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
+                    params: data?.login?.phone === '' ? {
+                      name: googleUser,
+                      phone: ''
+                    } : undefined
+                  }
+                ]
+              })
+            }
+          })
+        }
+      } else {
+        // Existing user or non-social login, proceed normally
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: data?.login?.phone === '' ? 'PhoneNumber' : 'Main',
+              params: data?.login?.phone === '' ? {
+                name: googleUser,
+                phone: ''
+              } : undefined
+            }
+          ]
+        })
+      }
       
       FlashMessage({ message: 'Successfully logged in' })
       
