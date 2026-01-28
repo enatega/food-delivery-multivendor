@@ -200,8 +200,8 @@ function LoyaltyPoints(props) {
       flex: 1
     },
     listItemName: {
-      fontSize: 14,
-      fontWeight: '600',
+      fontSize: 12,
+      fontWeight: '400',
       color: currentTheme.fontMainColor,
       marginBottom: 2
     },
@@ -360,20 +360,17 @@ function LoyaltyPoints(props) {
         level1: referralTransactions.filter(t => t.level === 1).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
-          points: t.value,
-          date: new Date(t.createdAt).toLocaleDateString()
+          points: t.value
         })),
         level2: referralTransactions.filter(t => t.level === 2).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
-          points: t.value,
-          date: new Date(t.createdAt).toLocaleDateString()
+          points: t.value
         })),
         level3: referralTransactions.filter(t => t.level === 3).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
-          points: t.value,
-          date: new Date(t.createdAt).toLocaleDateString()
+          points: t.value
         }))
       }
       setReferralsByLevel(groupedReferrals)
@@ -507,7 +504,6 @@ function LoyaltyPoints(props) {
                     <View key={item.id} style={styles.listItem}>
                       <View style={styles.listItemLeft}>
                         <Text style={styles.listItemName}>{item.name}</Text>
-                        <Text style={styles.listItemDate}>{item.date}</Text>
                       </View>
                       <Text style={styles.listItemPoints}>+{item.points} pts</Text>
                     </View>
