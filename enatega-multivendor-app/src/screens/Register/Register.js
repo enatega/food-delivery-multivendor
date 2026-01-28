@@ -51,7 +51,8 @@ function Register(props) {
     setPhoneError,
     isCountryLoading,
     referralCode,
-    setReferralCode
+    setReferralCode,
+    hasStoredReferralCode
   } = useRegister()
 
   const { t } = useTranslation()
@@ -276,19 +277,6 @@ function Register(props) {
                   </View>
                 )}
                 
-                <View>
-                  <TextInput
-                    placeholder="Referral Code (Optional)"
-                    style={[
-                      styles(currentTheme).textField
-                    ]}
-                    placeholderTextColor={currentTheme.fontSecondColor}
-                    value={referralCode}
-                    onChangeText={(e) => setReferralCode(e)}
-                    autoCapitalize="characters"
-                    maxLength={10}
-                  />
-                </View>
               </View>
             </View>
             <View style={styles().btnContainer}>

@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../../context/Configuration'
 import useEnvVars from '../../../../environment'
 import { getStoredReferralCode } from '../../../utils/branch.io'
+import { getReferralCode } from '../../../utils/referralStorage'
 
 const SEND_OTP_TO_EMAIL = gql`
   ${sendOtpToEmail}
@@ -88,10 +89,36 @@ const useEmailOtp = (isPhoneExists) => {
         type: 'email'
       })
       await setTokenAsync(data.createUser.token)
-      navigation.navigate('PhoneOtp', {
-        name: data?.createUser?.name,
-        phone: data?.createUser?.phone
-      })
+      
+      // Check if referral was processed during registration
+      const referralData = await getStoredReferralCode()
+      const storedReferralCode = await getReferralCode()
+      const hadReferralCode = referralData?.code || storedReferralCode
+      
+      if (hadReferralCode) {
+        // Clear the processed referral codes
+        const { clearStoredReferralCode } = require('../../../utils/branch.io')
+        const { clearReferralCode } = require('../../../utils/referralStorage')
+        await clearStoredReferralCode()
+        await clearReferralCode()
+        
+        // Referral was processed, go directly to phone verification
+        navigation.navigate('PhoneOtp', {
+          name: data?.createUser?.name,
+          phone: data?.createUser?.phone
+        })
+      } else {
+        // No referral processed, show referral entry screen after account creation
+        navigation.navigate('ReferralCodeEntry', {
+          isNewUser: true,
+          onComplete: () => {
+            navigation.navigate('PhoneOtp', {
+              name: data?.createUser?.name,
+              phone: data?.createUser?.phone
+            })
+          }
+        })
+      }
     } catch (e) {
       console.log(e)
     }
@@ -126,10 +153,10 @@ const useEmailOtp = (isPhoneExists) => {
       console.log('mutation variables: create user', isPhoneExists)
 
       const referralData = await getStoredReferralCode()
-      const referralCode = referralData?.code || null
+      const branchReferralCode = referralData?.code || null
+      const storedReferralCode = await getReferralCode()
+      const finalReferralCode = storedReferralCode || branchReferralCode
 
-      
-    
       await mutateUser({
         variables: {
           phone: user?.phone ?? '',
@@ -140,7 +167,7 @@ const useEmailOtp = (isPhoneExists) => {
           notificationToken: notificationToken,
           emailIsVerified: true,
           isPhoneExists: isPhoneExists || false,
-          ...(referralCode && { referralCode: referralCode })
+          ...(finalReferralCode && { referralCode: finalReferralCode })
         }
       })
     } catch (error) {
@@ -153,11 +180,38 @@ const useEmailOtp = (isPhoneExists) => {
     if (configuration?.skipEmailVerification) {
       // If email verification is skipped, check if entered OTP matches test OTP
       if (TEST_OTP && otp_code === TEST_OTP) {
-        await mutateRegister()
+        // For email signup, navigate to referral entry instead of creating user here
+        navigation.navigate('ReferralCodeEntry', {
+          isNewUser: true,
+          isEmailSignup: true,
+          userData: {
+            phone: user?.phone ?? '',
+            email: user.email,
+            password: user.password,
+            name: user.name,
+            isPhoneExists: isPhoneExists || false
+          },
+          onComplete: () => {
+            // ReferralCodeEntry will handle user creation and navigation
+          }
+        })
         return
       } else if (!TEST_OTP) {
-        // If no test OTP is set, just proceed with registration
-        await mutateRegister()
+        // If no test OTP is set, navigate to referral entry
+        navigation.navigate('ReferralCodeEntry', {
+          isNewUser: true,
+          isEmailSignup: true,
+          userData: {
+            phone: user?.phone ?? '',
+            email: user.email,
+            password: user.password,
+            name: user.name,
+            isPhoneExists: isPhoneExists || false
+          },
+          onComplete: () => {
+            // ReferralCodeEntry will handle user creation and navigation
+          }
+        })
         return
       } else {
         // Wrong test OTP entered
@@ -172,7 +226,21 @@ const useEmailOtp = (isPhoneExists) => {
     })
 
     if (data?.verifyOtp) {
-      await mutateRegister()
+      // For email signup, navigate to referral entry instead of creating user here
+      navigation.navigate('ReferralCodeEntry', {
+        isNewUser: true,
+        isEmailSignup: true,
+        userData: {
+          phone: user?.phone ?? '',
+          email: user.email,
+          password: user.password,
+          name: user.name,
+          isPhoneExists: isPhoneExists || false
+        },
+        onComplete: () => {
+          // ReferralCodeEntry will handle user creation and navigation
+        }
+      })
     } else {
       setOtpError(true)
     }
@@ -197,7 +265,7 @@ const useEmailOtp = (isPhoneExists) => {
     return () => {
       clearInterval(myInterval)
     }
-  })
+  }, [seconds])
 
   useEffect(() => {
     if (!configuration) return
@@ -216,9 +284,9 @@ const useEmailOtp = (isPhoneExists) => {
       }, 3000)
     }
     return () => {
-      timer && clearTimeout(timer)
+      if (timer) clearTimeout(timer)
     }
-  }, [configuration])
+  }, [configuration, TEST_OTP])
 
   return {
     otp,

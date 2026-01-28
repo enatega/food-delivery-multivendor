@@ -444,6 +444,126 @@ const styles = (props = null) =>
       borderColor: props !== null ? props?.iconColor : '#717171',
       width: '70%',
       alignSelf: 'center'
+    },
+    // Wallet Styles
+    walletCard: {
+      backgroundColor: '#90E36D',
+      borderRadius: 12,
+      padding: 16,
+      marginVertical: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3
+    },
+    walletCardContent: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center'
+    },
+    walletIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: props?.isRTL ? 0 : 12,
+      marginLeft: props?.isRTL ? 12 : 0
+    },
+    walletInfo: {
+      flex: 1
+    },
+    walletArrow: {
+      marginLeft: props?.isRTL ? 0 : 8,
+      marginRight: props?.isRTL ? 8 : 0
+    },
+    walletAppliedCard: {
+      backgroundColor: props !== null ? props?.themeBackground : '#FFFFFF',
+      borderRadius: 12,
+      padding: 16,
+      marginVertical: 8,
+      borderWidth: 1,
+      borderColor: props !== null ? props?.primary || '#90E36D' : '#90E36D'
+    },
+    walletAppliedHeader: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 12
+    },
+    walletRemoveBtn: {
+      backgroundColor: '#EF4444',
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 6
+    },
+    walletAppliedContent: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center'
+    },
+    walletAppliedIcon: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: props !== null ? `${props?.primary}20` || '#90E36D20' : '#90E36D20',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: props?.isRTL ? 0 : 12,
+      marginLeft: props?.isRTL ? 12 : 0
+    },
+    walletAppliedInfo: {
+      flex: 1
+    },
+    walletSavingsTag: {
+      backgroundColor: '#10B981',
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 6
+    },
+    walletModalCard: {
+      backgroundColor: '#90E36D',
+      borderRadius: 12,
+      padding: 16,
+      marginTop: 8
+    },
+    walletModalHeader: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: 8
+    },
+    walletModalInput: {
+      height: scale(50),
+      borderWidth: 2,
+      borderColor: props !== null ? props?.primary || '#90E36D' : '#90E36D',
+      backgroundColor: props !== null ? props?.themeBackground : '#FFFFFF',
+      padding: 16,
+      borderRadius: 12,
+      fontSize: 16,
+      color: props !== null ? props?.fontMainColor : '#000000',
+      textAlign: props?.isRTL ? 'right' : 'left'
+    },
+    walletPreview: {
+      backgroundColor: props !== null ? `${props?.primary}15` || '#90E36D15' : '#90E36D15',
+      padding: 12,
+      borderRadius: 8,
+      alignItems: 'center'
+    },
+    walletModalButton: {
+      backgroundColor: '#90E36D',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: scale(50),
+      borderRadius: 12,
+      marginTop: 16
+    },
+    // Remove Button
+    removeButton: {
+      backgroundColor: '#EF4444',
+      paddingHorizontal: 6,
+      paddingVertical: 3,
+      borderRadius: 6,
+      alignSelf: 'flex-end'
     }
   })
 export default styles

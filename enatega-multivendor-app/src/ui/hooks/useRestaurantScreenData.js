@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { gql, useQuery } from '@apollo/client'
 import { escapeRegExp } from '../../utils/regex'
 import { isOpen } from '../../utils/customFunctions'
+import FlashMessage from '../../ui/FlashMessage/FlashMessage'
 import {
   popularItems,
   GET_SUB_CATEGORIES,
@@ -53,16 +54,17 @@ export const useRestaurantData = (
 
   // console.log("🚀 ~ popularFoodsItems:", JSON.stringify(popularFoodsItems))
 
-  const { data: subCategoriesData, loading: subCategoriesLoading } = useQuery(
-    GET_SUB_CATEGORIES,
-    {
-      onError: (error) => {
-        FlashMessage({
-          message: error.message || 'Failed to fetch sub-categories'
-        })
-      }
-    }
+  const { data: subCategoriesData, loading: subCategoriesLoading, error: subCategoriesError } = useQuery(
+    GET_SUB_CATEGORIES
   )
+
+  useEffect(() => {
+    if (subCategoriesError) {
+      FlashMessage({
+        message: subCategoriesError.message || 'Failed to fetch sub-categories'
+      })
+    }
+  }, [subCategoriesError])
 
   const fetchFoodDetails = (itemId) => {
     try {

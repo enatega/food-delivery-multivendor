@@ -1,12 +1,14 @@
 /* eslint-disable indent */
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, TextInput, Dimensions } from 'react-native'
+import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, TextInput, Dimensions, KeyboardAvoidingView } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useSafeAreaInsets, initialWindowMetrics } from 'react-native-safe-area-context'
 import { AntDesign, EvilIcons, Feather, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
+import Animated, { useSharedValue, useAnimatedStyle, runOnJS, withSpring } from 'react-native-reanimated'
+import { PanGestureHandler, Gesture } from 'react-native-gesture-handler'
 import { getTipping, orderFragment } from '../../apollo/queries'
 import { applyCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
@@ -55,7 +57,7 @@ const TIPPING = gql`
 const APPLY_COUPON = gql`
   ${applyCoupon}
 `
-const { height: HEIGHT } = Dimensions.get('window')
+const { height: HEIGHT, width: WIDTH } = Dimensions.get('window')
 
 function Checkout(props) {
   const Analytics = analytics()
@@ -95,6 +97,11 @@ function Checkout(props) {
   const calenderModalRef = useRef(null)
   const [paymentMode, setPaymentMode] = useState('COD')
 
+  // Draggable wallet button
+  const translateX = useSharedValue(WIDTH - 76) // Start at top-right
+  const translateY = useSharedValue(100)
+  const isDragging = useSharedValue(false)
+
   const { loading, data } = useRestaurant(cartRestaurant)
   console.log('data?.restaurant?._id', data?.restaurant?._id)
   const [loadingOrder, setLoadingOrder] = useState(false)
@@ -110,6 +117,55 @@ function Checkout(props) {
   const [orderConfirmedTime, setOrderConfirmedTime] = useState(null)
 
   const restaurant = data?.restaurant
+
+  const snapToCorner = () => {
+    const buttonSize = 56
+    const margin = 20
+    
+    const corners = [
+      { x: margin, y: 100 }, // top-left
+      { x: WIDTH - buttonSize - margin, y: 100 }, // top-right
+      { x: margin, y: HEIGHT - 200 }, // bottom-left
+      { x: WIDTH - buttonSize - margin, y: HEIGHT - 200 } // bottom-right
+    ]
+    
+    let closestCorner = corners[0]
+    let minDistance = Math.sqrt(Math.pow(translateX.value - corners[0].x, 2) + Math.pow(translateY.value - corners[0].y, 2))
+    
+    corners.forEach(corner => {
+      const distance = Math.sqrt(Math.pow(translateX.value - corner.x, 2) + Math.pow(translateY.value - corner.y, 2))
+      if (distance < minDistance) {
+        minDistance = distance
+        closestCorner = corner
+      }
+    })
+    
+    translateX.value = withSpring(closestCorner.x)
+    translateY.value = withSpring(closestCorner.y)
+  }
+
+  const gesture = Gesture.Pan()
+    .onStart(() => {
+      isDragging.value = true
+    })
+    .onUpdate((event) => {
+      translateX.value = event.absoluteX - 28
+      translateY.value = event.absoluteY - 28
+    })
+    .onEnd(() => {
+      isDragging.value = false
+      runOnJS(snapToCorner)()
+    })
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { translateY: translateY.value }
+      ],
+      opacity: isDragging.value ? 0.8 : 1
+    }
+  })
 
   const onModalOpen = (modalRef) => {
     const modal = modalRef.current
@@ -739,12 +795,6 @@ function Checkout(props) {
                     </View>
                     <View style={styles(currentTheme).labelContainer}>
                       <View style={{ marginHorizontal: scale(5) }}>
-                        {/* <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>                         
-                          {t(isPickup ? 'pickUp' : 'delivery')} ({deliveryTime} {t('mins')})
-                        </TextDefault> */}
-                        {/* <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
-                          {orderConfirmedTime ? `${t(isPickup ? 'pickUp' : 'delivery')} (${deliveryTime} ${t('mins')})` : `${t(isPickup ? 'pickUp' : 'delivery')} (${restaurant?.deliveryTime} ${t('mins')})`}
-                        </TextDefault> */}
                         <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
                           {t(isPickup ? 'pickUp' : 'delivery')} {deliveryTime} {''}
                           {t('mins')}
@@ -757,6 +807,32 @@ function Checkout(props) {
                       </View>
                     </View>
                   </TouchableOpacity>
+                  
+                  {/* Wallet Section */}
+                  {profile?.walletBalance > 0 && walletAmount === 0 && (
+                    <TouchableOpacity
+                      onPress={() => onModalOpen(walletModalRef)}
+                      style={styles(currentTheme).deliveryTime}
+                    >
+                      <View style={[styles().iconContainer]}>
+                        <View style={styles().icon}>
+                          <MaterialCommunityIcons name='wallet' size={scale(20)} color={currentTheme.newIconColor} />
+                        </View>
+                      </View>
+                      <View style={styles(currentTheme).labelContainer}>
+                        <View style={{ marginHorizontal: scale(5) }}>
+                          <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
+                            Use Wallet ({configuration.currencySymbol}{profile?.walletBalance?.toFixed(2)})
+                          </TextDefault>
+                        </View>
+                      </View>
+                      <View style={[styles().iconContainer, { justifyContent: 'center', alignItems: 'center' }]}>
+                        <View style={[styles().icon, { backgroundColor: null }]}>
+                          <Feather name={currentTheme?.isRTL ? 'chevron-left' : 'chevron-right'} size={20} color={currentTheme.secondaryText} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  )}
                 </View>
                 <View>
                   <Instructions theme={currentTheme} title={'Instruction for the restaurant'} message={instructions} />
@@ -805,46 +881,7 @@ function Checkout(props) {
                 )}
                 <View style={[styles(currentTheme).horizontalLine2, { width: '92%', alignSelf: 'center' }]} />
 
-                {/* Wallet Section */}
-                {profile?.walletBalance > 0 && (
-                  <View style={styles().voucherSec}>
-                    {walletAmount === 0 ? (
-                      <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).voucherSecInner} onPress={() => onModalOpen(walletModalRef)}>
-                        <MaterialCommunityIcons name='wallet' size={24} color={currentTheme.lightBlue} />
-                        <TextDefault H4 bolder textColor={currentTheme.lightBlue} center>
-                          Use Wallet Balance (${configuration.currencySymbol}{profile?.walletBalance?.toFixed(2)})
-                        </TextDefault>
-                        <Feather name='chevron-right' size={20} color={currentTheme.lightBlue} />
-                      </TouchableOpacity>
-                    ) : (
-                      <>
-                        <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
-                          Wallet
-                        </TextDefault>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: scale(8), gap: scale(5) }}>
-                            <MaterialCommunityIcons name='wallet' size={24} color={currentTheme.main} />
-                            <View>
-                              <TextDefault numberOfLines={1} tnormal bold textColor={currentTheme.fontFourthColor}>
-                                ${configuration.currencySymbol}{walletAmount.toFixed(2)} applied
-                              </TextDefault>
-                              <TextDefault small bold textColor={currentTheme.fontFourthColor}>
-                                Wallet discount
-                              </TextDefault>
-                            </View>
-                          </View>
-                          <View style={styles(currentTheme).changeBtn}>
-                            <TouchableOpacity activeOpacity={0.7} onPress={() => setWalletAmount(0)}>
-                              <TextDefault small bold textColor={currentTheme.darkBgFont} center>
-                                Remove
-                              </TextDefault>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </>
-                    )}
-                  </View>
-                )}
+                {/* Wallet Section - Wallet Applied State - REMOVED */}
 
                 <View style={styles().voucherSec}>
                   {!coupon ? (
@@ -1017,6 +1054,16 @@ function Checkout(props) {
                           {walletAmount.toFixed(2)}
                         </TextDefault>
                       </View>
+                      <View style={{ alignItems: 'flex-end', marginTop: 4 }}>
+                        <TouchableOpacity 
+                          onPress={() => setWalletAmount(0)}
+                          style={styles(currentTheme).removeButton}
+                        >
+                          <TextDefault style={{ fontSize: 8, color: '#FFFFFF', fontWeight: 'bold' }}>
+                            Remove
+                          </TextDefault>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   )}
                   <View style={styles(currentTheme).horizontalLine2} />
@@ -1063,6 +1110,8 @@ function Checkout(props) {
                 </TouchableOpacity>
               </View>
             )}
+            
+            {/* Draggable Floating Wallet Button - REMOVED */}
           </>
         )}
 
@@ -1113,7 +1162,7 @@ function Checkout(props) {
           modalStyle={[styles(currentTheme).modal]}
           overlayStyle={styles(currentTheme).overlay}
           handleStyle={styles(currentTheme).handle}
-          modalHeight={550}
+          modalHeight={HEIGHT * 0.7}
           handlePosition='inside'
           openAnimationConfig={{
             timing: { duration: 400 },
@@ -1127,29 +1176,31 @@ function Checkout(props) {
           <View style={styles().modalContainer}>
             <View style={styles(currentTheme).modalHeader}>
               <View activeOpacity={0.7} style={styles(currentTheme).modalheading}>
-                <MaterialCommunityIcons name='wallet' size={20} color={currentTheme.newIconColor} />
+                <MaterialCommunityIcons name='wallet-outline' size={20} color={currentTheme.newIconColor} />
                 <TextDefault H4 bolder textColor={currentTheme.newFontcolor} center>
-                  Use Wallet Balance
+                  Use Wallet
                 </TextDefault>
               </View>
               <Feather name='x-circle' size={24} color={currentTheme.newIconColor} onPress={() => onModalClose(walletModalRef)} />
             </View>
-            <View style={{ gap: 8, marginBottom: 16 }}>
-              <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
-                Available Balance: {configuration.currencySymbol}{profile?.walletBalance?.toFixed(2)}
+            
+            <View style={{ marginBottom: 16 }}>
+              <TextDefault small textColor={currentTheme.fontSecondColor}>
+                Available: {configuration.currencySymbol}{profile?.walletBalance?.toFixed(2)}
               </TextDefault>
-              <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
-                Enter Amount to Use
-              </TextDefault>
+            </View>
+            
+            <View style={{ gap: 12 }}>
               <TextInput 
                 keyboardType='numeric' 
-                placeholder={`Max: ${profile?.walletBalance?.toFixed(2)}`}
+                placeholder={`Enter amount`}
                 placeholderTextColor={currentTheme.inputPlaceHolder} 
                 value={walletInputAmount} 
                 onChangeText={(text) => setWalletInputAmount(text)} 
                 style={styles(currentTheme).modalInput} 
               />
             </View>
+            
             <TouchableOpacity 
               disabled={!walletInputAmount || parseFloat(walletInputAmount) <= 0} 
               activeOpacity={0.7} 
@@ -1157,16 +1208,16 @@ function Checkout(props) {
                 const amount = parseFloat(walletInputAmount)
                 const maxAmount = Math.min(profile?.walletBalance || 0, parseFloat(calculateTotal()) + amount)
                 if (amount > maxAmount) {
-                  FlashMessage({ message: `Maximum amount you can use is ${configuration.currencySymbol}${maxAmount.toFixed(2)}` })
+                  FlashMessage({ message: `Maximum ${configuration.currencySymbol}${maxAmount.toFixed(2)}` })
                   return
                 }
                 setWalletAmount(amount)
                 setWalletInputAmount('')
                 onModalClose(walletModalRef)
               }} 
-              style={[styles(currentTheme).button, { height: scale(40) }]}
+              style={[styles(currentTheme).button, { height: scale(45), opacity: (!walletInputAmount || parseFloat(walletInputAmount) <= 0) ? 0.5 : 1 }]}
             >
-              <TextDefault textColor={currentTheme.black} style={styles().checkoutBtn} bold H4>
+              <TextDefault textColor={currentTheme.black} bold H4>
                 Apply
               </TextDefault>
             </TouchableOpacity>

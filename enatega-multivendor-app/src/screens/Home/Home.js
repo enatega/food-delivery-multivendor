@@ -239,7 +239,7 @@ function Main(props) {
           }}
         >
           <View style={styles().addressSubContainer}>
-            <AntDesign name='pluscircleo' size={scale(12)} color={currentTheme.black} />
+            <AntDesign name='plus-circle' size={scale(12)} color={currentTheme.black} />
             <View style={styles().mL5p} />
             <TextDefault bold>{t('addAddress')}</TextDefault>
           </View>

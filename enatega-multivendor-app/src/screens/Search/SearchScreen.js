@@ -319,14 +319,14 @@ const SearchScreen = () => {
           ) : (
             uniqueTags.map((tag, index) =>
               hasAnimated ? (
-                <TouchableOpacity key={index} onPress={() => handleTagPress(tag)}>
+                <TouchableOpacity key={tag} onPress={() => handleTagPress(tag)}>
                   <View style={styles(currentTheme).tagItem}>
                     <TextDefault>{tag}</TextDefault>
                   </View>
                 </TouchableOpacity>
               ) : (
-                <CustomItem index={index}>
-                  <TouchableOpacity key={tag} onPress={() => handleTagPress(tag)}>
+                <CustomItem key={tag} index={index}>
+                  <TouchableOpacity onPress={() => handleTagPress(tag)}>
                     <View style={styles(currentTheme).tagItem}>
                       <TextDefault>{tag}</TextDefault>
                     </View>
