@@ -435,6 +435,10 @@ body {
   position: relative;
 }
 
+.dark .fa-plus {
+  color: white !important;
+}
+
 .text-icon-clickable-container>span {
   font-size: 0.2rem;
   /* equivalent to text-xs */
