@@ -23,6 +23,7 @@ import useOrderConfirmation from '../Checkout/useOrderConfirmation'
 import ConfigurationContext from '../../../context/Configuration'
 import { OrderSummary } from '../../components/Checkout'
 import { formatDateTime } from '../../../utils/formatDateTime'
+import OrderHistoryDetailsSkeleton from './OrderHistoryDetailsSkeleton'
 
 const OrderHistoryDetails = () => {
   const route = useRoute()
@@ -118,16 +119,7 @@ const OrderHistoryDetails = () => {
   // Show loading indicator while data is being fetched
   if (loading) {
     return (
-      <SafeAreaView style={themedStyles.container}>
-        <AccountSectionHeader
-          currentTheme={currentTheme}
-          onBack={() => navigation.goBack()}
-          headerText={t('Order details') || 'Order details'}
-        />
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color={currentTheme.singlevendorcolor} />
-        </View>
-      </SafeAreaView>
+        <OrderHistoryDetailsSkeleton />
     )
   }
 
