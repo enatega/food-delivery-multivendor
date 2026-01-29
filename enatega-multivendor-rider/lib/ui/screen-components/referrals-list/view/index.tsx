@@ -66,9 +66,7 @@ export default function ReferralsListMain() {
       .filter((activity) => activity.level === activeLevel)
       .map((activity) => {
         // Use createdAt as the joined date (when the referral activity happened)
-        // createdAt is a Unix timestamp in milliseconds
-        // Keep it as string for the formatDate function to parse
-        const joinedDate = activity.createdAt ? String(activity.createdAt) : "";
+        const joinedDate = activity.createdAt || "";
         
         return {
           _id: activity._id,
@@ -79,7 +77,13 @@ export default function ReferralsListMain() {
           level: activeLevel,
         } as IReferral;
       })
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => {
+        // Sort by date descending (latest first)
+        // Try parsing as both timestamp and ISO date
+        const dateA = new Date(isNaN(Number(a.joinedDate)) ? a.joinedDate : Number(a.joinedDate)).getTime();
+        const dateB = new Date(isNaN(Number(b.joinedDate)) ? b.joinedDate : Number(b.joinedDate)).getTime();
+        return dateB - dateA;
+      });
   }, [activeLevel, activitiesData]);
 
   return (
