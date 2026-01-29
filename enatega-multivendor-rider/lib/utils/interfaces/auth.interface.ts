@@ -13,6 +13,7 @@ export interface ILoginInitialValues {
 export interface ISignUpInitialValues {
   name: string;
   username: string;
+  email: string;
   password: string;
   confirmPassword: string;
   phone: string;
@@ -25,6 +26,7 @@ export interface IRiderInput {
   _id?: string;
   name: string;
   username: string;
+  email: string;
   password: string;
   phone: string;
   available: boolean;

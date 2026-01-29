@@ -158,7 +158,12 @@ export default function ReferralRewards() {
               </Text>
             ) : filteredReferrals.length > 0 ? (
               filteredReferrals
-                .sort((a, b) => a.riderName.localeCompare(b.riderName))
+                .sort((a, b) => {
+                  // Sort by joinedAt date descending (latest first)
+                  const dateA = new Date(isNaN(Number(a.joinedAt)) ? a.joinedAt : Number(a.joinedAt)).getTime();
+                  const dateB = new Date(isNaN(Number(b.joinedAt)) ? b.joinedAt : Number(b.joinedAt)).getTime();
+                  return dateB - dateA;
+                })
                 .map((referral, index) => {
                   // Map API status to UI status
                   const isWithdrawn = referral.status === "WITHDRAWN" || referral.status === "COMPLETED";

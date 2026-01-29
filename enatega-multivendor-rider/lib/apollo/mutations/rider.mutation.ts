@@ -6,6 +6,7 @@ export const CREATE_RIDER = gql`
       _id
       name
       username
+      email
       password
       phone
       available
@@ -120,6 +121,16 @@ export const UPLOAD_IMAGE_TO_S3 = gql`
   mutation UploadImageToS3($image: String!) {
     uploadImageToS3(image: $image) {
       imageUrl
+    }
+  }
+`;
+
+export const REAPPLY_RIDER = gql`
+  mutation ReapplyRider($email: String!) {
+    reapplyRider(email: $email) {
+      _id
+      riderRequestStatus
+      applyCount
     }
   }
 `;
