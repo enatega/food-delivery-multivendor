@@ -12,16 +12,9 @@ const FloatingCartButton = () => {
 
   const items = useCartStore((state) => state.items)
 
-  // 🔢 Total quantity from all variations
-  const cartCount = items.reduce((total, food) => {
-    const variationCount = food.variations?.reduce(
-      (sum, v) => sum + (v.quantity || 0),
-      0
-    )
-    return total + variationCount
-  }, 0)
+  const singleVendorCartCount = items?.length
 
-  if (cartCount === 0) return null
+  if (singleVendorCartCount === 0) return null
 
   return (
     <View style={[styles.container, { bottom: insets.bottom + 16 }]}>
@@ -35,7 +28,7 @@ const FloatingCartButton = () => {
         <Icon name="cart" size={22} color="#fff" />
 
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>{cartCount}</Text>
+          <Text style={styles.badgeText}>{singleVendorCartCount}</Text>
         </View>
       </Pressable>
     </View>

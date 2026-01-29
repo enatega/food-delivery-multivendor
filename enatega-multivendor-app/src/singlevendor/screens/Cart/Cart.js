@@ -130,6 +130,17 @@ const Cart = (props) => {
     console.log('Product pressed:', product)
   }
 
+  const formatAmount = value => {
+  const number = Number(value)
+
+  if (!Number.isFinite(number)) {
+    return '0.00'
+  }
+
+  return number.toFixed(2)
+}
+
+
   //Cart Skeleton loading
   if (loading) {
     return <CartSkeleton />
@@ -189,7 +200,7 @@ const Cart = (props) => {
             </View>
             <TextDefault textColor={isBelowMinimumOrder ? currentTheme.gray300 : currentTheme.white} bolder H5>
               {t('goToCheckout') || 'Go to checkout'} {currencySymbol}
-              {grandTotal}
+              {formatAmount(grandTotal)}
             </TextDefault>
           </View>
         </TouchableOpacity>
