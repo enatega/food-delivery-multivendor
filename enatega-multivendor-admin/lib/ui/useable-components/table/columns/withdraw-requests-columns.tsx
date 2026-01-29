@@ -45,7 +45,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   const [selectedWithDrawRequest, setSelectedWithDrawRequest] =
     useState<string>('');
 
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
 
   const [updateWithdrawReqStatus, { loading: status_change_loading }] =
     useMutation(UPDATE_WITHDRAW_REQUEST, {
@@ -252,7 +252,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
         propertyName: 'requestAmount',
         body: (rowData: IWithDrawRequest) => (
           <span className="font-medium">
-            {CURRENT_SYMBOL || '$'}
+            {CURRENCY_SYMBOL || '$'}
             {rowData?.requestAmount.toFixed(2)}
           </span>
         ),

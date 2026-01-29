@@ -54,7 +54,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   const configuration = useContext(ConfigurationContext);
   // Hooks
   const t = useTranslations();
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
   const { showToast } = useContext(ToastContext);
 
   if (!configuration) {
@@ -214,7 +214,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
         <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-1 mb-2 text-sm">
           <CarSVG width="24" height="24" />
           <span>
-            {CURRENT_SYMBOL || '$'} {deliveryRate}
+            {CURRENCY_SYMBOL || '$'} {deliveryRate}
           </span>
         </div>
 
@@ -222,7 +222,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
         <div className="flex items-center gap-1 rounded-lg border border-gray-300 p-2 mb-2 text-sm">
           <span>{t('Min Order')}</span>
           <span>
-            {CURRENT_SYMBOL || '$'}
+            {CURRENCY_SYMBOL || '$'}
             {restaurant?.minimumOrder}
           </span>
         </div>

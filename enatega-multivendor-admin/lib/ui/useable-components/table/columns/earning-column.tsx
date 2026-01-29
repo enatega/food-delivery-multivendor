@@ -11,7 +11,7 @@ export const EARNING_COLUMNS = ({
 }) => {
   // Hooks
   const t = useTranslations();
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
 
   console.log({ isSuperAdmin });
 
@@ -48,7 +48,7 @@ export const EARNING_COLUMNS = ({
       body: (earning: IEarning) =>
         isSuperAdmin ? (
           <div>
-            {CURRENT_SYMBOL || '$'}{' '}
+            {CURRENCY_SYMBOL || '$'}{' '}
             {earning?.platformEarnings?.totalEarnings?.toFixed(2)}
           </div>
         ) : (
@@ -68,7 +68,7 @@ export const EARNING_COLUMNS = ({
 
       body: (earning: IEarning) => (
         <div>
-          {CURRENT_SYMBOL || '$'}{' '}
+          {CURRENCY_SYMBOL || '$'}{' '}
           {earning?.storeEarnings?.totalEarnings?.toFixed(2)}
         </div>
       ),
@@ -87,7 +87,7 @@ export const EARNING_COLUMNS = ({
       hidden: !isSuperAdmin,
       body: (earning: IEarning) => (
         <div>
-          {CURRENT_SYMBOL || '$'}{' '}
+          {CURRENCY_SYMBOL || '$'}{' '}
           {earning?.riderEarnings?.totalEarnings?.toFixed(2)}
         </div>
       ),

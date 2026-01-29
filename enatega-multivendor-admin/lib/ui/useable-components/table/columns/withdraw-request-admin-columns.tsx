@@ -6,7 +6,7 @@ import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
   const t = useTranslations();
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
   const options = useMemo(
     () => [
       {
@@ -50,7 +50,7 @@ export const WITHDRAW_REQUESTS_ADMIN_TABLE_COLUMNS = () => {
         propertyName: 'requestAmount',
         body: (rowData: IWithDrawRequest) => (
           <span className="font-medium">
-            {CURRENT_SYMBOL || '$'}
+            {CURRENCY_SYMBOL || '$'}
             {rowData?.requestAmount?.toFixed(2)}
           </span>
         ),

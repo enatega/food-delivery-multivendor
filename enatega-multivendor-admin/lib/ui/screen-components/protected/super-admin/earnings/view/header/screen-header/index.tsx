@@ -4,6 +4,7 @@ import StatsCard from '@/lib/ui/useable-components/stats-card';
 import { IEarningsHeaderComponentProps } from '@/lib/utils/interfaces';
 import { useTranslations } from 'next-intl';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
+import { faDollarSign } from '@fortawesome/free-solid-svg-icons';
 // import { useState } from 'react';
 
 const EarningsSuperAdminHeader = ({

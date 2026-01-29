@@ -44,7 +44,7 @@ export default function CustomNumberTextField({
     }
   };
 
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
 
   return !isLoading ? (
     <div className="flex flex-col gap-2">
@@ -68,7 +68,7 @@ export default function CustomNumberTextField({
           className={`${classes.inputNumber} z-0 h-11 w-full border border-inherit bg-white dark:bg-dark-950 px-10 text-center focus:shadow-none focus:outline-none ${className}`}
           name={name}
           value={value}
-          prefix={CURRENT_SYMBOL ?? '$'}
+          prefix={CURRENCY_SYMBOL ?? '$'}
           useGrouping={false}
           onChange={(e: { value: number | null }) => {
             setFieldValue(name, e.value);

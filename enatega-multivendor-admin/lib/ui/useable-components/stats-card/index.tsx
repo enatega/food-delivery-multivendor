@@ -1,5 +1,6 @@
 // Core
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Interface
 import { IStatsCardProps } from '@/lib/utils/interfaces';
@@ -19,6 +20,7 @@ export default function StatsCard({
   loading = false,
   amountConfig,
   isClickable = true,
+  icon,
   SvgIcon,
   positiveTrending,
   trendChange,

@@ -34,7 +34,7 @@ export default function WithdrawRequestAddForm({
   console.log(restaurantProfileResponse?.data);
 
   const t = useTranslations();
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
 
   const currentWalletAmount =
     restaurantProfileResponse?.data?.restaurant?.currentWalletAmount || 0;
@@ -124,7 +124,7 @@ export default function WithdrawRequestAddForm({
                   )}
 
                   <div className="text-sm text-gray-500 dark:text-white">
-                    {t('available_balance')}: {CURRENT_SYMBOL || '$'}
+                    {t('available_balance')}: {CURRENCY_SYMBOL || '$'}
                     {currentWalletAmount?.toLocaleString('en-US')}
                   </div>
 

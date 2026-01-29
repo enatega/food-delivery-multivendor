@@ -20,7 +20,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
 }) => {
   // Hooks
   const t = useTranslations();
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
 
   if (!transaction) return null;
 
@@ -138,7 +138,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                   {t('Current Wallet Amount')}
                 </p>
                 <p className="font-medium">
-                  {CURRENT_SYMBOL || '$'}
+                  {CURRENCY_SYMBOL || '$'}
                   {(transaction?.rider?.currentWalletAmount ?? 0).toFixed(2)}
                 </p>
               </div>
@@ -147,7 +147,7 @@ const TransactionDetailModal: React.FC<ITransactionDetailModalProps> = ({
                   {t('Total Earnings')}
                 </p>
                 <p className="font-medium">
-                  {CURRENT_SYMBOL || '$'}
+                  {CURRENCY_SYMBOL || '$'}
                   {(transaction?.rider?.totalWalletAmount ?? 0).toFixed(2)}
                 </p>
               </div>

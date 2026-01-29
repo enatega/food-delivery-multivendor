@@ -13,7 +13,7 @@ import { useConfiguration } from '@/lib/hooks/useConfiguration';
 const RestaurantMain: React.FC = () => {
   // Hooks
   const t = useTranslations();
-  const { CURRENT_SYMBOL } = useConfiguration();
+  const { CURRENCY_SYMBOL } = useConfiguration();
 
   // Context
   const { restaurantProfileResponse } = useContext(ProfileContext);
@@ -27,7 +27,7 @@ const RestaurantMain: React.FC = () => {
     if (label === t('Delivery Time')) {
       icon = <FontAwesomeIcon icon={faClock} className="mr-1" />;
     } else if (label === t('Service Charges') || label === t('Min Order')) {
-      icon = CURRENT_SYMBOL || '$';
+      icon = CURRENCY_SYMBOL || '$';
     }
     return (
       <div>
