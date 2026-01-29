@@ -13,7 +13,7 @@ import { IRiderResponse } from '@/lib/utils/interfaces/rider.interface';
 import { IDropdownSelectItem } from '@/lib/utils/interfaces';
 
 // GraphQL
-import { GET_RIDERS, TOGGLE_RIDER, ACCEPT_RIDER_REQUEST, DELETE_RIDER } from '@/lib/api/graphql';
+import { GET_RIDERS, TOGGLE_RIDER, ACCEPT_RIDER_REQUEST } from '@/lib/api/graphql';
 import { useMutation } from '@apollo/client';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useTranslations } from 'next-intl';
@@ -21,8 +21,10 @@ import { toTextCase } from '@/lib/utils/methods';
 
 export const RIDER_TABLE_COLUMNS = ({
   menuItems,
+  onRejectRider,
 }: {
   menuItems: IActionMenuProps<IRiderResponse>['items'];
+  onRejectRider?: (rider: IRiderResponse) => void;
 }) => {
   // Hooks
   const t = useTranslations();
@@ -44,8 +46,8 @@ export const RIDER_TABLE_COLUMNS = ({
       severity: 'success' as const
     },
     { 
-      label: t('Decline'), 
-      code: 'DECLINED',
+      label: t('Reject'), 
+      code: 'REJECTED',
       severity: 'danger' as const
     }
   ];
@@ -102,31 +104,12 @@ export const RIDER_TABLE_COLUMNS = ({
     },
   });
 
-  const [mutateDecline, { loading: declineLoading }] = useMutation(DELETE_RIDER, {
-    refetchQueries: [{ query: GET_RIDERS }],
-    awaitRefetchQueries: true,
-    onCompleted: () => {
-      showToast({
-        type: 'success',
-        title: t('Success'),
-        message: t('Rider request declined successfully'),
-      });
-    },
-    onError: () => {
-      showToast({
-        type: 'error',
-        title: t('Error'),
-        message: t('Failed to decline rider request'),
-      });
-    },
-  });
-
   // Handle status change
   const handleStatusChange = (value: string, rider: IRiderResponse) => {
     if (value === 'ACCEPTED') {
       mutateAccept({ variables: { id: rider._id } });
-    } else if (value === 'DECLINED') {
-      mutateDecline({ variables: { id: rider._id } });
+    } else if (value === 'REJECTED') {
+      onRejectRider?.(rider);
     }
   };
 
@@ -187,22 +170,30 @@ export const RIDER_TABLE_COLUMNS = ({
               onChange={(e) => handleStatusChange(e.value.code, rider)}
               itemTemplate={itemTemplate}
               valueTemplate={() => (
-                <Tag
-                  severity="warning"
-                  value={t('Pending')}
-                  rounded
-                  style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
-                />
+                <div className="relative">
+                  <Tag
+                    severity="warning"
+                    value={t('Pending')}
+                    rounded
+                    style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
+                  />
+                  {rider.applyCount && rider.applyCount > 1 && (
+                    <div className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-3 h-3 flex items-center justify-center font-bold">
+                      {rider.applyCount}
+                    </div>
+                  )}
+                </div>
               )}
               placeholder={t('Pending')}
-              className="min-w-[120px] outline outline-1 outline-gray-300"
-              disabled={acceptLoading || declineLoading}
+              className="w-[120px] outline outline-1 outline-gray-300"
+              disabled={acceptLoading}
             />
           );
         }
         
         // Show tags for all other statuses
         const getStatusTag = () => {
+          console.log('Rider status:', rider.riderRequestStatus, 'Type:', typeof rider.riderRequestStatus);
           switch (rider.riderRequestStatus) {
             case 'ACCEPTED':
               return (
@@ -221,7 +212,16 @@ export const RIDER_TABLE_COLUMNS = ({
                   style={{ backgroundColor: '#fbbf24', color: '#92400e' }}
                 />
               );
+            case 'REJECTED':
+              return (
+                <Tag
+                  severity="danger"
+                  value={t('Rejected')}
+                  rounded
+                />
+              );
             default:
+              console.log('Unknown status, falling back to pending:', rider.riderRequestStatus);
               return (
                 <Tag
                   severity="warning"

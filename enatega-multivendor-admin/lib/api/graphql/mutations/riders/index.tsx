@@ -60,6 +60,27 @@ export const ACCEPT_RIDER_REQUEST = gql`
   }
 `;
 
+export const REJECT_RIDER_REQUEST = gql`
+  mutation RejectRiderRequest($id: ID!, $reason: String!) {
+    rejectRiderRequest(id: $id, reason: $reason) {
+      _id
+      name
+      username
+      phone
+      available
+      vehicleType
+      madeBy
+      riderRequestStatus
+      rejectionReason
+      applyCount
+      zone {
+        _id
+        title
+      }
+    }
+  }
+`;
+
 export const TOGGLE_RIDER = gql`
   mutation ToggleRider($id: String!) {
     toggleAvailablity(id: $id) {

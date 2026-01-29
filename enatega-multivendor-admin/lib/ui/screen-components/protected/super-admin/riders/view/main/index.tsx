@@ -17,6 +17,7 @@ import {
 // UI Components
 import RidersTableHeader from '../header/table-header';
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
+import RejectionReasonModal from '@/lib/ui/useable-components/rejection-reason-modal';
 import Table from '@/lib/ui/useable-components/table';
 import { RIDER_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/rider-columns';
 
@@ -28,7 +29,7 @@ import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
 
 // GraphQL and Utilities
-import { DELETE_RIDER, GET_RIDERS } from '@/lib/api/graphql';
+import { DELETE_RIDER, GET_RIDERS, REJECT_RIDER_REQUEST } from '@/lib/api/graphql';
 import { IQueryResult } from '@/lib/utils/interfaces';
 
 // Data
@@ -54,6 +55,8 @@ export default function RidersMain({
   const [filters, setFilters] = useState({
     global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
   });
+  const [rejectionModalVisible, setRejectionModalVisible] = useState(false);
+  const [riderToReject, setRiderToReject] = useState<IRiderResponse | null>(null);
 
   // Query
   const { data, loading } = useQueryGQL(GET_RIDERS, {}) as IQueryResult<
@@ -68,6 +71,49 @@ export default function RidersMain({
       refetchQueries: [{ query: GET_RIDERS }],
     }
   );
+
+  const [mutateReject, { loading: rejectLoading }] = useMutation(REJECT_RIDER_REQUEST, {
+    refetchQueries: [{ query: GET_RIDERS }],
+    awaitRefetchQueries: true,
+    onCompleted: () => {
+      showToast({
+        type: 'success',
+        title: t('Success'),
+        message: t('Rider request rejected successfully'),
+        duration: 3000,
+      });
+      setRejectionModalVisible(false);
+      setRiderToReject(null);
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        title: t('Error'),
+        message: t('Failed to reject rider request'),
+        duration: 3000,
+      });
+      setRejectionModalVisible(false);
+      setRiderToReject(null);
+    },
+  });
+
+  // Handle rejection with reason
+  const handleRejectWithReason = (rejectionReason: string) => {
+    if (riderToReject) {
+      mutateReject({ 
+        variables: { 
+          id: riderToReject._id, 
+          reason: rejectionReason 
+        } 
+      });
+    }
+  };
+
+  // Handle rider rejection
+  const handleRiderRejection = (rider: IRiderResponse) => {
+    setRiderToReject(rider);
+    setRejectionModalVisible(true);
+  };
 
   // For global search
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +152,26 @@ export default function RidersMain({
     },
   ];
 
-  const riderTableColumns = RIDER_TABLE_COLUMNS({ menuItems });
+  // Sort riders: PENDING first (latest first), then ACCEPTED, then REJECTED
+  const sortedRiders = data?.riders ? [...data.riders].sort((a, b) => {
+    // First sort by status priority
+    const statusOrder = { 'PENDING': 0, 'ACCEPTED': 1, 'REJECTED': 2 };
+    const statusComparison = statusOrder[a.riderRequestStatus] - statusOrder[b.riderRequestStatus];
+    
+    if (statusComparison !== 0) return statusComparison;
+    
+    // Within same status, sort by creation date (latest first)
+    if (a.createdAt && b.createdAt) {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+    
+    return 0;
+  }) : [];
+
+  const riderTableColumns = RIDER_TABLE_COLUMNS({ 
+    menuItems,
+    onRejectRider: handleRiderRejection 
+  });
 
   return (
     <div className="p-3">
@@ -117,7 +182,7 @@ export default function RidersMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={data?.riders || (loading ? generateDummyRiders() : [])}
+        data={sortedRiders.length > 0 ? sortedRiders : (loading ? generateDummyRiders() : [])}
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
@@ -145,6 +210,16 @@ export default function RidersMain({
           });
         }}
         message={t('Are you sure you want to delete this item?')}
+      />
+      
+      <RejectionReasonModal
+        visible={rejectionModalVisible}
+        onHide={() => {
+          setRejectionModalVisible(false);
+          setRiderToReject(null);
+        }}
+        onConfirm={handleRejectWithReason}
+        loading={rejectLoading}
       />
     </div>
   );

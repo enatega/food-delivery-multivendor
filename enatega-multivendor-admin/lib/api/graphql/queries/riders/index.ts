@@ -13,6 +13,9 @@ export const GET_RIDERS = gql`
       assigned
       madeBy
       riderRequestStatus
+      rejectionReason
+      applyCount
+      createdAt
       zone {
         _id
         title

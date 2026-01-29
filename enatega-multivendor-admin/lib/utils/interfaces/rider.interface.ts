@@ -20,7 +20,10 @@ export interface IRiderResponse {
   assigned: string[];
   zone: IRiderResponseZone;
   madeBy: 'ADMIN' | 'RIDER_REQUEST';
-  riderRequestStatus: 'PENDING' | 'ACCEPTED';
+  riderRequestStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  rejectionReason?: string;
+  applyCount?: number;
+  createdAt?: string;
 }
 
 export interface ISingleRiderResponse {
