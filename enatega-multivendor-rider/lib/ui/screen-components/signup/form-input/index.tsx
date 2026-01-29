@@ -14,6 +14,7 @@ interface FormInputProps {
   secureTextEntry?: boolean;
   keyboardType?: "default" | "email-address" | "phone-pad";
   inputMode?: "text" | "email" | "tel";
+  autoCapitalize?: "none" | "sentences" | "words" | "characters";
 }
 
 export default function FormInput({
@@ -27,6 +28,7 @@ export default function FormInput({
   secureTextEntry = false,
   keyboardType = "default",
   inputMode = "text",
+  autoCapitalize = "sentences",
 }: FormInputProps) {
   const { appTheme } = useApptheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -61,6 +63,7 @@ export default function FormInput({
           placeholderTextColor={appTheme.fontSecondColor}
           keyboardType={keyboardType}
           inputMode={inputMode}
+          autoCapitalize={autoCapitalize}
           value={value}
           onChangeText={onChangeText}
           onBlur={onBlur}

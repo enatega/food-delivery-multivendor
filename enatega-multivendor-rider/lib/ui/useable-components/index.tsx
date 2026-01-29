@@ -8,3 +8,4 @@ export { default as SwitchButton } from "./switch-button";
 export { default as Order } from "./order";
 export { default as CustomRadioButton } from "./custom-radio-button";
 export { default as LocationPermissionComp } from "./location-permission/index";
+export { RejectionModal } from "./rejection-modal";

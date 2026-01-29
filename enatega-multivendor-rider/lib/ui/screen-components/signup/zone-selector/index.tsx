@@ -128,14 +128,6 @@ export default function ZoneSelector({
                   >
                     {zone.title}
                   </Text>
-                  {zone.description && (
-                    <Text
-                      className="text-sm mt-1"
-                      style={{ color: appTheme.fontSecondColor }}
-                    >
-                      {zone.description}
-                    </Text>
-                  )}
                 </TouchableOpacity>
               ))}
             </ScrollView>
