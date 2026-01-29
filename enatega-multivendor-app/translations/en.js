@@ -550,7 +550,7 @@ export const en = {
   yourEmailPassword: 'Please enter your passwords now for access!',
   brandName: 'Fast',
   welcomeText: 'Fresh Groceries, Delivered to Your Door',
-  createAccountDesc: 'Sign in to order fresh groceries, track your delivery, and get special offers from Fruito.',
+  createAccountDesc: 'Sign in to order fresh groceries, track your delivery, and get special offers from Fast.',
   phoneNumber: 'Phone Number',
   textWithCodeBtn: 'Send text with code',
   resendOtpBtn: 'Resend OTP',

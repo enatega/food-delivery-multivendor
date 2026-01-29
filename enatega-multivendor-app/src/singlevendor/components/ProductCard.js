@@ -9,12 +9,10 @@ import { getDealPricing } from '../utils/helper'
 import useAddToCart from '../screens/ProductDetails/useAddToCart'
 
 const ProductCard = ({ product, onCardPress, containerStyles }) => {
-  console.log("🚀 ~ ProductCard ~ product:", JSON.stringify(product, null, 2))
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const configuration = useContext(ConfigurationContext)
-  console.log('product:::::', product.variations[0])
 
   const variation = product?.variations?.[0]
   const deal = variation?.deal

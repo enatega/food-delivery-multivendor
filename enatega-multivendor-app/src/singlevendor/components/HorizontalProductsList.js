@@ -30,10 +30,10 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
     console.log('Add to cart:', drink.name)
   }
 
-  const onProductPress = (id) => {
+  const onProductPress = (id, itemCategoryId) => {
     navigation.navigate('ProductDetails', {
       productId: id,
-      categoryId
+      categoryId: categoryId ?? itemCategoryId
     })
   }
 

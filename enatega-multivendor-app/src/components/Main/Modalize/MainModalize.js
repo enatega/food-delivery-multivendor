@@ -54,6 +54,11 @@ const MainModalize = ({ modalRef, currentTheme, isLoggedIn, addressIcons, modalH
                   <TextDefault textColor={isSelected ? currentTheme.headerMainFontColor : currentTheme.darkBgFont} bold H5>
                     {t(address.label)}
                   </TextDefault>
+                  {address?.details !== address?.deliveryAddress && (
+                  <TextDefault textColor={isSelected ? currentTheme.headerMainFontColor : currentTheme.fontSecondColor} bold>
+                    {address?.details}
+                  </TextDefault>
+                  )}
                   <TextDefault textColor={isSelected ? currentTheme.headerMainFontColor : currentTheme.fontSecondColor} bold>
                     {address?.deliveryAddress}
                   </TextDefault>
