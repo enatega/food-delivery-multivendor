@@ -41,12 +41,11 @@ const OrderConfirmation = (props) => {
 
   const currencySymbol = configuration?.currencySymbol || '€'
 
-  // Add to cart hook
-  const { addItemToCart, loadingItemIds ,updateUserCartLoading } = useAddToCart({ foodId: null })
-  console.log('addItemToCart', addItemToCart)
-  console.log('loadingItemIds', loadingItemIds)
-
-  console.log('updateUserCartLoading', updateUserCartLoading)
+  // Add to cart hook – navigate to cart once when reorder succeeds (callback avoids navigation during render)
+  const { addItemToCart, loadingItemIds, updateUserCartLoading } = useAddToCart({
+    foodId: null,
+    onCartUpdateSuccess: () => navigation.navigate('cart')
+  })
 
   // ----------------------------------
   // 1️⃣ Base order fetch (REST-like)
@@ -244,7 +243,6 @@ const OrderConfirmation = (props) => {
     }
 
     // Navigate to cart screen
-    // navigation.navigate('cart')
   }
 
   // ----------------------------------

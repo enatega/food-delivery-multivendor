@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useRef } from 'react'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
@@ -9,7 +9,7 @@ import useCartStore from '../../stores/useCartStore'
 import UserContext from '../../../context/User'
 import { useNavigation } from '@react-navigation/native'
 import useCartQueueStore from '../../stores/useCartQueueStore'
-const useAddToCart = ({ foodId }) => {
+const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
@@ -18,15 +18,17 @@ const useAddToCart = ({ foodId }) => {
   const { setCartFromServer } = useCartStore()
   const navigation = useNavigation()
 
-   const loadingItemIds = useCartQueueStore(
+  const loadingItemIds = useCartQueueStore(
     (state) => state.loadingItemIds
   )
 
-  const [updateUserCart, { loading:updateUserCartLoading, error: updateUserCartError }] = useMutation(UPDATE_USER_CART, {
+  const onCartUpdateSuccessRef = useRef(onCartUpdateSuccess)
+  onCartUpdateSuccessRef.current = onCartUpdateSuccess
+
+  const [updateUserCart, { loading: updateUserCartLoading, error: updateUserCartError }] = useMutation(UPDATE_USER_CART, {
     onCompleted: (data) => {
-      console.log('Cart updated:', data?.userCartData)
       const response = data?.userCartData
-      console.log('response:response', response)
+      console.log('response_response', JSON.stringify(response,null,2))
 
       if (!response?.success) {
         if (response?.message) {
@@ -46,6 +48,7 @@ const useAddToCart = ({ foodId }) => {
       })
 
       FlashMessage({ message: t('itemAddedToCart') })
+      onCartUpdateSuccessRef.current?.(response)
     },
     onError: (error) => {
       console.error('Error updating cart:', error)
@@ -149,7 +152,7 @@ const useAddToCart = ({ foodId }) => {
   //   }
   // }
 
-  return { currentTheme, t, loadingItemIds, addItemToCart ,updateUserCartLoading ,updateUserCartLoading}
+  return { currentTheme, t, loadingItemIds, addItemToCart, updateUserCartLoading }
 }
 
 export default useAddToCart

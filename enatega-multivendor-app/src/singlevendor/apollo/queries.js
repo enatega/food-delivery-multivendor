@@ -538,6 +538,7 @@ export const ORDER_DETAILS_PAGE = gql`
         pickedAt
         deliveredAt
         cancelledAt
+        scheduledAt
         assignedAt
         instructions
       }
