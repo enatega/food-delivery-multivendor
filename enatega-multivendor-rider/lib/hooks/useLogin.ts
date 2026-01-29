@@ -30,10 +30,17 @@ import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { setItem } from "../services/async-storage";
 import { getNotificationToken } from "../utils/methods/permission";
+import { REAPPLY_RIDER } from "../apollo/mutations/rider.mutation";
+
+interface RejectionError {
+  isRejected: boolean;
+  email: string;
+}
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [rejectionError, setRejectionError] = useState<RejectionError | null>(null);
 
   // Hooks
   const { t } = useTranslation();
@@ -45,6 +52,11 @@ const useLogin = () => {
   const [login] = useMutation(RIDER_LOGIN, {
     onCompleted: onLoginCompleted,
     onError,
+  });
+
+  const [reapplyRider, { loading: reapplyLoading }] = useMutation(REAPPLY_RIDER, {
+    onCompleted: onReapplyCompleted,
+    onError: onReapplyError,
   });
 
   useQuery(DEFAULT_RIDER_CREDS, { onCompleted: onDefaultCredsCompleted });
@@ -75,17 +87,46 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
   function onError(err: ApolloError) {
     const error = err as ApolloError;
     setIsLoading(false);
+    
+    // Check if error is about application rejection
+    const errorMessage = error?.graphQLErrors[0]?.message || "";
+    if (errorMessage.includes("Application rejected for")) {
+      // Extract email from error message
+      const emailMatch = errorMessage.match(/Application rejected for (.+)/);
+      const email = emailMatch ? emailMatch[1].trim() : "";
+      
+      setRejectionError({
+        isRejected: true,
+        email,
+      });
+    } else {
+      FlashMessageComponent({
+        message:
+          error?.graphQLErrors[0]?.message ??
+          error?.networkError?.message ??
+          t("Something went wrong"),
+      });
+    }
+  }
+
+  function onReapplyCompleted(data: any) {
     FlashMessageComponent({
-      message:
-        error?.graphQLErrors[0]?.message ??
-        error?.networkError?.message ??
-        t("Something went wrong"),
+      message: t("Your application has been resubmitted successfully"),
+      type: "success",
+    });
+    setRejectionError(null);
+  }
+
+  function onReapplyError(err: ApolloError) {
+    FlashMessageComponent({
+      message: err?.graphQLErrors[0]?.message ?? t("Failed to reapply. Please try again."),
     });
   }
   
   const onLogin = async (username: string, password: string) => {
     try {
       setIsLoading(true);
+      setRejectionError(null); // Clear any previous rejection errors
 
       const notificationToken = await getNotificationToken();
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -101,16 +142,36 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
     } catch (err) {
       const error = err as ApolloError;
       console.log("Login error:", error);
-      FlashMessageComponent({ message: error.message || "Login failed. Please try again." });
+      // Error is handled in onError callback
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const onReapply = async (email: string) => {
+    try {
+      await reapplyRider({
+        variables: {
+          email,
+        },
+      });
+    } catch (err) {
+      console.log("Reapply error:", err);
+    }
+  };
+
+  const clearRejectionError = () => {
+    setRejectionError(null);
   };
 
   return {
     creds,
     onLogin,
     isLogging: isLoading,
+    rejectionError,
+    onReapply,
+    clearRejectionError,
+    reapplyLoading,
   };
 };
 export default useLogin;

@@ -124,3 +124,13 @@ export const UPLOAD_IMAGE_TO_S3 = gql`
     }
   }
 `;
+
+export const REAPPLY_RIDER = gql`
+  mutation ReapplyRider($email: String!) {
+    reapplyRider(email: $email) {
+      _id
+      riderRequestStatus
+      applyCount
+    }
+  }
+`;
