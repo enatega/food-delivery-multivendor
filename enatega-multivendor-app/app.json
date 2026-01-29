@@ -94,6 +94,9 @@
         "com.google.android.gms.permission.AD_ID"
       ],
       "icon": "./assets/appIcon.png",
+      "navigationBar": {
+        "visible": "immersive"
+      },
       "intentFilters": [
         {
           "action": "android.intent.action.VIEW",

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect } from 'react'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -219,6 +219,8 @@ function BottomTabNavigator() {
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
   const { profile: userProfile } = useContext(UserContext)
+  const insets = useSafeAreaInsets()
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -229,8 +231,8 @@ function BottomTabNavigator() {
         tabBarStyle: {
           paddingHorizontal: 15,
           paddingVertical: 10,
-          paddingBottom: Platform.OS === 'ios' ? 25 : 15,
-          height: Platform.OS === 'ios' ? 90 : 70,
+          paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 5) : Math.max(insets.bottom, 15),
+          height: Platform.OS === 'ios' ? 70 + insets.bottom : 70 + insets.bottom,
           backgroundColor: currentTheme.cardBackground
         },
         tabBarActiveTintColor: '#0EA5E9',
@@ -327,7 +329,10 @@ function AppContainer() {
   }
 
   useEffect(() => {
-    init()
+    const initializeApp = async () => {
+      await init()
+    }
+    initializeApp()
   }, [])
 
   useEffect(() => {

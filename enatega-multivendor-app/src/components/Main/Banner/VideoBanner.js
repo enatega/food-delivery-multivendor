@@ -32,7 +32,7 @@ export default function VideoBanner(props) {
       <VideoView
         style={styles.video}
         player={player}
-        allowsFullscreen={false}
+        fullscreenOptions={{ enabled: false }}
         allowsPictureInPicture={false}
         nativeControls={false}
         contentFit="cover"
