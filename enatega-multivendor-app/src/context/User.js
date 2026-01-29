@@ -45,10 +45,22 @@ export const UserProvider = (props) => {
     networkStatus
   } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
-    onError,
-    onCompleted,
     skip: !token
   })
+
+  // Replace deprecated onCompleted with useEffect
+  useEffect(() => {
+    if (dataProfile?.profile && !loadingProfile) {
+      onCompleted(dataProfile)
+    }
+  }, [dataProfile, loadingProfile])
+
+  // Replace deprecated onError with useEffect
+  useEffect(() => {
+    if (errorProfile) {
+      onError(errorProfile)
+    }
+  }, [errorProfile])
   useEffect(() => {
     let isSubscribed = true
     ;(async () => {

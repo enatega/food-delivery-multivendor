@@ -442,7 +442,7 @@ function ReferralAndLoyaltyRewards(props) {
 
           <View style={styles.pointsBadgeContainer}>
             <View style={styles.pointsBadge}>
-              <Text style={styles.pointsText}>Available Points</Text>
+              <Text style={styles.pointsText}>Total Earned Points</Text>
               <Text style={styles.pointsValue}>{(profile?.tier?.current_earned_points || 0).toLocaleString()}</Text>
             </View>
           </View>

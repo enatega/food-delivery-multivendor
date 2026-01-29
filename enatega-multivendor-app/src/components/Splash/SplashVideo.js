@@ -58,7 +58,7 @@ export default function SplashVideo({ onLoaded, onFinish }) {
       <VideoView
         style={StyleSheet.absoluteFill}
         player={player}
-        allowsFullscreen={false}
+        fullscreenOptions={{ enabled: false }}
         allowsPictureInPicture={false}
         nativeControls={false}
         contentFit="cover"
