@@ -160,7 +160,7 @@ export default function SubCategoriesAddForm({
       onHide={onHide}
       visible={isAddSubCategoriesVisible.bool}
       position="right"
-      className='dark:text-white dark:bg-dark-950 dark:border dark:border-dark-600'
+      className="dark:text-white dark:bg-dark-950 dark:border dark:border-dark-600"
     >
       <Formik
         initialValues={initialValues}
@@ -178,14 +178,14 @@ export default function SubCategoriesAddForm({
                     value.parentCategoryId =
                       isAddSubCategoriesVisible.parentCategoryId;
                     return (
-                      <div key={index} className=" rounded-lg shadow-sm ">
+                      <div key={index} className="rounded-lg shadow-sm ">
                         <Fieldset
                           legend={`${t('Sub-Category')} #${index + 1} ${value.title ? `(${value.title})` : ''}`}
                           toggleable
                           className="my-1 dark:text-white dark:bg-dark-950"
                         >
                           {/* Sub-Category Field and Remove Button */}
-                          <div className="flex-col justify-center items-center">
+                          <div className="flex-col justify-center items-center dark:bg-dark-900 ">
                             <TextIconClickable
                               icon={faTrash}
                               iconStyles={{ color: 'red' }}

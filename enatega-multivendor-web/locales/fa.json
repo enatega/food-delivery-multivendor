@@ -915,5 +915,7 @@
   "Thursday": "پنج‌شنبه",
   "Friday": "جمعه",
   "Saturday": "شنبه",
-  "Sunday": "یکشنبه"
+  "Sunday": "یکشنبه",
+   "loading_orders": "در حال بارگذاری سفارشات",
+  "show_more_orders": "نمایش سفارشات بیشتر"
 }

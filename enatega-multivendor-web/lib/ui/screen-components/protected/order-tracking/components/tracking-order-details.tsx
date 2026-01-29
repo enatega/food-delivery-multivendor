@@ -1,5 +1,5 @@
 "use client";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { IOrderTrackingDetail } from "@/lib/utils/interfaces/order-tracking-detail.interface";
 import CancelOrderModal from "./cancelOrderModal";
@@ -42,7 +42,7 @@ function TrackingOrderDetails({
         return addonSum + optionsTotal;
       }, 0);
 
-      return total + addonTotal;
+      return total + addonTotal * item.quantity;
     }, 0);
   };
 
@@ -67,6 +67,21 @@ function TrackingOrderDetails({
 
   //   return subtotal + deliveryCharge + tax + tip + addons;
   // };
+
+  const calculateItemTotal = (item: any) => {
+    const variationPrice = item.variation.price || 0;
+    const addonsPrice =
+      item.addons?.reduce((sum: number, addon: any) => {
+        return (
+          sum +
+          addon.options.reduce(
+            (optSum: number, option: any) => optSum + (option.price || 0),
+            0,
+          )
+        );
+      }, 0) || 0;
+    return (variationPrice + addonsPrice) * item.quantity;
+  };
 
   // Check if order can be cancelled (only PENDING or ACCEPTED)
   const canCancelOrder = () => {
@@ -148,7 +163,7 @@ function TrackingOrderDetails({
                           >
                             + {option.title}
                             {option.price > 0
-                              ? ` (${formatCurrency(calculateTotalAddonPrice())})`
+                              ? ` (${formatCurrency(option.price)})`
                               : ""}
                           </p>
                         ))}
@@ -159,7 +174,7 @@ function TrackingOrderDetails({
               </div>
             </div>
             <span className="text-blue-600 dark:text-blue-400 font-semibold">
-              {formatCurrency(item.variation.price)}
+              {formatCurrency(calculateItemTotal(item))}
             </span>
           </div>
         ))}
@@ -182,10 +197,7 @@ function TrackingOrderDetails({
         <div className="text-sm text-gray-700 dark:text-gray-300 space-y-3">
           {/* Display each item with quantity and price */}
           {orderTrackingDetails.items?.map((item, idx) => (
-            <div
-              key={`summary-${item._id || idx}`}
-              className="flex justify-between"
-            >
+            <div key={`summary-item-${idx}`} className="flex justify-between">
               <span>
                 {item.quantity}x {item.title}
               </span>
@@ -230,10 +242,10 @@ function TrackingOrderDetails({
           </div>
 
           <div className="flex justify-between">
-            <span >{t("discount_label")}</span>
-            
+            <span>{t("discount_label")}</span>
+
             <span className="text-red-500">
-             -{""} {formatCurrency(orderTrackingDetails.discountAmount || 0)}
+              -{""} {formatCurrency(orderTrackingDetails.discountAmount || 0)}
             </span>
           </div>
 

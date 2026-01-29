@@ -97,7 +97,7 @@ export default function OrderCheckoutScreen() {
   const [distance, setDistance] = useState("0.0");
   const [shouldLeaveAtDoor, setShouldLeaveAtDoor] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(
-    PAYMENT_METHOD_LIST[0].value
+    PAYMENT_METHOD_LIST[0].value,
   );
   const [taxValue, setTaxValue] = useState();
   const [directions, setDirections] =
@@ -124,6 +124,8 @@ export default function OrderCheckoutScreen() {
     fetchProfile,
     loadingProfile,
   } = useUser();
+
+  console.log(cart, "cart");
   const { userAddress } = useUserAddress();
   const restaurantFromLocalStorage = localStorage.getItem("restaurant");
   const { data: restaurantData } = useRestaurant(restaurantId || "") || {
@@ -145,7 +147,7 @@ export default function OrderCheckoutScreen() {
       } catch (error) {
         console.error(
           "Error parsing restaurant data from localStorage:",
-          error
+          error,
         );
       }
     }
@@ -186,7 +188,7 @@ export default function OrderCheckoutScreen() {
         onUseLocalStorage(
           "save",
           COUPON_STORAGE_KEY,
-          JSON.stringify(coupon.coupon)
+          JSON.stringify(coupon.coupon),
         );
         onUseLocalStorage("save", COUPON_TEXT_STORAGE_KEY, couponText);
         onUseLocalStorage("save", COUPON_APPLIED_STORAGE_KEY, "true");
@@ -252,7 +254,7 @@ export default function OrderCheckoutScreen() {
       const savedCouponText = onUseLocalStorage("get", COUPON_TEXT_STORAGE_KEY);
       const savedCouponApplied = onUseLocalStorage(
         "get",
-        COUPON_APPLIED_STORAGE_KEY
+        COUPON_APPLIED_STORAGE_KEY,
       );
       const savedRestaurantId = onUseLocalStorage("get", COUPON_RESTAURANT_KEY);
 
@@ -351,7 +353,7 @@ export default function OrderCheckoutScreen() {
   const store_user_location_cache_key = `${origin?.lat},${origin?.lng}_${destination?.lat},${destination?.lng}`;
 
   const [orderInstructions, setOrderInstructions] = useState<string | null>(
-    null
+    null,
   );
   const { theme } = useTheme();
 
@@ -382,7 +384,7 @@ export default function OrderCheckoutScreen() {
     return () =>
       window.removeEventListener(
         "orderInstructionsUpdated",
-        handleCustomUpdate
+        handleCustomUpdate,
       );
   }, []);
 
@@ -394,13 +396,13 @@ export default function OrderCheckoutScreen() {
       onCompleted,
       onError,
       update,
-    }
+    },
   );
   const [verifyCoupon, { loading: couponLoading }] = useMutation(
     VERIFY_COUPON,
     {
       onCompleted: couponCompleted,
-    }
+    },
   );
 
   console.log("Tipps from admin:", tipData);
@@ -434,16 +436,15 @@ export default function OrderCheckoutScreen() {
     if (savedCoupon) {
       const parsed = JSON.parse(savedCoupon);
       setCoupon(parsed);
-      setIsCouponApplied(true);  // ← VERY IMPORTANT
+      setIsCouponApplied(true); // ← VERY IMPORTANT
     }
   }, []);
-
 
   const onInitDirectionCacheSet = () => {
     try {
       const stored_direction = onUseLocalStorage(
         "get",
-        store_user_location_cache_key
+        store_user_location_cache_key,
       );
       if (stored_direction) {
         setDirections(JSON.parse(stored_direction));
@@ -473,7 +474,7 @@ export default function OrderCheckoutScreen() {
     let amount = calculateAmount(
       COST_TYPE as OrderTypes.TCostType,
       DELIVERY_RATE,
-      distance
+      distance,
     );
     setDistance(distance.toFixed(2));
     setDeliveryCharges(amount > 0 ? amount : DELIVERY_RATE);
@@ -491,9 +492,9 @@ export default function OrderCheckoutScreen() {
         variation: food.variation._id,
         addons: food.addons
           ? food.addons.map(({ _id, options }) => ({
-            _id,
-            options: options.map(({ _id }) => _id),
-          }))
+              _id,
+              options: options.map(({ _id }) => _id),
+            }))
           : [],
         specialInstructions: food.specialInstructions,
       };
@@ -508,7 +509,7 @@ export default function OrderCheckoutScreen() {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const todaysTimings = finalRestaurantData.restaurant.openingTimes?.find(
-      (o: any) => o.day === DAYS[day]
+      (o: any) => o.day === DAYS[day],
     );
 
     if (!todaysTimings) return false;
@@ -518,7 +519,7 @@ export default function OrderCheckoutScreen() {
         hours >= Number(t.startTime[0]) &&
         minutes >= Number(t.startTime[1]) &&
         hours <= Number(t.endTime[0]) &&
-        minutes <= Number(t.endTime[1])
+        minutes <= Number(t.endTime[1]),
     );
 
     return times.length > 0;
@@ -526,40 +527,10 @@ export default function OrderCheckoutScreen() {
 
   // API Handlers
   const onApplyCoupon = () => {
-    verifyCoupon({ variables: { coupon: couponText, restaurantId: restaurantId } });
+    verifyCoupon({
+      variables: { coupon: couponText, restaurantId: restaurantId },
+    });
   };
-
-  function couponCompleted({ coupon }: { coupon: ICoupon }) {
-    if (!coupon.success) {
-      showToast({
-        type: "info",
-        title: t("coupon_not_found_title"),
-        message: `${couponText} ${t("coupon_is_not_valid_message_with_title")}`,
-      });
-    }
-    else if (coupon.coupon) {
-      if (coupon.coupon.enabled) {
-        showToast({
-          type: "info",
-          title: t("coupon_applied_title"),
-          message: `${coupon.coupon.title} ${t("coupon_has_been_applied_message")}`,
-        });
-        setIsCouponApplied(true);
-        setCoupon(coupon.coupon);
-        localStorage.setItem("coupon", JSON.stringify(coupon.coupon));
-      } else {
-        showToast({
-          type: "info",
-          title: t("coupon_not_found_title"),
-          message: `${coupon.coupon.title} ${t("coupon_is_not_valid_message_with_title")}`,
-        });
-      }
-    }
-
-
-  }
-
-
 
   // function validateOrder() {
   //   if (!restaurantData.restaurant.isAvailable || !onCheckIsOpen()) {
@@ -806,6 +777,7 @@ export default function OrderCheckoutScreen() {
 
     if (checkPaymentMethod(CURRENCY, paymentMethod)) {
       const items = transformOrder(cart);
+      console.log("items", items);
 
       placeOrder({
         variables: {
@@ -813,7 +785,7 @@ export default function OrderCheckoutScreen() {
           orderInput: items,
           instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
-          couponCode: isCouponApplied ? coupon ? coupon.title : null : null,
+          couponCode: isCouponApplied ? (coupon ? coupon.title : null) : null,
           tipping: +selectedTip,
           taxationAmount: +taxCalculation(),
           // address: {
@@ -858,14 +830,14 @@ export default function OrderCheckoutScreen() {
       router.replace(`/paypal?id=${data.placeOrder._id}`);
     } else if (paymentMethod === "STRIPE") {
       router.replace(
-        `${SERVER_URL}stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`
+        `${SERVER_URL}stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`,
       );
     }
   }
 
   function update(
     cache: ApolloCache<any>,
-    { data }: { data?: { placeOrder: IOrder } }
+    { data }: { data?: { placeOrder: IOrder } },
   ) {
     const placeOrder = data?.placeOrder;
 
@@ -948,13 +920,13 @@ export default function OrderCheckoutScreen() {
         onUseLocalStorage(
           "save",
           store_user_location_cache_key,
-          JSON.stringify(result)
+          JSON.stringify(result),
         );
       } else {
         console.error("Directions request failed due to", status);
       }
     },
-    []
+    [],
   );
 
   // Filter PAYMENT_METHOD_LIST based on stripeDetailsSubmitted
@@ -1075,10 +1047,11 @@ export default function OrderCheckoutScreen() {
             {/* <!-- Delivery and Pickup Toggle --> */}
             <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full p-2 mb-6">
               <button
-                className={`w-1/2 ${deliveryType === "Delivery"
-                  ? "bg-primary-color"
-                  : "bg-gray-100 dark:bg-gray-700"
-                  } text-white py-2 rounded-full flex items-center justify-center`}
+                className={`w-1/2 ${
+                  deliveryType === "Delivery"
+                    ? "bg-primary-color"
+                    : "bg-gray-100 dark:bg-gray-700"
+                } text-white py-2 rounded-full flex items-center justify-center`}
                 onClick={() => {
                   setDeliveryType("Delivery");
                   setIsPickUp(false);
@@ -1094,10 +1067,11 @@ export default function OrderCheckoutScreen() {
               </button>
 
               <button
-                className={`w-1/2 ${deliveryType === "Pickup"
-                  ? "bg-primary-color"
-                  : "bg-gray-100 dark:bg-gray-700"
-                  } px-6 py-2 rounded-full mx-2 flex items-center justify-center`}
+                className={`w-1/2 ${
+                  deliveryType === "Pickup"
+                    ? "bg-primary-color"
+                    : "bg-gray-100 dark:bg-gray-700"
+                } px-6 py-2 rounded-full mx-2 flex items-center justify-center`}
                 onClick={() => {
                   setDeliveryType("Pickup");
                   setIsPickUp(true);
@@ -1218,7 +1192,7 @@ export default function OrderCheckoutScreen() {
                                   + {optionTitle}
                                 </p>
                               );
-                            }
+                            },
                           )}
                         </div>
                         <p className="text-secondary-color font-semibold text-sm sm:text-base md:text-[11px] lg:text-[12px] xl:text-[14px]">
@@ -1239,15 +1213,15 @@ export default function OrderCheckoutScreen() {
                 onClick={() => {
                   const currentShopType = onUseLocalStorage(
                     "get",
-                    "currentShopType"
+                    "currentShopType",
                   );
                   const restaurantId = onUseLocalStorage("get", "restaurant");
                   const restaurantSlug = onUseLocalStorage(
                     "get",
-                    "restaurant-slug"
+                    "restaurant-slug",
                   );
                   router.replace(
-                    `/${currentShopType}/${restaurantSlug}/${restaurantId}`
+                    `/${currentShopType}/${restaurantSlug}/${restaurantId}`,
                   );
                 }}
               >
@@ -1283,10 +1257,9 @@ export default function OrderCheckoutScreen() {
                       className="text-gray-600 dark:text-gray-300 flex items-center text-sm sm:text-base md:text-[12px] lg:text-[12px] xl:text-[14px]"
                       htmlFor="card"
                     >
-                      <FontAwesomeIcon
-                        icon={paymentMethodItem.icon}
-                        className="text-gray-900 mr-2 dark:text-gray-100 rtl:ml-2"
-                      />
+                      <span className="font-medium pr-1">
+                        {CURRENCY_SYMBOL}
+                      </span>
                       {t(paymentMethodItem.label)}
                     </label>
                     <input
@@ -1318,10 +1291,11 @@ export default function OrderCheckoutScreen() {
                       (tip: string, index: number) => (
                         <button
                           key={index}
-                          className={`text-[12px] ${selectedTip === tip
-                            ? "text-white bg-secondary-color"
-                            : "text-secondary-color bg-white dark:bg-gray-800 dark:text-secondary-color"
-                            } border border-secondary-color px-4 py-2 rounded-full w-full`}
+                          className={`text-[12px] ${
+                            selectedTip === tip
+                              ? "text-white bg-secondary-color"
+                              : "text-secondary-color bg-white dark:bg-gray-800 dark:text-secondary-color"
+                          } border border-secondary-color px-4 py-2 rounded-full w-full`}
                           onClick={() => {
                             if (selectedTip === tip) {
                               setSelectedTip("");
@@ -1333,7 +1307,7 @@ export default function OrderCheckoutScreen() {
                           {tip !== "Other" ? CURRENCY_SYMBOL : ""}
                           {tip}
                         </button>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
@@ -1389,8 +1363,10 @@ export default function OrderCheckoutScreen() {
                       disabled={couponLoading}
                     />
                     <button
-                      className="bg-primary-color rtl:mr-2 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium text-gray-900 dark:text-gray-900  tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full"
+                      className="bg-primary-color rtl:mr-2 sm:mt-0 mt-2 sm:w-fit w-full h-10 px-8 space-x-2 font-medium text-gray-900 dark:text-gray-900  tracking-normal font-inter text-sm sm:text-base md:text-[12px] lg:text-[14px] rounded-full
+                      disabled:opacity-60 disabled:cursor-not-allowed"
                       onClick={onApplyCoupon}
+                      disabled={cart.length === 0}
                     >
                       {couponLoading ? (
                         <FontAwesomeIcon icon={faSpinner} spin />
@@ -1508,8 +1484,9 @@ export default function OrderCheckoutScreen() {
               </div>
 
               <button
-                className="bg-primary-color text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px]"
+                className="bg-primary-color text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={onPlaceOrder}
+                disabled={cart.length === 0}
               >
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />

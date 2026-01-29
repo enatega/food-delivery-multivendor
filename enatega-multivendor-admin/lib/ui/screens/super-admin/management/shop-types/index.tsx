@@ -18,7 +18,7 @@ export default function CouponsScreen() {
       __typename: '',
       _id: '',
       isActive: false,
-      image:"",
+      image: '',
       name: '',
     },
   });
@@ -26,6 +26,16 @@ export default function CouponsScreen() {
   //toggle visibility
   const handleButtonClick = () => {
     setVisible(true);
+    setIsEditing({
+      bool: false,
+      data: {
+        __typename: '',
+        _id: '',
+        isActive: false,
+        image: '',
+        name: '',
+      },
+    });
   };
 
   return (

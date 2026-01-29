@@ -66,24 +66,24 @@ const UserHeader: React.FC<UserHeaderProps> = ({
             className="min-w-[300px] px-2 py-3 border rounded-md"
           />
           <CustomMultiSelectComponent
-            name={"registration_method"}
+            name={'registration_method'}
             selectedItems={registrationMethodFilter}
             options={registrationMethodOptions}
-            setSelectedItems={(key, items) => handleRegistrationMethodChange(items)}
+            setSelectedItems={(key, items) =>
+              handleRegistrationMethodChange(items)
+            }
             placeholder={t('registration_method')}
             className=" w-min border dark:border-dark-600 rounded-md py-1"
-            multiSelectClassName='border-none'
-
+            multiSelectClassName="border-none"
           />
           <CustomMultiSelectComponent
-            name={"account_status"}
+            name={'account_status'}
             selectedItems={accountStatusFilter}
             options={accountStatusOptions}
             setSelectedItems={(key, items) => handleAccountStatusChange(items)}
             placeholder={t('account_status')}
-            className=" w-min border  border dark:border-dark-600 rounded-md py-1"
-            multiSelectClassName='border-none'
-
+            className=" w-min border dark:border-dark-600 rounded-md py-1"
+            multiSelectClassName="border-none"
           />
         </div>
       </div>

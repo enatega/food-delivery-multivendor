@@ -90,14 +90,14 @@ export default function TransactionHistoryStoreTableHeader({
           )}
         </div>
       </div>
-      <div className="flex gap-4">
+      <div className="flex">
         <span className="p-input-icon-left">
-          <i className="pi pi-search" />
+          <i className="pi pi-search pl-2" />
           <InputText
-            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-black dark:text-white"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-7 pr-3 text-black dark:text-white"
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
-            placeholder={t('Search')}
+            placeholder={t('Search here')}
           />
         </span>
       </div>

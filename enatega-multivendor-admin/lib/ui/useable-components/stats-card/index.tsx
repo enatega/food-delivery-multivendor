@@ -1,5 +1,4 @@
 // Core
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 
 // Interface
@@ -16,7 +15,6 @@ export default function StatsCard({
   total,
   description,
   currencySymbol,
-  icon,
   route,
   loading = false,
   amountConfig,
@@ -27,8 +25,9 @@ export default function StatsCard({
 }: IStatsCardProps) {
   const stats_card = () => (
     <div
-      className={`card flex flex-col justify-between min-h-28 bg-white border border-gray-200 dark:bg-dark-900 dark:border-dark-600 dark:text-white ${isClickable ? 'cursor-pointer' : 'cursor-default'
-        }`}
+      className={`card flex flex-col justify-between min-h-28 bg-white border border-gray-200 dark:bg-dark-900 dark:border-dark-600 dark:text-white ${
+        isClickable ? 'cursor-pointer' : 'cursor-default'
+      }`}
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="text-gray-600 dark:text-white">{label}</span>
@@ -58,10 +57,9 @@ export default function StatsCard({
 
   return loading ? (
     <DashboardStatsCardSkeleton />
-  ) : isClickable ?
-    (
-      <Link href={route ?? ''}>{stats_card()}</Link>
-    ) : (
-      stats_card()
-    );
+  ) : isClickable ? (
+    <Link href={route ?? ''}>{stats_card()}</Link>
+  ) : (
+    stats_card()
+  );
 }

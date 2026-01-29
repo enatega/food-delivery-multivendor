@@ -7,12 +7,13 @@ import RestaurantProfileSkeleton from '@/lib/ui/useable-components/custom-skelet
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faDollarSign } from '@fortawesome/free-solid-svg-icons';
-
+import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 const RestaurantMain: React.FC = () => {
   // Hooks
   const t = useTranslations();
+  const { CURRENT_SYMBOL } = useConfiguration();
 
   // Context
   const { restaurantProfileResponse } = useContext(ProfileContext);
@@ -26,7 +27,7 @@ const RestaurantMain: React.FC = () => {
     if (label === t('Delivery Time')) {
       icon = <FontAwesomeIcon icon={faClock} className="mr-1" />;
     } else if (label === t('Service Charges') || label === t('Min Order')) {
-      icon = <FontAwesomeIcon icon={faDollarSign} className="mr-1" />;
+      icon = CURRENT_SYMBOL || '$';
     }
     return (
       <div>
@@ -44,7 +45,9 @@ const RestaurantMain: React.FC = () => {
         <div className="flex items-center mb-6">
           <ProfileLogoSVG width="55" height="55" strokeColor="#1E1E1E" />
           <div className="ml-2">
-            <h1 className="text-xs text-gray-500 dark:text-white">{t('Store Name')}</h1>
+            <h1 className="text-xs text-gray-500 dark:text-white">
+              {t('Store Name')}
+            </h1>
             <h2 className="text-2xl font-bold">{restaurant?.name || 'N/A'}</h2>
           </div>
         </div>
@@ -53,7 +56,9 @@ const RestaurantMain: React.FC = () => {
           <InfoItem label={t('Email')} value={restaurant?.username} />
           <InfoItem label={t('Password')} value={restaurant?.password} />
           <div className="md:row-span-4">
-            <p className="text-xs text-gray-500 dark:text-white mb-4">{t('Images')}</p>
+            <p className="text-xs text-gray-500 dark:text-white mb-4">
+              {t('Images')}
+            </p>
             <div className="flex space-x-2">
               {restaurant?.image ? (
                 <Image

@@ -71,9 +71,9 @@ export default function EarningRestaurantTableHeader({
     <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
       <div className="flex flex-wrap gap-4">
         <span className="p-input-icon-left w-full md:w-auto">
-          <i className="pi pi-search" />
+          <i className="pi pi-search ml-2" />
           <InputText
-            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3"
+            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-7 pr-3"
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
             placeholder={t('Search')}
@@ -81,7 +81,7 @@ export default function EarningRestaurantTableHeader({
         </span>
         <div className="flex flex-col">
           <Calendar
-            className="w-[14rem] h-10 border-[1px] border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
+            className="w-[14rem] h-10 border-[1px] font-medium border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-sm"
             placeholder={t('Start Date')}
             value={
               dateFilters.startingDate

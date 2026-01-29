@@ -916,5 +916,7 @@
   "Thursday": "Giovedì",
   "Friday": "Venerdì",
   "Saturday": "Sabato",
-  "Sunday": "Domenica"
+  "Sunday": "Domenica",
+   "loading_orders": " Caricamento ordini...",
+  "show_more_orders": "Mostra più ordini"
 }

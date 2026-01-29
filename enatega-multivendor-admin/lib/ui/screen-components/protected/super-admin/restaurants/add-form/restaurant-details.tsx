@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 // Core
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { Form, Formik } from 'formik';
@@ -21,6 +22,8 @@ import CustomMultiSelectComponent from '@/lib/ui/useable-components/custom-multi
 import CustomTextField from '@/lib/ui/useable-components/input-field';
 import CustomIconTextField from '@/lib/ui/useable-components/input-icon-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
+import ShopTypesForm from '@/lib/ui/screen-components/protected/super-admin/shop-types/form';
+import CuisineForm from '@/lib/ui/screen-components/protected/super-admin/cuisines/form';
 
 // Constants
 import {
@@ -31,6 +34,7 @@ import {
 
 // Interface
 import { IRestaurantForm } from '@/lib/utils/interfaces';
+import { IEditState, IShopType } from '@/lib/utils/interfaces';
 
 // Methods
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
@@ -53,7 +57,12 @@ import {
 import { IRestaurantsAddRestaurantComponentProps } from '@/lib/utils/interfaces/restaurants.interface';
 import { toTextCase } from '@/lib/utils/methods';
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
-import { ApolloCache, ApolloError, useMutation, useQuery } from '@apollo/client';
+import {
+  ApolloCache,
+  ApolloError,
+  useMutation,
+  useQuery,
+} from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 import { useShopTypes } from '@/lib/hooks/useShopType';
@@ -80,6 +89,29 @@ export default function RestaurantDetailsForm({
 }: IRestaurantsAddRestaurantComponentProps) {
   // Hooks
   const t = useTranslations();
+  const [isAddShopTypeVisible, setIsAddShopTypeVisible] = useState(false);
+  const [isEditShopType, setIsEditShopType] = useState<IEditState<IShopType>>({
+    bool: false,
+    data: {
+      __typename: '',
+      _id: '',
+      name: '',
+      isActive: true,
+      image: '',
+    },
+  });
+  const [isAddCuisineVisible, setIsAddCuisineVisible] = useState(false);
+  const [isEditCuisine, setIsEditCuisine] = useState<IEditState<ICuisine>>({
+    bool: false,
+    data: {
+      _id: '',
+      description: '',
+      image: '',
+      name: '',
+      shopType: '',
+      __typename: '',
+    },
+  });
 
   // Props
   const { onStepChange, order } = stepperProps ?? {
@@ -130,7 +162,10 @@ export default function RestaurantDetailsForm({
   }) as IQueryResult<IGetCuisinesData | undefined, undefined>;
   cuisineResponse.data?.cuisines;
 
-  const {dropdownList,loading} =  useShopTypes({invoke_now: true, transform_to_dropdown_list: true})
+  const { dropdownList, loading } = useShopTypes({
+    invoke_now: true,
+    transform_to_dropdown_list: true,
+  });
 
   // Memoized Constants
   const cuisinesDropdown = useMemo(
@@ -155,9 +190,9 @@ export default function RestaurantDetailsForm({
         return;
       }
 
-       // check if values.name is present in restaurantData and show error toast
-       const existingRestaurant = restaurantData?.restaurants.find(
-        (restaurant:IRestaurantForm) =>
+      // check if values.name is present in restaurantData and show error toast
+      const existingRestaurant = restaurantData?.restaurants.find(
+        (restaurant: IRestaurantForm) =>
           restaurant.name.toLowerCase() === data.name.toLowerCase()
       );
       console.log('existingRestaurant ==> ', existingRestaurant);
@@ -236,6 +271,8 @@ export default function RestaurantDetailsForm({
     });
   }
 
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{6,}$/;
   return (
     <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950">
       <div className="h-full w-full">
@@ -475,7 +512,7 @@ export default function RestaurantDetailsForm({
                         />
                       </div>
                       <div>
-                      <CustomDropdownComponent
+                        <CustomDropdownComponent
                           name="shopType"
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
@@ -491,6 +528,10 @@ export default function RestaurantDetailsForm({
                             )
                               ? 'red'
                               : '',
+                          }}
+                          extraFooterButton={{
+                            title: t('Add Shop Category'),
+                            onChange: () => setIsAddShopTypeVisible(true),
                           }}
                         />
                       </div>
@@ -511,6 +552,10 @@ export default function RestaurantDetailsForm({
                             )
                               ? 'red'
                               : '',
+                          }}
+                          extraFooterButton={{
+                            title: t('Add Cuisine'),
+                            onChange: () => setIsAddCuisineVisible(true),
                           }}
                         />
                       </div>
@@ -563,20 +608,35 @@ export default function RestaurantDetailsForm({
 
                       <div className="mt-4 flex justify-between">
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                          className="h-10 w-fit border border-gray-300 dark:hover:bg-dark-600 dark:border-dark-600 bg-black px-8 text-white"
                           label={t('Back')}
                           type="button"
                           onClick={() => onStepChange(order - 1)}
                         />
 
                         <CustomButton
-                          className="h-10 w-fit border-gray-300 bg-black px-8 text-white"
+                          className="h-10 w-fit border border-gray-300 dark:hover:bg-dark-600 dark:border-dark-600 bg-black px-8 text-white"
                           label={t('Save & Next')}
                           type="submit"
                           loading={isSubmitting}
+                          onClick={() => {
+                            if (
+                              values.password &&
+                              !strongPasswordRegex.test(values.password)
+                            ) {
+                              showToast({
+                                title: t('Error'),
+                                message: t(
+                                  'Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+                                ),
+                                type: 'error',
+                                duration: 3000,
+                              });
+                            }
+                          }}
                         />
                       </div>
-                      <div className='flex justify-end'>
+                      <div className="flex justify-end">
                         {errors.address && touched.address && (
                           <small className="ml-5 p-error">
                             {errors.address}
@@ -589,6 +649,20 @@ export default function RestaurantDetailsForm({
               }}
             </Formik>
           </div>
+
+          <ShopTypesForm
+            visible={isAddShopTypeVisible}
+            setVisible={setIsAddShopTypeVisible}
+            isEditing={isEditShopType}
+            setIsEditing={setIsEditShopType}
+          />
+
+          <CuisineForm
+            visible={isAddCuisineVisible}
+            setVisible={setIsAddCuisineVisible}
+            isEditing={isEditCuisine}
+            setIsEditing={setIsEditCuisine}
+          />
         </div>
       </div>
     </div>

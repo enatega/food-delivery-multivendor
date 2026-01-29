@@ -16,7 +16,7 @@ export interface IAuthFormData {
   password?: string;
   phone?: string;
   type?: "default" | "google";
-  isReset?: boolean;
+  isPhoneExists?: boolean;
 }
 export interface ILoginWithGoogleProps {
   googleLogin: (overrideConfig?: OverridableTokenClientConfig) => void;
@@ -198,7 +198,7 @@ export interface ICreateUserArguments {
   notificationToken?: string;
   appleId?: string;
   emailIsVerified?: boolean; // optional, can be undefined
-  isReset?: boolean;
+  isPhoneExists?: boolean;
 }
 export interface IVerificationEmailForChangePasswordProps {
   handleSubmitAfterVerification: () => void;

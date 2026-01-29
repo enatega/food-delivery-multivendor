@@ -75,6 +75,15 @@ export interface IRestaurantResponse {
   shopType: string;
   __typename: string;
 }
+//Interface for commission rate
+export interface ICommissionRateRestaurantResponse {
+  _id: string;
+  unique_restaurant_id: string;
+  orderId: string;
+  orderPrefix: string;
+  name: string;
+  commissionRate: number;
+}
 
 // Updated to support pagination
 export interface IPaginatedRestaurantResponse {
