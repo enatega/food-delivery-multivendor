@@ -25,6 +25,7 @@ interface SignUpFormProps {
 const initialValues: ISignUpInitialValues = {
   name: "",
   username: "",
+  email: "",
   password: "",
   confirmPassword: "",
   phone: "",
@@ -75,6 +76,18 @@ export default function SignUpForm({
             onBlur={handleBlur("username") as any}
             error={touched.username ? errors.username : undefined}
             icon="user"
+          />
+
+          <FormInput
+            label={t("Email")}
+            placeholder={t("Enter your email")}
+            value={values.email}
+            onChangeText={handleChange("email")}
+            onBlur={handleBlur("email") as any}
+            error={touched.email ? errors.email : undefined}
+            icon="envelope"
+            keyboardType="email-address"
+            autoCapitalize="none"
           />
 
           <CustomPhoneInput

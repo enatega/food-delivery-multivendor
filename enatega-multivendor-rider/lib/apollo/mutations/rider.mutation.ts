@@ -6,6 +6,7 @@ export const CREATE_RIDER = gql`
       _id
       name
       username
+      email
       password
       phone
       available
