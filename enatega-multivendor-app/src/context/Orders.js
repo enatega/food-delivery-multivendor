@@ -28,14 +28,19 @@ export const OrdersProvider = ({ children }) => {
     subscribeToMore: subscribeToMoreOrders
   } = useQuery(ORDERS, {
     fetchPolicy: 'network-only',
-    onError,
-    // pollInterval:2000,
     skip: !profile
   })
 
   function onError(error) {
     console.log('error context orders', error?.message)
   }
+
+  // Replace deprecated onError with useEffect
+  useEffect(() => {
+    if (errorOrders) {
+      onError(errorOrders)
+    }
+  }, [errorOrders])
 
   useEffect(() => {
     if (!profile) return
