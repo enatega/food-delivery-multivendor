@@ -242,6 +242,9 @@ export default function RestaurantDetails({
     });
   }
 
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{6,}$/;
+
   return (
     <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950">
       <div className="h-full w-full">
@@ -585,6 +588,20 @@ export default function RestaurantDetails({
                           label={t('Add')}
                           type="submit"
                           loading={isSubmitting}
+                          onClick={() => {
+                            if (
+                              values.password &&
+                              !strongPasswordRegex.test(values.password)
+                            ) {
+                              showToast({
+                                type: 'error',
+                                duration: 3000,
+                                title: 'Weak Password',
+                                message:
+                                  'Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+                              });
+                            }
+                          }}
                         />
                       </div>
                     </div>
