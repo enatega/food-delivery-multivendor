@@ -845,3 +845,42 @@ query PastNotificationsByToken($skip: Int, $limit: Int) {
   }
 }
 `
+
+export const GET_ALL_CATEGORIES_WITH_SUBCATEGORIES_ONLY_SEE_ALL_SINGLE_VENDOR = gql`
+  query GetAllCategoriesWithSubCategoriesOnlySeeAllSingleVendor {
+    getAllCategoriesWithSubCategoriesOnlySeeAllSingleVendor {
+      categoryId
+      categoryName
+      subCategories {
+        subCategoryId
+        subCategoryName
+      }
+    }
+  }
+`
+export const GET_CATEGORY_PRODUCTS = gql`
+  query GetCategoryProducts($categoryId: ID!, $offset: Int!, $limit: Int!) {
+    getCategoryProducts(pagination: { offset: $offset, limit: $limit }, categoryId: $categoryId) {
+      hasMore
+      totalCount
+      items {
+        id
+        title
+        image
+        description
+        subCategory
+        variations {
+          id
+          title
+          price
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
+        }
+      }
+    }
+  }
+`
