@@ -19,6 +19,22 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type ActivityDetails = {
+  __typename?: 'ActivityDetails';
+  _id: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  referralsByLevel: ActivityReferralsByLevel;
+  totalEarnings: Scalars['Float']['output'];
+  totalReferrals: Scalars['Int']['output'];
+};
+
+export type ActivityReferralsByLevel = {
+  __typename?: 'ActivityReferralsByLevel';
+  level1: ReferralLevelDetails;
+  level2: ReferralLevelDetails;
+  level3: ReferralLevelDetails;
+};
+
 export type Addon = {
   __typename?: 'Addon';
   _id: Scalars['String']['output'];
@@ -67,6 +83,19 @@ export type Admin = {
   userId: Scalars['String']['output'];
 };
 
+export type AllShopTypeResponse = {
+  __typename?: 'AllShopTypeResponse';
+  _id: Scalars['ID']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  slug?: Maybe<Scalars['String']['output']>;
+};
+
+export type AllShopTypes = {
+  __typename?: 'AllShopTypes';
+  data?: Maybe<Array<Maybe<AllShopTypeResponse>>>;
+};
+
 export type AmplitudeApiKeyConfigurationInput = {
   appAmplitudeApiKey: Scalars['String']['input'];
   webAmplitudeApiKey: Scalars['String']['input'];
@@ -87,6 +116,12 @@ export type AppType = {
 export type AppTypeInput = {
   android?: InputMaybe<Scalars['String']['input']>;
   ios?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ApplyReferralCodeResponse = {
+  __typename?: 'ApplyReferralCodeResponse';
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type AuditLog = {
@@ -121,6 +156,9 @@ export type AuthData = {
   phone?: Maybe<Scalars['String']['output']>;
   phoneIsVerified?: Maybe<Scalars['Boolean']['output']>;
   picture?: Maybe<Scalars['String']['output']>;
+  referralCode?: Maybe<Scalars['String']['output']>;
+  rejectionReason?: Maybe<Scalars['String']['output']>;
+  riderRequestStatus?: Maybe<Scalars['String']['output']>;
   token: Scalars['String']['output'];
   tokenExpiration: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
@@ -394,6 +432,10 @@ export type Configuration = {
   webSentryUrl?: Maybe<Scalars['String']['output']>;
 };
 
+export type ConvertPointsInput = {
+  points: Scalars['Int']['input'];
+};
+
 export type CoordinatesInput = {
   latitude: Scalars['Float']['input'];
   longitude: Scalars['Float']['input'];
@@ -449,6 +491,11 @@ export type CreateOptionInput = {
   restaurant?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CreateShopTypeInput = {
+  image?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
 export type Cuisine = {
   __typename?: 'Cuisine';
   _id: Scalars['String']['output'];
@@ -456,6 +503,14 @@ export type Cuisine = {
   image?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   shopType?: Maybe<Scalars['String']['output']>;
+};
+
+export type CuisineFilterInput = {
+  keyword?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  paginate?: InputMaybe<Scalars['Boolean']['input']>;
+  shopType?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CuisineInput = {
@@ -473,6 +528,7 @@ export type CurrencyConfigurationInput = {
 
 export type DashboardCounts = {
   __typename?: 'DashboardCounts';
+  percentageChange?: Maybe<PercentageChange>;
   restaurantsCount?: Maybe<Array<Scalars['Int']['output']>>;
   ridersCount?: Maybe<Array<Scalars['Int']['output']>>;
   usersCount?: Maybe<Array<Scalars['Int']['output']>>;
@@ -566,6 +622,11 @@ export type DeleteResult = {
   success: Scalars['Boolean']['output'];
 };
 
+export enum DeleteTypeEnum {
+  Hard = 'HARD',
+  Soft = 'SOFT'
+}
+
 export type DeliveryBoundsResponse = {
   __typename?: 'DeliveryBoundsResponse';
   coordinates?: Maybe<Array<Maybe<Array<Maybe<Array<Scalars['Float']['output']>>>>>>;
@@ -610,6 +671,12 @@ export type Earnings = {
   updatedAt?: Maybe<Scalars['Date']['output']>;
 };
 
+export type EarningsByLevel = {
+  __typename?: 'EarningsByLevel';
+  totalEarnings: Scalars['Float']['output'];
+  totalReferrals: Scalars['Int']['output'];
+};
+
 export type EarningsData = {
   __typename?: 'EarningsData';
   earnings?: Maybe<Array<Earnings>>;
@@ -639,6 +706,24 @@ export type EmailConfigurationInput = {
   emailName: Scalars['String']['input'];
   enableEmail: Scalars['Boolean']['input'];
   password: Scalars['String']['input'];
+};
+
+export type FetchLoyaltyReferralHistoryFilterInput = {
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  startDate?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FetchShopTypeFilter = {
+  isDeleted?: InputMaybe<Scalars['Boolean']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FetchUniqueShopTypeInput = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FiltersInput = {
@@ -705,6 +790,14 @@ export type FormSubmissionResponse = {
   __typename?: 'FormSubmissionResponse';
   message: Scalars['String']['output'];
   status: Scalars['String']['output'];
+};
+
+export type GetAllCuisinesResponse = {
+  __typename?: 'GetAllCuisinesResponse';
+  cuisines: Array<Cuisine>;
+  currentPage: Scalars['Int']['output'];
+  docsCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
 };
 
 export type GoogleApiKeyConfigurationInput = {
@@ -846,6 +939,23 @@ export type LoyaltyLevelInput = {
   userType: Scalars['String']['input'];
 };
 
+export type LoyaltyReferralAnalytics = {
+  __typename?: 'LoyaltyReferralAnalytics';
+  totalPointsDistributed?: Maybe<Scalars['Int']['output']>;
+  totalReferralCashDistributed?: Maybe<Scalars['Float']['output']>;
+  totalReferrals?: Maybe<Scalars['Int']['output']>;
+};
+
+export type LoyaltyReferralHistoryResponse = {
+  __typename?: 'LoyaltyReferralHistoryResponse';
+  currentPage: Scalars['Int']['output'];
+  data: Array<Maybe<LoyalyReferralHistory>>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
 export type LoyaltyTier = {
   __typename?: 'LoyaltyTier';
   _id: Scalars['String']['output'];
@@ -863,6 +973,8 @@ export type LoyalyReferralHistory = {
   _id: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
   level: Scalars['Int']['output'];
+  source: Scalars['String']['output'];
+  triggeredBy: Scalars['String']['output'];
   type: Scalars['String']['output'];
   user_name: Scalars['String']['output'];
   user_rank: Scalars['String']['output'];
@@ -890,15 +1002,18 @@ export type Mutation = {
   Deactivate: User;
   abortOrder?: Maybe<Order>;
   acceptOrder: Order;
+  acceptRiderRequest?: Maybe<Rider>;
   addFavourite: User;
   addOrUpdateLiveActivityToken: LiveActivityResponse;
   addRestaurantToOffer?: Maybe<Offer>;
   adminLogin: Admin;
+  applyReferralCode: ApplyReferralCodeResponse;
   assignOrder?: Maybe<Order>;
   assignRider: Order;
   banner: Banner;
   cancelOrder: Order;
   changePassword: Scalars['Boolean']['output'];
+  convertPointsToWallet: Scalars['Boolean']['output'];
   coupon: CouponResponse;
   createAddons: Restaurant;
   createAddress: User;
@@ -919,6 +1034,7 @@ export type Mutation = {
   createReview: Restaurant;
   createRider: Rider;
   createSection: Section;
+  createShopType?: Maybe<ShopType>;
   createStaff: Staff;
   createSubCategories: Scalars['String']['output'];
   createSubCategory: Scalars['String']['output'];
@@ -948,6 +1064,7 @@ export type Mutation = {
   deleteRestaurantCoupon: Scalars['String']['output'];
   deleteRider: Rider;
   deleteSection?: Maybe<Scalars['Boolean']['output']>;
+  deleteShopType?: Maybe<ShopType>;
   deleteStaff: Staff;
   deleteSubCategories: Scalars['String']['output'];
   deleteSubCategory: Scalars['String']['output'];
@@ -991,6 +1108,9 @@ export type Mutation = {
   phoneExist?: Maybe<User>;
   placeOrder: Order;
   pushToken: User;
+  reapplyRider: Rider;
+  redeemWalletForOrder: Scalars['Boolean']['output'];
+  rejectRiderRequest: Rider;
   resetPassword: ForgotPassword;
   resetUserSession?: Maybe<User>;
   restaurantLogin: RestaurantAuth;
@@ -1028,6 +1148,7 @@ export type Mutation = {
   toggleAvailablity: Rider;
   toggleMenuFood: Food;
   toggleStoreAvailability: Restaurant;
+  transferReferralBalance?: Maybe<Rider>;
   updateCommission: Restaurant;
   updateDeliveryBoundsAndLocation: RestaurantResponse;
   updateFoodOutOfStock: Scalars['Boolean']['output'];
@@ -1044,6 +1165,7 @@ export type Mutation = {
   updateRiderLicenseDetails: Rider;
   updateRiderLocation: Rider;
   updateRiderVehicleDetails: Rider;
+  updateShopType?: Maybe<ShopType>;
   updateStatus: Order;
   updateSupportTicketStatus: SupportTicket;
   updateTimings: Restaurant;
@@ -1076,6 +1198,11 @@ export type MutationAcceptOrderArgs = {
 };
 
 
+export type MutationAcceptRiderRequestArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationAddFavouriteArgs = {
   id: Scalars['String']['input'];
 };
@@ -1097,6 +1224,11 @@ export type MutationAddRestaurantToOfferArgs = {
 export type MutationAdminLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationApplyReferralCodeArgs = {
+  referralCode: Scalars['String']['input'];
 };
 
 
@@ -1125,6 +1257,11 @@ export type MutationCancelOrderArgs = {
 export type MutationChangePasswordArgs = {
   newPassword: Scalars['String']['input'];
   oldPassword: Scalars['String']['input'];
+};
+
+
+export type MutationConvertPointsToWalletArgs = {
+  input: ConvertPointsInput;
 };
 
 
@@ -1228,6 +1365,11 @@ export type MutationCreateRiderArgs = {
 
 export type MutationCreateSectionArgs = {
   section: SectionInput;
+};
+
+
+export type MutationCreateShopTypeArgs = {
+  dto: InputMaybe<CreateShopTypeInput>;
 };
 
 
@@ -1380,6 +1522,12 @@ export type MutationDeleteRiderArgs = {
 
 export type MutationDeleteSectionArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteShopTypeArgs = {
+  id: Scalars['String']['input'];
+  type: InputMaybe<DeleteTypeEnum>;
 };
 
 
@@ -1548,6 +1696,7 @@ export type MutationLoginArgs = {
   name: InputMaybe<Scalars['String']['input']>;
   notificationToken: InputMaybe<Scalars['String']['input']>;
   password: InputMaybe<Scalars['String']['input']>;
+  referralCode: InputMaybe<Scalars['String']['input']>;
   type: Scalars['String']['input'];
 };
 
@@ -1611,11 +1760,28 @@ export type MutationPlaceOrderArgs = {
   restaurant: Scalars['String']['input'];
   taxationAmount: Scalars['Float']['input'];
   tipping: Scalars['Float']['input'];
+  walletAmount: InputMaybe<Scalars['Float']['input']>;
 };
 
 
 export type MutationPushTokenArgs = {
   token: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationReapplyRiderArgs = {
+  email: Scalars['String']['input'];
+};
+
+
+export type MutationRedeemWalletForOrderArgs = {
+  input: RedeemWalletInput;
+};
+
+
+export type MutationRejectRiderRequestArgs = {
+  id: Scalars['ID']['input'];
+  reason: Scalars['String']['input'];
 };
 
 
@@ -1817,6 +1983,11 @@ export type MutationToggleStoreAvailabilityArgs = {
 };
 
 
+export type MutationTransferReferralBalanceArgs = {
+  amount: Scalars['Float']['input'];
+};
+
+
 export type MutationUpdateCommissionArgs = {
   commissionRate: Scalars['Float']['input'];
   id: Scalars['String']['input'];
@@ -1923,6 +2094,11 @@ export type MutationUpdateRiderVehicleDetailsArgs = {
 };
 
 
+export type MutationUpdateShopTypeArgs = {
+  dto: InputMaybe<UpdateShopTypeInput>;
+};
+
+
 export type MutationUpdateStatusArgs = {
   id: InputMaybe<Scalars['String']['input']>;
   orderStatus: Scalars['String']['input'];
@@ -1953,6 +2129,7 @@ export type MutationUpdateUserNotesArgs = {
 
 export type MutationUpdateUserStatusArgs = {
   id: Scalars['ID']['input'];
+  reason: InputMaybe<Scalars['String']['input']>;
   status: Scalars['String']['input'];
 };
 
@@ -2104,6 +2281,7 @@ export type Order = {
   deliveredAt?: Maybe<Scalars['String']['output']>;
   deliveryAddress: OrderAddress;
   deliveryCharges?: Maybe<Scalars['Float']['output']>;
+  discountAmount?: Maybe<Scalars['Float']['output']>;
   expectedTime?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   instructions?: Maybe<Scalars['String']['output']>;
@@ -2285,6 +2463,14 @@ export type PaypalConfigurationInput = {
   sandbox: Scalars['Boolean']['input'];
 };
 
+export type PercentageChange = {
+  __typename?: 'PercentageChange';
+  restaurantsPercent?: Maybe<Scalars['Float']['output']>;
+  ridersPercent?: Maybe<Scalars['Float']['output']>;
+  usersPercent?: Maybe<Scalars['Float']['output']>;
+  vendorsPercent?: Maybe<Scalars['Float']['output']>;
+};
+
 export type PlatformEarnings = {
   __typename?: 'PlatformEarnings';
   deliveryCommission: Scalars['Float']['output'];
@@ -2296,7 +2482,14 @@ export type PlatformEarnings = {
 
 export type Point = {
   __typename?: 'Point';
+  _id: Scalars['ID']['output'];
   coordinates?: Maybe<Array<Scalars['String']['output']>>;
+  createdAt: Scalars['Date']['output'];
+  orderId?: Maybe<Scalars['String']['output']>;
+  points: Scalars['Int']['output'];
+  referredUser?: Maybe<User>;
+  type: Scalars['String']['output'];
+  user: Scalars['ID']['output'];
 };
 
 export type PointInput = {
@@ -2318,6 +2511,7 @@ export type Query = {
   __typename?: 'Query';
   addons?: Maybe<Array<Addon>>;
   allOrders: Array<Order>;
+  allOrdersPaginated: OrderPagination;
   allOrdersWithoutPagination: Array<Order>;
   assignedOrders?: Maybe<Array<Order>>;
   auditLogs: AuditLogPagination;
@@ -2331,6 +2525,7 @@ export type Query = {
   cuisines: Array<Cuisine>;
   deliveredOrders: Array<Order>;
   earnings?: Maybe<EarningsResponse>;
+  fetchAllShopTypes?: Maybe<AllShopTypes>;
   fetchCategoryDetailsByStoreId?: Maybe<Array<Maybe<CategoryDetailsResponse>>>;
   fetchCategoryDetailsByStoreIdForMobile?: Maybe<Array<Maybe<CategoryDetailsResponseForMobile>>>;
   fetchLoyaltyBreakdownById?: Maybe<LoyaltyBreakdown>;
@@ -2338,13 +2533,24 @@ export type Query = {
   fetchLoyaltyConfiguration?: Maybe<LoyaltyConfiguration>;
   fetchLoyaltyLevelById?: Maybe<LoyaltyLevel>;
   fetchLoyaltyLevelsByUserType?: Maybe<Array<Maybe<LoyaltyLevel>>>;
+  fetchLoyaltyReferralAnalytics?: Maybe<LoyaltyReferralAnalytics>;
   fetchLoyaltyTierById?: Maybe<LoyaltyTier>;
   fetchLoyaltyTiers?: Maybe<Array<Maybe<LoyaltyTier>>>;
-  fetchReferralLoyaltyHistory?: Maybe<Array<Maybe<LoyalyReferralHistory>>>;
+  fetchReferralLoyaltyHistory?: Maybe<LoyaltyReferralHistoryResponse>;
+  fetchRiderActivityDetails?: Maybe<ActivityDetails>;
+  fetchRiderRecentActivity?: Maybe<RiderRecentActivityResponse>;
+  fetchRiderReferralRewards?: Maybe<RiderReferralRewards>;
+  fetchRiderRequests?: Maybe<Array<Maybe<Rider>>>;
+  fetchShopTypeByUnique?: Maybe<ShopType>;
+  fetchShopTypes?: Maybe<ShopTypePagination>;
+  fetchUserLoyaltyData?: Maybe<UserLoyaltyData>;
+  fetchWalletBalance: Scalars['Float']['output'];
+  fetchWalletTransactions: Array<WalletTransaction>;
   foodByCategory: Array<Food>;
   foodByIds?: Maybe<Array<CartFood>>;
   foods: Array<Food>;
   getActiveOrders: OrderPagination;
+  getAllCuisines: GetAllCuisinesResponse;
   getAllSupportTickets: PaginatedSupportTickets;
   getAllWithdrawRequests: WithdrawRequestReponse;
   getCitiesByCountry?: Maybe<Country>;
@@ -2365,6 +2571,7 @@ export type Query = {
   getOrderStatuses?: Maybe<Array<Scalars['String']['output']>>;
   getOrdersByDateRange: OrdersWithCashOnDeliveryInfo;
   getPaymentStatuses?: Maybe<Array<Scalars['String']['output']>>;
+  getReferralActivities: Array<Point>;
   getRestaurantDashboardOrdersSalesStats: RestaurantDashboardOrders;
   getRestaurantDashboardSalesOrderCountDetailsByYear: DashboardSalesOrderCountDetails;
   getRestaurantDeliveryZoneInfo?: Maybe<RestaurantDeliveryZoneInfoResponse>;
@@ -2417,6 +2624,7 @@ export type Query = {
   reviews: Array<Review>;
   reviewsByRestaurant: ReviewResult;
   rider: Rider;
+  riderByEmail?: Maybe<Rider>;
   riderCompletedOrders?: Maybe<Array<Order>>;
   riderCurrentWithdrawRequest?: Maybe<WithdrawRequest>;
   riderEarnings?: Maybe<Array<Earnings>>;
@@ -2455,6 +2663,17 @@ export type Query = {
 
 export type QueryAllOrdersArgs = {
   page: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryAllOrdersPaginatedArgs = {
+  dateKeyword: InputMaybe<Scalars['String']['input']>;
+  ending_date: InputMaybe<Scalars['String']['input']>;
+  orderStatus: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  page: InputMaybe<Scalars['Int']['input']>;
+  rows: InputMaybe<Scalars['Int']['input']>;
+  search: InputMaybe<Scalars['String']['input']>;
+  starting_date: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2527,6 +2746,42 @@ export type QueryFetchLoyaltyTierByIdArgs = {
 };
 
 
+export type QueryFetchReferralLoyaltyHistoryArgs = {
+  filter: InputMaybe<FetchLoyaltyReferralHistoryFilterInput>;
+};
+
+
+export type QueryFetchRiderActivityDetailsArgs = {
+  activityId: Scalars['String']['input'];
+};
+
+
+export type QueryFetchRiderRecentActivityArgs = {
+  filter: InputMaybe<RiderActivityFilterInput>;
+};
+
+
+export type QueryFetchRiderReferralRewardsArgs = {
+  level: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryFetchRiderRequestsArgs = {
+  status: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryFetchShopTypeByUniqueArgs = {
+  dto: InputMaybe<FetchUniqueShopTypeInput>;
+};
+
+
+export type QueryFetchShopTypesArgs = {
+  filter: InputMaybe<FetchShopTypeFilter>;
+  pagination: InputMaybe<PaginationInput>;
+};
+
+
 export type QueryFoodByCategoryArgs = {
   category: Scalars['String']['input'];
   inStock: InputMaybe<Scalars['Boolean']['input']>;
@@ -2548,6 +2803,11 @@ export type QueryGetActiveOrdersArgs = {
   restaurantId: InputMaybe<Scalars['ID']['input']>;
   rowsPerPage: InputMaybe<Scalars['Int']['input']>;
   search: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetAllCuisinesArgs = {
+  input: InputMaybe<CuisineFilterInput>;
 };
 
 
@@ -2766,7 +3026,9 @@ export type QueryOrderStripeArgs = {
 
 
 export type QueryOrdersArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
   offset: InputMaybe<Scalars['Int']['input']>;
+  page: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -2861,6 +3123,11 @@ export type QueryReviewsByRestaurantArgs = {
 
 export type QueryRiderArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryRiderByEmailArgs = {
+  email: Scalars['String']['input'];
 };
 
 
@@ -2977,6 +3244,36 @@ export type QueryWithdrawRequestsArgs = {
 
 export type QueryZoneArgs = {
   id: Scalars['String']['input'];
+};
+
+export type RedeemWalletInput = {
+  amount: Scalars['Float']['input'];
+  orderId: Scalars['String']['input'];
+};
+
+export type ReferralDetail = {
+  __typename?: 'ReferralDetail';
+  earnedAmount: Scalars['Float']['output'];
+  joinedAt: Scalars['String']['output'];
+  level: Scalars['Int']['output'];
+  riderId: Scalars['String']['output'];
+  riderName: Scalars['String']['output'];
+  riderPhone?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+};
+
+export type ReferralLevelDetails = {
+  __typename?: 'ReferralLevelDetails';
+  count: Scalars['Int']['output'];
+  earnings: Scalars['Float']['output'];
+  riders: Array<Maybe<RiderDetailInfo>>;
+};
+
+export type ReferralRewardsEarningsByLevel = {
+  __typename?: 'ReferralRewardsEarningsByLevel';
+  level1: EarningsByLevel;
+  level2: EarningsByLevel;
+  level3: EarningsByLevel;
 };
 
 export type ResponseCouponDetails = {
@@ -3227,6 +3524,7 @@ export type Rider = {
   __typename?: 'Rider';
   _id: Scalars['ID']['output'];
   accountNumber?: Maybe<Scalars['String']['output']>;
+  applyCount?: Maybe<Scalars['Int']['output']>;
   assigned?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   available: Scalars['Boolean']['output'];
   bussinessDetails?: Maybe<BussinessDetails>;
@@ -3237,9 +3535,14 @@ export type Rider = {
   isActive: Scalars['Boolean']['output'];
   licenseDetails?: Maybe<LicenseDetails>;
   location?: Maybe<Point>;
+  madeBy?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
   phone: Scalars['String']['output'];
+  referralCashBalance?: Maybe<Scalars['Float']['output']>;
+  referralCode?: Maybe<Scalars['String']['output']>;
+  rejectionReason?: Maybe<Scalars['String']['output']>;
+  riderRequestStatus?: Maybe<Scalars['String']['output']>;
   timeZone?: Maybe<Scalars['String']['output']>;
   totalWalletAmount?: Maybe<Scalars['Float']['output']>;
   updatedAt: Scalars['String']['output'];
@@ -3249,6 +3552,21 @@ export type Rider = {
   withdrawnWalletAmount?: Maybe<Scalars['Float']['output']>;
   workSchedule?: Maybe<Array<DaySchedule>>;
   zone: Zone;
+};
+
+export type RiderActivityFilterInput = {
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  startDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type RiderActivitySummary = {
+  __typename?: 'RiderActivitySummary';
+  periodEnd?: Maybe<Scalars['String']['output']>;
+  periodStart?: Maybe<Scalars['String']['output']>;
+  totalEarnings: Scalars['Float']['output'];
+  totalReferrals: Scalars['Int']['output'];
 };
 
 export type RiderAndWithdrawRequest = {
@@ -3261,6 +3579,15 @@ export type RiderAndWithdrawRequest = {
   rider?: Maybe<Rider>;
   status: Scalars['String']['output'];
   store?: Maybe<Restaurant>;
+};
+
+export type RiderDetailInfo = {
+  __typename?: 'RiderDetailInfo';
+  _id: Scalars['String']['output'];
+  earnedAmount: Scalars['Float']['output'];
+  joinedAt: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
 };
 
 export type RiderEarnings = {
@@ -3313,10 +3640,12 @@ export type RiderInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   image?: InputMaybe<Scalars['String']['input']>;
   licenseDetails?: InputMaybe<LicenseDetailsInput>;
+  madeBy?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
   referralCode?: InputMaybe<Scalars['String']['input']>;
+  riderRequestStatus?: InputMaybe<Scalars['String']['input']>;
   username: Scalars['String']['input'];
   vehicleDetails?: InputMaybe<VehicleDetailsInput>;
   vehicleType?: InputMaybe<Scalars['String']['input']>;
@@ -3327,6 +3656,23 @@ export type RiderOrders = {
   __typename?: 'RiderOrders';
   orders?: Maybe<Array<Order>>;
   riderId: Scalars['String']['output'];
+};
+
+export type RiderRecentActivityResponse = {
+  __typename?: 'RiderRecentActivityResponse';
+  activities: Array<Maybe<LoyalyReferralHistory>>;
+  hasMore: Scalars['Boolean']['output'];
+  summary: RiderActivitySummary;
+  total: Scalars['Int']['output'];
+};
+
+export type RiderReferralRewards = {
+  __typename?: 'RiderReferralRewards';
+  currentBalance: Scalars['Float']['output'];
+  earningsByLevel: ReferralRewardsEarningsByLevel;
+  referralDetails: Array<Maybe<ReferralDetail>>;
+  totalEarnings: Scalars['Float']['output'];
+  totalWithdrawn: Scalars['Float']['output'];
 };
 
 export type RiderWithdrawRequestHistory = {
@@ -3400,6 +3746,29 @@ export type SentryConfigurationInput = {
   restaurantAppSentryUrl: Scalars['String']['input'];
   riderAppSentryUrl: Scalars['String']['input'];
   webSentryUrl: Scalars['String']['input'];
+};
+
+export type ShopType = {
+  __typename?: 'ShopType';
+  _id: Scalars['ID']['output'];
+  createdAt?: Maybe<Scalars['String']['output']>;
+  deletedAt?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<Scalars['String']['output']>;
+  isActive?: Maybe<Scalars['Boolean']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  slug?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type ShopTypePagination = {
+  __typename?: 'ShopTypePagination';
+  data?: Maybe<Array<Maybe<ShopType>>>;
+  hasNextPage?: Maybe<Scalars['Boolean']['output']>;
+  hasPrevPage?: Maybe<Scalars['Boolean']['output']>;
+  page?: Maybe<Scalars['Int']['output']>;
+  pageSize?: Maybe<Scalars['Int']['output']>;
+  total?: Maybe<Scalars['Int']['output']>;
+  totalPages?: Maybe<Scalars['Int']['output']>;
 };
 
 export type SingleUserSupportTicketsInput = {
@@ -3654,6 +4023,14 @@ export type TippingInput = {
   tipVariations?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
 };
 
+export type TodayYesterdayStats = {
+  __typename?: 'TodayYesterdayStats';
+  restaurants?: Maybe<Scalars['Int']['output']>;
+  riders?: Maybe<Scalars['Int']['output']>;
+  users?: Maybe<Scalars['Int']['output']>;
+  vendors?: Maybe<Scalars['Int']['output']>;
+};
+
 export type TransactionHistory = {
   __typename?: 'TransactionHistory';
   _id: Scalars['String']['output'];
@@ -3705,6 +4082,13 @@ export type UpdateLoyaltyTierInput = {
   points?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type UpdateShopTypeInput = {
+  _id?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateSupportTicketInput = {
   status: SupportTicketStatus;
   ticketId: Scalars['ID']['input'];
@@ -3747,9 +4131,14 @@ export type User = {
   password?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
   phoneIsVerified?: Maybe<Scalars['Boolean']['output']>;
+  pointsBalance?: Maybe<Scalars['Float']['output']>;
+  referralCode?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
+  statusReason?: Maybe<Scalars['String']['output']>;
+  tier?: Maybe<UserTier>;
   updatedAt?: Maybe<Scalars['String']['output']>;
   userType?: Maybe<Scalars['String']['output']>;
+  walletBalance?: Maybe<Scalars['Float']['output']>;
 };
 
 export type UserInput = {
@@ -3763,6 +4152,24 @@ export type UserInput = {
   phone?: InputMaybe<Scalars['String']['input']>;
   phoneIsVerified?: InputMaybe<Scalars['Boolean']['input']>;
   referralCode?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UserLoyaltyData = {
+  __typename?: 'UserLoyaltyData';
+  loyaltyPoints?: Maybe<Scalars['Int']['output']>;
+  pointsBalance?: Maybe<Scalars['Int']['output']>;
+  referralPoints?: Maybe<Scalars['Int']['output']>;
+  tier?: Maybe<LoyaltyTier>;
+  totalEarnedPoints?: Maybe<Scalars['Int']['output']>;
+};
+
+export type UserTier = {
+  __typename?: 'UserTier';
+  _id?: Maybe<Scalars['String']['output']>;
+  current_earned_points?: Maybe<Scalars['Int']['output']>;
+  current_tier_name?: Maybe<Scalars['String']['output']>;
+  next_tier_name?: Maybe<Scalars['String']['output']>;
+  next_tier_points?: Maybe<Scalars['Int']['output']>;
 };
 
 export enum UserTypeEnum {
@@ -3871,6 +4278,17 @@ export type Versions = {
   customerAppVersion?: Maybe<AppType>;
   restaurantAppVersion?: Maybe<AppType>;
   riderAppVersion?: Maybe<AppType>;
+};
+
+export type WalletTransaction = {
+  __typename?: 'WalletTransaction';
+  _id: Scalars['ID']['output'];
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  pointsUsed?: Maybe<Scalars['Int']['output']>;
+  type: Scalars['String']['output'];
+  user: User;
 };
 
 export type WebConfigurationInput = {
@@ -4059,10 +4477,12 @@ export type DeleteLoyaltyBreakdownMutationVariables = Exact<{
 
 export type DeleteLoyaltyBreakdownMutation = { __typename?: 'Mutation', deleteLoyaltyBreakdown?: { __typename?: 'LoyaltyBreakdown', _id: string, min: number, max: number, bronze: number, silver: number, gold: number, platinum: number } | null | undefined };
 
-export type FetchReferralLoyaltyHistoryQueryVariables = Exact<{ [key: string]: never; }>;
+export type FetchReferralLoyaltyHistoryQueryVariables = Exact<{
+  filter: InputMaybe<FetchLoyaltyReferralHistoryFilterInput>;
+}>;
 
 
-export type FetchReferralLoyaltyHistoryQuery = { __typename?: 'Query', fetchReferralLoyaltyHistory?: Array<{ __typename?: 'LoyalyReferralHistory', _id: string, user_name: string, user_rank: string, type: string, level: number, value: number, createdAt: string } | null | undefined> | null | undefined };
+export type FetchReferralLoyaltyHistoryQuery = { __typename?: 'Query', fetchReferralLoyaltyHistory?: { __typename?: 'LoyaltyReferralHistoryResponse', totalCount: number, totalPages: number, currentPage: number, hasNextPage: boolean, hasPrevPage: boolean, data: Array<{ __typename?: 'LoyalyReferralHistory', _id: string, user_name: string, user_rank: string, type: string, level: number, value: number, createdAt: string } | null | undefined> } | null | undefined };
 
 
 export const FetchLoyaltyConfiguraionDocument = gql`
@@ -4733,15 +5153,22 @@ export type DeleteLoyaltyBreakdownMutationHookResult = ReturnType<typeof useDele
 export type DeleteLoyaltyBreakdownMutationResult = Apollo.MutationResult<DeleteLoyaltyBreakdownMutation>;
 export type DeleteLoyaltyBreakdownMutationOptions = Apollo.BaseMutationOptions<DeleteLoyaltyBreakdownMutation, DeleteLoyaltyBreakdownMutationVariables>;
 export const FetchReferralLoyaltyHistoryDocument = gql`
-    query FetchReferralLoyaltyHistory {
-  fetchReferralLoyaltyHistory {
-    _id
-    user_name
-    user_rank
-    type
-    level
-    value
-    createdAt
+    query FetchReferralLoyaltyHistory($filter: FetchLoyaltyReferralHistoryFilterInput) {
+  fetchReferralLoyaltyHistory(filter: $filter) {
+    data {
+      _id
+      user_name
+      user_rank
+      type
+      level
+      value
+      createdAt
+    }
+    totalCount
+    totalPages
+    currentPage
+    hasNextPage
+    hasPrevPage
   }
 }
     `;
@@ -4758,6 +5185,7 @@ export const FetchReferralLoyaltyHistoryDocument = gql`
  * @example
  * const { data, loading, error } = useFetchReferralLoyaltyHistoryQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */
