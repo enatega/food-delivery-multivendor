@@ -162,6 +162,7 @@ export const GET_SIMILAR_FOODS = gql`
         title
         description
         image
+        categoryId
         variations {
           id
           title
@@ -384,6 +385,7 @@ export const GET_RECOMMENDED_FOODS = gql`
         hasMore
       }
       items {
+      categoryId
         variations {
           title
           price

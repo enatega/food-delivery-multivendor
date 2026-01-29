@@ -25,16 +25,14 @@ const ProductDetails = ({ route }) => {
 
   const variations = productInfoData.variations || []
   const selectedAddons = productInfoData.selectedAddons || []
-  console.log('productInfoData', variations)
   const [selectedVariationId, setSelectedVariationId] = useState(
     // productInfoData?.selectedVariations?.length > 0 ? productInfoData?.selectedVariations :
-    variations?.length ? [variations[0].id] : []
+    variations?.length ? [variations[0]?.id] : []
   )
   const [selectedAddonIds, setSelectedAddonIds] = useState([])
   const [totalPrice, setTotalPrice] = useState(variations?.[0]?.price || 0)
   const selectedAddonsRef = useRef([])
   const selectedVariation = variations?.find((v) => v.id === selectedVariationId[0])
-  console.log('totalPrice:', totalPrice)
 
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -50,7 +48,7 @@ const ProductDetails = ({ route }) => {
   }, [navigation])
 
   useEffect(() => {
-    if (!variations?.length || selectedVariationId?.length) return
+    if (!variations?.length) return
     setSelectedVariationId([variations[0]?.id])
   }, [variations])
 

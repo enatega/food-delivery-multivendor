@@ -36,7 +36,7 @@ const ProductInfo = ({ t, productInfoData, currentTheme, onAddToCart, isAddingTo
 
       <View style={[styles().containerPadding, { gap: 18 }]}>
         <View style={styles().titleContainer}>
-          <TextDefault bolder H2>
+          <TextDefault bolder H2 numberOfLines={3} style={{ flexShrink: 1, flex: 1, paddingRight: 8}}>
             {productInfoData?.title}
           </TextDefault>
           <ToggleFavorite id={productInfoData?.id} />
