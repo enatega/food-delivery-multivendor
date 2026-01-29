@@ -33,17 +33,15 @@ export default function ReferralsListMain() {
   // Get dateKey from params (YYYY-MM-DD format)
   const dateKey = params.dateKey as string;
 
-  // Calculate start and end of day for the date
+  // For a single day, send the same date for both startDate and endDate
   const { startDate, endDate } = useMemo(() => {
     if (!dateKey) return { startDate: "", endDate: "" };
     
-    const date = new Date(dateKey);
-    const start = new Date(date.setHours(0, 0, 0, 0));
-    const end = new Date(date.setHours(23, 59, 59, 999));
-    
+    // Send the same date (YYYY-MM-DD) for both start and end
+    // Backend should handle filtering for that specific day
     return {
-      startDate: start.toISOString(),
-      endDate: end.toISOString(),
+      startDate: dateKey,
+      endDate: dateKey,
     };
   }, [dateKey]);
 
