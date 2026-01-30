@@ -83,7 +83,7 @@ const styles = (props = null) =>
       borderRadius: scale(6)
     },
     tabSelected: {
-      backgroundColor: props !== null ? props.themeBackground : '#fff'
+      backgroundColor: props !== null ? props.editProfileButton : '#fff'
     }
   });
 
