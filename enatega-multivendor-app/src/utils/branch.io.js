@@ -158,8 +158,6 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
         inviterName: userInfo.name || 'Your friend',
         $fallback_url: `https://multivendor.enatega.com/?ref=${referralCode}`,
         $desktop_url: `https://multivendor.enatega.com/?ref=${referralCode}`,
-        $ios_url: `enategamultivendor://?ref=${referralCode}`,
-        $android_url: `enategamultivendor://?ref=${referralCode}`
       }
     }
 
