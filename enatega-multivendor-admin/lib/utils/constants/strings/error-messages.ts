@@ -106,6 +106,7 @@ export const BussinessDetailsErrors: IUpdateBussinessDetailsFormErrors = {
 
 export const RiderErrors: IRiderErrors = {
   name: ['Required', 'Name cannot be only spaces'],
+  email: ['Invalid email format'],
   username: ['Required'],
   password: ['Required', ...PasswordErrors],
   confirmPassword: ['Required', 'Password must match'],

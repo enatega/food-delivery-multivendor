@@ -13,7 +13,7 @@ export interface IRiderForm {
 
 export interface IRiderErrors {
   name: string[];
-  email?: string[];
+  email: string[];
   username: string[];
   password: string[];
   confirmPassword: string[];
