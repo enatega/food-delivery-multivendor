@@ -32,12 +32,12 @@ export default function CustomDialog({
             onClick={onHide}
             className={`${direction === "rtl" ? "left-4" : "right-4"} absolute cursor-pointer top-4 z-10 w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-700 focus:outline-none`}
           >
-            <CircleCrossSvg color="black" width={32} height={32} />
+            <CircleCrossSvg color="black" width={28} height={28} />
           </span>
         )}
 
         {/* Just render the children passed to the dialog */}
-        {children}
+        <div className="pt-10">{children}</div>
       </div>
     </Dialog>
   );
