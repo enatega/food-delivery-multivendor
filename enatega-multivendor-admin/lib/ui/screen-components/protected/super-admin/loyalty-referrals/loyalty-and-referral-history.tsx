@@ -63,14 +63,14 @@ export default function LoyaltyAndReferralHistoryComponent() {
       propertyName: 'user_name',
       headerName: 'Customer Name',
       body: (rowData: HistoryRow) => (
-        <span className="text-foreground text-sm">{rowData.user_name}</span>
+        <span className="text-foreground dark:text-white text-sm">{rowData.user_name}</span>
       ),
     },
     {
       propertyName: 'user_rank',
       headerName: 'Rank',
       body: (rowData: HistoryRow) => (
-        <span className="text-foreground text-sm font-medium">
+        <span className="text-foreground dark:text-white text-sm font-medium">
           {toTextCase(rowData.user_rank, 'title')}
         </span>
       ),
@@ -79,28 +79,28 @@ export default function LoyaltyAndReferralHistoryComponent() {
       propertyName: 'value',
       headerName: 'Total Points',
       body: (rowData: HistoryRow) => (
-        <span className="text-foreground text-sm font-medium">{rowData.value}</span>
+        <span className="text-foreground dark:text-white text-sm font-medium">{rowData.value}</span>
       ),
     },
     {
       propertyName: 'type',
       headerName: 'Type',
       body: (rowData: HistoryRow) => (
-        <span className="text-foreground text-sm font-medium">{rowData.type}</span>
+        <span className="text-foreground dark:text-white text-sm font-medium">{rowData.type}</span>
       ),
     },
     {
       propertyName: 'level',
       headerName: 'Tier',
       body: (rowData: HistoryRow) => (
-        <span className="text-foreground text-sm font-medium">Level {rowData.level}</span>
+        <span className="text-foreground dark:text-white text-sm font-medium">Level {rowData.level}</span>
       ),
     },
     {
       propertyName: 'createdAt',
       headerName: 'Last Purchase',
       body: (rowData: HistoryRow) => (
-        <span className="text-foreground text-sm font-medium">
+        <span className="text-foreground dark:text-white text-sm font-medium">
           {new Date(parseInt(rowData.createdAt)).toLocaleString('en-US', {
             year: 'numeric',
             month: '2-digit',

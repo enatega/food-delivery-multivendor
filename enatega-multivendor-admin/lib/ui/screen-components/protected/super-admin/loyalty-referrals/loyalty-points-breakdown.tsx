@@ -101,25 +101,25 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
         </div>
 
         <div
-          className="bg-card border border-border rounded-lg overflow-visible"
+          className="bg-card dark:bg-dark-900 border border-border dark:border-dark-600 rounded-lg overflow-visible"
           ref={menuRef}
         >
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border bg-[#F4F4F5]">
-                <th className="text-[#71717A] text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
+              <tr className="border-b border-border dark:border-dark-600 bg-[#F4F4F5] dark:bg-dark-600">
+                <th className="text-[#71717A] dark:text-gray-300 text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
                   Spending Range ({CURRENCY_SYMBOL})
                 </th>
-                <th className="text-[#71717A] text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
+                <th className="text-[#71717A] dark:text-gray-300 text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
                   Bronze Pts
                 </th>
-                <th className="text-[#71717A] text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
+                <th className="text-[#71717A] dark:text-gray-300 text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
                   Silver Pts
                 </th>
-                <th className="text-[#71717A] text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
+                <th className="text-[#71717A] dark:text-gray-300 text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
                   Gold Pts
                 </th>
-                <th className="text-[#71717A] text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
+                <th className="text-[#71717A] dark:text-gray-300 text-left px-6 py-4 text-foreground font-inter font-medium text-sm leading-5 tracking-normal">
                   Platinum Pts
                 </th>
                 <th className="text-right px-6 py-4 w-12"></th>
@@ -169,20 +169,20 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
                           : ''
                       }
                     >
-                      <td className="px-6 py-4 text-foreground text-sm">
+                      <td className="px-6 py-4 text-foreground dark:text-white text-sm">
                         {CURRENCY_SYMBOL}{row.min} - {CURRENCY_SYMBOL}{row.max}
                       </td>
                    
-                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <td className="px-6 py-4 text-foreground dark:text-white text-sm font-medium">
                         {row.bronze}
                       </td>
-                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <td className="px-6 py-4 text-foreground dark:text-white text-sm font-medium">
                         {row.silver}
                       </td>
-                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <td className="px-6 py-4 text-foreground dark:text-white text-sm font-medium">
                         {row.gold}
                       </td>
-                      <td className="px-6 py-4 text-foreground text-sm font-medium">
+                      <td className="px-6 py-4 text-foreground dark:text-white text-sm font-medium">
                         {row.platinum}
                       </td>
 
@@ -209,9 +209,9 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
                         )}
 
                         {openMenu === row._id && (
-                          <div className="absolute top-12 right-0 mt-1 w-40 bg-white border border-border rounded-lg shadow-lg z-50">
+                          <div className="absolute top-12 right-0 mt-1 w-40 bg-white dark:bg-dark-900 border border-border dark:border-dark-600 rounded-lg shadow-lg z-50">
                             <button
-                              className="w-full text-left px-4 py-2 flex items-center gap-2 text-sm bg-white"
+                              className="w-full text-left px-4 py-2 flex items-center gap-2 text-sm bg-white dark:bg-dark-900 text-foreground dark:text-white hover:bg-gray-50 dark:hover:bg-dark-600"
                               onClick={() => {
                                 setOpenMenu(null);
                                 setLoyaltyData({ breakdownId: row?._id });
@@ -223,7 +223,7 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
                             </button>
                             <button
                               onClick={() => handleDelete(row._id)}
-                              className="w-full text-left px-4 py-2 flex items-center gap-2 bg-white text-sm text-destructive border-t border-border"
+                              className="w-full text-left px-4 py-2 flex items-center gap-2 bg-white dark:bg-dark-900 text-sm text-destructive border-t border-border dark:border-dark-600 hover:bg-gray-50 dark:hover:bg-dark-600"
                             >
                               <FontAwesomeIcon icon={faTrash} />
                               Delete

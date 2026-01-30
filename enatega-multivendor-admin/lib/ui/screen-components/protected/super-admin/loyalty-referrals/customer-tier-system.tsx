@@ -30,9 +30,9 @@ interface LevelCardProps {
 
 function LevelCard({ name, point, loading, onMenuClick }: LevelCardProps) {
   return (
-    <div className="bg-[#F9FAFB] border border-[#E4E4E7] rounded-2xl p-6 hover:shadow-md transition-shadow">
+    <div className="bg-[#F9FAFB] dark:bg-dark-900 border border-[#E4E4E7] dark:border-dark-600 rounded-2xl p-6 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
-        <span className="inline-block bg-[#F0FFEA] border border-[#5AC12F] px-3 py-1 rounded-full text-sm font-medium">
+        <span className="inline-block bg-[#F0FFEA] dark:bg-dark-600 border border-[#5AC12F] dark:border-primary-dark px-3 py-1 rounded-full text-sm font-medium text-foreground dark:text-white">
           {name}
         </span>
         {loading ? (
@@ -52,7 +52,7 @@ function LevelCard({ name, point, loading, onMenuClick }: LevelCardProps) {
         )}
       </div>
 
-      <div className="text-4xl text-foreground font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
+      <div className="text-4xl text-foreground dark:text-white font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
         {point}
       </div>
     </div>
@@ -172,9 +172,9 @@ export default function LoyaltyAndReferralTierSystemComponent() {
 
                     {/* Dropdown Menu */}
                     {openMenu === tier._id && (
-                      <div className="absolute top-14 right-2 bg-background border border-border rounded-lg shadow-lg z-10 w-40">
+                      <div className="absolute top-14 right-2 bg-background dark:bg-dark-900 border border-border dark:border-dark-600 rounded-lg shadow-lg z-10 w-40">
                         <button
-                          className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm"
+                          className="w-full text-left px-4 py-2 hover:bg-muted dark:hover:bg-dark-600 flex items-center gap-2 text-sm text-foreground dark:text-white"
                           onClick={() => {
                             setOpenMenu(null);
                             setLoyaltyData({ tierId: tier?._id });
@@ -186,7 +186,7 @@ export default function LoyaltyAndReferralTierSystemComponent() {
                         </button>
                         <button
                           onClick={() => handleDeleteTier(tier._id)}
-                          className="w-full text-left px-4 py-2 hover:bg-muted flex items-center gap-2 text-sm text-destructive"
+                          className="w-full text-left px-4 py-2 hover:bg-muted dark:hover:bg-dark-600 flex items-center gap-2 text-sm text-destructive"
                         >
                           <FontAwesomeIcon icon={faTrash} color="#EF4444" />
                           Delete
