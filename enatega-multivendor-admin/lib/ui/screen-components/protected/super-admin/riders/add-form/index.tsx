@@ -49,6 +49,7 @@ export default function RiderAddForm({
 }: IRidersAddFormComponentProps) {
   const initialValues: IRiderForm = {
     name: '',
+    email: '',
     username: '',
     password: '',
     ...rider,
@@ -87,6 +88,7 @@ export default function RiderAddForm({
           riderInput: {
             _id: rider ? rider._id : '',
             name: values.name,
+            email: values.email,
             username: values.username,
             password: values.password,
             phone: values.phone?.toString(),
@@ -172,6 +174,24 @@ export default function RiderAddForm({
                             borderColor: onErrorMessageMatcher(
                               'name',
                               errors?.name,
+                              RiderErrors
+                            )
+                              ? 'red'
+                              : '',
+                          }}
+                        />
+
+                        <CustomTextField
+                          type="email"
+                          name="email"
+                          placeholder={t('Email')}
+                          value={values.email || ''}
+                          onChange={handleChange}
+                          showLabel={true}
+                          style={{
+                            borderColor: onErrorMessageMatcher(
+                              'email',
+                              errors?.email,
                               RiderErrors
                             )
                               ? 'red'

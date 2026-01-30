@@ -5,6 +5,7 @@ export const GET_RIDERS = gql`
     riders {
       _id
       name
+      email
       username
       password
       phone
@@ -29,6 +30,7 @@ export const GET_RIDER = gql`
     rider(id: $id) {
       _id
       name
+      email
       username
       password
       phone

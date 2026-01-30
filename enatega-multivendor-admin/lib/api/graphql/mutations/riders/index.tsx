@@ -5,6 +5,7 @@ export const CREATE_RIDER = gql`
     createRider(riderInput: $riderInput) {
       _id
       name
+      email
       username
       password
       phone
@@ -22,6 +23,7 @@ export const EDIT_RIDER = gql`
     editRider(riderInput: $riderInput) {
       _id
       name
+      email
       username
       phone
       password

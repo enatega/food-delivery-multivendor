@@ -6,6 +6,7 @@ export const RiderSchema = Yup.object().shape({
     .trim()
     .matches(/\S/, 'Name cannot be only spaces')
     .required('Required'),
+  email: Yup.string().email('Invalid email format').optional(),
   username: Yup.string().min(2).max(35).required('Required'),
     password: Yup.string()
     .required('Required')

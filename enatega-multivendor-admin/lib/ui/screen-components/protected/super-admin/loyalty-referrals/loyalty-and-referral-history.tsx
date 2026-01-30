@@ -4,6 +4,7 @@ import { useFetchReferralLoyaltyHistoryQuery } from '@/lib/graphql-generated';
 import Table from '@/lib/ui/useable-components/table';
 import { toTextCase } from '@/lib/utils/methods';
 import { useMemo, useState } from 'react';
+import type { JSX } from 'react';
 
 interface HistoryRow {
   _id: string;

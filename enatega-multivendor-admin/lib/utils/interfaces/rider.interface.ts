@@ -12,6 +12,7 @@ export interface IRiderResponse {
   __typename: 'Rider';
   _id: string;
   name: string;
+  email?: string;
   username: string;
   password: string;
   phone: string;

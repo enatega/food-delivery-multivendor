@@ -133,6 +133,7 @@ export const RIDER_TABLE_COLUMNS = ({
 
   return [
     { headerName: t('Name'), propertyName: 'name' },
+    { headerName: t('Email'), propertyName: 'email' },
     { headerName: t('Username'), propertyName: 'username' },
     { headerName: t('Phone'), propertyName: 'phone' },
     {
