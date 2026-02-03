@@ -153,9 +153,9 @@ function ReferralAndLoyaltyRecentActivity(props) {
   })
 
   useEffect(() => {
-    if (data?.fetchReferralLoyaltyHistory && Array.isArray(data.fetchReferralLoyaltyHistory)) {
+    if (data?.fetchCustomerReferralHistory && Array.isArray(data.fetchCustomerReferralHistory)) {
       try {
-        const formattedActivities = data.fetchReferralLoyaltyHistory
+        const formattedActivities = data.fetchCustomerReferralHistory
           .filter(activity => activity && activity._id && activity.value && activity.createdAt)
           .sort((a, b) => new Date(parseInt(b.createdAt)) - new Date(parseInt(a.createdAt)))
           .map(activity => ({
@@ -175,7 +175,7 @@ function ReferralAndLoyaltyRecentActivity(props) {
         console.error('Error processing activities:', err)
         setActivities([])
       }
-    } else if (data?.fetchReferralLoyaltyHistory === null) {
+    } else if (data?.fetchCustomerReferralHistory === null) {
       setActivities([])
     }
   }, [data])

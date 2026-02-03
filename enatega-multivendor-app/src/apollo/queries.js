@@ -1163,8 +1163,8 @@ export const FETCH_LOYALTY_CONFIGURATIon = gql`
 `
 
 export const FETCH_LOYALTY_REFERRAL_HISTORY = gql`
-  query FetchReferralLoyaltyHistory($filter: FetchLoyaltyReferralHistoryFilterInput) {
-    fetchReferralLoyaltyHistory(filter: $filter) {
+  query FetchCustomerReferralHistory($filter: FetchLoyaltyReferralHistoryFilterInput) {
+    fetchCustomerReferralHistory(filter: $filter) {
       _id
       user_name
       user_rank
