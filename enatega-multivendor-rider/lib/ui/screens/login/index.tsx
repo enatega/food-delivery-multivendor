@@ -32,7 +32,7 @@ import { useRouter } from "expo-router";
 import setupApollo from "@/lib/apollo";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
-import { CustomContinueButton } from "../../useable-components";
+import { CustomContinueButton, RejectionModal } from "../../useable-components";
 
 const initial: ILoginInitialValues = {
   username: "",
@@ -48,7 +48,7 @@ const LoginScreen = () => {
   const { appTheme } = useApptheme();
   const client = setupApollo();
   const { t } = useTranslation();
-  const { onLogin, creds } = useLogin();
+  const { onLogin, creds, rejectionError, onReapply, clearRejectionError, reapplyLoading } = useLogin();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -62,6 +62,12 @@ const LoginScreen = () => {
       console.log(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleReapply = () => {
+    if (rejectionError?.email) {
+      onReapply(rejectionError.email);
     }
   };
 
@@ -246,6 +252,17 @@ const LoginScreen = () => {
           </Formik>
         </ScrollView>
       </SafeAreaView>
+
+      {/* Rejection Modal */}
+      {rejectionError && (
+        <RejectionModal
+          visible={rejectionError.isRejected}
+          email={rejectionError.email}
+          onReapply={handleReapply}
+          onClose={clearRejectionError}
+          loading={reapplyLoading}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };

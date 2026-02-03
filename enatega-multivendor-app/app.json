@@ -2,7 +2,7 @@
   "expo": {
     "name": "Enatega Multi",
     "scheme": "enategamultivendor",
-    "version": "1.1.6",
+    "version": "1.1.10",
     "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     "slug": "enategamultivendor",
     "owner": "ninjas_code",
@@ -43,17 +43,21 @@
       "config": {
         "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
       },
+      "associatedDomains": [
+        "applinks:390ag.app.link",
+        "applinks:390ag-alternate.app.link"
+      ],
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
         "UIBackgroundModes": [
-          "remote-notification",
           "remote-notification"
         ],
         "NSUserTrackingUsageDescription": "Allow this app to collect app-related data that can be used for tracking you or your device.",
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
+              "enategamultivendor",
               "com.googleusercontent.apps.650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7"
             ]
           }
@@ -69,7 +73,7 @@
       "androidCollapsedTitle": "Enatega Multivendor"
     },
     "android": {
-      "versionCode": 106,
+      "versionCode": 110,
       "package": "com.enatega.multivendor",
       "userInterfaceStyle": "automatic",
       "googleServicesFile": "./google-services.json",
@@ -90,6 +94,9 @@
         "com.google.android.gms.permission.AD_ID"
       ],
       "icon": "./assets/appIcon.png",
+      "navigationBar": {
+        "visible": "immersive"
+      },
       "intentFilters": [
         {
           "action": "android.intent.action.VIEW",
@@ -161,12 +168,6 @@
       "expo-web-browser",
       "expo-video",
       "expo-apple-authentication",
-      [
-        "expo-tracking-transparency",
-        {
-          "userTrackingPermission": "Allow this app to collect app-related data that can be used for tracking you or your device."
-        }
-      ],
       [
         "@config-plugins/react-native-branch",
         {

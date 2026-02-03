@@ -33,17 +33,15 @@ export default function ReferralsListMain() {
   // Get dateKey from params (YYYY-MM-DD format)
   const dateKey = params.dateKey as string;
 
-  // Calculate start and end of day for the date
+  // For a single day, send the same date for both startDate and endDate
   const { startDate, endDate } = useMemo(() => {
     if (!dateKey) return { startDate: "", endDate: "" };
     
-    const date = new Date(dateKey);
-    const start = new Date(date.setHours(0, 0, 0, 0));
-    const end = new Date(date.setHours(23, 59, 59, 999));
-    
+    // Send the same date (YYYY-MM-DD) for both start and end
+    // Backend should handle filtering for that specific day
     return {
-      startDate: start.toISOString(),
-      endDate: end.toISOString(),
+      startDate: dateKey,
+      endDate: dateKey,
     };
   }, [dateKey]);
 
@@ -68,9 +66,7 @@ export default function ReferralsListMain() {
       .filter((activity) => activity.level === activeLevel)
       .map((activity) => {
         // Use createdAt as the joined date (when the referral activity happened)
-        // createdAt is a Unix timestamp in milliseconds
-        // Keep it as string for the formatDate function to parse
-        const joinedDate = activity.createdAt ? String(activity.createdAt) : "";
+        const joinedDate = activity.createdAt || "";
         
         return {
           _id: activity._id,
@@ -81,7 +77,13 @@ export default function ReferralsListMain() {
           level: activeLevel,
         } as IReferral;
       })
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => {
+        // Sort by date descending (latest first)
+        // Try parsing as both timestamp and ISO date
+        const dateA = new Date(isNaN(Number(a.joinedDate)) ? a.joinedDate : Number(a.joinedDate)).getTime();
+        const dateB = new Date(isNaN(Number(b.joinedDate)) ? b.joinedDate : Number(b.joinedDate)).getTime();
+        return dateB - dateA;
+      });
   }, [activeLevel, activitiesData]);
 
   return (

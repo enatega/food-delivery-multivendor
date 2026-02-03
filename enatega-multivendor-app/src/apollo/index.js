@@ -71,8 +71,24 @@ const setupApollo = () => {
             }
           },
         }
+      },
+      // Fix cache normalization issues
+      Order: {
+        keyFields: ['_id']
+      },
+      ItemVariation: {
+        keyFields: ['_id']
+      },
+      ItemAddon: {
+        keyFields: ['_id']
+      },
+      ItemOption: {
+        keyFields: ['_id']
       }
-    }
+    },
+    // Remove deprecated options and add error handling
+    addTypename: true,
+    resultCaching: true
   })
 
   const httpLink = createHttpLink({
@@ -126,7 +142,19 @@ const setupApollo = () => {
   const client = new ApolloClient({
     link: concat(ApolloLink.from([terminatingLink, requestLink]), httpLink),
     cache,
-    resolvers: {}
+    resolvers: {},
+    // Add error handling and suppress warnings
+    defaultOptions: {
+      watchQuery: {
+        errorPolicy: 'all'
+      },
+      query: {
+        errorPolicy: 'all'
+      },
+      mutate: {
+        errorPolicy: 'all'
+      }
+    }
   })
 
   return client

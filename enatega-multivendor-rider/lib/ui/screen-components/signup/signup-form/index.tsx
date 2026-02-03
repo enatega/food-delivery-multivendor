@@ -25,6 +25,7 @@ interface SignUpFormProps {
 const initialValues: ISignUpInitialValues = {
   name: "",
   username: "",
+  email: "",
   password: "",
   confirmPassword: "",
   phone: "",
@@ -46,6 +47,9 @@ export default function SignUpForm({
       initialValues={initialValues}
       validationSchema={SignUpSchema}
       onSubmit={onSubmit}
+      validateOnChange={true}
+      validateOnBlur={true}
+      validateOnMount={false}
     >
       {({
         handleChange,
@@ -55,15 +59,19 @@ export default function SignUpForm({
         errors,
         touched,
         setFieldValue,
+        setFieldTouched,
       }) => (
         <View className="gap-y-1">
           <FormInput
             label={t("Full Name")}
             placeholder={t("Enter your full name")}
             value={values.name}
-            onChangeText={handleChange("name")}
+            onChangeText={(text) => {
+              handleChange("name")(text);
+              setFieldTouched("name", true, false);
+            }}
             onBlur={handleBlur("name") as any}
-            error={touched.name ? errors.name : undefined}
+            error={touched.name && errors.name ? errors.name : undefined}
             icon="user"
           />
 
@@ -71,27 +79,52 @@ export default function SignUpForm({
             label={t("Username")}
             placeholder={t("Enter your username")}
             value={values.username}
-            onChangeText={handleChange("username")}
+            onChangeText={(text) => {
+              handleChange("username")(text);
+              setFieldTouched("username", true, false);
+            }}
             onBlur={handleBlur("username") as any}
-            error={touched.username ? errors.username : undefined}
+            error={touched.username && errors.username ? errors.username : undefined}
             icon="user"
+            autoCapitalize="none"
+          />
+
+          <FormInput
+            label={t("Email")}
+            placeholder={t("Enter your email")}
+            value={values.email}
+            onChangeText={(text) => {
+              handleChange("email")(text);
+              setFieldTouched("email", true, false);
+            }}
+            onBlur={handleBlur("email") as any}
+            error={touched.email && errors.email ? errors.email : undefined}
+            icon="envelope"
+            keyboardType="email-address"
+            autoCapitalize="none"
           />
 
           <CustomPhoneInput
             label={t("Phone Number")}
             value={values.phone}
-            onChangeText={(text) => setFieldValue("phone", text)}
+            onChangeText={(text) => {
+              setFieldValue("phone", text);
+              setFieldTouched("phone", true, false);
+            }}
             onBlur={handleBlur("phone") as any}
-            error={touched.phone ? errors.phone : undefined}
+            error={touched.phone && errors.phone ? errors.phone : undefined}
           />
 
           <FormInput
             label={t("Password")}
             placeholder={t("Create a strong password")}
             value={values.password}
-            onChangeText={handleChange("password")}
+            onChangeText={(text) => {
+              handleChange("password")(text);
+              setFieldTouched("password", true, false);
+            }}
             onBlur={handleBlur("password") as any}
-            error={touched.password ? errors.password : undefined}
+            error={touched.password && errors.password ? errors.password : undefined}
             icon="lock"
             secureTextEntry
           />
@@ -100,24 +133,33 @@ export default function SignUpForm({
             label={t("Confirm Password")}
             placeholder={t("Re-enter your password")}
             value={values.confirmPassword}
-            onChangeText={handleChange("confirmPassword")}
+            onChangeText={(text) => {
+              handleChange("confirmPassword")(text);
+              setFieldTouched("confirmPassword", true, false);
+            }}
             onBlur={handleBlur("confirmPassword") as any}
-            error={touched.confirmPassword ? errors.confirmPassword : undefined}
+            error={touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : undefined}
             icon="lock"
             secureTextEntry
           />
 
           <VehicleSelector
             selectedVehicle={values.vehicleType}
-            onSelect={(vehicleCode) => setFieldValue("vehicleType", vehicleCode)}
-            error={touched.vehicleType ? errors.vehicleType : undefined}
+            onSelect={(vehicleCode) => {
+              setFieldValue("vehicleType", vehicleCode);
+              setFieldTouched("vehicleType", true, false);
+            }}
+            error={touched.vehicleType && errors.vehicleType ? errors.vehicleType : undefined}
           />
 
           <ZoneSelector
             zones={zones}
             selectedZone={values.zone}
-            onSelect={(zoneId) => setFieldValue("zone", zoneId)}
-            error={touched.zone ? errors.zone : undefined}
+            onSelect={(zoneId) => {
+              setFieldValue("zone", zoneId);
+              setFieldTouched("zone", true, false);
+            }}
+            error={touched.zone && errors.zone ? errors.zone : undefined}
             loading={zonesLoading}
           />
 
@@ -125,15 +167,24 @@ export default function SignUpForm({
             label={t("Referral Code (Optional)")}
             placeholder={t("Enter referral code")}
             value={values.referralCode}
-            onChangeText={handleChange("referralCode")}
+            onChangeText={(text) => {
+              handleChange("referralCode")(text);
+              setFieldTouched("referralCode", true, false);
+            }}
             onBlur={handleBlur("referralCode") as any}
-            error={touched.referralCode ? errors.referralCode : undefined}
+            error={touched.referralCode && errors.referralCode ? errors.referralCode : undefined}
             icon="gift"
           />
 
           <CustomContinueButton
             title={isSubmitting ? t("Creating Account...") : t("Sign Up")}
-            onPress={() => handleSubmit()}
+            onPress={() => {
+              // Mark all fields as touched to show validation errors
+              Object.keys(values).forEach((key) => {
+                setFieldTouched(key, true, false);
+              });
+              handleSubmit();
+            }}
             disabled={isSubmitting}
             className="mt-4"
           />

@@ -15,7 +15,7 @@ export const initializeBranch = () => {
         console.log('🌿 [BRANCH DEBUG] Error:', error)
         console.log('🌿 [BRANCH DEBUG] Params:', params)
         console.log('🌿 [BRANCH DEBUG] URI:', uri)
-        
+
         branchSessionData = { params, uri, error }
 
         if (!isBranchReady) {
@@ -51,7 +51,7 @@ export const initializeBranch = () => {
     } catch (error) {
       console.error('🌿 [BRANCH DEBUG] Error initializing Branch:', error)
       isBranchReady = true
-      resolve(() => {})
+      resolve(() => { })
     }
   })
 }
@@ -156,10 +156,10 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
         ref: referralCode,
         code: referralCode,
         inviterName: userInfo.name || 'Your friend',
-        $fallback_url: `exp+enategamultivendor://?ref=${referralCode}`,
-        $desktop_url: `https://borku.co.uk/download?ref=${referralCode}`,
-        $ios_url: `exp+enategamultivendor://?ref=${referralCode}`,
-        $android_url: `exp+enategamultivendor://?ref=${referralCode}`
+        $fallback_url: `https://apps.apple.com/app/enatega-multivendor/id1526488093`,
+        $desktop_url: `https://multivendor.enatega.com/?ref=${referralCode}`,
+        $ios_url: `https://apps.apple.com/app/enatega-multivendor/id1526488093`,
+        $android_url: `https://play.google.com/store/apps/details?id=com.enatega.multivendor`,
       }
     }
 
@@ -176,7 +176,7 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
         locallyIndex: true,
         title: 'Join Enatega and get credits!',
         contentDescription: `Use my referral code ${referralCode} to get credits on your first order!`,
-        contentImageUrl: 'https://borku.co.uk/assets/logo.png',
+        contentImageUrl: 'https://cdn-inech.nitrocdn.com/jdKghPovkzWfRohbpgAZaZYRcFhYiZiI/assets/images/optimized/rev-2fba21a/enatega.com/wp-content/uploads/2025/11/Enatega-logo-250-Purple-135x.webp',
         contentMetadata: {
           customMetadata: {
             referralCode: referralCode,
@@ -201,9 +201,9 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
 }
 
 const createFallbackLink = (referralCode, userInfo = {}) => {
-  const fallbackUrl = `exp+enategamultivendor://?referralCode=${referralCode}&ref=${referralCode}&$fallback_url=https://borku.co.uk/download?ref=${referralCode}`
+  const fallbackUrl = `https://390ag.app.link/?referralCode=${referralCode}&ref=${referralCode}`
   const fallbackText = `Hey! Join Enatega - the easiest and cheapest way to shop for your African foods and groceries with convenient doorstep delivery in the UK. Use my referral code ${referralCode} to get credits for every order! For the first order you complete, I get 100 Enatega credits! Download:${fallbackUrl}`
-  
+
   return {
     url: fallbackUrl,
     shareText: fallbackText,

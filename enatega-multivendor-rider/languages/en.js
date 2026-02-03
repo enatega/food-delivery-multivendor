@@ -422,5 +422,14 @@ export const en = {
   "Phone number is too short": "Phone number is too short",
   "Invalid phone number format": "Invalid phone number format",
   "Zone is required": "Zone is required",
+  
+  // Rejection Modal
+  "Application Rejected": "Application Rejected",
+  "Your rider application has been rejected for": "Your rider application has been rejected for",
+  "You can reapply by clicking the button below": "You can reapply by clicking the button below",
+  "Reapply": "Apply Again",
+  "Close": "Close",
+  "Your application has been resubmitted successfully": "Your application has been resubmitted successfully",
+  "Failed to reapply. Please try again.": "Failed to reapply. Please try again.",
 };
 

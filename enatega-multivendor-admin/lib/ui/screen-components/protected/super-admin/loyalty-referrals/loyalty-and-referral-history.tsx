@@ -1,73 +1,117 @@
 'use client';
 
 import { useFetchReferralLoyaltyHistoryQuery } from '@/lib/graphql-generated';
-import DataTableColumnSkeleton from '@/lib/ui/useable-components/custom-skeletons/datatable.column.skeleton';
-import NoData from '@/lib/ui/useable-components/no-data';
+import Table from '@/lib/ui/useable-components/table';
 import { toTextCase } from '@/lib/utils/methods';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import type { JSX } from 'react';
 
-interface BreakdownRow {
-  id: number;
-  customer_name: string;
-  rank: string;
-  total_points: number;
+interface HistoryRow {
+  _id: string;
+  user_name: string;
+  user_rank: string;
   type: string;
-  tier: string;
-  last_purchase: string;
+  level: number;
+  value: number;
+  createdAt: string;
+}
+
+interface TableColumn {
+  propertyName: string;
+  headerName: string;
+  body?: (rowData: HistoryRow) => JSX.Element;
+  hidden?: boolean;
 }
 
 export default function LoyaltyAndReferralHistoryComponent() {
-  // API
-  const { data, loading } = useFetchReferralLoyaltyHistoryQuery();
-  const logs = data?.fetchReferralLoyaltyHistory || [];
+  // State for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [breakdowns] = useState<BreakdownRow[]>([
+  // API
+  const { data, loading, refetch } = useFetchReferralLoyaltyHistoryQuery({
+    variables: {
+      filter: {
+        page: currentPage,
+        limit: rowsPerPage,
+      },
+    },
+    fetchPolicy: 'cache-and-network',
+  });
+  
+  // Process data for table
+  const tableData = useMemo(() => {
+    const logs = data?.fetchReferralLoyaltyHistory?.data || [];
+    return logs.filter(Boolean) as HistoryRow[];
+  }, [data]);
+
+  // Pagination handler
+  const handlePageChange = (page: number, rows: number) => {
+    setCurrentPage(page);
+    setRowsPerPage(rows);
+    refetch({
+      filter: {
+        page,
+        limit: rows,
+      },
+    });
+  };
+
+  // Table columns configuration
+  const columns: TableColumn[] = [
     {
-      id: 1,
-      customer_name: 'Jennifer Oliver',
-      rank: 'Silver',
-      total_points: 250,
-      type: 'Referral',
-      tier: 'Level 02',
-      last_purchase: '03-11-2025 17:00:00',
+      propertyName: 'user_name',
+      headerName: 'Customer Name',
+      body: (rowData: HistoryRow) => (
+        <span className="text-foreground dark:text-white text-sm">{rowData.user_name}</span>
+      ),
     },
     {
-      id: 2,
-      customer_name: 'Jennifer Oliver',
-      rank: 'Silver',
-      total_points: 250,
-      type: 'Loyalty',
-      tier: 'Level 02',
-      last_purchase: '03-11-2025 17:00:00',
+      propertyName: 'user_rank',
+      headerName: 'Rank',
+      body: (rowData: HistoryRow) => (
+        <span className="text-foreground dark:text-white text-sm font-medium">
+          {toTextCase(rowData.user_rank, 'title')}
+        </span>
+      ),
     },
     {
-      id: 3,
-      customer_name: 'Jennifer Oliver',
-      rank: 'Silver',
-      total_points: 250,
-      type: 'Referral',
-      tier: 'Level 02',
-      last_purchase: '03-11-2025 17:00:00',
+      propertyName: 'value',
+      headerName: 'Total Points',
+      body: (rowData: HistoryRow) => (
+        <span className="text-foreground dark:text-white text-sm font-medium">{rowData.value}</span>
+      ),
     },
     {
-      id: 4,
-      customer_name: 'Jennifer Oliver',
-      rank: 'Silver',
-      total_points: 250,
-      type: 'Loyalty',
-      tier: 'Level 02',
-      last_purchase: '03-11-2025 17:00:00',
+      propertyName: 'type',
+      headerName: 'Type',
+      body: (rowData: HistoryRow) => (
+        <span className="text-foreground dark:text-white text-sm font-medium">{rowData.type}</span>
+      ),
     },
     {
-      id: 5,
-      customer_name: 'Jennifer Oliver',
-      rank: 'Silver',
-      total_points: 250,
-      type: 'Referral',
-      tier: 'Level 02',
-      last_purchase: '03-11-2025 17:00:00',
+      propertyName: 'level',
+      headerName: 'Tier',
+      body: (rowData: HistoryRow) => (
+        <span className="text-foreground dark:text-white text-sm font-medium">Level {rowData.level}</span>
+      ),
     },
-  ]);
+    {
+      propertyName: 'createdAt',
+      headerName: 'Last Purchase',
+      body: (rowData: HistoryRow) => (
+        <span className="text-foreground dark:text-white text-sm font-medium">
+          {new Date(parseInt(rowData.createdAt)).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </span>
+      ),
+    },
+  ];
 
   return (
     <div className="m-3 p-6 border border-border rounded-2xl">
@@ -77,132 +121,21 @@ export default function LoyaltyAndReferralHistoryComponent() {
             Referral and Loyalty History
           </h2>
           <p className="text-muted-foreground text-sm">
-            Top 5 customers by earned points or total spending.
+            Customer loyalty and referral activity history.
           </p>
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-border bg-[#F4F4F5]">
-              <th
-                className="text-[#71717A] text-left px-6 py-4  text-foreground  font-inter font-medium text-sm leading-5 tracking-normal
-"
-              >
-                Customer Name
-              </th>
-              <th
-                className="text-[#71717A] text-left px-6 py-4  text-foreground  font-inter font-medium text-sm leading-5 tracking-normal
-"
-              >
-                Rank
-              </th>
-              <th
-                className="text-[#71717A] text-left px-6 py-4  text-foreground  font-inter font-medium text-sm leading-5 tracking-normal
-"
-              >
-                Total Points
-              </th>
-              <th
-                className="text-[#71717A] text-left px-6 py-4  text-foreground  font-inter font-medium text-sm leading-5 tracking-normal
-"
-              >
-                Type
-              </th>
-
-              <th
-                className="text-[#71717A] text-left px-6 py-4  text-foreground  font-inter font-medium text-sm leading-5 tracking-normal
-"
-              >
-                Tier
-              </th>
-              <th
-                className="text-[#71717A] text-left px-6 py-4  text-foreground  font-inter font-medium text-sm leading-5 tracking-normal
-"
-              >
-                Last Purchase
-              </th>
-
-              <th className="text-right px-6 py-4 w-12"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <>
-                {new Array(5).fill(0).map((_, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      <DataTableColumnSkeleton key={index} />
-                    </td>
-
-                    <td className="px-6 py-4 text-foreground text-sm">
-                      <DataTableColumnSkeleton key={index} />
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      <DataTableColumnSkeleton key={index} />
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      <DataTableColumnSkeleton key={index} />
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      <DataTableColumnSkeleton key={index} />
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      <DataTableColumnSkeleton key={index} />
-                    </td>
-                  </tr>
-                ))}
-              </>
-            ) : !logs || logs?.length === 0 ? (
-              <NoData />
-            ) : (
-              logs.map((row, index) => {
-                if (!row) return;
-
-                return (
-                  <tr
-                    key={row._id}
-                    className={
-                      index !== breakdowns.length - 1
-                        ? 'border-b border-border'
-                        : ''
-                    }
-                  >
-                    <td className="px-6 py-4 text-foreground text-sm">
-                      {row.user_name}
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      {toTextCase(row.user_rank,"title")}
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      {row.value}
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      {row.type}
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      {row.level}
-                    </td>
-                    <td className="px-6 py-4 text-foreground text-sm font-medium">
-                      {new Date(parseInt(row.createdAt)).toLocaleString(
-                        'en-US',
-                        {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        }
-                      )}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        data={tableData}
+        columns={columns}
+        loading={loading}
+        rowsPerPage={rowsPerPage}
+        className="loyalty-history-table"
+        totalRecords={data?.fetchReferralLoyaltyHistory?.totalCount}
+        onPageChange={handlePageChange}
+        currentPage={currentPage}
+      />
     </div>
   );
 }

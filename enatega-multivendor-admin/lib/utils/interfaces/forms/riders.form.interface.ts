@@ -2,6 +2,7 @@ import { IDropdownSelectItem } from '../global.interface';
 
 export interface IRiderForm {
   name: string;
+  email?: string;
   username: string;
   password: string;
   confirmPassword: string;
@@ -12,6 +13,7 @@ export interface IRiderForm {
 
 export interface IRiderErrors {
   name: string[];
+  email: string[];
   username: string[];
   password: string[];
   confirmPassword: string[];

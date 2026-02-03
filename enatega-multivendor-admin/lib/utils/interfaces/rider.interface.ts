@@ -12,6 +12,7 @@ export interface IRiderResponse {
   __typename: 'Rider';
   _id: string;
   name: string;
+  email?: string;
   username: string;
   password: string;
   phone: string;
@@ -20,7 +21,10 @@ export interface IRiderResponse {
   assigned: string[];
   zone: IRiderResponseZone;
   madeBy: 'ADMIN' | 'RIDER_REQUEST';
-  riderRequestStatus: 'PENDING' | 'ACCEPTED';
+  riderRequestStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  rejectionReason?: string;
+  applyCount?: number;
+  createdAt?: string;
 }
 
 export interface ISingleRiderResponse {

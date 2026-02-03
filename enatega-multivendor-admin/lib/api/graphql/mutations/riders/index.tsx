@@ -5,6 +5,7 @@ export const CREATE_RIDER = gql`
     createRider(riderInput: $riderInput) {
       _id
       name
+      email
       username
       password
       phone
@@ -22,6 +23,7 @@ export const EDIT_RIDER = gql`
     editRider(riderInput: $riderInput) {
       _id
       name
+      email
       username
       phone
       password
@@ -52,6 +54,27 @@ export const ACCEPT_RIDER_REQUEST = gql`
       vehicleType
       madeBy
       riderRequestStatus
+      zone {
+        _id
+        title
+      }
+    }
+  }
+`;
+
+export const REJECT_RIDER_REQUEST = gql`
+  mutation RejectRiderRequest($id: ID!, $reason: String!) {
+    rejectRiderRequest(id: $id, reason: $reason) {
+      _id
+      name
+      username
+      phone
+      available
+      vehicleType
+      madeBy
+      riderRequestStatus
+      rejectionReason
+      applyCount
       zone {
         _id
         title

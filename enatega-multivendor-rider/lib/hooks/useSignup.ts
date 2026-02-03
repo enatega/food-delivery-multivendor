@@ -15,6 +15,7 @@ export default function useSignup() {
         _id: "",
         name: values.name,
         username: values.username,
+        email: values.email,
         password: values.password,
         phone: values.phone,
         available: true,

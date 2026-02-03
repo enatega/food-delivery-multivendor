@@ -37,6 +37,10 @@ import { ErrorBoundary } from './src/components/ErrorBoundary'
 import * as Clarity from '@microsoft/react-native-clarity'
 import { initializeBranch } from './src/utils/branch.io'
 import ReferralManager from './src/ui/ReferralManager'
+import { suppressApolloWarnings } from './src/utils/apolloErrorSuppression'
+
+// Suppress Apollo Client warnings that don't affect functionality
+suppressApolloWarnings()
 
 // LogBox.ignoreLogs([
 //   // 'Warning: ...',

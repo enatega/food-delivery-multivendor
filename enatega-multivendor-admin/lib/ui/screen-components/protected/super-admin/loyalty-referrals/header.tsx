@@ -73,7 +73,7 @@ export default function LoyaltyAndReferralHeader() {
           <HeaderText text="Loyalty and Referrals" />
 
           <div className="flex gap-2">
-            <div className="flex items-center gap-2 bg-gray-100 p-2 rounded">
+            <div className="flex items-center gap-2 bg-gray-100 dark:bg-dark-600 p-2 rounded">
               {loading && !loyaltyConfig ? (
                 <CustomLoader />
               ) : (
@@ -88,20 +88,21 @@ export default function LoyaltyAndReferralHeader() {
                         onChange={(e) => setValue(Number(e.target.value))}
                         onBlur={handleInputBlur}
                         onKeyDown={handleInputKeyDown}
+                        className="bg-white dark:bg-dark-900 text-foreground dark:text-white border border-gray-300 dark:border-dark-600 rounded px-2 py-1"
                         style={{ width: '60px' }}
                       />
                     ) : (
                       <span
                         onClick={handleSpanClick}
-                        style={{ cursor: 'pointer' }}
+                        className="text-foreground dark:text-white cursor-pointer"
                       >
                         {loyaltyConfig?.pointsPerDollar} pts
                       </span>
                     )}
-                    <div>
+                    <div className="text-foreground dark:text-white">
                       <FontAwesomeIcon icon={faArrowRightArrowLeft} />
                     </div>
-                    <div>{CURRENCY_SYMBOL}1</div>
+                    <div className="text-foreground dark:text-white">{CURRENCY_SYMBOL}1</div>
                   </>
                 )
               )}
