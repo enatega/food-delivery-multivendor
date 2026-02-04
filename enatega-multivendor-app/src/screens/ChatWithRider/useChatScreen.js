@@ -15,7 +15,7 @@ import { alignment } from '../../utils/alignment'
 import { useFocusEffect } from '@react-navigation/native'
 
 export const useChatScreen = ({ navigation, route }) => {
-  const { id: orderId, orderNo, total, riderPhone } = route.params
+  const { id: orderId, orderNo, total } = route.params
 
   const { t } = useTranslation()
   const { profile } = useUserContext()
@@ -110,7 +110,7 @@ export const useChatScreen = ({ navigation, route }) => {
             name="call-outline"
             size={24}
             color={currentTheme.fontFourthColor}
-            onPress={() => callNumber(riderPhone)}
+            onPress={() => callNumber('+923159499378')}
           />
         </View>
       ),
@@ -134,26 +134,25 @@ export const useChatScreen = ({ navigation, route }) => {
     return unsubscribe
   })
   const onSend = () => {
-    if (!inputMessage?.trim()) return
-    
-    const newMessage = {
+    const tempMessage = {
       _id: Date.now().toString(),
-      text: inputMessage.trim(),
-      createdAt: new Date(),
+      text: inputMessage,
+      createdAt: new Date().toISOString(),
       user: {
         _id: profile._id,
         name: profile.name
       }
     }
-    
-    // Optimistically update messages
-    setMessages(previousMessages => [newMessage, ...previousMessages])
-    
+
+    setMessages(prev => [tempMessage, ...prev])
+    setInputMessage(null)
+    setImage([])
+
     send({
       variables: {
         orderId: orderId,
         messageInput: {
-          message: inputMessage.trim(),
+          message: inputMessage,
           user: {
             id: profile._id,
             name: profile.name
@@ -161,8 +160,6 @@ export const useChatScreen = ({ navigation, route }) => {
         }
       }
     })
-    setInputMessage('')
-    setImage([])
   }
 
   return {
