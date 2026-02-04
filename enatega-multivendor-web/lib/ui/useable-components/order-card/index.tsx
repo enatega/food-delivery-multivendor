@@ -47,7 +47,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     setSelectedItems(
       order.items
         ?.map((item) => item._id)
-        .filter((id): id is string => Boolean(id)) || []
+        .filter((id): id is string => Boolean(id)) || [],
     );
 
     setIsDialogVisible(true);
@@ -99,7 +99,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     if (!selectedOrder) return;
 
     const itemsToReorder = (selectedOrder.items ?? []).filter((item) =>
-      selectedItems.includes(item._id ?? "")
+      selectedItems.includes(item._id ?? ""),
     );
 
     // Check if cart has items from a different restaurant
@@ -127,7 +127,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     // Then transform with food info if needed
     const transformed = transformCartWithFoodInfo(
       cleanedItems,
-      selectedOrder as any
+      selectedOrder as any,
     );
 
     setCart((prevCart) => {
@@ -145,24 +145,24 @@ const OrderCard: FC<IOrderCardProps> = ({
           setCartRestaurant(selectedOrder.restaurant?._id ?? "");
           localStorage.setItem(
             "restaurant-slug",
-            selectedOrder.restaurant?.slug || ""
+            selectedOrder.restaurant?.slug || "",
           );
           localStorage.setItem(
             "currentShopType",
             selectedOrder.restaurant?.shopType === "grocery"
               ? "store"
-              : "restaurant"
+              : "restaurant",
           );
           // Save restaurant data for checkout page
           try {
             localStorage.setItem(
               "restaurantData",
-              JSON.stringify(selectedOrder.restaurant || {})
+              JSON.stringify(selectedOrder.restaurant || {}),
             );
           } catch (error) {
             console.error(
               "Error saving restaurant data to localStorage:",
-              error
+              error,
             );
           }
         }
@@ -173,7 +173,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     handleReOrderClicked?.(
       selectedOrder.restaurant?._id ?? "",
       selectedOrder.restaurant?.slug ?? "",
-      selectedOrder.restaurant?.shopType ?? ""
+      selectedOrder.restaurant?.shopType ?? "",
     );
 
     handleCloseDialog();
@@ -191,7 +191,7 @@ const OrderCard: FC<IOrderCardProps> = ({
       try {
         localStorage.setItem(
           "restaurantData",
-          JSON.stringify(selectedOrder.restaurant || {})
+          JSON.stringify(selectedOrder.restaurant || {}),
         );
       } catch (error) {
         console.error("Error saving restaurant data to localStorage:", error);
@@ -224,7 +224,7 @@ const OrderCard: FC<IOrderCardProps> = ({
   // ✅ Calculate total based only on selected items including addons
   const calculateSelectedTotal = (
     order: IOrder,
-    selected: string[]
+    selected: string[],
   ): string => {
     return (
       order.items
@@ -253,7 +253,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     <div
       className={twMerge(
         "p-6 dark:bg-gray-900 dark:border-gray-700",
-        className
+        className,
       )}
     >
       <div className="flex flex-col md:flex-row gap-4">
@@ -395,7 +395,7 @@ const OrderCard: FC<IOrderCardProps> = ({
                         }, 0)
                       );
                     },
-                    0
+                    0,
                   );
                   const itemTotal = (item.variation?.price ?? 0) + addonTotal;
                   return (
@@ -412,8 +412,8 @@ const OrderCard: FC<IOrderCardProps> = ({
                             if (selectedItems.includes(id)) {
                               setSelectedItems(
                                 selectedItems.filter(
-                                  (existingId) => existingId !== id
-                                )
+                                  (existingId) => existingId !== id,
+                                ),
                               );
                             } else {
                               setSelectedItems([...selectedItems, id]);
