@@ -1,5 +1,10 @@
 // Core
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { 
+  KeyboardAvoidingView, 
+  Platform, 
+  StyleSheet, 
+  View
+} from "react-native";
 
 // Gifted Chat
 import { useApptheme } from "@/lib/context/global/theme.context";
@@ -154,6 +159,7 @@ export default function ChatMain() {
             backgroundColor: appTheme.screenBackground,
           }}
           onInputTextChanged={(m) => setInputMessage(String(m ?? ""))}
+          keyboardShouldPersistTaps="never"
         />
       </View>
     </KeyboardAvoidingView>
