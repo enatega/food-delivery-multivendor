@@ -148,7 +148,7 @@ export default function ChatMain() {
             left: { color: appTheme.fontMainColor },
             right: { color: appTheme.primary },
           }}
-          placeholder={t("Chats Here")}
+          placeholder={t("Chat Here")}
           // textInputStyle={{ paddingTop: 10 }}
           // renderAccessory={image.length > 0 ? renderAccessory : null}
           text={inputMessage ?? ""}
