@@ -45,7 +45,7 @@ export const UserProvider = (props) => {
     networkStatus
   } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
-    skip: !token
+    skip: !token || token === 'null' || token === 'undefined'
   })
 
   // Replace deprecated onCompleted with useEffect
@@ -79,6 +79,9 @@ export const UserProvider = (props) => {
 
   function onError(error) {
     console.log('error context user', error.message)
+    if (error.networkError && error.networkError.statusCode === 400) {
+      logout()
+    }
   }
   async function onCompleted(data) {
     const { _id: userId, name, email, phone } = data?.profile

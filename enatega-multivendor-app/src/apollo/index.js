@@ -103,7 +103,8 @@ const setupApollo = () => {
   })
 
   const request = async operation => {
-    const token = await AsyncStorage.getItem('token')
+    let token = await AsyncStorage.getItem('token')
+    if (token === 'null' || token === 'undefined') token = null
     console.log('🔐 [Apollo Debug] Setting authorization header with token:', token ? 'TOKEN_PRESENT' : 'NO_TOKEN')
 
     operation.setContext({
