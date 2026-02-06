@@ -132,7 +132,7 @@ export const useChatScreen = ({ navigation, route }) => {
       }
     })
     return unsubscribe
-  })
+  }, [orderId])
   const onSend = () => {
     const tempMessage = {
       _id: Date.now().toString(),
