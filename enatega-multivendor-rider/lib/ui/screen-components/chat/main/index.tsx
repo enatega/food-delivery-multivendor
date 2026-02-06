@@ -1,5 +1,10 @@
 // Core
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { 
+  KeyboardAvoidingView, 
+  Platform, 
+  StyleSheet, 
+  View
+} from "react-native";
 
 // Gifted Chat
 import { useApptheme } from "@/lib/context/global/theme.context";
@@ -60,7 +65,7 @@ export default function ChatMain() {
   //   );
   // };
 
-  const renderBubble = (props) => {
+  const renderBubble = (props: any) => {
     return (
       <Bubble
         {...props}
@@ -121,7 +126,11 @@ export default function ChatMain() {
   // };
 
   return (
-    <KeyboardAvoidingView className="flex-1">
+    <KeyboardAvoidingView 
+      className="flex-1"
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+    >
       <View
         className="flex-1"
         style={[
@@ -137,25 +146,20 @@ export default function ChatMain() {
           }}
           renderBubble={renderBubble}
           renderSend={renderSend}
-          scrollToBottom
-          scrollToBottomComponent={scrollToBottomComponent}
-          // messagesContainerStyle
           renderAvatar={null}
           renderUsernameOnMessage
-          // renderChatEmpty={renderChatEmpty}
           inverted={Platform.OS !== "web" || messages.length === 0}
           timeTextStyle={{
             left: { color: appTheme.fontMainColor },
             right: { color: appTheme.primary },
           }}
-          placeholder={t("Chats Here")}
-          // textInputStyle={{ paddingTop: 10 }}
-          // renderAccessory={image.length > 0 ? renderAccessory : null}
+          placeholder={t("Chat Here")}
           text={inputMessage ?? ""}
           messagesContainerStyle={{
             backgroundColor: appTheme.screenBackground,
           }}
           onInputTextChanged={(m) => setInputMessage(String(m ?? ""))}
+          keyboardShouldPersistTaps="never"
         />
       </View>
     </KeyboardAvoidingView>

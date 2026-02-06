@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRoute } from "@react-navigation/native";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
+import { useFocusEffect } from "expo-router";
 
 // Context
 import UserContext from "../context/global/user.context";
@@ -27,7 +28,7 @@ export const useChatScreen = () => {
   const [image, setImage] = useState([]);
 
   // API
-  const { subscribeToMore: subscribeToMessages, data: chatData } = useQuery(
+  const { subscribeToMore: subscribeToMessages, data: chatData, refetch } = useQuery(
     CHAT,
     {
       variables: { order: orderId },
@@ -70,7 +71,17 @@ export const useChatScreen = () => {
     setImage([]);
   };
 
-  // Use Effect
+  // Use Effect to refetch data when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      // Refetch chat messages when screen comes into focus
+      if (refetch) {
+        refetch();
+      }
+    }, [refetch])
+  );
+
+  // Use Effect for subscription
   useEffect(() => {
     const unsubscribe = subscribeToMessages({
       document: SUBSCRIPTION_NEW_MESSAGE,
@@ -83,12 +94,12 @@ export const useChatScreen = () => {
       },
     });
     return unsubscribe;
-  });
+  }, [orderId, subscribeToMessages]);
 
   useEffect(() => {
     if (chatData) {
       setMessages(
-        chatData?.chat?.map((message: IMessage) => ({
+        chatData?.chat?.map((message: any) => ({
           _id: message?.id ?? "",
           text: message?.message ?? "",
           createdAt: message.createdAt,
