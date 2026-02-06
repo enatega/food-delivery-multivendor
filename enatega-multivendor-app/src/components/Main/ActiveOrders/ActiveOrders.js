@@ -1,10 +1,10 @@
-import React, { useContext, useState, useEffect, useRef } from 'react'
+import React, { useContext, useState, useEffect, useRef, useCallback } from 'react'
 import { View, TouchableOpacity, Dimensions, StyleSheet, Animated } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import TextError from '../../Text/TextError/TextError'
 import OrdersContext from '../../../context/Orders'
 import Spinner from '../../Spinner/Spinner'
@@ -25,7 +25,7 @@ const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 
 const ActiveOrders = ({ onActiveOrdersChange }) => {
   const { t, i18n } = useTranslation()
-  const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
+  const { loadingOrders, errorOrders, orders, reFetchOrders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -34,11 +34,31 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
     ...theme[themeContext.ThemeValue]
   }
 
+  // Force re-render when orders change
+  const [updateCounter, setUpdateCounter] = useState(0)
+
   const activeOrders = orders.filter(
     (o) =>
       orderStatusActive.includes(o.orderStatus) &&
       (o?.paymentStatus === 'PAID' || o?.paymentMethod == 'COD')
   )
+
+  // Refetch orders when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      if (reFetchOrders) {
+        reFetchOrders()
+      }
+      return () => {
+        // Cleanup if needed
+      }
+    }, [reFetchOrders])
+  )
+
+  // Force update when orders array changes
+  useEffect(() => {
+    setUpdateCounter(prev => prev + 1)
+  }, [orders])
 
   const onPressDetails = (order) => {
     navigation.navigate('OrderDetail', {
