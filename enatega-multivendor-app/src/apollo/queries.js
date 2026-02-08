@@ -522,6 +522,9 @@ export const getConfiguration = `query Configuration{
     skipMobileVerification
     skipEmailVerification
     costType
+    password
+    publishableKey
+    secretKey
   }
 }`
 

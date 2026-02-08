@@ -1,7 +1,6 @@
 import {
   ApolloClient,
   ApolloLink,
-  concat,
   createHttpLink,
   InMemoryCache,
   Observable,
@@ -15,13 +14,16 @@ import {
   offsetLimitPagination,
 } from "@apollo/client/utilities";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 import useEnvVars from "../../environment";
 import { RIDER_TOKEN } from "../utils/constants";
 import { IRestaurantLocation } from "../utils/interfaces";
 import { calculateDistance } from "../utils/methods/custom-functions";
-// import { onError } from "apollo-link-error";
+import { getValidPublicToken } from "../utils/service/publicAccessService";
+import { getOrCreateNonce } from "../utils/publicAccessToken";
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars();
@@ -69,7 +71,7 @@ const setupApollo = () => {
                 restaurantLocation.coordinates[0][0][0],
                 restaurantLocation.coordinates[0][0][1],
                 variables?.latitude,
-                variables?.longitude
+                variables?.longitude,
               );
               return distance;
             },
@@ -95,21 +97,85 @@ const setupApollo = () => {
     uri: GRAPHQL_URL,
   });
 
-  const wsLink = new WebSocketLink({
-    uri: WS_GRAPHQL_URL,
-    options: {
+  const wsClient = new SubscriptionClient(
+    WS_GRAPHQL_URL,
+    {
       reconnect: true,
-      timeout:30000
+      lazy: true,
+      connectionParams: async () => {
+        const token = await AsyncStorage.getItem(RIDER_TOKEN);
+        const publicToken = await getValidPublicToken(
+          GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
+        ).catch((err) => {
+          console.log("⚠️ Could not get public token for WebSocket:", err.message);
+          return null;
+        });
+        const nonce = await getOrCreateNonce();
+
+        console.log("🔌 WebSocket connecting with user token:", token ? "✓" : "✗");
+        console.log("🔌 WebSocket connecting with public token:", publicToken ? "✓" : "✗");
+
+        return {
+          authorization: token ? `Bearer ${token}` : "",
+          "bop-auth": publicToken ? `Bearer ${publicToken}` : "",
+          nonce: nonce,
+        };
+      },
+      connectionCallback: (error) => {
+        if (error) {
+          console.error("❌ WebSocket connection error:", error);
+        } else {
+          console.log("✅ WebSocket connected successfully");
+        }
+      },
     },
+    WebSocket
+  );
+
+  // Add event listeners for debugging (can be removed in production)
+  wsClient.onConnected(() => {
+    console.log("✅ WebSocket connected");
   });
+
+  wsClient.onReconnected(() => {
+    console.log("🔄 WebSocket reconnected");
+  });
+
+  const wsLink = new WebSocketLink(wsClient);
 
   const request = async (operation: Operation) => {
     const token = await AsyncStorage.getItem(RIDER_TOKEN);
 
+    // Try to get public token, but don't fail if it's not available yet
+    const publicToken = await getValidPublicToken(
+      GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
+    ).catch((err) => {
+      console.log("⚠️ Could not get public token for request:", err.message);
+      return null;
+    });
+
+    const nonce = await getOrCreateNonce();
+
+    // Get platform-specific information for fingerprinting
+    const platform = Platform.OS;
+    const locale = (await AsyncStorage.getItem("lang")) || "en";
+
+    // Build headers object
+    const headers: Record<string, string> = {
+      authorization: token ? `Bearer ${token}` : "",
+      nonce: nonce,
+      "x-platform": platform,
+      "accept-language": locale,
+      "user-agent": `Yalla-Rider-App/${platform}`,
+    };
+
+    // Add bop-auth if we have a public token
+    if (publicToken) {
+      headers["bop-auth"] = `Bearer ${publicToken}`;
+    }
+
     operation.setContext({
-      headers: {
-        authorization: token ? `Bearer ${token}` : "",
-      },
+      headers,
     });
   };
 
@@ -131,23 +197,34 @@ const setupApollo = () => {
         return () => {
           if (handle) handle.unsubscribe();
         };
-      })
+      }),
   );
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message, locations, path }) => {
+        // IMPORTANT: Only remove user token for actual user auth failures
+        // Do NOT remove token for public auth failures (bop-auth related)
+        const isPublicAuthError =
+          message.toLowerCase().includes("fingerprint mismatch") ||
+          message.toLowerCase().includes("token expired") ||
+          message.toLowerCase().includes("invalid token") ||
+          message.toLowerCase().includes("token missing");
+
+        // Only remove rider token if it's a user auth error (not public auth error)
         if (
-          message.toLowerCase().includes("unauthenticate") ||
-          message.toLowerCase().includes("unauthorize")
+          !isPublicAuthError &&
+          (message.toLowerCase().includes("unauthenticate") ||
+           message.toLowerCase().includes("unauthorize"))
         ) {
+          console.log("❌ User authentication failed, removing rider token");
           AsyncStorage.removeItem(RIDER_TOKEN)
             .then(() => {})
             .catch((err) => console.log(err));
         }
 
         console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
         );
       });
     }
@@ -156,34 +233,27 @@ const setupApollo = () => {
     }
   });
 
-  // const terminatingLink = split(({ query }) => {
-  //   const {
-  //     kind,
-  //     operation,
-  //   }: OperationDefinitionNode | FragmentDefinitionNode =
-  //     getMainDefinition(query);
-  //   return kind === "OperationDefinition" && operation === "subscription";
-  // }, wsLink);
-
-  // Terminating Link
-  const terminatingLink = split(({ query }) => {
-    const definition = getMainDefinition(query) as
-      | DefinitionNode
-      | (FragmentDefinitionNode & {
-          kind: string;
-          operation?: string;
-        });
-    return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
-    );
-  }, wsLink);
-
   const client = new ApolloClient({
-    link: concat(
-      ApolloLink.from([terminatingLink, requestLink, errorLink]),
-      httpLink
-    ),
+    link: ApolloLink.from([
+      errorLink,
+      requestLink,
+      split(
+        ({ query }) => {
+          const definition = getMainDefinition(query) as
+            | DefinitionNode
+            | (FragmentDefinitionNode & {
+                kind: string;
+                operation?: string;
+              });
+          return (
+            definition.kind === "OperationDefinition" &&
+            definition.operation === "subscription"
+          );
+        },
+        wsLink,
+        httpLink
+      ),
+    ]),
     cache,
     resolvers: {},
   });

@@ -303,7 +303,6 @@ function Main(props) {
     </View>
   )
 
-  if (error) return <ErrorView />
 
   // const filterCusinies = () => {
   //   if (data !== undefined) {
@@ -344,7 +343,7 @@ function Main(props) {
 
   const restaurantCuisines = useCuisinesData('restaurant', allCuisines)
   const groceryCuisines = useCuisinesData('grocery', allCuisines)
-
+  if (error) return <ErrorView />
   return (
     <>
       {!connect ? (

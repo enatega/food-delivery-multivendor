@@ -6,12 +6,14 @@ import "react-native-reanimated";
 
 // Service
 import setupApollo from "@/lib/apollo";
+import PublicAccessTokenService from "@/lib/services/public-access-token.service";
 
 // Providers
 import { AuthProvider } from "@/lib/context/global/auth.context";
 import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
 import { ApolloProvider } from "@apollo/client";
 
+import { useEffect, useState } from "react";
 
 
 // Locale
@@ -23,11 +25,11 @@ import "../global.css";
 // Hooks
 import { UserProvider } from "@/lib/context/global/user.context";
 import { useFonts } from "expo-font";
+import { useKeepAwake } from "expo-keep-awake";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
 import FlashMessage from "react-native-flash-message";
 
-// PRoviders
+// Providers
 import InternetProvider from "@/lib/context/global/internet-provider";
 // UI
 import AppThemeProvidor, { useApptheme } from "@/lib/context/theme.context";
@@ -50,12 +52,15 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
   // Hooks
+  useKeepAwake();
   const { currentTheme, appTheme } = useApptheme();
   const [loaded] = useFonts({
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
     Inter: require("../lib/assets/fonts/Inter.ttf"),
   });
 
+  const [isTokenReady, setIsTokenReady] = useState(false);
+  
   const client = setupApollo();
 
   // Use Effect
@@ -65,7 +70,20 @@ function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
+  useEffect(() => {
+    console.log("🔄 Initializing public access token...");
+    PublicAccessTokenService.initialize(client)
+      .then(() => {
+        console.log("✅ Public access token initialized");
+        setIsTokenReady(true);
+      })
+      .catch((error) => {
+        console.error("❌ Failed to initialize token:", error);
+        setIsTokenReady(true);
+      });
+  }, [client]);
+
+  if (!isTokenReady) {
     return null;
   }
 
