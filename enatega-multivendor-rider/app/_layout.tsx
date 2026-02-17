@@ -34,6 +34,7 @@ import { requestMediaLibraryPermissionsAsync } from "expo-image-picker";
 import { useEffect } from "react";
 
 import "../global.css";
+import { usePublicAccessInit } from "@/lib/hooks/usePublicAccessInit";
 
 initSentry();
 
@@ -53,6 +54,8 @@ function RootLayout() {
   async function grantCameraAndGalleryPermissions() {
     await requestMediaLibraryPermissionsAsync();
   }
+
+  usePublicAccessInit()
 
   // Use Effect
   useEffect(() => {

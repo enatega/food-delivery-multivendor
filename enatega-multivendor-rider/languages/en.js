@@ -326,5 +326,6 @@ export const en = {
   "Light": "Light",
   "Time slot overlaps with another existing slot": "Time slot overlaps with another existing slot",
   "Account holder name": "Account holder name",
-  "Tips": "Tips"
+  "Tips": "Tips",
+  "Account not found, Please create your account." : "Account not found, Please create your account."
 };

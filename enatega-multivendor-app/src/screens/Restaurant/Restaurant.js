@@ -108,7 +108,7 @@ function Restaurant(props) {
       // setFilterData([])
       const filteredData = []
       deals?.forEach((category) => {
-        category.data.forEach((deals) => {
+        category?.data?.forEach((deals) => {
           filteredData.push(deals)
         })
       })
@@ -119,7 +119,7 @@ function Restaurant(props) {
       const regex = new RegExp(escapedSearchText, 'i')
       const filteredData = []
       deals.forEach((category) => {
-        category.data.forEach((deals) => {
+        category?.data?.forEach((deals) => {
           const title = deals.title.search(regex)
           if (title < 0) {
             const description = deals.description.search(regex)

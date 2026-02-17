@@ -1,19 +1,34 @@
 import React, { useRef, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, AppState } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 
 export default function VideoBanner(props) {
-  // Create video player instance
+  const appState = useRef(AppState.currentState);
+
   const player = useVideoPlayer(props?.source, (player) => {
     player.loop = true;
     player.muted = true;
-    player.play();
+    if (AppState.currentState === 'active') {
+      player.play();
+    }
   });
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/active/) && nextAppState === 'background') {
+        player.pause();
+      } else if (nextAppState === 'active') {
+        player.play();
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => subscription?.remove();
+  }, [player]);
 
   useEffect(() => {
     const subscription = player.addListener('statusChange', (status) => {
       if (status.isLoaded) {
-        // Video is ready to play
         console.log('Video loaded successfully');
       }
       

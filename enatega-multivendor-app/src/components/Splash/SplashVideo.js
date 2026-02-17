@@ -1,10 +1,11 @@
-import { StyleSheet, View } from 'react-native';
-import { useState, useEffect } from 'react';
+import { StyleSheet, View, AppState } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
 import { VideoView, useVideoPlayer } from 'expo-video';
 
 export default function SplashVideo({ onLoaded, onFinish }) {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
+  const appState = useRef(AppState.currentState);
 
   const player = useVideoPlayer(require('./../../../assets/mobileSplash.mp4'), (player) => {
     player.loop = false;
@@ -12,17 +13,30 @@ export default function SplashVideo({ onLoaded, onFinish }) {
   });
 
   useEffect(() => {
-    // Delay initial play to ensure video is ready after cache clear
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/active/) && nextAppState === 'background') {
+        player.pause();
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => subscription?.remove();
+  }, [player]);
+
+  useEffect(() => {
     const playTimeout = setTimeout(() => {
-      player.play();
+      if (AppState.currentState === 'active') {
+        player.play();
+      }
     }, 500);
 
     const statusSubscription = player.addListener('statusChange', (status) => {
       if (status.status === 'readyToPlay' && !hasLoaded) {
         setHasLoaded(true);
         onLoaded?.();
-        // Ensure play after ready state
-        player.play();
+        if (AppState.currentState === 'active') {
+          player.play();
+        }
       }
       
       if (status.status === 'idle' && hasLoaded && !hasFinished) {

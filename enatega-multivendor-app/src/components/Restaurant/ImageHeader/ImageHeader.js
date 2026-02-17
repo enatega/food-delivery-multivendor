@@ -5,7 +5,8 @@ import {
   Entypo,
   SimpleLineIcons,
   MaterialCommunityIcons,
-  FontAwesome5
+  FontAwesome5,
+  AntDesign
 } from '@expo/vector-icons'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -30,6 +31,8 @@ import Animated, {
 import FavoriteButton from '../../FavButton/FavouriteButton'
 import Bicycle from '../../../assets/SVG/Bicycle'
 import ConfigurationContext from '../../../context/Configuration'
+import { useFavorite } from '../../FavButton/useFavorite'
+import Spinner from '../../Spinner/Spinner'
 
 const AnimatedText = Animated.createAnimatedComponent(Text)
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
@@ -85,6 +88,8 @@ function ImageTextCenterHeader(props, ref) {
     reviewsAverage: props?.reviewAverage,
     _id: props?.restaurantId
   }
+
+  const { isFavorite, loading: favLoading, toggleFavorite } = useFavorite(aboutObject?.restaurantId)
 
   const currentDayShort = new Date()
     .toLocaleString('en-US', { weekday: 'short' })
@@ -338,10 +343,33 @@ function ImageTextCenterHeader(props, ref) {
                       {aboutObject?.restaurantName}
                     </TextDefault>
                   </View>
-                  <FavoriteButton
-                    iconSize={scale(24)}
-                    restaurantId={aboutObject.restaurantId}
-                  />
+                  <AnimatedTouchable
+                    activeOpacity={0.7}
+                    disabled={favLoading}
+                    onPress={toggleFavorite}
+                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+                    style={{
+                      minWidth: scale(44),
+                      minHeight: scale(44),
+                      padding: scale(8),
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    {favLoading ? (
+                      <Spinner
+                        size={'small'}
+                        backColor={'transparent'}
+                        spinnerColor={currentTheme.iconColorDark}
+                      />
+                    ) : (
+                      <AntDesign
+                        name={isFavorite ? 'heart' : 'hearto'}
+                        size={scale(24)}
+                        color={currentTheme.newIconColor}
+                      />
+                    )}
+                  </AnimatedTouchable>
                 </View>
                 <TextDefault
                   textColor={currentTheme.fontThirdColor}

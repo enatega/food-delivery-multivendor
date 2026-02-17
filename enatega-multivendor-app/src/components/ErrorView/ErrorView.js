@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import ErrorSvg from '../../assets/SVG/error';
 import useNetworkStatus from '../../utils/useNetworkStatus';
 
-const ErrorView = ({ refetchFunctions = [] }) => {
+const ErrorView = ({ refetchFunctions = [], errorMessage }) => {
   const themeContext = useContext(ThemeContext);
   const currentTheme = theme[themeContext.ThemeValue];
   const { t } = useTranslation();
@@ -15,12 +15,16 @@ const ErrorView = ({ refetchFunctions = [] }) => {
   const { isConnected } = useNetworkStatus();
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await Promise.all(refetchFunctions.map((refetch) => refetch()))
+const onRefresh = async () => {
+  setRefreshing(true);
+  try {
+    await Promise.all(refetchFunctions.map((f) => f()));
+  } catch (e) {
+    console.error("One or more queries failed:", e);
+  } finally {
     setRefreshing(false);
-  };
-
+  }
+};
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
@@ -33,7 +37,7 @@ const ErrorView = ({ refetchFunctions = [] }) => {
         {t('somethingWentWrong')}
       </TextDefault>
       <TextDefault center H4 textColor={currentTheme.newFontcolor}>
-        {t('checkInternet')}
+       {errorMessage ? errorMessage : t('checkInternet')}
       </TextDefault>
     </ScrollView>
   );

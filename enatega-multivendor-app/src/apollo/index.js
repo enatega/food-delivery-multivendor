@@ -17,6 +17,9 @@ import useEnvVars from '../../environment'
 import { useContext } from 'react'
 import { LocationContext } from '../context/Location'
 import { calculateDistance } from '../utils/customFunctions'
+import { getValidPublicToken } from '../services/publicAcccessService'
+import { getOrCreateNonce } from '../utils/publicAccessToken'
+import { Platform } from 'react-native'
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars()
@@ -82,16 +85,30 @@ const setupApollo = () => {
   const wsLink = new WebSocketLink({
     uri: WS_GRAPHQL_URL,
     options: {
-      reconnect: true
+      reconnect: true,
+      lazy: true,
+      connectionParams: async () => {
+        const token = await AsyncStorage.getItem('token')
+        return {
+          authorization: token ? `Bearer ${token}` : ''
+        }
+      }
     }
   })
 
   const request = async operation => {
     const token = await AsyncStorage.getItem('token')
+    const publicToken = await getValidPublicToken(GRAPHQL_URL)
+    const nonce = await getOrCreateNonce()
 
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : ''
+        authorization: token ? `Bearer ${token}` : '',
+        "bop-auth": publicToken ? `Bearer ${publicToken}` : '',
+        nonce: nonce,
+        'user-agent': `EnategaApp/${Platform.OS}`,
+        'accept-language': 'en-US',
+        'x-platform': Platform.OS
       }
     })
   }
@@ -117,13 +134,17 @@ const setupApollo = () => {
       })
   )
 
-  const terminatingLink = split(({ query }) => {
-    const { kind, operation } = getMainDefinition(query)
-    return kind === 'OperationDefinition' && operation === 'subscription'
-  }, wsLink)
+  const terminatingLink = split(
+    ({ query }) => {
+      const { kind, operation } = getMainDefinition(query)
+      return kind === 'OperationDefinition' && operation === 'subscription'
+    },
+    wsLink,
+    concat(requestLink, httpLink)
+  )
 
   const client = new ApolloClient({
-    link: concat(ApolloLink.from([terminatingLink, requestLink]), httpLink),
+    link: terminatingLink,
     cache,
     resolvers: {}
   })

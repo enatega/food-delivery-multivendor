@@ -43,16 +43,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       const lng = await AsyncStorage.getItem("lang");
       console.log("🚀 ~ handleSetCurrentLanguage ~ lng:", lng);
       
-      // Safe handling of Localization.locale
+      // Safe handling of Localization
       let systemLanguage = "en"; // default fallback
       
-      if (Localization.locale && typeof Localization.locale === 'string') {
-        systemLanguage = Localization.locale.split("-")[0];
-      } else if (Localization.locales && Array.isArray(Localization.locales) && Localization.locales.length > 0) {
-        const firstLocale = Localization.locales[0];
-        if (firstLocale && typeof firstLocale === 'string') {
-          systemLanguage = firstLocale.split("-")[0];
-        }
+      const locales = Localization.getLocales();
+      if (locales && locales.length > 0 && locales[0].languageCode) {
+        systemLanguage = locales[0].languageCode;
       }
       
       console.log("🚀 ~ handleSetCurrentLanguage ~ systemLanguage:", systemLanguage);
@@ -74,6 +70,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       }
     }
   };
+
 
   const logout = async () => {
     try {
