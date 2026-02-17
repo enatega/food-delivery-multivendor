@@ -107,9 +107,9 @@ export default function TransactionHistoryTableHeader({
       </div>
       <div className="flex gap-4">
         <span className="p-input-icon-left">
-          <i className="pi pi-search" />
+          <i className="pi pi-search pl-2" />
           <InputText
-            className="w-[14rem] h-10 border-[1px] font-light border-gray-300 rounded-[0.3rem] pl-3 pr-3 text-black dark:text-white"
+            className="w-[14rem] h-10 border-[1px] font-light border-gray-300 rounded-[0.3rem] pl-7 pr-3 text-black dark:text-white"
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
             placeholder={t('Search')}

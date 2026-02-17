@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "Giriş bilgileri",
   "Sign in": "Giriş yap",
   "CustomerSupport": "Müşteri Destek",
@@ -18,6 +19,7 @@
   "Edit": "Düzenle",
   "Delete": "Sil",
   "Edit Category": "Kategoriyi Düzenle",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Bu mağazayı silmek istediğinizden emin misiniz?",
   "Save": "Kaydet",
   "OrderID prefix": "Sipariş ID öneki",
   "Order": "Sipariş",
@@ -57,7 +59,6 @@
   "Users": "Kullanıcılar",
   "Phone": "Telefon",
   "Address": "Adres",
-  "2019": "2019",
   "About Us": "Hakkımızda",
   "Blog": "Blog",
   "Welcome": "Hoş geldiniz",

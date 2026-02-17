@@ -10,7 +10,7 @@ import "primeicons/primeicons.css";
 import { useTranslations } from "next-intl";
 
 export default function PersonalInfoMain() {
-  const t = useTranslations()
+  const t = useTranslations();
   const [isUpdatePhoneModalVisible, setIsUpdatePhoneModalVisible] =
     useState<boolean>(false);
 
@@ -22,7 +22,7 @@ export default function PersonalInfoMain() {
     GET_USER_PROFILE,
     {
       fetchPolicy: "network-only",
-    }
+    },
   );
 
   // Get initials from the name
@@ -58,23 +58,41 @@ export default function PersonalInfoMain() {
               text={profileData?.profile?.email || "N/A"}
               className="font-normal text-sm md:text-base text-gray-700 dark:text-gray-200"
             />
+            <TextComponent
+              text={
+                profileData?.profile?.emailIsVerified
+                  ? t("Verified")
+                  : t("Not Verified")
+              }
+              className={`text-sm font-medium ${profileData?.profile?.emailIsVerified ? "text-blue-500" : "text-red-500"}`}
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">
-
-            <TextComponent
-              text={t("Phone")}
-              className="text-black dark:text-gray-200 font-semibold text-base md:text-lg"
-            />
-             <i  onClick={handleUpdatePhoneModal} className="pi pi-pen-to-square cursor-pointer dark:text-white text-sm"></i>
+              <TextComponent
+                text={t("Phone")}
+                className="text-black dark:text-gray-200 font-semibold text-base md:text-lg"
+              />
+              <i
+                onClick={handleUpdatePhoneModal}
+                className="pi pi-pen-to-square cursor-pointer dark:text-white text-sm"
+              ></i>
             </div>
             <h1
               onClick={handleUpdatePhoneModal}
               title="Update phone number"
               className=" text-blue-700 dark:text-blue-400 font-normal text-sm md:text-base cursor-pointer"
-            >           
+            >
               {profileData?.profile?.phone || "N/A"}
             </h1>
+            <TextComponent
+              text={
+                profileData?.profile?.phoneIsVerified
+                  ? t("verified")
+                  : t("not_verified")
+              }
+              className={`text-sm font-medium ${profileData?.profile?.phoneIsVerified ? "text-blue-500" : "text-red-500"}`}
+            />
           </div>
         </div>
         <UpdatePhoneModal
@@ -82,7 +100,6 @@ export default function PersonalInfoMain() {
           handleUpdatePhoneModal={handleUpdatePhoneModal}
           ActiveStep={activeStep}
           setActiveStep={setActiveStep}
-          
           isUpdatePhoneModalVisible={isUpdatePhoneModalVisible}
         />
       </div>

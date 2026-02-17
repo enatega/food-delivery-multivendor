@@ -14,7 +14,7 @@ const ConfigCard = ({
   return (
     <div className="flex w-full sm:w-2/3 mx-auto flex-col overflow-hidden rounded-lg border">
       {/* header */}
-      <div className="flex items-center justify-between bg-[#F4F4F5] p-4">
+      <div className="flex items-center justify-between bg-[#F4F4F5] dark:bg-dark-900 p-4">
         <span className="select-none text-lg font-bold">{cardTitle}</span>
         {toggleLabel && (
           <>

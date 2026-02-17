@@ -1,4 +1,6 @@
-{"audit_log_header_desc": "Tizimdagi barcha ma'muriy harakatlar va o'zgarishlarni kuzatib boring.",
+{
+  "2019": "2019",
+  "audit_log_header_desc": "Tizimdagi barcha ma'muriy harakatlar va o'zgarishlarni kuzatib boring.",
   "Performed_by": "Bajaruvchi",
   "show_detail": "Tafsilotlarni ko‘rsatish",
   "hide_detail": "Tafsilotlarni yashirish",
@@ -11,7 +13,6 @@
     "medium": "O‘rta",
     "strong": "Kuchli"
   },
-  
   "Sign in credentials": "Kirish ma'lumotlari",
   "Sign in": "Kirish",
   "CustomerSupport": "Mijozlarni qo'llab-quvvatlash",
@@ -21,6 +22,7 @@
   "Add": "Qo'shish",
   "Remove": "O'chirish",
   "Add/Remove": "Qo'shish/O'chirish",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Haqiqatan ham ushbu do‘konni o‘chirmoqchimisiz?",
   "Success": "Muvaffaqiyat",
   "危险": "Xavf",
   "Categories": "Kategoriyalar",
@@ -69,7 +71,6 @@
   "Users": "Foydalanuvchilar",
   "Phone": "Telefon",
   "Address": "Manzil",
-  "2019": "2019",
   "About Us": "Biz haqimizda",
   "Blog": "Blog",
   "Welcome": "Xush kelibsiz",

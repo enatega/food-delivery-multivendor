@@ -2,7 +2,6 @@
 import HeaderText from '@/lib/ui/useable-components/header-text';
 import StatsCard from '@/lib/ui/useable-components/stats-card';
 import { IEarningsHeaderComponentProps } from '@/lib/utils/interfaces';
-import { faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
 // import { useState } from 'react';
@@ -24,16 +23,14 @@ const EarningsSuperAdminHeader = ({
         <StatsCard
           label={t('Total Platform Earning')}
           total={formatNumber(earnings?.platformTotal || 0)}
-          icon={faDollarSign}
           currencySymbol={CURRENT_SYMBOL || '$'}
           route=""
           isClickable={false}
-        // loading= {loading}
+          // loading= {loading}
         />
         <StatsCard
           label={t('Total Stores Earning')}
           total={formatNumber(earnings?.storeTotal || 0)}
-          icon={faDollarSign}
           currencySymbol={CURRENT_SYMBOL || '$'}
           isClickable={false}
           route="" // loading={loading}
@@ -41,7 +38,6 @@ const EarningsSuperAdminHeader = ({
         <StatsCard
           label={t('Total Riders Earnings')}
           total={formatNumber(earnings?.riderTotal || 0)}
-          icon={faDollarSign}
           currencySymbol={CURRENT_SYMBOL || '$'}
           isClickable={false}
           route="" // loading = {loading}

@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "登录凭据",
   "Sign in": "登录",
   "Add Category": "添加类别",
@@ -19,6 +20,7 @@
   "Delete": "删除",
   "Edit Category": "编辑类别",
   "Save": "保存",
+  "are_you_sure_you_want_to_delete_this_shoptype": "您确定要删除此商店吗？",
   "OrderID prefix": "订单ID前缀",
   "Order": "订单",
   "Email": "电子邮件",
@@ -56,7 +58,6 @@
   "Users": "用户",
   "Phone": "电话",
   "Address": "地址",
-  "2019": "2019",
   "Status Changed Successfully": "状态已成功更改",
   "About Us": "关于我们",
   "Blog": "博客",

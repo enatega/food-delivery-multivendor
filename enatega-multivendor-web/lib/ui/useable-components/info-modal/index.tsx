@@ -27,7 +27,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
     lng: 24.9384,
   });
 
-  const { GOOGLE_MAPS_KEY } = useConfig();
+  const { GOOGLE_MAPS_KEY, CURRENCY_SYMBOL } = useConfig();
   const t = useTranslations();
 
   useEffect(() => {
@@ -102,7 +102,12 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
   };
 
   return (
-    <CustomDialog visible={visible} onHide={onHide} className="m-0 z-[100]" width="550px">
+    <CustomDialog
+      visible={visible}
+      onHide={onHide}
+      className="m-0 z-[100]"
+      width="550px"
+    >
       <div className="restaurant-info-modal">
         {/* Map */}
         <div className="relative">
@@ -119,13 +124,16 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
         </div>
 
         <div className="py-6 md:px-6">
-          <h1 className="text-xl md:text-3xl font-bold mb-2">{restaurantInfo.name}</h1>
+          <h1 className="text-xl md:text-3xl font-bold mb-2">
+            {restaurantInfo.name}
+          </h1>
 
           <div className="flex items-center mb-4">
             <FontAwesomeIcon
               icon={faCircle}
               className={`text-[10px] md:text-xs font-normal md:text-[16px] mr-2 ${
-                restaurantInfo.isAvailable && getCurrentDayHours() !== t("Closed")
+                restaurantInfo.isAvailable &&
+                getCurrentDayHours() !== t("Closed")
                   ? "text-primary-color"
                   : "text-red-500"
               }`}
@@ -135,11 +143,15 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
             </span>
           </div>
 
-          <p className="mb-6 text-xs font-normal md:text-[16px]">{restaurantInfo.description}</p>
+          <p className="mb-6 text-xs font-normal md:text-[16px]">
+            {restaurantInfo.description}
+          </p>
 
           {/* Address */}
           <div className="mb-6">
-            <h2 className="text-lg md:text-xl font-bold mb-2">{t("Address")}</h2>
+            <h2 className="text-lg md:text-xl font-bold mb-2">
+              {t("Address")}
+            </h2>
             <p className="mb-2 text-xs md:text-[16px] font-normal">
               {restaurantInfo.address}
             </p>
@@ -155,7 +167,9 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
 
           {/* Opening Hours */}
           <div className="mb-6">
-            <h2 className="text-lg md:text-xl font-bold mb-2">{t("OpeningHours")}</h2>
+            <h2 className="text-lg md:text-xl font-bold mb-2">
+              {t("OpeningHours")}
+            </h2>
             <div className="grid grid-cols-1 gap-2">
               {restaurantInfo.openingTimes.map((day) => (
                 <div key={day.day} className="flex justify-between items-start">
@@ -175,17 +189,29 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
 
           {/* Delivery Info */}
           <div className="mb-6">
-            <h2 className="text-lg md:text-xl font-bold mb-2">{t("DeliveryInfo")}</h2>
+            <h2 className="text-lg md:text-xl font-bold mb-2">
+              {t("DeliveryInfo")}
+            </h2>
             <div className="grid grid-cols-1 gap-2">
-              <p>{t("MinOrder")} {" "}: £{restaurantInfo.MinimumOrder}</p>
-              <p>{t("DeliveryTime")} {" "}: {restaurantInfo.deliveryTime} mins</p>
-              <p>{t("SalesTax")} {" "}: £{restaurantInfo.deliveryTax}</p>
+              <p>
+                {t("MinOrder")} : {CURRENCY_SYMBOL}
+                {restaurantInfo.MinimumOrder}
+              </p>
+              <p>
+                {t("DeliveryTime")} : {restaurantInfo.deliveryTime} mins
+              </p>
+              <p>
+                {t("SalesTax")} : {CURRENCY_SYMBOL}
+                {restaurantInfo.deliveryTax}
+              </p>
             </div>
           </div>
 
           {/* Contact */}
           <div>
-            <h2 className="text-lg md:text-xl font-bold mb-2">{t("Contact")}</h2>
+            <h2 className="text-lg md:text-xl font-bold mb-2">
+              {t("Contact")}
+            </h2>
             <p className="text-gray-500 text-xs md:text-[16px] font-normal">
               {t("AllergyNote")}
             </p>
@@ -207,7 +233,9 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
             </div>
             <hr />
             <div className=" flex justify-between text-xs md:text-[16px] font-normal mt-2">
-              <h1 className="text-sm md:text-[16px] font-bold mb-2">{t("Email")}</h1>
+              <h1 className="text-sm md:text-[16px] font-bold mb-2">
+                {t("Email")}
+              </h1>
               {restaurantInfo?.username !== "N/A" ? (
                 <a
                   href={`mailto:${restaurantInfo?.username || "N/A"}`}

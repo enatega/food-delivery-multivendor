@@ -20,7 +20,7 @@ import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 import ShopTypes from "@/lib/ui/screen-components/protected/home/discovery/shop-types";
 
 export default function DiscoveryScreen() {
-  const { restaurantCuisinesData, groceryCuisinesData, error, loading } =
+  const { restaurantCuisinesData, groceryCuisinesData, queryData:cuisinesQueryData, error, loading } =
     useGetCuisines();
 
   const {
@@ -38,56 +38,58 @@ export default function DiscoveryScreen() {
   } = useNearByRestaurantsPreview(true, 1, 6);
 
   // Show loader/skeleton while fetching
-  if (loading && restaurantsLoading) {
-    return (
-      <>
-        
-        <DiscoveryBannerSection />
-        <OrderItAgain />
-        <ShopTypes />
-        <MostOrderedRestaurants
-          data={queryData}
-          loading={mostOrderedLoading}
-          error={!!mostorderedError}
-        />
-        <CuisinesSection
-          title="Restaurant-cuisines"
-          data={restaurantCuisinesData}
-          loading={loading || restaurantsLoading}
-          error={!!error}
-        />
-        <RestaurantsNearYou
-          data={restaurantsNearYou}
-          loading={restaurantsLoading}
-          error={!!restaurantsError}
-        />
-        <CuisinesSection
-          title="Grocery-cuisines"
-          data={groceryCuisinesData}
-          loading={loading || restaurantsLoading}
-          error={!!error}
-        />
-        <GroceryList
-          data={groceriesData}
-          loading={restaurantsLoading}
-          error={!!restaurantsError}
-        />
-        <TopGroceryPicks
-        // // data={MostOrderedRestaurantsGroceryData}
-        // loading={mostOrderedLoading}
-        // error={!!mostorderedError}
-        />
-        <TopRatedVendors />
-        <PopularRestaurants />
-        <PopularStores />
-      </>
-    );
-  }
+  // if (loading && restaurantsLoading) {
+  //   return (
+  //     <>
+  //       <DiscoveryBannerSection />
+  //       <OrderItAgain />
+  //       <ShopTypes />
+  //       <MostOrderedRestaurants
+  //         data={queryData}
+  //         loading={mostOrderedLoading}
+  //         error={!!mostorderedError}
+  //       />
+  //       <CuisinesSection
+  //         title="Restaurant-cuisines"
+  //         data={restaurantCuisinesData}
+  //         loading={loading || restaurantsLoading}
+  //         error={!!error}
+  //       />
+  //       <RestaurantsNearYou
+  //         data={restaurantsNearYou}
+  //         loading={restaurantsLoading}
+  //         error={!!restaurantsError}
+  //       />
+  //       <CuisinesSection
+  //         title="Grocery-cuisines"
+  //         data={groceryCuisinesData}
+  //         loading={loading || restaurantsLoading}
+  //         error={!!error}
+  //       />
+  //       <GroceryList
+  //         data={groceriesData}
+  //         loading={restaurantsLoading}
+  //         error={!!restaurantsError}
+  //       />
+  //       <TopGroceryPicks
+  //       // // data={MostOrderedRestaurantsGroceryData}
+  //       // loading={mostOrderedLoading}
+  //       // error={!!mostorderedError}
+  //       />
+  //       <TopRatedVendors />
+  //       <PopularRestaurants />
+  //       <PopularStores />
+  //     </>
+  //   );
+  // }
 
   // // Show ComingSoon only after loading is complete and data is confirmed empty
   if (
     restaurantsData.length === 0 &&
     groceriesData.length === 0 &&
+    restaurantsNearYou.length === 0 &&
+    queryData.length === 0 &&
+    cuisinesQueryData?.length === 0 &&
     !loading &&
     !restaurantsLoading
   ) {
@@ -96,7 +98,6 @@ export default function DiscoveryScreen() {
 
   return (
     <>
-     
       <DiscoveryBannerSection />
       <OrderItAgain />
       <ShopTypes />
@@ -108,7 +109,7 @@ export default function DiscoveryScreen() {
       <CuisinesSection
         title="Restaurant-cuisines"
         data={restaurantCuisinesData}
-        loading={loading || restaurantsLoading}
+        loading={loading}
         error={!!error}
       />
       <RestaurantsNearYou
@@ -119,7 +120,7 @@ export default function DiscoveryScreen() {
       <CuisinesSection
         title="Grocery-cuisines"
         data={groceryCuisinesData}
-        loading={loading || restaurantsLoading}
+        loading={loading}
         error={!!error}
       />
       <GroceryList

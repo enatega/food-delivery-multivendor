@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "Credenciais de login",
   "Sign in": "Entrar",
   "CustomerSupport": "Suporte ao Cliente",
@@ -18,6 +19,7 @@
   "Edit": "Editar",
   "Delete": "Excluir",
   "Edit Category": "Editar Categoria",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Tem certeza de que deseja excluir esta loja?",
   "Save": "Salvar",
   "OrderID prefix": "Prefixo do ID do Pedido",
   "Order": "Pedido",
@@ -56,7 +58,6 @@
   "Users": "Usuários",
   "Phone": "Telefone",
   "Address": "Endereço",
-  "2019": "2019",
   "About Us": "Sobre Nós",
   "Blog": "Blog",
   "Welcome": "Bem-vindo",

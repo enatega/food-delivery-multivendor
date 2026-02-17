@@ -8,8 +8,7 @@ import {
   Operation,
   split,
 } from "@apollo/client";
-import { createClient } from "graphql-ws";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
 import getEnvVars from "@/environment";
@@ -17,29 +16,48 @@ import * as SecureStore from "expo-secure-store";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
 import { STORE_TOKEN } from "../utils/constants";
+import PublicAccessTokenService from "../services/public-access-token.service";
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars();
 
-  const wsLink = new GraphQLWsLink(
-    createClient({
-      url: WS_GRAPHQL_URL,
-    })
-  );
-  const cache = new InMemoryCache();
-  // eslint-disable-next-line new-cap
+  const wsLink = new WebSocketLink({
+    uri: WS_GRAPHQL_URL,
+    options: {
+      reconnect: true,
+      lazy: true,
+      timeout: 30000,
+    },
+  });
+  const cache = new InMemoryCache(); // eslint-disable-next-line new-cap
   const httpLink = createHttpLink({
     uri: GRAPHQL_URL,
   });
 
-  const request = async (operation: Operation) => {
-    const token = await SecureStore.getItemAsync(STORE_TOKEN);
+  const client = new ApolloClient({
+    link: httpLink,
+    cache,
+  });
 
-    operation.setContext({
-      headers: {
-        authorization: token ? `Bearer ${token}` : "",
-      },
-    });
+  const request = async (operation: Operation) => {
+    const skipPublicAuth =
+      operation.getContext().headers?.["x-skip-public-auth"];
+    const token = await SecureStore.getItemAsync(STORE_TOKEN);
+    const nonce = PublicAccessTokenService.getNonce();
+
+    const headers: Record<string, string> = {
+      authorization: token ? `Bearer ${token}` : "",
+      nonce: nonce || "",
+      "x-platform": "mobile",
+      ...operation.getContext().headers,
+    };
+
+    if (!skipPublicAuth) {
+      const publicToken = await PublicAccessTokenService.getToken(client);
+      headers["bop-auth"] = publicToken ? `Bearer ${publicToken}` : "";
+    }
+
+    operation.setContext({ headers });
   };
 
   const requestLink = new ApolloLink(
@@ -71,8 +89,8 @@ const setupApollo = () => {
   //     getMainDefinition(query);
   //   return kind === "OperationDefinition" && operation === "subscription";
   // }, wsLink);
-
   // Terminating Link
+
   const terminatingLink = split(({ query }) => {
     const definition = getMainDefinition(query) as
       | DefinitionNode
@@ -86,10 +104,9 @@ const setupApollo = () => {
     );
   }, wsLink);
 
-  const client = new ApolloClient({
-    link: concat(ApolloLink.from([terminatingLink, requestLink]), httpLink),
-    cache,
-  });
+  client.setLink(
+    concat(ApolloLink.from([terminatingLink, requestLink]), httpLink),
+  );
 
   return client;
 };

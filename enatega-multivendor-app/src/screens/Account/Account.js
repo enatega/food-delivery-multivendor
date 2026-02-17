@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react'
-import { View, TouchableOpacity, KeyboardAvoidingView, Platform, StatusBar, Modal, ScrollView, AppState, Linking } from 'react-native'
+import { View, TouchableOpacity, KeyboardAvoidingView, Platform, StatusBar, Modal, ScrollView, AppState, Linking, Switch } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { scale } from '../../utils/scaling'
@@ -30,6 +30,7 @@ import LanguageModal from '../../components/LanguageModalize/LanguageModal'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Localization from 'expo-localization'
 import { languageTypes } from '../../components/LanguageModalize/LanguageModal'
+import Constants from 'expo-constants'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -214,6 +215,18 @@ function Account(props) {
     return status
   }
 
+  async function requestPermission() {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
+    }
+
+    return finalStatus
+  }
+
   function toggleTheme() {
     if (themeContext.ThemeValue === 'Pink') {
       themeContext.dispatch({ type: 'Dark' })
@@ -314,10 +327,32 @@ function Account(props) {
       return
     }
 
-    const permission = await getPermission()
-    if (!profile.notificationToken || permission !== 'granted') {
-      console.log('Permission not granted or notification token not available, opening settings')
+    // Request permission if not granted
+    const permission = await requestPermission()
+
+    if (permission !== 'granted') {
+      console.log('Permission not granted, opening settings')
+      FlashMessage({
+        message: t('notificationPermissionDenied') || 'Please enable notifications in Settings'
+      })
       Linking.openSettings()
+      return
+    }
+
+    // Get push token if not available
+    if (!profile.notificationToken) {
+      try {
+        const token = await Notifications.getExpoPushTokenAsync({
+          projectId: Constants.expoConfig.extra.eas.projectId
+        })
+        await uploadToken({ variables: { token: token.data } })
+      } catch (error) {
+        console.log('Error getting push token:', error)
+        FlashMessage({
+          message: t('notificationTokenError') || 'Error setting up notifications'
+        })
+        return
+      }
     }
 
     if (notificationCheck === 'offer') {
@@ -427,13 +462,17 @@ function Account(props) {
                 <View style={styles(currentTheme).mainContainerArea}>
                   <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
                     <View>
-                      <CheckboxBtn
-                        checked={orderNotification}
-                        onPress={() => {
-                          updateNotificationStatus('order')
-                          setBtnText('order')
-                        }}
-                      />
+                      {loading && btnText === 'order'
+                        ? <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />
+                        : (
+                          <CheckboxBtn
+                            checked={orderNotification}
+                            onPress={() => {
+                              updateNotificationStatus('order')
+                              setBtnText('order')
+                            }}
+                          />
+                          )}
                     </View>
                     <TouchableOpacity
                       activeOpacity={0.7}
@@ -453,48 +492,36 @@ function Account(props) {
                           {t('receivePushNotification')}{' '}
                         </TextDefault>
                       </View>
-                      {loading && btnText === 'order' && (
-                        <View>
-                          <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />
-                        </View>
-                      )}
                     </TouchableOpacity>
                   </View>
 
                   <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
-                    <View>
-                      <CheckboxBtn
-                        checked={offerNotification}
-                        onPress={() => {
-                          updateNotificationStatus('offer')
-                          setBtnText('offer')
-                        }}
-                      />
-                    </View>
+                    <Switch
+                      trackColor={{ false: currentTheme.gray200 || '#d1d5db', true: currentTheme.main }}
+                      thumbColor={offerNotification ? currentTheme.white || '#ffffff' : '#f4f3f4'}
+                      ios_backgroundColor={currentTheme.gray200 || '#d1d5db'}
+                      onValueChange={() => {
+                        updateNotificationStatus('offer')
+                        setBtnText('offer')
+                      }}
+                      value={offerNotification}
+                    />
                     <TouchableOpacity
                       activeOpacity={0.7}
+                      style={{ flex: 1 }}
                       onPress={() => {
                         updateNotificationStatus('offer')
                         setBtnText('offer')
                       }}
                     >
                       <View style={styles(currentTheme).notificationChekboxContainer}>
-                        <TextDefault
-                          // numberOfLines={1}
-                          textColor={currentTheme.darkBgFont}
-                          style={alignment.MLsmall}
-                          isRTL
-                        >
+                        <TextDefault textColor={currentTheme.darkBgFont} style={alignment.MLsmall} isRTL>
                           {' '}
                           {t('receiveOfferByEmail')}{' '}
                         </TextDefault>
                       </View>
-                      {loading && btnText === 'offer' && (
-                        <View>
-                          <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />
-                        </View>
-                      )}
                     </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>{loading && btnText === 'offer' && <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />}</View>
                   </View>
 
                   <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>

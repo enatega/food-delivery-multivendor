@@ -13,6 +13,8 @@ import InputSkeleton from '../custom-skeletons/inputfield.skeleton';
 // Styles
 import classes from './custom-input.module.css';
 
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
+
 export default function CustomNumberTextField({
   className,
   placeholder,
@@ -42,9 +44,14 @@ export default function CustomNumberTextField({
     }
   };
 
+  const { CURRENT_SYMBOL } = useConfiguration();
+
   return !isLoading ? (
     <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="text-sm font-medium text-gray-600 dark:text-white">
+      <label
+        htmlFor={name}
+        className="text-sm font-medium text-gray-600 dark:text-white"
+      >
         {placeholder}
       </label>
 
@@ -61,7 +68,7 @@ export default function CustomNumberTextField({
           className={`${classes.inputNumber} z-0 h-11 w-full border border-inherit bg-white dark:bg-dark-950 px-10 text-center focus:shadow-none focus:outline-none ${className}`}
           name={name}
           value={value}
-          prefix="$ "
+          prefix={CURRENT_SYMBOL ?? '$'}
           useGrouping={false}
           onChange={(e: { value: number | null }) => {
             setFieldValue(name, e.value);

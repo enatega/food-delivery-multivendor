@@ -91,7 +91,7 @@ export default function RestaurantDetailsScreen() {
       variables: {
         restaurantId: id,
       },
-    }
+    },
   );
   // Transform cart items when restaurant data is loaded - only once when dependencies change
   useEffect(() => {
@@ -105,7 +105,7 @@ export default function RestaurantDetailsScreen() {
 
   // Filter food categories based on search term
   const allDeals = data?.restaurant?.categories?.filter(
-    (cat: ICategory) => cat.foods.length
+    (cat: ICategory) => cat.foods.length,
   );
 
   // Check if restaurant is favorited when profile is loaded
@@ -123,11 +123,11 @@ export default function RestaurantDetailsScreen() {
         setIsModalOpen({ value, id });
       }
     },
-    [isModalOpen]
+    [isModalOpen],
   );
 
   const popularDealsIds = popularSubCategoriesList?.popularItems?.map(
-    (item: any) => item.id
+    (item: any) => item.id,
   );
 
   const deals = useMemo(() => {
@@ -140,7 +140,7 @@ export default function RestaurantDetailsScreen() {
             .toLowerCase()
             .includes(filter.toLowerCase());
           const foodsMatch = c.foods.some((food: IFood) =>
-            food.title.toLowerCase().includes(filter.toLowerCase())
+            food.title.toLowerCase().includes(filter.toLowerCase()),
           );
 
           return categoryMatches || foodsMatch;
@@ -167,7 +167,7 @@ export default function RestaurantDetailsScreen() {
 
     // Filter foods that are in popularDealsIds
     const popularFoods = allFoods.filter((food: IFood) =>
-      popularDealsIds?.includes(food._id)
+      popularDealsIds?.includes(food._id),
     );
 
     // Create a "Popular Deals" category if there are matching foods
@@ -216,7 +216,7 @@ export default function RestaurantDetailsScreen() {
         setIsLiked((prev) => !prev); // Revert the like state on error
       },
       refetchQueries: [{ query: GET_USER_PROFILE }],
-    }
+    },
   );
 
   const t = useTranslations();
@@ -318,7 +318,7 @@ export default function RestaurantDetailsScreen() {
       return;
     }
     // Check if there's a different restaurant in the cart
-    if (cartRestaurant && id !== cartRestaurant) {
+    if (cart.length > 0 && cartRestaurant && id !== cartRestaurant) {
       // Store the action we want to perform after cart confirmation
       setPendingRestaurantAction({
         type: "foodModal",
@@ -350,7 +350,7 @@ export default function RestaurantDetailsScreen() {
     onUseLocalStorage(
       "save",
       "currentShopType",
-      data?.restaurant?.shopType === "restaurant" ? "restaurant" : "store"
+      data?.restaurant?.shopType === "restaurant" ? "restaurant" : "store",
     );
 
     // Hide the modal
@@ -669,7 +669,7 @@ export default function RestaurantDetailsScreen() {
                           </button>
                         </li>
                       );
-                    }
+                    },
                   )}
 
                   {!showAll && deals.length > visibleItems && (

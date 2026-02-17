@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import CustomDialog from "../custom-dialog";
 import useUser from "@/lib/hooks/useUser";
 import { CartItem } from "@/lib/context/User/User.context";
+import { useConfig } from "@/lib/context/configuration/configuration.context";
 
 const OrderCard: FC<IOrderCardProps> = ({
   order,
@@ -25,6 +26,7 @@ const OrderCard: FC<IOrderCardProps> = ({
   handleRateOrderClicked,
 }) => {
   const t = useTranslations();
+  const { CURRENCY_SYMBOL } = useConfig();
 
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -36,7 +38,8 @@ const OrderCard: FC<IOrderCardProps> = ({
     handleTrackOrderClicked?.(order?._id);
   };
 
-  const { cart, setCart, transformCartWithFoodInfo, setCartRestaurant } = useUser();
+  const { cart, setCart, transformCartWithFoodInfo, setCartRestaurant } =
+    useUser();
 
   const handleReorder = useCallback((order: IOrder) => {
     setSelectedOrder(order);
@@ -44,7 +47,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     setSelectedItems(
       order.items
         ?.map((item) => item._id)
-        .filter((id): id is string => Boolean(id)) || []
+        .filter((id): id is string => Boolean(id)) || [],
     );
 
     setIsDialogVisible(true);
@@ -96,7 +99,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     if (!selectedOrder) return;
 
     const itemsToReorder = (selectedOrder.items ?? []).filter((item) =>
-      selectedItems.includes(item._id ?? "")
+      selectedItems.includes(item._id ?? ""),
     );
 
     // Check if cart has items from a different restaurant
@@ -124,7 +127,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     // Then transform with food info if needed
     const transformed = transformCartWithFoodInfo(
       cleanedItems,
-      selectedOrder as any
+      selectedOrder as any,
     );
 
     setCart((prevCart) => {
@@ -139,25 +142,27 @@ const OrderCard: FC<IOrderCardProps> = ({
           //   "restaurant",
           //   selectedOrder.restaurant?._id ?? ""
           // );
-          setCartRestaurant(selectedOrder.restaurant?._id ?? "")
+          setCartRestaurant(selectedOrder.restaurant?._id ?? "");
           localStorage.setItem(
             "restaurant-slug",
-            selectedOrder.restaurant?.slug || ""
+            selectedOrder.restaurant?.slug || "",
           );
           localStorage.setItem(
             "currentShopType",
-            selectedOrder.restaurant?.shopType === "grocery" ? "store" : "restaurant"
+            selectedOrder.restaurant?.shopType === "grocery"
+              ? "store"
+              : "restaurant",
           );
           // Save restaurant data for checkout page
           try {
             localStorage.setItem(
               "restaurantData",
-              JSON.stringify(selectedOrder.restaurant || {})
+              JSON.stringify(selectedOrder.restaurant || {}),
             );
           } catch (error) {
             console.error(
               "Error saving restaurant data to localStorage:",
-              error
+              error,
             );
           }
         }
@@ -168,7 +173,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     handleReOrderClicked?.(
       selectedOrder.restaurant?._id ?? "",
       selectedOrder.restaurant?.slug ?? "",
-      selectedOrder.restaurant?.shopType ?? ""
+      selectedOrder.restaurant?.shopType ?? "",
     );
 
     handleCloseDialog();
@@ -186,7 +191,7 @@ const OrderCard: FC<IOrderCardProps> = ({
       try {
         localStorage.setItem(
           "restaurantData",
-          JSON.stringify(selectedOrder.restaurant || {})
+          JSON.stringify(selectedOrder.restaurant || {}),
         );
       } catch (error) {
         console.error("Error saving restaurant data to localStorage:", error);
@@ -195,7 +200,7 @@ const OrderCard: FC<IOrderCardProps> = ({
 
     // Process the reorder
     processReorder(pendingReorderItems);
-    
+
     // Close the confirmation dialog
     setShowClearCartDialog(false);
     setPendingReorderItems([]);
@@ -219,7 +224,7 @@ const OrderCard: FC<IOrderCardProps> = ({
   // ✅ Calculate total based only on selected items including addons
   const calculateSelectedTotal = (
     order: IOrder,
-    selected: string[]
+    selected: string[],
   ): string => {
     return (
       order.items
@@ -248,7 +253,7 @@ const OrderCard: FC<IOrderCardProps> = ({
     <div
       className={twMerge(
         "p-6 dark:bg-gray-900 dark:border-gray-700",
-        className
+        className,
       )}
     >
       <div className="flex flex-col md:flex-row gap-4">
@@ -300,7 +305,8 @@ const OrderCard: FC<IOrderCardProps> = ({
         {/* Price and Action */}
         <div className="flex md:flex-col md:items-end justify-between gap-2">
           <div className="font-semibold text-lg dark:text-gray-100">
-            ${order.orderAmount?.toFixed(2)}
+            {CURRENCY_SYMBOL}
+            {order.orderAmount?.toFixed(2)}
           </div>
 
           {(type === "active" || type === "past") && (
@@ -389,7 +395,7 @@ const OrderCard: FC<IOrderCardProps> = ({
                         }, 0)
                       );
                     },
-                    0
+                    0,
                   );
                   const itemTotal = (item.variation?.price ?? 0) + addonTotal;
                   return (
@@ -406,8 +412,8 @@ const OrderCard: FC<IOrderCardProps> = ({
                             if (selectedItems.includes(id)) {
                               setSelectedItems(
                                 selectedItems.filter(
-                                  (existingId) => existingId !== id
-                                )
+                                  (existingId) => existingId !== id,
+                                ),
                               );
                             } else {
                               setSelectedItems([...selectedItems, id]);
@@ -423,7 +429,8 @@ const OrderCard: FC<IOrderCardProps> = ({
                           </span>
                         </div>
                         <span className="text-gray-700 font-medium text-sm dark:text-white">
-                          ${itemTotal.toFixed(2)}
+                          {CURRENCY_SYMBOL}
+                          {itemTotal.toFixed(2)}
                         </span>
                       </div>
                       {/* Display addons for this item */}
@@ -447,7 +454,8 @@ const OrderCard: FC<IOrderCardProps> = ({
                                       {option.title}
                                     </span>
                                     <span className="dark:text-white">
-                                      ${(option.price ?? 0).toFixed(2)}
+                                      {CURRENCY_SYMBOL}
+                                      {(option.price ?? 0).toFixed(2)}
                                     </span>
                                   </li>
                                 ))}
@@ -461,7 +469,7 @@ const OrderCard: FC<IOrderCardProps> = ({
                 })}
               </ul>
               <p className="mt-3 font-semibold text-gray-900">
-                {t("order_details_total_label")}: $
+                {t("order_details_total_label")}: {CURRENCY_SYMBOL}
                 {calculateSelectedTotal(selectedOrder, selectedItems)}
               </p>
             </div>

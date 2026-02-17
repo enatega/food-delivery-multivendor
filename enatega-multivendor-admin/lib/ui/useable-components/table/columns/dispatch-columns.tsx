@@ -46,10 +46,13 @@ const valueTemplate = (option: IDropdownSelectItem) => (
 );
 
 // Item templates
+// Item templates
 const itemTemplate = (option: IDropdownSelectItem) => {
   return (
     <div
-      className={`flex flex-row-reverse items-center justify-start gap-2 ${classes.dropDownItem}`}
+      className={`flex flex-row-reverse items-center justify-start gap-2 ${
+        classes.dropDownItem
+      } ${option.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <span>{option.label}</span>
     </div>
@@ -85,24 +88,24 @@ export const DISPATCH_TABLE_COLUMNS = () => {
       body: () => <Tag value={t('PENDING')} severity="secondary" rounded />,
     },
     {
-      label: t('ASSIGNED'),
-      code: 'ASSIGNED',
-      body: () => <Tag value={t('ASSIGNED')} severity="warning" rounded />,
-    },
-    {
       label: t('ACCEPTED'),
       code: 'ACCEPTED',
       body: () => <Tag value={t('ACCEPTED')} severity="info" rounded />,
     },
     {
-      label: t('DELIVERED'),
-      code: 'DELIVERED',
-      body: () => <Tag value={t('DELIVERED')} severity="success" rounded />,
+      label: t('ASSIGNED'),
+      code: 'ASSIGNED',
+      body: () => <Tag value={t('ASSIGNED')} severity="warning" rounded />,
     },
     {
       label: t('PICKED'),
       code: 'PICKED',
       body: () => <Tag value={t('PICKED')} severity="contrast" rounded />,
+    },
+    {
+      label: t('DELIVERED'),
+      code: 'DELIVERED',
+      body: () => <Tag value={t('DELIVERED')} severity="success" rounded />,
     },
     {
       label: t('CANCELLED'),
@@ -160,7 +163,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   };
   const OrderSubscription = ({ rowData }: { rowData: IActiveOrders }) => {
     useOrderSubscription(rowData);
-    return <p>{rowData.isPickedUp === false ? "Delivery" : "Picked"}</p>;
+    return <p>{rowData.isPickedUp === false ? 'Delivery' : 'Pick Up'}</p>;
   };
 
   // Mutations
@@ -226,6 +229,12 @@ export const DISPATCH_TABLE_COLUMNS = () => {
         },
       });
       if (data) {
+        await updateStatus({
+          variables: {
+            id: rowData._id,
+            orderStatus: 'ASSIGNED',
+          },
+        });
         showToast({
           type: 'success',
           title: t('Assign Rider'),
@@ -398,13 +407,53 @@ export const DISPATCH_TABLE_COLUMNS = () => {
       headerName: t('Status'),
       body: (rowData: IActiveOrders) => {
         // CHANGE 2: Filter status options based on whether it's a pickup order
-        const availableStatuses = rowData.isPickedUp
+        const filteredOptions = rowData.isPickedUp
           ? actionStatusOptions.filter((status) =>
-            ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
-              status.code
+              ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
+                status.code
+              )
             )
-          )
           : actionStatusOptions;
+
+        // Get the list of statuses that are part of the main flow (excluding CANCELLED)
+        const flowCodes = filteredOptions
+          .filter((s) => s.code !== 'CANCELLED')
+          .map((s) => s.code);
+        const currentIndex = flowCodes.indexOf(rowData.orderStatus);
+
+        const availableStatuses = filteredOptions.map((status) => {
+          let disabled = false;
+
+          if (status.code === 'CANCELLED') {
+            // Disable cancel if already delivered or cancelled
+            if (
+              rowData.orderStatus === 'DELIVERED' ||
+              rowData.orderStatus === 'CANCELLED'
+            ) {
+              disabled = true;
+            }
+          } else {
+            const statusIndex = flowCodes.indexOf(status.code);
+
+            // If current status is not in the flow (e.g. CANCELLED), disable all main flow steps
+            // OR if it's a valid flow status:
+            if (currentIndex !== -1 && statusIndex !== -1) {
+              if (statusIndex < currentIndex) disabled = true; // Previous steps
+              if (statusIndex > currentIndex + 1) disabled = true; // Future steps beyond next one
+            } else {
+              // Fallback: if we are in a weird state, maybe disable everything except current?
+              // Or if we are in CANCELLED, everything is disabled.
+              disabled = true;
+            }
+
+            // Specific rule: Cannot assign without rider
+            if (status.code === 'ASSIGNED' && !rowData.rider) {
+              disabled = true;
+            }
+          }
+
+          return { ...status, disabled };
+        });
 
         const currentStatus = availableStatuses.find(
           (status: IDropdownSelectItem) => status.code === rowData?.orderStatus
@@ -425,6 +474,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
                 isStatusUpdating.bool && isStatusUpdating._id === rowData._id
               }
               className="outline outline-1 outline-gray-300"
+              optionDisabled="disabled"
               disabled={isDelivered} // CHANGE 5: Disable dropdown if delivered
             />
           </>

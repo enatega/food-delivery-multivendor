@@ -79,11 +79,11 @@ const Table = <T extends ITableExtends>({
   // Prepare pagination props based on server pagination status
   const paginationProps = isServerPaginated
     ? {
-      lazy: true,
-      first: (currentPage - 1) * rowsPerPage,
-      totalRecords: totalRecords,
-      onPage: handlePageChange,
-    }
+        lazy: true,
+        first: (currentPage - 1) * rowsPerPage,
+        totalRecords: totalRecords,
+        onPage: handlePageChange,
+      }
     : {};
 
   useEffect(() => {
@@ -94,7 +94,6 @@ const Table = <T extends ITableExtends>({
 
   return (
     <>
-
       <DataTable
         header={header}
         paginator
@@ -103,7 +102,7 @@ const Table = <T extends ITableExtends>({
         value={data}
         selectionAutoFocus={true}
         size={size}
-        selection={isSelectable ? (selectedData || []) : []}
+        selection={isSelectable ? selectedData || [] : []}
         onSelectionChange={isSelectable ? handleSelectionChange : undefined}
         className={className}
         dataKey="_id"
@@ -148,7 +147,7 @@ const Table = <T extends ITableExtends>({
             key={index}
             field={col?.propertyName}
             header={col?.headerName}
-            className='dark:text-white'
+            className="dark:text-white"
             headerClassName="dark:text-white dark:bg-dark-900"
             footerClassName="dark:text-white dark:bg-dark-900"
             sortable={!col?.propertyName?.includes('action')}

@@ -2,9 +2,10 @@
 import { useContext, useMemo } from 'react';
 import { Form, Formik } from 'formik';
 import { ApolloCache, ApolloError, useMutation } from '@apollo/client';
-
+import { useState } from 'react';
 // Icons
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { IEditState, IShopType } from '@/lib/utils/interfaces';
 
 // Interfaces and Types
 import {
@@ -30,16 +31,17 @@ import CustomIconTextField from '@/lib/ui/useable-components/input-icon-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
-
+import ShopTypesForm from '@/lib/ui/screen-components/protected/super-admin/shop-types/form';
+import CuisineForm from '@/lib/ui/screen-components/protected/super-admin/cuisines/form';
 // Constants and Utils
 import {
   MAX_LANSDCAPE_FILE_SIZE,
   MAX_SQUARE_FILE_SIZE,
   RestaurantErrors,
-  SHOP_TYPE,
 } from '@/lib/utils/constants';
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 import { toTextCase } from '@/lib/utils/methods';
+import { useShopTypes } from '@/lib/hooks/useShopType';
 
 // Schemas and GraphQL
 import { RestaurantSchema } from '@/lib/utils/schema/restaurant';
@@ -86,6 +88,29 @@ export default function RestaurantDetails({
 
   // Hooks
   const t = useTranslations();
+  const [isAddShopTypeVisible, setIsAddShopTypeVisible] = useState(false);
+  const [isEditShopType, setIsEditShopType] = useState<IEditState<IShopType>>({
+    bool: false,
+    data: {
+      __typename: '',
+      _id: '',
+      name: '',
+      isActive: true,
+      image: '',
+    },
+  });
+  const [isAddCuisineVisible, setIsAddCuisineVisible] = useState(false);
+  const [isEditCuisine, setIsEditCuisine] = useState<IEditState<ICuisine>>({
+    bool: false,
+    data: {
+      _id: '',
+      description: '',
+      image: '',
+      name: '',
+      shopType: '',
+      __typename: '',
+    },
+  });
 
   // Context
   const { showToast } = useContext(ToastContext);
@@ -121,6 +146,11 @@ export default function RestaurantDetails({
     debounceMs: 300,
   }) as IQueryResult<IGetCuisinesData | undefined, undefined>;
   cuisineResponse.data?.cuisines;
+
+  const { dropdownList, loading } = useShopTypes({
+    invoke_now: true,
+    transform_to_dropdown_list: true,
+  });
 
   // Memoized Constants
   const cuisinesDropdown = useMemo(
@@ -211,6 +241,9 @@ export default function RestaurantDetails({
       },
     });
   }
+
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{6,}$/;
 
   return (
     <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950">
@@ -455,7 +488,8 @@ export default function RestaurantDetails({
                           placeholder={t('Shop Category')}
                           selectedItem={values.shopType}
                           setSelectedItem={setFieldValue}
-                          options={SHOP_TYPE}
+                          loading={loading}
+                          options={dropdownList || []}
                           showLabel={true}
                           style={{
                             borderColor: onErrorMessageMatcher(
@@ -465,6 +499,10 @@ export default function RestaurantDetails({
                             )
                               ? 'red'
                               : '',
+                          }}
+                          extraFooterButton={{
+                            title: t('Add Shop Category'),
+                            onChange: () => setIsAddShopTypeVisible(true),
                           }}
                         />
                       </div>
@@ -485,6 +523,10 @@ export default function RestaurantDetails({
                             )
                               ? 'red'
                               : '',
+                          }}
+                          extraFooterButton={{
+                            title: t('Add Cuisine'),
+                            onChange: () => setIsAddCuisineVisible(true),
                           }}
                         />
                       </div>
@@ -546,6 +588,20 @@ export default function RestaurantDetails({
                           label={t('Add')}
                           type="submit"
                           loading={isSubmitting}
+                          onClick={() => {
+                            if (
+                              values.password &&
+                              !strongPasswordRegex.test(values.password)
+                            ) {
+                              showToast({
+                                type: 'error',
+                                duration: 3000,
+                                title: 'Weak Password',
+                                message:
+                                  'Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+                              });
+                            }
+                          }}
                         />
                       </div>
                     </div>
@@ -554,6 +610,20 @@ export default function RestaurantDetails({
               }}
             </Formik>
           </div>
+
+          <ShopTypesForm
+            visible={isAddShopTypeVisible}
+            setVisible={setIsAddShopTypeVisible}
+            isEditing={isEditShopType}
+            setIsEditing={setIsEditShopType}
+          />
+
+          <CuisineForm
+            visible={isAddCuisineVisible}
+            setVisible={setIsAddCuisineVisible}
+            isEditing={isEditCuisine}
+            setIsEditing={setIsEditCuisine}
+          />
         </div>
       </div>
     </div>

@@ -71,7 +71,7 @@ const autocompleteService: {
 
 const CustomGoogleMapsLocationBounds: React.FC<
   ICustomGoogleMapsLocationBoundsComponentProps
-> = ({ onStepChange, hideControls, height }) =>   {
+> = ({ onStepChange, hideControls, height }) => {
   // Context
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const { restaurantId } = restaurantLayoutContextData;
@@ -94,7 +94,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
   const [distance, setDistance] = useState(1);
   // Hooks
   const t = useTranslations();
-  const { theme } = useTheme()
+  const { theme } = useTheme();
 
   // States
   const [options, setOptions] = useState<IPlaceSelectedOption[]>([]);
@@ -136,7 +136,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
         if (data) {
           updateCache(cache, { data } as IRestaurantProfileResponse);
         }
-      },  
+      },
 
       onCompleted: onRestaurantZoneUpdateCompleted,
       onError: onErrorLocationZoneUpdate,
@@ -149,7 +149,6 @@ const CustomGoogleMapsLocationBounds: React.FC<
       }
     },
   });
-  
 
   // Memos
   const radiusInMeter = useMemo(() => {
@@ -163,7 +162,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
     []
   );
 
-  console.log("Zones........ ", zones);
+  console.log('Zones........ ', zones);
   // API Handlers
   function updateCache(
     cache: ApolloCache<unknown>,
@@ -697,6 +696,11 @@ const CustomGoogleMapsLocationBounds: React.FC<
                   // Zone boundary polygon
                   <Polygon
                     key={zone._id}
+                    onClick={
+                      deliveryZoneType === 'point'
+                        ? onClickGoogleMaps
+                        : undefined
+                    }
                     paths={zone.location.coordinates[0].map(
                       (coords: number[]) => ({ lat: coords[1], lng: coords[0] })
                     )}
@@ -710,7 +714,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
                   />
                 )
             )}
-            
+
             {/* Delivery zone boundary. */}
             <Polygon
               editable={!hideControls}

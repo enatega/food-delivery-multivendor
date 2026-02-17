@@ -731,6 +731,11 @@ const CustomGoogleMapsLocationBounds: React.FC<
                 zone.location && (
                   // Zone boundary polygon
                   <Polygon
+                    onClick={
+                      deliveryZoneType === 'point'
+                        ? onClickGoogleMaps
+                        : undefined
+                    }
                     key={zone._id}
                     paths={zone.location.coordinates[0].map(
                       (coords: number[]) => ({ lat: coords[1], lng: coords[0] })
@@ -748,7 +753,9 @@ const CustomGoogleMapsLocationBounds: React.FC<
             <Polygon
               editable={!hideControls}
               draggable={!hideControls}
-              visible={deliveryZoneType === 'polygon'}
+              visible={
+                deliveryZoneType === 'polygon' || deliveryZoneType === 'point'
+              }
               paths={path}
               options={{
                 strokeColor: 'black',
@@ -766,9 +773,7 @@ const CustomGoogleMapsLocationBounds: React.FC<
             <Circle
               center={center}
               radius={radiusInMeter}
-              visible={
-                deliveryZoneType === 'radius' || deliveryZoneType === 'point'
-              }
+              visible={deliveryZoneType === 'radius'}
               options={{
                 fillColor: 'black',
                 fillOpacity: 0.2,

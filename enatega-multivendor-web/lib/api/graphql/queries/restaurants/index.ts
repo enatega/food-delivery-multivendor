@@ -32,6 +32,7 @@ export const RESTAURANTS_FRAGMENT = gql`
     logo
     slug
     shopType
+    minimumOrder
     deliveryTime
     location {
       coordinates

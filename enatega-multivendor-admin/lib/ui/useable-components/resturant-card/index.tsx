@@ -28,6 +28,7 @@ import { DELETE_RESTAURANT, HARD_DELETE_RESTAURANT } from '@/lib/api/graphql';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { RestaurantContext } from '@/lib/context/super-admin/restaurant.context';
 import { ConfigurationContext } from '@/lib/context/global/configuration.context';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 // Components
 import CustomButton from '../button';
@@ -53,6 +54,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   const configuration = useContext(ConfigurationContext);
   // Hooks
   const t = useTranslations();
+  const { CURRENT_SYMBOL } = useConfiguration();
   const { showToast } = useContext(ToastContext);
 
   if (!configuration) {
@@ -129,16 +131,16 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   };
 
   const handleDelete = async () => {
-    if(isPaidVersion) {
-    hardDeleteRestaurant({ variables: { id: _id } });
-  }else {
-    showToast({
-      type: 'error',
-      title: t('You are using free version'),
-      message: t('This Feature is only Available in Paid Version'),
-    });
-  }
-}
+    if (isPaidVersion) {
+      hardDeleteRestaurant({ variables: { id: _id } });
+    } else {
+      showToast({
+        type: 'error',
+        title: t('You are using free version'),
+        message: t('This Feature is only Available in Paid Version'),
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col rounded-lg border-2 border-[#F4F4F5] dark:text-white dark:border-dark-600 dark:bg-dark-950 bg-white shadow-md">
@@ -160,7 +162,10 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
           />
         )}
         <div className="min-w-0 flex-grow">
-          <TextComponent className={` dark:text-white card-h2 truncate`} text={name} />
+          <TextComponent
+            className={` dark:text-white card-h2 truncate`}
+            text={name}
+          />
           <TextComponent
             className={`card-h3 truncate text-gray-500 dark:text-white`}
             text={unique_restaurant_id}
@@ -209,7 +214,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
         <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-1 mb-2 text-sm">
           <CarSVG width="24" height="24" />
           <span>
-            {'₪'} {deliveryRate}
+            {CURRENT_SYMBOL || '$'} {deliveryRate}
           </span>
         </div>
 
@@ -217,7 +222,8 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
         <div className="flex items-center gap-1 rounded-lg border border-gray-300 p-2 mb-2 text-sm">
           <span>{t('Min Order')}</span>
           <span>
-            {'₪'} {restaurant?.minimumOrder}
+            {CURRENT_SYMBOL || '$'}
+            {restaurant?.minimumOrder}
           </span>
         </div>
       </div>
@@ -227,7 +233,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
           label={t('View Details')}
           onClick={() => {
             onUseLocalStorage('save', 'restaurantId', _id);
-            onUseLocalStorage('save', 'shopType', shopType)
+            onUseLocalStorage('save', 'shopType', shopType);
             const routeStack = ['Admin'];
             onUseLocalStorage('save', 'routeStack', JSON.stringify(routeStack));
             router.push(`/admin/store/`);

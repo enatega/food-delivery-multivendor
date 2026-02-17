@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "ログイン認証情報",
   "Sign in": "ログイン",
   "CustomerSupport": "カスタマーサポート",
@@ -17,6 +18,7 @@
   "Error": "エラー",
   "Edit": "編集",
   "Delete": "削除",
+  "are_you_sure_you_want_to_delete_this_shoptype": "このショップを削除してもよろしいですか？",
   "Vehicle Type": "車両タイプ",
   "Edit Category": "カテゴリを編集",
   "Status Changed Successfully": "ステータスが正常に変更されました",
@@ -57,7 +59,6 @@
   "Users": "ユーザー",
   "Phone": "電話",
   "Address": "住所",
-  "2019": "2019",
   "About Us": "私たちについて",
   "Blog": "ブログ",
   "Welcome": "ようこそ",
@@ -1101,7 +1102,6 @@
   "Payment Required": "支払いが必要",
   "Please complete your purchase to gain full access to the product": "購入を完了して製品へのフルアクセスを取得してください",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "手数料率はパーセンテージ値であるため、最大100を超えることはできません",
-  
   "audit_log_header_desc": "システム内のすべての管理操作と変更を追跡します。",
   "Performed_by": "実行者",
   "show_detail": "詳細を表示",
@@ -1114,7 +1114,5 @@
     "weak": "弱い",
     "medium": "普通",
     "strong": "強い"
-  
-}
-
+  }
 }

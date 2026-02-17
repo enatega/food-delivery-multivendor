@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "Daxil olma məlumatları",
   "Sign in": "Daxil ol",
   "CustomerSupport": "Müştəri Dəstəyi",
@@ -18,6 +19,7 @@
   "Edit": "Redaktə et",
   "Delete": "Sil",
   "Edit Category": "Kateqoriyanı redaktə et",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Bu mağazanı silmək istədiyinizə əminsinizmi?",
   "Save": "Yadda saxla",
   "OrderID prefix": "Sifariş ID prefiksi",
   "Order": "Sifariş",
@@ -75,7 +77,6 @@
   "Users": "İstifadəçilər",
   "Phone": "Telefon",
   "Address": "Ünvan",
-  "2019": "2019",
   "About Us": "Haqqımızda",
   "Blog": "Bloq",
   "Welcome": "Xoş gəldiniz",
@@ -1101,17 +1102,16 @@
   "Please complete your purchase to gain full access to the product": "Məhsula tam giriş əldə etmək üçün alışınızı tamamlayın",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "Komissiya dərəcəsi % dəyər olduğu üçün maksimum 100-ü keçə bilməz",
   "audit_log_header_desc": "Sistem daxilində bütün inzibati hərəkətləri və dəyişiklikləri izləyin.",
-"Performed_by": "Tərəfindən yerinə yetirilib",
-"show_detail": "Ətraflı göstər",
-"hide_detail": "Ətraflı gizlət",
-"No_differences_found_in_data": "Məlumatlarda heç bir fərq tapılmadı.",
-"read more": "Daha çox oxu",
-"read less": "Daha az oxu",
-"enter_password": {
-  "enter_a_password": "Şifrə daxil edin",
-  "weak": "Zəif",
-  "medium": "Orta",
-  "strong": "Güclü"
-}
-
+  "Performed_by": "Tərəfindən yerinə yetirilib",
+  "show_detail": "Ətraflı göstər",
+  "hide_detail": "Ətraflı gizlət",
+  "No_differences_found_in_data": "Məlumatlarda heç bir fərq tapılmadı.",
+  "read more": "Daha çox oxu",
+  "read less": "Daha az oxu",
+  "enter_password": {
+    "enter_a_password": "Şifrə daxil edin",
+    "weak": "Zəif",
+    "medium": "Orta",
+    "strong": "Güclü"
+  }
 }

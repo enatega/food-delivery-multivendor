@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "Identifiants de connexion",
   "Sign in": "Se connecter",
   "Add Category": "Ajouter une catégorie",
@@ -21,6 +22,7 @@
   "Save": "Sauvegarder",
   "OrderID prefix": "Préfixe de l'ID de commande",
   "Order": "Commande",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Êtes-vous sûr de vouloir supprimer cette boutique ?",
   "Email": "E-mail",
   "Password": "Mot de passe",
   "Enable": "Activer",
@@ -81,7 +83,6 @@
   "Users": "Utilisateurs",
   "Phone": "Téléphone",
   "Address": "Adresse",
-  "2019": "2019",
   "About Us": "À propos de nous",
   "Blog": "Blog",
   "user_details": "Détails de l'utilisateur",
@@ -1094,17 +1095,16 @@
   "Please complete your purchase to gain full access to the product": "Veuillez finaliser votre achat pour avoir un accès complet au produit",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "Étant donné que le taux de commission est une valeur en %, il ne peut pas dépasser une valeur maximale de 100",
   "audit_log_header_desc": "Suivez toutes les actions et modifications administratives au sein du système.",
-"Performed_by": "Effectué par",
-"show_detail": "Afficher les détails",
-"hide_detail": "Masquer les détails",
-"No_differences_found_in_data": "Aucune différence trouvée dans les données.",
-"read more": "Lire plus",
-"read less": "Lire moins",
-"enter_password": {
-  "enter_a_password": "Entrez un mot de passe",
-  "weak": "Faible",
-  "medium": "Moyen",
-  "strong": "Fort"
-}
-
+  "Performed_by": "Effectué par",
+  "show_detail": "Afficher les détails",
+  "hide_detail": "Masquer les détails",
+  "No_differences_found_in_data": "Aucune différence trouvée dans les données.",
+  "read more": "Lire plus",
+  "read less": "Lire moins",
+  "enter_password": {
+    "enter_a_password": "Entrez un mot de passe",
+    "weak": "Faible",
+    "medium": "Moyen",
+    "strong": "Fort"
+  }
 }

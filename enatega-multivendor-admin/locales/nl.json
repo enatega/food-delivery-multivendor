@@ -1,4 +1,6 @@
-{ "audit_log_header_desc": "Volg alle administratieve acties en wijzigingen binnen het systeem.",
+{
+  "2019": "2019",
+  "audit_log_header_desc": "Volg alle administratieve acties en wijzigingen binnen het systeem.",
   "Performed_by": "Uitgevoerd door",
   "show_detail": "Toon details",
   "hide_detail": "Verberg details",
@@ -11,7 +13,6 @@
     "medium": "Gemiddeld",
     "strong": "Sterk"
   },
-  
   "Sign in credentials": "Inloggegevens",
   "Sign in": "Inloggen",
   "CustomerSupport": "Klantenservice",
@@ -21,6 +22,7 @@
   "Add": "Toevoegen",
   "Remove": "Verwijderen",
   "Add/Remove": "Toevoegen/Verwijderen",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Weet u zeker dat u deze winkel wilt verwijderen?",
   "Success": "Succes",
   "危险": "Gevaar",
   "Categories": "Categorieën",
@@ -69,7 +71,6 @@
   "Users": "Gebruikers",
   "Phone": "Telefoon",
   "Address": "Adres",
-  "2019": "2019",
   "About Us": "Over ons",
   "Blog": "Blog",
   "Welcome": "Welkom",

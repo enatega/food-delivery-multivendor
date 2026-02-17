@@ -1,4 +1,5 @@
 {
+  "2019": "٢٠١٩",
   "Sign in credentials": "بيانات تسجيل الدخول",
   "Sign in": "تسجيل الدخول",
   "CustomerSupport": "دعم العملاء",
@@ -17,6 +18,7 @@
   "this_ticket_is_closed_you_cannot_send_new_messages": "هذه التذكرة مغلقة. لا يمكنك إرسال رسائل جديدة",
   "No_messages_yet": "لا توجد رسائل بعد",
   "type_your_message_here": "اكتب رسالتك هنا ...",
+  "are_you_sure_you_want_to_delete_this_shoptype": "هل أنت متأكد أنك تريد حذف هذا المتجر؟",
   "Header": "العنوان",
   "Loading": "جاري التحميل",
   "Error": "خطأ",
@@ -62,7 +64,6 @@
   "Users": "المستخدمون",
   "Phone": "الهاتف",
   "Address": "العنوان",
-  "2019": "٢٠١٩",
   "About Us": "من نحن",
   "Blog": "المدونة",
   "Welcome": "مرحباً",
@@ -1110,12 +1111,11 @@
   "No_differences_found_in_data": "لم يتم العثور على أي اختلافات في البيانات.",
   "read more": "اقرأ المزيد",
   "read less": "اقرأ أقل",
-    "no_user_found": "لم يتم العثور على أي مستخدم",
-    "enter_password": {
+  "no_user_found": "لم يتم العثور على أي مستخدم",
+  "enter_password": {
     "enter_a_password": "أدخل كلمة المرور",
     "weak": "ضعيف",
     "medium": "متوسط",
     "strong": "قوي"
   }
-
 }

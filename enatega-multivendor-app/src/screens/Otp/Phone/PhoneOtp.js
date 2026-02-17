@@ -101,7 +101,7 @@ function PhoneOtp(props) {
                 style={styles().otpInput}
                 codeInputFieldStyle={[
                   styles(currentTheme).otpBox,
-                  otpError && styles().errorInput
+                  otpError && styles(currentTheme).errorInput
                 ]}
                 codeInputHighlightStyle={{
                   borderColor: currentTheme.iconColorPink

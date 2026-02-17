@@ -16,7 +16,7 @@ export const useShopTypes = (
 ): IUseShopTypesHookResponse => {
   // Props
   const { invoke_now, transform_to_dropdown_list } = props;
-  
+
   const { data, loading, fetch } = useLazyQueryQL(GET_SHOP_TYPES, {
     fetchPolicy: 'network-only',
     debounceMs: 5000,

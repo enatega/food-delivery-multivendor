@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "Учетные данные для входа",
   "Sign in": "Войти",
   "CustomerSupport": "Поддержка клиентов",
@@ -17,6 +18,7 @@
   "Error": "Ошибка",
   "Edit": "Редактировать",
   "Delete": "Удалить",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Вы уверены, что хотите удалить этот магазин?",
   "Vehicle Type": "Тип транспорта",
   "Edit Category": "Редактировать категорию",
   "Save": "Сохранить",
@@ -57,7 +59,6 @@
   "Users": "Пользователи",
   "Phone": "Телефон",
   "Address": "Адрес",
-  "2019": "2019",
   "About Us": "О нас",
   "Blog": "Блог",
   "Welcome": "Добро пожаловать",
@@ -1100,7 +1101,6 @@
   "Payment Required": "Требуется оплата",
   "Please complete your purchase to gain full access to the product": "Завершите покупку для полного доступа к продукту",
   "As commission rate is a %age value so it cannot exceed a max value of 100": "Поскольку ставка комиссии является процентным значением, она не может превышать максимальное значение 100",
-  
   "audit_log_header_desc": "Отслеживайте все административные действия и изменения в системе.",
   "Performed_by": "Выполнено",
   "show_detail": "Показать детали",
@@ -1113,7 +1113,5 @@
     "weak": "Слабый",
     "medium": "Средний",
     "strong": "Сильный"
-  
-}
-
+  }
 }

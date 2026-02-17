@@ -10,6 +10,7 @@ import {
   faDashboard,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastContext } from '@/lib/context/global/toast.context';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 import { useMutation } from '@apollo/client';
 import {
   UPDATE_WITHDRAW_REQUEST,
@@ -17,7 +18,7 @@ import {
 } from '@/lib/api/graphql';
 import { IWithDrawRequest } from '@/lib/utils/interfaces/withdraw-request.interface';
 import { IActionMenuProps } from '@/lib/utils/interfaces/action-menu.interface';
-import { useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl';
 
 export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   menuItems,
@@ -43,6 +44,8 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   });
   const [selectedWithDrawRequest, setSelectedWithDrawRequest] =
     useState<string>('');
+
+  const { CURRENT_SYMBOL } = useConfiguration();
 
   const [updateWithdrawReqStatus, { loading: status_change_loading }] =
     useMutation(UPDATE_WITHDRAW_REQUEST, {
@@ -249,7 +252,8 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
         propertyName: 'requestAmount',
         body: (rowData: IWithDrawRequest) => (
           <span className="font-medium">
-            ${rowData?.requestAmount.toFixed(2)}
+            {CURRENT_SYMBOL || '$'}
+            {rowData?.requestAmount.toFixed(2)}
           </span>
         ),
       },

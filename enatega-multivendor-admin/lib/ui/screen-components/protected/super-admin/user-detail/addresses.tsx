@@ -1,9 +1,9 @@
-"use client";
+'use client';
 import React from 'react';
 import { Tag } from 'primereact/tag';
 import { IAddress } from '@/lib/utils/interfaces/users.interface';
 import { Card } from 'primereact/card';
-import { useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl';
 
 interface AddressesProps {
   addresses: IAddress[];
@@ -19,13 +19,19 @@ const Addresses: React.FC<AddressesProps> = ({ addresses }) => {
           className="shadow-sm border border-gray-100 rounded-lg"
           title={
             <div className="flex justify-between items-center">
-              <span className="text-lg font-semibold">{t(addr.label)}</span>
+              <span className="text-lg font-semibold dark:text-white">
+                {t(addr.label)}
+              </span>
               {addr.selected && <Tag value="Default" severity="success" />}
             </div>
           }
         >
-          <p className="text-gray-700">{addr.deliveryAddress}</p>
-          <p className="text-gray-700 text-sm">{addr.details}</p>
+          <p className="text-gray-700 dark:text-white">
+            {addr.deliveryAddress}
+          </p>
+          <p className="text-gray-700 text-sm dark:text-white">
+            {addr.details}
+          </p>
         </Card>
       ))}
     </div>

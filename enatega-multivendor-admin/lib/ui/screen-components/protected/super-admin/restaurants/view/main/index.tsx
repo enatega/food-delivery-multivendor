@@ -62,7 +62,9 @@ export default function RestaurantsMain() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [deleteId, setDeleteId] = useState('');
   const [duplicateId, setDuplicateId] = useState('');
-  const [selectedProducts, setSelectedProducts] = useState<IRestaurantResponse[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<
+    IRestaurantResponse[]
+  >([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
 
@@ -91,17 +93,15 @@ export default function RestaurantsMain() {
 
   //Query
   const { data, loading, refetch } = useQueryGQL(
-    currentTab === 'Actual' ? GET_RESTAURANTS_PAGINATED : GET_CLONED_RESTAURANTS_PAGINATED,
+    currentTab === 'Actual'
+      ? GET_RESTAURANTS_PAGINATED
+      : GET_CLONED_RESTAURANTS_PAGINATED,
     queryVariables,
     {
       fetchPolicy: 'cache-and-network',
       debounceMs: 300,
     }
   ) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
-
-  useEffect(() => {
-    console.log("🚀 Store Screen Rendered");
-  });
 
   // API
   const [hardDeleteRestaurant, { loading: isHardDeleting }] = useMutation(
@@ -185,9 +185,10 @@ export default function RestaurantsMain() {
   ];
 
   // Get pagination data
-  const restaurantData = currentTab === 'Actual'
-    ? data?.restaurantsPaginated
-    : data?.getClonedRestaurantsPaginated;
+  const restaurantData =
+    currentTab === 'Actual'
+      ? data?.restaurantsPaginated
+      : data?.getClonedRestaurantsPaginated;
 
   const restaurants = restaurantData?.data || [];
   const totalRecords = restaurantData?.totalCount || 0;

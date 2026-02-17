@@ -1,4 +1,5 @@
 {
+  "2019": "2019",
   "Sign in credentials": "Anmeldedaten",
   "Sign in": "Anmelden",
   "Add Category": "Kategorie hinzufügen",
@@ -18,6 +19,7 @@
   "Edit": "Bearbeiten",
   "Delete": "Löschen",
   "Edit Category": "Kategorie bearbeiten",
+  "are_you_sure_you_want_to_delete_this_shoptype": "Sind Sie sicher, dass Sie diesen Shop löschen möchten?",
   "Save": "Speichern",
   "OrderID prefix": "OrderID-Präfix",
   "Order": "Bestellung",
@@ -57,7 +59,6 @@
   "Users": "Benutzer",
   "Phone": "Telefon",
   "Address": "Adresse",
-  "2019": "2019",
   "About Us": "Über uns",
   "Blog": "Blog",
   "Welcome": "Willkommen",
@@ -1090,17 +1091,16 @@
   "ShopType": "Ladenart",
   "Audit Logs": "Prüfprotokolle",
   "audit_log_header_desc": "Verfolgen Sie alle administrativen Aktionen und Änderungen innerhalb des Systems.",
-"Performed_by": "Durchgeführt von",
-"show_detail": "Details anzeigen",
-"hide_detail": "Details ausblenden",
-"No_differences_found_in_data": "Keine Unterschiede in den Daten gefunden.",
-"read more": "Mehr lesen",
-"read less": "Weniger lesen",
-"enter_password": {
-  "enter_a_password": "Geben Sie ein Passwort ein",
-  "weak": "Schwach",
-  "medium": "Mittel",
-  "strong": "Stark"
-}
-
+  "Performed_by": "Durchgeführt von",
+  "show_detail": "Details anzeigen",
+  "hide_detail": "Details ausblenden",
+  "No_differences_found_in_data": "Keine Unterschiede in den Daten gefunden.",
+  "read more": "Mehr lesen",
+  "read less": "Weniger lesen",
+  "enter_password": {
+    "enter_a_password": "Geben Sie ein Passwort ein",
+    "weak": "Schwach",
+    "medium": "Mittel",
+    "strong": "Stark"
+  }
 }

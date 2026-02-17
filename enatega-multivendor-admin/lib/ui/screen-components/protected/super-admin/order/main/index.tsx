@@ -3,7 +3,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useDebounce from '@/lib/hooks/useDebounce';
 // Interfaces & Types
-import { IDateFilter, IQueryResult, IPaginationVars } from '@/lib/utils/interfaces';
+import {
+  IDateFilter,
+  IQueryResult,
+  IPaginationVars,
+} from '@/lib/utils/interfaces';
 import { IOrder, IExtendedOrder } from '@/lib/utils/interfaces';
 import { TOrderRowData } from '@/lib/utils/types';
 import { getGraphQLErrorMessage } from '@/lib/utils/methods/error';
@@ -36,9 +40,7 @@ export default function OrderSuperAdminMain() {
   const [dateFilter, setDateFilter] = useState<IDateFilter>({
     dateKeyword: 'All',
     startDate: `${new Date().getFullYear()}-01-01`, // Current year, January 1st
-    endDate: `${new Date().getFullYear()}-${String(new Date().getMonth()).padStart(2, '0')}-${String(new Date(new Date().getFullYear(), new Date().getMonth(), 0).getDate()).padStart(2, '0')}`, // Last day of previous month
-
-
+    endDate: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`, // Today's date
   });
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10); // For PrimeReact Table's 'rows' prop
@@ -55,12 +57,15 @@ export default function OrderSuperAdminMain() {
     });
   };
 
+  // Only send dates when Custom filter is active, otherwise backend handles date filtering
   const queryVariables = {
     page: currentPage,
     rows: rows,
     dateKeyword: dateFilter.dateKeyword,
-    starting_date: dateFilter.startDate,
-    ending_date: dateFilter.endDate,
+    starting_date:
+      dateFilter.dateKeyword === 'Custom' ? dateFilter.startDate : undefined,
+    ending_date:
+      dateFilter.dateKeyword === 'Custom' ? dateFilter.endDate : undefined,
     orderStatus: selectedActions.length > 0 ? selectedActions : undefined,
     search: debouncedSearch,
   };
@@ -73,15 +78,15 @@ export default function OrderSuperAdminMain() {
     }
   ) as IQueryResult<
     | {
-      allOrdersPaginated: {
-        totalCount: number;
-        currentPage: number;
-        totalPages: number;
-        prevPage: number;
-        nextPage: number;
-        orders: IOrder[];
-      };
-    }
+        allOrdersPaginated: {
+          totalCount: number;
+          currentPage: number;
+          totalPages: number;
+          prevPage: number;
+          nextPage: number;
+          orders: IOrder[];
+        };
+      }
     | undefined,
     IPaginationVars
   >;
@@ -133,7 +138,8 @@ export default function OrderSuperAdminMain() {
             .join(', ')
             .slice(0, 15) + '...',
         OrderdeliveryAddress:
-          order?.deliveryAddress?.deliveryAddress?.toString()?.slice(0, 15) + '...',
+          order?.deliveryAddress?.deliveryAddress?.toString()?.slice(0, 15) +
+          '...',
         DateCreated: order?.createdAt?.toString()?.slice(0, 10),
       })
     );
@@ -164,30 +170,32 @@ export default function OrderSuperAdminMain() {
           />
         </>
       }
-      {!error && <OrderTable
-        data={
-          data?.allOrdersPaginated
-            ? {
-              ...data.allOrdersPaginated,
-              orders: displayData as IExtendedOrder[],
-            }
-            : undefined
-        }
-        loading={loading}
-        isInitialLoad={isInitialLoad}
-        handleRowClick={handleRowClick}
-        selectedData={selectedData}
-        setSelectedData={setSelectedData}
-        first={first}
-        rows={rows}
-        filters={filters}
-        globalFilterValue={globalFilterValue}
-        onPage={(e) => {
-          setFirst(e.first);
-          setRows(Math.min(e.rows, 100));
-          setCurrentPage((e.page ?? 0) + 1);
-        }}
-      />}
+      {!error && (
+        <OrderTable
+          data={
+            data?.allOrdersPaginated
+              ? {
+                  ...data.allOrdersPaginated,
+                  orders: displayData as IExtendedOrder[],
+                }
+              : undefined
+          }
+          loading={loading}
+          isInitialLoad={isInitialLoad}
+          handleRowClick={handleRowClick}
+          selectedData={selectedData}
+          setSelectedData={setSelectedData}
+          first={first}
+          rows={rows}
+          filters={filters}
+          globalFilterValue={globalFilterValue}
+          onPage={(e) => {
+            setFirst(e.first);
+            setRows(Math.min(e.rows, 100));
+            setCurrentPage((e.page ?? 0) + 1);
+          }}
+        />
+      )}
       <OrderDetailModal
         visible={isModalOpen}
         onHide={() => setIsModalOpen(false)}
