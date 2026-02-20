@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, Dimensions, Image } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -22,6 +22,7 @@ const Banner = ({ banners }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { width } = Dimensions.get('window')
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const onPressBanner = (banner) => {
     let _selectedType = ''
@@ -72,6 +73,7 @@ const Banner = ({ banners }) => {
       autoplay
       autoplayDelay={3}
       autoplayLoop
+      onChangeIndex={({ index }) => setActiveIndex(index)}
       removeClippedSubviews={true}
       windowSize={3}
       showPagination
@@ -83,7 +85,7 @@ const Banner = ({ banners }) => {
       paginationDefaultColor={currentTheme.hex}
       paginationStyleItemActive={styles().paginationItem}
       paginationStyleItemInactive={styles().paginationItem}
-      renderItem={({ item }) => {
+      renderItem={({ item, index }) => {
         const mediaType = getMediaTypeFromUrl(item.file)
 
         return (
@@ -95,7 +97,7 @@ const Banner = ({ banners }) => {
             }}
           >
             {mediaType === 'video' ? (
-              <VideoBanner style={styles().image} source={{ uri: item?.file }}>
+              <VideoBanner style={styles().image} source={{ uri: item?.file }} shouldPlay={index === activeIndex}>
                 {renderBannerContent(item)}
               </VideoBanner>
             ) : (
