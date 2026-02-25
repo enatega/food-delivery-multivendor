@@ -447,7 +447,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.discountAmount}
+            {order?.discountAmount.toFixed(2)}
           </Text>
         </View>
         )}
@@ -471,7 +471,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.deliveryCharges}
+            {(order?.deliveryCharges)?.toFixed(0)}
           </Text>
         </View>}
 
