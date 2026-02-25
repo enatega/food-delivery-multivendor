@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, Feather } from '@expo/vector-icons'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { scale } from '../../utils/scaling'
@@ -31,7 +31,7 @@ const FavoriteButton = ({ restaurantId, iconSize }) => {
         position: 'relative'
       }}
     >
-      {loading ? <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} /> : <AntDesign name={isFavorite ? 'heart' : 'hearto'} size={iconSize} color={currentTheme.newIconColor} />}
+      {loading ? <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} /> : isFavorite ? <AntDesign name='heart' size={iconSize} color={currentTheme.newIconColor} /> : <Feather name='heart' size={iconSize} color={currentTheme.newIconColor} />}
     </TouchableOpacity>
   )
 }
