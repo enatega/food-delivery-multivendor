@@ -150,6 +150,7 @@ const LoginScreen = () => {
                       value={values.username}
                       onChangeText={handleChange("username")}
                       onBlur={handleBlur("username")}
+                      autoCapitalize="none"
                     />
                   </View>
                   {errors.username && (
@@ -172,10 +173,10 @@ const LoginScreen = () => {
                       placeholder={t("Password")}
                       secureTextEntry={!passwordVisible}
                       placeholderTextColor={appTheme.fontSecondColor}
-
                       value={values.password}
                       onChangeText={handleChange("password")}
                       onBlur={handleBlur("password")}
+                      autoCapitalize="none"
                     />
                     <TouchableOpacity
                       onPress={() => setPasswordVisible(!passwordVisible)}
