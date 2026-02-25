@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { View, StyleSheet, AppState } from 'react-native'
 import { VideoView, useVideoPlayer } from 'expo-video'
 
 export default function VideoBanner({ source, shouldPlay, children, style }) {
+  const appState = useRef(AppState.currentState)
   // Correct way to enable caching
   const player = useVideoPlayer(
     {
@@ -19,7 +20,7 @@ export default function VideoBanner({ source, shouldPlay, children, style }) {
   useEffect(() => {
     if (!player) return
 
-    if (shouldPlay) {
+    if (shouldPlay && AppState.currentState === 'active') {
       player.play()
     } else {
       player.pause()
@@ -30,6 +31,19 @@ export default function VideoBanner({ source, shouldPlay, children, style }) {
       } catch (e) {}
     }
   }, [shouldPlay, player])
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (appState.current.match(/active/) && nextAppState === 'background') {
+        player.pause()
+      } else if (nextAppState === 'active') {
+        player.play()
+      }
+      appState.current = nextAppState
+    })
+
+    return () => subscription?.remove()
+  }, [player])
 
   return (
     <View style={[styles.container, style]}>
