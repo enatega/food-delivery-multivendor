@@ -38,7 +38,7 @@ const Taxes = ({ tax, deliveryCharges, currency, tip, discountAmount }) => {
           {' '}
           {item?.title === 'voucherDiscount' && '-'}
           {currency}
-          {item?.amount}{' '}
+          {(item?.amount).toFixed(2)}{' '}
         </TextDefault>
       </View>
     )
