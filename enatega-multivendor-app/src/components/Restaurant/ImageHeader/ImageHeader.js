@@ -6,7 +6,8 @@ import {
   SimpleLineIcons,
   MaterialCommunityIcons,
   FontAwesome5,
-  AntDesign
+  AntDesign,
+  Feather
 } from '@expo/vector-icons'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -363,11 +364,15 @@ function ImageTextCenterHeader(props, ref) {
                         spinnerColor={currentTheme.iconColorDark}
                       />
                     ) : (
-                      <AntDesign
-                        name={isFavorite ? 'heart' : 'hearto'}
-                        size={scale(24)}
-                        color={currentTheme.newIconColor}
-                      />
+                      isFavorite ? (
+                        <AntDesign
+                          name='heart'
+                          size={scale(24)}
+                          color={currentTheme.newIconColor}
+                        />
+                      ) : (
+                        <Feather name="heart" size={scale(24)} color={currentTheme.newIconColor} />
+                      )
                     )}
                   </AnimatedTouchable>
                 </View>
