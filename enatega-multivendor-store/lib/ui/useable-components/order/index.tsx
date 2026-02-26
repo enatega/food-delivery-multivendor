@@ -427,6 +427,31 @@ const Order = ({
           </Text>
         </View>
 
+        {/* Discount Amount */}
+        {order?.discountAmount > 0 && (         
+        <View className="flex-row justify-between">
+          <Text
+            style={{
+              color: appTheme.fontMainColor,
+              fontSize: 18,
+              fontWeight: "600",
+            }}
+          >
+            {t("discountAmount")}
+          </Text>
+          <Text
+            style={{
+              color: appTheme.fontMainColor,
+              fontSize: 18,
+              fontWeight: "600",
+            }}
+          >
+            {configuration?.currencySymbol}
+            {order?.discountAmount}
+          </Text>
+        </View>
+        )}
+
         {/* Delivery */}
         {!order?.isPickedUp && <View className="flex-row justify-between">
           <Text

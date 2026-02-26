@@ -665,6 +665,7 @@ export const en = {
   "confirmDelete" : "Are you Sure, you want to delete this address?",
   "Confirm": "Confirm",
   "AlreadyExsistsAlert":"This phone number is already associated with another account. Are you sure you want to proceed? Continuing will disassociate this phone number from the previous account.",
+  "ShopTypes":"Shop Types",
   "notificationPermissionDenied": "Please enable notifications in Settings to receive order updates and offers",
   "notificationTokenError": "Error setting up notifications. Please try again later",
 }

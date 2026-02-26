@@ -9,7 +9,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
-import { getCuisines } from '../../apollo/queries'
+import { getCuisines, RestaurantCuisines } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -48,6 +48,9 @@ const SELECT_ADDRESS = gql`
 const GET_CUISINES = gql`
   ${getCuisines}
 `
+const GET_RESTAURANTS_CUISINES = gql`
+  ${RestaurantCuisines}
+`
 
 export const FILTER_VALUES = {
   Sort: {
@@ -72,6 +75,7 @@ function Menu({ route, props }) {
   const selectedType = route.params?.selectedType
   const queryType = route.params?.queryType
   const collection = route.params?.collection
+  const isShopType = route.params?.isShopType
   const { t, i18n } = useTranslation()
   const { getAddress } = useGeocoding()
   const [busy, setBusy] = useState(false)
@@ -113,12 +117,29 @@ function Menu({ route, props }) {
   const locationData = location
   const [filterApplied, setfilterApplied] = useState(false)
 
+  console.log('selected Type ::::', selectedType)
+
   const { data, refetch, networkStatus, loading, error, restaurantData, setRestaurantData, heading, subHeading, allData } = useRestaurantQueries(queryType, location, selectedType)
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
 
-  const { data: allCuisines, refetch: refetchCuisines } = useQuery(GET_CUISINES)
+  const restaurantsCuisinsVariables = isShopType ? { latitude: location.latitude || null, longitude: location.longitude || null, shopType: collection } : {}
+
+  console.log('restaurantsCuisinsVariables::', restaurantsCuisinsVariables)
+
+  const { data: cuisinesData, refetch: refetchCuisines, error: cuisinesError } = useQuery(isShopType ? GET_RESTAURANTS_CUISINES : GET_CUISINES, { variables: restaurantsCuisinsVariables })
+
+  // const allCuisines = useRef(isShopType ? { cuisines: cuisinesData?.nearByRestaurantsCuisines } : cuisinesData).current
+
+  const allCuisines = useMemo(() => {
+    if (isShopType) {
+      return { cuisines: cuisinesData?.nearByRestaurantsCuisines ?? [] }
+    }
+    return cuisinesData ?? { cuisines: [] }
+  }, [isShopType, cuisinesData])
+
+  console.log('allCuisines::restaurants cuisins', cuisinesData?.nearByRestaurantsCuisines, allCuisines, cuisinesError)
 
   const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */ } = useCollapsibleSubHeader()
 
@@ -169,11 +190,19 @@ function Menu({ route, props }) {
   }, [allCuisines])
 
   useEffect(() => {
+    console.log('all data:', allData)
+    console.log('all data:collection', collection)
     if (collection && allData) {
       setActiveCollection(collection)
       const tempData = [...allData]
-      const filteredData = tempData?.filter((item) => item?.cuisines?.includes(collection))
-      setRestaurantData(filteredData)
+      if (isShopType) {
+        setRestaurantData(tempData)
+      } else {
+        const filteredData = tempData?.filter((item) => item?.cuisines?.includes(collection))
+        console.log('all data changed:', filteredData)
+        setRestaurantData(filteredData)
+      }
+
       setfilterApplied(true)
     }
   }, [collection, route, allData])
@@ -243,14 +272,23 @@ function Menu({ route, props }) {
   // }, [routeData, allCuisines])
 
   const collectionData = useMemo(() => {
-    if (routeData?.name === 'Restaurants' || routeData?.params?.shopType == 'restaurant') {
-      return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Restaurant')
-    } else if (routeData?.name === 'Store' || routeData?.params?.shopType == 'grocery') {
-      return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Grocery')
-    } else {
+    console.log('allCuisines collection', allCuisines?.cuisines,isShopType)
+    if (isShopType) {
       return allCuisines?.cuisines
+    } else {
+      if (routeData?.name === 'Restaurants' || routeData?.params?.shopType == 'restaurant') {
+        return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Restaurant')
+      } else if (routeData?.name === 'Store' || routeData?.params?.shopType == 'grocery') {
+        console.log('isShopType::filter', isShopType)
+
+        return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Grocery')
+      } else {
+        return allCuisines?.cuisines
+      }
     }
   }, [routeData, allCuisines])
+
+  console.log('collectionData::', collectionData)
 
   const setCurrentLocation = async () => {
     setBusy(true)

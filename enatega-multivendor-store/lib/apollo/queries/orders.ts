@@ -91,6 +91,7 @@ export const GET_ORDERS = gql`
         username
         available
       }
+      discountAmount
     }
   }
 `;

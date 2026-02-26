@@ -128,4 +128,5 @@ export interface IOrder {
   isRinged: boolean;
   isRiderRinged: boolean;
   instructions?: string;
+  discountAmount: number
 }
