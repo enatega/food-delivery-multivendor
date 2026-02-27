@@ -15,7 +15,6 @@ import { GET_CONFIGURATION } from '@/lib/api/graphql';
 
 // Hooks
 import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL';
-import { decryptConfigFields } from '@/lib/utils/methods/decryption/decrypt-config-fields';
 
 export const ConfigurationContext = React.createContext<
   IConfiguration | null | undefined
