@@ -24,34 +24,70 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import { Subscription } from "zen-observable-ts";
 // import { ENV } from "../utils/constants";
 
+import {
+  initializeNonce,
+  getNonce,
+  storeMetricsToken,
+  getMetricsToken,
+  shouldRefreshToken,
+} from '../utils/methods/security';
+import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
+import { print } from 'graphql';
+
+let isRefreshing = false;
+let refreshPromise: Promise<string | null> | null = null;
+
+async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
+  if (isRefreshing && refreshPromise) {
+    return refreshPromise;
+  }
+
+  isRefreshing = true;
+  refreshPromise = (async () => {
+    try {
+      const nonce = getNonce();
+      const response = await fetch(`${serverUrl}graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          nonce: nonce || '',
+        },
+        body: JSON.stringify({
+          query: print(METRICS_GENERAL),
+        }),
+      });
+
+      const result = await response.json();
+      if (result.data?.metricsGeneral) {
+        const { experience, hehe } = result.data.metricsGeneral;
+        storeMetricsToken(experience, hehe);
+        return experience;
+      }
+      return null;
+    } catch (error) {
+      console.error('Failed to fetch metrics token:', error);
+      return null;
+    } finally {
+      isRefreshing = false;
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+}
+
 export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   // const { SERVER_URL, WS_SERVER_URL } = getEnv(ENV);
   const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
   const WS_SERVER_URL = process.env.NEXT_PUBLIC_WS_SERVER_URL;
 
-  const cache = new InMemoryCache({
-    typePolicies: {
-      // Prevent Apollo from normalizing these nested types by _id
-      // This fixes the issue where addons/options with the same _id
-      // would be merged across different order items
-      ItemAddon: {
-        keyFields: false, // Treat as embedded object, don't normalize
-      },
-      ItemOption: {
-        keyFields: false,
-      },
-      ItemVariation: {
-        keyFields: false,
-      },
-      OrderItem: {
-        keyFields: false, // Each order item should be treated as unique
-      },
-    },
-  });
+  initializeNonce();
+
+  const cache = new InMemoryCache();
 
   const httpLink = createHttpLink({
     uri: `${SERVER_URL}graphql`,
-    // useGETForQueries: true,
+    // useGETForQueries: true, 
   });
 
   // WebSocketLink with error handling
@@ -60,7 +96,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       reconnect: true,
       timeout: 30000,
       lazy: true,
-    }),
+    })
   );
 
   // Error Handling Link using ApolloLink's onError (for network errors)
@@ -88,12 +124,21 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   const request = async (operation: Operation): Promise<void> => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
+    const operationName = operation.operationName;
+    if (operationName !== 'MetricsGeneral' && shouldRefreshToken()) {
+      await fetchMetricsToken(SERVER_URL);
+    }
+
+    const nonce = getNonce();
+    const metricsToken = getMetricsToken();
     operation.setContext({
       headers: {
         authorization: (token ?? "") ? `Bearer ${token ?? ""}` : "",
+        nonce: nonce || '',
+        'bop-auth': `Bearer ${metricsToken}` || '',
         userId: userId ?? "",
         isAuth: !!token,
-        "X-Client-Type": "web",
+        "X-Client-Type": "web"
       },
     });
   };
@@ -117,7 +162,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
         return () => {
           if (handle) handle.unsubscribe();
         };
-      }),
+      })
   );
 
   // Terminating Link for split between HTTP and WebSocket
@@ -132,7 +177,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   const client = new ApolloClient({
     link: concat(
       ApolloLink.from([errorLink, terminatingLink, requestLink]),
-      httpLink,
+      httpLink
     ),
     cache,
     connectToDevTools: true,
