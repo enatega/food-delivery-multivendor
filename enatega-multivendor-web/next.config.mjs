@@ -31,32 +31,38 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
-            key: 'Content-Security-Policy',
-            value: 'upgrade-insecure-requests; media-src \'self\' https://*.amazonaws.com https://*.s3.amazonaws.com data: blob:'
+            key: "Content-Security-Policy",
+            value:
+              "upgrade-insecure-requests; media-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com data: blob:",
           },
           // Optional: Add other security headers
           {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains'
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
           },
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
           {
-            key: 'X-Frame-Options',
-            value: 'DENY'
+            key: "X-Frame-Options",
+            value: "DENY",
           },
           {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin'
-          }
-        ]
-      }
-    ]
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "media-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com https://assets.enatega.com data: blob:",
+          },
+        ],
+      },
+    ];
   },
 
   images: {
@@ -135,16 +141,16 @@ const nextConfig = {
         hostname: "flagcdn.com",
       },
       {
-        protocol:'https',
-        hostname:"images.deliveryhero.io"
-      },
-       {
-        protocol: 'https',
-        hostname: 'enatega-backend.s3.eu-north-1.amazonaws.com',
+        protocol: "https",
+        hostname: "images.deliveryhero.io",
       },
       {
-        protocol: 'https',
-        hostname: '*.s3.*.amazonaws.com',
+        protocol: "https",
+        hostname: "enatega-backend.s3.eu-north-1.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.s3.*.amazonaws.com",
       },
     ], // Add placehold.co as an allowed domain
   },

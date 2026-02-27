@@ -164,9 +164,9 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
             enableAdminDemo: false,
           }
         : data?.configuration;
-    const decryptedConfiguration = await decryptConfigFields(configuration);
-    console.log('Decrypted Configuration:', decryptedConfiguration);
-    setConfiguration(decryptedConfiguration);
+    // const decryptedConfiguration = await decryptConfigFields(configuration);
+    // console.log('Decrypted Configuration:', decryptedConfiguration);
+    setConfiguration(configuration);
   };
 
   const fetchConfiguration = useCallback(() => {
