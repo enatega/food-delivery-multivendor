@@ -80,7 +80,7 @@
     "expo-tracking-transparency": "~5.2.4",
     "expo-updates": "~0.28.17",
     "expo-video": "^2.2.2",
-    "expo-web-browser": "~14.2.0",
+    "expo-web-browser": "~15.0.10",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.10.1",
     "i18n-js": "^4.3.2",
