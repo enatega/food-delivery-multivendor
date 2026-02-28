@@ -19,11 +19,11 @@ export const RIDER_LOGIN = gql`
   }
 `;
 
-export const DEFAULT_RIDER_CREDS = gql`
-  query LastOrderCreds {
-    lastOrderCreds {
-      riderUsername
-      riderPassword
-    }
-  }
-`;
+// export const DEFAULT_RIDER_CREDS = gql`
+//   query LastOrderCreds {
+//     lastOrderCreds {
+//       riderUsername
+//       riderPassword
+//     }
+//   }
+// `;

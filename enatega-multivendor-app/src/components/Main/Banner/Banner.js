@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, Dimensions, Image } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -12,8 +12,10 @@ import { scale } from '../../../utils/scaling'
 
 // Helper function to get media type from URL
 const getMediaTypeFromUrl = (url) => {
-  const extension = url?.split('.').pop().toLowerCase()
-  const videoExtensions = ['mp4']
+  if (!url) return 'image'
+  const pathWithoutQuery = url.split('?')[0]
+  const extension = pathWithoutQuery.split('.').pop().toLowerCase()
+  const videoExtensions = ['mp4', 'mov', 'webm']
   return videoExtensions.includes(extension) ? 'video' : 'image'
 }
 
@@ -22,6 +24,7 @@ const Banner = ({ banners }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { width } = Dimensions.get('window')
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const onPressBanner = (banner) => {
     let _selectedType = ''
@@ -72,6 +75,7 @@ const Banner = ({ banners }) => {
       autoplay
       autoplayDelay={3}
       autoplayLoop
+      onChangeIndex={({ index }) => setActiveIndex(index)}
       removeClippedSubviews={true}
       windowSize={3}
       showPagination
@@ -83,7 +87,7 @@ const Banner = ({ banners }) => {
       paginationDefaultColor={currentTheme.hex}
       paginationStyleItemActive={styles().paginationItem}
       paginationStyleItemInactive={styles().paginationItem}
-      renderItem={({ item }) => {
+      renderItem={({ item, index }) => {
         const mediaType = getMediaTypeFromUrl(item.file)
 
         return (
@@ -95,7 +99,7 @@ const Banner = ({ banners }) => {
             }}
           >
             {mediaType === 'video' ? (
-              <VideoBanner style={styles().image} source={{ uri: item?.file }}>
+              <VideoBanner style={styles().image} source={{ uri: item?.file }} shouldPlay={index === activeIndex}>
                 {renderBannerContent(item)}
               </VideoBanner>
             ) : (

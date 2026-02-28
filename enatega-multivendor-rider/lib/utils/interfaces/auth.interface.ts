@@ -25,12 +25,12 @@ export interface IRiderLoginResponse {
   userId: string;
 }
 
-export interface IRiderDefaultCredsResponse {
-  riderUsername: string;
-  riderPassword: string;
-}
+// export interface IRiderDefaultCredsResponse {
+//   riderUsername: string;
+//   riderPassword: string;
+// }
 
-export interface IRiderLoginCompleteResponse {
-  riderLogin: IRiderLoginResponse;
-  lastOrderCreds: IRiderDefaultCredsResponse;
-}
+// export interface IRiderLoginCompleteResponse {
+//   riderLogin: IRiderLoginResponse;
+//   lastOrderCreds: IRiderDefaultCredsResponse;
+// }

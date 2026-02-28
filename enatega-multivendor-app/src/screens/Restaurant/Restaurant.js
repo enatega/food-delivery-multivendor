@@ -2,7 +2,7 @@ import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/nativ
 import React, { useState, useContext, useEffect, useRef } from 'react'
 import { View, TouchableOpacity, Alert, StatusBar, Platform, Image, Dimensions, SectionList } from 'react-native'
 import Animated, { Extrapolation, interpolate, useSharedValue, Easing as EasingNode, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets, initialWindowMetrics } from 'react-native-safe-area-context'
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
 import ImageHeader from '../../components/Restaurant/ImageHeader'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -29,6 +29,7 @@ import PopularIcon from '../../assets/SVG/popular'
 
 import { escapeRegExp } from '../../utils/regex'
 import { isOpen } from '../../utils/customFunctions'
+import ImageHeaderSkeleton from '../../components/Restaurant/ImageHeader/ImageHeaderSkeleton'
 
 const { height } = Dimensions.get('screen')
 
@@ -75,7 +76,7 @@ function Restaurant(props) {
   const [showSearchResults, setShowSearchResults] = useState(false)
   const { restaurant: restaurantCart, setCartRestaurant, cartCount, addCartItem, addQuantity, clearCart, checkItemCart } = useContext(UserContext)
   const { data, refetch, networkStatus, loading, error } = useRestaurant(propsData._id)
-
+  const insets = initialWindowMetrics.insets ?? { top: 0, bottom: 0, left: 0, right: 0 }
   const client = useApolloClient()
   const { data: popularItems } = useQuery(POPULAR_ITEMS, {
     variables: { restaurantId }
@@ -398,9 +399,8 @@ function Restaurant(props) {
 
   if (loading) {
     return (
-      <View style={[styles(currentTheme).flex]}>
-        <ImageHeader iconColor={iconColor} iconSize={iconSize} iconBackColor={iconBackColor} iconRadius={iconRadius} iconTouchWidth={iconTouchWidth} iconTouchHeight={iconTouchHeight} restaurantName={propsData?.name ?? data?.restaurant?.name} restaurantId={propsData?._id} restaurantImage={propsData?.image ?? data?.restaurant?.image} restaurant={null} topaBarData={[]} loading={loading} minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder} tax={propsData?.tax ?? data?.restaurant?.tax} updatedDeals={[]} searchOpen={searchOpen} showSearchResults={showSearchResults} setSearch={setSearch} search={search} searchHandler={searchHandler} searchPopupHandler={searchPopupHandler} translationY={translationY} />
-
+      <View style={[styles(currentTheme).flex, {marginTop: insets.top> 0 ? insets.top : scale(50)}]}>
+        <ImageHeaderSkeleton iconRadius={iconRadius} iconTouchHeight={iconTouchHeight} />
         <View
           style={[
             styles(currentTheme).navbarContainer,
