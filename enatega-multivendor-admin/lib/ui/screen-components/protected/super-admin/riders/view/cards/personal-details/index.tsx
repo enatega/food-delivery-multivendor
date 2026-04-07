@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 // Interfaces
 import { IRiderDetailsProps } from '@/lib/utils/interfaces';
 
@@ -7,8 +9,20 @@ import { Skeleton } from 'primereact/skeleton';
 // Localization
 import { useTranslations } from 'next-intl';
 
+// Utility
+import { decryptPassword } from '@/lib/utils/methods/decryption/decrypt-password';
+
 const PersonalDetails = ({ loading, rider }: IRiderDetailsProps) => {
   const t = useTranslations();
+  const [decryptedPassword, setDecryptedPassword] = useState('');
+
+  useEffect(() => {
+    if (rider?.password) {
+      decryptPassword(rider.password, process.env.NEXT_PUBLIC_ENCRYPTION_KEY)
+        .then((res) => setDecryptedPassword(res ?? ''))
+        .catch(console.error);
+    }
+  }, [rider?.password]);
 
   return (
     <div className="flex flex-col gap-2 border rounded-lg overflow-hidden">
@@ -58,7 +72,7 @@ const PersonalDetails = ({ loading, rider }: IRiderDetailsProps) => {
               {loading ? (
                 <Skeleton height="1.5rem" />
               ) : (
-                (rider?.password ?? '-')
+                decryptedPassword || rider?.password || '-'
               )}
             </span>
           </div>
