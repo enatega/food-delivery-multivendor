@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import { decryptPassword } from '@/lib/utils/methods/decryption/decrypt-password';
+
 // Core
 import { Form, Formik, FormikHelpers } from 'formik';
 
@@ -47,19 +50,30 @@ export default function RiderAddForm({
   position = 'right',
   isAddRiderVisible,
 }: IRidersAddFormComponentProps) {
+  const [decryptedPassword, setDecryptedPassword] = useState('');
+
+  useEffect(() => {
+    if (rider?.password) {
+      decryptPassword(rider.password, process.env.NEXT_PUBLIC_ENCRYPTION_KEY)
+        .then((res) => setDecryptedPassword(res || ''))
+        .catch(console.error);
+    } else {
+      setDecryptedPassword('');
+    }
+  }, [rider?.password]);
+
   const initialValues: IRiderForm = {
     name: '',
     username: '',
-    password: '',
     ...rider,
+    password: decryptedPassword,
     vehicleType: rider
       ? VEHICLE_TYPE.find((vt) => vt?.code === rider?.vehicleType) || null
       : null,
-    confirmPassword: rider?.password ?? '',
+    confirmPassword: decryptedPassword,
     phone: rider ? +rider.phone : null,
     zone: rider ? { label: rider.zone.title, code: rider.zone._id } : null,
   };
-
 
   // Hooks
   const t = useTranslations();
@@ -154,8 +168,8 @@ export default function RiderAddForm({
                   handleChange,
                   handleSubmit,
                   setFieldValue,
-                  setFieldTouched ,
-                  touched
+                  setFieldTouched,
+                  touched,
                 }) => {
                   return (
                     <Form onSubmit={handleSubmit}>
@@ -290,11 +304,14 @@ export default function RiderAddForm({
                             setFieldTouched('phone', true, false); // Mark as touched immediately
                           }}
                           style={{
-                            borderColor: onErrorMessageMatcher(
-                              'phone',
-                              errors?.phone,
-                              RiderErrors
-                            ) && touched?.phone ? 'red' : '',
+                            borderColor:
+                              onErrorMessageMatcher(
+                                'phone',
+                                errors?.phone,
+                                RiderErrors
+                              ) && touched?.phone
+                                ? 'red'
+                                : '',
                           }}
                         />
 
