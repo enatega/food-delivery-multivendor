@@ -1,0 +1,55 @@
+{
+  "name": "foodflow",
+  "version": "1.0.0",
+  "description": "Foodflow - Complete Food Delivery Platform",
+  "private": true,
+  "workspaces": [
+    "foodflow-web",
+    "foodflow-admin",
+    "foodflow-app",
+    "foodflow-rider",
+    "foodflow-store"
+  ],
+  "scripts": {
+    "dev:web": "cd foodflow-web && npm run dev",
+    "dev:admin": "cd foodflow-admin && npm run dev",
+    "dev:app": "cd foodflow-app && npm start",
+    "dev:rider": "cd foodflow-rider && npm start",
+    "dev:store": "cd foodflow-store && npm start",
+    "build:web": "cd foodflow-web && npm run build",
+    "build:admin": "cd foodflow-admin && npm run build",
+    "start:web": "cd foodflow-web && npm start",
+    "start:admin": "cd foodflow-admin && npm start",
+    "install:all": "npm install",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces --if-present",
+    "clean": "rm -rf node_modules */node_modules */*/node_modules",
+    "postinstall": "echo 'Foodflow installation complete'"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foodflow/foodflow.git"
+  },
+  "keywords": [
+    "food-delivery",
+    "restaurant",
+    "react",
+    "nextjs",
+    "react-native",
+    "graphql",
+    "apollo"
+  ],
+  "author": "Foodflow Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/foodflow/foodflow/issues"
+  },
+  "homepage": "https://foodflow.app",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
