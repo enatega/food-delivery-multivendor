@@ -1,0 +1,80 @@
+{
+  "name": "foodflow-app",
+  "version": "1.0.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "build:android": "eas build -p android --profile production"
+  },
+
+  "dependencies": {
+    "expo": "53.0.22",
+    "react": "18.2.0",
+    "react-native": "0.76.7",
+
+    "@apollo/client": "^3.9.0",
+    "graphql": "^16.8.1",
+    "axios": "^1.6.8",
+
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/netinfo": "11.3.1",
+
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/stack": "^6.4.0",
+    "@react-navigation/bottom-tabs": "^6.6.1",
+
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-screens": "~3.31.1",
+
+    "react-native-gesture-handler": "~2.16.1",
+    "react-native-reanimated": "~3.10.1",
+
+    "react-native-svg": "15.8.0",
+    "react-native-webview": "13.8.6",
+
+    "react-native-flash-message": "^0.4.2",
+    "react-native-modalize": "^2.1.1",
+    "react-native-country-picker-modal": "^2.0.0",
+
+    "react-native-paper": "^5.8.0",
+    "react-native-material-textfield": "^0.16.1",
+    "rn-placeholder": "^3.0.1",
+
+    "react-native-maps": "1.20.1",
+    "react-native-maps-directions": "^1.9.0",
+
+    "lottie-react-native": "6.7.0",
+
+    "react-native-get-random-values": "^1.10.0",
+    "react-native-url-polyfill": "^2.0.0",
+
+    "expo-font": "~13.0.2",
+    "expo-notifications": "~0.28.17",
+    "expo-splash-screen": "~0.29.13",
+    "expo-updates": "~0.27.2",
+    "expo-location": "~17.0.1",
+    "expo-constants": "~16.0.2",
+    "expo-localization": "~15.0.3",
+    "expo-web-browser": "~14.0.2",
+    "expo-device": "~6.0.2",
+    "expo-keep-awake": "~13.0.2",
+    "expo-video": "~2.2.2",
+    "expo-apple-authentication": "~7.2.4",
+
+    "i18next": "^23.10.1",
+    "react-i18next": "^13.2.2",
+
+    "@amplitude/analytics-react-native": "^1.5.0",
+
+    "fs-extra": "^11.2.0"
+  },
+
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "babel-preset-expo": "~13.0.0"
+  }
+}

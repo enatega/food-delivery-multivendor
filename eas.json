@@ -1,0 +1,13 @@
+{
+  "cli": {
+    "version": ">= 3.0.0"
+  },
+  "build": {
+    "production": {
+      "node": "18.18.0",
+      "env": {
+        "EXPO_USE_NPM": "1"
+      }
+    }
+  }
+}
