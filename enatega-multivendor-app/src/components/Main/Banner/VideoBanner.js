@@ -51,6 +51,7 @@ export default function VideoBanner(props) {
         allowsPictureInPicture={false}
         nativeControls={false}
         contentFit="cover"
+        onFirstFrameRender={props?.onFirstFrameRender}
       />
       {props?.children}
     </View>

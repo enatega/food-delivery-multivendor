@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { View, FlatList, Text, TouchableOpacity } from 'react-native'
+import React, { useContext, useCallback, useMemo } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
@@ -13,6 +13,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import { isOpen } from '../../../utils/customFunctions'
 import Ripple from 'react-native-material-ripple'
+import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 
 const ICONS = {
   grocery: 'local-grocery-store',
@@ -30,9 +31,16 @@ function MainRestaurantCard(props) {
     ...theme[themeContext.ThemeValue]
   }
 
+  const orders = useMemo(() => props?.orders || [], [props?.orders])
+
+  const renderRestaurantItem = useCallback(({ item }) => {
+    const restaurantOpen = isOpen(item)
+    return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
+  }, [])
+
   if (props?.loading) return <MainLoadingUI />
   if (props?.error) return <Text>Error: {props?.error?.message}</Text>
-  if (props?.orders?.length <= 0) return <></>
+  if (orders?.length <= 0) return <></>
   return (
     <View style={styles().orderAgainSec}>
       <View style={{ gap: scale(8) }}>
@@ -73,18 +81,13 @@ function MainRestaurantCard(props) {
             </TextDefault>
           </Ripple>
         </View>
-        <FlatList
+        <HorizontalFlashList
           style={styles().offerScroll}
+          estimatedItemSize={280}
           contentContainerStyle={{ flexGrow: 1, ...alignment.PRlarge }}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={props?.orders}
+          data={orders}
           keyExtractor={(item) => item._id}
-          renderItem={({ item }) => {
-            const restaurantOpen = isOpen(item)
-            return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
-          }}
+          renderItem={renderRestaurantItem}
           inverted={currentTheme?.isRTL ? true : false}
         />
       </View>
@@ -92,4 +95,4 @@ function MainRestaurantCard(props) {
   )
 }
 
-export default MainRestaurantCard
+export default React.memo(MainRestaurantCard)

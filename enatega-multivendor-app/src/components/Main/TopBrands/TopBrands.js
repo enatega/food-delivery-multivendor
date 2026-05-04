@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { View, FlatList, Text, Image, Dimensions } from 'react-native'
+import React, { useContext, useMemo, useCallback } from 'react'
+import { View, Text, Image, Dimensions } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native'
 import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../../utils/customFunctions'
+import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 
 const { height } = Dimensions.get('window')
 function TopBrands(props) {
@@ -52,16 +53,36 @@ function TopBrands(props) {
     </TouchableOpacity>
   )
 
+  const topRatedVendors = useMemo(() => data?.topRatedVendorsPreview ?? [], [data])
+  const restaurantBrands = useMemo(
+    () => topRatedVendors.filter((item) => item.shopType === 'restaurant'),
+    [topRatedVendors]
+  )
+  const groceryBrands = useMemo(
+    () => topRatedVendors.filter((item) => item.shopType === 'grocery'),
+    [topRatedVendors]
+  )
+  const sortedRestaurantBrands = useMemo(
+    () => sortRestaurantsByOpenStatus(restaurantBrands || []),
+    [restaurantBrands]
+  )
+  const sortedGroceryBrands = useMemo(
+    () => sortRestaurantsByOpenStatus(groceryBrands || []),
+    [groceryBrands]
+  )
+
+  const renderBrandItem = useCallback(({ item }) => <RenderItem item={item} />, [])
+  const renderRestaurantItem = useCallback(({ item }) => {
+    const restaurantOpen = isOpen(item)
+    return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
+  }, [])
+
   if (loading) return <TopBrandsLoadingUI />
   if (error) return <Text style={styles().margin}>Error: {error.message}</Text>
 
-  const restaurantBrands = data?.topRatedVendorsPreview?.filter((item) => item.shopType === 'restaurant')
-
-  const groceryBrands = data?.topRatedVendorsPreview?.filter((item) => item.shopType === 'grocery')
-
   return (
     <View style={styles().mainContainer}>
-      {data?.topRatedVendorsPreview?.length > 0 && (
+      {topRatedVendors?.length > 0 && (
         <View style={styles().topbrandsSec}>
           <View style={styles(currentTheme).header}>
             <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} bolder H4>
@@ -83,17 +104,13 @@ function TopBrands(props) {
             </TouchableOpacity>
           </View>
           <View style={{ ...alignment.PRsmall }}>
-            <FlatList
-              data={data?.topRatedVendorsPreview}
-              renderItem={({ item }) => {
-                return <RenderItem item={item} />
-              }}
+            <HorizontalFlashList
+              data={topRatedVendors}
+              renderItem={renderBrandItem}
               keyExtractor={(item) => item?._id}
               contentContainerStyle={{ flexGrow: 1 }}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
               inverted={currentTheme?.isRTL ? true : false}
+              estimatedItemSize={140}
             />
           </View>
         </View>
@@ -122,18 +139,13 @@ function TopBrands(props) {
             </TouchableOpacity>
           </View>
           <View style={{ ...alignment.PRsmall, height: height * 0.384 }}>
-            <FlatList
-              data={sortRestaurantsByOpenStatus(restaurantBrands || [])}
-              renderItem={({ item }) => {
-                const restaurantOpen = isOpen(item)
-                return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
-              }}
+            <HorizontalFlashList
+              data={sortedRestaurantBrands}
+              renderItem={renderRestaurantItem}
               keyExtractor={(item) => item?._id}
               contentContainerStyle={{ flexGrow: 1 }}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
               inverted={currentTheme?.isRTL ? true : false}
+              estimatedItemSize={280}
             />
           </View>
         </View>
@@ -162,18 +174,13 @@ function TopBrands(props) {
             </TouchableOpacity>
           </View>
           <View style={{ ...alignment.PRsmall }}>
-            <FlatList
-              data={sortRestaurantsByOpenStatus(groceryBrands || [])}
-              renderItem={({ item }) => {
-                const restaurantOpen = isOpen(item)
-                return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
-              }}
+            <HorizontalFlashList
+              data={sortedGroceryBrands}
+              renderItem={renderRestaurantItem}
               keyExtractor={(item) => item?._id}
               contentContainerStyle={{ flexGrow: 1 }}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
               inverted={currentTheme?.isRTL ? true : false}
+              estimatedItemSize={280}
             />
           </View>
         </View>
@@ -182,4 +189,4 @@ function TopBrands(props) {
   )
 }
 
-export default TopBrands
+export default React.memo(TopBrands)
