@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Platform } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 
 function HorizontalFlashList({
@@ -26,7 +26,7 @@ function HorizontalFlashList({
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       estimatedItemSize={estimatedItemSize}
-      removeClippedSubviews
+      removeClippedSubviews={Platform.OS === 'ios'}
       ItemSeparatorComponent={itemSpacing > 0 ? Spacer : undefined}
     />
   )
