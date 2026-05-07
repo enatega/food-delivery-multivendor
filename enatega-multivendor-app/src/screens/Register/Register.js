@@ -235,6 +235,15 @@ function Register(props) {
                             onSelect={(country) => onCountrySelect(country)}
                             withAlphaFilter
                             withFilter
+                            flatListProps={{
+                            ListEmptyComponent: (
+                              <View style={{ paddingVertical: 20, alignItems: 'center' }}>
+                                <TextDefault H4 textColor={currentTheme.newFontcolor}>
+                                  {t('noResults') || 'No Results Found'}
+                                </TextDefault>
+                              </View>
+                            )
+                          }}
                           />
                           <TextDefault
                             textColor={currentTheme.newFontcolor}
