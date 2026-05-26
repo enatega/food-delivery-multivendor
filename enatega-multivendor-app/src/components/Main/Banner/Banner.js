@@ -152,7 +152,7 @@ const Banner = ({ banners }) => {
             }}
           >
             {shouldRenderVideo ? (
-              <VideoBanner style={styles().image} source={{ uri: videoUri, useCaching: true }}>
+              <VideoBanner style={styles().image} source={videoUri}>
                 {renderBannerContent(item)}
               </VideoBanner>
             ) : (

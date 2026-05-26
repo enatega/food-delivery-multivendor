@@ -272,21 +272,25 @@ function Menu({ route, props }) {
   // }, [routeData, allCuisines])
 
   const collectionData = useMemo(() => {
-    console.log('allCuisines collection', allCuisines?.cuisines,isShopType)
+    console.log('allCuisines collection', allCuisines?.cuisines, isShopType)
     if (isShopType) {
       return allCuisines?.cuisines
-    } else {
-      if (routeData?.name === 'Restaurants' || routeData?.params?.shopType == 'restaurant') {
-        return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Restaurant')
-      } else if (routeData?.name === 'Store' || routeData?.params?.shopType == 'grocery') {
-        console.log('isShopType::filter', isShopType)
-
-        return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Grocery')
-      } else {
-        return allCuisines?.cuisines
-      }
     }
-  }, [routeData, allCuisines])
+
+    const normalizedShopType = (
+      routeData?.params?.shopType ||
+      selectedType ||
+      (routeData?.name === 'Restaurants' ? 'restaurant' : routeData?.name === 'Store' ? 'grocery' : '')
+    )?.toLowerCase()
+
+    if (normalizedShopType === 'restaurant' || normalizedShopType === 'grocery') {
+      return allCuisines?.cuisines?.filter(
+        (cuisine) => cuisine?.shopType?.toLowerCase() === normalizedShopType
+      )
+    }
+
+    return allCuisines?.cuisines
+  }, [allCuisines, isShopType, routeData, selectedType])
 
   console.log('collectionData::', collectionData)
 
