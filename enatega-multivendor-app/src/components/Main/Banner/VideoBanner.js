@@ -5,7 +5,12 @@ import { VideoView, useVideoPlayer } from 'expo-video';
 export default function VideoBanner(props) {
   const appState = useRef(AppState.currentState);
 
-  const player = useVideoPlayer(props?.source, (player) => {
+  // Extract URI from source - handle both string and object formats
+  const sourceUri = typeof props?.source === 'string' 
+    ? props.source 
+    : props?.source?.uri || '';
+
+  const player = useVideoPlayer(sourceUri, (player) => {
     player.loop = true;
     player.muted = true;
     if (AppState.currentState === 'active') {
@@ -29,18 +34,19 @@ export default function VideoBanner(props) {
   useEffect(() => {
     const subscription = player.addListener('statusChange', (status) => {
       if (status.isLoaded) {
-        console.log('Video loaded successfully');
+        console.log('Video loaded successfully from:', sourceUri);
       }
       
       if (status.error) {
-        console.log('expo-video error:', status.error);
+        console.error('expo-video error:', status.error);
+        console.error('Video source:', sourceUri);
       }
     });
 
     return () => {
       subscription?.remove();
     };
-  }, [player]);
+  }, [player, sourceUri]);
 
   return (
     <View style={[styles.container, props?.style]}>
@@ -51,6 +57,7 @@ export default function VideoBanner(props) {
         allowsPictureInPicture={false}
         nativeControls={false}
         contentFit="cover"
+        onFirstFrameRender={props?.onFirstFrameRender}
       />
       {props?.children}
     </View>

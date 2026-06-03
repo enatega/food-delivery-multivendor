@@ -44,11 +44,10 @@ import * as Clarity from '@microsoft/react-native-clarity';
 // ]) // Ignore log notification by message
 // LogBox.ignoreAllLogs() // Ignore all log notifications
 
-if (!__DEV__) {
-  Clarity.initialize('mcdyi6urgs', {
-    logLevel: Clarity.LogLevel.None
-  })
-}
+
+Clarity.initialize('mcdyi6urgs', {
+  logLevel: Clarity.LogLevel.Verbose, // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
+});
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -341,3 +340,4 @@ async function registerForPushNotificationsAsync() {
 //     trigger: { seconds: 10 }
 //   })
 // }
+

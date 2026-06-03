@@ -16,7 +16,7 @@ import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 import PhoneNumberInput from '../../components/PhoneNumberInput'
 
 function PhoneNumber(props) {
-  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, currentTheme, loading, setPhoneError ,isCountryLoading} = usePhoneNumber()
+  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, currentTheme, loading, setPhoneError, isCountryLoading } = usePhoneNumber()
 
   const { t } = useTranslation()
 
@@ -72,29 +72,34 @@ function PhoneNumber(props) {
               <View style={styles().form}>
                 <View style={styles(currentTheme).number}>
                   <View style={[styles(currentTheme).textField, styles().countryCode, { padding: Platform.OS === 'ios' ? scale(5) : scale(12) }]}>
-                    {
-                      isCountryLoading ?
-
-                        <ActivityIndicator size='small' color={currentTheme.white} />
-                        :
-                        <>
-                          <CountryPicker countryCode={countryCode} onSelect={(country) => onCountrySelect(country)} withAlphaFilter withFilter />
-                          <TextDefault textColor={currentTheme.newFontcolor} style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
-                            {/* {country?.cca2} */}+{country?.callingCode[0]}
-                          </TextDefault>
-                        </>
-                    }
+                    {isCountryLoading ? (
+                      <ActivityIndicator size='small' color={currentTheme.white} />
+                    ) : (
+                      <>
+                        <CountryPicker
+                          countryCode={countryCode}
+                          onSelect={(country) => onCountrySelect(country)}
+                          withAlphaFilter
+                          withFilter
+                          flatListProps={{
+                            ListEmptyComponent: (
+                              <View style={{ paddingVertical: 20, alignItems: 'center' }}>
+                                <TextDefault H4 textColor={currentTheme.newFontcolor}>
+                                  {t('noResults') || 'No Results Found'}
+                                </TextDefault>
+                              </View>
+                            )
+                          }}
+                        />
+                        <TextDefault textColor={currentTheme.newFontcolor} style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
+                          {/* {country?.cca2} */}+{country?.callingCode[0]}
+                        </TextDefault>
+                      </>
+                    )}
                   </View>
                   <View style={[styles(currentTheme).textField, styles().phoneNumber, phoneError && styles(currentTheme).errorInput]}>
                     <View style={styles(currentTheme).phoneField}>
-                      <PhoneNumberInput
-                        setError={setPhoneError}
-                        placeholder={t('phoneNumber')}
-                        placeholderTextColor={currentTheme.color6}
-                        style={styles(currentTheme).phoneNo}
-                        countryCode={country?.callingCode[0]}
-                        value={phone}
-                        onChange={(e) => setPhone(e)} />
+                      <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.color6} style={styles(currentTheme).phoneNo} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
                     </View>
                   </View>
                 </View>

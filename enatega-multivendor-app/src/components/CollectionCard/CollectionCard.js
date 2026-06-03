@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -10,7 +10,15 @@ import { IMAGE_LINK } from '../../utils/constants'
 const CollectionCard = ({ onPress, image, name }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const imageUri = image || IMAGE_LINK
+  const normalizedImage = useMemo(() => {
+    const raw = image || IMAGE_LINK
+    return raw?.split('#')[0] || IMAGE_LINK
+  }, [image])
+  const [imageUri, setImageUri] = useState(normalizedImage)
+
+  React.useEffect(() => {
+    setImageUri(normalizedImage)
+  }, [normalizedImage])
   
   return (
     <Ripple
@@ -26,6 +34,9 @@ const CollectionCard = ({ onPress, image, name }) => {
           source={{ uri: imageUri }}
           style={styles().collectionImage}
           resizeMode='cover'
+          onError={() => {
+            if (imageUri !== IMAGE_LINK) setImageUri(IMAGE_LINK)
+          }}
         />
       </View>
       <TextDefault
