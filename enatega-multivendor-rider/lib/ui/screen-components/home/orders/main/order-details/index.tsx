@@ -569,7 +569,11 @@ export default function OrderDetailScreen() {
 
               <View className="flex-1 flex-row justify-start items-center gap-x-4 mb-4">
                 <Image
-                  src={localOrder?.restaurant?.image}
+                  source={
+                      localOrder?.restaurant?.image
+                        ? { uri: localOrder?.restaurant?.image }
+                        : require("../../../../../../assets/images/placeholder.png")
+                    }
                   style={{ width: 32, height: 30, borderRadius: 8 }}
                 />
 

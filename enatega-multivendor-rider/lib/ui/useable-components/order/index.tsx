@@ -180,7 +180,11 @@ const Order = ({
                   {/* <View className="h-8 w-8 bg-gray-400 justify-center items-center"> */}
                   {/* <View className="w-[60px] h-[70px] bg-gray-200 rounded-[8px]"> */}
                   <Image
-                    src={restaurant?.image}
+                    source={
+                      restaurant?.image
+                        ? { uri: restaurant.image }
+                        : require(".././../../assets/images/placeholder.png")
+                    }
                     style={{ width: 32, height: 30, borderRadius: 8 }}
                   />
                   {/* </View> */}

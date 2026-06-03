@@ -29,7 +29,8 @@
         "backgroundColor": "#ffffff"
       },
       "entitlements": {
-        "com.apple.developer.networking.wifi-info": true
+        "com.apple.developer.networking.wifi-info": true,
+        "aps-environment": "development"
       },
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
@@ -113,6 +114,7 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $Enatega Multivendor to use your location."
         }
       ],
+      "expo-notifications",
       "expo-font",
       "expo-localization",
       "expo-web-browser",
