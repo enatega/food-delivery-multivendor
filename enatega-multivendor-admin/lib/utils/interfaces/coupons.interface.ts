@@ -6,8 +6,8 @@ export interface ICoupon {
   discount: number;
   enabled: boolean;
   lifeTimeActive: boolean;
-  startDate: string;
-  endDate: string;
+  startDate: string | null;
+  endDate: string | null;
   title: string;
   __typename: string;
   _id: string;

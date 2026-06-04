@@ -117,11 +117,12 @@ export const COUPONS_TABLE_COLUMNS = ({
         propertyName: 'startDate',
         body: (rowData: ICoupon) => {
           if (rowData.lifeTimeActive) return <span>{t('Lifetime')}</span>;
+          const date = rowData.startDate ? new Date(rowData.startDate) : null;
           return (
             <span>
-              {rowData.startDate
-                ? new Date(Number(rowData.startDate)).toLocaleDateString()
-                : '-'}{' '}
+              {date && !Number.isNaN(date.getTime())
+                ? date.toLocaleDateString()
+                : '-'}
             </span>
           );
         },
@@ -131,10 +132,11 @@ export const COUPONS_TABLE_COLUMNS = ({
         propertyName: 'endDate',
         body: (rowData: ICoupon) => {
           if (rowData.lifeTimeActive) return <span>{t('Lifetime')}</span>;
+          const date = rowData.endDate ? new Date(rowData.endDate) : null;
           return (
             <span>
-              {rowData.endDate
-                ? new Date(Number(rowData.endDate)).toLocaleDateString()
+              {date && !Number.isNaN(date.getTime())
+                ? date.toLocaleDateString()
                 : '-'}
             </span>
           );
