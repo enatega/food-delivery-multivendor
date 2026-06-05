@@ -572,7 +572,7 @@ export default function OrderDetailScreen() {
                   source={
                       localOrder?.restaurant?.image
                         ? { uri: localOrder?.restaurant?.image }
-                        : require("../../../../../../assets/images/placeholder.png")
+                        : require("../../../../../../assets/images/placeholder.jpg")
                     }
                   style={{ width: 32, height: 30, borderRadius: 8 }}
                 />

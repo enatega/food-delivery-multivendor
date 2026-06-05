@@ -183,7 +183,7 @@ const Order = ({
                     source={
                       restaurant?.image
                         ? { uri: restaurant.image }
-                        : require(".././../../assets/images/placeholder.png")
+                        : require("../../../assets/images/placeholder.jpg")
                     }
                     style={{ width: 32, height: 30, borderRadius: 8 }}
                   />
