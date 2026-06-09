@@ -60,6 +60,7 @@ export interface IRestaurantData extends IGlobalComponentProps {
   currentWalletAmount: number;
   totalWalletAmount: number;
   withdrawnWalletAmount: number;
+  owner: string
 }
 
 export interface IRestaurantProfileProps extends IGlobalComponentProps {

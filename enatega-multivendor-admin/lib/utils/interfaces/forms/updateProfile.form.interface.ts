@@ -16,6 +16,7 @@ export interface IUpdateProfileFormErrors {
   logo: string[];
   email: string[];
   orderprefix: string[];
+  owner: string[];
 }
 
 export interface IUpdateBussinessDetailsFormErrors {
@@ -44,4 +45,5 @@ export interface IUpdateProfileForm {
   logo: string;
   email: string;
   orderprefix: string;
+  owner: string;
 }

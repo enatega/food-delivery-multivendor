@@ -135,6 +135,7 @@ export default function UpdateRestaurantDetails({
       logo: restaurantData?.logo ?? '',
       email: restaurantData?.username ?? '',
       orderprefix: restaurantData?.orderPrefix ?? '',
+      owner: restaurantData?.owner?._id || '',
     };
   }, [restaurantProfileResponse.data?.restaurant, dropdownList]);
 
@@ -167,6 +168,7 @@ export default function UpdateRestaurantDetails({
             salesTax: data.salesTax,
             orderPrefix: data.orderprefix,
             cuisines: data.cuisines.map((cuisine) => cuisine.code),
+            owner: data?.owner || '',
           },
         },
       });
