@@ -89,6 +89,7 @@ export const ProfileErrors: IUpdateProfileFormErrors = {
   cuisines: ['Required', 'Cuisines field must have at least 1 items'],
   image: ['Required', 'Invalid image URL'],
   logo: ['Required', 'Invalid logo URL'],
+  owner: ['Required'],
 };
 
 export const BussinessDetailsErrors: IUpdateBussinessDetailsFormErrors = {

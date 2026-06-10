@@ -112,6 +112,11 @@ export default function UpdateRestaurantDetails({
 
   const initialValues: IUpdateProfileForm = useMemo(() => {
     const restaurantData = restaurantProfileResponse.data?.restaurant;
+    const ownerId =
+      typeof restaurantData?.owner === 'string'
+        ? restaurantData.owner
+        : restaurantData?.owner?._id ?? '';
+
     return {
       name: restaurantData?.name ?? '',
       username: restaurantData?.username ?? '',
@@ -135,7 +140,7 @@ export default function UpdateRestaurantDetails({
       logo: restaurantData?.logo ?? '',
       email: restaurantData?.username ?? '',
       orderprefix: restaurantData?.orderPrefix ?? '',
-      owner: restaurantData?.owner?._id || '',
+      owner: ownerId,
     };
   }, [restaurantProfileResponse.data?.restaurant, dropdownList]);
 
