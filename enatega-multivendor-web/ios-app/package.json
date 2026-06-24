@@ -10,7 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@capacitor/cli": "^7.4.0",
+    "@capacitor/cli": "^7.6.7",
     "@capacitor/core": "^7.4.0",
     "@capacitor/ios": "^7.4.0"
   }
