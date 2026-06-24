@@ -20,6 +20,7 @@ export interface ILoginResponse {
   shopType: string;
   userId: string;
   token: string;
+  tokenExpiration?: string;
   email: string;
   name?: string;
   image?: string;

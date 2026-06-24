@@ -682,7 +682,7 @@ export default function OrderCheckoutScreen() {
     if (!userAddress) {
       showToast({
         title: t("missing_address"),
-        message: t("Select_your_address"),
+        message: t("Select_your_address_prompt"),
         type: "warn",
       });
       return false;

@@ -6,8 +6,6 @@ export const GET_STAFFS = gql`
       _id
       name
       email
-      plainPassword
-      password
       phone
       # vehicleType
       isActive

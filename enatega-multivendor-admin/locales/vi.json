@@ -574,7 +574,6 @@
   "Store has been added successfully": "Cửa hàng đã được thêm thành công",
   "New Store": "Cửa hàng mới",
   "Create Store": "Tạo cửa hàng",
-  "Store Creation Failed - Please select a vendor.": "Tạo cửa hàng thất bại - Vui lòng chọn nhà cung cấp",
   "Store Creation  Failed": "Tạo cửa hàng thất bại",
   "Save & Next": "Lưu & Tiếp theo",
   "Add Timings": "Thêm thời gian",
@@ -654,7 +653,6 @@
   "Transferred": "Đã chuyển",
   "Requested": "Đã yêu cầu",
   "Zone has been": "Khu vực",
-  "Something went wrong. Please try again": "Đã xảy ra lỗi. Vui lòng thử lại",
   "Something went wrong, Please try again": "Đã xảy ra lỗi, Vui lòng thử lại",
   "Add Zone": "Thêm khu vực",
   "Delete Zone": "Xóa khu vực",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "Tỷ lệ hoa hồng đã được cập nhật cho",
   "Error updating commission rate for": "Lỗi cập nhật tỷ lệ hoa hồng cho",
   "Error Fetching Restaurants": "Lỗi lấy nhà hàng",
-  "An error occurred while fetching restaurants. Please try again later.": "Đã xảy ra lỗi khi lấy nhà hàng. Vui lòng thử lại sau.",
   "Set Commission Rate": "Đặt tỷ lệ hoa hồng",
   "Amplitude Configuration Updated": "Cấu hình Amplitude đã được cập nhật",
   "Web Amplitude API Key": "Khóa API Amplitude web",
@@ -793,7 +790,6 @@
   "Order Time": "Thời gian đặt hàng",
   "By signing up, you agree to our": "Bằng cách đăng ký, bạn đồng ý với",
   "and": "và",
-  "We have sent OTP code to john@email.com": "Chúng tôi đã gửi mã OTP đến john@email.com",
   "Please check your inbox": "Vui lòng kiểm tra hộp thư đến",
   "Valid for 1min": "Hiệu lực trong 1 phút",
   "Resend OTP": "Gửi lại OTP",
@@ -1113,5 +1109,9 @@
     "weak": "Yếu",
     "medium": "Trung bình",
     "strong": "Mạnh"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Tạo cửa hàng thất bại - Vui lòng chọn nhà cung cấp",
+  "Something went wrong - Please try again": "Đã xảy ra lỗi. Vui lòng thử lại",
+  "An error occurred while fetching restaurants - Please try again later": "Đã xảy ra lỗi khi lấy nhà hàng. Vui lòng thử lại sau.",
+  "We have sent OTP code to your email": "Chúng tôi đã gửi mã OTP đến john@email.com"
 }

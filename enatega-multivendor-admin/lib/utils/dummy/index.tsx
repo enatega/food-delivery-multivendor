@@ -159,7 +159,6 @@ export const generateDummyRiders = (count: number = 10): IRiderResponse[] => {
       _id: `rider_${i + 1}`,
       name: `Rider ${i + 1}`,
       username: `rider${i + 1}`,
-      password: `password${i + 1}`,
       phone: `+1234567890${i}`,
       zone: {
         title: `Zone ${(i % 5) + 1}`,
@@ -566,8 +565,6 @@ export const generateDummyStaff = (count: number = 10): IStaffResponse[] => {
       _id: `staff_${i + 1}`,
       name: `Staff ${i + 1}`,
       email: `staff${i + 1}@example.com`, // updated email to be more realistic
-      plainPassword: `password${i + 1}`,
-      password: `password${i + 1}`,
       phone: 1234567890 + i,
       permissions: ['Dummy'],
       isActive: Math.random() > 0.5,

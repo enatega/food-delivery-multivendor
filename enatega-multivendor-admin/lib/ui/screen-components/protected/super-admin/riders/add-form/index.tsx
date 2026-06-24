@@ -55,7 +55,7 @@ export default function RiderAddForm({
     vehicleType: rider
       ? VEHICLE_TYPE.find((vt) => vt?.code === rider?.vehicleType) || null
       : null,
-    confirmPassword: rider?.password ?? '',
+    confirmPassword: '',
     phone: rider ? +rider.phone : null,
     zone: rider ? { label: rider.zone.title, code: rider.zone._id } : null,
   };
@@ -88,11 +88,11 @@ export default function RiderAddForm({
             _id: rider ? rider._id : '',
             name: values.name,
             username: values.username,
-            password: values.password,
             phone: values.phone?.toString(),
             zone: values.zone?.code,
             vehicleType: values.vehicleType?.code,
             available: rider ? rider.available : true,
+            ...(values.password ? { password: values.password } : {}),
           },
         },
         onCompleted: () => {

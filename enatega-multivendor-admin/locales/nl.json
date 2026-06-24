@@ -614,7 +614,6 @@
   "Store has been added successfully": "Winkel succesvol toegevoegd",
   "New Store": "Nieuwe winkel",
   "Create Store": "Winkel aanmaken",
-  "Store Creation Failed - Please select a vendor.": "Winkel aanmaken mislukt - Selecteer een verkoper.",
   "Store Creation  Failed": "Winkel aanmaken mislukt",
   "Save & Next": "Opslaan & Volgende",
   "Add Timings": "Tijden toevoegen",
@@ -667,7 +666,6 @@
   "Transferred": "Overgedragen",
   "Requested": "Aangevraagd",
   "Zone has been": "Zone is",
-  "Something went wrong. Please try again": "Er is iets misgegaan. Probeer opnieuw",
   "Something went wrong, Please try again": "Er is iets misgegaan, probeer opnieuw",
   "Add Zone": "Zone toevoegen",
   "Delete Zone": "Zone verwijderen",
@@ -708,7 +706,6 @@
   "Commission rate updated for": "Commissietarief bijgewerkt voor",
   "Error updating commission rate for": "Fout bij bijwerken commissietarief voor",
   "Error Fetching Restaurants": "Fout bij ophalen restaurants",
-  "An error occurred while fetching restaurants. Please try again later.": "Er is een fout opgetreden bij het ophalen van restaurants. Probeer later opnieuw.",
   "Set Commission Rate": "Commissietarief instellen",
   "Amplitude Configuration Updated": "Amplitude-configuratie bijgewerkt",
   "Web Amplitude API Key": "Web Amplitude API-sleutel",
@@ -806,7 +803,6 @@
   "Order Time": "Besteltijd",
   "By signing up, you agree to our": "Door te registreren gaat u akkoord met onze",
   "and": "en",
-  "We have sent OTP code to john@email.com": "We hebben OTP-code verzonden naar john@email.com",
   "Please check your inbox": "Controleer uw inbox",
   "Valid for 1min": "Geldig voor 1 minuut",
   "Resend OTP": "OTP opnieuw verzenden",
@@ -1113,5 +1109,9 @@
   "Connect with Stripe for payments": "Verbind met Stripe voor betalingen",
   "Payment Required": "Betaling vereist",
   "Please complete your purchase to gain full access to the product": "Voltooi uw aankoop om volledige toegang tot het product te krijgen",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Omdat het commissietarief een % waarde is, kan het een maximumwaarde van 100 niet overschrijden"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Omdat het commissietarief een % waarde is, kan het een maximumwaarde van 100 niet overschrijden",
+  "Store Creation Failed - Please select a vendor": "Winkel aanmaken mislukt - Selecteer een verkoper.",
+  "Something went wrong - Please try again": "Er is iets misgegaan. Probeer opnieuw",
+  "An error occurred while fetching restaurants - Please try again later": "Er is een fout opgetreden bij het ophalen van restaurants. Probeer later opnieuw.",
+  "We have sent OTP code to your email": "We hebben OTP-code verzonden naar john@email.com"
 }

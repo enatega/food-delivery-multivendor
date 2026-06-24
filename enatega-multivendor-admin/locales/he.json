@@ -551,7 +551,6 @@
   "Store has been added successfully": "החנות נוספה בהצלחה",
   "New Store": "חנות חדשה",
   "Create Store": "צור חנות",
-  "Store Creation Failed - Please select a vendor.": "יצירת חנות נכשלה - אנא בחר ספק.",
   "Store Creation  Failed": "יצירת חנות נכשלה",
   "Save & Next": "שמור & הבא",
   "Add Timings": "הוסף זמני פתיחה",
@@ -604,7 +603,6 @@
   "Transferred": "הועבר",
   "Requested": "הוזמן",
   "Zone has been": "האיזור נבחר",
-  "Something went wrong. Please try again": "משהו השתבש. אנא נסה שוב",
   "Something went wrong, Please try again": "משהו השתבש, אנא נסה שוב",
   "Add Zone": "הוסף איזור",
   "Delete Zone": "מחק איזור",
@@ -645,7 +643,6 @@
   "Commission rate updated for": "שיעור העמלה עודכן עבור",
   "Error updating commission rate for": "שגיאה בעדכון שיעור העמלה עבור",
   "Error Fetching Restaurants": "שגיאה בקבלת מסעדות",
-  "An error occurred while fetching restaurants. Please try again later.": "אירעה שגיאה בעת קבלת מסעדות. אנא נסה מאוחר יותר.",
   "Set Commission Rate": "הגדר שיעור עמלה",
   "Amplitude Configuration Updated": "הגדרת אמפליטודה עודכנה",
   "Web Amplitude API Key": "מפתח API לאמפליטודה לאינטרנט",
@@ -743,7 +740,6 @@
   "Order Time": "זמן הזמנה",
   "By signing up, you agree to our": "בהרשמה, אתה מסכים ל",
   "and": "ו",
-  "We have sent OTP code to john@email.com": "שלחנו קוד OTP ל-john@email.com",
   "Please check your inbox": "אנא בדוק את תיבת הדואר שלך",
   "Valid for 1min": "תוקף למשך דקה אחת",
   "Resend OTP": "שלח קוד OTP מחדש",
@@ -1112,5 +1108,9 @@
     "weak": "חלשה",
     "medium": "בינונית",
     "strong": "חזקה"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "יצירת חנות נכשלה - אנא בחר ספק.",
+  "Something went wrong - Please try again": "משהו השתבש. אנא נסה שוב",
+  "An error occurred while fetching restaurants - Please try again later": "אירעה שגיאה בעת קבלת מסעדות. אנא נסה מאוחר יותר.",
+  "We have sent OTP code to your email": "שלחנו קוד OTP ל-john@email.com"
 }

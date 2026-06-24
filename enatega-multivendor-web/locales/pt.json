@@ -412,7 +412,6 @@
   "please_enter_valid_otp_message": "Por favor digite um OTP válido",
   "verify_your_mobile_number_label": "Verifique seu número de telefone",
   "otp_valid_for_10_minutes_label": "Válido por 10 minutos",
-  "your@email.com": "seu@email.com",
   "continue_label": "Continuar",
   "resend_otp_label": "Reenviar OTP",
   "login_label": "Login",
@@ -651,7 +650,6 @@
   "The_minimum_amount_of_(": "O valor mínimo de (",
   ")_for_your_order_has_not_been_reached": ") para seu pedido não foi atingido.",
   "missing_address": "Endereço Ausente",
-  "Select_your_address.": "Selecione seu endereço.",
   "DeliveryTime": "Tempo de Entrega",
   "SalesTax": "Imposto sobre Vendas",
   "Contact": "Contato",
@@ -908,5 +906,7 @@
   "Saturday": "Sábado",
   "Sunday": "Domingo",
   "loading_orders": "Carregando pedidos...",
-  "show_more_orders": "Mostrar mais pedidos"
+  "show_more_orders": "Mostrar mais pedidos",
+  "your_email": "seu@email.com",
+  "Select_your_address_prompt": "Selecione seu endereço."
 }

@@ -148,7 +148,6 @@ export const GET_RESTAURANTS_BY_OWNER = gql`
         deliveryTime
         minimumOrder
         username
-        password
         location {
           coordinates
         }
@@ -216,7 +215,6 @@ export const GET_RESTAURANT_PROFILE = gql`
         deliveryFee
       }
       username
-      password
       deliveryTime
       minimumOrder
       tax

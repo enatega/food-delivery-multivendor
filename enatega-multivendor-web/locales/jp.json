@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "有効なOTPを入力してください",
   "verify_your_mobile_number_label": "携帯番号を確認",
   "otp_valid_for_10_minutes_label": "10分間有効",
-  "your@email.com": "your@email.com",
   "continue_label": "続ける",
   "resend_otp_label": "OTPを再送信",
   "login_label": "ログイン",
@@ -660,7 +659,6 @@
   "The_minimum_amount_of_(": "最小金額（",
   ")_for_your_order_has_not_been_reached": ") に達していません。",
   "missing_address": "住所がありません",
-  "Select_your_address.": "住所を選択してください。",
   "DeliveryTime": "配達時間",
   "SalesTax": "消費税",
   "Contact": "連絡先",
@@ -916,6 +914,8 @@
   "Friday": "金曜日",
   "Saturday": "土曜日",
   "Sunday": "日曜日",
-   "loading_orders": "注文を読み込み中...",
-  "show_more_orders": "さらに注文を表示"
+  "loading_orders": "注文を読み込み中...",
+  "show_more_orders": "さらに注文を表示",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "住所を選択してください。"
 }

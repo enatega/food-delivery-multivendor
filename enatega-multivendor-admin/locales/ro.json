@@ -603,7 +603,6 @@
   "Store has been added successfully": "Magazin adăugat cu succes",
   "New Store": "Magazin nou",
   "Create Store": "Creați magazin",
-  "Store Creation Failed - Please select a vendor.": "Eșec la crearea magazinului - Selectați un vânzător.",
   "Store Creation  Failed": "Eșec la crearea magazinului",
   "Save & Next": "Salvați și următor",
   "Add Timings": "Adăugați ore",
@@ -656,7 +655,6 @@
   "Transferred": "Transferat",
   "Requested": "Solicitat",
   "Zone has been": "Zona a fost",
-  "Something went wrong. Please try again": "Ceva nu a mers bine. Încercați din nou",
   "Something went wrong, Please try again": "Ceva nu a mers bine, încercați din nou",
   "Add Zone": "Adăugați zonă",
   "Delete Zone": "Ștergeți zona",
@@ -697,7 +695,6 @@
   "Commission rate updated for": "Rata comision actualizată pentru",
   "Error updating commission rate for": "Eroare la actualizarea ratei comision pentru",
   "Error Fetching Restaurants": "Eroare la preluarea restaurantelor",
-  "An error occurred while fetching restaurants. Please try again later.": "A apărut o eroare la preluarea restaurantelor. Încercați mai târziu.",
   "Set Commission Rate": "Setați rata comision",
   "Amplitude Configuration Updated": "Configurație Amplitude actualizată",
   "Web Amplitude API Key": "Cheie API Web Amplitude",
@@ -795,7 +792,6 @@
   "Order Time": "Ora comenzii",
   "By signing up, you agree to our": "Prin înregistrare, sunteți de acord cu",
   "and": "și",
-  "We have sent OTP code to john@email.com": "Am trimis codul OTP la john@email.com",
   "Please check your inbox": "Vă rugăm să verificați inbox-ul",
   "Valid for 1min": "Valabil 1 minut",
   "Resend OTP": "Retrimiteți OTP",
@@ -1102,5 +1098,9 @@
   "Connect with Stripe for payments": "Conectați cu Stripe pentru plăți",
   "Payment Required": "Plată necesară",
   "Please complete your purchase to gain full access to the product": "Completați achiziția pentru acces complet la produs",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Deoarece rata comision este o valoare procentuală, nu poate depăși valoarea maximă de 100"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Deoarece rata comision este o valoare procentuală, nu poate depăși valoarea maximă de 100",
+  "Store Creation Failed - Please select a vendor": "Eșec la crearea magazinului - Selectați un vânzător.",
+  "Something went wrong - Please try again": "Ceva nu a mers bine. Încercați din nou",
+  "An error occurred while fetching restaurants - Please try again later": "A apărut o eroare la preluarea restaurantelor. Încercați mai târziu.",
+  "We have sent OTP code to your email": "Am trimis codul OTP la john@email.com"
 }

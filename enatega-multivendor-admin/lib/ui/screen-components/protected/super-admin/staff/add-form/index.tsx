@@ -49,8 +49,8 @@ export default function StaffAddForm({
     phone: String(staff?.phone) ?? '',
     isActive: true,
     ...staff,
-    password: staff ? staff.plainPassword : '',
-    confirmPassword: staff ? staff.plainPassword : '',
+    password: '',
+    confirmPassword: '',
     permissions: staff
       ? staff.permissions?.map((p) => {
           return { label: p, code: p };
@@ -79,12 +79,12 @@ export default function StaffAddForm({
             _id: staff ? staff._id : '',
             name: values.name,
             email: values.email,
-            password: values.password,
             phone: values.phone?.toString(),
             isActive: values.isActive,
             permissions: values.permissions.map((v) => {
               return v.code;
             }),
+            ...(values.password ? { password: values.password } : {}),
           },
         },
         onCompleted: () => {

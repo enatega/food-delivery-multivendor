@@ -52,16 +52,6 @@ const PersonalDetails = ({ loading, rider }: IRiderDetailsProps) => {
               {loading ? <Skeleton height="1.5rem" /> : (rider?.phone ?? '-')}
             </span>
           </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs">{t('Password')}</span>
-            <span className="font-medium">
-              {loading ? (
-                <Skeleton height="1.5rem" />
-              ) : (
-                (rider?.password ?? '-')
-              )}
-            </span>
-          </div>
         </div>
       </div>
     </div>

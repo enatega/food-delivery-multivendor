@@ -601,7 +601,6 @@
   "Store has been added successfully": "Loja adicionada com sucesso",
   "New Store": "Nova loja",
   "Create Store": "Criar loja",
-  "Store Creation Failed - Please select a vendor.": "Falha ao criar loja - Selecione um fornecedor.",
   "Store Creation  Failed": "Falha ao criar loja",
   "Save & Next": "Salvar e próximo",
   "Add Timings": "Adicionar horários",
@@ -654,7 +653,6 @@
   "Transferred": "Transferido",
   "Requested": "Solicitado",
   "Zone has been": "Zona foi",
-  "Something went wrong. Please try again": "Algo deu errado. Tente novamente",
   "Something went wrong, Please try again": "Algo deu errado, tente novamente",
   "Add Zone": "Adicionar zona",
   "Delete Zone": "Excluir zona",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "Taxa de comissão atualizada para",
   "Error updating commission rate for": "Erro ao atualizar taxa de comissão para",
   "Error Fetching Restaurants": "Erro ao buscar restaurantes",
-  "An error occurred while fetching restaurants. Please try again later.": "Ocorreu um erro ao buscar restaurantes. Tente novamente mais tarde.",
   "Set Commission Rate": "Definir taxa de comissão",
   "Amplitude Configuration Updated": "Configuração do Amplitude atualizada",
   "Web Amplitude API Key": "Chave da API Web Amplitude",
@@ -793,7 +790,6 @@
   "Order Time": "Horário do pedido",
   "By signing up, you agree to our": "Ao se cadastrar, você concorda com nossos",
   "and": "e",
-  "We have sent OTP code to john@email.com": "Enviamos o código OTP para john@email.com",
   "Please check your inbox": "Por favor, verifique sua caixa de entrada",
   "Valid for 1min": "Válido por 1 minuto",
   "Resend OTP": "Reenviar OTP",
@@ -1113,5 +1109,9 @@
     "weak": "Fraca",
     "medium": "Média",
     "strong": "Forte"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Falha ao criar loja - Selecione um fornecedor.",
+  "Something went wrong - Please try again": "Algo deu errado. Tente novamente",
+  "An error occurred while fetching restaurants - Please try again later": "Ocorreu um erro ao buscar restaurantes. Tente novamente mais tarde.",
+  "We have sent OTP code to your email": "Enviamos o código OTP para john@email.com"
 }

@@ -13,7 +13,6 @@ import {
   Operation,
   split,
 } from "@apollo/client";
-import { onError } from "@apollo/client/link/error"; // Import onError utility
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
@@ -33,6 +32,7 @@ import {
 } from '../utils/methods/security';
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
+import { clearAuthTokens, getAccessToken } from '../utils/methods/auth';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -91,39 +91,46 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   });
 
   // WebSocketLink with error handling
-  const wsLink = new WebSocketLink(
-    new SubscriptionClient(`${WS_SERVER_URL}graphql`, {
+  const wsClient = new SubscriptionClient(`${WS_SERVER_URL}graphql`, {
       reconnect: true,
       timeout: 30000,
       lazy: true,
+      connectionParams: () => ({
+        authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : '',
+      }),
+    });
+  const wsLink = new WebSocketLink(wsClient);
+
+  const clearSession = () => {
+    if (typeof window === 'undefined') return;
+    clearAuthTokens();
+    localStorage.clear();
+    sessionStorage.clear();
+    if (window.location.pathname !== '/') {
+      window.location.href = '/';
+    }
+  };
+
+  const errorLink = new ApolloLink((operation, forward) =>
+    new Observable((observer) => {
+      let subscription: Subscription | undefined;
+
+      const run = () => {
+        subscription = forward(operation).subscribe({
+          next: observer.next.bind(observer),
+          complete: observer.complete.bind(observer),
+          error: observer.error.bind(observer),
+        });
+      };
+
+      run();
+      return () => subscription?.unsubscribe();
     })
   );
 
-  // Error Handling Link using ApolloLink's onError (for network errors)
-  const errorLink = onError(({ networkError, graphQLErrors }) => {
-    if (networkError) {
-      console.error("Network Error:", networkError);
-    }
-
-    if (graphQLErrors) {
-      (graphQLErrors || [])?.forEach((error) => {
-        console.error("GraphQL Error:", error?.message);
-        if (error.extensions?.code === "UNAUTHENTICATED") {
-          if (typeof window !== "undefined") {
-            localStorage.clear();
-            sessionStorage.clear();
-            if (window.location.pathname !== "/") {
-              window.location.href = "/";
-            }
-          }
-        }
-      });
-    }
-  });
-
   const request = async (operation: Operation): Promise<void> => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const token = getAccessToken();
+    const userId = typeof window === 'undefined' ? '' : localStorage.getItem('userId');
     const operationName = operation.operationName;
     if (operationName !== 'MetricsGeneral' && shouldRefreshToken()) {
       await fetchMetricsToken(SERVER_URL);
@@ -133,7 +140,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     const metricsToken = getMetricsToken();
     operation.setContext({
       headers: {
-        authorization: (token ?? "") ? `Bearer ${token ?? ""}` : "",
+        authorization: token ? `Bearer ${token}` : "",
         nonce: nonce || '',
         'bop-auth': `Bearer ${metricsToken}` || '',
         userId: userId ?? "",

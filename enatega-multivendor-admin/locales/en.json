@@ -569,7 +569,6 @@
   "Store has been added successfully": "Store has been added successfully",
   "New Store": "New Store",
   "Create Store": "Create Store",
-  "Store Creation Failed - Please select a vendor.": "Store Creation Failed - Please select a vendor.",
   "Store Creation  Failed": "Store Creation  Failed",
   "Save & Next": "Save & Next",
   "Add Timings": "Add Timings",
@@ -632,7 +631,6 @@
   "Transferred": "Transferred",
   "Requested": "Requested",
   "Zone has been": "Zone has been",
-  "Something went wrong. Please try again": "Something went wrong. Please try again",
   "Something went wrong, Please try again": "Something went wrong, Please try again",
   "Add Zone": "Add Zone",
   "Delete Zone": "Delete Zone",
@@ -673,7 +671,6 @@
   "Commission rate updated for": "Commission rate updated for",
   "Error updating commission rate for": "Error updating commission rate for",
   "Error Fetching Restaurants": "Error Fetching Restaurants",
-  "An error occurred while fetching restaurants. Please try again later.": "An error occurred while fetching restaurants. Please try again later.",
   "Set Commission Rate": "Set Commission Rate",
   "Amplitude Configuration Updated": "Amplitude Configuration Updated",
   "Web Amplitude API Key": "Web Amplitude API Key",
@@ -771,7 +768,6 @@
   "Order Time": "Order Time",
   "By signing up, you agree to our": "By signing up, you agree to our",
   "and": "and",
-  "We have sent OTP code to john@email.com": "We have sent OTP code to john@email.com",
   "Please check your inbox": "Please check your inbox",
   "Valid for 1min": "Valid for 1min",
   "Resend OTP": "Resend OTP",
@@ -1107,5 +1103,9 @@
     "weak": "Weak",
     "medium": "Medium",
     "strong": "Strong"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Store Creation Failed - Please select a vendor.",
+  "Something went wrong - Please try again": "Something went wrong. Please try again",
+  "An error occurred while fetching restaurants - Please try again later": "An error occurred while fetching restaurants. Please try again later.",
+  "We have sent OTP code to your email": "We have sent OTP code to john@email.com"
 }

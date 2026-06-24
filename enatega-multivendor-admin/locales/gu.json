@@ -601,7 +601,6 @@
   "Store has been added successfully": "દુકાન સફળતાપૂર્વક ઉમેરાઈ",
   "New Store": "નવી દુકાન",
   "Create Store": "દુકાન બનાવો",
-  "Store Creation Failed - Please select a vendor.": "દુકાન બનાવવામાં નિષ્ફળ - કૃપા કરીને વેન્ડર પસંદ કરો.",
   "Store Creation  Failed": "દુકાન બનાવવામાં નિષ્ફળ",
   "Save & Next": "સાચવો અને આગળ",
   "Add Timings": "સમય ઉમેરો",
@@ -654,7 +653,6 @@
   "Transferred": "સ્થાનાંતરિત",
   "Requested": "વિનંતી કરેલ",
   "Zone has been": "ઝોન",
-  "Something went wrong. Please try again": "કંઈક ખોટું થયું. કૃપા કરીને ફરી પ્રયાસ કરો",
   "Something went wrong, Please try again": "કંઈક ખોટું થયું, કૃપા કરીને ફરી પ્રયાસ કરો",
   "Add Zone": "ઝોન ઉમેરો",
   "Delete Zone": "ઝોન કાઢી નાખો",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "કમિશન દર અપડેટ થયો માટે",
   "Error updating commission rate for": "કમિશન દર અપડેટ કરવામાં ભૂલ માટે",
   "Error Fetching Restaurants": "રેસ્ટોરન્ટ્સ મેળવવામાં ભૂલ",
-  "An error occurred while fetching restaurants. Please try again later.": "રેસ્ટોરન્ટ્સ મેળવતી વખતે ભૂલ થઈ. કૃપા કરીને પછી ફરી પ્રયાસ કરો.",
   "Set Commission Rate": "કમિશન દર સેટ કરો",
   "Amplitude Configuration Updated": "એમ્પ્લિટ્યુડ રૂપરેખાંકન અપડેટ થયું",
   "Web Amplitude API Key": "વેબ એમ્પ્લિટ્યુડ API કી",
@@ -793,7 +790,6 @@
   "Order Time": "ઓર્ડર સમય",
   "By signing up, you agree to our": "સાઇન અપ કરીને, તમે અમારા",
   "and": "અને",
-  "We have sent OTP code to john@email.com": "અમે OTP કોડ john@email.com પર મોકલ્યો છે",
   "Please check your inbox": "કૃપા કરીને તમારું ઇનબોક્સ તપાસો",
   "Valid for 1min": "૧ મિનિટ માટે માન્ય",
   "Resend OTP": "OTP ફરી મોકલો",
@@ -1113,5 +1109,9 @@
     "weak": "નબળું",
     "medium": "મધ્યમ",
     "strong": "મજબૂત"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "દુકાન બનાવવામાં નિષ્ફળ - કૃપા કરીને વેન્ડર પસંદ કરો.",
+  "Something went wrong - Please try again": "કંઈક ખોટું થયું. કૃપા કરીને ફરી પ્રયાસ કરો",
+  "An error occurred while fetching restaurants - Please try again later": "રેસ્ટોરન્ટ્સ મેળવતી વખતે ભૂલ થઈ. કૃપા કરીને પછી ફરી પ્રયાસ કરો.",
+  "We have sent OTP code to your email": "અમે OTP કોડ john@email.com પર મોકલ્યો છે"
 }

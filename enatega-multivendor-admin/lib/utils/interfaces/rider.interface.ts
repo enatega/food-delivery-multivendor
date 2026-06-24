@@ -13,7 +13,6 @@ export interface IRiderResponse {
   _id: string;
   name: string;
   username: string;
-  password: string;
   phone: string;
   available: boolean;
   vehicleType: string;
@@ -27,7 +26,6 @@ export interface ISingleRiderResponse {
   name: string;
   email: string;
   username: string;
-  password: string;
   phone: string;
   available: boolean;
   assigned: string[];
@@ -94,7 +92,6 @@ export interface IRiderReponse {
   _id: string;
   name: string;
   username: string;
-  password: string;
   phone: string;
   available: boolean;
   zone: {

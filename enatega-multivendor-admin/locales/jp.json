@@ -601,7 +601,6 @@
   "Store has been added successfully": "店舗が正常に追加されました",
   "New Store": "新しい店舗",
   "Create Store": "店舗を作成",
-  "Store Creation Failed - Please select a vendor.": "店舗作成に失敗しました - ベンダーを選択してください。",
   "Store Creation  Failed": "店舗作成に失敗しました",
   "Save & Next": "保存して次へ",
   "Add Timings": "時間を追加",
@@ -654,7 +653,6 @@
   "Transferred": "転送済み",
   "Requested": "リクエスト済み",
   "Zone has been": "ゾーンが",
-  "Something went wrong. Please try again": "何かが間違っています。もう一度お試しください",
   "Something went wrong, Please try again": "何かが間違っています。もう一度お試しください",
   "Add Zone": "ゾーンを追加",
   "Delete Zone": "ゾーンを削除",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "手数料率が更新されました",
   "Error updating commission rate for": "手数料率の更新エラー",
   "Error Fetching Restaurants": "レストラン取得エラー",
-  "An error occurred while fetching restaurants. Please try again later.": "レストランの取得中にエラーが発生しました。後でもう一度お試しください。",
   "Set Commission Rate": "手数料率を設定",
   "Amplitude Configuration Updated": "Amplitude設定が更新されました",
   "Web Amplitude API Key": "Web Amplitude APIキー",
@@ -794,7 +791,6 @@
   "Order Time": "注文時間",
   "By signing up, you agree to our": "登録することで、あなたは私たちの",
   "and": "と",
-  "We have sent OTP code to john@email.com": "john@email.comにOTPコードを送信しました",
   "Please check your inbox": "受信トレイを確認してください",
   "Valid for 1min": "1分間有効",
   "Resend OTP": "OTPを再送信",
@@ -1114,5 +1110,9 @@
     "weak": "弱い",
     "medium": "普通",
     "strong": "強い"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "店舗作成に失敗しました - ベンダーを選択してください。",
+  "Something went wrong - Please try again": "何かが間違っています。もう一度お試しください",
+  "An error occurred while fetching restaurants - Please try again later": "レストランの取得中にエラーが発生しました。後でもう一度お試しください。",
+  "We have sent OTP code to your email": "john@email.comにOTPコードを送信しました"
 }

@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "กรุณาป้อน OTP ที่ถูกต้อง",
   "verify_your_mobile_number_label": "ยืนยันหมายเลขโทรศัพท์ของคุณ",
   "otp_valid_for_10_minutes_label": "ใช้ได้ 10 นาที",
-  "your@email.com": "อีเมลของคุณ",
   "continue_label": "ดำเนินการต่อ",
   "resend_otp_label": "ส่ง OTP อีกครั้ง",
   "login_label": "เข้าสู่ระบบ",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "จำนวนขั้นต่ำของ (",
   ")_for_your_order_has_not_been_reached": ") สำหรับคำสั่งซื้อของคุณยังไม่ถึง",
   "missing_address": "ขาดที่อยู่",
-  "Select_your_address.": "เลือกที่อยู่ของคุณ",
   "DeliveryTime": "เวลาจัดส่ง",
   "SalesTax": "ภาษีขาย",
   "Contact": "ติดต่อ",
@@ -918,5 +916,7 @@
   "Saturday": "วันเสาร์",
   "Sunday": "วันอาทิตย์",
   "loading_orders": " กำลังโหลดคำสั่งซื้อ...",
-  "show_more_orders": "แสดงคำสั่งซื้อเพิ่มเติม"
+  "show_more_orders": "แสดงคำสั่งซื้อเพิ่มเติม",
+  "your_email": "อีเมลของคุณ",
+  "Select_your_address_prompt": "เลือกที่อยู่ของคุณ"
 }

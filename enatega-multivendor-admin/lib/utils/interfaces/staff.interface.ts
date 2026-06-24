@@ -11,8 +11,6 @@ export interface IStaffResponse {
   _id: string;
   name: string;
   email: string;
-  password: string;
-  plainPassword: string;
   phone: number;
   isActive: boolean;
   permissions: string[];

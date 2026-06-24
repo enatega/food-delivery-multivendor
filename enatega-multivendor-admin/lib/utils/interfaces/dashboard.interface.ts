@@ -90,11 +90,24 @@ export interface IDashboardSalesByTypeResponseGraphQL {
 // Restaurant
 
 export interface IDashboardRestaurantOrdersSalesStatsResponseGraphQL {
-  getRestaurantDashboardOrdersSalesStats: {
-    totalOrders: number;
-    totalSales: number;
-    totalCODOrders: number;
-    totalCardOrders: number;
+  getRestaurantDashboardOrderSalesDetailsByPaymentMethod: {
+    total_orders?: number;
+    total_sales?: number;
+    total_sales_without_delivery?: number;
+    total_delivery_fee?: number;
+    pickup_total_orders?: number;
+    delivery_total_orders?: number;
+    pickup_orders?: number;
+    delivery_orders?: number;
+    pickup?: {
+      total_orders?: number;
+    };
+    delivery?: {
+      total_orders?: number;
+    };
+    all?: IDashboardOrderSalesDetailsByPaymentMethodData[];
+    cod?: IDashboardOrderSalesDetailsByPaymentMethodData[];
+    card?: IDashboardOrderSalesDetailsByPaymentMethodData[];
   };
 }
 
@@ -118,7 +131,21 @@ interface IDashboardOrderSalesDetailsByPaymentMethodData {
 }
 
 export interface IDashboardOrderSalesDetailsByPaymentMethodResponseGraphQL {
-  getDashboardOrderSalesDetailsByPaymentMethod: {
+  getRestaurantDashboardOrderSalesDetailsByPaymentMethod: {
+    total_orders?: number;
+    total_sales?: number;
+    total_sales_without_delivery?: number;
+    total_delivery_fee?: number;
+    pickup_total_orders?: number;
+    delivery_total_orders?: number;
+    pickup_orders?: number;
+    delivery_orders?: number;
+    pickup?: {
+      total_orders?: number;
+    };
+    delivery?: {
+      total_orders?: number;
+    };
     all: IDashboardOrderSalesDetailsByPaymentMethodData[];
     cod: IDashboardOrderSalesDetailsByPaymentMethodData[];
     card: IDashboardOrderSalesDetailsByPaymentMethodData[];

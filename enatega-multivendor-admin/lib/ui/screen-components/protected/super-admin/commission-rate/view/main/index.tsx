@@ -191,7 +191,7 @@ export default function CommissionRateMain() {
         type: 'error',
         title: t('Error Fetching Restaurants'),
         message: t(
-          'An error occurred while fetching restaurants. Please try again later.'
+          'An error occurred while fetching restaurants - Please try again later'
         ),
         duration: 2000,
       });

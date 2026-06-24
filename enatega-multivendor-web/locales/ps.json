@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "مهرباني وکړئ یو معتبر OTP دننه کړئ",
   "verify_your_mobile_number_label": "خپله د تلیفون شمیره تایید کړئ",
   "otp_valid_for_10_minutes_label": "د 10 دقیقو لپاره معتبر دی",
-  "your@email.com": "ستاسو@بریښنالیک.com",
   "continue_label": "ادامه",
   "resend_otp_label": "OTP بیا لیږل",
   "login_label": "ننوتل",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "د ( لږترلږه مقدار",
   ")_for_your_order_has_not_been_reached": ") ستاسو د امر لپاره نه دی رسیدلی.",
   "missing_address": "پته ورک شوې",
-  "Select_your_address.": "خپله پته غوره کړئ.",
   "DeliveryTime": "د رسولو وخت",
   "SalesTax": "د خرڅلاو مالیه",
   "Contact": "اړیکه",
@@ -918,5 +916,7 @@
   "Saturday": "شنبه",
   "Sunday": "یکشنبه",
   "loading_orders": "د امرونو بارول...",
-  "show_more_orders": "د امرونو بیشتر نیشاندن"
+  "show_more_orders": "د امرونو بیشتر نیشاندن",
+  "your_email": "ستاسو@بریښنالیک.com",
+  "Select_your_address_prompt": "خپله پته غوره کړئ."
 }

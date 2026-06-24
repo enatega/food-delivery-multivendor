@@ -100,7 +100,6 @@
   "DiscoveryPage": {
     "Mostorder": "Restaurants les plus commandés",
     "storenearyou": "Restaurants près de chez vous",
-
     "ourbrand": "Nos marques",
     "popularrest": "Restaurants populaires",
     "popularstore": "Magasins populaires"
@@ -119,7 +118,6 @@
     "popitems": "Articles populaires",
     "Uncategorized": "Non classé"
   },
-
   "addresses": "Adresses",
   "Restaurant-cuisines": "Cuisines de restaurant",
   "Grocery-cuisines": "Cuisines d'épicerie",
@@ -150,7 +148,6 @@
   "phone_already_registered": "Ce numéro de téléphone est déjà enregistré, veuillez en entrer un autre.",
   "error_checking_phone": "Une erreur s'est produite lors de la vérification du téléphone.",
   "password_reset": "Réinitialisation du mot de passe",
-  "your@email.com": " ",
   "password_reset_success": "Votre mot de passe a été réinitialisé avec succès.",
   "password_reset_error": "Erreur de réinitialisation du mot de passe",
   "error_resetting_password": "Une erreur s'est produite lors de la réinitialisation du mot de passe.",
@@ -161,7 +158,6 @@
   "The_minimum_amount_of_(": " Le montant minimum de (",
   ")_for_your_order_has_not_been_reached": ") pour votre commande n'a pas été atteint.",
   "missing_address": " manque d'adresse",
-  "Select_your_address.": " Sélectionnez votre adresse.",
   "error_logging_in": "Une erreur s'est produite lors de la connexion.",
   "create_user": "Créer un utilisateur",
   "registration_success": "Vous avez été enregistré avec succès.",
@@ -241,7 +237,6 @@
   "Assigned": "Un livreur a été assigné et viendra bientôt chercher votre commande.",
   "PickedElapsed": "Votre livreur a pris votre commande il y a {min} min et est en route vers vous !",
   "PickedElapsedJustNow": "Votre livreur vient de prendre votre commande et est en route !",
-
   "Picked": "Votre livreur a pris votre commande et est en route vers vous !",
   "DeliveredRestaurant": "Votre commande a été livrée à {time}. Bon appétit !",
   "DeliveredStore": "Votre commande a été livrée à {time}. Merci d'avoir magasiné avec nous !",
@@ -315,7 +310,6 @@
   "send_button": "Envoyer",
   "no_active_orders_title": "Aucune commande active",
   "active_orders_title": " Commandes actives",
-
   "no_active_orders_message": "Vous n'avez aucune commande active pour le moment.",
   "browse_store_button": "Parcourir le magasin",
   "active_orders_label": "Commandes actives",
@@ -421,7 +415,6 @@
   "login_label": "Connexion",
   "Continue_with_mail": "Continuer avec l'e-mail",
   "restaurant_modal_label": "La préservation du goût authentique de tous les plats traditionnels est maintenue ici.",
-
   "At_least_6_characters_label": "Au moins 6 caractères",
   "At_least_one_lowercase_letter_(a-z)_label": "Au moins une lettre minuscule (a-z)",
   "At_least_one_uppercase_letter_(A-Z)_label": "Au moins une lettre majuscule (A-Z)",
@@ -434,9 +427,7 @@
     "medium": "Moyen",
     "strong": "Fort"
   },
-
   "password_recovery_label": "Récupération du mot de passe",
-
   "update_your_password_now_message": "Mettez à jour votre mot de passe maintenant",
   "please_enter_valid_password_message": "Veuillez entrer un mot de passe valide",
   "failed_to_reset_password_message": "Échec de la réinitialisation du mot de passe. Veuillez réessayer.",
@@ -841,6 +832,8 @@
   "order": "commande",
   "orders": "commandes",
   "ok": "OK",
-   "loading_orders": "Chargement des commandes",
-  "show_more_orders": "Afficher plus de commandes"
+  "loading_orders": "Chargement des commandes",
+  "show_more_orders": "Afficher plus de commandes",
+  "your_email": " ",
+  "Select_your_address_prompt": " Sélectionnez votre adresse."
 }

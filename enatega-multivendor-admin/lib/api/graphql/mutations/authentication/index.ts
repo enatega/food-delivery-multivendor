@@ -5,6 +5,7 @@ export const OWNER_LOGIN = gql`
     ownerLogin(email: $email, password: $password) {
       userId
       token
+      tokenExpiration
       email
       userType
       restaurants {

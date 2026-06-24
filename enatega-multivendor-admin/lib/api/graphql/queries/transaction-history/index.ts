@@ -37,7 +37,6 @@ export const GET_TRANSACTION_HISTORY = gql`
           name
           email
           username
-          password
           phone
           image
           available

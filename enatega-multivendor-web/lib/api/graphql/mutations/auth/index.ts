@@ -8,19 +8,19 @@ export const LOGIN = gql`
     $name: String
     $notificationToken: String
     $isActive: Boolean
-  ) {
-    login(
+    ) {
+      login(
       type: $type
       email: $email
       password: $password
       name: $name
       notificationToken: $notificationToken
       isActive: $isActive
-    ) {
-      userId
-      token
-      tokenExpiration
-      name
+      ) {
+        userId
+        token
+        tokenExpiration
+        name
       phone
       phoneIsVerified
       email
@@ -87,8 +87,8 @@ export const CREATE_USER = gql`
     $appleId: String
     $emailIsVerified: Boolean
     $isPhoneExists: Boolean
-  ) {
-    createUser(
+    ) {
+      createUser(
       userInput: {
         phone: $phone
         email: $email
@@ -99,7 +99,7 @@ export const CREATE_USER = gql`
         emailIsVerified: $emailIsVerified
         isPhoneExists: $isPhoneExists
       }
-    ) {
+      ) {
       userId
       token
       tokenExpiration
@@ -155,6 +155,16 @@ export const VERIFY_OTP = gql`
   mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
     verifyOtp(otp: $otp, email: $email, phone: $phone) {
       result
+    }
+  }
+`;
+
+export const REFRESH_TOKEN = gql`
+  mutation RefreshToken($refreshToken: String!, $userType: String!) {
+    refreshToken(refreshToken: $refreshToken, userType: $userType) {
+      userId
+      token
+      tokenExpiration
     }
   }
 `;

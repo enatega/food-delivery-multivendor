@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "దయచేసి సరైన OTP ను నమోదు చేయండి",
   "verify_your_mobile_number_label": "మీ ఫోన్ నంబర్ను ధృవీకరించండి",
   "otp_valid_for_10_minutes_label": "10 నిమిషాలు చెల్లుబాటు అవుతుంది",
-  "your@email.com": "your@email.com",
   "continue_label": "కొనసాగించండి",
   "resend_otp_label": "OTPని మళ్లీ పంపండి",
   "login_label": "లాగిన్",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "కనీస మొత్తం (",
   ")_for_your_order_has_not_been_reached": ") మీ ఆర్డర్ కోసం చేరుకోలేదు.",
   "missing_address": "చిరునామా లేదు",
-  "Select_your_address.": "మీ చిరునామాను ఎంచుకోండి.",
   "DeliveryTime": "డెలివరీ సమయం",
   "SalesTax": "సేల్స్ ట్యాక్స్",
   "Contact": "సంప్రదించండి",
@@ -918,5 +916,7 @@
   "Saturday": "శనివారం",
   "Sunday": "ఆదివారం",
   "loading_orders": " ఆర్డర్లు లోడ్ అవుతున్నాయి...",
-  "show_more_orders": "మరిన్ని ఆర్డర్లు చూపించు"
+  "show_more_orders": "మరిన్ని ఆర్డర్లు చూపించు",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "మీ చిరునామాను ఎంచుకోండి."
 }

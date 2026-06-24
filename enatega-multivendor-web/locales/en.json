@@ -99,9 +99,7 @@
   },
   "DiscoveryPage": {
     "Mostorder": "Most ordered restaurants",
-
     "storenearyou": "Restaurants near you",
-
     "ourbrand": "Our brands",
     "popularrest": "Popular restaurants"
   },
@@ -121,7 +119,6 @@
   },
   "Restaurant-cuisines": "Restaurant cuisines",
   "Grocery-cuisines": "Grocery cuisines",
-
   "addresses": "Addresses",
   "grocerylist": "Grocery list",
   "toppicks": "Top grocery picks",
@@ -175,7 +172,6 @@
   "phone_verification": "Phone Verification",
   "Missing_Phone_number": " Missing Phone number",
   "Phone_number_is_missing": "Phone number is missing",
-
   "phone_otp_error": "Phone OTP Error",
   "error_sending_otp_to_phone": "An error occurred while sending the OTP to phone.",
   "toast_success": "Success",
@@ -209,7 +205,6 @@
   "cancelling_text": "Cancelling...",
   "most_ordered_restaurants": " Most ordered restaurants",
   "Popular-restaurants": " Popular restaurants",
-
   "cancel_my_order_button": "Cancel my order",
   "ill_wait_for_my_order_button": "I'll wait for my order",
   "chat_with_rider_button": "Chat With Rider",
@@ -282,7 +277,6 @@
   "not_available_label": "N/A",
   "support_ticket_created_successfully": "Your support ticket has been created successfully",
   "failed_to_create_support_ticket": "Failed to create support ticket",
-
   "validation_error_title": "Validation Error",
   "select_reason_for_inquiry": "Please select a reason for your inquiry",
   "provide_order_idprovide_order_id": "Please provide an order ID",
@@ -317,7 +311,6 @@
   "describe_issue_with_order_label": "Describe your issue with this order",
   "tell_us_more_about_issue_label": "Tell us more about your issue",
   "describe_issue_in_detail_placeholder": "Please describe your issue in detail...",
-
   "send_button": "Send",
   "no_active_orders_title": "No Active Orders",
   "active_orders_title": "Active Orders",
@@ -350,7 +343,6 @@
   "Add_new_address": "Add new address",
   "failed_to_fetch_Address": "Failed to fetch address",
   "Address_updated_success": "Address update failed",
-
   "Address_updated_failed_message": "All required fields must be filled before saving the address.",
   "Location_Type": "Location Type",
   "cancel_address": "Cancel",
@@ -386,7 +378,6 @@
   "logoutSuccessToastMessage": "User Logged out successfully",
   "your_fav": "Your Favourites",
   "Favourites": "Favourites",
-
   "See_all": "See all",
   "update_phone_name_title": "Enter phone number",
   "update_phone_name_cancel_button": "Cancel",
@@ -427,29 +418,23 @@
   "please_enter_valid_otp_message": "Please enter a valid OTP",
   "verify_your_mobile_number_label": "Verify your Phone number",
   "otp_valid_for_10_minutes_label": "Valid for 10 minutes",
-  "your@email.com": "your@email.com",
-
   "continue_label": "Continue",
   "resend_otp_label": "Resend OTP",
   "login_label": "Login",
   "Continue_with_mail": "Continue with Email",
-
   "restaurant_modal_label": "Preservation of the authentic taste of all traditional foods is upheld here.",
-
   "At_least_6_characters_label": "At least 6 characters",
   "At_least_one_lowercase_letter_(a-z)_label": "At least one lowercase letter (a-z)",
   "At_least_one_uppercase_letter_(A-Z)_label": "At least one uppercase letter (A-Z)",
   "At_least_one_number_(0-9)_label": "At least one number (0-9)",
   "At_least_one_special_character": "At least one special character",
   "Password_does_not_match": "Password does not match",
-
   "Password": {
     "enter_a_password": "Enter a password",
     "weak": "Weak",
     "medium": "Medium",
     "strong": "Strong"
   },
-
   "password_recovery_label": "Password Recovery",
   "update_your_password_now_message": "Update your password now",
   "please_enter_valid_password_message": "Please enter a valid password",
@@ -528,7 +513,6 @@
   "in_10_20_min_label": "in 10-20 min",
   "coupon_applied_title": "Coupon Applied",
   "Remove": "Remove",
-
   "coupon_has_been_applied_message": "coupon has been applied",
   "coupon_not_found_title": "Coupon Not Found",
   "coupon_is_not_valid_message_with_title": "coupon is not valid.",
@@ -557,7 +541,6 @@
   "privacy_policy_access_info": "You have a right to request a copy of the information we hold on you at any time. Please email us if you would like to receive a copy of this information – info@enatega.com. There will be a small charge for processing this request.",
   "other_websites": "Other Websites",
   "theme": " Theme",
-
   "privacy_policy_other_websites": "Our website may have links to other websites. This privacy policy only applies to this website. You should therefore read the privacy policies of the other websites when you are using those sites.",
   "grow_with_Enatega": "Grow with Enatega",
   "access_active_customer_base": "Access our active customer base by offering pickup and delivery on the Enatega app.",
@@ -651,13 +634,11 @@
   "item_subtotal_label": "Item subtotal",
   "delivery_with_distance_label": "Delivery Distance",
   "km_unit": "km",
-
   "tip_label": "Tip",
   "tax_label": "Tax",
   "discount_label": "Discount",
   "total_sum_label": "Total sum",
   "click_to_order_button": "Click to order",
-
   "burgers": "BURGERS.",
   "pizza": "PIZZA.",
   "desserts": "DESSERTS.",
@@ -666,7 +647,6 @@
   "login_for_saved_address": "Login for saved address",
   "view_saved_addresses": "View saved addresses",
   "MapNotAvailable": "Map not available",
-
   "Address": "Address",
   "SeeMap": "See Map",
   "OpeningHours": "Opening Hours",
@@ -676,8 +656,6 @@
   "The_minimum_amount_of_(": "The minimum amount of (",
   ")_for_your_order_has_not_been_reached": ") for your order has not been reached.",
   "missing_address": "Missing Address",
-  "Select_your_address.": "Select your address.",
-
   "DeliveryTime": "Delivery Time",
   "SalesTax": "Sales Tax",
   "Contact": "Contact",
@@ -685,7 +663,6 @@
   "Phone": "Phone Number",
   "Unverified_Phone_number": "Phone Number Unverified",
   "Phone_Number_is_not_verified": "Phone Number Verification required",
-
   "Email": "Email",
   "NA": "N/A",
   "InvalidTime": "Invalid time",
@@ -780,7 +757,6 @@
   "terms_paragraph_13_1": "In the event of a dispute as to the Terms, the English version shall prevail. The English language version of these Terms shall control in all respects and shall prevail in case of any inconsistencies with translated versions.",
   "list_14_1": "What we do: Through our Platforms, Enatega links you to the vendors (\"Vendors\") for you to order a variety of goods including prepared meals, non-prepared food and miscellaneous non-food items (hereinafter collectively referred to as 'Goods') to be delivered to you. When you place an order for Goods from our Vendors (\"Order\"), Enatega acts as an agent on behalf of that Vendor to facilitate, process and conclude the order and subsequently for either us or the Vendor to deliver your Order to you. Vendors may be owned and operated by third party vendors, our affiliate companies, or us.",
   "list_14_2": "How to contact us: For customer support, you may reach out to us via email or through our in-app customer support chat feature.",
-
   "list_15_1": "Activities Prohibited on the Platforms: In processing your order we may send your information to credit reference and fraud prevention agencies. The following is a non-exhaustive list of the types of conduct that are illegal or prohibited on the Platforms. Enatega reserves the right to investigate and take appropriate legal action against anyone who, in Enatega's sole discretion, engages in any of the prohibited activities. Prohibited activities include, but are not limited to the following:",
   "list_16_1": "Some of the Goods we offer on our Platforms are subject to restrictions for purchase (\"Restricted Goods\")",
   "list_17_1": "When you place an Order with Enatega, Enatega will confirm your order by sending you a confirmation email containing the Order receipt. Where applicable, Orders will include delivery fees and any applicable tax (e.g. goods and services tax, value-added tax, etc.).",
@@ -866,7 +842,6 @@
   "enatega_rider_page_name_card3_text": "After an order is placed, Enatega rider partners deliver to your customers in about 30 minutes.",
   "enatega_rider_page_name_form_heading": "Become a Rider",
   "enatega_rider_page_name_form_role": "Driver Registration",
-
   "first_name_required": "First name is required",
   "last_name_required": "Last name is required",
   "phone_invalid": "Enter a valid phone number",
@@ -880,44 +855,33 @@
   "terms_required": "Accept terms to continue",
   "cash": "Cash",
   "AboutUsPage_title": "About Us",
-
   "AboutUsPage_mission1": "Our Mission",
   "AboutUsPage_mission2": "At Enatega, our mission is to revolutionize the online food delivery experience by empowering local vendors and offering customers a seamless, efficient, and enjoyable way to order food. We connect people with the best flavors in their city—quickly, safely, and reliably.",
-
   "AboutUsPage_who3": "Who We Are",
   "AboutUsPage_who4": "Enatega is a multivendor food delivery platform built to serve both customers and restaurant partners. We provide a powerful and scalable solution where restaurants can sign up, manage their listings, and reach thousands of customers through one centralized platform.",
-
   "AboutUsPage_different5": "What Makes Us Different",
   "AboutUsPage_different6": "Unlike traditional food delivery services, Enatega puts vendors first by offering full control over their restaurant operations. With features like real-time order management, customizable menus, dynamic delivery options, and customer feedback tools, we ensure our partners thrive in a competitive market.",
-
   "AboutUsPage_technology7": "Our Technology",
   "AboutUsPage_technology8": "Our platform is powered by robust and scalable modern technology. From AI-driven delivery assignment to real-time tracking, we've integrated cutting-edge tools to deliver not just food—but peace of mind. The Enatega stack is designed for performance, scalability, and vendor flexibility.",
-
   "AboutUsPage_how9": "How It Works",
   "AboutUsPage_how10": "Customers browse through a wide range of restaurants and cuisines in their area.",
   "AboutUsPage_how11": "Place an order with real-time updates and secure online payments.",
   "AboutUsPage_how12": "Vendors prepare and manage the order through our restaurant portal.",
   "AboutUsPage_how13": "Orders are delivered either by Enatega riders or vendor's own delivery personnel.",
-
   "AboutUsPage_commitment14": "Our Commitment",
   "AboutUsPage_commitment15": "We are committed to transparency, fairness, and inclusivity. Whether you're a small local eatery or a national chain, Enatega offers equal opportunity for growth and exposure. Our team works tirelessly to ensure timely deliveries, great user experience, and constant improvement through feedback.",
-
   "AboutUsPage_join16": "Join Us",
   "AboutUsPage_join17": "Are you a vendor looking to grow your food business? Or a hungry customer looking for your next favorite meal? Enatega is the place for you. Join our growing community and be part of the food delivery future.",
-
   "view_label": "View",
   "onMap_label": "On Map",
   "update_password_error_title": "Error",
   "sort_by_label": "Sort by ",
   "installPWA": "Install this app for a better experience!",
   "install_app_label": "Install App",
-
   "delete_success": "If you have any questions, feel free to reach  out to our support team.",
   "Addons_label": "Addons",
-
   "order_details_no_instructions_text": "No instructions added",
   "and_labed": "and",
-
   "please_enter_a_valid_name_message": "Please enter a valid username",
   "firstNameRequired": "First name is required",
   "lastNameRequired": "Last name is required",
@@ -939,7 +903,6 @@
   "Courier_Professionalism": "Courier Professionalism",
   "Estimate": "Estimate ",
   "Delivery_on_time": " Delivery on time",
-
   "Monday": "Monday",
   "Tuesday": "Tuesday",
   "Wednesday": "Wednesday",
@@ -962,5 +925,7 @@
   "active": "active",
   "you_can_only_delete_account": "You can only delete your account once all your orders are completed",
   "loading_orders": "Loading orders",
-  "show_more_orders": "Show more orders"
+  "show_more_orders": "Show more orders",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "Select your address."
 }

@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "Silakan masukkan OTP yang valid",
   "verify_your_mobile_number_label": "Verifikasi nomor ponsel Anda",
   "otp_valid_for_10_minutes_label": "Berlaku selama 10 menit",
-  "your@email.com": "email@anda.com",
   "continue_label": "Lanjutkan",
   "resend_otp_label": "Kirim Ulang OTP",
   "login_label": "Masuk",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "Jumlah minimum sebesar (",
   ")_for_your_order_has_not_been_reached": ") untuk pesanan Anda belum tercapai.",
   "missing_address": "Alamat Hilang",
-  "Select_your_address.": "Pilih alamat Anda.",
   "DeliveryTime": "Waktu Pengantaran",
   "SalesTax": "Pajak Penjualan",
   "Contact": "Kontak",
@@ -917,6 +915,8 @@
   "Friday": "Jumat",
   "Saturday": "Sabtu",
   "Sunday": "Minggu",
-   "loading_orders": "Memuat pesanan...",
-  "show_more_orders": "Tampilkan lebih banyak pesanan"
+  "loading_orders": "Memuat pesanan...",
+  "show_more_orders": "Tampilkan lebih banyak pesanan",
+  "your_email": "email@anda.com",
+  "Select_your_address_prompt": "Pilih alamat Anda."
 }

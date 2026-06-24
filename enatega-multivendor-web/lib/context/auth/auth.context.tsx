@@ -50,6 +50,7 @@ import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 
 // Google API
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
+import { setAuthTokens } from "@/lib/utils/methods/auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 
@@ -203,8 +204,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       const { data } = userResponse;
-      localStorage.setItem("userId", data?.login.userId ?? "");
-      localStorage.setItem("token", data?.login.token ?? "");
+      setAuthTokens({
+        userId: data?.login.userId,
+        token: data?.login.token,
+        tokenExpiration: data?.login.tokenExpiration,
+        userType: 'USER',
+      });
 
       return data;
     } catch (err) {
@@ -239,8 +244,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         },
       });
       if (userData.data?.createUser && userData.data.createUser.userId) {
-        localStorage.setItem("token", userData.data.createUser.token);
-        localStorage.setItem("userId", userData.data.createUser.userId);
+        setAuthTokens({
+          userId: userData.data.createUser.userId,
+          token: userData.data.createUser.token,
+          tokenExpiration: userData.data.createUser.tokenExpiration,
+          userType: 'USER',
+        });
         const {
           userId,
           email,
@@ -270,8 +279,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           title: t("create_user_label"),
           message: t("registration_success"),
         });
-        localStorage.setItem("token", userData.data.createUser.token);
-        localStorage.setItem("userId", userData.data.createUser.userId);
+        setAuthTokens({
+          userId: userData.data.createUser.userId,
+          token: userData.data.createUser.token,
+          tokenExpiration: userData.data.createUser.tokenExpiration,
+          userType: 'USER',
+        });
         return userData.data.createUser as ICreateUserData;
       } else {
         return {} as ICreateUserData;
@@ -299,8 +312,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setUser(data.login);
 
-      localStorage.setItem("token", data?.login?.token ?? "");
-      localStorage.setItem("userId", data?.login?.userId ?? "");
+      setAuthTokens({
+        userId: data?.login?.userId,
+        token: data?.login?.token,
+        tokenExpiration: data?.login?.tokenExpiration,
+        userType: 'USER',
+      });
       await fetchProfile();
       if (!data.login.emailIsVerified) {
         setActivePanel(5);

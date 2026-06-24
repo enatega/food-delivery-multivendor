@@ -3,7 +3,9 @@ import React, { useContext, useMemo } from 'react';
 import { Divider } from 'primereact/divider';
 
 // API and context imports
-import { GET_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD } from '@/lib/api/graphql/queries/dashboard';
+import {
+  GET_RESTAURANT_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD,
+} from '@/lib/api/graphql/queries/dashboard';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import {
@@ -36,7 +38,7 @@ export default function RestaurantStatesTable({
 
   // API
   const { data: salesDetailsData, loading: salesDetailsLoading } = useQueryGQL(
-    GET_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD,
+    GET_RESTAURANT_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD,
     {
       restaurant: restaurantLayoutContextData?.restaurantId ?? '',
       dateKeyword: dateFilter?.dateKeyword,
@@ -57,7 +59,8 @@ export default function RestaurantStatesTable({
   const dashboardOrderSalesDetailsByPaymentMethod = useMemo(() => {
     if (!salesDetailsData) return null;
     return (
-      salesDetailsData?.getDashboardOrderSalesDetailsByPaymentMethod ?? null
+      salesDetailsData?.getRestaurantDashboardOrderSalesDetailsByPaymentMethod ??
+      null
     );
   }, [salesDetailsData]);
 

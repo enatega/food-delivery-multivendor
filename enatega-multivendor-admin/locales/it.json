@@ -601,7 +601,6 @@
   "Store has been added successfully": "Negozio aggiunto con successo",
   "New Store": "Nuovo negozio",
   "Create Store": "Crea negozio",
-  "Store Creation Failed - Please select a vendor.": "Creazione negozio fallita - Seleziona un venditore.",
   "Store Creation  Failed": "Creazione negozio fallita",
   "Save & Next": "Salva e avanti",
   "Add Timings": "Aggiungi orari",
@@ -654,7 +653,6 @@
   "Transferred": "Trasferito",
   "Requested": "Richiesto",
   "Zone has been": "La zona",
-  "Something went wrong. Please try again": "Qualcosa è andato storto. Riprova",
   "Something went wrong, Please try again": "Qualcosa è andato storto, riprova",
   "Add Zone": "Aggiungi zona",
   "Delete Zone": "Elimina zona",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "Tariffa commissione aggiornata per",
   "Error updating commission rate for": "Errore aggiornamento tariffa commissione per",
   "Error Fetching Restaurants": "Errore recupero ristoranti",
-  "An error occurred while fetching restaurants. Please try again later.": "Si è verificato un errore durante il recupero dei ristoranti. Riprova più tardi.",
   "Set Commission Rate": "Imposta tariffa commissione",
   "Amplitude Configuration Updated": "Configurazione Amplitude aggiornata",
   "Web Amplitude API Key": "Chiave API Amplitude Web",
@@ -793,7 +790,6 @@
   "Order Time": "Orario ordine",
   "By signing up, you agree to our": "Registrandoti, accetti i nostri",
   "and": "e",
-  "We have sent OTP code to john@email.com": "Abbiamo inviato il codice OTP a john@email.com",
   "Please check your inbox": "Controlla la tua casella di posta",
   "Valid for 1min": "Valido per 1 minuto",
   "Resend OTP": "Reinvia OTP",
@@ -1113,5 +1109,9 @@
     "weak": "Debole",
     "medium": "Medio",
     "strong": "Forte"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Creazione negozio fallita - Seleziona un venditore.",
+  "Something went wrong - Please try again": "Qualcosa è andato storto. Riprova",
+  "An error occurred while fetching restaurants - Please try again later": "Si è verificato un errore durante il recupero dei ristoranti. Riprova più tardi.",
+  "We have sent OTP code to your email": "Abbiamo inviato il codice OTP a john@email.com"
 }

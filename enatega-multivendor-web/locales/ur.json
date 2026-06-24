@@ -412,7 +412,6 @@
   "please_enter_valid_otp_message": "براہ کرم ایک درست OTP درج کریں",
   "verify_your_mobile_number_label": "اپنا فون نمبر تصدیق کریں",
   "otp_valid_for_10_minutes_label": "10 منٹ کے لیے درست",
-  "your@email.com": "آپ@ای میل.com",
   "continue_label": "جاری رکھیں",
   "resend_otp_label": "OTP دوبارہ بھیجیں",
   "login_label": "لاگ ان",
@@ -650,7 +649,6 @@
   "The_minimum_amount_of_(": "آپ کے آرڈر کے لیے کم از کم رقم (",
   ")_for_your_order_has_not_been_reached": ") تک نہیں پہنچی ہے۔",
   "missing_address": "پتہ غائب",
-  "Select_your_address.": "اپنا پتہ منتخب کریں۔",
   "DeliveryTime": "ڈیلیوری کا وقت",
   "SalesTax": "سیلز ٹیکس",
   "Contact": "رابطہ",
@@ -907,5 +905,7 @@
   "Saturday": "ہفتہ",
   "Sunday": "اتوار",
   "loading_orders": "آرڈرز لوڈ ہو رہے ہیں...",
-  "show_more_orders": "مزید آرڈرز دکھائیں"
+  "show_more_orders": "مزید آرڈرز دکھائیں",
+  "your_email": "آپ@ای میل.com",
+  "Select_your_address_prompt": "اپنا پتہ منتخب کریں۔"
 }

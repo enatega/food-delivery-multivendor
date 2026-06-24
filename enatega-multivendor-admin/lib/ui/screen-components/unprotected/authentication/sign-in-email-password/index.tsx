@@ -43,6 +43,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 
 // Schema
 import { onUseLocalStorage } from '@/lib/utils/methods';
+import { setAuthTokens } from '@/lib/utils/methods/auth';
 import { SignInSchema } from '@/lib/utils/schema';
 import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/lib/hooks/useUser';
@@ -70,6 +71,12 @@ export default function LoginEmailPasswordMain() {
   // API Handlers
   function onCompleted({ ownerLogin }: IOwnerLoginDataResponse) {
     onUseLocalStorage('save', `user-${APP_NAME}`, JSON.stringify(ownerLogin));
+    setAuthTokens({
+      userId: ownerLogin.userId,
+      token: ownerLogin.token,
+      tokenExpiration: ownerLogin.tokenExpiration,
+      userType: ownerLogin.userType,
+    });
     setUser(ownerLogin);
     let redirect_url = DEFAULT_ROUTES[ownerLogin.userType];
 
@@ -98,7 +105,7 @@ export default function LoginEmailPasswordMain() {
       message:
         graphQLErrors[0]?.message ??
         networkError?.message ??
-        `Something went wrong. Please try again`,
+        `Something went wrong - Please try again`,
     });
   }
 

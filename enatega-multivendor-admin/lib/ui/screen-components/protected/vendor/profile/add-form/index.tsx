@@ -77,10 +77,10 @@ export default function VendorUpdateForm({
             _id: vendor?._id,
             name: data?.name ?? ' ',
             email: data?.email,
-            password: data?.password,
             image: data?.image,
             phoneNumber: data?.phoneNumber,
             lastName: data?.lastName,
+            ...(data?.password ? { password: data.password } : {}),
           },
         },
       });
@@ -120,8 +120,8 @@ export default function VendorUpdateForm({
       setFormValues({
         name: vendor?.name ?? '',
         email: vendor?.email ?? '',
-        password: vendor?.plainPassword ?? '',
-        confirmPassword: vendor?.plainPassword ?? '',
+        password: '',
+        confirmPassword: '',
         image: vendor?.image || '',
         phoneNumber: vendor?.phoneNumber || '',
         lastName: vendor?.lastName || '',

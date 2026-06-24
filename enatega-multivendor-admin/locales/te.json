@@ -595,7 +595,6 @@
   "Store has been added successfully": "స్టోర్ విజయవంతంగా జోడించబడింది",
   "New Store": "కొత్త స్టోర్",
   "Create Store": "స్టోర్ సృష్టించండి",
-  "Store Creation Failed - Please select a vendor.": "స్టోర్ సృష్టి విఫలమైంది - దయచేసి వెండర్ ఎంచుకోండి.",
   "Store Creation  Failed": "స్టోర్ సృష్టి విఫలమైంది",
   "Save & Next": "సేవ్ చేసి తదుపరి",
   "Add Timings": "టైమింగ్స్ జోడించండి",
@@ -648,7 +647,6 @@
   "Transferred": "బదిలీ చేయబడింది",
   "Requested": "అభ్యర్థించబడింది",
   "Zone has been": "జోన్ ఉంది",
-  "Something went wrong. Please try again": "ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి",
   "Something went wrong, Please try again": "ఏదో తప్పు జరిగింది, మళ్లీ ప్రయత్నించండి",
   "Add Zone": "జోన్ జోడించండి",
   "Delete Zone": "జోన్ తొలగించండి",
@@ -689,7 +687,6 @@
   "Commission rate updated for": "కమిషన్ రేటు అప్‌డేట్ చేయబడింది",
   "Error updating commission rate for": "కమిషన్ రేటు అప్‌డేట్ చేస్తున్నప్పుడు లోపం",
   "Error Fetching Restaurants": "రెస్టారెంట్లు ఫెచ్ చేస్తున్నప్పుడు లోపం",
-  "An error occurred while fetching restaurants. Please try again later.": "రెస్టారెంట్లు ఫెచ్ చేస్తున్నప్పుడు లోపం సంభవించింది. తర్వాత మళ్లీ ప్రయత్నించండి.",
   "Set Commission Rate": "కమిషన్ రేటు సెట్ చేయండి",
   "Amplitude Configuration Updated": "Amplitude కాన్ఫిగరేషన్ అప్‌డేట్ చేయబడింది",
   "Web Amplitude API Key": "వెబ్ Amplitude API కీ",
@@ -787,7 +784,6 @@
   "Order Time": "ఆర్డర్ సమయం",
   "By signing up, you agree to our": "సైన్ అప్ చేయడం ద్వారా, మీరు మా",
   "and": "మరియు",
-  "We have sent OTP code to john@email.com": "మేము OTP కోడ్‌ను john@email.comకి పంపాము",
   "Please check your inbox": "దయచేసి మీ ఇన్‌బాక్స్ తనిఖీ చేయండి",
   "Valid for 1min": "1 నిమిషం వరకు చెల్లుబాటు అవుతుంది",
   "Resend OTP": "OTP మళ్లీ పంపండి",
@@ -1107,5 +1103,9 @@
     "weak": "బలహీనమైన",
     "medium": "సగటు",
     "strong": "బలమైన"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "స్టోర్ సృష్టి విఫలమైంది - దయచేసి వెండర్ ఎంచుకోండి.",
+  "Something went wrong - Please try again": "ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి",
+  "An error occurred while fetching restaurants - Please try again later": "రెస్టారెంట్లు ఫెచ్ చేస్తున్నప్పుడు లోపం సంభవించింది. తర్వాత మళ్లీ ప్రయత్నించండి.",
+  "We have sent OTP code to your email": "మేము OTP కోడ్‌ను john@email.comకి పంపాము"
 }

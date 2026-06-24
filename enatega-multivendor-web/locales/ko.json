@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "유효한 OTP를 입력해 주세요",
   "verify_your_mobile_number_label": "휴대폰 번호 인증",
   "otp_valid_for_10_minutes_label": "10분 동안 유효",
-  "your@email.com": "your@email.com",
   "continue_label": "계속",
   "resend_otp_label": "OTP 재발송",
   "login_label": "로그인",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "최소 주문 금액(",
   ")_for_your_order_has_not_been_reached": ")에 도달하지 않았습니다.",
   "missing_address": "주소 없음",
-  "Select_your_address.": "주소를 선택해 주세요.",
   "DeliveryTime": "배달 시간",
   "SalesTax": "판매세",
   "Contact": "연락처",
@@ -917,6 +915,8 @@
   "Friday": "금요일",
   "Saturday": "토요일",
   "Sunday": "일요일",
-   "loading_orders": "주문 로딩 중...",
-  "show_more_orders": "더 많은 주문 보기"
+  "loading_orders": "주문 로딩 중...",
+  "show_more_orders": "더 많은 주문 보기",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "주소를 선택해 주세요."
 }

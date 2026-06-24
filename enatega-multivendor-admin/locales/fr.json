@@ -594,7 +594,6 @@
   "Store has been added successfully": "Le magasin a été ajouté avec succès",
   "New Store": "Nouveau magasin",
   "Create Store": "Créer un magasin",
-  "Store Creation Failed - Please select a vendor.": "Échec de la création du magasin - Veuillez sélectionner un fournisseur.",
   "Store Creation  Failed": "Échec de la création du magasin",
   "Save & Next": "Enregistrer et suivant",
   "Add Timings": "Ajouter des horaires",
@@ -647,7 +646,6 @@
   "Transferred": "Transféré",
   "Requested": "Demandé",
   "Zone has been": "La zone a été",
-  "Something went wrong. Please try again": "Quelque chose a mal tourné. Veuillez réessayer",
   "Something went wrong, Please try again": "Quelque chose a mal tourné, veuillez réessayer",
   "Add Zone": "Ajouter une zone",
   "Delete Zone": "Supprimer la zone",
@@ -688,7 +686,6 @@
   "Commission rate updated for": "Komissiya dərəcəsi yeniləndi",
   "Error updating commission rate for": "Komissiya dərəcəsi yenilənərkən səhv baş verdi",
   "Error Fetching Restaurants": "Restoranlar alınarkən səhv baş verdi",
-  "An error occurred while fetching restaurants. Please try again later.": "Restoranlar alınarkən səhv baş verdi. Zəhmət olmasa sonra yenidən cəhd edin.",
   "Set Commission Rate": "Komissiya Dərəcəsini Müəyyən Et",
   "Amplitude Configuration Updated": "Amplitude Konfiqurasiyası Yeniləndi",
   "Web Amplitude API Key": "Web Amplitude API Açarı",
@@ -786,7 +783,6 @@
   "Order Time": "Sifariş Vaxtı",
   "By signing up, you agree to our": "Qeydiyyatdan keçərək, bizimlə razılaşırsınız",
   "and": "və",
-  "We have sent OTP code to john@email.com": "OTP kodunu john@email.com ünvanına göndərdik",
   "Please check your inbox": "Zəhmət olmasa daxil olan qutunuzu yoxlayın",
   "Valid for 1min": "1 dəqiqə üçün keçərlidir",
   "Resend OTP": "OTP-ni Yenidən Göndər",
@@ -1106,5 +1102,9 @@
     "weak": "Faible",
     "medium": "Moyen",
     "strong": "Fort"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Échec de la création du magasin - Veuillez sélectionner un fournisseur.",
+  "Something went wrong - Please try again": "Quelque chose a mal tourné. Veuillez réessayer",
+  "An error occurred while fetching restaurants - Please try again later": "Restoranlar alınarkən səhv baş verdi. Zəhmət olmasa sonra yenidən cəhd edin.",
+  "We have sent OTP code to your email": "OTP kodunu john@email.com ünvanına göndərdik"
 }

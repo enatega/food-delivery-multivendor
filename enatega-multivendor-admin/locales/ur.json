@@ -601,7 +601,6 @@
   "Store has been added successfully": "اسٹور کامیابی سے شامل ہو گیا",
   "New Store": "نیا اسٹور",
   "Create Store": "اسٹور بنائیں",
-  "Store Creation Failed - Please select a vendor.": "اسٹور بنانے میں ناکامی - براہ کرم ایک وینڈر منتخب کریں",
   "Store Creation  Failed": "اسٹور بنانے میں ناکامی",
   "Save & Next": "محفوظ کریں اور اگلا",
   "Add Timings": "اوقات شامل کریں",
@@ -654,7 +653,6 @@
   "Transferred": "منتقل ہو گیا",
   "Requested": "درخواست کی گئی",
   "Zone has been": "زون",
-  "Something went wrong. Please try again": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں",
   "Something went wrong, Please try again": "کچھ غلط ہو گیا، براہ کرم دوبارہ کوشش کریں",
   "Add Zone": "زون شامل کریں",
   "Delete Zone": "زون حذف کریں",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "کمیشن کی شرح اپ ڈیٹ ہو گئی",
   "Error updating commission rate for": "کمیشن کی شرح اپ ڈیٹ کرنے میں خرابی",
   "Error Fetching Restaurants": "ریسٹورنٹس حاصل کرنے میں خرابی",
-  "An error occurred while fetching restaurants. Please try again later.": "ریسٹورنٹس حاصل کرتے وقت خرابی ہوئی۔ براہ کرم بعد میں دوبارہ کوشش کریں۔",
   "Set Commission Rate": "کمیشن کی شرح سیٹ کریں",
   "Amplitude Configuration Updated": "ایمپلیٹوڈ کنفیگریشن اپ ڈیٹ ہو گئی",
   "Web Amplitude API Key": "ویب ایمپلیٹوڈ API کلید",
@@ -793,7 +790,6 @@
   "Order Time": "آرڈر کا وقت",
   "By signing up, you agree to our": "سائن اپ کرکے، آپ ہماری شرائط سے اتفاق کرتے ہیں",
   "and": "اور",
-  "We have sent OTP code to john@email.com": "ہم نے OTP کوڈ john@email.com پر بھیج دیا ہے",
   "Please check your inbox": "براہ کرم اپنا ان باکس چیک کریں",
   "Valid for 1min": "1 منٹ کے لیے درست",
   "Resend OTP": "OTP دوبارہ بھیجیں",
@@ -1113,5 +1109,9 @@
     "weak": "کمزور",
     "medium": "درمیانہ",
     "strong": "مضبوط"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "اسٹور بنانے میں ناکامی - براہ کرم ایک وینڈر منتخب کریں",
+  "Something went wrong - Please try again": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں",
+  "An error occurred while fetching restaurants - Please try again later": "ریسٹورنٹس حاصل کرتے وقت خرابی ہوئی۔ براہ کرم بعد میں دوبارہ کوشش کریں۔",
+  "We have sent OTP code to your email": "ہم نے OTP کوڈ john@email.com پر بھیج دیا ہے"
 }

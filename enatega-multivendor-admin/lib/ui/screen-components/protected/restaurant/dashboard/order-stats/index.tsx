@@ -1,5 +1,7 @@
 // Component
-import { GET_DASHBOARD_RESTAURANT_ORDERS } from '@/lib/api/graphql/queries/dashboard';
+import {
+  GET_RESTAURANT_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD,
+} from '@/lib/api/graphql/queries/dashboard';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import {
   IDashboardOrderStatsComponentsProps,
@@ -11,9 +13,8 @@ import StatsCard from '@/lib/ui/useable-components/stats-card';
 // Interface & Types
 import {
   faCashRegister,
-  faCreditCard,
-  faMoneyBillWave,
   faShoppingCart,
+  faTruck,
 } from '@fortawesome/free-solid-svg-icons';
 import { useContext, useMemo } from 'react';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
@@ -34,7 +35,7 @@ export default function UserStats({
   const { CURRENCY_CODE } = useConfiguration();
 
   const { data, loading } = useQueryGQL(
-    GET_DASHBOARD_RESTAURANT_ORDERS,
+    GET_RESTAURANT_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD,
     {
       restaurant: restaurantId,
       dateKeyword: dateFilter?.dateKeyword,
@@ -44,6 +45,7 @@ export default function UserStats({
     {
       fetchPolicy: 'network-only',
       debounceMs: 300,
+      enabled: !!restaurantId,
     }
   ) as IQueryResult<
     IDashboardRestaurantOrdersSalesStatsResponseGraphQL | undefined,
@@ -52,14 +54,25 @@ export default function UserStats({
 
   const dashboardUsers = useMemo(() => {
     if (!data) return null;
+    const stats =
+      data?.getRestaurantDashboardOrderSalesDetailsByPaymentMethod ?? {};
+    const totalOrders =
+      stats.total_orders ?? stats.all?.[0]?.data?.total_orders ?? 0;
+    const pickupOrders =
+      stats.pickup_total_orders ??
+      stats.pickup_orders ??
+      stats.pickup?.total_orders ??
+      0;
+    const deliveryOrders =
+      stats.delivery_total_orders ??
+      stats.delivery_orders ??
+      stats.delivery?.total_orders ??
+      Math.max(totalOrders - pickupOrders, 0);
     return {
-      totalOrders:
-        data?.getRestaurantDashboardOrdersSalesStats?.totalOrders ?? 0,
-      totalSales: data?.getRestaurantDashboardOrdersSalesStats?.totalSales ?? 0,
-      totalCODOrders:
-        data?.getRestaurantDashboardOrdersSalesStats?.totalCODOrders ?? 0,
-      totalCardOrders:
-        data?.getRestaurantDashboardOrdersSalesStats?.totalCardOrders ?? 0,
+      totalOrders,
+      pickupOrders,
+      deliveryOrders,
+      totalSales: stats.total_sales ?? stats.all?.[0]?.data?.total_sales ?? 0,
     };
   }, [data]);
 
@@ -75,18 +88,18 @@ export default function UserStats({
       />
 
       <StatsCard
-        label={t('Total COD Orders')}
-        total={dashboardUsers?.totalCODOrders ?? 0}
-        icon={faMoneyBillWave}
+        label={t('Pickup Orders')}
+        total={dashboardUsers?.pickupOrders ?? 0}
+        icon={faShoppingCart}
         route="/admin/store/orders"
         loading={loading}
         amountConfig={{ format: 'number', currency: 'USD' }}
       />
 
       <StatsCard
-        label={t('Total Card Orders')}
-        total={dashboardUsers?.totalCardOrders ?? 0}
-        icon={faCreditCard}
+        label={t('Delivery Orders')}
+        total={dashboardUsers?.deliveryOrders ?? 0}
+        icon={faTruck}
         route="/admin/store/orders"
         loading={loading}
         amountConfig={{ format: 'number', currency: 'USD' }}

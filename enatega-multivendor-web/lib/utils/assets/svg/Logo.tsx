@@ -65,13 +65,13 @@ const Logo = ({
           y2="27.4787"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#6FD97C" />
-          <stop offset="0.2444" stop-color="#6CD67B" />
-          <stop offset="0.4557" stop-color="#61CC76" />
-          <stop offset="0.5215" stop-color="#5CC774" />
-          <stop offset="0.6585" stop-color="#51BD6F" />
-          <stop offset="0.8973" stop-color="#34A263" />
-          <stop offset="1" stop-color="#26955D" />
+          <stop stopColor="#6FD97C" />
+          <stop offset="0.2444" stopColor="#6CD67B" />
+          <stop offset="0.4557" stopColor="#61CC76" />
+          <stop offset="0.5215" stopColor="#5CC774" />
+          <stop offset="0.6585" stopColor="#51BD6F" />
+          <stop offset="0.8973" stopColor="#34A263" />
+          <stop offset="1" stopColor="#26955D" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_273_288"
@@ -81,12 +81,12 @@ const Logo = ({
           y2="12.3891"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#73DE7F" />
-          <stop offset="0.2582" stop-color="#70DB7E" />
-          <stop offset="0.4819" stop-color="#65D179" />
-          <stop offset="0.6927" stop-color="#53C071" />
-          <stop offset="0.8944" stop-color="#3AA967" />
-          <stop offset="1" stop-color="#2A9A60" />
+          <stop stopColor="#73DE7F" />
+          <stop offset="0.2582" stopColor="#70DB7E" />
+          <stop offset="0.4819" stopColor="#65D179" />
+          <stop offset="0.6927" stopColor="#53C071" />
+          <stop offset="0.8944" stopColor="#3AA967" />
+          <stop offset="1" stopColor="#2A9A60" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_273_288"
@@ -96,12 +96,12 @@ const Logo = ({
           y2="24.038"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#2A9A60" />
-          <stop offset="0.0945416" stop-color="#38A766" />
-          <stop offset="0.2988" stop-color="#51BE70" />
-          <stop offset="0.5121" stop-color="#63CF77" />
-          <stop offset="0.7385" stop-color="#6ED97C" />
-          <stop offset="1" stop-color="#71DC7D" />
+          <stop stopColor="#2A9A60" />
+          <stop offset="0.0945416" stopColor="#38A766" />
+          <stop offset="0.2988" stopColor="#51BE70" />
+          <stop offset="0.5121" stopColor="#63CF77" />
+          <stop offset="0.7385" stopColor="#6ED97C" />
+          <stop offset="1" stopColor="#71DC7D" />
         </linearGradient>
       </defs>
     </svg>

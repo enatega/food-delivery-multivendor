@@ -54,7 +54,6 @@ const RestaurantMain: React.FC = () => {
         <hr className="mb-6 border-dark-600" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <InfoItem label={t('Email')} value={restaurant?.username} />
-          <InfoItem label={t('Password')} value={restaurant?.password} />
           <div className="md:row-span-4">
             <p className="text-xs text-gray-500 dark:text-white mb-4">
               {t('Images')}
