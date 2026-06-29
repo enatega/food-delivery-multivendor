@@ -26,6 +26,8 @@ import DashboardStatsTableSkeleton from '@/lib/ui/useable-components/custom-skel
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
 import { useTranslations } from 'next-intl';
 
+const PAYMENT_METHOD_KEYS = ['all', 'cod', 'card'] as const;
+
 export default function RestaurantStatesTable({
   dateFilter,
 }: IDashboardRestaurantStatesTableComponentsProps) {
@@ -64,23 +66,22 @@ export default function RestaurantStatesTable({
     );
   }, [salesDetailsData]);
 
-  // Constants
-  const paymentMethod = Object.keys(
-    dashboardOrderSalesDetailsByPaymentMethod ?? {}
-  );
+  const paymentMethodStats = useMemo(() => {
+    if (!dashboardOrderSalesDetailsByPaymentMethod) return [];
 
-  if (!dashboardOrderSalesDetailsByPaymentMethod) return;
+    return PAYMENT_METHOD_KEYS.map((key) => ({
+      key,
+      items: dashboardOrderSalesDetailsByPaymentMethod[key] ?? [],
+    }));
+  }, [dashboardOrderSalesDetailsByPaymentMethod]);
+
+  if (!dashboardOrderSalesDetailsByPaymentMethod) return null;
 
   return (
     <div className="p-3 bg-gray-50 dark:bg-gray-950 rounded-lg shadow-md space-y-6">
-      {paymentMethod.map((method: string) => {
-        const key: keyof typeof dashboardOrderSalesDetailsByPaymentMethod =
-          method as keyof typeof dashboardOrderSalesDetailsByPaymentMethod;
-
-        if (key !== 'all' && key !== 'cod' && key !== 'card') return;
-
+      {paymentMethodStats.map(({ key, items }) => {
         return (
-          <>
+          <React.Fragment key={key}>
             <div className="flex flex-col space-y-2">
               <HeaderText text={t(DASHBOARD_PAYMENT_METHOD[key])} />
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
@@ -91,9 +92,7 @@ export default function RestaurantStatesTable({
                     })}
                   </div>
                 ) : (
-                  dashboardOrderSalesDetailsByPaymentMethod[
-                    method as keyof typeof dashboardOrderSalesDetailsByPaymentMethod
-                  ]?.map((item, index) => {
+                  items.map((item, index) => {
                     return (
                       <DashboardRestaurantStatsTable
                         key={index}
@@ -108,7 +107,7 @@ export default function RestaurantStatesTable({
               </div>
             </div>
             <Divider className="my-4 border-t border-gray-300 dark:border-dark-600" />
-          </>
+          </React.Fragment>
         );
       })}
     </div>
