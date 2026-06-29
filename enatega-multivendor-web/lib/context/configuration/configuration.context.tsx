@@ -16,6 +16,8 @@ import { Libraries } from "@react-google-maps/api";
 import React, { ReactNode, useContext } from "react";
 
 const ConfigurationContext = React.createContext({} as IConfigProps);
+const GOOGLE_WEB_CLIENT_ID_REGEX =
+  /^[a-zA-Z0-9-]+\.apps\.googleusercontent\.com$/;
 
 export const ConfigurationProvider = ({
   children,
@@ -32,7 +34,11 @@ export const ConfigurationProvider = ({
     : data.configuration;
 
   
-  const GOOGLE_CLIENT_ID = configuration.webClientID;
+  const GOOGLE_CLIENT_ID = GOOGLE_WEB_CLIENT_ID_REGEX.test(
+    configuration.webClientID ?? "",
+  )
+    ? configuration.webClientID
+    : "not_found";
   const STRIPE_PUBLIC_KEY = configuration.publishableKey;
   const PAYPAL_KEY = configuration.clientId;
   const GOOGLE_MAPS_KEY = configuration.googleApiKey;
