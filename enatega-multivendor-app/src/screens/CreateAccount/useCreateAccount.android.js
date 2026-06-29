@@ -37,6 +37,11 @@ export const useCreateAccount = () => {
   const themeContext = useContext(ThemeContext);
   const [googleUser, setGoogleUser] = useState(null);
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] };
+  const socialLoginMessages = {
+    missingToken: 'Your social sign-in did not return a valid token. Please try again.',
+    invalidToken: 'Your social sign-in token is invalid or expired. Please sign in again.',
+    notConfigured: 'Social login is not configured right now. Please use email and password.'
+  }
 
   const {
     IOS_CLIENT_ID_GOOGLE,
@@ -77,10 +82,19 @@ export const useCreateAccount = () => {
       const userInfo = await GoogleSignin.signIn();
       console.log('✅ Google sign-in successful!');
       console.log('👤 User:', userInfo.user.email);
+      const idToken = userInfo.idToken ?? userInfo?.data?.idToken;
+
+      if (!idToken) {
+        FlashMessage({ message: socialLoginMessages.missingToken });
+        setLoading(false);
+        loginButtonSetter(null);
+        return;
+      }
 
       const userData = {
         phone: '',
         email: userInfo.user.email,
+        idToken,
         password: '',
         name: userInfo.user.name,
         picture: userInfo.user.photo || '',
@@ -100,7 +114,12 @@ export const useCreateAccount = () => {
         console.log('⏳ Sign in already in progress');
       } else if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
         console.log('❌ Google Play Services not available');
-        FlashMessage({ message: 'Google Play Services not available' });
+        FlashMessage({ message: socialLoginMessages.notConfigured });
+      } else if (
+        error.code === 'DEVELOPER_ERROR' ||
+        error.code === 'SIGN_IN_REQUIRED'
+      ) {
+        FlashMessage({ message: socialLoginMessages.invalidToken });
       } else {
         FlashMessage({ message: 'Google sign in failed' });
       }
@@ -136,6 +155,12 @@ export const useCreateAccount = () => {
   // --- Common Login Mutation Function ---
   async function mutateLogin(user) {
     try {
+      if ((user.type === 'google' || user.type === 'apple') && !user.idToken) {
+        FlashMessage({ message: socialLoginMessages.missingToken });
+        setLoading(false);
+        loginButtonSetter(null);
+        return;
+      }
       console.log('🔐 [Login Debug] Starting login mutation for:', user.email);
       console.log('🔐 [Login Debug] User type:', user.type);
       console.log('🔐 [Login Debug] Full user object:', user);
@@ -261,11 +286,43 @@ export const useCreateAccount = () => {
     console.error('❌ [Login Debug] Network error:', error.networkError);
 
     FlashMessage({
-      message: error.message || 'Login failed. Please try again.'
+      message: getSocialLoginErrorMessage(error) || 'Login failed. Please try again.'
     });
 
     setLoading(false);
     loginButtonSetter(null);
+  }
+
+  function getSocialLoginErrorMessage(error) {
+    const message =
+      error?.graphQLErrors?.[0]?.message ||
+      error?.networkError?.message ||
+      error?.message ||
+      '';
+    const normalizedMessage = message.toLowerCase();
+
+    if (normalizedMessage.includes('not configured')) {
+      return socialLoginMessages.notConfigured;
+    }
+
+    if (
+      normalizedMessage.includes('idtoken') ||
+      normalizedMessage.includes('identity token') ||
+      normalizedMessage.includes('missing token')
+    ) {
+      return socialLoginMessages.missingToken;
+    }
+
+    if (
+      normalizedMessage.includes('invalid token') ||
+      normalizedMessage.includes('expired token') ||
+      normalizedMessage.includes('jwt') ||
+      normalizedMessage.includes('token')
+    ) {
+      return socialLoginMessages.invalidToken;
+    }
+
+    return message;
   }
 
   // --- Common Focus Effect for Status Bar (with Android-specific styling) ---

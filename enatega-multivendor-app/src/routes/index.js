@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
+import * as Linking from 'expo-linking'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
@@ -70,6 +71,21 @@ import * as LocationImport from 'expo-location'
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
 const Tab = createBottomTabNavigator()
+const linking = {
+  prefixes: [
+    Linking.createURL('/'),
+    'enategamultivendor://',
+    'https://multivendor.enatega.com',
+    'https://www.multivendor.enatega.com'
+  ],
+  config: {
+    screens: {
+      SetYourPassword: {
+        path: 'auth/reset'
+      }
+    }
+  }
+}
 
 function MainNavigator() {
   const themeContext = useContext(ThemeContext)
@@ -333,6 +349,7 @@ function AppContainer() {
   return (
     <SafeAreaProvider>
       <NavigationContainer
+        linking={linking}
         ref={(ref) => {
           navigationService.setGlobalRef(ref)
         }}

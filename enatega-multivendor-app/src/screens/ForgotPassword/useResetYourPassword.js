@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { resetPassword } from '../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
@@ -20,7 +20,8 @@ export const useResetYourPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordError, setPasswordError] = useState(null)
   const [confirmPasswordError, setConfirmPasswordError] = useState(null)
-  const [email] = useState(route?.params.email)
+  const [email] = useState(route?.params?.email)
+  const [token] = useState(route?.params?.token)
 
   const [mutate, { loading }] = useMutation(RESET_PASSWORD, {
     onCompleted,
@@ -29,6 +30,15 @@ export const useResetYourPassword = () => {
 
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+
+  useEffect(() => {
+    if (!email || !token) {
+      FlashMessage({
+        message: 'This reset link is expired or invalid. Please request a new one.'
+      })
+      navigation.replace('ForgotPassword', { email })
+    }
+  }, [email, navigation, token])
 
   function validateCredentials() {
     let result = true
@@ -54,11 +64,28 @@ export const useResetYourPassword = () => {
     FlashMessage({
       message: t('passwordResetSuccessfully')
     })
-    navigation.navigate('Login')
+    navigation.replace('Login')
   }
 
   function onError(error) {
-    if (error.networkError) {
+    const rawMessage =
+      error?.networkError?.result?.errors?.[0]?.message ||
+      error?.graphQLErrors?.[0]?.message ||
+      ''
+    const normalizedMessage = rawMessage.toLowerCase()
+
+    if (
+      !token ||
+      normalizedMessage.includes('token') ||
+      normalizedMessage.includes('expired') ||
+      normalizedMessage.includes('invalid') ||
+      normalizedMessage.includes('reuse')
+    ) {
+      FlashMessage({
+        message: 'This reset link is expired or invalid. Please request a new one.'
+      })
+      navigation.replace('ForgotPassword', { email })
+    } else if (error.networkError) {
       FlashMessage({
         message: error.networkError.result.errors[0].message
       })
@@ -70,9 +97,17 @@ export const useResetYourPassword = () => {
   }
 
   function resetYourPassword() {
+    if (!email || !token) {
+      FlashMessage({
+        message: 'This reset link is expired or invalid. Please request a new one.'
+      })
+      navigation.replace('ForgotPassword', { email })
+      return
+    }
+
     if (validateCredentials()) {
       if (password === confirmPassword) {
-        mutate({ variables: { password, email: email.toLowerCase().trim() } })
+        mutate({ variables: { password, email: email.toLowerCase().trim(), token } })
       } else {
         setConfirmPasswordError(t('passwordMustMatch'))
       }

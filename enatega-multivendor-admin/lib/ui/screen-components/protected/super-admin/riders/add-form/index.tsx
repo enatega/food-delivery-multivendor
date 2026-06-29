@@ -57,7 +57,9 @@ export default function RiderAddForm({
       : null,
     confirmPassword: '',
     phone: rider ? +rider.phone : null,
-    zone: rider ? { label: rider.zone.title, code: rider.zone._id } : null,
+    zone: rider?.zone
+      ? { label: rider.zone.title, code: rider.zone._id }
+      : null,
   };
 
 

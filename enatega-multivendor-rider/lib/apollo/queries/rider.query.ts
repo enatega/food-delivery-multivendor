@@ -85,7 +85,6 @@ export const RIDER_PROFILE = gql`
         coordinates
       }
       name
-      password
       phone
       totalWalletAmount
       updatedAt

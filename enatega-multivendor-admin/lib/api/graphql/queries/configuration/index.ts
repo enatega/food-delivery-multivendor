@@ -6,7 +6,6 @@ export const GET_CONFIGURATION = gql`
       _id
       email
       emailName
-      password
       enableEmail
       clientId
       clientSecret

@@ -81,7 +81,7 @@ export const RIDER_TABLE_COLUMNS = ({
     {
       headerName: t('Zone'),
       propertyName: 'zone',
-      body: (rider: IRiderResponse) => rider.zone.title,
+      body: (rider: IRiderResponse) => rider.zone?.title ?? '-',
     },
     {
       headerName: t('Vehicle Type'),

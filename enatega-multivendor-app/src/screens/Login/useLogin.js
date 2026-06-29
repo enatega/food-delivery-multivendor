@@ -92,21 +92,8 @@ export const useLogin = () => {
 
   function onCompleted({ emailExist }) {
     if (validateCredentials()) {
-      if (emailExist && emailExist._id) {
-        if (
-          emailExist.userType !== 'apple' &&
-          emailExist.userType !== 'google' &&
-          emailExist.userType !== 'facebook'
-        ) {
-          setRegisteredEmail(true)
-        } else {
-          FlashMessage({
-            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t(
-              'continueWith'
-            )} ${emailExist.userType}`
-          })
-          navigation.navigate({ name: 'Main', merge: true })
-        }
+      if (emailExist) {
+        setRegisteredEmail(true)
       } else {
         navigation.navigate('Register', { email:emailRef.current })
       }

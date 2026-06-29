@@ -14,11 +14,12 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { decodeJwtToken } from '../../utils/decode-jwt'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 
 const { height } = Dimensions.get('window')
 
 const CreateAccount = (props) => {
-  const { enableApple, loginButton, loginButtonSetter, loading, themeContext, currentTheme, mutateLogin, navigateToLogin, navigation, signIn } = useCreateAccount()
+  const { enableApple, loginButton, loginButtonSetter, loading, setLoading, themeContext, currentTheme, mutateLogin, navigateToLogin, navigation, signIn } = useCreateAccount()
 
   const { t } = useTranslation()
 
@@ -52,14 +53,24 @@ const CreateAccount = (props) => {
         style={styles().appleBtn}
         onPress={async () => {
           try {
+            loginButtonSetter('Apple')
+            setLoading(true)
             const credential = await AppleAuthentication.signInAsync({
               requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL]
             })
-            const access_token = credential?.identityToken
-            const user_details = decodeJwtToken(access_token)
+            const idToken = credential?.identityToken
+            if (!idToken) {
+              FlashMessage({
+                message: 'Your social sign-in did not return a valid token. Please try again.'
+              })
+              setLoading(false)
+              loginButtonSetter(null)
+              return
+            }
+            const user_details = decodeJwtToken(idToken)
 
             if (!user_details) {
-              throw 'Apple login failed.'
+              throw new Error('Apple login token is invalid.')
             }
 
             const { givenName, familyName } = credential.fullName || {}
@@ -71,18 +82,24 @@ const CreateAccount = (props) => {
               appleId,
               phone: '',
               email,
+              idToken,
               password: '',
               name,
               picture: '',
               type: 'apple'
             }
 
-            mutateLogin(user)
-            loginButtonSetter('Apple')
+            await mutateLogin(user)
           } catch (e) {
             if (e.code !== 'ERR_CANCELED') {
               console.error('Apple Sign In Error:', e)
+              FlashMessage({
+                message: e?.message?.toLowerCase()?.includes('token')
+                  ? 'Your social sign-in token is invalid or expired. Please sign in again.'
+                  : 'Social login is not configured right now. Please use email and password.'
+              })
             }
+            setLoading(false)
             loginButtonSetter(null)
           }
         }}

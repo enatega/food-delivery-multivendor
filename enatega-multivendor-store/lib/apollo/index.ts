@@ -13,10 +13,28 @@ import { getMainDefinition } from "@apollo/client/utilities";
 
 import getEnvVars from "@/environment";
 import * as SecureStore from "expo-secure-store";
+import { onError } from "@apollo/client/link/error";
+import { router } from "expo-router";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
 import { STORE_TOKEN } from "../utils/constants";
 import PublicAccessTokenService from "../services/public-access-token.service";
+
+let isAuthRedirecting = false;
+
+async function handleInvalidSession(): Promise<void> {
+  if (isAuthRedirecting) return;
+  isAuthRedirecting = true;
+
+  try {
+    await SecureStore.deleteItemAsync(STORE_TOKEN);
+    router.replace("/(un-protected)/login");
+  } finally {
+    setTimeout(() => {
+      isAuthRedirecting = false;
+    }, 1000);
+  }
+}
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars();
@@ -81,6 +99,18 @@ const setupApollo = () => {
       }),
   );
 
+  const errorLink = onError(({ graphQLErrors }) => {
+    const hasInvalidSession = (graphQLErrors || []).some(
+      (graphQLError) =>
+        graphQLError?.extensions?.code === "TOKEN_EXPIRED" ||
+        graphQLError?.extensions?.code === "INVALID_TOKEN",
+    );
+
+    if (hasInvalidSession) {
+      void handleInvalidSession();
+    }
+  });
+
   // const terminatingLink = split(({ query }) => {
   //   const {
   //     kind,
@@ -105,7 +135,7 @@ const setupApollo = () => {
   }, wsLink);
 
   client.setLink(
-    concat(ApolloLink.from([terminatingLink, requestLink]), httpLink),
+    concat(ApolloLink.from([errorLink, terminatingLink, requestLink]), httpLink),
   );
 
   return client;

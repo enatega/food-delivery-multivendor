@@ -31,6 +31,29 @@ const useLogin = () => {
 
   useQuery(DEFAULT_STORE_CREDS, { onCompleted, onError });
 
+  function getLoginErrorMessage(error: ApolloError): string {
+    const graphQLError = error?.graphQLErrors?.[0];
+    const rawMessage =
+      graphQLError?.message ??
+      error?.networkError?.message ??
+      error?.message ??
+      "";
+    const normalizedMessage = rawMessage.toLowerCase();
+    const errorCode = graphQLError?.extensions?.code;
+
+    if (
+      errorCode === "TOO_MANY_REQUESTS" ||
+      errorCode === "RATE_LIMITED" ||
+      normalizedMessage.includes("rate limit") ||
+      normalizedMessage.includes("too many request") ||
+      normalizedMessage.includes("too many attempt")
+    ) {
+      return rawMessage;
+    }
+
+    return "Invalid credentials";
+  }
+
   // Handlers
   async function onCompleted({
     restaurantLogin,
@@ -58,13 +81,9 @@ const useLogin = () => {
 
   function onError(err: ApolloError) {
     console.log("🚀 ~ onError called with:", { err });
-    const error = err as ApolloError;
     setIsLoading(false);
     FlashMessageComponent({
-      message:
-        error?.graphQLErrors?.[0]?.message ??
-        error?.networkError?.message ??
-        "Something went wrong",
+      message: getLoginErrorMessage(err),
     });
   }
 
@@ -157,10 +176,7 @@ const useLogin = () => {
       
       const error = err as ApolloError;
       FlashMessageComponent({
-        message:
-          error?.graphQLErrors?.[0]?.message ??
-          error?.networkError?.message ??
-          "Something went wrong",
+        message: getLoginErrorMessage(error),
       });
     }
   };

@@ -1,4 +1,3 @@
-import { OverridableTokenClientConfig } from "@react-oauth/google";
 import { Dispatch, SetStateAction } from "react";
 import { IUser } from "./orders.interface";
 
@@ -19,7 +18,7 @@ export interface IAuthFormData {
   isPhoneExists?: boolean;
 }
 export interface ILoginWithGoogleProps {
-  googleLogin: (overrideConfig?: OverridableTokenClientConfig) => void;
+  googleLogin: () => Promise<void>;
   handleChangePanel: (index: number) => void;
   handleFormChange: (name: string, value: string) => void;
   formData: IAuthFormData;
@@ -53,6 +52,7 @@ export interface IPhoneVerificationProps {
 export interface IUserLoginArguments {
   appleId?: string;
   email?: string;
+  idToken?: string;
   password?: string;
   phone?: string;
   type?: string;
@@ -66,7 +66,7 @@ export interface IAuthContextProps {
   setAuthToken: Dispatch<SetStateAction<string>>;
   user: IUser | null;
   setUser: Dispatch<SetStateAction<ILoginProfile | null>>;
-  checkEmailExists: (email: string) => Promise<IEmailExists>;
+  checkEmailExists: (email: string) => Promise<boolean>;
   checkPhoneExists: (phone: string) => Promise<boolean | void>;
   handleUserLogin: (
     user: IUserLoginArguments & {
@@ -81,6 +81,7 @@ export interface IAuthContextProps {
   setOtp: Dispatch<SetStateAction<string | null>>;
   sendOtpToEmailAddress: { (email: string, type?: string): Promise<void> };
   sendOtpToPhoneNumber: { (phone: string): Promise<void> };
+  handleForgotPassword: (email: string) => Promise<void>;
   handleCreateUser: (user: ICreateUserArguments) => Promise<ICreateUserData>;
   isRegistering: boolean;
   setIsRegistering: Dispatch<SetStateAction<boolean>>;
@@ -88,7 +89,7 @@ export interface IAuthContextProps {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   refetchProfileData: boolean;
   setRefetchProfileData: Dispatch<SetStateAction<boolean>>;
-  handlePasswordReset: (password: string, email: string, setFormData: Dispatch<SetStateAction<IAuthFormData>>) => Promise<void>;
+  handlePasswordReset: (password: string, email: string, token?: string, setFormData?: Dispatch<SetStateAction<IAuthFormData>>) => Promise<void>;
 }
 export interface ILoginProfile {
   userId?: string;
@@ -115,15 +116,10 @@ export interface ILoginProfileResponse {
 }
 
 export interface IPhoneExistsResponse {
-  phoneExist: { _id: string };
-}
-
-export interface IEmailExists {
-  _id: string;
-  userType: string;
+  phoneExist: boolean;
 }
 export interface IEmailExistsResponse {
-  emailExist: IEmailExists;
+  emailExist: boolean;
 }
 
 export interface ISendOtpToPhoneResponse {

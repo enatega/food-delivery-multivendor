@@ -191,7 +191,7 @@ export const en = {
   wrongOtp: 'Wrong otp. Please try again!',
   resendBtn: 'Resend',
   enterYourEmail:
-    "Enter your email and we'll send you an OTP to reset your password.",
+    "Enter your email and we'll send reset instructions if the account exists.",
   backToLogin: 'Back to login',
   setYourPassword: 'Set your Password',
   enterPass: 'Kindly enter your password',

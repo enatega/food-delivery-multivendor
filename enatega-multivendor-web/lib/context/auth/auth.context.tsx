@@ -20,6 +20,7 @@ import { useConfig } from "../configuration/configuration.context";
 import {
   CREATE_USER,
   EMAIL_EXISTS,
+  FORGOT_PASSWORD,
   GET_USER_PROFILE,
   LOGIN,
   PHONE_EXISTS,
@@ -35,7 +36,6 @@ import {
   ICreateUserArguments,
   ICreateUserData,
   ICreateUserResponse,
-  IEmailExists,
   IEmailExistsResponse,
   ILoginProfile,
   ILoginProfileResponse,
@@ -55,6 +55,14 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 
 const AuthContext = createContext({} as IAuthContextProps);
+const SOCIAL_AUTH_MESSAGES = {
+  missingToken:
+    "Your social sign-in did not return a valid token. Please try again.",
+  invalidToken:
+    "Your social sign-in token is invalid or expired. Please sign in again.",
+  notConfigured:
+    "Social login is not configured right now. Please use email and password.",
+};
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   // States
@@ -79,11 +87,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   // Mutations
-  const [mutateEmailCheck] = useMutation<
+  const [checkEmailExistsMutation] = useMutation<
     IEmailExistsResponse,
     undefined | { email: string }
   >(EMAIL_EXISTS);
-  const [mutatePhoneCheck] = useMutation<
+  const [checkPhoneExistsMutation] = useMutation<
     IPhoneExistsResponse,
     undefined | { phone: string }
   >(PHONE_EXISTS);
@@ -99,19 +107,23 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     ICreateUserResponse,
     undefined | ICreateUserArguments
   >(CREATE_USER);
+  const [mutateForgotPassword] = useMutation<
+    { forgotPassword: { result: boolean } },
+    undefined | { email: string }
+  >(FORGOT_PASSWORD);
   const [mutateResetPassword] = useMutation<
     { resetPassword: { result: boolean } },
     undefined | { password: string; email: string }
   >(RESET_PASSWORD);
 
   // Checkers
-  async function checkEmailExists(email: string): Promise<IEmailExists> {
+  async function checkEmailExists(email: string): Promise<boolean> {
     try {
       setIsLoading(true);
-      const emailResponse = await mutateEmailCheck({
+      const emailResponse = await checkEmailExistsMutation({
         variables: { email: email },
       });
-      return emailResponse.data?.emailExist || ({} as IEmailExists);
+      return Boolean(emailResponse.data?.emailExist);
     } catch (err) {
       const error = err as ApolloError;
       console.error("Error while checking email:", error);
@@ -121,7 +133,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         message: error.cause?.message || t("error_checking_email"),
         duration: 3000
       });
-      return {} as IEmailExists;
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -131,8 +143,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
 
-      const resp = await mutatePhoneCheck({ variables: { phone } });
-      const exists = Boolean(resp.data?.phoneExist?._id);
+      const resp = await checkPhoneExistsMutation({ variables: { phone } });
+      const exists = Boolean(resp.data?.phoneExist);
 
       // if (exists) {
       // showToast({
@@ -165,7 +177,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const handlePasswordReset = async (
     password: string,
     email: string,
-    setFormData: Dispatch<SetStateAction<IAuthFormData>>
+    _token?: string,
+    setFormData?: Dispatch<SetStateAction<IAuthFormData>>
   ) => {
     try {
       setIsLoading(true);
@@ -178,7 +191,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           title: t("password_reset"),
           message: t("password_reset_success"),
         });
-        setFormData({} as IAuthFormData);
+        setFormData?.({} as IAuthFormData);
         setActivePanel(0);
         // setIsAuthModalVisible(false);
       }
@@ -196,9 +209,45 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const handleForgotPassword = async (email: string) => {
+    try {
+      setIsLoading(true);
+      await mutateForgotPassword({
+        variables: { email: email.trim().toLowerCase() },
+      });
+      showToast({
+        type: "success",
+        title: t("please_check_your_inbox_message"),
+        message: t("reset_password_email_sent_generic_message"),
+      });
+    } catch (err) {
+      const error = err as ApolloError;
+      console.error("Error while requesting password reset:", error);
+      showToast({
+        type: "error",
+        title: t("password_reset_error"),
+        message: error.cause?.message || t("error_resetting_password"),
+        duration: 3000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleUserLogin = async (user: IUserLoginArguments) => {
     try {
       setIsLoading(true);
+      if (
+        (user.type === "google" || user.type === "apple") &&
+        !user.idToken
+      ) {
+        showToast({
+          type: "error",
+          title: t("login_error"),
+          message: SOCIAL_AUTH_MESSAGES.missingToken,
+        });
+        return;
+      }
       const userResponse = await mutateLogin({
         variables: { ...user },
       });
@@ -223,7 +272,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       showToast({
         type: "error",
         title: t("login_error"),
-        message: t("invalid_credentials"),
+        message: getLoginErrorMessage(error, user.type),
         // sticky: true,
       });
     } finally {
@@ -350,19 +399,54 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   function onLoginError(error: ApolloError) {
     console.error("Error while logging in:", error);
-    if (error.message) {
-      showToast({
-        type: "error",
-        title: t("login_error"),
-        message: error.message,
-      });
-    } else {
-      showToast({
-        type: "error",
-        title: t("login_error"),
-        message: t("invalid_credentials"),
-      });
+    showToast({
+      type: "error",
+      title: t("login_error"),
+      message: getLoginErrorMessage(error),
+    });
+  }
+
+  function getLoginErrorMessage(error: ApolloError, loginType?: string) {
+    const rawMessage =
+      error.graphQLErrors[0]?.message ||
+      error.networkError?.message ||
+      error.message;
+    const normalizedMessage = rawMessage.toLowerCase();
+
+    if (
+      normalizedMessage.includes("not configured") ||
+      normalizedMessage.includes("not supported") ||
+      normalizedMessage.includes("social login is not configured")
+    ) {
+      return SOCIAL_AUTH_MESSAGES.notConfigured;
     }
+
+    if (
+      normalizedMessage.includes("idtoken") ||
+      normalizedMessage.includes("identity token") ||
+      normalizedMessage.includes("missing token")
+    ) {
+      return SOCIAL_AUTH_MESSAGES.missingToken;
+    }
+
+    if (
+      (loginType === "google" || loginType === "apple") &&
+      (normalizedMessage.includes("invalid token") ||
+        normalizedMessage.includes("expired token") ||
+        normalizedMessage.includes("jwt") ||
+        normalizedMessage.includes("token"))
+    ) {
+      return SOCIAL_AUTH_MESSAGES.invalidToken;
+    }
+
+    if (
+      normalizedMessage.includes("invalid token") ||
+      normalizedMessage.includes("expired token")
+    ) {
+      return SOCIAL_AUTH_MESSAGES.invalidToken;
+    }
+
+    return rawMessage || t("invalid_credentials");
   }
 
   // OTP Handlers
@@ -497,6 +581,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           setOtp,
           sendOtpToEmailAddress,
           sendOtpToPhoneNumber,
+          handleForgotPassword,
           handleCreateUser,
           setIsLoading,
           isLoading,

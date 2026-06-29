@@ -34,6 +34,7 @@ export default function ChangePassword({
       await handlePasswordReset(
         formData?.password || '',
         formData?.email || '',
+        '',
         setFormData
       );
     } catch (error) {

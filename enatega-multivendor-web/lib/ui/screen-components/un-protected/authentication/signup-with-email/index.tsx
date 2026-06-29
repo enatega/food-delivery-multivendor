@@ -113,8 +113,7 @@ export default function SignUpWithEmail({
       // Only check if we are NOT already continuing with isPhoneExists flag
       if (!isPhoneExists && formData.email) {
         console.log("Checking email existence for:", formData.email);
-        const emailResult = await checkEmailExists(formData.email);
-        const emailExists = !!emailResult?._id;
+        const emailExists = await checkEmailExists(formData.email);
         console.log("Email exists result:", emailExists);
 
         if (emailExists) {

@@ -1,19 +1,11 @@
 export const emailExist = `#graphql
   mutation EmailExist($email: String!) {
-    emailExist(email: $email) {
-      userType
-      _id
-      email
-    }
+    emailExist(email: $email)
   }`;
 
 export const phoneExist = `#graphql
   mutation PhoneExist($phone: String!) {
-    phoneExist(phone: $phone) {
-      userType
-      _id
-      phone
-    }
+    phoneExist(phone: $phone)
   }`;
 
 export const sendOtpToEmail = `#graphql
@@ -38,8 +30,8 @@ export const Deactivate = `#graphql
   }
   `;
 export const login = `#graphql
-  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$name:String,$notificationToken:String){
-    login(email:$email,password:$password,type:$type,appleId:$appleId,name:$name,notificationToken:$notificationToken){
+  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$idToken:String,$name:String,$notificationToken:String){
+    login(email:$email,password:$password,type:$type,appleId:$appleId,idToken:$idToken,name:$name,notificationToken:$notificationToken){
      userId
      token
      tokenExpiration

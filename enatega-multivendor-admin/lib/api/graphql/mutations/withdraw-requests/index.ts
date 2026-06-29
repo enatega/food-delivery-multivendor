@@ -50,7 +50,6 @@ export const UPDATE_WITHDRAW_REQUEST = gql`
           logo
           address
           username
-          password
           slug
           stripeDetailsSubmitted
           commissionRate

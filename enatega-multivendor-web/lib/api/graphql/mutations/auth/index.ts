@@ -5,6 +5,8 @@ export const LOGIN = gql`
     $type: String!
     $email: String
     $password: String
+    $appleId: String
+    $idToken: String
     $name: String
     $notificationToken: String
     $isActive: Boolean
@@ -13,6 +15,8 @@ export const LOGIN = gql`
       type: $type
       email: $email
       password: $password
+      appleId: $appleId
+      idToken: $idToken
       name: $name
       notificationToken: $notificationToken
       isActive: $isActive
@@ -41,18 +45,13 @@ export const LOGIN = gql`
 
 export const EMAIL_EXISTS = gql`
   mutation EmailExist($email: String!) {
-    emailExist(email: $email) {
-      userType
-      _id
-    }
+    emailExist(email: $email)
   }
 `;
 
 export const PHONE_EXISTS = gql`
   mutation PhoneExist($phone: String!) {
-    phoneExist(phone: $phone) {
-      _id
-    }
+    phoneExist(phone: $phone)
   }
 `;
 
@@ -70,9 +69,24 @@ export const SENT_OTP_TO_PHONE = gql`
     }
   }
 `;
+export const FORGOT_PASSWORD = gql`
+  mutation ForgotPassword($email: String!) {
+    forgotPassword(email: $email) {
+      result
+    }
+  }
+`;
 export const RESET_PASSWORD = gql`
   mutation ResetPassword($password: String!, $email: String!) {
     resetPassword(password: $password, email: $email) {
+      result
+    }
+  }
+`;
+
+export const RESET_PASSWORD_WITH_TOKEN = gql`
+  mutation ResetPassword($password: String!, $email: String!, $token: String!) {
+    resetPassword(password: $password, email: $email, token: $token) {
       result
     }
   }

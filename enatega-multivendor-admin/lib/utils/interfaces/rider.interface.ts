@@ -17,7 +17,7 @@ export interface IRiderResponse {
   available: boolean;
   vehicleType: string;
   assigned: string[];
-  zone: IRiderResponseZone;
+  zone: IRiderResponseZone | null;
 }
 
 export interface ISingleRiderResponse {
@@ -29,7 +29,7 @@ export interface ISingleRiderResponse {
   phone: string;
   available: boolean;
   assigned: string[];
-  zone: IRiderResponseZone;
+  zone: IRiderResponseZone | null;
   bussinessDetails: IBusinessDetails;
   licenseDetails: ILicenseDetails;
   vehicleDetails: IVehicleDetails;
@@ -98,7 +98,7 @@ export interface IRiderReponse {
     _id: string;
     title: string;
     __typename: 'Zone';
-  };
+  } | null;
   __typename: 'Rider';
 }
 

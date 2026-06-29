@@ -102,7 +102,6 @@ export const restaurantFragment = `#graphql
             phoneIsVerified
             email
             emailIsVerified
-            password
             isActive
             isOrderNotification
             isOfferNotification
@@ -137,7 +136,6 @@ export const restaurantFragment = `#graphql
             name
             email
             username
-            password
             phone
             image
             available
@@ -178,7 +176,6 @@ export const restaurantFragment = `#graphql
           image
           address
           username
-          password
           deliveryTime
           minimumOrder
           sections
@@ -213,7 +210,6 @@ export const restaurantFragment = `#graphql
       isActive
     }
     username
-    password
     deliveryTime
     minimumOrder
     sections

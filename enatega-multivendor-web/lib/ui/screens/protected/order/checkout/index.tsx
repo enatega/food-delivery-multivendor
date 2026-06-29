@@ -84,6 +84,8 @@ const COUPON_STORAGE_KEY = "applied_coupon";
 const COUPON_TEXT_STORAGE_KEY = "coupon_text";
 const COUPON_APPLIED_STORAGE_KEY = "is_coupon_applied";
 const COUPON_RESTAURANT_KEY = "coupon_restaurant_id";
+const PENDING_STRIPE_ORDER_ID_KEY = "pending_stripe_order_id";
+const PENDING_STRIPE_STARTED_AT_KEY = "pending_stripe_started_at";
 
 export default function OrderCheckoutScreen() {
   const t = useTranslations();
@@ -818,17 +820,29 @@ export default function OrderCheckoutScreen() {
 
   async function onCompleted(data: { placeOrder: IOrder }) {
     localStorage.removeItem("orderInstructions");
-    clearCart();
-    // CLEAR COUPON FROM LOCALSTORAGE
-    onUseLocalStorage("delete", COUPON_STORAGE_KEY);
-    onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
-    onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
-    onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
     if (paymentMethod === "COD") {
+      clearCart();
+      onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
       router.replace(`/order/${data.placeOrder._id}/tracking`);
     } else if (paymentMethod === "PAYPAL") {
+      clearCart();
+      onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
       router.replace(`/paypal?id=${data.placeOrder._id}`);
     } else if (paymentMethod === "STRIPE") {
+      localStorage.setItem(
+        PENDING_STRIPE_ORDER_ID_KEY,
+        data?.placeOrder?.orderId || "",
+      );
+      localStorage.setItem(
+        PENDING_STRIPE_STARTED_AT_KEY,
+        Date.now().toString(),
+      );
       router.replace(
         `${SERVER_URL}stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`,
       );

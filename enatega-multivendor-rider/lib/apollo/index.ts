@@ -14,6 +14,7 @@ import {
   offsetLimitPagination,
 } from "@apollo/client/utilities";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 import { Platform } from "react-native";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
@@ -24,6 +25,22 @@ import { IRestaurantLocation } from "../utils/interfaces";
 import { calculateDistance } from "../utils/methods/custom-functions";
 import { getValidPublicToken } from "../utils/service/publicAccessService";
 import { getOrCreateNonce } from "../utils/publicAccessToken";
+
+let isAuthRedirecting = false;
+
+async function handleInvalidSession(): Promise<void> {
+  if (isAuthRedirecting) return;
+  isAuthRedirecting = true;
+
+  try {
+    await AsyncStorage.multiRemove([RIDER_TOKEN, "rider-id"]);
+    router.replace("/login");
+  } finally {
+    setTimeout(() => {
+      isAuthRedirecting = false;
+    }, 1000);
+  }
+}
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars();
@@ -201,6 +218,17 @@ const setupApollo = () => {
   );
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
+    const hasInvalidSession = (graphQLErrors || []).some(
+      (graphQLError) =>
+        graphQLError?.extensions?.code === "TOKEN_EXPIRED" ||
+        graphQLError?.extensions?.code === "INVALID_TOKEN",
+    );
+
+    if (hasInvalidSession) {
+      void handleInvalidSession();
+      return;
+    }
+
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message, locations, path }) => {
         // IMPORTANT: Only remove user token for actual user auth failures

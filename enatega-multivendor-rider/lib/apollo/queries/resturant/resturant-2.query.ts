@@ -8,7 +8,6 @@ export const restaurantPreviewFragment = `#graphql
     image
     address
     username
-    password
     deliveryTime
     minimumOrder
     sections
@@ -153,7 +152,6 @@ query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
       image
       address
       username
-      password
       deliveryTime
       minimumOrder
       sections

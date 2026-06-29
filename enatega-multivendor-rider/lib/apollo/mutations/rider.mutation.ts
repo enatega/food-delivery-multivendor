@@ -7,7 +7,6 @@ export const EDIT_RIDER = gql`
       name
       username
       phone
-      password
       vehicleType
       zone {
         _id

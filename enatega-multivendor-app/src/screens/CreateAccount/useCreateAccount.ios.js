@@ -39,6 +39,11 @@ export const useCreateAccount = () => {
   const themeContext = useContext(ThemeContext);
   const [googleUser, setGoogleUser] = useState(null);
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] };
+  const socialLoginMessages = {
+    missingToken: 'Your social sign-in did not return a valid token. Please try again.',
+    invalidToken: 'Your social sign-in token is invalid or expired. Please sign in again.',
+    notConfigured: 'Social login is not configured right now. Please use email and password.'
+  }
 
   const {
     IOS_CLIENT_ID_GOOGLE,
@@ -61,8 +66,18 @@ export const useCreateAccount = () => {
   // Effect to handle the Google authentication response
   useEffect(() => {
     if (response?.type === 'success') {
-      const { authentication } = response;
-      fetchUserInfo(authentication.accessToken);
+      const { authentication, params } = response;
+      const idToken = authentication?.idToken ?? params?.id_token;
+      const accessToken = authentication?.accessToken ?? params?.access_token;
+
+      if (!idToken) {
+        FlashMessage({ message: socialLoginMessages.missingToken });
+        setLoading(false);
+        loginButtonSetter(null);
+        return;
+      }
+
+      fetchUserInfo({ accessToken, idToken });
     } else if (response?.type === 'error') {
       console.error('Authentication error:', response.error);
       FlashMessage({ message: `Google sign-in failed: ${response.error.message || 'Unknown error'}` });
@@ -76,16 +91,21 @@ export const useCreateAccount = () => {
   }, [response]);
 
   // Fetches user information from Google API after successful token acquisition
-  const fetchUserInfo = async (accessToken) => {
+  const fetchUserInfo = async ({ accessToken, idToken }) => {
     try {
-      const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const user = await response.json();
+      let user = {};
+
+      if (accessToken) {
+        const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        user = await response.json();
+      }
 
       const userData = {
         phone: '',
         email: user.email,
+        idToken,
         password: '',
         name: user.name,
         picture: user.photo || '',
@@ -157,6 +177,12 @@ export const useCreateAccount = () => {
   // --- Common Login Mutation Function ---
   async function mutateLogin(user) {
     try {
+      if ((user.type === 'google' || user.type === 'apple') && !user.idToken) {
+        FlashMessage({ message: socialLoginMessages.missingToken });
+        setLoading(false);
+        loginButtonSetter(null);
+        return;
+      }
  
       let notificationToken = null;
 
@@ -256,11 +282,43 @@ export const useCreateAccount = () => {
     console.error('❌ [Login Debug] Network error:', error.networkError);
 
     FlashMessage({
-      message: error.message || 'Login failed. Please try again.'
+      message: getSocialLoginErrorMessage(error) || 'Login failed. Please try again.'
     });
 
     setLoading(false);
     loginButtonSetter(null);
+  }
+
+  function getSocialLoginErrorMessage(error) {
+    const message =
+      error?.graphQLErrors?.[0]?.message ||
+      error?.networkError?.message ||
+      error?.message ||
+      '';
+    const normalizedMessage = message.toLowerCase();
+
+    if (normalizedMessage.includes('not configured')) {
+      return socialLoginMessages.notConfigured;
+    }
+
+    if (
+      normalizedMessage.includes('idtoken') ||
+      normalizedMessage.includes('identity token') ||
+      normalizedMessage.includes('missing token')
+    ) {
+      return socialLoginMessages.missingToken;
+    }
+
+    if (
+      normalizedMessage.includes('invalid token') ||
+      normalizedMessage.includes('expired token') ||
+      normalizedMessage.includes('jwt') ||
+      normalizedMessage.includes('token')
+    ) {
+      return socialLoginMessages.invalidToken;
+    }
+
+    return message;
   }
 
   // --- Common Focus Effect for Status Bar ---

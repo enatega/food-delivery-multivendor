@@ -8,7 +8,6 @@ export const SAVE_EMAIL_CONFIGURATION = gql`
       _id
       email
       emailName
-      password
       enableEmail
     }
   }

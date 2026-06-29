@@ -8,6 +8,7 @@ import {
   concat,
   Observable
 } from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
 import {
   getMainDefinition,
   offsetLimitPagination
@@ -20,6 +21,23 @@ import { calculateDistance } from '../utils/customFunctions'
 import { getValidPublicToken } from '../services/publicAcccessService'
 import { getOrCreateNonce } from '../utils/publicAccessToken'
 import { Platform } from 'react-native'
+import navigationService from '../routes/navigationService'
+
+let isAuthRedirecting = false
+
+async function handleInvalidSession() {
+  if (isAuthRedirecting) return
+  isAuthRedirecting = true
+
+  try {
+    await AsyncStorage.removeItem('token')
+  } finally {
+    navigationService.navigate('Login')
+    setTimeout(() => {
+      isAuthRedirecting = false
+    }, 1000)
+  }
+}
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars()
@@ -134,6 +152,18 @@ const setupApollo = () => {
       })
   )
 
+  const errorLink = onError(({ graphQLErrors }) => {
+    const hasInvalidSession = (graphQLErrors || []).some(
+      (graphQLError) =>
+        graphQLError?.extensions?.code === 'TOKEN_EXPIRED' ||
+        graphQLError?.extensions?.code === 'INVALID_TOKEN'
+    )
+
+    if (hasInvalidSession) {
+      void handleInvalidSession()
+    }
+  })
+
   const terminatingLink = split(
     ({ query }) => {
       const { kind, operation } = getMainDefinition(query)
@@ -144,7 +174,7 @@ const setupApollo = () => {
   )
 
   const client = new ApolloClient({
-    link: terminatingLink,
+    link: ApolloLink.from([errorLink, terminatingLink]),
     cache,
     resolvers: {}
   })
