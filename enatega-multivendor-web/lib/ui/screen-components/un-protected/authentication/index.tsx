@@ -176,11 +176,13 @@ export default function AuthModal({
         return;
       }
 
+      const googleAccountsId = google.accounts.id;
+
       let isSettled = false;
       const resolveOnce = (credential?: string) => {
         if (isSettled) return;
         isSettled = true;
-        google.accounts.id.cancel();
+        googleAccountsId.cancel();
         if (credential) {
           resolve(credential);
           return;
@@ -195,18 +197,18 @@ export default function AuthModal({
       const rejectOnce = (message: string) => {
         if (isSettled) return;
         isSettled = true;
-        google.accounts.id.cancel();
+        googleAccountsId.cancel();
         reject(new Error(message));
       };
 
-      google.accounts.id.initialize({
+      googleAccountsId.initialize({
         client_id: GOOGLE_CLIENT_ID,
         ux_mode: "popup",
         callback: (response: { credential?: string }) =>
           resolveOnce(response?.credential),
       });
 
-      google.accounts.id.prompt((notification) => {
+      googleAccountsId.prompt((notification) => {
         if (notification?.isNotDisplayed?.()) {
           rejectOnce(
             "Social login is not configured right now. Please use email and password.",

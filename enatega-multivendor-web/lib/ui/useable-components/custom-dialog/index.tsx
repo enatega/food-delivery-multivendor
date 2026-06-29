@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { ICustomDialogProps } from "@/lib/utils/interfaces";
 import { CircleCrossSvg } from "@/lib/utils/assets/svg";
@@ -12,8 +13,14 @@ export default function CustomDialog({
   showCloseButton = true,
   className = "",
 }: ICustomDialogProps) {
-  // get the RTL direction
-  const direction = document.documentElement.getAttribute("dir") || "ltr";
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const dir = document.documentElement.getAttribute("dir");
+    setDirection(dir === "rtl" ? "rtl" : "ltr");
+  }, []);
+
   return (
     <Dialog
       visible={visible}

@@ -169,8 +169,13 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     return ticket.title;
   };
 
-   // get the RTL direction
-   const direction = document.documentElement.getAttribute("dir") || "ltr";
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const dir = document.documentElement.getAttribute("dir");
+    setDirection(dir === "rtl" ? "rtl" : "ltr");
+  }, []);
 
   return (
     <Dialog

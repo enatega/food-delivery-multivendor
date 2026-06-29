@@ -67,9 +67,6 @@ import { useTranslations } from "next-intl";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 
 export default function StoreDetailsScreen() {
-  // get the RTL direction
-  const direction = document.documentElement.getAttribute("dir") || "ltr";
-
   const t = useTranslations();
   // Access the UserContext via our custom hook
   const { cart, transformCartWithFoodInfo, updateCart, profile } = useUser();
@@ -79,6 +76,7 @@ export default function StoreDetailsScreen() {
 
   // State
   const [showDialog, setShowDialog] = useState<IFood | null>(null);
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
   const [showReviews, setShowReviews] = useState<boolean>(false);
   const [showMoreInfo, setShowMoreInfo] = useState<boolean>(false);
   const [filter] = useState("");
@@ -118,6 +116,12 @@ export default function StoreDetailsScreen() {
 
   const { data: subcategoriesData, loading: subcategoriesLoading } =
     useQuery(GET_SUB_CATEGORIES);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const dir = document.documentElement.getAttribute("dir");
+    setDirection(dir === "rtl" ? "rtl" : "ltr");
+  }, []);
 
   // Transform cart items when restaurant data is loaded
   useEffect(() => {

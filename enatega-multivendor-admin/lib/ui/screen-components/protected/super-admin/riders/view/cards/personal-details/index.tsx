@@ -38,7 +38,7 @@ const PersonalDetails = ({ loading, rider }: IRiderDetailsProps) => {
               {loading ? (
                 <Skeleton height="1.5rem" />
               ) : (
-                (rider?.zone.title ?? '-')
+                (rider?.zone?.title ?? '-')
               )}
             </span>
           </div>

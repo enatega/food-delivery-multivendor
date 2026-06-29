@@ -63,10 +63,8 @@ export default function RestaurantDetailsScreen() {
   const categoryRefs = useRef<Record<string, HTMLElement | null>>({});
   const selectedCategoryRef = useRef<string>("");
 
-  // get the RTL direction
-  const direction = document.documentElement.getAttribute("dir") || "ltr";
-
   // State
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
   const [filter, setFilter] = useState("");
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [selectedFood, setSelectedFood] = useState<IFood | null>(null);
@@ -93,6 +91,12 @@ export default function RestaurantDetailsScreen() {
       },
     },
   );
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const dir = document.documentElement.getAttribute("dir");
+    setDirection(dir === "rtl" ? "rtl" : "ltr");
+  }, []);
   // Transform cart items when restaurant data is loaded - only once when dependencies change
   useEffect(() => {
     if (data?.restaurant && cart.length > 0) {

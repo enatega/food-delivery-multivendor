@@ -1,8 +1,11 @@
 "use client"
 import Link from "next/link"
-import Lottie from "lottie-react"
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+
 export default function FavoritesEmptyState() {
   const [animationData, setAnimationData] = useState<null | object>(null);
   const t = useTranslations()
