@@ -22,7 +22,7 @@ import { APP_NAME } from '../utils/constants';
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
 import { getMetricsToken, getNonce, initializeNonce, shouldRefreshToken, storeMetricsToken } from '../utils/methods/security';
-import { clearAuthTokens, getAccessToken } from '../utils/methods/auth';
+import { getAccessToken } from '../utils/methods/auth';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -86,16 +86,6 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       }),
     });
   const wsLink = new WebSocketLink(wsClient);
-
-  const clearSession = () => {
-    if (typeof window === 'undefined') return;
-    clearAuthTokens();
-    localStorage.clear();
-    sessionStorage.clear();
-    if (window.location.pathname !== '/authentication/login') {
-      window.location.href = '/authentication/login';
-    }
-  };
 
   const errorLink = new ApolloLink((operation, forward) =>
     new Observable((observer) => {
