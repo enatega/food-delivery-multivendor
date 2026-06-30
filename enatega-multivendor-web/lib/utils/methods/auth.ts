@@ -73,10 +73,7 @@ export function hasValidAuthToken(): boolean {
   return Boolean(token);
 }
 
-export function getUserType(): string {
-  if (typeof window === 'undefined') return '';
-  return localStorage.getItem(AUTH_KEYS.USER_TYPE) ?? '';
-}
+
 
 export function clearAuthTokens(): void {
   if (typeof window === 'undefined') return;

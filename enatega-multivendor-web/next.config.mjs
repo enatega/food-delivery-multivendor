@@ -1,20 +1,4 @@
 import createNextIntlPlugin from "next-intl/plugin";
-// import PWA from 'next-pwa';
-
-/* const withPWA = PWA({
-    skipWaiting: false,
-    register:false,
-    dest:'public',
-    // disable: process.env.NODE_ENV === 'development',
-    swSrc: 'public/serviceWorker.js', // Or service-worker.ts if using TS & custom build process
-    buildExcludes: [
-      /app-build-manifest\.json$/,
-      /middleware-manifest\.json$/,     // (often fails too)
-    ],
-    scope: '/',
-  }
-);
- */
 
 const withNextIntl = createNextIntlPlugin();
 const contentSecurityPolicy = [

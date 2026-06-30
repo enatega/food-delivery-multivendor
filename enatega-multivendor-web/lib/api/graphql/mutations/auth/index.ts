@@ -173,12 +173,3 @@ export const VERIFY_OTP = gql`
   }
 `;
 
-export const REFRESH_TOKEN = gql`
-  mutation RefreshToken($refreshToken: String!, $userType: String!) {
-    refreshToken(refreshToken: $refreshToken, userType: $userType) {
-      userId
-      token
-      tokenExpiration
-    }
-  }
-`;
