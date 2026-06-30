@@ -43,7 +43,7 @@ export default function UserStats({
       ending_date: dateFilter?.endDate,
     },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       debounceMs: 300,
       enabled: !!restaurantId,
     }

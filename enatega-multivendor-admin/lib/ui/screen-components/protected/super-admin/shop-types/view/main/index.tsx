@@ -69,7 +69,7 @@ export default function ShopTypesMain({
 
   // Queries
   const { data, fetch } = useLazyQueryQL(GET_SHOP_TYPES, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 5000,
     onCompleted: () => setIsLoading(false),
   }) as ILazyQueryResult<IGetShopTypesData | undefined, undefined>;

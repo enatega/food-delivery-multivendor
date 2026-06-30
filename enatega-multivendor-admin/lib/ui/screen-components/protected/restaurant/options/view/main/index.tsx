@@ -57,7 +57,7 @@ export default function OptionMain({
     GET_OPTIONS_BY_RESTAURANT_ID,
     { id: restaurantId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
       onCompleted: onFetchCategoriesByRestaurantCompleted,
       onError: onErrorFetchCategoriesByRestaurant,

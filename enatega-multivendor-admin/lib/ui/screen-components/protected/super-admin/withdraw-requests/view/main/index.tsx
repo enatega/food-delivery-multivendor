@@ -66,7 +66,7 @@ export default function WithdrawRequestsSuperAdminMain({
       userType: selectedUserType,
       search: debouncedSearch,
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   }) as unknown as IQueryResult<IGetWithDrawRequestsData | undefined, any>;
 
   // Global search handler

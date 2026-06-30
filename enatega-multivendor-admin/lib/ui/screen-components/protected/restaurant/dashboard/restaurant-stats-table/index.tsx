@@ -48,7 +48,7 @@ export default function RestaurantStatesTable({
       ending_date: dateFilter.endDate,
     },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       debounceMs: 300,
       enabled: !!restaurantLayoutContextData?.restaurantId,
     }

@@ -34,7 +34,7 @@ export default function OrderVendorMain() {
       search: searchTerm, // Only pass restaurant and search
     },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
     }
   ) as IQueryResult<IOrdersData | undefined, undefined>;

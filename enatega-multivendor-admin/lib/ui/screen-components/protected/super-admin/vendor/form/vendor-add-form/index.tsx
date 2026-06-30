@@ -102,7 +102,7 @@ export default function VendorAddForm({
     loading,
     data,
   } = useLazyQueryQL(GET_VENDOR_BY_ID, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 300,
   }) as ILazyQueryResult<IGetVendorResponseGraphQL | undefined, { id: string }>;
 

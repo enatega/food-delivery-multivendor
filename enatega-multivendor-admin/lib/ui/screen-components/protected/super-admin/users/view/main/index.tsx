@@ -37,7 +37,7 @@ export default function UsersMain({
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const { data, loading } = useQuery<IUsersDataResponse>(GET_USERS, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   });
 
   const allUsers: IUserResponse[] = useMemo(() => data?.users ?? [], [data]);

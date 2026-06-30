@@ -75,7 +75,7 @@ export default function CategoryMain({
     GET_CATEGORY_BY_RESTAURANT_ID,
     { id: restaurantId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
       onCompleted: onFetchCategoriesByRestaurantCompleted,
       onError: onErrorFetchCategoriesByRestaurant,
@@ -84,7 +84,7 @@ export default function CategoryMain({
 
   const { data: subCategoriesData, loading: loadingSubCategories } =
     useQueryGQL(GET_SUBCATEGORIES, {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       onError: (error) => {
         showToast({
           type: 'error',

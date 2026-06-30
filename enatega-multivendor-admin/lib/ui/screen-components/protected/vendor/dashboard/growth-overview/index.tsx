@@ -50,7 +50,7 @@ const VendorGrowthOverViewGraph = () => {
       year: new Date().getFullYear(),
     },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       debounceMs: 300,
     }
   ) as IQueryResult<
@@ -198,7 +198,7 @@ const VendorGrowthOverViewTabular = ({
       ending_date: dateFilter?.endDate ?? '',
     },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!vendorId,
     }
   ) as IQueryResult<IVendorStoreDetailsResponseGraphQL | undefined, undefined>;

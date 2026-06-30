@@ -81,7 +81,7 @@ export default function CouponsMain({
 
   // Queries
   const { data, fetch } = useLazyQueryQL(GET_COUPONS, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 5000,
     onCompleted: () => setIsLoading(false),
   }) as ILazyQueryResult<IGetCouponsData | undefined, undefined>;

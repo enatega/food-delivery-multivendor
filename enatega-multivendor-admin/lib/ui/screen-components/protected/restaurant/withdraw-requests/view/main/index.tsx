@@ -59,7 +59,7 @@ export default function WithdrawRequestsAdminMain() {
       userType: UserTypeEnum.STORE, // Hardcoded to STORE
       userId: restaurantId, // Added restaurantId
     },
-    fetchPolicy: 'network-only', // Add this line
+    fetchPolicy: 'cache-and-network',
   }) as unknown as IQueryResult<
     IGetWithDrawRequestsData | undefined,
     undefined
