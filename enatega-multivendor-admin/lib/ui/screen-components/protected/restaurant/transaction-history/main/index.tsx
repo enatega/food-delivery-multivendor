@@ -23,7 +23,6 @@ import { IActionMenuItem } from '@/lib/utils/interfaces/action-menu.interface';
 // GraphQL
 import { GET_TRANSACTION_HISTORY } from '@/lib/api/graphql';
 import { useQuery } from '@apollo/client';
-import { generateSkeletonTransactionHistory } from '@/lib/utils/dummy';
 import TransactionDetailModal from '@/lib/ui/useable-components/popup-menu/transaction-history-modal.module';
 import TransactionHistoryStoreTableHeader from '../header/table-header';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
@@ -123,8 +122,7 @@ export default function TransactionHistoryStoreMain() {
           />
         }
         data={
-          transactionData ||
-          (loading ? generateSkeletonTransactionHistory() : [])
+          transactionData || []
         }
         filters={filters}
         setSelectedData={setSelectedTransactions}

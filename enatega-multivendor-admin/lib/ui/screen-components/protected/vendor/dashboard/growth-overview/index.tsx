@@ -23,7 +23,6 @@ import { VendorLayoutContext } from '@/lib/context/vendor/layout-vendor.context'
 import Table from '@/lib/ui/useable-components/table';
 import { DataTableRowClickEvent } from 'primereact/datatable';
 import { onUseLocalStorage } from '@/lib/utils/methods';
-import { generateVendorStoreDetails } from '@/lib/utils/dummy';
 import { useTranslations } from 'next-intl';
 import { VENDOR_STORE_DETAILS_COLUMN } from '@/lib/ui/useable-components/table/columns/store-details-by-vendor-columns';
 
@@ -214,8 +213,7 @@ const VendorGrowthOverViewTabular = ({
     <div className="p-3">
       <Table
         data={
-          data?.getStoreDetailsByVendorId ||
-          (loading ? generateVendorStoreDetails() : [])
+          data?.getStoreDetailsByVendorId || []
         }
         setSelectedData={() => {}}
         selectedData={[]}

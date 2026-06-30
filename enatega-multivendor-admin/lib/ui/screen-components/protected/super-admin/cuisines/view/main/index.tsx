@@ -26,7 +26,6 @@ import { useContext, useEffect, useState } from 'react';
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
 import Table from '@/lib/ui/useable-components/table';
 import CuisineTableHeader from '../header/table-header';
-import { generateDummyCuisines } from '@/lib/utils/dummy';
 import { CUISINE_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/cuisine-columns';
 import { useTranslations } from 'next-intl';
 
@@ -40,7 +39,6 @@ export default function CuisinesMain({
     DELETE_CUISINE,
     {
       refetchQueries: [{ query: GET_CUISINES }],
-      fetchPolicy: 'network-only',
     }
   );
 
@@ -169,7 +167,7 @@ export default function CuisinesMain({
     <div className="p-3">
       <Table
         columns={CUISINE_TABLE_COLUMNS({ menuItems })}
-        data={data?.cuisines || (isLoading ? generateDummyCuisines() : [])}
+        data={data?.cuisines || []}
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e as ICuisine[])}
         filters={filters}

@@ -23,7 +23,6 @@ import { IActionMenuItem } from '@/lib/utils/interfaces/action-menu.interface';
 // GraphQL
 import { GET_TRANSACTION_HISTORY } from '@/lib/api/graphql';
 import { useQuery } from '@apollo/client';
-import { generateSkeletonTransactionHistory } from '@/lib/utils/dummy';
 import TransactionDetailModal from '@/lib/ui/useable-components/popup-menu/transaction-history-modal.module';
 import { useTranslations } from 'next-intl';
 import useDebounce from '@/lib/hooks/useDebounce';
@@ -120,8 +119,7 @@ export default function TransactionHistoryMain() {
           />
         }
         data={
-          transactionData ||
-          (loading ? generateSkeletonTransactionHistory() : [])
+          transactionData || []
         }
         filters={filters}
         setSelectedData={setSelectedTransactions}

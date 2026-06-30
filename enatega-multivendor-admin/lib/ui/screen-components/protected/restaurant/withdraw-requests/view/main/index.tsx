@@ -24,7 +24,6 @@ import {
   IQueryResult,
   UserTypeEnum, // Add this import if not already present
 } from '@/lib/utils/interfaces';
-import { generateDummyWithdrawRequests } from '@/lib/utils/dummy';
 import WithdrawRequestAdminTableHeader from '../header/table-header';
 
 export default function WithdrawRequestsAdminMain() {
@@ -107,7 +106,7 @@ export default function WithdrawRequestsAdminMain() {
             setSelectedActions={setSelectedActions}
           />
         }
-        data={loading ? generateDummyWithdrawRequests() : filteredData}
+        data={filteredData}
         filters={filters}
         setSelectedData={setSelectedData}
         selectedData={selectedData}

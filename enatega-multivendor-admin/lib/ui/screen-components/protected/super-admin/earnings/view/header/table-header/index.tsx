@@ -32,7 +32,7 @@ export default function EarningTableHeader({
 
   // Query
   const { data } = useQueryGQL(GET_STORE_RIDER, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   }) as IQueryResult<IStoreRidersResponse | undefined, undefined>;
 
   const storesDropdown = useMemo(

@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 
 // Prime React
 import { DataTableRowClickEvent } from 'primereact/datatable';
-import { generateDummyUsers } from '@/lib/utils/dummy';
 
 // Interface and Types
 import {
@@ -90,7 +89,7 @@ export default function UsersMain({
   return (
     <div className="flex flex-col gap-3 p-3 w-full overflow-auto">
       <Table
-        data={loading ? generateDummyUsers() : paginatedUsers}
+        data={loading ? [] : paginatedUsers}
         columns={USERS_TABLE_COLUMNS(openMenuId, setOpenMenuId)}
         rowsPerPage={limit}
         totalRecords={totalFilteredUsers}

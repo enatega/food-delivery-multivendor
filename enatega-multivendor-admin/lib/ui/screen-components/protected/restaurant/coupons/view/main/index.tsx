@@ -20,7 +20,6 @@ import Table from '@/lib/ui/useable-components/table';
 
 // Utilities and Data
 import { IActionMenuItem } from '@/lib/utils/interfaces/action-menu.interface';
-import { generateDummyCouponsRestaurant } from '@/lib/utils/dummy';
 
 // Hooks
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
@@ -111,8 +110,7 @@ export default function CouponsMain({
           />
         }
         data={
-          data?.restaurantCoupons ||
-          (loading ? generateDummyCouponsRestaurant() : [])
+          data?.restaurantCoupons || []
         }
         filters={filters}
         setSelectedData={setSelectedProducts}

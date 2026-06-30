@@ -34,7 +34,6 @@ import useToast from '@/lib/hooks/useToast';
 import { DELETE_ZONE, GET_ZONES } from '@/lib/api/graphql';
 
 // Data
-import { generateDummyZones } from '@/lib/utils/dummy';
 import { useTranslations } from 'next-intl';
 
 export default function ZoneMain({
@@ -129,7 +128,7 @@ export default function ZoneMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={data?.zones || (loading ? generateDummyZones() : [])}
+        data={data?.zones || []}
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}

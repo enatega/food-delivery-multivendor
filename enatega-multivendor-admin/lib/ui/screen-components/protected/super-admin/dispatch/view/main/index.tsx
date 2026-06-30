@@ -15,7 +15,6 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 // Constants
-import { generateDummyDispatchOrders } from '@/lib/utils/dummy';
 import { DISPATCH_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/dispatch-columns';
 import { useLazyQuery, useSubscription } from '@apollo/client';
 
@@ -142,7 +141,7 @@ export default function DispatchMain() {
         columns={DISPATCH_TABLE_COLUMNS()}
         data={
           showLoading
-            ? generateDummyDispatchOrders()
+            ? []
             : active_orders_data?.getActiveOrders.orders ??
             lastValidOrders
         }

@@ -33,7 +33,6 @@ import { FOODS_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/f
 
 // Utilities and Data
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
-import { generateDummyFoods } from '@/lib/utils/dummy';
 
 // Context
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
@@ -67,7 +66,6 @@ export default function FoodsMain() {
 
   // State - Table
   const [foodItems, setFoodItems] = useState<IFoodNew[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [deleteId, setDeleteId] = useState({ id: '', categoryId: '' });
   const [selectedProducts, setSelectedProducts] = useState<IFoodNew[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -84,7 +82,7 @@ export default function FoodsMain() {
     GET_FOODS_BY_RESTAURANT_ID,
     { id: restaurantId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
       onError: onErrorFetchFoodsByRestaurant,
     }
@@ -94,7 +92,7 @@ export default function FoodsMain() {
     GET_ADDONS_BY_RESTAURANT_ID,
     { id: restaurantId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
     }
   ) as IQueryResult<IAddonByRestaurantResponse | undefined, undefined>;
@@ -156,7 +154,6 @@ export default function FoodsMain() {
   function onFetchFoodsByRestaurantCompleted() {
     if (!foodsData) return;
     const refined_food_items: IFoodNew[] = [];
-    setIsLoading(true);
     foodsData.restaurant.categories.map((ctg) =>
       ctg.foods.map((fd: IFood) => {
         return refined_food_items.push({
@@ -182,7 +179,6 @@ export default function FoodsMain() {
       })
     );
     setFoodItems(refined_food_items);
-    setIsLoading(false);
   }
   // Restaurant Zone Info Error
   function onErrorFetchFoodsByRestaurant() {
@@ -271,7 +267,7 @@ export default function FoodsMain() {
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={foodItems || (loading || isLoading ? generateDummyFoods() : [])}
+        data={foodItems || []}
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}

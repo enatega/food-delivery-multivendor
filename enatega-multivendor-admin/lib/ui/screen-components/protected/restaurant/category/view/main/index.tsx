@@ -31,7 +31,6 @@ import {
   GET_CATEGORY_BY_RESTAURANT_ID,
 } from '@/lib/api/graphql';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
-import { generateDummyCategories } from '@/lib/utils/dummy';
 import { useMutation } from '@apollo/client';
 import CategoryTableHeader from '../header/table-header';
 import { GET_SUBCATEGORIES } from '@/lib/api/graphql/queries/sub-categories';
@@ -202,8 +201,7 @@ export default function CategoryMain({
           />
         }
         data={
-          data?.restaurant?.categories.slice().reverse() ||
-          (loading ? generateDummyCategories() : [])
+          data?.restaurant?.categories.slice().reverse() || []
         }
         filters={filters}
         setSelectedData={setSelectedProducts}

@@ -33,7 +33,6 @@ import Table from '@/lib/ui/useable-components/table';
 import CouponTableHeader from '../header/table-header';
 
 // Constants
-import { generateDummyCoupons } from '@/lib/utils/dummy';
 import { COUPONS_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/coupons-columns';
 
 export default function CouponsMain({
@@ -185,7 +184,7 @@ export default function CouponsMain({
     <div className="p-3">
       <Table
         columns={COUPONS_TABLE_COLUMNS({ menuItems })}
-        data={data?.coupons || (isLoading ? generateDummyCoupons() : [])}
+        data={data?.coupons || []}
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e)}
         loading={isLoading}

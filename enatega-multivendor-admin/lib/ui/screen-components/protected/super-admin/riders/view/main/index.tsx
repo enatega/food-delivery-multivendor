@@ -32,7 +32,6 @@ import { DELETE_RIDER, GET_RIDERS } from '@/lib/api/graphql';
 import { IQueryResult } from '@/lib/utils/interfaces';
 
 // Data
-import { generateDummyRiders } from '@/lib/utils/dummy';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
@@ -115,7 +114,7 @@ export default function RidersMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={data?.riders || (loading ? generateDummyRiders() : [])}
+        data={data?.riders || []}
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}

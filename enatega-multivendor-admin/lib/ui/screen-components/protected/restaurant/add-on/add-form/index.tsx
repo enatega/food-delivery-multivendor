@@ -100,7 +100,7 @@ export default function AddonAddForm({
     GET_OPTIONS_BY_RESTAURANT_ID,
     { id: restaurantId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
       onCompleted: onFetchAddonsByRestaurantCompleted,
       onError: onErrorFetchAddonsByRestaurant,
