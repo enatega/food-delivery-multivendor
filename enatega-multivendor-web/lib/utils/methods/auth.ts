@@ -90,3 +90,7 @@ export function clearClientSessionStorage(): void {
   SESSION_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
   clearMetricsData();
 }
+
+export function invalidateClientSession(): void {
+  clearClientSessionStorage();
+}

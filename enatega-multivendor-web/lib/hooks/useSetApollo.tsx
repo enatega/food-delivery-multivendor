@@ -32,7 +32,7 @@ import {
 } from '../utils/methods/security';
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
-import { clearClientSessionStorage, getAccessToken } from '../utils/methods/auth';
+import { getAccessToken, invalidateClientSession } from '../utils/methods/auth';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -41,7 +41,7 @@ let isAuthRedirecting = false;
 function handleInvalidSession(): void {
   if (typeof window === "undefined" || isAuthRedirecting) return;
   isAuthRedirecting = true;
-  clearClientSessionStorage();
+  invalidateClientSession();
   window.location.assign("/auth/login");
 }
 

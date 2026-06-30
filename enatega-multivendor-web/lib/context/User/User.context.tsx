@@ -32,7 +32,7 @@ import {
   IRestaurant,
   IVariation,
 } from "@/lib/utils/interfaces";
-import { clearClientSessionStorage } from "@/lib/utils/methods/auth";
+import { invalidateClientSession } from "@/lib/utils/methods/auth";
 
 const SUBSCRIPTION_ORDERS = gql`
   ${orderStatusChanged}
@@ -393,7 +393,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
   const logout = async () => {
     try {
-      clearClientSessionStorage();
+      invalidateClientSession();
       setCart([]);
       setRestaurant(null);
       setToken(null);

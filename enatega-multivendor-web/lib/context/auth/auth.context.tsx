@@ -52,8 +52,8 @@ import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 // Google API
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import {
-  clearClientSessionStorage,
   hasValidAuthToken,
+  invalidateClientSession,
   setAuthTokens,
 } from "@/lib/utils/methods/auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -569,7 +569,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    clearClientSessionStorage();
+    invalidateClientSession();
     setAuthToken("");
   }, []);
 

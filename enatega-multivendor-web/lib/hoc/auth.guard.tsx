@@ -6,8 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 // Methods
 import { onUseLocalStorage } from "../utils/methods/local-storage";
 import {
-  clearClientSessionStorage,
   hasValidAuthToken,
+  invalidateClientSession,
 } from "../utils/methods/auth";
 
 const AuthGuard = <T extends object>(Component: React.ComponentType<T>) => {
@@ -22,7 +22,7 @@ const AuthGuard = <T extends object>(Component: React.ComponentType<T>) => {
         const hasValidSession = hasValidAuthToken();
 
         if (!authToken || !hasValidSession) {
-          clearClientSessionStorage();
+          invalidateClientSession();
           const previousUrl = document.referrer;
           const isSameOrigin = previousUrl.startsWith(window.location.origin);
           const previousPath =
