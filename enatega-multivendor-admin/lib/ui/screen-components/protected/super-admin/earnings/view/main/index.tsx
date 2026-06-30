@@ -64,8 +64,6 @@ export default function EarningsMain({
     },
   });
 
-  console.log('Earnings data:', data);
-
   // Global search handler
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

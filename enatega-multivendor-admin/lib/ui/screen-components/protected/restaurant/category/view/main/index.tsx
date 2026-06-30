@@ -57,7 +57,6 @@ export default function CategoryMain({
   } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
   const shopType = restaurantLayoutContextData?.shopType || '';
-  console.log("🚀 ~ shopType:", shopType)
   // console.log("🚀 ~ restaurantLayoutContextData:", restaurantLayoutContextData)
 
   // Hooks

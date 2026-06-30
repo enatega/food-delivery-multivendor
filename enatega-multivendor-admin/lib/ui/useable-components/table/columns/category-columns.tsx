@@ -69,7 +69,6 @@ export const CATEGORY_TABLE_COLUMNS = ({
   const columns: ColumnDefinition[] = [];
 
   if (shopType === 'grocery') {
-    console.log("🚀 ~ shopType:", shopType)
     columns.push({
       headerName: t('Image'),
       propertyName: 'image',

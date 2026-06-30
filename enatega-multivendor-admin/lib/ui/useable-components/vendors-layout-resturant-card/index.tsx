@@ -140,8 +140,7 @@ export default function VendorsLayoutRestaurantCard({
   const handleCheckboxChange = async () => {
     try {
       await deleteRestaurant({ variables: { id: _id } });
-    } catch (err) {
-      console.log(err);
+    } catch {
       showToast({
         type: 'error',
         title: t('Store Status'),

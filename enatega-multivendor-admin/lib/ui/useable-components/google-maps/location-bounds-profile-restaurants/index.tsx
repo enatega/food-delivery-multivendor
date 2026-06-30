@@ -162,7 +162,6 @@ const CustomGoogleMapsLocationBounds: React.FC<
     []
   );
 
-  console.log('Zones........ ', zones);
   // API Handlers
   function updateCache(
     cache: ApolloCache<unknown>,

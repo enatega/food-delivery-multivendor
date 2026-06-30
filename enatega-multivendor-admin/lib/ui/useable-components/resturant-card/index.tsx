@@ -125,9 +125,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   const handleCheckboxChange = async () => {
     try {
       await deleteRestaurant({ variables: { id: _id } });
-    } catch (err) {
-      console.log({ err });
-    }
+    } catch {}
   };
 
   const handleDelete = async () => {

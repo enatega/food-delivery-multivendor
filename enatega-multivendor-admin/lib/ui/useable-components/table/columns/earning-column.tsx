@@ -13,8 +13,6 @@ export const EARNING_COLUMNS = ({
   const t = useTranslations();
   const { CURRENT_SYMBOL } = useConfiguration();
 
-  console.log({ isSuperAdmin });
-
   // Columns
   return [
     {

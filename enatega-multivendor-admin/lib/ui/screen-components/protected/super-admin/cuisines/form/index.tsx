@@ -81,7 +81,6 @@ export default function CuisineForm({
       refetchQueries: [{ query: GET_CUISINES }],
     }
   );
-  console.log(isEditing.data);
 
   const [editCuisine, { loading: editCuisineLoading }] = useMutation(
     EDIT_CUISINE,

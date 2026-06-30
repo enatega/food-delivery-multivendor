@@ -37,7 +37,6 @@ const RatingMain: React.FC = () => {
 
     if (searchTerm) {
       filtered = filtered.filter((review: IReview) => {
-        console.log(review.order);
         return (
           review.order?.user?.name
             ?.toLowerCase()

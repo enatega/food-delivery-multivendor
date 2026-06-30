@@ -84,7 +84,6 @@ export default function MakeVendorSidebar() {
   ];
 
   if (user?.userType === 'ADMIN' || user?.userType === 'STAFF') {
-    console.log(lastRoute);
     navBarItems.push({
       text: lastRoute ? t(`Back to ${lastRoute}`) : 'Back',
       route: '/general/vendors',
