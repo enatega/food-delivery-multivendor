@@ -23,6 +23,7 @@ import { Dialog } from "primereact/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import ThemeToggle from "@/lib/ui/useable-components/theme-button";
+import useUser from "@/lib/hooks/useUser";
 
 export default function SettingsMain() {
   // States for current values
@@ -42,6 +43,7 @@ export default function SettingsMain() {
 
   // Hooks
   const { setAuthToken } = useAuth();
+  const { logout } = useUser();
   const router = useRouter();
   const { showToast } = useToast();
   const t = useTranslations();
@@ -85,11 +87,11 @@ export default function SettingsMain() {
     // You can use a mutation to update the user's settings
   };
   //  handle Logout
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Add your logout logic here
     // e.g., clear cookies, redirect to login page, etc.
     setAuthToken("");
-    localStorage.clear();
+    await logout();
     showToast({
       type: "success",
       title: t("logoutSuccessToastTitle"),
@@ -116,7 +118,7 @@ const handleConfirmDelete = async () => {
     if (result.data?.Deactivate) {
       // Success: log out user
       setAuthToken("");
-      localStorage.clear();
+      await logout();
       setDeleteAccount(false);
       router.push("/");
 

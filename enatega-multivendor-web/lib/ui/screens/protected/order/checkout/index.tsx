@@ -761,6 +761,10 @@ export default function OrderCheckoutScreen() {
   }
 
   async function onPlaceOrder() {
+    if (loadingOrderMutation) {
+      return;
+    }
+
     // Check if user is autenticated
     if (!authToken) {
       setIsAuthModalVisible(true);
@@ -835,6 +839,21 @@ export default function OrderCheckoutScreen() {
       onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
       router.replace(`/paypal?id=${data.placeOrder._id}`);
     } else if (paymentMethod === "STRIPE") {
+      let stripeCheckoutUrl = "";
+      try {
+        stripeCheckoutUrl = new URL(
+          `stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`,
+          SERVER_URL,
+        ).toString();
+      } catch (error) {
+        showToast({
+          title: "Checkout Configuration Error",
+          message: "Unable to start Stripe checkout. Please contact support.",
+          type: "error",
+        });
+        return;
+      }
+
       localStorage.setItem(
         PENDING_STRIPE_ORDER_ID_KEY,
         data?.placeOrder?.orderId || "",
@@ -843,9 +862,7 @@ export default function OrderCheckoutScreen() {
         PENDING_STRIPE_STARTED_AT_KEY,
         Date.now().toString(),
       );
-      router.replace(
-        `${SERVER_URL}stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`,
-      );
+      router.replace(stripeCheckoutUrl);
     }
   }
 
@@ -1500,7 +1517,7 @@ export default function OrderCheckoutScreen() {
               <button
                 className="bg-primary-color text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={onPlaceOrder}
-                disabled={cart.length === 0}
+                disabled={cart.length === 0 || loadingOrderMutation}
               >
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />
@@ -1613,6 +1630,7 @@ export default function OrderCheckoutScreen() {
               <button
                 className="bg-primary-color text-gray-900 dark:text-white w-full py-2 rounded-full text-xs lg:text-[12px]"
                 onClick={onPlaceOrder}
+                disabled={cart.length === 0 || loadingOrderMutation}
               >
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />

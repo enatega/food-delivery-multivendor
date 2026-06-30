@@ -18,6 +18,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 
 // GQL
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { useEffect, useRef } from "react";
 
 // Utility imports
 import { Subscription } from "zen-observable-ts";
@@ -32,7 +33,7 @@ import {
 } from '../utils/methods/security';
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
-import { clearAuthTokens, getAccessToken } from '../utils/methods/auth';
+import { getAccessToken, invalidateClientSession } from '../utils/methods/auth';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -41,10 +42,7 @@ let isAuthRedirecting = false;
 function handleInvalidSession(): void {
   if (typeof window === "undefined" || isAuthRedirecting) return;
   isAuthRedirecting = true;
-  clearAuthTokens();
-  localStorage.removeItem("userToken");
-  localStorage.removeItem("userAddress");
-  localStorage.removeItem("token");
+  invalidateClientSession();
   window.location.assign("/auth/login");
 }
 
@@ -88,6 +86,21 @@ async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
 }
 
 export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
+  const clientRef = useRef<ApolloClient<NormalizedCacheObject> | null>(null);
+  const wsClientRef = useRef<SubscriptionClient | null>(null);
+
+  useEffect(() => {
+    return () => {
+      wsClientRef.current?.close(false, false);
+      wsClientRef.current = null;
+      clientRef.current = null;
+    };
+  }, []);
+
+  if (clientRef.current) {
+    return clientRef.current;
+  }
+
   // const { SERVER_URL, WS_SERVER_URL } = getEnv(ENV);
   const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
   const WS_SERVER_URL = process.env.NEXT_PUBLIC_WS_SERVER_URL;
@@ -110,6 +123,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
         authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : '',
       }),
     });
+  wsClientRef.current = wsClient;
   const wsLink = new WebSocketLink(wsClient);
 
   const errorLink = new ApolloLink((operation, forward) =>
@@ -201,8 +215,9 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       httpLink
     ),
     cache,
-    connectToDevTools: true,
+    connectToDevTools: process.env.NODE_ENV !== "production",
   });
 
+  clientRef.current = client;
   return client;
 };

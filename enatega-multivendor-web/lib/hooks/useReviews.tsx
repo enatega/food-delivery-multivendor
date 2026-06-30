@@ -6,7 +6,7 @@ export default function useReviews(restaurant: string) {
     GET_REVIEWS_BY_RESTAURANT,
     {
       variables: { restaurant },
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
     }
   );
   return { data, refetch, networkStatus, loading, error };

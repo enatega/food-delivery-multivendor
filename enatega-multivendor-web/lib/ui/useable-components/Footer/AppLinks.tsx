@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { hasValidAuthToken } from "@/lib/utils/methods/auth";
 
 const PlayStoreLink =
   "https://play.google.com/store/apps/details?id=com.enatega.multivendor&hl=en_IE";
@@ -20,13 +21,7 @@ const AppLinks = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-    if (!token || !userId) {
-      setIsLogin(false);
-    } else {
-      setIsLogin(true);
-    }
+    setIsLogin(hasValidAuthToken());
   }, []);
 
   const logoClickHandler = () => {
@@ -44,13 +39,15 @@ const AppLinks = () => {
 
       <div className="flex gap-2 flex-wrap">
         <button onClick={() => handleButtonClick(AppleStoreLink)}>
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             alt={t("apple_app_store_link")}
             width={130}
-            height={130}
+            height={39}
             src={
               "https://images.ctfassets.net/23u853certza/7xaqvusYmbDlca5umD9bZo/a0fa3e1c7ca41a70c6285d6c7b18c92b/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
             }
+            loading="lazy"
           />
         </button>
         <button onClick={() => handleButtonClick(PlayStoreLink)}>

@@ -1,9 +1,7 @@
 "use client";
 
-import getEnv from "@/environment";
 // GQL
 import { GET_CONFIG } from "@/lib/api/graphql/queries";
-import { ENV } from "@/lib/utils/constants";
 
 // Interfaces
 import { IConfigProps } from "@/lib/utils/interfaces";
@@ -25,9 +23,6 @@ export const ConfigurationProvider = ({
   children: ReactNode;
 }) => {
   const { loading, data, error } = useQuery(GET_CONFIG);
-
-
-  console.log("data : ", data)
   const configuration =
     loading || error || !data.configuration ?
       { currency: "", currencySymbol: "", deliveryRate: 0, costType: "perKM" }
@@ -64,8 +59,7 @@ export const ConfigurationProvider = ({
   const FIREBASE_MEASUREMENT_ID = configuration?.measurementId;
   const FIREBASE_VAPID_KEY = configuration?.vapidKey;
   const FIREBASE_AUTH_DOMAIN = configuration?.authDomain;
-
-  const { SERVER_URL } = getEnv(ENV);
+  const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL ?? "";
 
   return (
     <ConfigurationContext.Provider
