@@ -4,7 +4,6 @@ const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    unoptimized: true,
     dangerouslyAllowSVG: false,
     remotePatterns: [
       {
@@ -55,6 +54,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.s3.*.amazonaws.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'assets.enatega.com',
+      }
     ], // Add placehold.co as an allowed domain
   },
 };
