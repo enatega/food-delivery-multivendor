@@ -26,7 +26,7 @@ const FavouriteProducts = () => {
     loading: isFavouriteRestaurantsLoading,
   } = useQuery<IUserFavouriteQueryResponse>(GET_USER_FAVOURITE, {
     variables: {}, // Empty object for optional variables
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
   });
   
   //Handlers

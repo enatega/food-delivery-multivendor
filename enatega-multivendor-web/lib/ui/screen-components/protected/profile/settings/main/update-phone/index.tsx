@@ -55,7 +55,7 @@ export default function UpdatePhoneModal({
    const [
       fetchProfile
     ] = useLazyQuery(GET_USER_PROFILE, {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
     });
   
     // update user phone number

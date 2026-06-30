@@ -18,6 +18,7 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { v4 } from "uuid";
@@ -217,7 +218,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       data: dataProfile,
     },
   ] = useLazyQuery(GET_USER_PROFILE, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     onCompleted: onProfileCompleted,
     onError,
   });
@@ -238,7 +239,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       page: 1,
       limit: 300,
     },
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     onError,
   });
 
@@ -383,15 +384,18 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     console.log("error", error.message);
   }
 
-  const setTokenAsync = async (tokenReq: string, cb: () => void = () => { }) => {
-    setToken(tokenReq);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("token", tokenReq);
-    }
-    cb();
-  };
+  const setTokenAsync = useCallback(
+    async (tokenReq: string, cb: () => void = () => {}) => {
+      setToken(tokenReq);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", tokenReq);
+      }
+      cb();
+    },
+    []
+  );
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       invalidateClientSession();
       setCart([]);
@@ -401,7 +405,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     } catch (error) {
       console.log("error on logout", error);
     }
-  };
+  }, [client]);
 
   const subscribeOrders = useCallback(() => {
     if (!subscribeToMoreOrders || !dataProfile?.profile?._id) return;
@@ -747,6 +751,75 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       .toFixed(2);
   }, [cart]);
 
+  const contextValue = useMemo(
+    () => ({
+      isLoggedIn: !!token,
+      loadingProfile: loadingProfile && calledProfile,
+      errorProfile,
+      profile: dataProfile && dataProfile.profile ? dataProfile.profile : null,
+      fetchProfile,
+      setTokenAsync,
+      logout,
+      loadingOrders: loadingOrders && calledOrders,
+      errorOrders,
+      orders: dataOrders && dataOrders.orders ? dataOrders.orders : [],
+      fetchOrders,
+      fetchMoreOrdersFunc,
+      networkStatusOrders,
+      cart,
+      cartCount: numberOfCartItems(),
+      clearCart,
+      updateCart,
+      addQuantity,
+      removeQuantity,
+      addItem,
+      checkItemCart,
+      deleteItem,
+      restaurant,
+      setCartRestaurant,
+      isLoading,
+      updateItemQuantity,
+      removeItem,
+      calculateSubtotal,
+      transformCartWithFoodInfo,
+      setCart,
+    }),
+    [
+      token,
+      loadingProfile,
+      calledProfile,
+      errorProfile,
+      dataProfile,
+      fetchProfile,
+      setTokenAsync,
+      logout,
+      loadingOrders,
+      calledOrders,
+      errorOrders,
+      dataOrders,
+      fetchOrders,
+      fetchMoreOrdersFunc,
+      networkStatusOrders,
+      cart,
+      numberOfCartItems,
+      clearCart,
+      updateCart,
+      addQuantity,
+      removeQuantity,
+      addItem,
+      checkItemCart,
+      deleteItem,
+      restaurant,
+      setCartRestaurant,
+      isLoading,
+      updateItemQuantity,
+      removeItem,
+      calculateSubtotal,
+      transformCartWithFoodInfo,
+      setCart,
+    ]
+  );
+
 
 
 
@@ -754,40 +827,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
 
   return (
-    <UserContext.Provider
-      value={{
-        isLoggedIn: !!token,
-        loadingProfile: loadingProfile && calledProfile,
-        errorProfile,
-        profile: dataProfile && dataProfile.profile ? dataProfile.profile : null,
-        fetchProfile, // Add this line
-        setTokenAsync,
-        logout,
-        loadingOrders: loadingOrders && calledOrders,
-        errorOrders,
-        orders: dataOrders && dataOrders.orders ? dataOrders.orders : [],
-        fetchOrders,
-        fetchMoreOrdersFunc,
-        networkStatusOrders,
-        cart,
-        cartCount: numberOfCartItems(),
-        clearCart,
-        updateCart,
-        addQuantity,
-        removeQuantity,
-        addItem,
-        checkItemCart,
-        deleteItem,
-        restaurant,
-        setCartRestaurant,
-        isLoading,
-        updateItemQuantity,
-        removeItem,
-        calculateSubtotal,
-        transformCartWithFoodInfo,
-        setCart
-      }}
-    >
+    <UserContext.Provider value={contextValue}>
       {props.children}
     </UserContext.Provider>
   );
