@@ -10,5 +10,6 @@ export * from './zoom-calculator';
 export * from './image';
 export * from './video';
 export * from './security';
+export * from './timing';
 export * from './decryption/decrypt';
 export * from './decryption/decrypt-config-fields';

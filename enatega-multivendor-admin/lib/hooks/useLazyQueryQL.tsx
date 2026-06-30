@@ -5,9 +5,8 @@ import {
   useLazyQuery,
 } from '@apollo/client';
 import { WatchQueryFetchPolicy } from '@apollo/client/core/watchQueryOptions';
-import { debounce } from 'lodash';
 import { useCallback } from 'react';
-import { retryQuery } from '../utils/methods';
+import { debounce, retryQuery } from '../utils/methods';
 
 export const useLazyQueryQL = <
   T extends DocumentNode,

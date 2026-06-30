@@ -103,12 +103,6 @@ export default function BannersMain({
     },
   ];
 
-  // Handlers
-  // const onPageChange = (page: number, size: number) => {
-  //   setCurrentPage(page);
-  //   setPageSize(size);
-  // };
-
   // UseEffects
   useEffect(() => {
     refetchBanners({

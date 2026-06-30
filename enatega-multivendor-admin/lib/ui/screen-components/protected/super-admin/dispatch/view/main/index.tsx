@@ -24,28 +24,17 @@ export default function DispatchMain() {
   const [selectedData, setSelectedData] = useState<IActiveOrders[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
-  // const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState('');
   const hasDataRef = useRef(false);
   const [lastValidOrders, setLastValidOrders] = useState<IActiveOrders[]>([]);
 
-
-
   // Ref for debouncing and polling
   const refetchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pollingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
-  // Filters
-  // const filters = {
-  //   global: { value: globalFilterValue, matchMode: FilterMatchMode.CONTAINS },
-  //   orderStatus: {
-  //     value: selectedActions.length > 0 ? selectedActions : null,
-  //     matchMode: FilterMatchMode.IN,
-  //   },
-  // };
 
   // Queries
   const [
@@ -68,9 +57,6 @@ export default function DispatchMain() {
       search: search,
       actions: selectedActions,
     },
-    // onCompleted: () => {
-    //   setIsLoading(false);
-    // },
     fetchPolicy: 'network-only',
   });
   const showLoading =
@@ -85,7 +71,6 @@ export default function DispatchMain() {
     }
   }, [active_orders_data]);
 
-
   // 🔥 SUBSCRIPTION (will attempt to use, but has fallback)
   const { data: subscriptionData } = useSubscription(
     SUBSCRIPTION_DISPATCH_ORDER,
@@ -93,7 +78,6 @@ export default function DispatchMain() {
       shouldResubscribe: true,
     }
   );
-
 
   // Handle subscription data
   useEffect(() => {
@@ -138,9 +122,7 @@ export default function DispatchMain() {
         restaurantId: '',
       },
     });
-    // setIsLoading(true);
   }, [rowsPerPage, page, selectedActions, search, fetchActiveOrders]);
-
 
   // Cleanup
   useEffect(() => {
@@ -184,7 +166,6 @@ export default function DispatchMain() {
           setRowsPerPage(rowNumber);
         }}
         currentPage={page}
-      // filters={filters}
       />
     </div>
   );
