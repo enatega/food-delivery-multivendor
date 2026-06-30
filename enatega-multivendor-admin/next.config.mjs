@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
   images: {
     unoptimized: true,
-    dangerouslyAllowSVG: true,
+    dangerouslyAllowSVG: false,
     remotePatterns: [
       {
         protocol:'http',
