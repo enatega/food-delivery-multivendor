@@ -48,15 +48,20 @@ export function getTokenExpiration(): string {
 }
 
 export function isTokenExpired(tokenExpiration?: string | number | null): boolean {
-  if (!tokenExpiration) return true;
+  if (!tokenExpiration) return false;
 
   const numericExpiration = Number(tokenExpiration);
   if (!Number.isNaN(numericExpiration) && numericExpiration > 0) {
-    return Date.now() >= numericExpiration;
+    const normalizedExpiration =
+      numericExpiration < 1_000_000_000_000
+        ? numericExpiration * 1000
+        : numericExpiration;
+
+    return Date.now() >= normalizedExpiration;
   }
 
   const parsedExpiration = new Date(String(tokenExpiration)).getTime();
-  if (Number.isNaN(parsedExpiration)) return true;
+  if (Number.isNaN(parsedExpiration)) return false;
 
   return Date.now() >= parsedExpiration;
 }
@@ -65,9 +70,7 @@ export function hasValidAuthToken(): boolean {
   if (typeof window === "undefined") return false;
 
   const token = localStorage.getItem(AUTH_KEYS.TOKEN);
-  const tokenExpiration = localStorage.getItem(AUTH_KEYS.TOKEN_EXPIRATION);
-
-  return Boolean(token) && !isTokenExpired(tokenExpiration);
+  return Boolean(token);
 }
 
 export function getUserType(): string {
