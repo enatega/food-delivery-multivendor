@@ -33,7 +33,7 @@ export default function VendorLiveMonitor({
     {
       fetchPolicy: 'network-only',
       enabled: !!vendorId,
-      pollInterval: 15000,
+      pollInterval: 30000,
     }
   ) as IQueryResult<IVendorLiveMonitorResponseGraphQL | undefined, undefined>;
 

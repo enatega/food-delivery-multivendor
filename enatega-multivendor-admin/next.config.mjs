@@ -8,22 +8,6 @@ const nextConfig = {
     dangerouslyAllowSVG: false,
     remotePatterns: [
       {
-        protocol:'http',
-        hostname:'freepick.com'
-      },
-      {
-        protocol:'https',
-        hostname:'freepick.com'
-      },
-      {
-        protocol:'http',
-        hostname:'placeholder.com'
-      },
-      {
-        protocol:'https',
-        hostname:'placeholder.com'
-      },
-      {
         protocol: 'https',
         hostname: 'placehold.co',
       },
@@ -41,23 +25,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'enatega.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.lifcobooks.com',
-      },
-      {
-        protocol: 'https',
         hostname: 'images.pexels.com',
       },
       {
         protocol: 'https',
         hostname: 'upload.wikimedia.org',
-      },
-      {
-        hostname: 'example.com',
-        protocol: 'https',
       },
       {
         protocol: 'https',
