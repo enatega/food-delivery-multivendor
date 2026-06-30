@@ -27,12 +27,12 @@ import { useMutation } from '@apollo/client';
 
 const StripeAddForm = () => {
   // Hooks
-  const { STRIPE_PUBLIC_KEY, STRIPE_SECRET_KEY } = useConfiguration();
+  const { STRIPE_PUBLIC_KEY } = useConfiguration();
   const { showToast } = useToast();
 
   const initialValues = {
     publishableKey: STRIPE_PUBLIC_KEY,
-    secretKey: STRIPE_SECRET_KEY,
+    secretKey: '',
   };
 
   const [mutate, { loading: mutationLoading }] = useMutation(
@@ -43,11 +43,12 @@ const StripeAddForm = () => {
   );
 
   const handleSubmit = (values: IStripeForm) => {
+    const secretKey = values.secretKey?.trim();
     mutate({
       variables: {
         configurationInput: {
           publishableKey: values.publishableKey,
-          secretKey: values.secretKey,
+          ...(secretKey ? { secretKey } : {}),
         },
       },
       onCompleted: () => {
@@ -118,6 +119,9 @@ const StripeAddForm = () => {
                     }}
                   />
                 </div>
+                <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                  Leave the secret key blank to keep the current value.
+                </p>
               </ConfigCard>
             </Form>
           );

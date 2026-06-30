@@ -5,20 +5,22 @@ export const NodeMailerValidationSchema = Yup.object().shape({
   emailName: Yup.string()
     .max(35, 'Email name must be at most 35 characters')
     .required('Email name is required'),
-  password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .required('required'),
+  password: Yup.string().test(
+    'password-length',
+    'Password must be at least 8 characters',
+    (value) => !value || value.length >= 8
+  ),
   enableEmail: Yup.boolean(),
 });
 
 export const StripeValidationSchema = Yup.object().shape({
   publishableKey: Yup.string().required('required'),
-  secretKey: Yup.string().required('required'),
+  secretKey: Yup.string(),
 });
 
 export const PayPalValidationSchema = Yup.object().shape({
   clientId: Yup.string().required('required'),
-  clientSecret: Yup.string().required('required'),
+  clientSecret: Yup.string(),
   secret: Yup.boolean(),
 });
 
@@ -28,7 +30,7 @@ export const DeliverytRateValidationSchema = Yup.object().shape({
 
 export const TwilioValidationSchema = Yup.object().shape({
   twilioAccountSid: Yup.string().required('required'),
-  twilioAuthToken: Yup.string().required('required'),
+  twilioAuthToken: Yup.string(),
   twilioPhoneNumber: Yup.number().required('required'),
   twilioWhatsAppNumber: Yup.number().nullable(),
   skipWhatsAppOTP: Yup.boolean().nullable(),

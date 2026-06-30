@@ -8,25 +8,20 @@ export const GET_CONFIGURATION = gql`
       emailName
       enableEmail
       clientId
-      clientSecret
       sandbox
       publishableKey
-      secretKey
       currency
       currencySymbol
       deliveryRate
       twilioAccountSid
-      twilioAuthToken
       twilioPhoneNumber
       twilioEnabled
       skipWhatsAppOTP
       twilioWhatsAppNumber
       formEmail
-      sendGridApiKey
       sendGridEnabled
       sendGridEmail
       sendGridEmailName
-      sendGridPassword
       dashboardSentryUrl
       webSentryUrl
       apiSentryUrl
