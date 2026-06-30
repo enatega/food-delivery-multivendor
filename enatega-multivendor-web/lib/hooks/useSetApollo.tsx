@@ -32,7 +32,7 @@ import {
 } from '../utils/methods/security';
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
-import { clearAuthTokens, getAccessToken } from '../utils/methods/auth';
+import { clearClientSessionStorage, getAccessToken } from '../utils/methods/auth';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -41,10 +41,7 @@ let isAuthRedirecting = false;
 function handleInvalidSession(): void {
   if (typeof window === "undefined" || isAuthRedirecting) return;
   isAuthRedirecting = true;
-  clearAuthTokens();
-  localStorage.removeItem("userToken");
-  localStorage.removeItem("userAddress");
-  localStorage.removeItem("token");
+  clearClientSessionStorage();
   window.location.assign("/auth/login");
 }
 
@@ -201,7 +198,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       httpLink
     ),
     cache,
-    connectToDevTools: true,
+    connectToDevTools: process.env.NODE_ENV !== "production",
   });
 
   return client;

@@ -25,6 +25,7 @@ import {
   LOGIN,
   PHONE_EXISTS,
   RESET_PASSWORD,
+  RESET_PASSWORD_WITH_TOKEN,
   SENT_OTP_TO_EMAIL,
   SENT_OTP_TO_PHONE,
 } from "@/lib/api/graphql";
@@ -50,7 +51,11 @@ import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 
 // Google API
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
-import { setAuthTokens } from "@/lib/utils/methods/auth";
+import {
+  clearClientSessionStorage,
+  hasValidAuthToken,
+  setAuthTokens,
+} from "@/lib/utils/methods/auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 
@@ -115,6 +120,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     { resetPassword: { result: boolean } },
     undefined | { password: string; email: string }
   >(RESET_PASSWORD);
+  const [mutateResetPasswordWithToken] = useMutation<
+    { resetPassword: { result: boolean } },
+    undefined | { password: string; email: string; token: string }
+  >(RESET_PASSWORD_WITH_TOKEN);
 
   // Checkers
   async function checkEmailExists(email: string): Promise<boolean> {
@@ -177,14 +186,18 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const handlePasswordReset = async (
     password: string,
     email: string,
-    _token?: string,
+    token?: string,
     setFormData?: Dispatch<SetStateAction<IAuthFormData>>
   ) => {
     try {
       setIsLoading(true);
-      const resetPasswordResponse = await mutateResetPassword({
-        variables: { password, email },
-      });
+      const resetPasswordResponse = token
+        ? await mutateResetPasswordWithToken({
+            variables: { password, email, token },
+          })
+        : await mutateResetPassword({
+            variables: { password, email },
+          });
       if (resetPasswordResponse?.data?.resetPassword?.result === true) {
         showToast({
           type: "success",
@@ -259,6 +272,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         tokenExpiration: data?.login.tokenExpiration,
         userType: 'USER',
       });
+      setAuthToken(data?.login.token ?? "");
 
       return data;
     } catch (err) {
@@ -299,6 +313,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           tokenExpiration: userData.data.createUser.tokenExpiration,
           userType: 'USER',
         });
+        setAuthToken(userData.data.createUser.token ?? "");
         const {
           userId,
           email,
@@ -367,6 +382,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         tokenExpiration: data?.login?.tokenExpiration,
         userType: 'USER',
       });
+      setAuthToken(data?.login?.token ?? "");
       await fetchProfile();
       if (!data.login.emailIsVerified) {
         setActivePanel(5);
@@ -545,13 +561,17 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return; // ⛔ Prevent SSR execution
 
-    // Local Vars
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setAuthToken(token);
+    if (hasValidAuthToken()) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        setAuthToken(token);
+      }
+      return;
     }
-  }, [user]);
+
+    clearClientSessionStorage();
+    setAuthToken("");
+  }, []);
 
   useEffect(() => {
     if (typeof user?.token !== "undefined" && !!user?.token) {

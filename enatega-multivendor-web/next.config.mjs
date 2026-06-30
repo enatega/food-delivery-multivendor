@@ -17,6 +17,21 @@ import createNextIntlPlugin from "next-intl/plugin";
  */
 
 const withNextIntl = createNextIntlPlugin();
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "form-action 'self'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data: https:",
+  "style-src 'self' 'unsafe-inline' https:",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+  "connect-src 'self' https: wss: ws:",
+  "frame-src 'self' https:",
+  "media-src 'self' data: blob: https:",
+  "upgrade-insecure-requests",
+].join("; ");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -35,8 +50,7 @@ const nextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value:
-              "upgrade-insecure-requests; media-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com data: blob:",
+            value: contentSecurityPolicy,
           },
           // Optional: Add other security headers
           {
@@ -55,11 +69,6 @@ const nextConfig = {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },
-          {
-            key: "Content-Security-Policy",
-            value:
-              "media-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com https://assets.enatega.com data: blob:",
-          },
         ],
       },
     ];
@@ -68,7 +77,7 @@ const nextConfig = {
   images: {
     // domains: ["storage.googleapis.com"],
     unoptimized: true,
-    dangerouslyAllowSVG: true,
+    dangerouslyAllowSVG: false,
     remotePatterns: [
       {
         protocol: "https",

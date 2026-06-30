@@ -56,6 +56,7 @@ import {
   deleteSearchedKeywords,
   getSearchedKeywords,
 } from "@/lib/utils/methods";
+import { hasValidAuthToken } from "@/lib/utils/methods/auth";
 
 // Constnats
 import {
@@ -104,6 +105,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     profile,
     loadingProfile,
     fetchProfile,
+    logout,
   } = useUser();
   const { userAddress, setUserAddress } = useUserAddress();
   const { getCurrentLocation } = useLocation();
@@ -171,14 +173,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-    if (!token || !userId) {
-      setIsLogin(false);
-    } else {
-      setIsLogin(true);
-    }
-  }, []);
+    setIsLogin(hasValidAuthToken());
+  }, [authToken]);
 
   const onHandleAddressModelVisibility = () => {
     if (authToken) {
@@ -189,12 +185,12 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   };
 
   const { showToast } = useContext(ToastContext);
-  const onLogout = () => {
+  const onLogout = async () => {
     router.replace("/");
     setActivePanel(0);
     setAuthToken("");
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("token");
+    setIsLogin(false);
+    await logout();
     //Give Toast Alert You Logout Successfully
     showToast({
       type: "success",

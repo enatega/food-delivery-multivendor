@@ -32,6 +32,7 @@ import {
   IRestaurant,
   IVariation,
 } from "@/lib/utils/interfaces";
+import { clearClientSessionStorage } from "@/lib/utils/methods/auth";
 
 const SUBSCRIPTION_ORDERS = gql`
   ${orderStatusChanged}
@@ -392,9 +393,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
   const logout = async () => {
     try {
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("token");
-      }
+      clearClientSessionStorage();
+      setCart([]);
+      setRestaurant(null);
       setToken(null);
       await client.resetStore();
     } catch (error) {
