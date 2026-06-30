@@ -1,6 +1,6 @@
 
 'use client';
-import React from 'react';
+import React, { memo } from 'react';
 import { Tag } from 'primereact/tag';
 import ChangesDiff from './ChangesDiff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -90,4 +90,4 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
     );
 };
 
-export default AuditLogCard;
+export default memo(AuditLogCard);
