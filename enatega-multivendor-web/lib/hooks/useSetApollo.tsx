@@ -18,6 +18,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 
 // GQL
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { useEffect, useRef } from "react";
 
 // Utility imports
 import { Subscription } from "zen-observable-ts";
@@ -85,6 +86,21 @@ async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
 }
 
 export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
+  const clientRef = useRef<ApolloClient<NormalizedCacheObject> | null>(null);
+  const wsClientRef = useRef<SubscriptionClient | null>(null);
+
+  useEffect(() => {
+    return () => {
+      wsClientRef.current?.close(false, false);
+      wsClientRef.current = null;
+      clientRef.current = null;
+    };
+  }, []);
+
+  if (clientRef.current) {
+    return clientRef.current;
+  }
+
   // const { SERVER_URL, WS_SERVER_URL } = getEnv(ENV);
   const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
   const WS_SERVER_URL = process.env.NEXT_PUBLIC_WS_SERVER_URL;
@@ -107,6 +123,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
         authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : '',
       }),
     });
+  wsClientRef.current = wsClient;
   const wsLink = new WebSocketLink(wsClient);
 
   const errorLink = new ApolloLink((operation, forward) =>
@@ -201,5 +218,6 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     connectToDevTools: process.env.NODE_ENV !== "production",
   });
 
+  clientRef.current = client;
   return client;
 };

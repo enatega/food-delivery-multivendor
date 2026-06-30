@@ -76,7 +76,7 @@ const nextConfig = {
 
   images: {
     // domains: ["storage.googleapis.com"],
-    unoptimized: true,
+    unoptimized: false,
     dangerouslyAllowSVG: false,
     remotePatterns: [
       {
@@ -156,6 +156,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "enatega-backend.s3.eu-north-1.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "assets.enatega.com",
       },
       {
         protocol: "https",

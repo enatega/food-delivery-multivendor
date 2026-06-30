@@ -1,13 +1,5 @@
-"use client";
-
-import dynamic from 'next/dynamic';
-
-// Dynamically import the component with SSR disabled
-const CustomerTicketsScreen = dynamic(
-  () => import('@/lib/ui/screens/protected/profile').then(mod => mod.CustomerTicketsScreen),
-  { ssr: false }
-);
+import { CustomerTicketsScreen } from "@/lib/ui/screens/protected/profile";
 
 export default function CustomerTicketsPage() {
-  return <CustomerTicketsScreen/>
+  return <CustomerTicketsScreen />;
 }
