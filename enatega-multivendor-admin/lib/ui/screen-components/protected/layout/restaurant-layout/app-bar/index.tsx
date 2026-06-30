@@ -65,12 +65,14 @@ import { onUseLocalStorage } from '@/lib/utils/methods';
 // Styles
 import classes from './app-bar.module.css';
 import { AppLogo } from '@/lib/utils/assets/svgs/logo';
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import { GET_RESTAURANT_PROFILE } from '@/lib/api/graphql';
 import { useLocale, useTranslations } from 'next-intl';
 import { TLocale } from '@/lib/utils/types/locale';
 import { setUserLocale } from '@/lib/utils/methods/locale';
 import ThemeToggle from '@/lib/ui/useable-components/theme-button';
+import { clearAuthTokens } from '@/lib/utils/methods/auth';
+import { clearMetricsData } from '@/lib/utils/methods/security';
 
 const AppTopbar = () => {
   // Hooks
@@ -78,6 +80,7 @@ const AppTopbar = () => {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const currentLocale = useLocale();
+  const apolloClient = useApolloClient();
 
   // Local Storage
   const restaurantId = onUseLocalStorage('get', 'restaurantId');
@@ -124,13 +127,17 @@ const AppTopbar = () => {
     }
   };
 
-  const onConfirmLogout = () => {
+  const onConfirmLogout = async () => {
     setUser(null);
+    clearAuthTokens();
+    clearMetricsData();
     onUseLocalStorage('delete', SELECTED_VENDOR);
     onUseLocalStorage('delete', SELECTED_VENDOR_EMAIL);
     onUseLocalStorage('delete', SELECTED_RESTAURANT);
     onUseLocalStorage('delete', `user-${APP_NAME}`);
-    router.push('/authentication/login');
+    onUseLocalStorage('delete', 'messaging-token');
+    await apolloClient.clearStore();
+    router.replace('/authentication/login');
   };
 
   function onLocaleChange(value: string) {
