@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyFunction = (...args: any[]) => any;
 
 export const debounce = <F extends AnyFunction>(fn: F, wait: number) => {

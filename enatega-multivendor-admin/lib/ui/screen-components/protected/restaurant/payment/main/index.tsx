@@ -19,20 +19,35 @@ import { IPaymentMethod } from '@/lib/utils/interfaces/payment.card.interface';
 import { ProfileContext } from '@/lib/context/restaurant/profile.context';
 
 export default function PaymentMain() {
-
   // Hooks
   const { SERVER_URL } = useConfiguration();
-  const t = useTranslations()
+  const t = useTranslations();
 
   // Contexts
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
-  const {restaurantProfileResponse} = useContext(ProfileContext)
+  const { restaurantProfileResponse } = useContext(ProfileContext);
   const { showToast } = useContext(ToastContext);
   const { restaurantId } = restaurantLayoutContextData;
 
   const [initialLoading, setInitialLoading] = useState(true);
   const [submittingMethod, setSubmittingMethod] = useState<string | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<IPaymentMethod[]>([]);
+
+  const isAllowedStripeRedirect = (value: unknown) => {
+    if (typeof value !== 'string') {
+      return false;
+    }
+
+    try {
+      const url = new URL(value);
+      return (
+        url.protocol === 'https:' &&
+        (url.hostname === 'stripe.com' || url.hostname.endsWith('.stripe.com'))
+      );
+    } catch {
+      return false;
+    }
+  };
 
   const handleStripeSubmit = async () => {
     setSubmittingMethod('stripe');
@@ -45,7 +60,12 @@ export default function PaymentMain() {
         },
       });
       const data = await response.json();
-      window.location.href = data.url;
+
+      if (!isAllowedStripeRedirect(data?.url)) {
+        throw new Error('Invalid Stripe redirect URL');
+      }
+
+      window.location.assign(data.url);
     } catch {
       showToast({
         type: 'error',
@@ -68,7 +88,9 @@ export default function PaymentMain() {
           description: 'Connect with Stripe for payments',
           icon: faCreditCard,
           type: 'stripe',
-          isDetailsSubmitted: restaurantProfileResponse.data?.restaurant?.stripeDetailsSubmitted ?? false,
+          isDetailsSubmitted:
+            restaurantProfileResponse.data?.restaurant?.stripeDetailsSubmitted ??
+            false,
           onClick: handleStripeSubmit,
         },
       ]);
