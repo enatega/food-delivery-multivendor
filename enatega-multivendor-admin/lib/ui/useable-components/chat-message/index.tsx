@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Image from 'next/image';
 
 // Interface
@@ -16,7 +17,7 @@ export interface IChatMessageProps {
   isAdmin?: boolean;
 }
 
-export default function ChatMessage({ message, isAdmin = false }: IChatMessageProps) {
+function ChatMessage({ message, isAdmin = false }: IChatMessageProps) {
   return (
     <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'} mb-4`}>
       {!isAdmin && (
@@ -56,3 +57,5 @@ export default function ChatMessage({ message, isAdmin = false }: IChatMessagePr
     </div>
   );
 }
+
+export default memo(ChatMessage);

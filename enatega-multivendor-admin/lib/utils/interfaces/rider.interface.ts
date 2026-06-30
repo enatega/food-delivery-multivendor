@@ -61,6 +61,15 @@ export interface IRidersDataResponse {
   riders: IRiderResponse[];
 }
 
+export interface IRidersPaginatedDataResponse {
+  ridersPaginated: {
+    data: IRiderResponse[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 export interface IRiderDetailDataResponse {
   rider: ISingleRiderResponse;
 }

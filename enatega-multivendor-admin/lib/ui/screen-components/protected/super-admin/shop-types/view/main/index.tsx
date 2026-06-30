@@ -31,7 +31,6 @@ import ShopTypesTableHeader from '../header/table-header';
 import Table from '@/lib/ui/useable-components/table';
 
 // Constants
-import { generateDummyShopTypes } from '@/lib/utils/dummy';
 
 // Table COlumns
 import { SHOP_TYPES_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/shop-types-columns';
@@ -69,7 +68,7 @@ export default function ShopTypesMain({
 
   // Queries
   const { data, fetch } = useLazyQueryQL(GET_SHOP_TYPES, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 5000,
     onCompleted: () => setIsLoading(false),
   }) as ILazyQueryResult<IGetShopTypesData | undefined, undefined>;
@@ -170,8 +169,7 @@ export default function ShopTypesMain({
       <Table
         columns={SHOP_TYPES_TABLE_COLUMNS({ menuItems })}
         data={
-          data?.fetchShopTypes?.data ||
-          (isLoading ? generateDummyShopTypes() : [])
+          data?.fetchShopTypes?.data || []
         }
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e)}

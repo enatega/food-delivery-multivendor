@@ -125,8 +125,8 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   const handleCheckboxChange = async () => {
     try {
       await deleteRestaurant({ variables: { id: _id } });
-    } catch (err) {
-      console.log({ err });
+    } catch {
+      // onError in useMutation handles the toast for failed requests
     }
   };
 

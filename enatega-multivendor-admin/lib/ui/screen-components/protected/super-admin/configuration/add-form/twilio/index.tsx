@@ -30,7 +30,6 @@ const TwilioAddForm = () => {
   // Hooks
   const {
     TWILIO_ACCOUNT_SID,
-    TWILIO_AUTH_TOKEN,
     TWILIO_PHONE_NUMBER,
     TWILIO_ENABLED,
     TWILIO_WHATSAPP_NUMBER,
@@ -39,7 +38,7 @@ const TwilioAddForm = () => {
 
   const initialValues = {
     twilioAccountSid: TWILIO_ACCOUNT_SID,
-    twilioAuthToken: TWILIO_AUTH_TOKEN,
+    twilioAuthToken: '',
     twilioPhoneNumber: TWILIO_PHONE_NUMBER ? +TWILIO_PHONE_NUMBER : null,
     twilioEnabled: TWILIO_ENABLED,
     twilioWhatsAppNumber: TWILIO_WHATSAPP_NUMBER
@@ -55,11 +54,11 @@ const TwilioAddForm = () => {
   );
 
   const handleSubmit = (values: ITwilioForm) => {
+    const twilioAuthToken = values.twilioAuthToken?.trim();
     mutate({
       variables: {
         configurationInput: {
           twilioAccountSid: values.twilioAccountSid,
-          twilioAuthToken: values.twilioAuthToken,
           twilioPhoneNumber: values.twilioPhoneNumber
             ? values.twilioPhoneNumber.toString()
             : '',
@@ -67,6 +66,7 @@ const TwilioAddForm = () => {
           twilioWhatsAppNumber: values.twilioWhatsAppNumber
             ? values.twilioWhatsAppNumber?.toString()
             : '',
+          ...(twilioAuthToken ? { twilioAuthToken } : {}),
         },
       },
       onCompleted: () => {
@@ -186,6 +186,9 @@ const TwilioAddForm = () => {
                     }}
                   />
                 </div>
+                <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                  Leave the auth token blank to keep the current value.
+                </p>
               </ConfigCard>
             </Form>
           );

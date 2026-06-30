@@ -201,6 +201,15 @@ export interface IVendorStoreDetailsResponseGraphQL {
   getStoreDetailsByVendorId: IVendorStoreDetails[];
 }
 
+export interface IVendorStoreDetailsPaginatedResponseGraphQL {
+  getStoreDetailsByVendorIdPaginated: {
+    data: IVendorStoreDetails[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 export interface IVendorDashboardStatsCardDetailsResponseGraphQL {
   getVendorDashboardStatsCardDetails: {
     totalOrders: number;

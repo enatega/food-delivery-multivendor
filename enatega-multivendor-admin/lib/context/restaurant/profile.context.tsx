@@ -29,7 +29,7 @@ export const ProfileProvider: React.FC<IProfileProviderProps> = ({
     { id: restaurantId },
     {
       enabled: !!restaurantId,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       debounceMs: 300,
       onCompleted: () => {
         // You can perform any actions with the fetched data here

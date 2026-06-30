@@ -10,7 +10,6 @@ import {
 } from '@/lib/utils/interfaces';
 import EarningTableHeader from '../header/table-header';
 import { EARNING_COLUMNS } from '@/lib/ui/useable-components/table/columns/earning-column';
-import { generateSkeletonTransactionHistory } from '@/lib/utils/dummy';
 import useDebounce from '@/lib/hooks/useDebounce';
 
 export default function EarningsMain({
@@ -63,8 +62,6 @@ export default function EarningsMain({
       setTotalEarnings(grandTotalEarnings);
     },
   });
-
-  console.log('Earnings data:', data);
 
   // Global search handler
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,8 +123,7 @@ export default function EarningsMain({
           />
         }
         data={
-          data?.earnings?.data?.earnings ||
-          (loading ? generateSkeletonTransactionHistory() : [])
+          data?.earnings?.data?.earnings || []
         }
         filters={filters}
         setSelectedData={setSelectedEarnings}

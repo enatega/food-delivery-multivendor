@@ -93,11 +93,6 @@ export default function SidebarItem({
                 route // <-- check for shouldOpenInNewTab
               ) {
                 window.open(route, '_blank');
-              } else if (
-                route === 'https://hedgego.com.au/' ||
-                route === 'https://hedge.net.au/become-a-stockist'
-              ) {
-                window.open(route, '_blank');
               } else {
                 router.push(route ?? '');
               }

@@ -26,7 +26,6 @@ import useToast from '@/lib/hooks/useToast';
 import {
   CREATE_ADDONS,
   EDIT_ADDON,
-  GET_ADDONS_BY_RESTAURANT_ID,
   GET_OPTIONS_BY_RESTAURANT_ID,
 } from '@/lib/api/graphql';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
@@ -100,7 +99,7 @@ export default function AddonAddForm({
     GET_OPTIONS_BY_RESTAURANT_ID,
     { id: restaurantId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
       onCompleted: onFetchAddonsByRestaurantCompleted,
       onError: onErrorFetchAddonsByRestaurant,
@@ -120,12 +119,8 @@ export default function AddonAddForm({
   const [createAddons, { loading: mutationLoading }] = useMutation(
     addon ? EDIT_ADDON : CREATE_ADDONS,
     {
-      refetchQueries: [
-        {
-          query: GET_ADDONS_BY_RESTAURANT_ID,
-          variables: { id: restaurantId },
-        },
-      ],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
       onCompleted: () => {
         showToast({
           type: 'success',

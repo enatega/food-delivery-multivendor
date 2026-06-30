@@ -192,7 +192,6 @@ export const DISPATCH_TABLE_COLUMNS = () => {
 
   const [updateStatus] = useMutation(UPDATE_STATUS, {
     onError: (err) => {
-      console.log(err);
       showToast({
         type: 'error',
         message:
@@ -248,7 +247,6 @@ export const DISPATCH_TABLE_COLUMNS = () => {
     e: DropdownChangeEvent,
     rowData: IActiveOrders
   ) => {
-    console.log(rowData);
     // // Set the loader to true for the specific row
     setIsStatusUpdating({
       _id: rowData._id,
@@ -263,9 +261,8 @@ export const DISPATCH_TABLE_COLUMNS = () => {
           orderStatus: e.value.code,
         },
       });
-    } catch (error) {
+    } catch {
       // Handle error
-      console.log(error);
       showToast({
         type: 'error',
         title: t('Order Status'),

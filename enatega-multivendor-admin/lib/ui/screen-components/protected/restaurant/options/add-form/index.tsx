@@ -18,7 +18,6 @@ import useToast from '@/lib/hooks/useToast';
 import {
   CREATE_OPTIONS,
   EDIT_OPTION,
-  GET_OPTIONS_BY_RESTAURANT_ID,
 } from '@/lib/api/graphql';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
@@ -85,12 +84,8 @@ export default function OptionAddForm({
   const [createOption, { loading: mutationLoading }] = useMutation(
     option ? EDIT_OPTION : CREATE_OPTIONS,
     {
-      refetchQueries: [
-        {
-          query: GET_OPTIONS_BY_RESTAURANT_ID,
-          variables: { id: restaurantId },
-        },
-      ],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
       onCompleted: () => {
         showToast({
           type: 'success',

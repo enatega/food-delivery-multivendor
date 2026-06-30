@@ -21,7 +21,7 @@ import { APP_NAME } from '../utils/constants';
 
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
-import { getMetricsToken, getNonce, initializeNonce, shouldRefreshToken, storeMetricsToken } from '../utils/methods/security';
+import { clearMetricsData, getMetricsToken, getNonce, initializeNonce, shouldRefreshToken, storeMetricsToken } from '../utils/methods/security';
 import { clearAuthTokens, getAccessToken } from '../utils/methods/auth';
 
 let isRefreshing = false;
@@ -32,6 +32,7 @@ function handleInvalidSession(): void {
   if (typeof window === 'undefined' || isAuthRedirecting) return;
   isAuthRedirecting = true;
   clearAuthTokens();
+  clearMetricsData();
   localStorage.removeItem(`user-${APP_NAME}`);
   window.location.assign('/authentication/login');
 }
@@ -153,7 +154,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       headers: {
         authorization: token ? `Bearer ${token}` : '',
         nonce: nonce || '',
-        'bop-auth': `Bearer ${metricsToken}` || '',
+        'bop-auth': metricsToken ? `Bearer ${metricsToken}` : '',
       },
     });
   };
@@ -195,7 +196,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       httpLink
     ),
     cache,
-    connectToDevTools: true,
+    connectToDevTools: process.env.NODE_ENV !== 'production',
   });
 
   return client;

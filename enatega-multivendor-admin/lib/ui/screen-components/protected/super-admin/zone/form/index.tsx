@@ -66,7 +66,8 @@ export default function ZoneAddForm({
   const [createZone, { loading: mutationLoading }] = useMutation(
     zone ? EDIT_ZONE : CREATE_ZONE,
     {
-      refetchQueries: [{ query: GET_ZONES }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 

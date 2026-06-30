@@ -1,8 +1,7 @@
 
 'use client';
-import React from 'react';
+import React, { memo } from 'react';
 import { Tag } from 'primereact/tag';
-import moment from 'moment';
 import ChangesDiff from './ChangesDiff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faPlusCircle, faTrashAlt, faHistory } from '@fortawesome/free-solid-svg-icons';
@@ -28,6 +27,22 @@ interface AuditLogCardProps {
 
 const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
     const t = useTranslations()
+    const timestamp = new Date(log.timestamp);
+    const isValidTimestamp = !Number.isNaN(timestamp.getTime());
+    const dateText = isValidTimestamp
+        ? new Intl.DateTimeFormat('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          }).format(timestamp)
+        : '-';
+    const timeText = isValidTimestamp
+        ? new Intl.DateTimeFormat('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+          }).format(timestamp)
+        : '-';
 
     const getActionDetails = (action: string) => {
         const lowerAction = action.toLowerCase();
@@ -58,8 +73,8 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-white">{moment.utc(log.timestamp).local().format('MMMM D, YYYY')}</p>
-                        <p className="text-xs text-gray-400 dark:text-white">{moment.utc(log.timestamp).local().format('h:mm A')}</p>
+                        <p className="text-sm text-gray-600 dark:text-white">{dateText}</p>
+                        <p className="text-xs text-gray-400 dark:text-white">{timeText}</p>
                     </div>
                 </div>
 
@@ -75,4 +90,4 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({ log, isLast }) => {
     );
 };
 
-export default AuditLogCard;
+export default memo(AuditLogCard);

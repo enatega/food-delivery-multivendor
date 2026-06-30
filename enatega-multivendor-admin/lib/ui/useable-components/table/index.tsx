@@ -87,10 +87,10 @@ const Table = <T extends ITableExtends>({
     : {};
 
   useEffect(() => {
-    if (data?.length === 0 && currentPage > 1 && onPageChange) {
+    if (!loading && data?.length === 0 && currentPage > 1 && onPageChange) {
       onPageChange(1, rowsPerPage);
     }
-  }, [data, currentPage, onPageChange, rowsPerPage]);
+  }, [loading, data, currentPage, onPageChange, rowsPerPage]);
 
   return (
     <>

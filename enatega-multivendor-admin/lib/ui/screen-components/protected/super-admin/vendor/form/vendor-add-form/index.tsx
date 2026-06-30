@@ -102,7 +102,7 @@ export default function VendorAddForm({
     loading,
     data,
   } = useLazyQueryQL(GET_VENDOR_BY_ID, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 300,
   }) as ILazyQueryResult<IGetVendorResponseGraphQL | undefined, { id: string }>;
 
@@ -123,8 +123,7 @@ export default function VendorAddForm({
           },
         },
       });
-    } catch (error) {
-      console.log('error during add vendor ==> ', error);
+    } catch {
       showToast({
         type: 'error',
         title: `${isEditingVendor ? t('Edit') : t('Create')} ${t('Vendor')}`,

@@ -41,7 +41,6 @@ import {
 import { onUseLocalStorage } from '@/lib/utils/methods';
 
 // Dummy
-import { generateDummyRestaurants } from '@/lib/utils/dummy';
 import { DataTableRowClickEvent } from 'primereact/datatable';
 import { useTranslations } from 'next-intl';
 import { RESTAURANT_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/restaurant-column';
@@ -204,7 +203,7 @@ export default function RestaurantsMain() {
             setSelectedActions={setSelectedActions}
           />
         }
-        data={loading ? generateDummyRestaurants() : restaurants}
+        data={loading ? [] : restaurants}
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}

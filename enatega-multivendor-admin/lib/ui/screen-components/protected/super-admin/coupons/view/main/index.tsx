@@ -2,7 +2,7 @@
 import './index.module.css';
 
 // GraphQL
-import { DELETE_COUPON, GET_COUPONS } from '@/lib/api/graphql';
+import { DELETE_COUPON, GET_COUPONS_PAGINATED } from '@/lib/api/graphql';
 import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL';
 
 // Interfaces
@@ -14,17 +14,14 @@ import {
 import {
   ICoupon,
   ICouponMainProps,
-  IGetCouponsData,
+  IGetCouponsPaginatedData,
 } from '@/lib/utils/interfaces/coupons.interface';
-import { IFilterType } from '@/lib/utils/interfaces/table.interface';
-
-// Prime react
-import { FilterMatchMode } from 'primereact/api';
 
 // Hooks
 import { useContext, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMutation } from '@apollo/client';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 // Components
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -33,7 +30,6 @@ import Table from '@/lib/ui/useable-components/table';
 import CouponTableHeader from '../header/table-header';
 
 // Constants
-import { generateDummyCoupons } from '@/lib/utils/dummy';
 import { COUPONS_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/coupons-columns';
 
 export default function CouponsMain({
@@ -65,32 +61,34 @@ export default function CouponsMain({
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // Filters
-  const filters: IFilterType = {
-    global: { value: globalFilterValue, matchMode: FilterMatchMode.CONTAINS },
-
-    enabled: {
-      value:
-        selectedActions.includes('true') && selectedActions.includes('false')
-          ? ''
-          : selectedActions,
-      matchMode: FilterMatchMode.CONTAINS,
-    },
-  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
+  const enabled =
+    selectedActions.length === 1 && selectedActions[0] !== ''
+      ? selectedActions[0] === 'true'
+      : undefined;
 
   // Queries
-  const { data, fetch } = useLazyQueryQL(GET_COUPONS, {
+  const { data, fetch } = useLazyQueryQL(GET_COUPONS_PAGINATED, {
     fetchPolicy: 'network-only',
-    debounceMs: 5000,
     onCompleted: () => setIsLoading(false),
-  }) as ILazyQueryResult<IGetCouponsData | undefined, undefined>;
+  }) as ILazyQueryResult<
+    IGetCouponsPaginatedData | undefined,
+    {
+      page: number;
+      limit: number;
+      search?: string;
+      enabled?: boolean;
+    }
+  >;
 
   // Mutations
   const [deleteCoupon, { loading: deleteCouponLoading }] = useMutation(
     DELETE_COUPON,
     {
-      refetchQueries: [{ query: GET_COUPONS }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
       onCompleted: () => {
         showToast({
           title: t('Delete Coupon'),
@@ -177,15 +175,24 @@ export default function CouponsMain({
   }, [data, isEditing.bool]);
 
   useEffect(() => {
-    fetch();
     setIsLoading(true);
-  }, []);
+    fetch({
+      page: currentPage,
+      limit: rowsPerPage,
+      search: debouncedSearch || undefined,
+      enabled,
+    });
+  }, [currentPage, rowsPerPage, debouncedSearch, enabled]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch, enabled]);
 
   return (
     <div className="p-3">
       <Table
         columns={COUPONS_TABLE_COLUMNS({ menuItems })}
-        data={data?.coupons || (isLoading ? generateDummyCoupons() : [])}
+        data={data?.couponsPaginated?.data || []}
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e)}
         loading={isLoading}
@@ -197,7 +204,13 @@ export default function CouponsMain({
             setSelectedActions={setSelectedActions}
           />
         }
-        filters={filters}
+        totalRecords={data?.couponsPaginated?.totalCount ?? 0}
+        currentPage={data?.couponsPaginated?.currentPage ?? currentPage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
       <CustomDialog
         onConfirm={deleteItem}

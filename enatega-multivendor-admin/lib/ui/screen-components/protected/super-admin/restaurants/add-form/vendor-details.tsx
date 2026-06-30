@@ -191,7 +191,6 @@ export default function VendorDetails({
               }
               enableReinitialize={true}
               onSubmit={async (values) => {
-                console.log(values, 'values');
                 await onVendorSubmitHandler(values);
               }}
               validateOnChange={false}

@@ -195,7 +195,6 @@ export default function RestaurantDetailsForm({
         (restaurant: IRestaurantForm) =>
           restaurant.name.toLowerCase() === data.name.toLowerCase()
       );
-      console.log('existingRestaurant ==> ', existingRestaurant);
       if (existingRestaurant) {
         showToast({
           type: 'error',

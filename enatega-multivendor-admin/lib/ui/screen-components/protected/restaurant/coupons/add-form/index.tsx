@@ -30,7 +30,6 @@ import {
   CREATE_RESTAURANT_COUPON,
   EDIT_RESTAURANT_COUPON,
 } from '@/lib/api/graphql/mutations/coupons-restaurant';
-import { GET_RESTAURANT_COUPONS } from '@/lib/api/graphql/queries/coupons-restaurant';
 import { useTranslations } from 'next-intl';
 
 export default function CouponsAddForm({
@@ -58,9 +57,8 @@ export default function CouponsAddForm({
   // Mutation
   const mutation = coupon ? EDIT_RESTAURANT_COUPON : CREATE_RESTAURANT_COUPON;
   const [mutate, { loading: mutationLoading }] = useMutation(mutation, {
-    refetchQueries: [
-      { query: GET_RESTAURANT_COUPONS, variables: { restaurantId } },
-    ],
+    refetchQueries: 'active',
+    awaitRefetchQueries: true,
   });
 
   // Form Submission

@@ -15,6 +15,15 @@ export interface ICoupon {
 export interface IGetCouponsData {
   coupons: ICoupon[];
 }
+
+export interface IGetCouponsPaginatedData {
+  couponsPaginated: {
+    data: ICoupon[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
 export interface IGetCouponsVariables {}
 
 export interface ICouponsStakProps {

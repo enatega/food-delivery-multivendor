@@ -24,7 +24,6 @@ import {
 // GraphQL
 import { DELETE_BANNER } from '@/lib/api/graphql';
 import { GET_BANNERS } from '@/lib/api/graphql/queries/banners';
-import { generateDummyBanners } from '@/lib/utils/dummy';
 import { useMutation, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 
@@ -103,12 +102,6 @@ export default function BannersMain({
     },
   ];
 
-  // Handlers
-  // const onPageChange = (page: number, size: number) => {
-  //   setCurrentPage(page);
-  //   setPageSize(size);
-  // };
-
   // UseEffects
   useEffect(() => {
     refetchBanners({
@@ -128,7 +121,7 @@ export default function BannersMain({
             setSelectedActions={setSelectedActions}
           />
         }
-        data={data?.banners || (loading ? generateDummyBanners() : [])}
+        data={data?.banners || []}
         filters={filters}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}

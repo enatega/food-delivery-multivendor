@@ -36,7 +36,7 @@ export default function GrowthOverView() {
       year: new Date().getFullYear(),
     },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
       debounceMs: 300,
     }

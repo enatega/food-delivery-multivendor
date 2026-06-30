@@ -27,12 +27,12 @@ import { useMutation } from '@apollo/client';
 
 const PayPalAddForm = () => {
   // Hooks
-  const { PAYPAL_KEY, PAYPAL_SECRET, PAYPAL_SANDBOX } = useConfiguration();
+  const { PAYPAL_KEY, PAYPAL_SANDBOX } = useConfiguration();
   const { showToast } = useToast();
 
   const initialValues = {
     clientId: PAYPAL_KEY,
-    clientSecret: PAYPAL_SECRET,
+    clientSecret: '',
     sandbox: PAYPAL_SANDBOX,
   };
 
@@ -44,12 +44,13 @@ const PayPalAddForm = () => {
   );
 
   const handleSubmit = (values: IPaypalForm) => {
+    const clientSecret = values.clientSecret?.trim();
     mutate({
       variables: {
         configurationInput: {
           clientId: values.clientId,
-          clientSecret: values.clientSecret,
           sandbox: values.sandbox,
+          ...(clientSecret ? { clientSecret } : {}),
         },
       },
       onCompleted: () => {
@@ -135,6 +136,9 @@ const PayPalAddForm = () => {
                     }}
                   />
                 </div>
+                <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                  Leave the client secret blank to keep the current value.
+                </p>
               </ConfigCard>
             </Form>
           );

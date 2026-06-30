@@ -36,7 +36,7 @@ export const ProfileProvider: React.FC<IProfileProviderProps> = ({
     GET_VENDOR_BY_ID,
     { id: vendorId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       debounceMs: 300,
       onCompleted: () => {
         // You can perform any actions with the fetched data here

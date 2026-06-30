@@ -265,7 +265,7 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
                 };
               }
             } catch (error) {
-              console.log("Error fetching messages for ticket:", error);
+              console.error("Error fetching messages for ticket:", error);
             }
           }
         }

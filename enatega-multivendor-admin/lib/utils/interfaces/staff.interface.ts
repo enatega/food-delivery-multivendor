@@ -31,6 +31,15 @@ export interface IStaffGQLResponse {
   staffs: IStaffResponse[];
 }
 
+export interface IStaffPaginatedGQLResponse {
+  staffsPaginated: {
+    data: IStaffResponse[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 export interface IStaffTableHeaderProps {
   globalFilterValue: string;
   onGlobalFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

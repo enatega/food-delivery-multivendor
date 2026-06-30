@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import { GoogleMap, Polygon } from '@react-google-maps/api';
 import parse from 'autosuggest-highlight/parse';
-import { throttle } from 'lodash';
+import { throttle } from '@/lib/utils/methods';
 
 // Interfaces
 import {

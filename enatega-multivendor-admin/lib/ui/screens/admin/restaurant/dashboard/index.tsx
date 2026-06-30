@@ -18,7 +18,6 @@ export default function AdminRestaurantDashboard() {
   });
 
   const handleDateFilter = (dateFilter: IDateFilter) => {
-    console.log("dateFilter.....", dateFilter);
     setDateFilter({
       ...dateFilter,
       dateKeyword: dateFilter.dateKeyword ?? '',

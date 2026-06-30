@@ -83,7 +83,8 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({
           message: error.message || 'Failed to update user status',
         });
       },
-      refetchQueries: ['users'],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 
@@ -106,7 +107,8 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({
           message: error.message || 'Failed to update user notes',
         });
       },
-      refetchQueries: ['users'], // Refetch users after notes update
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 
@@ -128,7 +130,8 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({
           message: error.message || 'Failed to delete user',
         });
       },
-      refetchQueries: ['users'], // Refetch users after deletion
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 

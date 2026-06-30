@@ -74,7 +74,7 @@ export default function OrderSuperAdminMain() {
     GET_ALL_ORDERS_PAGINATED,
     queryVariables,
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
     }
   ) as IQueryResult<
     | {

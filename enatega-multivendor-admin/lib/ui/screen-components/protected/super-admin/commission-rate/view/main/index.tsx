@@ -66,7 +66,7 @@ export default function CommissionRateMain() {
     GET_COMMISSION_RATES_PAGINATED,
     { page: currentPage, limit: rowsPerPage },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
     }
   ) as IQueryResult<CommissionRateData | undefined, IPaginationCommissionRateVars>;
 
