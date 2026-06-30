@@ -68,3 +68,14 @@ export interface IOrdersByUserResponse {
   nextPage: number | null;
   prevPage: number | null;
 }
+
+export interface IOrdersByRestaurantPaginatedResponse {
+  ordersByRestId: {
+    orders: IExtendedOrder[];
+    totalCount: number;
+    totalPages: number;
+    currentPage: number;
+    nextPage: number | null;
+    prevPage: number | null;
+  };
+}

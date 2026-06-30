@@ -41,6 +41,15 @@ export interface IUsersDataResponse {
   users: IUserResponse[];
 }
 
+export interface IUsersPaginatedDataResponse {
+  usersPaginated: {
+    data: IUserResponse[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 export interface IUsersTableHeaderProps {
   globalFilterValue: string;
   onGlobalFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

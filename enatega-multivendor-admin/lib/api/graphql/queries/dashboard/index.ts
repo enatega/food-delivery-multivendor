@@ -169,6 +169,40 @@ export const GET_STORE_DETAILS_BY_VENDOR_ID = gql`
   }
 `;
 
+export const GET_STORE_DETAILS_BY_VENDOR_ID_PAGINATED = gql`
+  query GetStoreDetailsByVendorIdPaginated(
+    $id: String!
+    $dateKeyword: String
+    $starting_date: String
+    $ending_date: String
+    $page: Int
+    $limit: Int
+    $search: String
+  ) {
+    getStoreDetailsByVendorIdPaginated(
+      id: $id
+      dateKeyword: $dateKeyword
+      starting_date: $starting_date
+      ending_date: $ending_date
+      page: $page
+      limit: $limit
+      search: $search
+    ) {
+      data {
+        _id
+        totalOrders
+        restaurantName
+        totalSales
+        pickUpCount
+        deliveryCount
+      }
+      totalCount
+      currentPage
+      totalPages
+    }
+  }
+`;
+
 export const GET_VENDOR_DASHBOARD_STATS_CARD_DETAILS = gql`
   query GetVendorDashboardStatsCardDetails(
     $vendorId: String!

@@ -1,6 +1,6 @@
 'use client';
 // GraphQL
-import { CREATE_COUPON, EDIT_COUPON, GET_COUPONS } from '@/lib/api/graphql';
+import { CREATE_COUPON, EDIT_COUPON } from '@/lib/api/graphql';
 
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -71,7 +71,8 @@ export default function CouponForm({
   const [CreateCoupon, { loading: createCouponLoading }] = useMutation(
     CREATE_COUPON,
     {
-      refetchQueries: [{ query: GET_COUPONS }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
       onCompleted: () => {
         showToast({
           title: `${isEditing.bool ? t('Edit') : t('New')} ${t('Coupon')}`,
@@ -121,7 +122,8 @@ export default function CouponForm({
   const [editCoupon, { loading: editCouponLoading }] = useMutation(
     EDIT_COUPON,
     {
-      refetchQueries: [{ query: GET_COUPONS }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
       onCompleted: () => {
         showToast({
           title: `${isEditing.bool ? t('Edit') : t('New')} ${t('Coupon')}`,

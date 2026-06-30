@@ -45,7 +45,6 @@ import { faAdd, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useMutation, useQuery } from '@apollo/client';
 import { useContext, useEffect } from 'react';
 import {
-  GET_SUBCATEGORIES,
   GET_SUBCATEGORIES_BY_PARENT_ID,
 } from '@/lib/api/graphql/queries/sub-categories';
 import CustomLoader from '@/lib/ui/useable-components/custom-progress-indicator';
@@ -139,15 +138,8 @@ export default function CategoryAddForm({
   const [createCategory, { loading: mutationLoading }] = useMutation(
     category ? EDIT_CATEGORY : CREATE_CATEGORY,
     {
-      refetchQueries: [
-        {
-          query: GET_CATEGORY_BY_RESTAURANT_ID,
-          variables: { id: restaurantId },
-        },
-        {
-          query: GET_SUBCATEGORIES,
-        },
-      ],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
       onCompleted: () => {
         showToast({
           type: 'success',

@@ -33,7 +33,6 @@ import useToast from '@/lib/hooks/useToast';
 import {
   CREATE_RIDER,
   EDIT_RIDER,
-  GET_RIDERS,
   GET_ZONES,
 } from '@/lib/api/graphql';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
@@ -75,7 +74,8 @@ export default function RiderAddForm({
   // Mutation
   const mutation = rider ? EDIT_RIDER : CREATE_RIDER;
   const [mutate, { loading: mutationLoading }] = useMutation(mutation, {
-    refetchQueries: [{ query: GET_RIDERS }],
+    refetchQueries: 'active',
+    awaitRefetchQueries: true,
   });
 
   // Form Submission
