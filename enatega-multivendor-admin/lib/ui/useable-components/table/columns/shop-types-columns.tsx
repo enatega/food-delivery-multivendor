@@ -16,7 +16,7 @@ import { GET_COUPONS, UPDATE_SHOP_TYPE } from '@/lib/api/graphql';
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 export const SHOP_TYPES_TABLE_COLUMNS = ({
   menuItems,

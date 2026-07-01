@@ -1,5 +1,5 @@
 // Core
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 // Custom Components
 import ActionMenu from '@/lib/ui/useable-components/action-menu';
 // Interfaces and Types

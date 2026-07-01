@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 import { memo } from 'react';
 
 // Interfaces
