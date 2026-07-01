@@ -14,6 +14,8 @@ import {
 } from "react-native";
 import HelpAccordian from "../../accordian";
 
+const ItemSeparator = () => <View className="h-4" />;
+
 export default function HelpMain() {
   // Hooks
   const { appTheme } = useApptheme();
@@ -68,6 +70,14 @@ export default function HelpMain() {
     }
   });
 
+  const renderFaqItem = ({ item }: { item: (typeof FAQs)[number] }) => (
+    <HelpAccordian heading={t(item.heading)}>
+      <Text style={{ color: appTheme.fontSecondColor }}>
+        {t(item.description)}
+      </Text>
+    </HelpAccordian>
+  );
+
   return (
     <View
       className="flex-1 w-full dark:bg-gray-900 pb-16"
@@ -81,14 +91,8 @@ export default function HelpMain() {
           data={FAQs}
           keyExtractor={(item) => "Faq-" + item.id}
           showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View className="h-4" />}
-          renderItem={({ item }) => (
-            <HelpAccordian heading={t(item.heading)}>
-              <Text style={{ color: appTheme.fontSecondColor }}>
-                {t(item.description)}
-              </Text>
-            </HelpAccordian>
-          )}
+          ItemSeparatorComponent={ItemSeparator}
+          renderItem={({ item }) => renderFaqItem({ item })}
         />
       </View>
 

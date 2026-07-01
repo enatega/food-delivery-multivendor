@@ -127,6 +127,7 @@ export default function WorkScheduleMain() {
         },
       });
     } catch {
+      return;
     }
   };
 
@@ -380,6 +381,26 @@ export default function WorkScheduleMain() {
     }
   }, [dataProfile?.openingTimes]);
 
+  const renderScheduleItem = ({
+    item,
+    index,
+  }: {
+    item: WorkSchedule;
+    index: number;
+  }) => (
+    <WorkScheduleStack
+      key={String(index).concat("_workschedule_stack")}
+      item={item}
+      isTogglingDay={isTogglingDay}
+      index={index}
+      toggleDay={toggleDay}
+      removeSlot={removeSlot}
+      addSlot={addSlot}
+      dropdown={dropdown}
+      setDropdown={setDropdown}
+    />
+  );
+
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
       <View className="flex-1 items-center">
@@ -392,19 +413,7 @@ export default function WorkScheduleMain() {
             keyExtractor={(item) => item.day}
             scrollEnabled={true}
             scrollEventThrottle={16}
-            renderItem={({ item, index }) => (
-              <WorkScheduleStack
-                key={String(index).concat("_workschedule_stack")}
-                item={item}
-                isTogglingDay={isTogglingDay}
-                index={index}
-                toggleDay={toggleDay}
-                removeSlot={removeSlot}
-                addSlot={addSlot}
-                dropdown={dropdown}
-                setDropdown={setDropdown}
-              />
-            )}
+            renderItem={({ item, index }) => renderScheduleItem({ item, index })}
           />
         </View>
         <UpdateScheduleBtn

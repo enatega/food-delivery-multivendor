@@ -25,6 +25,15 @@ interface IOrderProps {
   onToggleDetails: (itemId: string) => void;
 }
 
+const didOrderDetailVisibilityChange = (
+  prevShowDetails: Record<string, boolean>,
+  nextShowDetails: Record<string, boolean>,
+  order: IOrder,
+) =>
+  order.items?.some(
+    (item) => prevShowDetails[item._id] !== nextShowDetails[item._id],
+  ) ?? false;
+
 const Order = ({
   order,
   tab,
@@ -664,4 +673,28 @@ const Order = ({
   );
 };
 
-export default memo(Order);
+export default memo(Order, (prevProps, nextProps) => {
+  if (prevProps.tab !== nextProps.tab) return false;
+  if (prevProps.order._id !== nextProps.order._id) return false;
+  if (prevProps.order.updatedAt !== nextProps.order.updatedAt) return false;
+  if (prevProps.order.orderStatus !== nextProps.order.orderStatus) return false;
+  if (prevProps.order.isPickedUp !== nextProps.order.isPickedUp) return false;
+  if (prevProps.order.preparationTime !== nextProps.order.preparationTime) {
+    return false;
+  }
+  if (prevProps.handlePresentModalPress !== nextProps.handlePresentModalPress) {
+    return false;
+  }
+  if (prevProps.onToggleDetails !== nextProps.onToggleDetails) return false;
+  if (
+    didOrderDetailVisibilityChange(
+      prevProps.showDetails,
+      nextProps.showDetails,
+      nextProps.order,
+    )
+  ) {
+    return false;
+  }
+
+  return true;
+});

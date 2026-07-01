@@ -4,6 +4,7 @@ import {
   IStoreByIdResponse,
   IStoreCurrentWithdrawRequestResponse,
   IStoreEarningsResponse,
+  IStoreTransaction,
   IStoreTransactionHistoryResponse,
 } from "@/lib/utils/interfaces/rider.interface";
 
@@ -184,6 +185,7 @@ export default function WalletMain() {
         },
       });
     } catch {
+      return;
     }
   }
   // Loading state
@@ -213,6 +215,33 @@ export default function WalletMain() {
       });
     }
   }, [userId]);
+
+  const renderTransactionsHeader = () => (
+    <Text
+      className="font-bold text-lg p-5"
+      style={{
+        color: appTheme.fontMainColor,
+        backgroundColor: appTheme.themeBackground,
+      }}
+    >
+      {t("Recent Transactions")}
+    </Text>
+  );
+
+  const renderTransactionItem = ({
+    item,
+    index,
+  }: {
+    item: IStoreTransaction;
+    index: number;
+  }) => {
+    const transactions = storeTransactionData?.transactionHistory?.data;
+    if (!transactions) return <NoRecordFound />;
+
+    return (
+      <RecentTransaction transaction={item} isLast={transactions.length - 1 === index} />
+    );
+  };
 
   if (isLoading) return <WalletScreenMainLoading />;
   else
@@ -288,38 +317,13 @@ export default function WalletMain() {
         {storeTransactionData && (
           <FlatList
             className="w-full h-full flex-1 basis-32 -mt-12"
-            ListHeaderComponent={() => {
-              return (
-                <Text
-                  className="font-bold text-lg p-5"
-                  style={{
-                    color: appTheme.fontMainColor,
-                    backgroundColor: appTheme.themeBackground,
-                  }}
-                >
-                  {t("Recent Transactions")}
-                </Text>
-              );
-            }}
+            ListHeaderComponent={renderTransactionsHeader}
             data={storeTransactionData?.transactionHistory?.data}
             ListEmptyComponent={<NoRecordFound />}
-            renderItem={({ item, index }) => {
-              if (storeTransactionData?.transactionHistory?.data) {
-                return (
-                  <RecentTransaction
-                    transaction={item}
-                    isLast={
-                      storeTransactionData?.transactionHistory?.data?.length -
-                        1 ===
-                      index
-                    }
-                    key={`transaction_${index}#`}
-                  />
-                );
-              } else {
-                return <NoRecordFound />;
-              }
-            }}
+            keyExtractor={(item, index) =>
+              `${item.createdAt}-${item.status}-${index}`
+            }
+            renderItem={({ item, index }) => renderTransactionItem({ item, index })}
           />
         )}
 

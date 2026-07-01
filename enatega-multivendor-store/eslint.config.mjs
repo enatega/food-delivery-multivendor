@@ -66,7 +66,14 @@ export default [
 
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-explicit-any": "error",
+      "no-console": "error",
       "react-hooks/exhaustive-deps": "off",
+    },
+  },
+  {
+    files: ["lib/utils/methods/git-hooks/**/*.ts"],
+    rules: {
+      "no-console": "off",
     },
   },
   pluginJs.configs.recommended,

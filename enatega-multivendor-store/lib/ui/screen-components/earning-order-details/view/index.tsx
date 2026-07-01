@@ -35,26 +35,33 @@ export default function EarningsOrderDetailsMain() {
     }
   }, [storeOrdersEarnings?.length]);
 
+  const renderOrderItem = ({
+    item,
+    index,
+  }: {
+    item: IStoreEarningsArray;
+    index: number;
+  }) => (
+    <OrderStack
+      isLast={index === recentOrderEarnings.length - 1}
+      amount={item.totalOrderAmount}
+      orderId={item.orderDetails.orderId}
+      date={item.date}
+    />
+  );
+
   if (!recentOrderEarnings.length) return <NoRecordFound />;
   return (
     <View style={{ backgroundColor: appTheme.themeBackground, height: "100%" }}>
       <FlatList
         data={recentOrderEarnings}
         contentContainerClassName="scroll-smooth"
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item, index) =>
+          `${item.orderDetails.orderId}-${item.date}-${index}`
+        }
         style={{ height: "55%" }}
         ListEmptyComponent={<NoRecordFound />}
-        renderItem={(info) => {
-          return (
-            <OrderStack
-              isLast={info.index === recentOrderEarnings?.length - 1}
-              key={info.index}
-              amount={info.item.totalOrderAmount}
-              orderId={info.item.orderDetails.orderId}
-              date={info.item.date}
-            />
-          );
-        }}
+        renderItem={({ item, index }) => renderOrderItem({ item, index })}
       />
     </View>
   );
