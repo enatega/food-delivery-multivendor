@@ -16,13 +16,12 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 
 // Utility imports
 import { Subscription } from 'zen-observable-ts';
-import { APP_NAME } from '../utils/constants';
 
 
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
 import { clearMetricsData, getMetricsToken, getNonce, initializeNonce, shouldRefreshToken, storeMetricsToken } from '../utils/methods/security';
-import { clearAuthTokens, getAccessToken } from '../utils/methods/auth';
+import { clearStoredSessionState, getAccessToken, getStoredUser } from '../utils/methods/auth';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -31,9 +30,8 @@ let isAuthRedirecting = false;
 function handleInvalidSession(): void {
   if (typeof window === 'undefined' || isAuthRedirecting) return;
   isAuthRedirecting = true;
-  clearAuthTokens();
+  clearStoredSessionState();
   clearMetricsData();
-  localStorage.removeItem(`user-${APP_NAME}`);
   window.location.assign('/authentication/login');
 }
 
@@ -131,17 +129,12 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     const data =
       typeof window === 'undefined'
         ? null
-        : localStorage.getItem(`user-${APP_NAME}`);
+        : getStoredUser();
     const operationName = operation.operationName;
     const token =
       getAccessToken() ||
-      (data ? (() => {
-        try {
-          return JSON.parse(data).token || '';
-        } catch {
-          return '';
-        }
-      })() : '');
+      data?.token ||
+      '';
 
     if (operationName !== 'MetricsGeneral' && shouldRefreshToken()) {
       await fetchMetricsToken(SERVER_URL);
