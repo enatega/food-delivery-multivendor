@@ -161,6 +161,8 @@ export default function WalletMain() {
 
   // Handlers
   async function handleFormSubmission(withdrawAmount: number) {
+    if (createWithDrawRequestLoading || !userId) return;
+
     const currentAmount =
       storeProfileData?.restaurant?.currentWalletAmount || 0;
     if (withdrawAmount > (currentAmount || 0)) {

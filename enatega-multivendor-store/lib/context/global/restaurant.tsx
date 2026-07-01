@@ -63,7 +63,8 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
 
   const subscribeToMoreOrders = async () => {
     try {
-      const restaurant = await AsyncStorage.getItem("store-id");
+      const restaurant = await AsyncStorage.getItem("restaurantId")
+      //AsyncStorage.getItem("store-id");
       if (!restaurant) return;
       unsubscribe = subscribeToMore({
         document: SUBSCRIBE_PLACE_ORDER,
