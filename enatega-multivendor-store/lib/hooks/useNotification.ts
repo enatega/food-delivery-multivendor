@@ -10,7 +10,7 @@ import { GET_RESTAURANT_BY_ID, SAVE_TOKEN } from "@/lib/api/graphql";
 
 export default function useNotification() {
   const [getStore, { data }] = useLazyQuery(GET_RESTAURANT_BY_ID, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     // variables: { id: userId },
   });
   const [sendTokenToBackend, { loading }] = useMutation(SAVE_TOKEN);

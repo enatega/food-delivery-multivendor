@@ -25,7 +25,6 @@ import "../global.css";
 // Hooks
 import { UserProvider } from "@/lib/context/global/user.context";
 import { useFonts } from "expo-font";
-import { useKeepAwake } from "expo-keep-awake";
 import { StatusBar } from "expo-status-bar";
 import FlashMessage from "react-native-flash-message";
 
@@ -52,7 +51,6 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
   // Hooks
-  useKeepAwake();
   const { currentTheme, appTheme } = useApptheme();
   const [loaded] = useFonts({
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),

@@ -5,7 +5,7 @@ import { orderSubTotal } from "@/lib/utils/methods";
 import { getIsAcceptButtonVisible } from "@/lib/utils/methods/gloabl";
 import { ORDER_TYPE } from "@/lib/utils/types";
 import moment from "moment";
-import { useContext, useEffect, useRef, useState } from "react";
+import { memo, useContext, useEffect, useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import CountdownTimer from "../custom-timer";
 import SpinnerComponent from "../spinner";
@@ -664,4 +664,4 @@ const Order = ({
   );
 };
 
-export default Order;
+export default memo(Order);

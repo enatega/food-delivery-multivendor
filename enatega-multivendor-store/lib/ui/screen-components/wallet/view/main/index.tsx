@@ -67,7 +67,7 @@ export default function WalletMain() {
   } = useLazyQueryQL(
     STORE_TRANSACTIONS_HISTORY,
     {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
     },
     {
       userType: "STORE",
@@ -86,7 +86,7 @@ export default function WalletMain() {
     loading: isStoreProfileLoading,
   } = useLazyQueryQL(
     STORE_BY_ID,
-    { fetchPolicy: "network-only" },
+    { fetchPolicy: "cache-and-network" },
     {
       id: userId,
     }
@@ -98,7 +98,7 @@ export default function WalletMain() {
     loading: isStoreCurrentWithdrawRequestLoading,
   } = useLazyQueryQL(
     STORE_CURRENT_WITHDRAW_REQUEST,
-    { fetchPolicy: "network-only" },
+    { fetchPolicy: "cache-and-network" },
     { storeId: userId }
   ) as ILazyQueryResult<
     IStoreCurrentWithdrawRequestResponse | undefined,

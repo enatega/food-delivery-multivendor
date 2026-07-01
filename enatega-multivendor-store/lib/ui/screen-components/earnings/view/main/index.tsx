@@ -146,6 +146,34 @@ export default function EarningsMain() {
     }
   }, [storeEarningsData?.storeEarningsGraph?.earnings?.length]);
 
+  const renderEmptyState = (
+    <Text
+      className="block mx-auto font-bold text-center w-full my-12 "
+      style={{ color: appTheme.fontSecondColor }}
+    >
+      {t("No record found")}
+    </Text>
+  );
+
+  const renderEarningItem = ({
+    item,
+    index,
+  }: {
+    item: IStoreEarnings;
+    index: number;
+  }) => (
+    <EarningStack
+      date={item._id}
+      earning={item.totalEarningsSum}
+      totalDeliveries={item.earningsArray.length}
+      _id={item._id}
+      totalOrderAmount={item.totalOrderAmount}
+      earningsArray={item.earningsArray}
+      key={index}
+      setModalVisible={setModalVisible}
+    />
+  );
+
   // If loading
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
   return (
@@ -211,28 +239,8 @@ export default function EarningsMain() {
           contentContainerClassName="scroll-smooth"
           keyExtractor={(item) => item._id}
           style={{ height: "55%" }}
-          ListEmptyComponent={
-            <Text
-              className="block mx-auto font-bold text-center w-full my-12 "
-              style={{ color: appTheme.fontSecondColor }}
-            >
-              {t("No record found")}
-            </Text>
-          }
-          renderItem={(info) => {
-            return (
-              <EarningStack
-                date={info?.item?._id}
-                earning={info?.item?.totalEarningsSum}
-                totalDeliveries={info?.item?.earningsArray.length}
-                _id={info?.item?._id}
-                totalOrderAmount={info?.item?.totalOrderAmount}
-                earningsArray={info?.item?.earningsArray}
-                key={info.index}
-                setModalVisible={setModalVisible}
-              />
-            );
-          }}
+          ListEmptyComponent={renderEmptyState}
+          renderItem={renderEarningItem}
         />
       </View>
     </GestureHandlerRootView>

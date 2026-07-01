@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 // UI
 import CustomTab from "@/lib/ui/useable-components/custom-tab";
 import Spinner from "@/lib/ui/useable-components/spinner";
@@ -23,9 +16,8 @@ import useOrders from "@/lib/hooks/useOrders";
 import Order from "@/lib/ui/useable-components/order";
 import { WalletIcon } from "@/lib/ui/useable-components/svg";
 import { ORDER_TYPE } from "@/lib/utils/types";
+import { useKeepAwake } from "expo-keep-awake";
 import { useTranslation } from "react-i18next";
-
-const { height } = Dimensions.get("window");
 
 function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   // Props
@@ -43,6 +35,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
     currentTab,
     setCurrentTab,
   } = useOrders();
+  useKeepAwake();
 
   // const { loading: mutateLoading } = useAcceptOrder();
 
@@ -74,24 +67,52 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
     setShowDetails((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
   };
 
+  const renderOrderItem = ({ item }: { item: IOrder }) => (
+    <Order
+      tab={route.key as ORDER_TYPE}
+      order={item}
+      showDetails={showDetails}
+      onToggleDetails={toggleShowDetails}
+    />
+  );
+
+  const renderEmptyState = () => (
+    <View
+      style={{
+        flex: 1,
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
+      {orders?.length === 0 ? (
+        <Text
+          style={{
+            color: appTheme.fontSecondColor,
+            fontSize: 18,
+            fontWeight: "500",
+            fontFamily: "Inter",
+          }}
+        >
+          {t(NO_ORDER_PROMPT[route.key])}
+        </Text>
+      ) : (
+        <Text style={{ color: appTheme.fontMainColor }}>
+          {t("Pull down to refresh")}
+        </Text>
+      )}
+    </View>
+  );
+
   // Use Effect
   useEffect(() => {
     onInitOrders();
   }, [data?.restaurantOrders, route.key, currentTab]);
 
-  useEffect(() => {
-    // Trigger refetch when orders length changes
-    if (orders?.length === 0) {
-      refetch();
-    }
-  }, [orders?.length]);
-
-  // Calculate the marginBottom dynamically
-  const marginBottom = Platform.OS === "ios" ? height * 0.4 : height * 0.35;
-
   return (
     <View
-      className="pt-14 flex-1 items-center pb-16"
+      className="pt-14 flex-1 items-center"
       style={[style.container, { backgroundColor: appTheme.themeBackground }]}
     >
       <CustomTab
@@ -106,95 +127,30 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         }
       />
 
-      {loading ? (
-        <View className="flex-1">
-          <Spinner />
-        </View>
-      ) : orders?.length > 0 ? (
-        <FlatList
-          className={`w-full h-[${height}px] mb-[${marginBottom}px]`}
-          keyExtractor={(item) => item._id}
-          data={orders}
-          showsVerticalScrollIndicator={false}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          initialNumToRender={20} // render more items up front
-          maxToRenderPerBatch={20} // reduce batching delays
-          windowSize={5} // keep more items around viewport
-          renderItem={({ item }: { item: IOrder }) => (
-            <Order
-              tab={route.key as ORDER_TYPE}
-              order={item}
-              key={item._id}
-              showDetails={showDetails}
-              onToggleDetails={toggleShowDetails}
-            />
-          )}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  minHeight:
-                    height > 670
-                      ? height - height * 0.5
-                      : height - height * 0.6,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <WalletIcon
-                  height={100}
-                  width={100}
-                  color={appTheme.fontMainColor}
-                />
-                {orders?.length === 0 ? (
-                  <Text
-                    style={{
-                      color: appTheme.fontSecondColor,
-                      fontSize: 18,
-                      fontWeight: "500",
-                      fontFamily: "Inter",
-                    }}
-                  >
-                    {t(NO_ORDER_PROMPT[route.key])}
-                  </Text>
-                ) : (
-                  <Text style={{ color: appTheme.fontMainColor }}>
-                    {t("Pull down to refresh")}
-                  </Text>
-                )}
-              </View>
-            );
-          }}
-        />
-      ) : (
-        <View
-          style={{
-            minHeight:
-              height > 670 ? height - height * 0.5 : height - height * 0.6,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
-          {orders?.length === 0 ? (
-            <Text
-              style={{
-                color: appTheme.fontSecondColor,
-                fontSize: 18,
-                fontWeight: "500",
-                fontFamily: "Inter",
-              }}
-            >
-              {t(NO_ORDER_PROMPT[route.key])}
-            </Text>
-          ) : (
-            <Text style={{ color: appTheme.fontMainColor }}>
-              {t("Pull down to refresh")}
-            </Text>
-          )}
-        </View>
-      )}
+      <View className="flex-1 w-full">
+        {loading ? (
+          <View className="flex-1">
+            <Spinner />
+          </View>
+        ) : orders?.length > 0 ? (
+          <FlatList
+            className="w-full"
+            contentContainerStyle={style.listContent}
+            keyExtractor={(item) => item._id}
+            data={orders}
+            showsVerticalScrollIndicator={false}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            initialNumToRender={20} // render more items up front
+            maxToRenderPerBatch={20} // reduce batching delays
+            windowSize={5} // keep more items around viewport
+            renderItem={renderOrderItem}
+            ListEmptyComponent={renderEmptyState}
+          />
+        ) : (
+          renderEmptyState()
+        )}
+      </View>
     </View>
   );
 }
@@ -202,7 +158,8 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
 export default HomeDeliveredOrdersMain;
 
 const style = StyleSheet.create({
-  container: {
-    paddingBottom: Platform.OS === "android" ? 50 : 80,
+  container: { flex: 1 },
+  listContent: {
+    paddingBottom: 16,
   },
 });
