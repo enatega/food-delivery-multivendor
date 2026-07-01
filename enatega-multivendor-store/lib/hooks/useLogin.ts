@@ -29,7 +29,11 @@ const useLogin = () => {
     onError,
   });
 
-  useQuery(DEFAULT_STORE_CREDS, { onCompleted, onError });
+  useQuery(DEFAULT_STORE_CREDS, {
+    onCompleted,
+    onError,
+    skip: !__DEV__,
+  });
 
   function getLoginErrorMessage(error: ApolloError): string {
     const graphQLError = error?.graphQLErrors?.[0];
@@ -66,6 +70,7 @@ const useLogin = () => {
       await setTokenAsync(restaurantLogin?.token);
       router.replace(ROUTES.home as Href);
     } else if (
+      __DEV__ &&
       lastOrderCreds &&
       lastOrderCreds?.restaurantUsername &&
       lastOrderCreds?.restaurantPassword
