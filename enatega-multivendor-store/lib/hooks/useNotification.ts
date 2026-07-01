@@ -80,19 +80,11 @@ export default function useNotification() {
         response.notification.request.content.data
       ) {
         const { _id } = response.notification.request.content.data;
-
-        // const { data } = await client.query({
-        //   query: STORE_ORDERS,
-        //   fetchPolicy: "network-only",
-        // });
-        // const order = data.riderOrders.find((o: IOrder) => o._id === _id);
         const lastNotificationHandledId = await AsyncStorage.getItem(
           "@lastNotificationHandledId"
         );
         if (lastNotificationHandledId === _id) return;
         await AsyncStorage.setItem("@lastNotificationHandledId", _id);
-        // router.navigate("/order-detail");
-        // router.setParams({ itemId: _id, order });
       }
     },
     []
