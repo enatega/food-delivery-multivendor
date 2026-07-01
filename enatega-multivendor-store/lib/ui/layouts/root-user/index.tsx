@@ -23,8 +23,7 @@ export default function RootUserLayout() {
       if (lng) {
         changeLanguage(lng);
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
     }
   }
 

@@ -4,8 +4,8 @@
 node_modules/
 
 # Secrets
-google-servicees.json
-google-service-account.json
+google-services.json
+google-service-account*.json
 
 # Expo
 .expo/

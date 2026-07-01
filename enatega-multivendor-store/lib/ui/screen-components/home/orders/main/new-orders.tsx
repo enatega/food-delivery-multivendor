@@ -101,13 +101,6 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     onInitOrders();
   }, [data?.restaurantOrders, route.key, currentTab]);
 
-  useEffect(() => {
-    // Trigger refetch when orders length changes
-    if (orders?.length === 0) {
-      refetch();
-    }
-  }, [orders?.length]);
-
   // Calculate the marginBottom dynamically
   const marginBottom = Platform.OS === "ios" ? height * 0.4 : height * 0.35;
 

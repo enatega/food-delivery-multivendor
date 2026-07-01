@@ -81,8 +81,6 @@ export default function useNotification() {
       ) {
         const { _id } = response.notification.request.content.data;
 
-        console.log("notification response", response);
-
         // const { data } = await client.query({
         //   query: STORE_ORDERS,
         //   fetchPolicy: "network-only",

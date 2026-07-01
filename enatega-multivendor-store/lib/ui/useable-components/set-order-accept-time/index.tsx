@@ -50,9 +50,8 @@ const SetTimeScreenAndAcceptOrder = ({
       await acceptOrder(id, selectedTime?.toString() || "0");
       await muteRing(orderId);
       handleDismissModal();
-    } catch (err) {
+    } catch {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
-      console.log(err);
     } finally {
       handleDismissModal();
     }
@@ -70,9 +69,8 @@ const SetTimeScreenAndAcceptOrder = ({
 
       setIsAcceptingOrder(false);
       handleDismissModal();
-    } catch (err) {
+    } catch {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
-      console.log(err);
     } finally {
       setIsAcceptingOrder(false);
       handleDismissModal();

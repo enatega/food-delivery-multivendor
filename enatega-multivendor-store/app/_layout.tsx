@@ -71,14 +71,11 @@ function RootLayout() {
   }, [loaded]);
 
   useEffect(() => {
-    console.log("🔄 Initializing public access token...");
     PublicAccessTokenService.initialize(client)
       .then(() => {
-        console.log("✅ Public access token initialized");
         setIsTokenReady(true);
       })
-      .catch((error) => {
-        console.error("❌ Failed to initialize token:", error);
+      .catch(() => {
         setIsTokenReady(true);
       });
   }, [client]);

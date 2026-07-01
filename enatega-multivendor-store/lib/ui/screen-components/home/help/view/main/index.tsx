@@ -31,11 +31,9 @@ export default function HelpMain() {
       .then((supported) => {
         if (supported) {
           Linking.openURL(storeUrl);
-        } else {
-          console.log("Cannot open URL:", storeUrl);
         }
       })
-      .catch((err) => console.log("Error opening URL:", err));
+      .catch(() => {});
   };
 
   const openWhatsAppChat = async () => {
@@ -59,8 +57,7 @@ export default function HelpMain() {
           openWhatsAppStore();
         }
       }
-    } catch (error) {
-      console.log("Error opening URL", error);
+    } catch {
       openWhatsAppStore();
     }
   };

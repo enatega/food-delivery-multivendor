@@ -40,8 +40,7 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
       await newSound.playAsync();
 
       setSound(newSound);
-    } catch (err) {
-      console.log(err);
+    } catch {
     }
   };
 

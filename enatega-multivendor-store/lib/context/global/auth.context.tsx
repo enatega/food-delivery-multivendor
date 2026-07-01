@@ -41,32 +41,27 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
   const handleSetCurrentLanguage = async () => {
     try {
       const lng = await AsyncStorage.getItem("lang");
-      console.log("🚀 ~ handleSetCurrentLanguage ~ lng:", lng);
-      
+
       // Safe handling of Localization
       let systemLanguage = "en"; // default fallback
-      
+
       const locales = Localization.getLocales();
       if (locales && locales.length > 0 && locales[0].languageCode) {
         systemLanguage = locales[0].languageCode;
       }
-      
-      console.log("🚀 ~ handleSetCurrentLanguage ~ systemLanguage:", systemLanguage);
 
       // Use stored language preference or fall back to system language
       const selectedLanguage = lng || systemLanguage;
-      
+
       await changeLanguage(selectedLanguage);
       setIsSelected(selectedLanguage);
-      
     } catch (error) {
-      console.error("Language setting error:", error);
       // Ultimate fallback
       try {
         await changeLanguage("en");
         setIsSelected("en");
       } catch (fallbackError) {
-        console.error("Fallback language setting failed:", fallbackError);
+        setIsSelected("en");
       }
     }
   };
@@ -83,8 +78,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 
       setToken("");
       router.replace("/(un-protected)/login");
-    } catch (e) {
-      console.error("Logout Error: ", { e });
+    } catch {
     }
   };
 
@@ -97,8 +91,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
         return await logout();
       }
       setToken(token);
-    } catch (error) {
-      console.error("error getting store id & token", error);
+    } catch {
       await logout();
     }
   }

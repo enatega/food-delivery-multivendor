@@ -38,15 +38,12 @@ export default function LanguageMain() {
 
   const handleSubmission = async () => {
     try {
-
-      console.log({isSelected})
-
       setIsChangingLang(true);
       await AsyncStorage.setItem("lang", isSelected);
       changeLanguage(isSelected);
       setIsChangingLang(false);
-    } catch (e) {
-      console.error(e);
+    } catch {
+      setIsChangingLang(false);
     }
   };
 

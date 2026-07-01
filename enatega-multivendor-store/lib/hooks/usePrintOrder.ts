@@ -64,7 +64,6 @@ export default function usePrintOrder() {
       });
       setStatus(`Printed successfully`);
     } catch (err: any) {
-      console.log(err);
       setStatus("Print failed: " + err.message);
     }
   };
@@ -114,7 +113,6 @@ export default function usePrintOrder() {
         return true;
       }
     } catch (err) {
-      console.log({ err });
       FlashMessageComponent({
         message:
           err?.message || "Something went wrong while printing the receipt.",

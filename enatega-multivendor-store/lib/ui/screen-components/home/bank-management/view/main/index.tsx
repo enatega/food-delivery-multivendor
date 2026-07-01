@@ -70,7 +70,6 @@ export default function BankManagementMain() {
           message: t("Failed to update bank details"),
           type: "danger",
         });
-        console.error("Failed to update bank details", error);
       },
       onCompleted: () => {
         setFormData({
@@ -148,8 +147,7 @@ export default function BankManagementMain() {
         t("Bank Details Updated"),
         t("Your bank details have been updated successfully"),
       );
-    } catch (error) {
-      console.log(error);
+    } catch {
     }
   };
 

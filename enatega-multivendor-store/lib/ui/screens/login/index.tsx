@@ -45,8 +45,7 @@ const LoginScreen = () => {
     // TODO: Implement login logic
     try {
       await onLogin(creds.username, creds.password);
-    } catch (err: unknown) {
-      console.log(err);
+    } catch {
     }
   };
 

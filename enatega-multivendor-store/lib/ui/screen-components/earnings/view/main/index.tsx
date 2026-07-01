@@ -82,7 +82,6 @@ export default function EarningsMain() {
     }
   >(STORE_EARNINGS_GRAPH, {
     onError: (err) => {
-      console.log(err);
       showMessage({
         message:
           err.graphQLErrors[0]?.message ||

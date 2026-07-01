@@ -2,7 +2,7 @@ import { UPDATE_WORK_SCHEDULE } from "@/lib/apollo/mutations/work-schedule";
 import { useUserContext } from "@/lib/context/global/user.context";
 
 import { WorkSchedule } from "@/lib/utils/interfaces";
-import { ApolloError, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 
 import { STORE_PROFILE } from "@/lib/apollo/queries";
 import { useApptheme } from "@/lib/context/theme.context";
@@ -126,9 +126,7 @@ export default function WorkScheduleMain() {
           });
         },
       });
-    } catch (err) {
-      const error = err as ApolloError;
-      console.log(error);
+    } catch {
     }
   };
 

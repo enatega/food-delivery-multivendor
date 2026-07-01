@@ -30,7 +30,6 @@ import {
   STORE_PROFILE,
   STORE_TRANSACTIONS_HISTORY,
 } from "@/lib/apollo/queries/store.query";
-import { GraphQLError } from "graphql";
 
 // Expo
 import { router } from "expo-router";
@@ -182,9 +181,7 @@ export default function WalletMain() {
           userId: userId,
         },
       });
-    } catch (error) {
-      const err = error as GraphQLError;
-      console.log(err);
+    } catch {
     }
   }
   // Loading state
