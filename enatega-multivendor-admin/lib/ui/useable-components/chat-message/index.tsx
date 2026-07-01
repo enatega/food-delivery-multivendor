@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Interface
 export interface IMessage {

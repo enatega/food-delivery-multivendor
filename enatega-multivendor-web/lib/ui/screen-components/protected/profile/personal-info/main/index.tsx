@@ -21,7 +21,7 @@ export default function PersonalInfoMain() {
   const { data: profileData, loading: profileLoading } = useQuery(
     GET_USER_PROFILE,
     {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
     },
   );
 

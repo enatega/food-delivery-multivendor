@@ -1,7 +1,7 @@
 'use client';
 
 // Core
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 import { useContext, useState } from 'react';
 
 // Context

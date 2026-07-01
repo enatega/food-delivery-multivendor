@@ -1,12 +1,9 @@
 // Core
-import { useContext, useState } from 'react';
-
-// Prime React
-import { FilterMatchMode } from 'primereact/api';
+import { useContext, useEffect, useState } from 'react';
 
 // Interface and Types
 import {
-  ICouponRestaurantGQLResponse,
+  ICouponRestaurantPaginatedGQLResponse,
   ICouponRestaurantMainComponentsProps,
   ICouponRestaurantResponse,
 } from '@/lib/utils/interfaces/coupons-restaurant.interface';
@@ -24,12 +21,13 @@ import { IActionMenuItem } from '@/lib/utils/interfaces/action-menu.interface';
 // Hooks
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 // Context
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 
 // GraphQL and Utilities
-import { GET_RESTAURANT_COUPONS } from '@/lib/api/graphql/queries/coupons-restaurant';
+import { GET_RESTAURANT_COUPONS_PAGINATED } from '@/lib/api/graphql/queries/coupons-restaurant';
 import { DELETE_RESTAURANT_COUPON } from '@/lib/api/graphql/mutations/coupons-restaurant';
 import { useMutation } from '@apollo/client';
 import { useTranslations } from 'next-intl';
@@ -52,33 +50,40 @@ export default function CouponsMain({
     ICouponRestaurantResponse[]
   >([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const [filters, setFilters] = useState({
-    global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
 
   // Query
-  const { data, loading } = useQueryGQL(GET_RESTAURANT_COUPONS, {
-    restaurantId: restaurantId,
-  }) as IQueryResult<ICouponRestaurantGQLResponse | undefined, undefined>;
+  const { data, loading } = useQueryGQL(GET_RESTAURANT_COUPONS_PAGINATED, {
+    restaurantId,
+    page: currentPage,
+    limit: rowsPerPage,
+    search: debouncedSearch || undefined,
+  }, {
+    fetchPolicy: 'network-only',
+  }) as IQueryResult<
+    ICouponRestaurantPaginatedGQLResponse | undefined,
+    undefined
+  >;
 
   //Mutation
   const [mutateDelete, { loading: mutationLoading }] = useMutation(
     DELETE_RESTAURANT_COUPON,
     {
-      refetchQueries: [
-        { query: GET_RESTAURANT_COUPONS, variables: { restaurantId } },
-      ],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 
   // For global search
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    let _filters = { ...filters };
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
+    setGlobalFilterValue(e.target.value);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   const menuItems: IActionMenuItem<ICouponRestaurantResponse>[] = [
     {
@@ -109,14 +114,20 @@ export default function CouponsMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={
-          data?.restaurantCoupons || []
-        }
-        filters={filters}
+        data={data?.restaurantCouponsPaginated?.data || []}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         loading={loading}
         columns={COUPONS_RESTAURANT_TABLE_COLUMNS({ menuItems })}
+        totalRecords={data?.restaurantCouponsPaginated?.totalCount ?? 0}
+        currentPage={
+          data?.restaurantCouponsPaginated?.currentPage ?? currentPage
+        }
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
       <DeleteDialog
         loading={mutationLoading}

@@ -6,9 +6,7 @@ export default function useVerifyOtp() {
   const [verifyOTP, { error }] = useMutation<
     VerifyOtpResponse,
     VerifyOtpVariables
-  >(VERIFY_OTP, {
-    fetchPolicy: "network-only",
-  });
+  >(VERIFY_OTP);
 
   return {
     verifyOTP,

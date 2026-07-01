@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Rating } from 'primereact/rating';
 import { IProfileCardProps } from '@/lib/utils/interfaces';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 const ProfileCard: React.FC<IProfileCardProps> = ({
   name,

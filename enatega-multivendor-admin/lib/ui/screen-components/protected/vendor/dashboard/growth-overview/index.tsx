@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Chart } from 'primereact/chart';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import {
-  GET_STORE_DETAILS_BY_VENDOR_ID,
+  GET_STORE_DETAILS_BY_VENDOR_ID_PAGINATED,
   GET_VENDOR_DASHBOARD_GROWTH_DETAILS_BY_YEAR,
 } from '@/lib/api/graphql';
 import {
@@ -16,12 +16,14 @@ import {
   IGetVendorDashboardGrowthDetailsByYearResponseGraphQL,
   IQueryResult,
   IVendorStoreDetails,
-  IVendorStoreDetailsResponseGraphQL,
+  IVendorStoreDetailsPaginatedResponseGraphQL,
 } from '@/lib/utils/interfaces';
 import DashboardUsersByYearStatsSkeleton from '@/lib/ui/useable-components/custom-skeletons/dasboard.user.year.stats.skeleton';
 import { VendorLayoutContext } from '@/lib/context/vendor/layout-vendor.context';
 import Table from '@/lib/ui/useable-components/table';
+import CustomTextField from '@/lib/ui/useable-components/input-field';
 import { DataTableRowClickEvent } from 'primereact/datatable';
+import useDebounce from '@/lib/hooks/useDebounce';
 import { onUseLocalStorage } from '@/lib/utils/methods';
 import { useTranslations } from 'next-intl';
 import { VENDOR_STORE_DETAILS_COLUMN } from '@/lib/ui/useable-components/table/columns/store-details-by-vendor-columns';
@@ -49,7 +51,7 @@ const VendorGrowthOverViewGraph = () => {
       year: new Date().getFullYear(),
     },
     {
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'network-only',
       debounceMs: 300,
     }
   ) as IQueryResult<
@@ -187,20 +189,39 @@ const VendorGrowthOverViewTabular = ({
 
   // Hooks
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
 
   const { data, loading } = useQueryGQL(
-    GET_STORE_DETAILS_BY_VENDOR_ID,
+    GET_STORE_DETAILS_BY_VENDOR_ID_PAGINATED,
     {
       id: vendorId,
       dateKeyword: dateFilter?.dateKeyword,
       starting_date: dateFilter?.startDate ?? '',
       ending_date: dateFilter?.endDate ?? '',
+      page: currentPage,
+      limit: rowsPerPage,
+      search: debouncedSearch || '',
     },
     {
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'network-only',
       enabled: !!vendorId,
     }
-  ) as IQueryResult<IVendorStoreDetailsResponseGraphQL | undefined, undefined>;
+  ) as IQueryResult<
+    IVendorStoreDetailsPaginatedResponseGraphQL | undefined,
+    undefined
+  >;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    dateFilter?.dateKeyword,
+    dateFilter?.startDate,
+    dateFilter?.endDate,
+    debouncedSearch,
+  ]);
 
   // Handler
   const handleRowClick = (event: DataTableRowClickEvent) => {
@@ -211,15 +232,35 @@ const VendorGrowthOverViewTabular = ({
 
   return (
     <div className="p-3">
+      <div className="mb-4 w-60">
+        <CustomTextField
+          type="text"
+          name="vendorStoreSearch"
+          maxLength={35}
+          showLabel={false}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Keyword Search"
+        />
+      </div>
       <Table
         data={
-          data?.getStoreDetailsByVendorId || []
+          data?.getStoreDetailsByVendorIdPaginated?.data || []
         }
         setSelectedData={() => {}}
         selectedData={[]}
         columns={VENDOR_STORE_DETAILS_COLUMN()}
         loading={loading}
         handleRowClick={handleRowClick}
+        totalRecords={data?.getStoreDetailsByVendorIdPaginated?.totalCount ?? 0}
+        currentPage={
+          data?.getStoreDetailsByVendorIdPaginated?.currentPage ?? currentPage
+        }
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 // Core
 import { useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Third-party libraries
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

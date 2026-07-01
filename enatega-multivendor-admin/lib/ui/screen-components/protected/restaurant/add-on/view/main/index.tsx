@@ -1,15 +1,12 @@
 // Core
 import { useMutation } from '@apollo/client';
-import { useContext, useState } from 'react';
-
-// Prime React
-import { FilterMatchMode } from 'primereact/api';
+import { useContext, useEffect, useState } from 'react';
 
 // Interface and Types
 import {
   IActionMenuItem,
   IAddon,
-  IAddonByRestaurantResponse,
+  IAddonPaginatedByRestaurantResponse,
   IAddonMainComponentsProps,
   IQueryResult,
 } from '@/lib/utils/interfaces';
@@ -25,10 +22,11 @@ import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
 // Context
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 // GraphQL
 import { DELETE_ADDON, GET_OPTIONS_BY_RESTAURANT_ID } from '@/lib/api/graphql';
-import { GET_ADDONS_BY_RESTAURANT_ID } from '@/lib/api/graphql/queries/addon';
+import { GET_RESTAURANT_ADDONS_PAGINATED } from '@/lib/api/graphql/queries/addon';
 
 // Context
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
@@ -50,21 +48,29 @@ export default function OptionMain({
   const [deleteId, setDeleteId] = useState('');
   const [selectedProducts, setSelectedProducts] = useState<IAddon[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const [filters, setFilters] = useState({
-    global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
 
   // Query
   const { data, loading } = useQueryGQL(
-    GET_ADDONS_BY_RESTAURANT_ID,
-    { id: restaurantId },
+    GET_RESTAURANT_ADDONS_PAGINATED,
     {
-      fetchPolicy: 'cache-and-network',
+      restaurantId,
+      page: currentPage,
+      limit: rowsPerPage,
+      search: debouncedSearch || undefined,
+    },
+    {
+      fetchPolicy: 'network-only',
       enabled: !!restaurantId,
       onCompleted: onFetchAddonsByRestaurantCompleted,
       onError: onErrorFetchAddonsByRestaurant,
     }
-  ) as IQueryResult<IAddonByRestaurantResponse | undefined, undefined>;
+  ) as IQueryResult<
+    IAddonPaginatedByRestaurantResponse | undefined,
+    undefined
+  >;
 
   //Mutation
   const [deleteCategory, { loading: mutationLoading }] = useMutation(
@@ -85,12 +91,12 @@ export default function OptionMain({
 
   // Handlers
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const _filters = { ...filters };
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
+    setGlobalFilterValue(e.target.value);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   // Restaurant Profile Complete
   function onFetchAddonsByRestaurantCompleted() {}
@@ -135,14 +141,20 @@ export default function OptionMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={
-          data?.restaurant?.addons.slice().reverse() || []
-        }
-        filters={filters}
+        data={data?.restaurantAddonsPaginated?.data || []}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         loading={loading}
         columns={ADDON_TABLE_COLUMNS({ menuItems })}
+        totalRecords={data?.restaurantAddonsPaginated?.totalCount ?? 0}
+        currentPage={
+          data?.restaurantAddonsPaginated?.currentPage ?? currentPage
+        }
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
       <CustomDialog
         loading={mutationLoading}

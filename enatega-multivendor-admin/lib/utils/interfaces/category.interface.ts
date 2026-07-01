@@ -54,6 +54,15 @@ export interface ICategoryByRestaurantResponse {
   };
 }
 
+export interface ICategoryPaginatedByRestaurantResponse {
+  restaurantCategoriesPaginated: {
+    data: ICategory[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 // Sub-Category
 export interface ISubCategory {
   _id?: string;

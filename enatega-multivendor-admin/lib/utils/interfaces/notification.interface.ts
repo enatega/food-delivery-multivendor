@@ -31,6 +31,15 @@ export interface IGetNotifications {
   notifications: INotification[];
 }
 
+export interface IGetNotificationsPaginated {
+  notificationsPaginated: {
+    data: INotification[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 export interface IWebNotification {
   __typename: 'WebNotification';
   _id: string;

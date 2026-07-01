@@ -12,7 +12,7 @@ import {
   useState,
   useTransition,
 } from 'react';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Icons
 import {

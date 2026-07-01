@@ -1,6 +1,6 @@
 'use client';
 // Contexts
-import { CREATE_CUISINE, EDIT_CUISINE, GET_CUISINES } from '@/lib/api/graphql';
+import { CREATE_CUISINE, EDIT_CUISINE } from '@/lib/api/graphql';
 
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -78,7 +78,8 @@ export default function CuisineForm({
           duration: 2000,
         });
       },
-      refetchQueries: [{ query: GET_CUISINES }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 
@@ -94,7 +95,8 @@ export default function CuisineForm({
           duration: 2000,
         });
       },
-      refetchQueries: [{ query: GET_CUISINES }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 

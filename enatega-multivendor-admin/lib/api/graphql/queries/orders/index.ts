@@ -64,85 +64,94 @@ export const GET_ORDER_BY_RESTAURANT = gql`
     $page: Int
     $rows: Int
     $search: String
+    $orderStatus: [String]
   ) {
     ordersByRestId(
       restaurant: $restaurant
       page: $page
       rows: $rows
       search: $search
+      orderStatus: $orderStatus
     ) {
-      _id
-      orderId
-      restaurant {
+      totalCount
+      totalPages
+      currentPage
+      prevPage
+      nextPage
+      orders {
         _id
-        name
-        image
-        address
-        location {
-          coordinates
+        orderId
+        restaurant {
+          _id
+          name
+          image
+          address
+          location {
+            coordinates
+          }
         }
-      }
-      deliveryAddress {
-        location {
-          coordinates
+        deliveryAddress {
+          location {
+            coordinates
+          }
+          deliveryAddress
+          details
+          label
         }
-        deliveryAddress
-        details
-        label
-      }
-      items {
-        _id
-        title
-        description
-        image
-        quantity
-        variation {
+        items {
           _id
           title
-          price
-          discounted
-        }
-        addons {
-          _id
-          options {
+          description
+          image
+          quantity
+          variation {
             _id
             title
-            description
             price
+            discounted
           }
-          description
-          title
-          quantityMinimum
-          quantityMaximum
+          addons {
+            _id
+            options {
+              _id
+              title
+              description
+              price
+            }
+            description
+            title
+            quantityMinimum
+            quantityMaximum
+          }
+          specialInstructions
+          isActive
+          createdAt
+          updatedAt
         }
-        specialInstructions
+        user {
+          _id
+          name
+          phone
+          email
+        }
+        paymentMethod
+        paidAmount
+        orderAmount
+        orderStatus
+        status
+        paymentStatus
+        reason
         isActive
         createdAt
-        updatedAt
-      }
-      user {
-        _id
-        name
-        phone
-        email
-      }
-      paymentMethod
-      paidAmount
-      orderAmount
-      orderStatus
-      status
-      paymentStatus
-      reason
-      isActive
-      createdAt
-      deliveryCharges
-      tipping
-      taxationAmount
-      rider {
-        _id
-        name
-        username
-        available
+        deliveryCharges
+        tipping
+        taxationAmount
+        rider {
+          _id
+          name
+          username
+          available
+        }
       }
     }
   }
@@ -482,8 +491,6 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
     }
   }
 `;
-
-
 
 
 

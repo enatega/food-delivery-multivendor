@@ -40,6 +40,12 @@ export interface IReview extends IGlobalComponentProps {
 export interface ICustomDataViewProps extends IGlobalComponentProps {
   products: IReview[];
   header: React.ReactNode;
+  rows?: number;
+  totalRecords?: number;
+  first?: number;
+  onPage?: (event: { first: number; rows: number; page?: number }) => void;
+  lazy?: boolean;
+  loading?: boolean;
 }
 
 export interface IItem extends IGlobalComponentProps {

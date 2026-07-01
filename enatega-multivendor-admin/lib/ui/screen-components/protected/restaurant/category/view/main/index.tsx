@@ -1,8 +1,5 @@
 // Core
-import { useContext, useState } from 'react';
-
-// Prime React
-import { FilterMatchMode } from 'primereact/api';
+import { useContext, useEffect, useState } from 'react';
 
 // Interface and Types
 
@@ -17,9 +14,10 @@ import { IActionMenuItem } from '@/lib/utils/interfaces/action-menu.interface';
 //Toast
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
+import useDebounce from '@/lib/hooks/useDebounce';
 import {
   ICategory,
-  ICategoryByRestaurantResponse,
+  ICategoryPaginatedByRestaurantResponse,
   ICategoryMainComponentsProps,
   IQueryResult,
   ISubCategoryResponse,
@@ -34,6 +32,7 @@ import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaur
 import { useMutation } from '@apollo/client';
 import CategoryTableHeader from '../header/table-header';
 import { GET_SUBCATEGORIES } from '@/lib/api/graphql/queries/sub-categories';
+import { GET_RESTAURANT_CATEGORIES_PAGINATED } from '@/lib/api/graphql/queries/category';
 import SubCategoriesPreiwModal from '../modal';
 import { useTranslations } from 'next-intl';
 
@@ -65,25 +64,33 @@ export default function CategoryMain({
   const [deleteId, setDeleteId] = useState('');
   const [selectedProducts, setSelectedProducts] = useState<ICategory[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const [filters, setFilters] = useState({
-    global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
 
   // Queries
   const { data, loading } = useQueryGQL(
-    GET_CATEGORY_BY_RESTAURANT_ID,
-    { id: restaurantId },
+    GET_RESTAURANT_CATEGORIES_PAGINATED,
     {
-      fetchPolicy: 'cache-and-network',
+      restaurantId,
+      page: currentPage,
+      limit: rowsPerPage,
+      search: debouncedSearch || undefined,
+    },
+    {
+      fetchPolicy: 'network-only',
       enabled: !!restaurantId,
       onCompleted: onFetchCategoriesByRestaurantCompleted,
       onError: onErrorFetchCategoriesByRestaurant,
     }
-  ) as IQueryResult<ICategoryByRestaurantResponse | undefined, undefined>;
+  ) as IQueryResult<
+    ICategoryPaginatedByRestaurantResponse | undefined,
+    undefined
+  >;
 
   const { data: subCategoriesData, loading: loadingSubCategories } =
     useQueryGQL(GET_SUBCATEGORIES, {
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'network-only',
       onError: (error) => {
         showToast({
           type: 'error',
@@ -115,12 +122,12 @@ export default function CategoryMain({
 
   // Handlers
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const _filters = { ...filters };
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
+    setGlobalFilterValue(e.target.value);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   const handleCategoryRowClick = (id: string) => {
     setSubCategoryParentId(id);
@@ -200,10 +207,7 @@ export default function CategoryMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={
-          data?.restaurant?.categories.slice().reverse() || []
-        }
-        filters={filters}
+        data={data?.restaurantCategoriesPaginated?.data || []}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         loading={loading && loadingSubCategories}
@@ -212,6 +216,15 @@ export default function CategoryMain({
           setIsAddSubCategoriesVisible,
           shopType: shopType,
         })}
+        totalRecords={data?.restaurantCategoriesPaginated?.totalCount ?? 0}
+        currentPage={
+          data?.restaurantCategoriesPaginated?.currentPage ?? currentPage
+        }
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
       <CustomDialog
         loading={mutationLoading}

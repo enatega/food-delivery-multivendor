@@ -1,8 +1,5 @@
-//Prime react
-import { FilterMatchMode } from 'primereact/api';
-
 //Hooks
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 //Components
 import NotificationTableHeader from '../header/table-header';
@@ -15,42 +12,42 @@ import { NOTIFICATIONS_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/c
 
 // Interfaces
 import { IQueryResult } from '@/lib/utils/interfaces';
-import { IGetNotifications } from '@/lib/utils/interfaces/notification.interface';
+import {
+  IGetNotificationsPaginated,
+} from '@/lib/utils/interfaces/notification.interface';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
-import { GET_NOTIFICATIONS } from '@/lib/api/graphql';
+import { GET_NOTIFICATIONS_PAGINATED } from '@/lib/api/graphql';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 export default function NotificationMain() {
-  const { data: notificationData, loading: notificationLoading } = useQueryGQL(
-    GET_NOTIFICATIONS,
-    {}
-  ) as IQueryResult<IGetNotifications | undefined, undefined>;
-
-  // States
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
-
-  // Filters
-  const [filters, setFilters] = useState({
-    global: { value: '', matchMode: FilterMatchMode.CONTAINS },
-  });
-
   const [globalFilterValue, setGlobalFilterValue] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
 
   // Global filters change
   const onGlobalFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const _filters = { ...filters };
-
-    _filters['global'].value = value;
-
-    setFilters(_filters);
-    setGlobalFilterValue(value);
+    setGlobalFilterValue(e.target.value);
   };
+
+  const { data, loading } = useQueryGQL(GET_NOTIFICATIONS_PAGINATED, {
+    page: currentPage,
+    limit: rowsPerPage,
+    search: debouncedSearch || undefined,
+  }, {
+    fetchPolicy: 'network-only',
+  }) as IQueryResult<IGetNotificationsPaginated | undefined, undefined>;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   return (
     <div className="p-3">
       <Table
         columns={NOTIFICATIONS_TABLE_COLUMNS()}
-        data={notificationData?.notifications ?? []}
+        data={data?.notificationsPaginated?.data ?? []}
         selectedData={[]}
         setSelectedData={() => {}}
         header={
@@ -61,8 +58,14 @@ export default function NotificationMain() {
             setSelectedActions={setSelectedActions}
           />
         }
-        loading={notificationLoading}
-        filters={filters}
+        loading={loading}
+        totalRecords={data?.notificationsPaginated?.totalCount ?? 0}
+        currentPage={data?.notificationsPaginated?.currentPage ?? currentPage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
     </div>
   );

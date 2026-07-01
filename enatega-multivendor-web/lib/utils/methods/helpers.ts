@@ -6,6 +6,9 @@ import { OrderStatus } from "../interfaces";
 import emailjs from "emailjs-com";
 import { onUseLocalStorage } from "./local-storage";
 
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
 export function formatDate(dateString?: string): string {
   if (!dateString) return "";
 
@@ -212,11 +215,17 @@ export const getDistanceFromLatLonInKm = (
 
 
 export const sendEmail = (templateId : any, templateParams : any) => {
+  if (!EMAILJS_SERVICE_ID || !EMAILJS_PUBLIC_KEY) {
+    return Promise.reject(
+      new Error("Email service is not configured. Missing EmailJS public environment variables."),
+    );
+  }
+
   return emailjs.send(
-    "service_463sz1v",
+    EMAILJS_SERVICE_ID,
     templateId,
     templateParams,
-    "kfOnsw1Kn8ZWu4l77"
+    EMAILJS_PUBLIC_KEY
   );
 };
 

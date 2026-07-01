@@ -1,5 +1,5 @@
 // GrpphQL
-import { DELETE_CUISINE, GET_CUISINES } from '@/lib/api/graphql';
+import { DELETE_CUISINE, GET_CUISINES_PAGINATED } from '@/lib/api/graphql';
 
 // Interfaces
 import {
@@ -10,15 +10,15 @@ import {
 import {
   ICuisine,
   ICuisineMainProps,
-  IGetCuisinesData,
+  IGetCuisinesPaginatedData,
 } from '@/lib/utils/interfaces/cuisine.interface';
-import { FilterMatchMode } from 'primereact/api';
 
 //  Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
 
 // Hooks
 import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL';
+import useDebounce from '@/lib/hooks/useDebounce';
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 
@@ -38,14 +38,23 @@ export default function CuisinesMain({
   const [deleteCuisine, { loading: deleteCuisineLoading }] = useMutation(
     DELETE_CUISINE,
     {
-      refetchQueries: [{ query: GET_CUISINES }],
+      refetchQueries: [{ query: GET_CUISINES_PAGINATED }],
     }
   );
 
   // Queries
-  const { data, fetch } = useLazyQueryQL(GET_CUISINES, {
+  const { data, fetch } = useLazyQueryQL(GET_CUISINES_PAGINATED, {
+    fetchPolicy: 'network-only',
     onCompleted: () => setIsLoading(false),
-  }) as ILazyQueryResult<IGetCuisinesData | undefined, undefined>;
+  }) as ILazyQueryResult<
+    IGetCuisinesPaginatedData | undefined,
+    {
+      page: number;
+      limit: number;
+      search?: string;
+      shopType?: string;
+    }
+  >;
 
   // Hooks
   const t = useTranslations();
@@ -67,18 +76,11 @@ export default function CuisinesMain({
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-
-  // Filters
-  const filters = {
-    global: { value: globalFilterValue, matchMode: FilterMatchMode.CONTAINS },
-    shopType: {
-      value:
-        selectedActions.length === 0 || selectedActions.length === 2
-          ? null // No filter when none or both are selected
-          : selectedActions,
-      matchMode: FilterMatchMode.CONTAINS, // Use "IN" to filter based on multiple values
-    },
-  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
+  const shopType =
+    selectedActions.length === 1 ? selectedActions[0] : undefined;
 
   // Menu Items
   const menuItems: IActionMenuItem<ICuisine>[] = [
@@ -149,9 +151,14 @@ export default function CuisinesMain({
     }
   }
 
-  const onFetchCuisines = () => {
+  const onFetchCuisines = (page = currentPage, limit = rowsPerPage) => {
     setIsLoading(true);
-    fetch();
+    fetch({
+      page,
+      limit,
+      search: debouncedSearch || undefined,
+      shopType,
+    });
   };
 
   // UseEffects
@@ -161,16 +168,19 @@ export default function CuisinesMain({
 
   useEffect(() => {
     onFetchCuisines();
-  }, []);
+  }, [currentPage, rowsPerPage, debouncedSearch, shopType]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch, shopType]);
 
   return (
     <div className="p-3">
       <Table
         columns={CUISINE_TABLE_COLUMNS({ menuItems })}
-        data={data?.cuisines || []}
+        data={data?.cuisinesPaginated?.data || []}
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e as ICuisine[])}
-        filters={filters}
         loading={isLoading}
         header={
           <CuisineTableHeader
@@ -180,6 +190,13 @@ export default function CuisinesMain({
             setSelectedActions={setSelectedActions}
           />
         }
+        totalRecords={data?.cuisinesPaginated?.totalCount ?? 0}
+        currentPage={data?.cuisinesPaginated?.currentPage ?? currentPage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
       <CustomDialog
         onConfirm={deleteItem}
