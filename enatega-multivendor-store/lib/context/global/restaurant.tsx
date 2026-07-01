@@ -29,8 +29,8 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
 
   const { loading, error, data, subscribeToMore, refetch, networkStatus } =
     useQuery(GET_ORDERS, {
-      fetchPolicy: "network-only",
-      pollInterval: 5000,
+      fetchPolicy: "cache-and-network",
+      pollInterval: 60000,
       onError: () => {},
     });
 
@@ -63,8 +63,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
 
   const subscribeToMoreOrders = async () => {
     try {
-      const restaurant = await AsyncStorage.getItem("restaurantId")
-      //AsyncStorage.getItem("store-id");
+      const restaurant = await AsyncStorage.getItem("store-id");
       if (!restaurant) return;
       unsubscribe = subscribeToMore({
         document: SUBSCRIBE_PLACE_ORDER,
