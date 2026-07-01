@@ -6,7 +6,7 @@ node_modules/
 # Secrets
 google-services.json
 google-service-account*.json
-
+google-service-account copy.json
 # Expo
 .expo/
 dist/
