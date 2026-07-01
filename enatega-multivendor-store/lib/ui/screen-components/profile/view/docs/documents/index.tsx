@@ -130,25 +130,6 @@ export default function DocumentsSection() {
               color: appTheme.fontMainColor,
             }}
           >
-            {t("Password")}
-          </Text>
-          {dataProfile?.password ? (
-            <Text style={{ color: appTheme.fontSecondColor }}>
-              {dataProfile?.password}
-            </Text>
-          ) : (
-            <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />
-          )}
-        </View>
-        <View
-          className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
-          style={{ borderColor: appTheme.borderLineColor }}
-        >
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-            }}
-          >
             {t("Wallet Amount")}
           </Text>
           {dataProfile?.currentWalletAmount ? (

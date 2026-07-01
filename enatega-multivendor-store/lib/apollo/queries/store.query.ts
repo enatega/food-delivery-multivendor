@@ -74,7 +74,6 @@ export const STORE_PROFILE = gql`
       logo
       address
       username
-      password
       minimumOrder
       isActive
       isAvailable
