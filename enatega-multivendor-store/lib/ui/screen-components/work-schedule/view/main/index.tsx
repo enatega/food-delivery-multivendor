@@ -68,16 +68,17 @@ export default function WorkScheduleMain() {
   const parallaxAnim = useRef(new Animated.Value(0)).current;
 
   // Context
-  const { dataProfile } = useUserContext();
+  const { dataProfile, userId } = useUserContext();
 
   // API Hook
   const [updateSchedule, { loading: isUpatingSchedule }] = useMutation(
     UPDATE_WORK_SCHEDULE,
     {
+      awaitRefetchQueries: true,
       refetchQueries: [
         {
           query: STORE_PROFILE,
-          variables: { id: dataProfile?._id },
+          variables: { restaurantId: userId },
         },
       ],
     }
