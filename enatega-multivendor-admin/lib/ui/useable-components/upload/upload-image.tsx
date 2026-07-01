@@ -10,7 +10,7 @@ import { UPLOAD_IMAGE_TO_S3 } from '@/lib/api/graphql/mutations';
 import {
   IImageUploadComponentProps,
 } from '@/lib/utils/interfaces';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Hooks
 import { memo, useCallback, useContext, useState } from 'react';

@@ -2,7 +2,7 @@
 import { ApolloError, useMutation } from '@apollo/client';
 import { Form, Formik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Context
 import { ToastContext } from '@/lib/context/global/toast.context';

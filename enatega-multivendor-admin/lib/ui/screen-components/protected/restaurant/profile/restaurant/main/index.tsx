@@ -4,7 +4,7 @@ import { IInfoItemProps } from '@/lib/utils/interfaces/profile/restaurant.profil
 import { Avatar } from 'primereact/avatar';
 import { ProfileContext } from '@/lib/context/restaurant/profile.context';
 import RestaurantProfileSkeleton from '@/lib/ui/useable-components/custom-skeletons/restaurant.profile.skeleton';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 import { useTranslations } from 'next-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';

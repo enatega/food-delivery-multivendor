@@ -13,7 +13,7 @@ import {
   useTransition,
 } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Icons
 import {

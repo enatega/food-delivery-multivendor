@@ -29,7 +29,7 @@ import {
 import { DELETE_VENDOR, GET_VENDORS } from '@/lib/api/graphql';
 
 // Components
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 import CustomDialog from '../delete-dialog';
 import CustomPopupMenu from '../popup-menu';
 import TextComponent from '../text-field';

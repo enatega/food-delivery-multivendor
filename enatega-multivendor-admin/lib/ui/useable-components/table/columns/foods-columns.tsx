@@ -1,5 +1,5 @@
 // import ActionMenu from '../../action-menu';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Interface
 import { IActionMenuProps, IFoodNew } from '@/lib/utils/interfaces';
