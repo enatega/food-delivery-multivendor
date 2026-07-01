@@ -51,15 +51,10 @@ import { IWebNotification } from '@/lib/utils/interfaces/notification.interface'
 
 // Constants
 import {
-  APP_NAME,
   languageTypes,
-  SELECTED_RESTAURANT,
-  SELECTED_VENDOR,
-  SELECTED_VENDOR_EMAIL,
 } from '@/lib/utils/constants';
 
 // Methods
-import { onUseLocalStorage } from '@/lib/utils/methods';
 import { timeAgo } from '@/lib/utils/methods/timeAgo';
 
 // Styles
@@ -82,7 +77,7 @@ import {
   MARK_WEB_NOTIFICATIONS_AS_READ,
 } from '@/lib/api/graphql';
 import ThemeToggle from '@/lib/ui/useable-components/theme-button';
-import { clearAuthTokens } from '@/lib/utils/methods/auth';
+import { clearStoredSessionState } from '@/lib/utils/methods/auth';
 import { clearMetricsData } from '@/lib/utils/methods/security';
 
 const AppTopbar = () => {
@@ -170,13 +165,8 @@ const AppTopbar = () => {
 
   const onConfirmLogout = async () => {
     setUser(null);
-    clearAuthTokens();
+    clearStoredSessionState();
     clearMetricsData();
-    onUseLocalStorage('delete', SELECTED_VENDOR);
-    onUseLocalStorage('delete', SELECTED_VENDOR_EMAIL);
-    onUseLocalStorage('delete', SELECTED_RESTAURANT);
-    onUseLocalStorage('delete', `user-${APP_NAME}`);
-    onUseLocalStorage('delete', 'messaging-token');
     await apolloClient.clearStore();
     router.replace('/authentication/login');
   };

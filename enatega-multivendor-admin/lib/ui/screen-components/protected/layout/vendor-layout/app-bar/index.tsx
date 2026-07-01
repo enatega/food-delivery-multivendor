@@ -48,11 +48,7 @@ import {
 
 // Constants
 import {
-  APP_NAME,
   languageTypes,
-  SELECTED_RESTAURANT,
-  SELECTED_VENDOR,
-  SELECTED_VENDOR_EMAIL,
 } from '@/lib/utils/constants';
 
 // Methods
@@ -67,7 +63,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { setUserLocale } from '@/lib/utils/methods/locale';
 import { TLocale } from '@/lib/utils/types/locale';
 import ThemeToggle from '@/lib/ui/useable-components/theme-button';
-import { clearAuthTokens } from '@/lib/utils/methods/auth';
+import { clearStoredSessionState } from '@/lib/utils/methods/auth';
 import { clearMetricsData } from '@/lib/utils/methods/security';
 
 const VendorAppTopbar = () => {
@@ -124,13 +120,8 @@ const VendorAppTopbar = () => {
 
   const onConfirmLogout = async () => {
     setUser(null);
-    clearAuthTokens();
+    clearStoredSessionState();
     clearMetricsData();
-    onUseLocalStorage('delete', SELECTED_VENDOR);
-    onUseLocalStorage('delete', SELECTED_VENDOR_EMAIL);
-    onUseLocalStorage('delete', SELECTED_RESTAURANT);
-    onUseLocalStorage('delete', `user-${APP_NAME}`);
-    onUseLocalStorage('delete', 'messaging-token');
     await apolloClient.clearStore();
     router.replace('/authentication/login');
   };

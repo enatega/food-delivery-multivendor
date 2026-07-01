@@ -8,19 +8,18 @@ import CustomLoader from '@/lib/ui/useable-components/custom-progress-indicator'
 import { useUserContext } from '@/lib/hooks/useUser';
 
 // Constants and Utils
-import { APP_NAME } from '@/lib/utils/constants';
-import { onUseLocalStorage } from '@/lib/utils/methods';
+import { getAccessToken } from '@/lib/utils/methods/auth';
 
 const RESTAURANT_GUARD = <T extends object>(
   Component: React.ComponentType<T>
 ) => {
   const WrappedComponent = (props: T) => {
     const router = useRouter();
-    const { user, loading } = useUserContext();
+    const { user, loading, isSessionVerified } = useUserContext();
 
-    const isLoggedIn = !!onUseLocalStorage('get', `user-${APP_NAME}`);
+    const hasSessionToken = !!getAccessToken();
     const isAllowed =
-      isLoggedIn &&
+      isSessionVerified &&
       !!user &&
       (user.userType !== 'STAFF' ||
         !!(
@@ -29,14 +28,18 @@ const RESTAURANT_GUARD = <T extends object>(
         ));
 
     useEffect(() => {
-      if (!isLoggedIn) {
+      if (!loading && !hasSessionToken) {
+        router.replace('/authentication/login');
+        return;
+      }
+      if (!loading && hasSessionToken && !isSessionVerified) {
         router.replace('/authentication/login');
         return;
       }
       if (!loading && !isAllowed) {
         router.replace('/forbidden');
       }
-    }, [isAllowed, isLoggedIn, loading, router]);
+    }, [hasSessionToken, isAllowed, isSessionVerified, loading, router]);
 
     if (loading) {
       return <CustomLoader />;
