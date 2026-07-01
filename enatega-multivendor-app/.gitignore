@@ -64,4 +64,8 @@ buck-out/
 .expo/
 web-build/
 
+# Local credentials
+*.pem
+google-service-account*.json
+
 # @end expo-cli
