@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/client'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 
 const FORGOT_PASSWORD = gql`
@@ -13,6 +13,7 @@ const FORGOT_PASSWORD = gql`
 `
 export const useForgotPassword = () => {
   const { t, i18n } = useTranslation()
+  const navigation = useNavigation()
   const route = useRoute()
   const [email, setEmail] = useState(route.params?.email || '')
   const [emailError, setEmailError] = useState(null)
@@ -49,7 +50,10 @@ export const useForgotPassword = () => {
 
   function onCompleted(data) {
     FlashMessage({
-      message: t('checkEmail')
+      message: t('otpSentToEmail')
+    })
+    navigation.navigate('ForgotPasswordOtp', {
+      email: email.toLowerCase().trim()
     })
   }
 

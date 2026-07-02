@@ -36,9 +36,7 @@
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.enatega.multivendor",
       "icon": "./assets/icon.png",
-      "config": {
-        "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
-      },
+      "config": {},
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
@@ -69,12 +67,8 @@
         "resizeMode": "cover",
         "backgroundColor": "#ffffff"
       },
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
-        }
-      },
-      "permissions": ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.FOREGROUND_SERVICE", "com.google.android.gms.permission.AD_ID"],
+      "config": {},
+      "permissions": ["android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.FOREGROUND_SERVICE"],
       "icon": "./assets/appIcon.png",
       "queries": {
         "packages": ["com.whatsapp", "com.whatsapp.w4b"]

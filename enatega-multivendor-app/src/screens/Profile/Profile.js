@@ -74,11 +74,12 @@ function Profile(props) {
 
   const { data, loading, error, refetch } = useQuery(RESTAURANTS, {
     variables: {
-      longitude: location.longitude || null,
-      latitude: location.latitude || null
+      longitude: location?.longitude || null,
+      latitude: location?.latitude || null
     },
     fetchPolicy: 'network-only',
-    errorPolicy : "all"
+    errorPolicy: 'all',
+    skip: !location?.latitude || !location?.longitude
   })
   const { orderLoading, orderData } = useHomeRestaurants()
 

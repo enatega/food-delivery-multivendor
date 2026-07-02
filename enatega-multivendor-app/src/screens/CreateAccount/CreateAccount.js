@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { View, Image, TouchableOpacity, Dimensions, StatusBar, Platform, KeyboardAvoidingView } from 'react-native'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
@@ -15,6 +15,7 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { decodeJwtToken } from '../../utils/decode-jwt'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+import { dismissSessionExpiredModal } from '../../utils/session'
 
 const { height } = Dimensions.get('window')
 
@@ -28,6 +29,10 @@ const CreateAccount = (props) => {
       headerShown: false
     })
   }, [navigation])
+
+  useEffect(() => {
+    void dismissSessionExpiredModal()
+  }, [])
 
   const renderAppleAction = () => {
     if (loading && loginButton === 'Apple') {

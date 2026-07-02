@@ -108,8 +108,8 @@ export const forgotPassword = `mutation ForgotPassword($email:String!){
     }
   }`
 
-export const resetPassword = `mutation ResetPassword($password:String!,$email:String!,$token:String!){
-    resetPassword(password:$password,email:$email,token:$token){
+export const resetPassword = `mutation ResetPassword($password:String!,$email:String!,$otp:String!){
+    resetPassword(password:$password,email:$email,otp:$otp){
       result
     }
   }`

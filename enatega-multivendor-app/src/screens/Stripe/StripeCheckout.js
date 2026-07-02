@@ -14,6 +14,15 @@ const MYORDERS = gql`
   ${myOrders}
 `
 
+const isAllowedHost = (url, allowedHosts) => {
+  try {
+    const host = new URL(url).hostname.toLowerCase()
+    return allowedHosts.some((allowedHost) => host === allowedHost || host.endsWith(`.${allowedHost}`))
+  } catch {
+    return false
+  }
+}
+
 function StripeCheckout(props) {
   const Analytics = analytics()
 
@@ -26,6 +35,26 @@ function StripeCheckout(props) {
   const client = useApolloClient()
   const { _id } = props?.route.params
   const isHandlingSuccessRef = useRef(false)
+  const backendHost = useRef(null)
+  const stripeAllowedHosts = useRef([
+    'checkout.stripe.com',
+    'js.stripe.com',
+    'api.stripe.com',
+    'hooks.stripe.com',
+    'stripe.com',
+    'stripe.network',
+    'm.stripe.network',
+    'q.stripe.com',
+    'b.stripecdn.com'
+  ])
+
+  useEffect(() => {
+    try {
+      backendHost.current = new URL(SERVER_REST_URL).hostname.toLowerCase()
+    } catch {
+      backendHost.current = null
+    }
+  }, [SERVER_REST_URL])
 
   useLayoutEffect(() => {
     props?.navigation.setOptions({
@@ -58,7 +87,11 @@ function StripeCheckout(props) {
           (item) => item.orderId === _id
         )
 
-        if (order?._id) {
+        const isPaidOrder =
+          order &&
+          (String(order.paymentStatus).toUpperCase() === 'PAID' || Number(order.paidAmount || 0) > 0)
+
+        if (isPaidOrder) {
           await clearCart()
           props?.navigation.reset({
             routes: [
@@ -101,6 +134,16 @@ function StripeCheckout(props) {
         javaScriptEnabled={true}
         // scrollEnabled={false}
         bounces={false}
+        originWhitelist={['https://*', 'http://*']}
+        onShouldStartLoadWithRequest={(request) => {
+          const { url } = request
+          if (!url) return false
+          const allowedHosts = [...stripeAllowedHosts.current]
+          if (backendHost.current) {
+            allowedHosts.push(backendHost.current)
+          }
+          return isAllowedHost(url, allowedHosts)
+        }}
         onLoad={() => {
           loadingSetter(false)
         }}

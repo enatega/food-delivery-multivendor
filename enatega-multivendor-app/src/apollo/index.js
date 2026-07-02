@@ -14,33 +14,15 @@ import {
   offsetLimitPagination
 } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/client/link/ws'
-import useEnvVars from '../../environment'
-import { useContext } from 'react'
-import { LocationContext } from '../context/Location'
 import { calculateDistance } from '../utils/customFunctions'
 import { getValidPublicToken } from '../services/publicAcccessService'
 import { getOrCreateNonce } from '../utils/publicAccessToken'
 import { Platform } from 'react-native'
-import navigationService from '../routes/navigationService'
+import { isJwtTokenExpired } from '../utils/decode-jwt'
+import { invalidateUserSession } from '../utils/session'
 
-let isAuthRedirecting = false
-
-async function handleInvalidSession() {
-  if (isAuthRedirecting) return
-  isAuthRedirecting = true
-
-  try {
-    await AsyncStorage.removeItem('token')
-  } finally {
-    navigationService.navigate('Login')
-    setTimeout(() => {
-      isAuthRedirecting = false
-    }, 1000)
-  }
-}
-
-const setupApollo = () => {
-  const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars()
+const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
+  const publicOperations = new Set(['ForgotPassword', 'VerifyOtp', 'ResetPassword'])
 
   const cache = new InMemoryCache({
     typePolicies: {
@@ -78,19 +60,7 @@ const setupApollo = () => {
               const distance = calculateDistance(restaurantLocation?.coordinates[0], restaurantLocation?.coordinates[1], variables.latitude, variables.longitude)
               return distance
             }
-          },
-          freeDelivery: {
-            read(_existing) {
-              const randomValue = Math.random() * 10;
-              return randomValue > 5
-            }
-          },
-          acceptVouchers: {
-            read(_existing) {
-              const randomValue = Math.random() * 10;
-              return randomValue < 5
-            }
-          },
+          }
         }
       }
     }
@@ -107,21 +77,33 @@ const setupApollo = () => {
       lazy: true,
       connectionParams: async () => {
         const token = await AsyncStorage.getItem('token')
+        const hasExpiredUserToken = token && isJwtTokenExpired(token)
+
+        if (hasExpiredUserToken) {
+          await invalidateUserSession({ reason: 'token_expired' })
+        }
+
         return {
-          authorization: token ? `Bearer ${token}` : ''
+          authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : ''
         }
       }
     }
   })
 
   const request = async operation => {
-    const token = await AsyncStorage.getItem('token')
     const publicToken = await getValidPublicToken(GRAPHQL_URL)
     const nonce = await getOrCreateNonce()
+    const isPublicOperation = publicOperations.has(operation.operationName)
+    const token = isPublicOperation ? null : await AsyncStorage.getItem('token')
+    const hasExpiredUserToken = token && isJwtTokenExpired(token)
+
+    if (hasExpiredUserToken) {
+      await invalidateUserSession({ reason: 'token_expired' })
+    }
 
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : '',
         "bop-auth": publicToken ? `Bearer ${publicToken}` : '',
         nonce: nonce,
         'user-agent': `EnategaApp/${Platform.OS}`,
@@ -152,15 +134,21 @@ const setupApollo = () => {
       })
   )
 
-  const errorLink = onError(({ graphQLErrors }) => {
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
     const hasInvalidSession = (graphQLErrors || []).some(
       (graphQLError) =>
+        graphQLError?.extensions?.code === 'UNAUTHENTICATED' ||
         graphQLError?.extensions?.code === 'TOKEN_EXPIRED' ||
         graphQLError?.extensions?.code === 'INVALID_TOKEN'
     )
+    const hasUnauthorizedNetworkError =
+      networkError?.statusCode === 401 ||
+      networkError?.response?.status === 401
 
-    if (hasInvalidSession) {
-      void handleInvalidSession()
+    if (hasInvalidSession || hasUnauthorizedNetworkError) {
+      void invalidateUserSession({
+        reason: hasUnauthorizedNetworkError ? 'network_unauthorized' : 'graphql_unauthenticated'
+      })
     }
   })
 

@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect } from 'react'
-import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Image, ScrollView, Dimensions } from 'react-native'
+import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Image, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
@@ -587,9 +587,8 @@ function Menu({ route, props }) {
     setFilters(appliedFilters) // Reset filters to the last applied state
   }
 
-  return (
-    <SafeAreaView edges={['left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
-      <ScrollView style={[styles(currentTheme).container]} stickyHeaderIndices={[2]} nestedScrollEnabled={true}>
+  const menuHeader = (
+    <View>
         <View style={[styles(currentTheme).header, { paddingHorizontal: 10, paddingVertical: 6 }]}>
           <View>
             <TextDefault bolder H2 isRTL>
@@ -656,41 +655,47 @@ function Menu({ route, props }) {
         <View style={{ backgroundColor: currentTheme?.toggler }}>{restaurantData?.length === 0 ? null : <ActiveOrdersAndSections menuPageHeading={heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants'} subHeading={subHeading ? subHeading : ''} />}</View>
 
         {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
-        <Animated.FlatList
-          contentInset={{ top: containerPaddingTop }}
-          contentContainerStyle={{
-            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
-            paddingBottom: HEIGHT * 0.34,
-            padding: 15,
-            gap: 16
-          }}
-          contentOffset={{ y: -containerPaddingTop }}
-          onScroll={onScroll}
-          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={emptyView()}
-          keyExtractor={(item, index) => index.toString()}
-          refreshControl={
-            <RefreshControl
-              progressViewOffset={containerPaddingTop}
-              colors={[currentTheme.iconColorPink]}
-              refreshing={networkStatus === 4}
-              onRefresh={() => {
-                if (networkStatus === 7) {
-                  refetch()
-                }
-              }}
-            />
+    </View>
+  )
+
+  return (
+    <SafeAreaView edges={['left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
+      <Animated.FlatList
+        style={[styles(currentTheme).container]}
+        ListHeaderComponent={menuHeader}
+        contentInset={{ top: containerPaddingTop }}
+        contentContainerStyle={{
+          paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
+          paddingBottom: HEIGHT * 0.34,
+          paddingHorizontal: 15,
+          gap: 16
+        }}
+        contentOffset={{ y: -containerPaddingTop }}
+        onScroll={onScroll}
+        scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={emptyView()}
+        keyExtractor={(item, index) => index.toString()}
+        refreshControl={
+          <RefreshControl
+            progressViewOffset={containerPaddingTop}
+            colors={[currentTheme.iconColorPink]}
+            refreshing={networkStatus === 4}
+            onRefresh={() => {
+              if (networkStatus === 7) {
+                refetch()
+              }
+            }}
+          />
+        }
+        data={sortRestaurantsByOpenStatus(restaurantData || [])}
+        renderItem={({ item }) => {
+          if (item && item?.image && item?._id) {
+            const restaurantOpen = isOpen(item)
+            return <NewRestaurantCard {...item} fullWidth isOpen={restaurantOpen} />
           }
-          data={sortRestaurantsByOpenStatus(restaurantData || [])}
-          renderItem={({ item }) => {
-            if (item && item?.image && item?._id) {
-              const restaurantOpen = isOpen(item)
-              return <NewRestaurantCard {...item} fullWidth isOpen={restaurantOpen} />
-            }
-          }}
-        />
-      </ScrollView>
+        }}
+      />
       <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
       <Modalize
         ref={filtersModalRef}

@@ -21,7 +21,7 @@ export const useResetYourPassword = () => {
   const [passwordError, setPasswordError] = useState(null)
   const [confirmPasswordError, setConfirmPasswordError] = useState(null)
   const [email] = useState(route?.params?.email)
-  const [token] = useState(route?.params?.token)
+  const [otp] = useState(route?.params?.otp)
 
   const [mutate, { loading }] = useMutation(RESET_PASSWORD, {
     onCompleted,
@@ -32,13 +32,13 @@ export const useResetYourPassword = () => {
   const currentTheme = theme[themeContext.ThemeValue]
 
   useEffect(() => {
-    if (!email || !token) {
+    if (!email || !otp) {
       FlashMessage({
-        message: 'This reset link is expired or invalid. Please request a new one.'
+        message: 'This OTP is expired or invalid. Please request a new one.'
       })
       navigation.replace('ForgotPassword', { email })
     }
-  }, [email, navigation, token])
+  }, [email, navigation, otp])
 
   function validateCredentials() {
     let result = true
@@ -75,14 +75,14 @@ export const useResetYourPassword = () => {
     const normalizedMessage = rawMessage.toLowerCase()
 
     if (
-      !token ||
+      !otp ||
       normalizedMessage.includes('token') ||
       normalizedMessage.includes('expired') ||
       normalizedMessage.includes('invalid') ||
       normalizedMessage.includes('reuse')
     ) {
       FlashMessage({
-        message: 'This reset link is expired or invalid. Please request a new one.'
+        message: 'This OTP is expired or invalid. Please request a new one.'
       })
       navigation.replace('ForgotPassword', { email })
     } else if (error.networkError) {
@@ -97,9 +97,9 @@ export const useResetYourPassword = () => {
   }
 
   function resetYourPassword() {
-    if (!email || !token) {
+    if (!email || !otp) {
       FlashMessage({
-        message: 'This reset link is expired or invalid. Please request a new one.'
+        message: 'This OTP is expired or invalid. Please request a new one.'
       })
       navigation.replace('ForgotPassword', { email })
       return
@@ -107,7 +107,7 @@ export const useResetYourPassword = () => {
 
     if (validateCredentials()) {
       if (password === confirmPassword) {
-        mutate({ variables: { password, email: email.toLowerCase().trim(), token } })
+        mutate({ variables: { password, email: email.toLowerCase().trim(), otp } })
       } else {
         setConfirmPasswordError(t('passwordMustMatch'))
       }

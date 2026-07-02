@@ -6,22 +6,22 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import { useRoute, useNavigation } from '@react-navigation/native'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const FORGOT_PASSWORD = gql`
   ${forgotPassword}
 `
 
 export const useForgotPasswordOtp = () => {
-  const {t, i18n} = useTranslation()
+  const { t, i18n } = useTranslation()
   const route = useRoute()
   const navigation = useNavigation()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
   const otpFrom = useRef(null)
-  const [email] = useState(route?.params.email)
+  const [email] = useState(route?.params?.email)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [seconds, setSeconds] = useState(30)
 
   function onCompleted(data) {
@@ -49,8 +49,7 @@ export const useForgotPasswordOtp = () => {
 
   const [verifyOTP] = useMutation(VERIFY_OTP)
 
-  
-  const onCodeFilled = async (code) => {    
+  const onCodeFilled = async (code) => {
     const { data } = await verifyOTP({
       variables: {
         otp: code,
@@ -58,7 +57,7 @@ export const useForgotPasswordOtp = () => {
       }
     })
     if (data?.verifyOtp) {
-      navigation.navigate('SetYourPassword', { email })
+      navigation.navigate('SetYourPassword', { email, otp: code })
     } else {
       setOtpError(true)
     }

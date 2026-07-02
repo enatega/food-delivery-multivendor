@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState, useEffect, useMemo } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
@@ -18,11 +18,23 @@ export const LocationProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false)
   const { loading, error, data, refetch } = useQuery(GET_ZONES)
 
+  const sanitizeLocationForStorage = (value) => {
+    if (!value) return value
+
+    const latitude = Number(value.latitude)
+    const longitude = Number(value.longitude)
+
+    return {
+      ...value,
+      latitude: Number.isFinite(latitude) ? Number(latitude.toFixed(4)) : value.latitude,
+      longitude: Number.isFinite(longitude) ? Number(longitude.toFixed(4)) : value.longitude
+    }
+  }
 
   useEffect(() => {
     if (location) {
       const saveLocation = async () => {
-        await AsyncStorage.setItem('location', JSON.stringify(location))
+        await AsyncStorage.setItem('location', JSON.stringify(sanitizeLocationForStorage(location)))
       }
 
       saveLocation()
@@ -102,18 +114,18 @@ export const LocationProvider = ({ children }) => {
     }
   }, [isConnected, refetch])
 
+  const locationContextValue = useMemo(() => ({
+    location,
+    setLocation,
+    cities,
+    loading,
+    isConnected,
+    permissionState,
+    setPermissionState
+  }), [location, cities, loading, isConnected, permissionState])
+
   return (
-    <LocationContext.Provider
-      value={{
-        location,
-        setLocation,
-        cities,
-        loading,
-        isConnected,
-        permissionState,
-        setPermissionState
-      }}
-    >
+    <LocationContext.Provider value={locationContextValue}>
       {children}
     </LocationContext.Provider>
   )

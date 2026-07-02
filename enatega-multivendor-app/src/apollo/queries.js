@@ -305,6 +305,8 @@ export const restaurantPreviewFragment = gql`
     tags
     reviewCount
     reviewAverage
+    freeDelivery
+    acceptVouchers
     location {
       coordinates
     }
@@ -549,8 +551,8 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
       tax
       shopType
       distanceWithCurrentLocation @client
-      freeDelivery @client
-      acceptVouchers @client
+      freeDelivery
+      acceptVouchers
       cuisines
       reviewData{
           total
@@ -654,8 +656,8 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       reviewCount
       reviewAverage
       distanceWithCurrentLocation @client
-      freeDelivery @client
-      acceptVouchers @client
+      freeDelivery
+      acceptVouchers
       location{coordinates}
       openingTimes{
         day

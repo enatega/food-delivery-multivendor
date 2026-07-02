@@ -25,8 +25,6 @@ import Addresses from '../screens/Addresses/Addresses'
 import NewAddress from '../screens/NewAddress/NewAddress'
 import EditAddress from '../screens/EditAddress/EditAddress'
 import CartAddress from '../screens/CartAddress/CartAddress'
-import FullMap from '../screens/FullMap/FullMap'
-import OrderDetail from '../screens/OrderDetail/OrderDetail'
 import Settings from '../screens/Settings/Settings'
 import HelpBrowser from '../screens/HelpBrowser/HelpBrowser'
 import Main from '../screens/Main/Main'
@@ -41,7 +39,6 @@ import screenOptions from './screenOptions'
 import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
 import Favourite from '../screens/Favourite/Favourite'
-import ChatScreen from '../screens/ChatWithRider/ChatScreen'
 import { DarkBackButton, RightButton } from '../components/Header/HeaderIcons/HeaderIcons'
 import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
@@ -56,17 +53,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import BottomTabIcon from '../components/BottomTabIcon/BottomTabIcon'
 import { useTranslation } from 'react-i18next'
 import Collection from '../screens/Collection/Collection'
-import MapSection from '../screens/MapSection'
 import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
-import SearchScreen from '../screens/Search/SearchScreen'
 import UserContext from '../context/User'
 import { Easing, Platform } from 'react-native'
-import CategoryPage from '../components/SubCategoryPage/SubCategoryPage'
 // import HypCheckout from '../screens/Hyp/HypCheckout'
-import NewRestaurantDetailDesign from '../components/NewRestaurantDetailDesign/RestaurantDetailDesign'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
-import * as LocationImport from 'expo-location'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -90,9 +82,61 @@ const linking = {
 function MainNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const { isLoggedIn } = useContext(UserContext)
+
+  const protectedScreens = isLoggedIn ? (
+    <>
+      <NavigationStack.Screen name='Profile' component={Profile} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='Addresses' component={Addresses} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='NewAddress' component={NewAddress} />
+      <NavigationStack.Screen name='EditAddress' component={EditAddress} />
+      <NavigationStack.Screen
+        name='FullMap'
+        getComponent={() => require('../screens/FullMap/FullMap').default}
+        options={SLIDE_UP_RIGHT_ANIMATION}
+      />
+      <NavigationStack.Screen name='CartAddress' component={CartAddress} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='AddNewAddress' component={AddNewAddress} />
+      <NavigationStack.Screen name='SaveAddress' component={SaveAddress} />
+      <NavigationStack.Screen name='Payment' component={Payment} />
+      <NavigationStack.Screen
+        name='OrderDetail'
+        getComponent={() => require('../screens/OrderDetail/OrderDetail').default}
+        options={{
+          headerBackImage: () =>
+            DarkBackButton({
+              iconColor: currentTheme.backIcon,
+              iconBackground: currentTheme.backIconBackground
+            }),
+          ...SLIDE_RIGHT_WITH_CURVE_ANIM
+        }}
+      />
+      <NavigationStack.Screen name='Settings' component={Settings} />
+      <NavigationStack.Screen name='MyOrders' component={MyOrders} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='Reorder' component={Reorder} />
+      <NavigationStack.Screen name='Favourite' component={Favourite} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='ChatWithRider'
+        getComponent={() => require('../screens/ChatWithRider/ChatScreen').default}
+      />
+      <NavigationStack.Screen name='Collection' component={Collection} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='MapSection'
+        getComponent={() => require('../screens/MapSection').default}
+        options={SLIDE_UP_RIGHT_ANIMATION}
+      />
+      <NavigationStack.Screen name='Account' component={Account} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='EditName' component={EditName} />
+      <NavigationStack.Screen
+        name='SearchScreen'
+        getComponent={() => require('../screens/Search/SearchScreen').default}
+      />
+    </>
+  ) : null
 
   return (
     <NavigationStack.Navigator
+      key={isLoggedIn ? 'authed' : 'guest'}
       screenOptions={screenOptions({
         theme: themeContext.ThemeValue,
         headerMenuBackground: currentTheme.headerMenuBackground,
@@ -115,7 +159,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='Menu' component={Menu} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen
         name='NewRestaurantDetailDesign'
-        component={NewRestaurantDetailDesign}
+        getComponent={() => require('../components/NewRestaurantDetailDesign/RestaurantDetailDesign').default}
         options={{
           header: () => null,
           ...AIMATE_FROM_CENTER
@@ -123,7 +167,7 @@ function MainNavigator() {
       />
       <NavigationStack.Screen
         name='CategoryPage'
-        component={CategoryPage}
+        getComponent={() => require('../components/SubCategoryPage/SubCategoryPage').default}
         options={{
           header: () => null,
           ...SLIDE_RIGHT_WITH_CURVE_ANIM
@@ -140,31 +184,6 @@ function MainNavigator() {
       <NavigationStack.Screen name='ItemDetail' component={ItemDetail} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='Cart' component={Cart} options={SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER} />
       <NavigationStack.Screen name='Checkout' component={Checkout} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='Profile' component={Profile} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='Addresses' component={Addresses} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='NewAddress' component={NewAddress} />
-      <NavigationStack.Screen name='EditAddress' component={EditAddress} />
-      <NavigationStack.Screen name='FullMap' component={FullMap} options={SLIDE_UP_RIGHT_ANIMATION} />
-      <NavigationStack.Screen name='CartAddress' component={CartAddress} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='Payment' component={Payment} />
-      <NavigationStack.Screen
-        name='OrderDetail'
-        component={OrderDetail}
-        options={{
-          // headerTransparent: true,
-          // headerRight: null,
-          // title: '',
-          headerBackImage: () =>
-            DarkBackButton({
-              iconColor: currentTheme.backIcon,
-              iconBackground: currentTheme.backIconBackground
-            }),
-          ...SLIDE_RIGHT_WITH_CURVE_ANIM
-        }}
-      />
-      <NavigationStack.Screen name='Settings' component={Settings} />
-      <NavigationStack.Screen name='MyOrders' component={MyOrders} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='Reorder' component={Reorder} />
       <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
@@ -185,15 +204,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='PhoneOtp' component={PhoneOtp} />
       <NavigationStack.Screen name='ForgotPasswordOtp' component={ForgotPasswordOtp} />
       <NavigationStack.Screen name='SelectLocation' component={SelectLocation} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='AddNewAddress' component={AddNewAddress} />
-      <NavigationStack.Screen name='SaveAddress' component={SaveAddress} />
-      <NavigationStack.Screen name='Favourite' component={Favourite} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='ChatWithRider' component={ChatScreen} />
-      <NavigationStack.Screen name='Collection' component={Collection} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='MapSection' component={MapSection} options={SLIDE_UP_RIGHT_ANIMATION} />
-      <NavigationStack.Screen name='Account' component={Account} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='EditName' component={EditName} />
-      <NavigationStack.Screen name='SearchScreen' component={SearchScreen} />
+      {protectedScreens}
       {/* <NavigationStack.Screen name='HypCheckout' component={HypCheckout} /> */}
     </NavigationStack.Navigator>
   )
@@ -274,7 +285,7 @@ function BottomTabNavigator() {
       />
       <Tab.Screen
         name='Search'
-        component={SearchScreen}
+        getComponent={() => require('../screens/Search/SearchScreen').default}
         options={{
           tabBarLabel: t('search')
         }}
@@ -293,6 +304,7 @@ function BottomTabNavigator() {
 function AppContainer() {
   const client = useApolloClient()
   const { permissionState, setPermissionState, location } = useContext(LocationContext)
+  const { isLoggedIn } = useContext(UserContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
 
   const [isLoadingPermission, setIsLoadingPermission] = React.useState(true)
@@ -320,7 +332,8 @@ function AppContainer() {
   // Handlers
   const init = async () => {
     try {
-      const permission_state = await LocationImport.getForegroundPermissionsAsync()
+      const Location = await import('expo-location')
+      const permission_state = await Location.getForegroundPermissionsAsync()
       console.log({permission_state})
 
       setPermissionState(permission_state)
@@ -354,7 +367,7 @@ function AppContainer() {
           navigationService.setGlobalRef(ref)
         }}
       >
-        {!permissionState?.granted || !location ? <LocationStack /> : <MainNavigator />}
+        {!permissionState?.granted || !location ? <LocationStack /> : <MainNavigator key={isLoggedIn ? 'authed' : 'guest'} />}
 
         {/* {<LocationStack />}
         <MainNavigator /> */}
