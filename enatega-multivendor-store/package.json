@@ -107,6 +107,7 @@
     "@types/react-test-renderer": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^8.57.1",
     "eslint-config-expo": "~10.0.0",
     "eslint-plugin-prettier": "^5.2.2",
