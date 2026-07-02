@@ -4,7 +4,6 @@ import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { orderSubTotal } from "@/lib/utils/methods";
 import { getIsAcceptButtonVisible } from "@/lib/utils/methods/gloabl";
 import { ORDER_TYPE } from "@/lib/utils/types";
-import moment from "moment";
 import { memo, useContext, useEffect, useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import CountdownTimer from "../custom-timer";
@@ -67,12 +66,13 @@ const Order = ({
 
   // Timer
   const timeNow = new Date();
-  const date = new Date(order.orderDate);
-  const acceptanceTime = moment(date).diff(timeNow, "seconds");
-  const createdTime = new Date(order?.createdAt);
-  let remainingTime = moment(createdTime)
-    .add(MAX_TIME, "seconds")
-    .diff(timeNow, "seconds");
+  const acceptanceTime = Math.floor(
+    (new Date(order.orderDate).getTime() - timeNow.getTime()) / 1000,
+  );
+  let remainingTime = Math.floor(
+    (new Date(order.createdAt).getTime() + MAX_TIME * 1000 - timeNow.getTime()) /
+      1000,
+  );
 
   // Preparation Time
   const prep = new Date(order.preparationTime ?? "2023-08-16T08:00:00.000Z");
@@ -103,7 +103,7 @@ const Order = ({
     let isSubscribed = true;
     (() => {
       timer.current = setInterval(() => {
-        const isAcceptButtonVisible = !moment().isBefore(order?.orderDate);
+        const isAcceptButtonVisible = getIsAcceptButtonVisible(order.orderDate);
         if (isSubscribed) {
           setIsAcceptButtonVisible(isAcceptButtonVisible);
         }

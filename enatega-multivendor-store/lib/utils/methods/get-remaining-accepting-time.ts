@@ -1,5 +1,6 @@
-import moment from "moment";
 import { MAX_TIME } from "../constants";
 
 export const getRemainingAcceptingTime = (acceptedAt: string) =>
-  moment(acceptedAt).add(MAX_TIME, "seconds").diff(new Date(), "seconds");
+  Math.floor(
+    (new Date(acceptedAt).getTime() + MAX_TIME * 1000 - Date.now()) / 1000,
+  );
