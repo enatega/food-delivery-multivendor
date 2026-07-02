@@ -40,18 +40,9 @@ const Order = ({
   showDetails = {},
   onToggleDetails,
 }: IOrderProps) => {
-  if (!order) {
-    return null; // Return early if order is not available
-  }
-
-  // Hooks can be called safely now
   const { appTheme } = useApptheme();
   const configuration = useContext(ConfigurationContext);
   const { t } = useTranslation();
-
-  if (!configuration) {
-    return null; // Configuration context is not available yet
-  }
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
 
@@ -60,17 +51,18 @@ const Order = ({
 
   // States
   const [isAcceptButtonVisible, setIsAcceptButtonVisible] = useState(
-    getIsAcceptButtonVisible(order?.orderDate),
+    getIsAcceptButtonVisible(order?.orderDate ?? ""),
   );
-
 
   // Timer
   const timeNow = new Date();
   const acceptanceTime = Math.floor(
-    (new Date(order.orderDate).getTime() - timeNow.getTime()) / 1000,
+    ((order ? new Date(order.orderDate).getTime() : 0) - timeNow.getTime()) / 1000,
   );
   let remainingTime = Math.floor(
-    (new Date(order.createdAt).getTime() + MAX_TIME * 1000 - timeNow.getTime()) /
+    ((order ? new Date(order.createdAt).getTime() : 0) +
+      MAX_TIME * 1000 -
+      timeNow.getTime()) /
       1000,
   );
 
@@ -100,6 +92,8 @@ const Order = ({
 
   // Use Effects
   useEffect(() => {
+    if (!order) return;
+
     let isSubscribed = true;
     (() => {
       timer.current = setInterval(() => {
@@ -117,6 +111,10 @@ const Order = ({
       isSubscribed = false;
     };
   }, []);
+
+  if (!order || !configuration) {
+    return null;
+  }
 
   return (
     <View className="w-full">

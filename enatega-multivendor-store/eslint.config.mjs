@@ -5,6 +5,7 @@ import tseslint from "typescript-eslint";
 import prettierPlugin from "eslint-plugin-prettier";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
 
 export default [
   {
@@ -35,6 +36,7 @@ export default [
       prettier: prettierPlugin,
       "unused-imports": unusedImportsPlugin,
       react: reactPlugin,
+      "react-hooks": reactHooksPlugin,
     },
     rules: {
       // Allow .tsx and .jsx extensions for JSX files
@@ -67,6 +69,7 @@ export default [
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-explicit-any": "error",
       "no-console": "error",
+      "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
     },
   },
