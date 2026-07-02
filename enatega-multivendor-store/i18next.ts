@@ -3,28 +3,25 @@ import { initReactI18next } from "react-i18next";
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Import language files
-import { en } from "./languages/en";
-import { de } from "./languages/de";
-import { fr } from "./languages/fr";
-import { km } from "./languages/km";
-import { zh } from "./languages/zh";
-import { ar } from "./languages/ar";
-import { he } from "./languages/he";
-
-// Define language resources
-export const languageResources: { [key: string]: { translation: object } } = {
-  en: { translation: en },
-  zh: { translation: zh },
-  de: { translation: de },
-  fr: { translation: fr },
-  km: { translation: km },
-  ar: { translation: ar },
-  he: { translation: he },
+const LANGUAGE_LOADERS = {
+  en: () => import("./languages/en").then((module) => module.en),
+  zh: () => import("./languages/zh").then((module) => module.zh),
+  de: () => import("./languages/de").then((module) => module.de),
+  fr: () => import("./languages/fr").then((module) => module.fr),
+  km: () => import("./languages/km").then((module) => module.km),
+  ar: () => import("./languages/ar").then((module) => module.ar),
+  he: () => import("./languages/he").then((module) => module.he),
 };
+type SupportedLanguage = keyof typeof LANGUAGE_LOADERS;
 
 const LANGUAGE_KEY = "lang";
 const LEGACY_LANGUAGE_KEY = "enatega-language";
+const DEFAULT_LANGUAGE: SupportedLanguage = "en";
+
+const normalizeLanguage = (language?: string | null): SupportedLanguage =>
+  language && language in LANGUAGE_LOADERS
+    ? (language as SupportedLanguage)
+    : DEFAULT_LANGUAGE;
 
 const getInitialLanguage = async (): Promise<string> => {
   const storedLang = await AsyncStorage.getItem(LANGUAGE_KEY);
@@ -40,20 +37,58 @@ const getInitialLanguage = async (): Promise<string> => {
   return Localization.getLocales()[0]?.languageCode || "en";
 };
 
+const getLanguageResources = async (language: SupportedLanguage) => {
+  const translation = await LANGUAGE_LOADERS[language]();
+  return { [language]: { translation } };
+};
+
+const ensureLanguageResources = async (language: SupportedLanguage) => {
+  if (i18next.hasResourceBundle(language, "translation")) return;
+
+  const resources = await getLanguageResources(language);
+  i18next.addResourceBundle(
+    language,
+    "translation",
+    resources[language].translation,
+    true,
+    true,
+  );
+};
+
+export const setAppLanguage = async (language?: string | null) => {
+  const normalizedLanguage = normalizeLanguage(language);
+
+  await ensureLanguageResources(DEFAULT_LANGUAGE);
+  if (normalizedLanguage !== DEFAULT_LANGUAGE) {
+    await ensureLanguageResources(normalizedLanguage);
+  }
+
+  await i18next.changeLanguage(normalizedLanguage);
+  return normalizedLanguage;
+};
+
 const initializeLanguage = async (): Promise<void> => {
   try {
-    const initialLang = await getInitialLanguage();
+    const initialLang = normalizeLanguage(await getInitialLanguage());
+    const resources = {
+      ...(await getLanguageResources(DEFAULT_LANGUAGE)),
+      ...(initialLang === DEFAULT_LANGUAGE
+        ? {}
+        : await getLanguageResources(initialLang)),
+    };
 
     await i18next.use(initReactI18next).init({
       lng: initialLang,
-      fallbackLng: "en",
-      resources: languageResources,
+      fallbackLng: DEFAULT_LANGUAGE,
+      resources,
     });
   } catch {
+    const fallbackResources = await getLanguageResources(DEFAULT_LANGUAGE);
+
     await i18next.use(initReactI18next).init({
-      lng: "en",
-      fallbackLng: "en",
-      resources: languageResources,
+      lng: DEFAULT_LANGUAGE,
+      fallbackLng: DEFAULT_LANGUAGE,
+      resources: fallbackResources,
     });
   }
 };

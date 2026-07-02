@@ -17,7 +17,7 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 
 // I18n
-import { changeLanguage } from "i18next";
+import { setAppLanguage } from "@/i18next";
 
 export const AuthContext = React.createContext<IAuthContext>(
   {} as IAuthContext,
@@ -53,19 +53,18 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       // Use stored language preference or fall back to system language
       const selectedLanguage = lng || systemLanguage;
 
-      await changeLanguage(selectedLanguage);
-      setIsSelected(selectedLanguage);
-    } catch (error) {
+      const appliedLanguage = await setAppLanguage(selectedLanguage);
+      setIsSelected(appliedLanguage);
+    } catch {
       // Ultimate fallback
       try {
-        await changeLanguage("en");
-        setIsSelected("en");
-      } catch (fallbackError) {
+        const appliedLanguage = await setAppLanguage("en");
+        setIsSelected(appliedLanguage);
+      } catch {
         setIsSelected("en");
       }
     }
   };
-
 
   const logout = async () => {
     try {
@@ -79,6 +78,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       setToken("");
       router.replace("/(un-protected)/login");
     } catch {
+      return;
     }
   };
 

@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack } from "expo-router";
 
 // i18n
-import { changeLanguage } from "i18next";
+import { setAppLanguage } from "@/i18next";
 
 // Hooks
 import { useEffect } from "react";
@@ -21,9 +21,10 @@ export default function RootUserLayout() {
     try {
       const lng = await AsyncStorage.getItem("lang");
       if (lng) {
-        changeLanguage(lng);
+        await setAppLanguage(lng);
       }
     } catch {
+      return;
     }
   }
 

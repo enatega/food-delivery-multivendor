@@ -11,7 +11,7 @@ import { LANGUAGES } from "@/lib/utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // I18n
-import { changeLanguage } from "i18next";
+import { setAppLanguage } from "@/i18next";
 
 // Hooks
 import { useApptheme } from "@/lib/context/theme.context";
@@ -40,7 +40,7 @@ export default function LanguageMain() {
     try {
       setIsChangingLang(true);
       await AsyncStorage.setItem("lang", isSelected);
-      changeLanguage(isSelected);
+      await setAppLanguage(isSelected);
       setIsChangingLang(false);
     } catch {
       setIsChangingLang(false);
