@@ -20,7 +20,8 @@ import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import useEnvVars from "../../environment";
-import { RIDER_TOKEN } from "../utils/constants";
+import { RIDER_ID, RIDER_TOKEN } from "../utils/constants";
+import { getSecureItem, removeSecureItem } from "../services/secure-storage";
 import { IRestaurantLocation } from "../utils/interfaces";
 import { calculateDistance } from "../utils/methods/custom-functions";
 import { getValidPublicToken } from "../utils/service/publicAccessService";
@@ -33,7 +34,10 @@ async function handleInvalidSession(): Promise<void> {
   isAuthRedirecting = true;
 
   try {
-    await AsyncStorage.multiRemove([RIDER_TOKEN, "rider-id"]);
+    await Promise.all([
+      removeSecureItem(RIDER_TOKEN),
+      AsyncStorage.removeItem(RIDER_ID),
+    ]);
     router.replace("/login");
   } finally {
     setTimeout(() => {
@@ -120,17 +124,14 @@ const setupApollo = () => {
       reconnect: true,
       lazy: true,
       connectionParams: async () => {
-        const token = await AsyncStorage.getItem(RIDER_TOKEN);
+        const token = await getSecureItem(RIDER_TOKEN);
         const publicToken = await getValidPublicToken(
           GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
-        ).catch((err) => {
-          console.log("⚠️ Could not get public token for WebSocket:", err.message);
+        ).catch(() => {
+          console.warn("Could not get public token for WebSocket");
           return null;
         });
         const nonce = await getOrCreateNonce();
-
-        console.log("🔌 WebSocket connecting with user token:", token ? "✓" : "✗");
-        console.log("🔌 WebSocket connecting with public token:", publicToken ? "✓" : "✗");
 
         return {
           authorization: token ? `Bearer ${token}` : "",
@@ -140,34 +141,23 @@ const setupApollo = () => {
       },
       connectionCallback: (error) => {
         if (error) {
-          console.error("❌ WebSocket connection error:", error);
-        } else {
-          console.log("✅ WebSocket connected successfully");
+          console.warn("WebSocket connection error");
         }
       },
     },
     WebSocket
   );
 
-  // Add event listeners for debugging (can be removed in production)
-  wsClient.onConnected(() => {
-    console.log("✅ WebSocket connected");
-  });
-
-  wsClient.onReconnected(() => {
-    console.log("🔄 WebSocket reconnected");
-  });
-
   const wsLink = new WebSocketLink(wsClient);
 
   const request = async (operation: Operation) => {
-    const token = await AsyncStorage.getItem(RIDER_TOKEN);
+    const token = await getSecureItem(RIDER_TOKEN);
 
     // Try to get public token, but don't fail if it's not available yet
     const publicToken = await getValidPublicToken(
       GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
-    ).catch((err) => {
-      console.log("⚠️ Could not get public token for request:", err.message);
+    ).catch(() => {
+      console.warn("Could not get public token for request");
       return null;
     });
 
@@ -230,7 +220,7 @@ const setupApollo = () => {
     }
 
     if (graphQLErrors) {
-      graphQLErrors.forEach(({ message, locations, path }) => {
+      graphQLErrors.forEach(({ message }) => {
         // IMPORTANT: Only remove user token for actual user auth failures
         // Do NOT remove token for public auth failures (bop-auth related)
         const isPublicAuthError =
@@ -245,19 +235,14 @@ const setupApollo = () => {
           (message.toLowerCase().includes("unauthenticate") ||
            message.toLowerCase().includes("unauthorize"))
         ) {
-          console.log("❌ User authentication failed, removing rider token");
-          AsyncStorage.removeItem(RIDER_TOKEN)
+          removeSecureItem(RIDER_TOKEN)
             .then(() => {})
-            .catch((err) => console.log(err));
+            .catch(() => {});
         }
-
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        );
       });
     }
     if (networkError) {
-      console.log(`[Network error]: ${networkError}`);
+      console.warn("Network error while processing GraphQL request");
     }
   });
 

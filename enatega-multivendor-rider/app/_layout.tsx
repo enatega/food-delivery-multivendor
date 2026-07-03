@@ -3,7 +3,6 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
-// import * as Sentry from "sentry-expo";
 import * as Sentry from "@sentry/react-native";
 
 import FlashMessage from "react-native-flash-message";
@@ -40,7 +39,6 @@ initSentry();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen?.preventAutoHideAsync();
-
 
 function RootLayout() {
   // Hooks

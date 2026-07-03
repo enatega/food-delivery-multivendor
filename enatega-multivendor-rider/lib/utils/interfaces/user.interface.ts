@@ -7,7 +7,6 @@ import {
 } from "./rider-earnings.interface";
 import { ApolloError, NetworkStatus } from "@apollo/client";
 import { IOrder } from "./order.interface";
-import { LocationPermissionResponse } from "expo-location";
 
 export interface IUserContextProps {
   loadingProfile: boolean;
@@ -18,9 +17,8 @@ export interface IUserContextProps {
   errorAssigned: ApolloError | undefined;
   assignedOrders: IOrder[] | null;
   refetchAssigned: () => void;
-  refetchProfile: () => Promise<any>;
+  refetchProfile: () => Promise<unknown>;
   networkStatusAssigned: NetworkStatus;
-  requestForegroundPermissionsAsync: () => Promise<LocationPermissionResponse>;
   modalVisible: IRiderEarnings & { bool: boolean };
   setModalVisible: Dispatch<SetStateAction<IRiderEarnings & { bool: boolean }>>;
   riderOrderEarnings: IRiderEarningsArray[];

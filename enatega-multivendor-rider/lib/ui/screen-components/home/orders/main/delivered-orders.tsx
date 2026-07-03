@@ -67,7 +67,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   return (
     <View
       className="pt-14 flex-1 pb-16"
-      style={[style.contaienr, { backgroundColor: appTheme.screenBackground }]}
+      style={[style.container, { backgroundColor: appTheme.screenBackground }]}
     >
       {orders?.length > 0 ? (
         <FlashList
@@ -158,7 +158,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
 export default HomeDeliveredOrdersMain;
 
 const style = StyleSheet.create({
-  contaienr: {
+  container: {
     paddingBottom: Platform.OS === "android" ? 50 : 80,
   },
 });

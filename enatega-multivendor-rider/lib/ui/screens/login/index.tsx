@@ -32,7 +32,6 @@ import setupApollo from "@/lib/apollo";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { CustomContinueButton } from "../../useable-components";
-import { set } from "lodash";
 
 const initial: ILoginInitialValues = {
   username: "",
@@ -48,7 +47,7 @@ const LoginScreen = () => {
   const { appTheme } = useApptheme();
   const client = setupApollo();
   const { t } = useTranslation();
-  const { onLogin, creds, isLogging } = useLogin();
+  const { onLogin, creds } = useLogin();
   const [loading, setLoading] = useState(false);
 
   // Handlers
@@ -194,27 +193,11 @@ const LoginScreen = () => {
                     </Text>
                   )}
 
-                  {/* Login Button */}
                   <CustomContinueButton
                     title={t("Login")}
                     onPress={() => handleSubmit()}
                     className="self-center"
                   />
-                  {/* <TouchableOpacity
-                    className="h-12 rounded-3xl py-2 mt-10 w-full"
-                    style={{ backgroundColor: appTheme.primary }}
-                    onPress={() => handleSubmit()}
-                  >
-                    {isLogging ?
-                      <SpinnerComponent />
-                    : <Text
-                        className="text-center text-lg font-medium"
-                        style={{ color: appTheme.black }}
-                      >
-                        {t("Login")}
-                      </Text>
-                    }
-                  </TouchableOpacity> */}
                 </View>
               );
             }}

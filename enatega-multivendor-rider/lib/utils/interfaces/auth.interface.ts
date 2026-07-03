@@ -2,8 +2,6 @@
 import { NormalizedCacheObject } from "@apollo/client";
 import { ApolloClient } from "@apollo/client";
 import { IGlobalProviderProps } from "./global.interface";
-import { IRiderEarnings } from "./rider-earnings.interface";
-import { Dispatch, SetStateAction } from "react";
 
 export interface ILoginInitialValues {
   username: string;
@@ -12,6 +10,7 @@ export interface ILoginInitialValues {
 
 export interface IAuthContext {
   token: string;
+  isAuthReady: boolean;
   setTokenAsync: (token: string) => Promise<void>;
   logout: () => void;
 }

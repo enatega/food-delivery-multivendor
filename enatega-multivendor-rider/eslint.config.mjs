@@ -21,6 +21,7 @@ export default [
       },
       globals: {
         process: "readonly",
+        module: "readonly",
         cy: "readonly",
         it: "readonly",
         React: "readonly",
@@ -55,7 +56,7 @@ export default [
       ],
 
       // Remove unused imports automatically
-      // "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-imports": "error",
 
       // Warn on unused variables but allow unused arguments prefixed with _
       "unused-imports/no-unused-vars": "error",

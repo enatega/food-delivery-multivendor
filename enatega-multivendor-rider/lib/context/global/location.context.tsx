@@ -1,5 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import { useApolloClient } from "@apollo/client";
 import * as Location from "expo-location";
+import React, { useState, useEffect, useContext, useRef } from "react";
+
+import { UPDATE_LOCATION } from "@/lib/apollo/mutations/rider.mutation";
+import { getSecureItem } from "@/lib/services/secure-storage";
+import { RIDER_TOKEN } from "@/lib/utils/constants";
 
 import {
   ICoodinates,
@@ -13,8 +18,10 @@ const LocationContext = React.createContext<ILocationContextProps>(
 
 export const LocationProvider = ({ children }: ILocationProviderProps) => {
   const locationListener = useRef<Location.LocationSubscription>();
+  const previousLocationRef = useRef<ICoodinates | null>(null);
   const [locationPermission, setLocationPermission] = useState(false);
   const [location, setLocation] = useState<ICoodinates>({} as ICoodinates);
+  const client = useApolloClient();
 
   const getLocationPermission = async () => {
     try {
@@ -26,7 +33,10 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
         accuracy: Location.Accuracy.BestForNavigation,
       });
       if (currentLocation) {
-        setLocation(currentLocation.coords as unknown as ICoodinates);
+        setLocation({
+          latitude: currentLocation.coords.latitude.toString(),
+          longitude: currentLocation.coords.longitude.toString(),
+        });
       }
     } catch (error) {
       console.log("Error getting location: ", error);
@@ -40,14 +50,37 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
       locationListener.current = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.BestForNavigation,
-          distanceInterval: 1,
-          timeInterval: 5000,
+          distanceInterval: 10,
+          timeInterval: 60000,
         },
-        (location) => {
-          setLocation({
-            latitude: location.coords.latitude.toString(),
-            longitude: location.coords.longitude.toString(),
-          });
+        async (nextLocation) => {
+          const nextCoordinates = {
+            latitude: nextLocation.coords.latitude.toString(),
+            longitude: nextLocation.coords.longitude.toString(),
+          };
+
+          setLocation(nextCoordinates);
+
+          if (
+            previousLocationRef.current?.latitude === nextCoordinates.latitude &&
+            previousLocationRef.current?.longitude === nextCoordinates.longitude
+          ) {
+            return;
+          }
+
+          previousLocationRef.current = nextCoordinates;
+
+          try {
+            const token = await getSecureItem(RIDER_TOKEN);
+            if (!token) return;
+
+            await client.mutate({
+              mutation: UPDATE_LOCATION,
+              variables: nextCoordinates,
+            });
+          } catch (mutationError) {
+            console.log("Error updating location: ", mutationError);
+          }
         },
       );
     } catch (error) {

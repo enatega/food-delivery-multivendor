@@ -1,9 +1,5 @@
 // React Native Async Storage
 
-// Expo
-import Constants from "expo-constants";
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
 import { Href, router } from "expo-router";
 
 // Contexts
@@ -19,7 +15,10 @@ import {
 import { FlashMessageComponent } from "../ui/useable-components";
 
 // Interfaces
-import { IRiderDefaultCredsResponse, IRiderLoginCompleteResponse, IRiderLoginResponse } from "../utils/interfaces/auth.interface";
+import {
+  IRiderDefaultCredsResponse,
+  IRiderLoginResponse,
+} from "../utils/interfaces/auth.interface";
 
 // Constants
 import { ROUTES } from "../utils/constants";
@@ -54,7 +53,6 @@ const useLogin = () => {
 async function onLoginCompleted({ riderLogin }: { riderLogin: IRiderLoginResponse }) {
   setIsLoading(false);
   if (riderLogin) {
-    console.log("riderLogin", riderLogin);
     await setItem("rider-id", riderLogin.userId);
     await setTokenAsync(riderLogin.token);
     router.replace(ROUTES.home as Href);
@@ -64,7 +62,6 @@ async function onLoginCompleted({ riderLogin }: { riderLogin: IRiderLoginRespons
 // For default credentials query
 function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDefaultCredsResponse }) {
   if (lastOrderCreds?.riderUsername && lastOrderCreds?.riderPassword) {
-    console.log("lastOrderCreds", lastOrderCreds);
     setCreds({
       username: lastOrderCreds.riderUsername,
       password: lastOrderCreds.riderPassword,
@@ -100,7 +97,6 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
       });
     } catch (err) {
       const error = err as ApolloError;
-      console.log("Login error:", error);
       FlashMessageComponent({ message: error.message || "Login failed. Please try again." });
     } finally {
       setIsLoading(false);
