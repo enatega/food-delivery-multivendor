@@ -63,10 +63,10 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     subscribeToMore,
     refetch: refetchAssigned,
   } = useQuery(RIDER_ORDERS, {
-    // Live updates come from the subscriptions below; the poll is only a
-    // slow reconciliation net for status changes the subscriptions don't cover
+    // Orders change constantly (status updates, new assignments), so every
+    // fetch/refetch/poll must hit the network rather than falling back to
+    // cache-first, which could serve stale order lists.
     fetchPolicy: "cache-and-network",
-    nextFetchPolicy: "cache-first",
     notifyOnNetworkStatusChange: true,
     pollInterval: 30000,
     skip: !userId,
@@ -164,7 +164,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     if (!userId) return;
 
     refetchProfile({ id: userId });
-  }, [refetchProfile, userId]);
+    refetchAssigned({ userId });
+  }, [refetchProfile, refetchAssigned, userId]);
 
   useEffect(() => {
     const listener = asyncStorageEmitter.addListener("rider-id", (data) => {

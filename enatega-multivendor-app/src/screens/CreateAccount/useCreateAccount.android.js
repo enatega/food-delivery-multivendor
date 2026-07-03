@@ -50,25 +50,32 @@ export const useCreateAccount = () => {
 
   const {
     TERMS_AND_CONDITIONS,
-    PRIVACY_POLICY
+    PRIVACY_POLICY,
+    EXPO_CLIENT_ID,
+    ANDROID_CLIENT_ID_GOOGLE,
+    IOS_CLIENT_ID_GOOGLE
   } = useEnvVars()
 
   useEffect(() => {
+    if (!EXPO_CLIENT_ID || !ANDROID_CLIENT_ID_GOOGLE) return
+
     GoogleSignin.configure({
-      webClientId:
-        '650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com',
-      androidClientId:
-        '650001300965-ii3nafver2uiu4qat9gbde9rkmhmvj0j.apps.googleusercontent.com',
-      iosClientId:
-        '650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7.apps.googleusercontent.com',
+      webClientId: EXPO_CLIENT_ID,
+      androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+      iosClientId: IOS_CLIENT_ID_GOOGLE,
       offlineAccess: true,
       hostedDomain: '',
       forceCodeForRefreshToken: true
     })
-  }, [])
+  }, [EXPO_CLIENT_ID, ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE])
 
   const signIn = async () => {
     try {
+      if (!EXPO_CLIENT_ID || !ANDROID_CLIENT_ID_GOOGLE) {
+        FlashMessage({ message: socialLoginMessages.notConfigured })
+        return
+      }
+
       loginButtonSetter('Google')
       setLoading(true)
 

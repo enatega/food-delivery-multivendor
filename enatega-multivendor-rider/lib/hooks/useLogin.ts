@@ -53,10 +53,14 @@ const useLogin = () => {
 async function onLoginCompleted({ riderLogin }: { riderLogin: IRiderLoginResponse }) {
   setIsLoading(false);
   if (riderLogin) {
-    await setItem("rider-id", riderLogin.userId);
+    // Store the token (and clear the Apollo cache) before the rider-id, since
+    // writing rider-id un-skips the profile/orders queries. Doing it in this
+    // order avoids clearStore() cancelling those queries mid-flight, which
+    // left assignedOrders stuck at [] until the app was restarted.
     await setTokenAsync(riderLogin.token);
+    await setItem("rider-id", riderLogin.userId);
     router.replace(ROUTES.home as Href);
-  } 
+  }
 }
 
 // For default credentials query
