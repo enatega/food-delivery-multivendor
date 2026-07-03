@@ -47,7 +47,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     data: dataProfile,
     refetch: refetchProfile,
   } = useQuery(RIDER_PROFILE, {
-    fetchPolicy: "cache-first",
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
     skip: !userId,
     variables: {
       id: userId,
@@ -62,9 +63,12 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     subscribeToMore,
     refetch: refetchAssigned,
   } = useQuery(RIDER_ORDERS, {
-    fetchPolicy: "network-only",
+    // Live updates come from the subscriptions below; the poll is only a
+    // slow reconciliation net for status changes the subscriptions don't cover
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
     notifyOnNetworkStatusChange: true,
-    pollInterval: 5000,
+    pollInterval: 30000,
     skip: !userId,
     variables: {
       userId,
@@ -81,12 +85,15 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
   // UseEffects
   useEffect(() => {
-    if (!dataProfile?.rider.zone._id || !dataProfile.rider._id) return;
+    const riderId = dataProfile?.rider?._id ?? userId;
+    const zoneIdValue = dataProfile?.rider?.zone?._id ?? zoneId;
+
+    if (!riderId || !zoneIdValue) return;
 
     const subscribeNewOrders = {
       unsubAssignOrder: subscribeToMore({
         document: SUBSCRIPTION_ASSIGNED_RIDER,
-        variables: { riderId: dataProfile?.rider?._id ?? userId },
+        variables: { riderId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
           if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
@@ -115,7 +122,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
       unsubZoneOrder: subscribeToMore({
         document: SUBSCRIPTION_ZONE_ORDERS,
-        variables: { zoneId: dataProfile?.rider?.zone?._id ?? zoneId },
+        variables: { zoneId: zoneIdValue },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
 
@@ -134,8 +141,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
     const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders;
     return () => {
-      if (dataProfile?.rider?.zone?._id) {
-        setZoneId(dataProfile?.rider?.zone?._id);
+      if (zoneIdValue) {
+        setZoneId(zoneIdValue);
         try {
           unsubZoneOrder();
         } catch (err) {
@@ -151,13 +158,13 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         }
       }
     };
-  }, [dataProfile]);
+  }, [dataProfile, subscribeToMore, userId, zoneId]);
 
   useEffect(() => {
     if (!userId) return;
 
     refetchProfile({ id: userId });
-  }, [userId]);
+  }, [refetchProfile, userId]);
 
   useEffect(() => {
     const listener = asyncStorageEmitter.addListener("rider-id", (data) => {

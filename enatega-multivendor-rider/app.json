@@ -12,7 +12,7 @@
     },
     "icon": "./lib/assets/images/icon.png",
     "assetBundlePatterns": [
-      "**/*"
+      "lib/assets/**/*"
     ],
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -40,7 +40,8 @@
           "supportsBackgroundPlayback": true,
           "supportsPictureInPicture": true
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "platforms": [
       "ios",

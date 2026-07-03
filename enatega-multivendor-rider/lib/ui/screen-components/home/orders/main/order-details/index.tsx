@@ -3,7 +3,7 @@ import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -25,7 +25,6 @@ import MapView, {
   PROVIDER_DEFAULT,
 } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-import { Easing } from "react-native-reanimated";
 
 // Methods
 import { linkToMapsApp } from "@/lib/utils/methods";
@@ -58,6 +57,8 @@ import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { height } = Dimensions.get("window");
+const MAX_ROUTE_RETRIES = 3;
+const RETRY_BASE_DELAY_MS = 500;
 
 // Helper function to check if coordinates are valid
 // Added to prevent array bounds crashes when using invalid coordinates
@@ -103,7 +104,8 @@ export default function OrderDetailScreen() {
   // States
   const [customMapStyles, setCustomMapStyles] = useState<MapStyleElement[]>();
   const [orderId, setOrderId] = useState("");
-  const [retryCount, setRetryCount] = useState(0); // Added to implement retry logic
+  const [retryCount, setRetryCount] = useState(0);
+  const retryCountRef = useRef(0);
 
   // Ref
   const latitude = useRef(
@@ -112,10 +114,11 @@ export default function OrderDetailScreen() {
   const longitude = useRef(
     new Animated.Value(locationPin.location.longitude),
   ).current;
-  const waveAnimation = useRef(new Animated.Value(0)).current; // Wave animation value
+  // Last coordinates the marker was moved to, so we only animate on real changes
+  const lastMarkerLocation = useRef<LatLng | null>(null);
 
   // Handler
-  const moveMarker = (newLocation: LatLng) => {
+  const moveMarker = useCallback((newLocation: LatLng) => {
     // Safety check for valid coordinates before starting animation
     // This prevents trying to animate to invalid coordinates which could cause crashes
     if (!isValidCoordinate(newLocation)) {
@@ -137,17 +140,66 @@ export default function OrderDetailScreen() {
         useNativeDriver: false,
       }),
     ]).start();
-  };
+  }, [latitude, longitude]);
 
   useEffect(() => {
     return () => {
-      // Clean up any pending retry timeouts
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
         retryTimeoutRef.current = null;
       }
     };
   }, []);
+
+  const clearRouteRetry = () => {
+    if (retryTimeoutRef.current) {
+      clearTimeout(retryTimeoutRef.current);
+      retryTimeoutRef.current = null;
+    }
+  };
+
+  const resetRouteRetry = () => {
+    clearRouteRetry();
+    retryCountRef.current = 0;
+    setRetryCount(0);
+  };
+
+  const scheduleRouteRetry = () => {
+    if (retryCountRef.current >= MAX_ROUTE_RETRIES) {
+      return;
+    }
+
+    if (retryTimeoutRef.current) {
+      return;
+    }
+
+    const nextAttempt = retryCountRef.current + 1;
+    retryTimeoutRef.current = setTimeout(() => {
+      retryTimeoutRef.current = null;
+      retryCountRef.current = nextAttempt;
+      setRetryCount(nextAttempt);
+    }, RETRY_BASE_DELAY_MS * nextAttempt);
+  };
+
+  const handleRouteReady = (result: { distance?: number; duration?: number }) => {
+    if (result?.distance) {
+      setDistance(result.distance);
+      setDuration(result.duration ?? null);
+    }
+
+    resetRouteRetry();
+  };
+
+  const handleRouteError = (label: string) => (error: unknown) => {
+    console.log(`${label} route error:`, error);
+
+    if (String(error).includes("NOT_FOUND")) {
+      scheduleRouteRetry();
+      return;
+    }
+
+    clearRouteRetry();
+  };
 
   const openMaps = () => {
     try {
@@ -225,73 +277,40 @@ export default function OrderDetailScreen() {
     }
   }, [appTheme, currentTheme, GOOGLE_MAPS_KEY]);
 
+  // Move the marker only when the rider's coordinates actually change,
+  // instead of re-animating on a timer to often-identical positions
   useEffect(() => {
-    // Only set up the animation if locationPin.location exists and is valid
-    // This prevents trying to animate when location data is invalid
     if (!locationPin?.location || !isValidCoordinate(locationPin.location)) {
       console.warn("Location pin is invalid or missing:", locationPin);
       return;
     }
 
-    // Reference to the timer for proper cleanup
-    let intervalId: NodeJS.Timeout | null = null;
+    const next = {
+      latitude: locationPin.location.latitude,
+      longitude: locationPin.location.longitude,
+    };
+    const prev = lastMarkerLocation.current;
 
-    try {
-      // Safely initialize marker position before starting animations
-      // This prevents issues with undefined initial values
-      const initialLatitude = locationPin.location.latitude;
-      const initialLongitude = locationPin.location.longitude;
-
+    if (!prev) {
       // Initial positioning (without animation)
-      latitude.setValue(initialLatitude);
-      longitude.setValue(initialLongitude);
-
-      // Start periodic updates with proper error handling
-      intervalId = setInterval(() => {
-        if (
-          !locationPin?.location ||
-          !isValidCoordinate(locationPin.location)
-        ) {
-          console.warn("Skipping marker update due to invalid location data");
-          return;
-        }
-
-        const newLatitude = locationPin.location.latitude;
-        const newLongitude = locationPin.location.longitude;
-        moveMarker({ latitude: newLatitude, longitude: newLongitude });
-      }, 5000);
-
-      // Start wave animation
-      const animation = Animated.loop(
-        Animated.timing(waveAnimation, {
-          toValue: 1000,
-          duration: 10000,
-          useNativeDriver: true,
-          easing: Easing.linear,
-        }),
-      );
-
-      animation.start();
-
-      return () => {
-        // Proper cleanup to prevent animation continuing after unmount
-        if (intervalId) {
-          clearInterval(intervalId);
-          intervalId = null;
-        }
-        animation.stop();
-      };
-    } catch (error) {
-      // Error handling to prevent uncaught exceptions
-      console.log("Error in location animation setup:", error);
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-      return () => { };
+      latitude.setValue(next.latitude);
+      longitude.setValue(next.longitude);
+    } else if (
+      prev.latitude !== next.latitude ||
+      prev.longitude !== next.longitude
+    ) {
+      moveMarker(next);
     }
-    // Added proper dependency array to control rerunning this effect
-    // This prevents stale closures that might reference outdated data
-  }, [locationPin?.location?.latitude, locationPin?.location?.longitude]);
+
+    lastMarkerLocation.current = next;
+  }, [latitude, locationPin, longitude, moveMarker]);
+
+  useEffect(() => {
+    return () => {
+      latitude.stopAnimation();
+      longitude.stopAnimation();
+    };
+  }, [latitude, longitude]);
 
   useEffect(() => {
     if (order) {
@@ -422,6 +441,7 @@ export default function OrderDetailScreen() {
                 isValidCoordinate(restaurantAddressPin?.location) &&
                 GOOGLE_MAPS_KEY && (
                   <MapViewDirections
+                    key={`store-route-${retryCount}`}
                     origin={locationPin?.location}
                     destination={restaurantAddressPin?.location}
                     apikey={GOOGLE_MAPS_KEY}
@@ -429,23 +449,9 @@ export default function OrderDetailScreen() {
                     strokeColor={"#f95509"}
                     precision="low"
                     resetOnChange={false} // Prevents unnecessary recalculations
-                    onReady={(results) => {
-                      if (results && results.distance) {
-                        setDistance(results.distance);
-                        setDuration(results.duration);
-                      }
-                    }}
+                    onReady={handleRouteReady}
                     optimizeWaypoints={true}
-                    onError={(error) => {
-                      console.log("Detailed route error:", error);
-                      // Retry logic for NOT_FOUND errors
-                      if (
-                        error.toString().includes("NOT_FOUND") &&
-                        retryCount < 10
-                      ) {
-                        setRetryCount((prev) => prev + 1);
-                      }
-                    }}
+                    onError={handleRouteError("Detailed")}
                   />
                 )
                 : null}
@@ -456,6 +462,7 @@ export default function OrderDetailScreen() {
                 isValidCoordinate(deliveryAddressPin?.location) &&
                 GOOGLE_MAPS_KEY && (
                   <MapViewDirections
+                    key={`delivery-route-${retryCount}`}
                     origin={locationPin?.location}
                     destination={deliveryAddressPin?.location}
                     apikey={GOOGLE_MAPS_KEY}
@@ -464,20 +471,8 @@ export default function OrderDetailScreen() {
                     precision="low"
                     resetOnChange={false}
                     optimizeWaypoints={true}
-                    onReady={(result) => {
-                      setDistance(result.distance);
-                      setDuration(result.duration);
-                    }}
-                    onError={(error) => {
-                      console.log("Delivery route error:", error);
-                      // Retry logic for NOT_FOUND errors
-                      if (
-                        error.toString().includes("NOT_FOUND") &&
-                        retryCount < 10
-                      ) {
-                        setRetryCount((prev) => prev + 1);
-                      }
-                    }}
+                    onReady={handleRouteReady}
+                    onError={handleRouteError("Delivery")}
                   />
                 )}
 
@@ -488,6 +483,7 @@ export default function OrderDetailScreen() {
                 isValidCoordinate(restaurantAddressPin?.location) &&
                 isValidCoordinate(deliveryAddressPin?.location) && (
                   <MapViewDirections
+                    key={`default-route-${retryCount}`}
                     origin={restaurantAddressPin?.location}
                     destination={deliveryAddressPin?.location}
                     apikey={GOOGLE_MAPS_KEY ?? ""}
@@ -496,22 +492,8 @@ export default function OrderDetailScreen() {
                     strokeColor={"#f95509"}
                     resetOnChange={false}
                     optimizeWaypoints={true}
-                    onReady={(result) => {
-                      if (result) {
-                        setDistance(result.distance);
-                        setDuration(result.duration);
-                      }
-                    }}
-                    onError={(error) => {
-                      console.log("Default route error:", error);
-                      // Retry logic for NOT_FOUND errors
-                      if (
-                        error.toString().includes("NOT_FOUND") &&
-                        retryCount < 10
-                      ) {
-                        setRetryCount((prev) => prev + 1);
-                      }
-                    }}
+                    onReady={handleRouteReady}
+                    onError={handleRouteError("Default")}
                   />
                 )}
               {/* <Button title="Open in Maps" onPress={openMaps} /> */}
@@ -687,14 +669,33 @@ export default function OrderDetailScreen() {
                   className="h-14 rounded-3xl py-3 w-full mt-4 mb-10"
                   style={{ backgroundColor: appTheme.primary }}
                   disabled={loadingOrderStatus}
-                  onPress={async () => {
-                    await mutateOrderStatus({
-                      variables: { id: localOrder?._id, status: "DELIVERED" },
-                      onCompleted: () => {
-                        setOrderId(localOrder?.orderId);
-                      },
-                    });
-                    setOrderId(localOrder?.orderId);
+                  onPress={() => {
+                    const isUnpaid = localOrder?.paymentStatus !== "PAID";
+                    const amountNote = isUnpaid
+                      ? `\n\n${t("Confirm you have collected")} ${configuration?.currencySymbol ?? ""}${localOrder?.orderAmount}.`
+                      : "";
+                    Alert.alert(
+                      t("Mark as Delivered?"),
+                      `${t("This completes the order and cannot be undone.")}${amountNote}`,
+                      [
+                        { text: t("Cancel"), style: "cancel" },
+                        {
+                          text: t("Mark as Delivered"),
+                          onPress: async () => {
+                            await mutateOrderStatus({
+                              variables: {
+                                id: localOrder?._id,
+                                status: "DELIVERED",
+                              },
+                              onCompleted: () => {
+                                setOrderId(localOrder?.orderId);
+                              },
+                            });
+                            setOrderId(localOrder?.orderId);
+                          },
+                        },
+                      ],
+                    );
                   }}
                 >
                   {loadingOrderStatus ? (

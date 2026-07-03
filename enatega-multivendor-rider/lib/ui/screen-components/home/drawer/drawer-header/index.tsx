@@ -52,10 +52,10 @@ const CustomDrawerHeader = () => {
 
   return (
     <View
-      className={` w-full h-[15%] flex-row justify-between p-3 pt-6 top-0 bottom-4`}
+      className="w-full flex-row items-center justify-between p-3 pt-6 top-0 bottom-4"
       style={{ backgroundColor: appTheme.primary }}
     >
-      <View className="justify-between flex-1">
+      <View className="flex-row flex-1 items-center gap-3 pr-3">
         <View
           className="w-[32px] h-[32px] rounded-full items-center justify-center overflow-hidden"
           style={{ backgroundColor: appTheme.white }}
@@ -81,7 +81,7 @@ const CustomDrawerHeader = () => {
               ) ?? "JS"}
           </Text>
         </View>
-        <View className="flex-1 pr-2">
+        <View className="flex-1 justify-center">
           <Text
             className="font-semibold text-[16px]"
             style={{
@@ -100,13 +100,12 @@ const CustomDrawerHeader = () => {
             numberOfLines={2}
             ellipsizeMode="tail"
           >
-            {dataProfile?._id.substring(0, 9).toUpperCase() ?? "rider id"}{" "}
-            aklsdjaskldjaskldsjdaklsdjaskldjas
+            {dataProfile?._id.substring(0, 9).toUpperCase() ?? "rider id"}
           </Text>
         </View>
       </View>
 
-      <View className="items-end justify-end gap-2">
+      <View className="items-end justify-center gap-2">
         <Text
           className="text-md"
           style={{ color: appTheme.secondaryTextColor }}

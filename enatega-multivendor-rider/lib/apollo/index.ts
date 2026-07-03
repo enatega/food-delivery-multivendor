@@ -3,6 +3,7 @@ import {
   ApolloLink,
   createHttpLink,
   InMemoryCache,
+  NormalizedCacheObject,
   Observable,
   Operation,
   split,
@@ -46,8 +47,18 @@ async function handleInvalidSession(): Promise<void> {
   }
 }
 
+// The whole app must share a single client (one cache, one WS connection),
+// so the client is created once and reused on subsequent calls.
+let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
 const setupApollo = () => {
+  // useEnvVars uses useContext, so it must run on every render to keep hook
+  // order stable — only the client construction below is skipped when cached.
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars();
+
+  if (apolloClient) {
+    return apolloClient;
+  }
 
   const cache = new InMemoryCache({
     typePolicies: {
@@ -97,18 +108,6 @@ const setupApollo = () => {
               return distance;
             },
           },
-          freeDelivery: {
-            read(/* _existing: IRestaurantLocation */) {
-              const randomValue = Math.random() * 10;
-              return randomValue > 5;
-            },
-          },
-          acceptVouchers: {
-            read(/* _existing: IRestaurantLocation */) {
-              const randomValue = Math.random() * 10;
-              return randomValue < 5;
-            },
-          },
         },
       },
     },
@@ -128,7 +127,7 @@ const setupApollo = () => {
         const publicToken = await getValidPublicToken(
           GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
         ).catch(() => {
-          console.warn("Could not get public token for WebSocket");
+          if (__DEV__) console.warn("Could not get public token for WebSocket");
           return null;
         });
         const nonce = await getOrCreateNonce();
@@ -140,7 +139,7 @@ const setupApollo = () => {
         };
       },
       connectionCallback: (error) => {
-        if (error) {
+        if (error && __DEV__) {
           console.warn("WebSocket connection error");
         }
       },
@@ -157,7 +156,7 @@ const setupApollo = () => {
     const publicToken = await getValidPublicToken(
       GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
     ).catch(() => {
-      console.warn("Could not get public token for request");
+      if (__DEV__) console.warn("Could not get public token for request");
       return null;
     });
 
@@ -241,7 +240,7 @@ const setupApollo = () => {
         }
       });
     }
-    if (networkError) {
+    if (networkError && __DEV__) {
       console.warn("Network error while processing GraphQL request");
     }
   });
@@ -271,6 +270,7 @@ const setupApollo = () => {
     resolvers: {},
   });
 
+  apolloClient = client;
   return client;
 };
 

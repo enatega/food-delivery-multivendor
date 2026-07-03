@@ -17,12 +17,36 @@ const STORAGE_KEYS = {
 };
 
 /**
+ * Cryptographically strong random hex string via the global crypto RNG
+ * (polyfilled by react-native-get-random-values at app entry). Falls back to
+ * Math.random only if the secure RNG is unavailable, so nonce generation never
+ * throws before the native crypto module is linked.
+ */
+const getRandomHex = (byteCount: number): string => {
+  try {
+    const cryptoObj = (
+      globalThis as {
+        crypto?: { getRandomValues?: (array: Uint8Array) => Uint8Array };
+      }
+    ).crypto;
+    if (typeof cryptoObj?.getRandomValues === "function") {
+      const bytes = new Uint8Array(byteCount);
+      cryptoObj.getRandomValues(bytes);
+      return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+    }
+  } catch {
+    // Secure RNG unavailable — fall back below.
+  }
+  return Math.random().toString(36).substring(2, 15);
+};
+
+/**
  * Generate a unique device nonce
  */
 const generateNonce = async (): Promise<string> => {
   const deviceId = Device.modelId || Device.osInternalBuildId || "unknown";
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 15);
+  const random = getRandomHex(16);
   return `${deviceId}-${timestamp}-${random}`;
 };
 

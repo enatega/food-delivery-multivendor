@@ -15,6 +15,7 @@ import { BikeRidingIcon, ChatIcon, ClockIcon } from "../svg";
 
 // Hooks
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
+import { useLocationContext } from "@/lib/context/global/location.context";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { calculateDistance } from "@/lib/utils/methods/custom-functions";
@@ -44,8 +45,23 @@ const Order = ({
   } as IOrder);
   const configuration = useContext(ConfigurationContext);
   const router = useRouter();
+  const { location: riderLocation } = useLocationContext();
 
-
+  // Distance between the rider's current location and the customer's delivery
+  // address. GeoJSON stores coordinates as [longitude, latitude].
+  const riderLat = Number(riderLocation?.latitude);
+  const riderLng = Number(riderLocation?.longitude);
+  const customerLng = Number(deliveryAddress?.location?.coordinates?.[0]);
+  const customerLat = Number(deliveryAddress?.location?.coordinates?.[1]);
+  const canShowDistance =
+    Number.isFinite(riderLat) &&
+    Number.isFinite(riderLng) &&
+    Number.isFinite(customerLat) &&
+    Number.isFinite(customerLng) &&
+    (riderLat !== 0 || riderLng !== 0);
+  const distanceLabel = canShowDistance
+    ? `${calculateDistance(riderLat, riderLng, customerLat, customerLng).toFixed(2)} km`
+    : "--";
 
   if (
     !orderId ||
@@ -183,7 +199,10 @@ const Order = ({
                     source={
                       restaurant?.image
                         ? { uri: restaurant.image }
-                        : require("../../../assets/images/placeholder.jpg")
+                        : (
+                            // eslint-disable-next-line @typescript-eslint/no-require-imports
+                            require("../../../assets/images/placeholder.jpg")
+                          )
                     }
                     style={{ width: 32, height: 30, borderRadius: 8 }}
                   />
@@ -277,15 +296,7 @@ const Order = ({
                       className="font-[Inter] text-base font-medium "
                       style={{ color: appTheme.fontMainColor }}
                     >
-                      {calculateDistance(
-                        Number(restaurant?.location?.coordinates[0]),
-                        Number(restaurant?.location?.coordinates[1]),
-                        deliveryAddress?.location?.coordinates[0],
-                        deliveryAddress?.location?.coordinates[1]
-                      )
-                        .toFixed(2)
-                        .toLocaleString()}
-                      km
+                      {distanceLabel}
                     </Text>
                   </View>
                 </View>
@@ -403,4 +414,42 @@ const Order = ({
     );
 };
 
-export default memo(Order);
+const areOrderPropsEqual = (
+  prevProps: IOrderComponentProps,
+  nextProps: IOrderComponentProps,
+) => {
+  const sameRestaurantLocation =
+    prevProps.restaurant?.location?.coordinates?.[0] ===
+      nextProps.restaurant?.location?.coordinates?.[0] &&
+    prevProps.restaurant?.location?.coordinates?.[1] ===
+      nextProps.restaurant?.location?.coordinates?.[1];
+
+  const sameDeliveryLocation =
+    prevProps.deliveryAddress?.location?.coordinates?.[0] ===
+      nextProps.deliveryAddress?.location?.coordinates?.[0] &&
+    prevProps.deliveryAddress?.location?.coordinates?.[1] ===
+      nextProps.deliveryAddress?.location?.coordinates?.[1];
+
+  return (
+    prevProps.tab === nextProps.tab &&
+    prevProps._id === nextProps._id &&
+    prevProps.orderId === nextProps.orderId &&
+    prevProps.orderStatus === nextProps.orderStatus &&
+    prevProps.paymentMethod === nextProps.paymentMethod &&
+    prevProps.orderAmount === nextProps.orderAmount &&
+    prevProps.paymentStatus === nextProps.paymentStatus &&
+    prevProps.acceptedAt === nextProps.acceptedAt &&
+    prevProps.restaurant?.name === nextProps.restaurant?.name &&
+    prevProps.restaurant?.address === nextProps.restaurant?.address &&
+    prevProps.restaurant?.image === nextProps.restaurant?.image &&
+    sameRestaurantLocation &&
+    prevProps.deliveryAddress?.deliveryAddress ===
+      nextProps.deliveryAddress?.deliveryAddress &&
+    sameDeliveryLocation &&
+    prevProps.user?._id === nextProps.user?._id &&
+    prevProps.user?.name === nextProps.user?.name &&
+    prevProps.user?.phone === nextProps.user?.phone
+  );
+};
+
+export default memo(Order, areOrderPropsEqual);

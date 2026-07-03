@@ -61,10 +61,11 @@ async function onLoginCompleted({ riderLogin }: { riderLogin: IRiderLoginRespons
 
 // For default credentials query
 function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDefaultCredsResponse }) {
-  if (lastOrderCreds?.riderUsername && lastOrderCreds?.riderPassword) {
+  // Only prefill the username; never fetch or auto-fill the password.
+  if (lastOrderCreds?.riderUsername) {
     setCreds({
       username: lastOrderCreds.riderUsername,
-      password: lastOrderCreds.riderPassword,
+      password: "",
     });
   }
 }
@@ -72,12 +73,14 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
   function onError(err: ApolloError) {
     const error = err as ApolloError;
     setIsLoading(false);
-    FlashMessageComponent({
-      message:
-        error?.graphQLErrors[0]?.message ??
-        error?.networkError?.message ??
-        t("Something went wrong"),
-    });
+    // Show a uniform credential error instead of the backend's message so the UI
+    // can't distinguish "user not found" from "wrong password" (enumeration).
+    const message = error?.graphQLErrors?.length
+      ? t("Invalid username or password")
+      : error?.networkError
+        ? t("Unable to connect. Please try again.")
+        : t("Something went wrong");
+    FlashMessageComponent({ message });
   }
   
   const onLogin = async (username: string, password: string) => {
@@ -95,9 +98,8 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
           timeZone,
         },
       });
-    } catch (err) {
-      const error = err as ApolloError;
-      FlashMessageComponent({ message: error.message || "Login failed. Please try again." });
+    } catch {
+      FlashMessageComponent({ message: t("Something went wrong") });
     } finally {
       setIsLoading(false);
     }

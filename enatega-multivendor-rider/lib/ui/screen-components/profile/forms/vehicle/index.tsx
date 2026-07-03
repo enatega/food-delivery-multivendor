@@ -177,7 +177,7 @@ export default function VehiclePlateForm({
       number: dataProfile?.vehicleDetails?.number ?? "",
       image: dataProfile?.vehicleDetails?.image ?? "",
     });
-  }, []);
+  }, [dataProfile?.vehicleDetails]);
   return (
     <View className="w-full">
        <KeyboardAvoidingView

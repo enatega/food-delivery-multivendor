@@ -36,12 +36,12 @@ const useDetails = (orderData: IOrder) => {
   const [order, setOrder] = useState<IOrder>(orderData);
 
   useEffect(() => {
-    if (!loadingAssigned && order) {
+    if (!loadingAssigned && orderData?._id) {
       setOrder(
-        assignedOrders?.find((o) => o._id === order?._id) ?? ({} as IOrder),
+        assignedOrders?.find((o) => o._id === orderData._id) ?? orderData,
       );
     }
-  }, [assignedOrders]);
+  }, [assignedOrders, loadingAssigned, orderData]);
 
   const preparationTime = {
     hours: new Date(order?.preparationTime).getHours(),
@@ -64,7 +64,10 @@ const useDetails = (orderData: IOrder) => {
 
   useSubscription(SUBSCRIPTION_ORDERS, {
     variables: { id: order?._id },
-    skip: !order,
+    skip: !order?._id,
+    onError: (error) => {
+      console.log("Order details subscription error:", error);
+    },
   });
 
   const {

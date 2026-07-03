@@ -28,7 +28,7 @@ import { useTranslation } from "react-i18next";
 import useLogin from "@/lib/hooks/useLogin";
 
 // Interface
-import setupApollo from "@/lib/apollo";
+import { useApolloClient } from "@apollo/client";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { CustomContinueButton } from "../../useable-components";
@@ -45,7 +45,7 @@ const LoginScreen = () => {
 
   // Hooks
   const { appTheme } = useApptheme();
-  const client = setupApollo();
+  const client = useApolloClient();
   const { t } = useTranslation();
   const { onLogin, creds } = useLogin();
   const [loading, setLoading] = useState(false);

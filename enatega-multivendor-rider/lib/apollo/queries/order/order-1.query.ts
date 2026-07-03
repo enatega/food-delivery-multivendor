@@ -40,7 +40,6 @@ query Order($id:String!){
       user{
         _id
         name
-        email
       }
       paymentMethod
       orderAmount

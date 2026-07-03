@@ -16,19 +16,19 @@ import { RIDER_ORDERS } from "@/lib/apollo/queries";
 // Constant
 import { ROUTES } from "@/lib/utils/constants";
 
-// Service
-import setupApollo from "@/lib/apollo";
+// Apollo
+import { useApolloClient } from "@apollo/client";
 
 // Interfaces
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 
 function App() {
-  const client = setupApollo();
+  const client = useApolloClient();
   const router = useRouter();
   const { token, isAuthReady } = useContext(AuthContext);
 
   // Notification Handler
-  const registerForPushNotification = async () => {
+  const registerForPushNotification = useCallback(async () => {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -42,14 +42,14 @@ function App() {
       Notifications.setNotificationHandler({
         handleNotification: async () => {
           return {
-            shouldShowAlert: false, // Prevent the app from closing
+            shouldShowAlert: false,
             shouldPlaySound: false,
             shouldSetBadge: false,
           };
         },
       });
     }
-  };
+  }, []);
 
   const handleNotification = useCallback(
     async (response: Notifications.NotificationResponse) => {
@@ -90,17 +90,16 @@ function App() {
   useEffect(() => {
     registerForPushNotification();
 
-    // Register a notification handler that will be called when a notification is received.
     Notifications.setNotificationHandler({
       handleNotification: async () => {
         return {
-          shouldShowAlert: false, // Prevent the app from closing
+          shouldShowAlert: false,
           shouldPlaySound: false,
           shouldSetBadge: false,
         };
       },
     });
-  }, []);
+  }, [registerForPushNotification]);
 
   if (!isAuthReady) {
     return <></>;

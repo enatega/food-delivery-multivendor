@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Localization from "expo-localization";
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import { Platform } from "react-native";
 
 // Import language files
 import { en } from "./languages/en";
@@ -72,40 +71,28 @@ export const languageResources: { [key: string]: { translation: object } } = {
   nl: { translation: nl },
 };
 
-// Function to get stored language from AsyncStorage or fallback to device locale
-const getStoredLanguage = async (): Promise<void> => {
+const defaultLanguage = Localization.getLocales()[0]?.languageCode || "en";
+
+i18next.use(initReactI18next).init({
+  lng: defaultLanguage,
+  fallbackLng: "en",
+  resources: languageResources,
+  interpolation: {
+    escapeValue: false,
+  },
+});
+
+const applyStoredLanguage = async (): Promise<void> => {
   try {
     const storedLang = await AsyncStorage.getItem("enatega-language");
-    const deviceLang = Localization.getLocales()[0]?.languageCode || "en";
-    const initialLang = storedLang || deviceLang;
+    const initialLang = storedLang || defaultLanguage;
 
-    await i18next.use(initReactI18next).init({
-      lng: initialLang,
-      fallbackLng: "en",
-      resources: languageResources,
-    });
-
-    // Apply the initial language
     await i18next.changeLanguage(initialLang);
   } catch (error) {
     console.log("Error initializing language:", error);
   }
 };
 
-// Initialize language
-getStoredLanguage();
-
-// Additional iOS-specific configuration (if necessary)
-if (Platform.OS === "ios") {
-  const iosLang = Localization.getLocales()[0]?.languageCode || "en";
-
-  i18next.use(initReactI18next).init({
-    lng: iosLang,
-    fallbackLng: "en",
-    resources: languageResources,
-  });
-
-  i18next.changeLanguage(iosLang);
-}
+applyStoredLanguage();
 
 export default i18next;

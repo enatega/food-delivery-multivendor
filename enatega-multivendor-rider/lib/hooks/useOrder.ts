@@ -20,47 +20,50 @@ const useOrder = (order: IOrder) => {
   const [time, setTime] = useState("00:00");
 
   useEffect(() => {
-        // Clear any existing timer first to prevent multiple timers
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-          timerRef.current = undefined;
-        }
-
-   if(order.acceptedAt){
-    const remainingSeconds = getRemainingAcceptingTime(order?.acceptedAt);
-    if (remainingSeconds > 0) {
-      minutesRef.current = Math.floor(remainingSeconds / 60);
-      secondsRef.current = remainingSeconds % 60;
-      timerRef.current = setInterval(() => {
-        if (secondsRef.current > 0) {
-          secondsRef.current = secondsRef.current - 1;
-        }
-        if (secondsRef.current < 1) {
-          if (minutesRef.current > 0) {
-            minutesRef.current = minutesRef.current - 1;
-            secondsRef.current = 59;
-          } else {
-            if (timerRef.current) {
-              clearInterval(timerRef.current);
-              timerRef.current = undefined;
-            }
-            refetchAssigned();
-          }
-        }
-        if (secondsRef.current > 0 && secondsRef.current < 10) {
-          setTime(`0${minutesRef.current}:0${secondsRef.current}`);
-        } else {
-          setTime(`0${minutesRef.current}:${secondsRef.current}`);
-        }
-      }, 1000);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = undefined;
     }
-   }
+
+    if (order.acceptedAt) {
+      const remainingSeconds = getRemainingAcceptingTime(order.acceptedAt);
+      if (remainingSeconds > 0) {
+        minutesRef.current = Math.floor(remainingSeconds / 60);
+        secondsRef.current = remainingSeconds % 60;
+        timerRef.current = setInterval(() => {
+          if (secondsRef.current > 0) {
+            secondsRef.current = secondsRef.current - 1;
+          }
+          if (secondsRef.current < 1) {
+            if (minutesRef.current > 0) {
+              minutesRef.current = minutesRef.current - 1;
+              secondsRef.current = 59;
+            } else {
+              if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = undefined;
+              }
+              refetchAssigned();
+            }
+          }
+          if (secondsRef.current > 0 && secondsRef.current < 10) {
+            setTime(`0${minutesRef.current}:0${secondsRef.current}`);
+          } else {
+            setTime(`0${minutesRef.current}:${secondsRef.current}`);
+          }
+        }, 1000);
+      }
+    }
+
     return () => timerRef.current && clearInterval(timerRef.current);
-  }, []);
+  }, [order.acceptedAt, refetchAssigned]);
 
   useSubscription(SUBSCRIPTION_ORDERS, {
     variables: { id: order?._id },
-    skip: !order,
+    skip: !order?._id,
+    onError: (error) => {
+      console.log("Order subscription error:", error);
+    },
   });
   const [mutateAssignOrder, { loading: loadingAssignOrder }] = useMutation(
     ASSIGN_ORDER,

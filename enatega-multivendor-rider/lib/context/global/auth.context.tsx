@@ -1,5 +1,3 @@
-// Core
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
 
@@ -10,6 +8,7 @@ import {
   removeSecureItem,
   setSecureItem,
 } from "@/lib/services/secure-storage";
+import { removeItem } from "@/lib/services/async-storage";
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
 import { useRouter } from "expo-router";
 
@@ -59,17 +58,20 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
   };
 
   const logout = async () => {
+    setToken("");
+
     try {
-      // Clear storage first to ensure logout happens immediately
       await Promise.all([
         removeSecureItem(RIDER_TOKEN),
-        AsyncStorage.removeItem(RIDER_ID),
+        removeItem(RIDER_ID),
       ]);
-      await client.clearStore();
 
-      // Navigate to login immediately after clearing storage
+      try {
+        await client.clearStore();
+      } catch (cacheError) {
+        console.log("Error clearing Apollo cache during logout:", cacheError);
+      }
 
-      // Stop location updates if they were started
       try {
         const hasLocationUpdates =
           await Location.hasStartedLocationUpdatesAsync("RIDER_LOCATION");
@@ -79,12 +81,10 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       } catch (locationError) {
         console.log("Error stopping location updates:", locationError);
       }
-
-      // Reset token state
-      setToken("");
-      router.replace("/login");
     } catch (e) {
       console.log("Logout Error: ", e);
+    } finally {
+      router.replace("/login");
     }
   };
 

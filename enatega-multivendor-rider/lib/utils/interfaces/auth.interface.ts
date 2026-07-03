@@ -12,7 +12,7 @@ export interface IAuthContext {
   token: string;
   isAuthReady: boolean;
   setTokenAsync: (token: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 export interface IAuthProviderProps extends IGlobalProviderProps {
@@ -26,7 +26,6 @@ export interface IRiderLoginResponse {
 
 export interface IRiderDefaultCredsResponse {
   riderUsername: string;
-  riderPassword: string;
 }
 
 export interface IRiderLoginCompleteResponse {

@@ -25,7 +25,7 @@ export interface IRiderTransaction {
 
 export interface IRiderTransactionHistoryResponse {
   transactionHistory: {
-    data: IRiderTransaction[]
+    data: IRiderTransaction[] | null
   }
 }
 
