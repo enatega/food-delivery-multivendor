@@ -12,15 +12,15 @@ const getEnvVars = (env = Updates.channel) => {
 
   if (env === "production" || env === "staging") {
     return {
-      GRAPHQL_URL: "https://aws-server-v2.enatega.com/graphql",
-      WS_GRAPHQL_URL: "wss://aws-server-v2.enatega.com/graphql",
+      GRAPHQL_URL: "https://enatega-api-staging-production.up.railway.app/graphql",
+      WS_GRAPHQL_URL: "wss://enatega-api-staging-production.up.railway.app/graphql", 
 
     };
   }
   return {
    
-      GRAPHQL_URL: "https://aws-server-v2.enatega.com/graphql",
-      WS_GRAPHQL_URL: "wss://aws-server-v2.enatega.com/graphql",
+      GRAPHQL_URL: "https://enatega-api-staging-production.up.railway.app/graphql",
+      WS_GRAPHQL_URL: "wss://enatega-api-staging-production.up.railway.app/graphql",
 
 
   };

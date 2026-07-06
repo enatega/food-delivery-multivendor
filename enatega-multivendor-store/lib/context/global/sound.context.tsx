@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { useContext, useEffect, useState, createContext } from "react";
-import { Audio } from "expo-av";
+import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
 // Interface
 import {
   ISoundContext,
@@ -15,7 +15,9 @@ const SoundContext = createContext<ISoundContext>({} as ISoundContext);
 
 export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   // State
-  const [sound, setSound] = useState<Audio.SoundObject | null>(null);
+  const [sound, setSound] = useState<ReturnType<typeof createAudioPlayer> | null>(
+    null,
+  );
   // Context/Hooks
   const { hasNewOrders } = useOrders();
 
@@ -23,31 +25,28 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   const playSound = async () => {
     try {
       await stopSound();
-      const { sound: newSound } = await Audio.Sound.createAsync(
+      const newSound = createAudioPlayer(
         require("@/lib/assets/sound/beep3.mp3"),
       );
-      await newSound.setIsLoopingAsync(true);
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-        staysActiveInBackground: true,
-        interruptionModeIOS: (Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS = 2),
-        playsInSilentModeIOS: true,
-        shouldDuckAndroid: true,
-        interruptionModeAndroid:
-          (Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS = 2),
-        playThroughEarpieceAndroid: true,
+      newSound.loop = true;
+      await setAudioModeAsync({
+        allowsRecording: false,
+        shouldPlayInBackground: true,
+        interruptionMode: "duckOthers",
+        playsInSilentMode: true,
+        shouldRouteThroughEarpiece: true,
       });
-      await newSound.playAsync();
+      newSound.play();
 
       setSound(newSound);
-    } catch (err) {
-      console.log(err);
+    } catch {
+      // Ignore audio startup failures and keep the app usable.
     }
   };
 
   const stopSound = async () => {
     if (sound) {
-      await sound.unloadAsync();
+      sound.remove();
       setSound(null);
     }
   };

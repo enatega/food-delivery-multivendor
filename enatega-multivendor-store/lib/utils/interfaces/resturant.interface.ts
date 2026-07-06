@@ -20,7 +20,6 @@ export interface IRestaurantProfile {
     __typename: string;
   };
   username: string;
-  password: string;
   deliveryTime: number;
   minimumOrder: number;
   tax: number;

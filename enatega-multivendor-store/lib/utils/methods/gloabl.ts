@@ -1,4 +1,3 @@
-import moment from "moment";
 import {
   ApolloQueryResult,
   DocumentNode,
@@ -35,6 +34,6 @@ export const retryQuery = async <
 };
 
 export const getIsAcceptButtonVisible = (orderDate: string) => {
-  const mockCurrentTime = moment().add(5, "minutes"); // Add 5 minutes as a grace period
-  return !mockCurrentTime.isBefore(orderDate);
+  const gracePeriodMs = 5 * 60 * 1000;
+  return Date.now() + gracePeriodMs >= new Date(orderDate).getTime();
 };

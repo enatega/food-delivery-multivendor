@@ -44,20 +44,24 @@ const SetTimeScreenAndAcceptOrder = ({
   const { muteRing, loading: loadingRing } = useOrderRing();
   const { acceptOrder, loading: loadingAcceptOrder } = useAcceptOrder();
   const { printOrder } = usePrintOrder();
+  const isSubmitting = loadingAcceptOrder || loadingRing || isAcceptingOrder;
 
   const onAcceptOrderHandler = async () => {
+    if (isSubmitting) return;
+
     try {
       await acceptOrder(id, selectedTime?.toString() || "0");
       await muteRing(orderId);
       handleDismissModal();
-    } catch (err) {
+    } catch {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
-      console.log(err);
     } finally {
       handleDismissModal();
     }
   };
   const onAcceptAndPrintOrderHandler = async () => {
+    if (isSubmitting) return;
+
     try {
       setIsAcceptingOrder(true);
       const status = await printOrder(id);
@@ -70,9 +74,8 @@ const SetTimeScreenAndAcceptOrder = ({
 
       setIsAcceptingOrder(false);
       handleDismissModal();
-    } catch (err) {
+    } catch {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
-      console.log(err);
     } finally {
       setIsAcceptingOrder(false);
       handleDismissModal();
@@ -121,6 +124,7 @@ const SetTimeScreenAndAcceptOrder = ({
 
       <View>
         <CustomContinueButton
+          disabled={isSubmitting}
           isLoading={loadingAcceptOrder || loadingRing}
           style={{ backgroundColor: appTheme.primary }}
           onPress={onAcceptOrderHandler}
@@ -130,7 +134,8 @@ const SetTimeScreenAndAcceptOrder = ({
       {Platform.OS === "android" && (
         <View>
           <CustomContinueButton
-            isLoading={(loadingAcceptOrder || loadingRing) && isAcceptingOrder}
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
             style={{ backgroundColor: appTheme.primary }}
             onPress={onAcceptAndPrintOrderHandler}
             title={t("AcceptAndPrint")}

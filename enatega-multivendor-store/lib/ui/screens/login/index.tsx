@@ -1,6 +1,6 @@
 // Core
 import { Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 // React Native
 import {
@@ -33,32 +33,20 @@ const initial: ILoginInitialValues = {
 const LoginScreen = () => {
   // States
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [initialValues, setInitialValues] = useState(initial);
 
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { onLogin, creds } = useLogin();
+  const { onLogin } = useLogin();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
     // TODO: Implement login logic
     try {
       await onLogin(creds.username, creds.password);
-    } catch (err: unknown) {
-      console.log(err);
+    } catch {
     }
   };
-
-  const onInit = () => {
-    if (!creds?.username) return;
-    setInitialValues(creds);
-  };
-
-  // Use Effect
-  useEffect(() => {
-    onInit();
-  }, [creds]);
 
   return (
     <KeyboardAvoidingView
@@ -76,7 +64,7 @@ const LoginScreen = () => {
           // contentContainerStyle={{ height: height * 1 }}
         >
           <Formik
-            initialValues={initialValues}
+            initialValues={initial}
             enableReinitialize={true}
             validationSchema={SignInSchema}
             onSubmit={onLoginHandler}
@@ -113,8 +101,7 @@ const LoginScreen = () => {
                     <TextInput
                       className="flex-1 h-12 text-bas"
                       style={{ color: appTheme.fontMainColor }}
-                      placeholder={t("Email")}
-                      keyboardType="email-address"
+                      placeholder={t("Username or Email")}
                       value={values.username}
                       onChangeText={handleChange("username")}
                       onBlur={handleBlur("username")}

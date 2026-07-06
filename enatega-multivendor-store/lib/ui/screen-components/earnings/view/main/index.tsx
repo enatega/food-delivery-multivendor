@@ -29,6 +29,7 @@ import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 // Components
 import { useApptheme } from "@/lib/context/theme.context";
 import formatNumber from "@/lib/utils/methods/num-formatter";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useEffect, useState } from "react";
 import { showMessage } from "react-native-flash-message";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -66,6 +67,7 @@ export default function EarningsMain() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId, setModalVisible } = useUserContext();
+  const tabBarHeight = useBottomTabBarHeight();
 
   // Queries
   const [
@@ -82,7 +84,6 @@ export default function EarningsMain() {
     }
   >(STORE_EARNINGS_GRAPH, {
     onError: (err) => {
-      console.log(err);
       showMessage({
         message:
           err.graphQLErrors[0]?.message ||
@@ -147,11 +148,39 @@ export default function EarningsMain() {
     }
   }, [storeEarningsData?.storeEarningsGraph?.earnings?.length]);
 
+  const renderEmptyState = (
+    <Text
+      className="block mx-auto font-bold text-center w-full my-12 "
+      style={{ color: appTheme.fontSecondColor }}
+    >
+      {t("No record found")}
+    </Text>
+  );
+
+  const renderEarningItem = ({
+    item,
+    index,
+  }: {
+    item: IStoreEarnings;
+    index: number;
+  }) => (
+    <EarningStack
+      date={item._id}
+      earning={item.totalEarningsSum}
+      totalDeliveries={item.earningsArray.length}
+      _id={item._id}
+      totalOrderAmount={item.totalOrderAmount}
+      earningsArray={item.earningsArray}
+      key={index}
+      setModalVisible={setModalVisible}
+    />
+  );
+
   // If loading
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
   return (
     <GestureHandlerRootView
-      style={{ backgroundColor: appTheme.themeBackground }}
+      style={{ backgroundColor: appTheme.themeBackground, flex: 1 }}
     >
       <EarningsBarChart
         data={barData}
@@ -205,35 +234,14 @@ export default function EarningsMain() {
           </Text>
         </TouchableOpacity>
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList
           data={recentTransaction}
-          contentContainerStyle={{ paddingBottom: 30 }}
+          contentContainerStyle={{ paddingBottom: tabBarHeight + 24 }}
           contentContainerClassName="scroll-smooth"
           keyExtractor={(item) => item._id}
-          style={{ height: "55%" }}
-          ListEmptyComponent={
-            <Text
-              className="block mx-auto font-bold text-center w-full my-12 "
-              style={{ color: appTheme.fontSecondColor }}
-            >
-              {t("No record found")}
-            </Text>
-          }
-          renderItem={(info) => {
-            return (
-              <EarningStack
-                date={info?.item?._id}
-                earning={info?.item?.totalEarningsSum}
-                totalDeliveries={info?.item?.earningsArray.length}
-                _id={info?.item?._id}
-                totalOrderAmount={info?.item?.totalOrderAmount}
-                earningsArray={info?.item?.earningsArray}
-                key={info.index}
-                setModalVisible={setModalVisible}
-              />
-            );
-          }}
+          ListEmptyComponent={renderEmptyState}
+          renderItem={renderEarningItem}
         />
       </View>
     </GestureHandlerRootView>

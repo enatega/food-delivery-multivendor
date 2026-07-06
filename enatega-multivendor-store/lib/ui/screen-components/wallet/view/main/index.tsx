@@ -4,6 +4,7 @@ import {
   IStoreByIdResponse,
   IStoreCurrentWithdrawRequestResponse,
   IStoreEarningsResponse,
+  IStoreTransaction,
   IStoreTransactionHistoryResponse,
 } from "@/lib/utils/interfaces/rider.interface";
 
@@ -18,6 +19,7 @@ import RecentTransaction from "../recent-transactions";
 // Hooks
 import { useUserContext } from "@/lib/context/global/user.context";
 import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 
@@ -30,7 +32,6 @@ import {
   STORE_PROFILE,
   STORE_TRANSACTIONS_HISTORY,
 } from "@/lib/apollo/queries/store.query";
-import { GraphQLError } from "graphql";
 
 // Expo
 import { router } from "expo-router";
@@ -49,6 +50,7 @@ export default function WalletMain() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId } = useUserContext();
+  const tabBarHeight = useBottomTabBarHeight();
 
   // States
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
@@ -68,7 +70,7 @@ export default function WalletMain() {
   } = useLazyQueryQL(
     STORE_TRANSACTIONS_HISTORY,
     {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
     },
     {
       userType: "STORE",
@@ -87,7 +89,7 @@ export default function WalletMain() {
     loading: isStoreProfileLoading,
   } = useLazyQueryQL(
     STORE_BY_ID,
-    { fetchPolicy: "network-only" },
+    { fetchPolicy: "cache-and-network" },
     {
       id: userId,
     }
@@ -99,7 +101,7 @@ export default function WalletMain() {
     loading: isStoreCurrentWithdrawRequestLoading,
   } = useLazyQueryQL(
     STORE_CURRENT_WITHDRAW_REQUEST,
-    { fetchPolicy: "network-only" },
+    { fetchPolicy: "cache-and-network" },
     { storeId: userId }
   ) as ILazyQueryResult<
     IStoreCurrentWithdrawRequestResponse | undefined,
@@ -162,6 +164,8 @@ export default function WalletMain() {
 
   // Handlers
   async function handleFormSubmission(withdrawAmount: number) {
+    if (createWithDrawRequestLoading || !userId) return;
+
     const currentAmount =
       storeProfileData?.restaurant?.currentWalletAmount || 0;
     if (withdrawAmount > (currentAmount || 0)) {
@@ -182,9 +186,8 @@ export default function WalletMain() {
           userId: userId,
         },
       });
-    } catch (error) {
-      const err = error as GraphQLError;
-      console.log(err);
+    } catch {
+      return;
     }
   }
   // Loading state
@@ -214,6 +217,33 @@ export default function WalletMain() {
       });
     }
   }, [userId]);
+
+  const renderTransactionsHeader = () => (
+    <Text
+      className="font-bold text-lg p-5"
+      style={{
+        color: appTheme.fontMainColor,
+        backgroundColor: appTheme.themeBackground,
+      }}
+    >
+      {t("Recent Transactions")}
+    </Text>
+  );
+
+  const renderTransactionItem = ({
+    item,
+    index,
+  }: {
+    item: IStoreTransaction;
+    index: number;
+  }) => {
+    const transactions = storeTransactionData?.transactionHistory?.data;
+    if (!transactions) return <NoRecordFound />;
+
+    return (
+      <RecentTransaction transaction={item} isLast={transactions.length - 1 === index} />
+    );
+  };
 
   if (isLoading) return <WalletScreenMainLoading />;
   else
@@ -289,38 +319,14 @@ export default function WalletMain() {
         {storeTransactionData && (
           <FlatList
             className="w-full h-full flex-1 basis-32 -mt-12"
-            ListHeaderComponent={() => {
-              return (
-                <Text
-                  className="font-bold text-lg p-5"
-                  style={{
-                    color: appTheme.fontMainColor,
-                    backgroundColor: appTheme.themeBackground,
-                  }}
-                >
-                  {t("Recent Transactions")}
-                </Text>
-              );
-            }}
+            ListHeaderComponent={renderTransactionsHeader}
             data={storeTransactionData?.transactionHistory?.data}
+            contentContainerStyle={{ paddingBottom: tabBarHeight + 24 }}
             ListEmptyComponent={<NoRecordFound />}
-            renderItem={({ item, index }) => {
-              if (storeTransactionData?.transactionHistory?.data) {
-                return (
-                  <RecentTransaction
-                    transaction={item}
-                    isLast={
-                      storeTransactionData?.transactionHistory?.data?.length -
-                        1 ===
-                      index
-                    }
-                    key={`transaction_${index}#`}
-                  />
-                );
-              } else {
-                return <NoRecordFound />;
-              }
-            }}
+            keyExtractor={(item, index) =>
+              `${item.createdAt}-${item.status}-${index}`
+            }
+            renderItem={({ item, index }) => renderTransactionItem({ item, index })}
           />
         )}
 

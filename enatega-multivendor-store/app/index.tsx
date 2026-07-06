@@ -53,7 +53,6 @@ function App() {
             const token = (await getDevicePushToken()).data;
 
             try {
-              console.log({ token });
               sendTokenToBackend({
                 variables: { token, isEnabled: true },
                 onCompleted: () => {
@@ -69,15 +68,12 @@ function App() {
           }
         }
         notificationRef.current = false;
-      } catch (err) {
-        console.log({ checkToken: JSON.stringify(err, null, 2) });
+      } catch {
         init();
       }
     };
     checkToken();
   }, [restaurantData]);
-
-  console.log("Running...");
 
   return <SpinnerComponent />;
 }

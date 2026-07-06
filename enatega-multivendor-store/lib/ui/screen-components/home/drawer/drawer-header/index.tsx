@@ -41,8 +41,7 @@ const CustomDrawerHeader = () => {
   async function handleToggleAvailability() {
     try {
       await toggleAvailablity({ variables: { restaurantId: userId ?? "" } });
-    } catch (error) {
-      console.error("error whilte toggling availabibility", error);
+    } catch {
     }
   }
 

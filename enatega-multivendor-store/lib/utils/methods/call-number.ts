@@ -15,5 +15,5 @@ export const callNumber = (phone: string) => {
         return Linking.openURL(phoneNumber);
       }
     })
-    .catch((err) => console.log(err));
+    .catch(() => {});
 };

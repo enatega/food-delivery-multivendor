@@ -4,8 +4,7 @@ import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { orderSubTotal } from "@/lib/utils/methods";
 import { getIsAcceptButtonVisible } from "@/lib/utils/methods/gloabl";
 import { ORDER_TYPE } from "@/lib/utils/types";
-import moment from "moment";
-import { useContext, useEffect, useRef, useState } from "react";
+import { memo, useContext, useEffect, useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import CountdownTimer from "../custom-timer";
 import SpinnerComponent from "../spinner";
@@ -25,6 +24,15 @@ interface IOrderProps {
   onToggleDetails: (itemId: string) => void;
 }
 
+const didOrderDetailVisibilityChange = (
+  prevShowDetails: Record<string, boolean>,
+  nextShowDetails: Record<string, boolean>,
+  order: IOrder,
+) =>
+  order.items?.some(
+    (item) => prevShowDetails[item._id] !== nextShowDetails[item._id],
+  ) ?? false;
+
 const Order = ({
   order,
   tab,
@@ -32,18 +40,9 @@ const Order = ({
   showDetails = {},
   onToggleDetails,
 }: IOrderProps) => {
-  if (!order) {
-    return null; // Return early if order is not available
-  }
-
-  // Hooks can be called safely now
   const { appTheme } = useApptheme();
   const configuration = useContext(ConfigurationContext);
   const { t } = useTranslation();
-
-  if (!configuration) {
-    return null; // Configuration context is not available yet
-  }
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
 
@@ -52,18 +51,20 @@ const Order = ({
 
   // States
   const [isAcceptButtonVisible, setIsAcceptButtonVisible] = useState(
-    getIsAcceptButtonVisible(order?.orderDate),
+    getIsAcceptButtonVisible(order?.orderDate ?? ""),
   );
-
 
   // Timer
   const timeNow = new Date();
-  const date = new Date(order.orderDate);
-  const acceptanceTime = moment(date).diff(timeNow, "seconds");
-  const createdTime = new Date(order?.createdAt);
-  let remainingTime = moment(createdTime)
-    .add(MAX_TIME, "seconds")
-    .diff(timeNow, "seconds");
+  const acceptanceTime = Math.floor(
+    ((order ? new Date(order.orderDate).getTime() : 0) - timeNow.getTime()) / 1000,
+  );
+  let remainingTime = Math.floor(
+    ((order ? new Date(order.createdAt).getTime() : 0) +
+      MAX_TIME * 1000 -
+      timeNow.getTime()) /
+      1000,
+  );
 
   // Preparation Time
   const prep = new Date(order.preparationTime ?? "2023-08-16T08:00:00.000Z");
@@ -91,10 +92,12 @@ const Order = ({
 
   // Use Effects
   useEffect(() => {
+    if (!order) return;
+
     let isSubscribed = true;
     (() => {
       timer.current = setInterval(() => {
-        const isAcceptButtonVisible = !moment().isBefore(order?.orderDate);
+        const isAcceptButtonVisible = getIsAcceptButtonVisible(order.orderDate);
         if (isSubscribed) {
           setIsAcceptButtonVisible(isAcceptButtonVisible);
         }
@@ -108,6 +111,10 @@ const Order = ({
       isSubscribed = false;
     };
   }, []);
+
+  if (!order || !configuration) {
+    return null;
+  }
 
   return (
     <View className="w-full">
@@ -664,4 +671,28 @@ const Order = ({
   );
 };
 
-export default Order;
+export default memo(Order, (prevProps, nextProps) => {
+  if (prevProps.tab !== nextProps.tab) return false;
+  if (prevProps.order._id !== nextProps.order._id) return false;
+  if (prevProps.order.updatedAt !== nextProps.order.updatedAt) return false;
+  if (prevProps.order.orderStatus !== nextProps.order.orderStatus) return false;
+  if (prevProps.order.isPickedUp !== nextProps.order.isPickedUp) return false;
+  if (prevProps.order.preparationTime !== nextProps.order.preparationTime) {
+    return false;
+  }
+  if (prevProps.handlePresentModalPress !== nextProps.handlePresentModalPress) {
+    return false;
+  }
+  if (prevProps.onToggleDetails !== nextProps.onToggleDetails) return false;
+  if (
+    didOrderDetailVisibilityChange(
+      prevProps.showDetails,
+      nextProps.showDetails,
+      nextProps.order,
+    )
+  ) {
+    return false;
+  }
+
+  return true;
+});

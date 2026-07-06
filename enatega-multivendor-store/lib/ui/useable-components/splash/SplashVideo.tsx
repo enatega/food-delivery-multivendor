@@ -1,30 +1,34 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { ResizeMode, Video } from "expo-av";
+import { VideoView, useVideoPlayer } from "expo-video";
 import { StyleSheet } from "react-native";
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function SplashVideo({ onLoaded, onFinish }) {
-  const video = useRef(null);
-  const [lastStatus, setStatus] = useState({});
+  const didLoad = useRef(false);
+  const player = useVideoPlayer(require("@/lib/assets/video/mobile-splash.mp4"), (
+    videoPlayer,
+  ) => {
+    videoPlayer.loop = false;
+    videoPlayer.play();
+  });
+
+  useEffect(() => {
+    const subscription = player.addListener("playToEnd", onFinish);
+    return () => subscription.remove();
+  }, [onFinish, player]);
 
   return (
-    <Video
-      ref={video}
+    <VideoView
+      player={player}
       style={StyleSheet.absoluteFill}
-      source={require("@/lib/assets/video/mobile-splash.mp4")}
-      shouldPlay={!(lastStatus.isLoaded && lastStatus.didJustFinish)}
-      isLooping={false}
-      resizeMode={ResizeMode.COVER}
-      onPlaybackStatusUpdate={(status) => {
-        if (status.isLoaded) {
-          if (lastStatus.isLoaded !== status.isLoaded) {
-            onLoaded();
-          }
-          if (status.didJustFinish) {
-            onFinish();
-          }
+      nativeControls={false}
+      contentFit="cover"
+      onFirstFrameRender={() => {
+        if (didLoad.current) {
+          return;
         }
-        setStatus(() => status);
+        didLoad.current = true;
+        onLoaded();
       }}
     />
   );

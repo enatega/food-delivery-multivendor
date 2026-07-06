@@ -9,8 +9,7 @@ export const printAsync = async (order, printerUrl) => {
       html: formatReceipt(order),
       printerUrl,
     });
-  } catch (error) {
-    console.log("error", error);
+  } catch {
   }
   return null;
 };
@@ -21,8 +20,7 @@ export const printToFileAsync = async (order) => {
       width: 576, // 80mm=302px,
       html: formatReceipt(order),
     });
-  } catch (error) {
-    console.log("error", error);
+  } catch {
   }
   return null;
 };
@@ -31,8 +29,7 @@ export const selectPrinterAsync = async () => {
   try {
     const { name, url } = await Print.selectPrinterAsync();
     return { name, url };
-  } catch (error) {
-    console.log("error", error);
+  } catch {
   }
   return null;
 };
