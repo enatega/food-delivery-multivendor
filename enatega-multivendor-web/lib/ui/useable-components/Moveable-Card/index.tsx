@@ -1,5 +1,5 @@
 "use client"
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import React from "react";
 import styles from "./Movable.module.css"; // Ensure this path is correct
 import { MoveableProps } from "@/lib/utils/interfaces/Home-interfaces";
@@ -41,7 +41,8 @@ const MoveableCard: React.FC<MoveableProps> = ({
           "https://images.ctfassets.net/23u853certza/0V5KYLmUImbVPRBerxy9b/78c9f84e09efbde9e124e74e6eef8fad/photocard_courier_v4.jpg?w=1200&q=90&fm=webp"
         }
         alt="Main Image"
-        layout="fill"
+        fill
+        sizes="(max-width: 700px) 100vw, 600px"
         className={`${styles.imageContainer} c`}
       />
 

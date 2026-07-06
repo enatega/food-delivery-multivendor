@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
 
@@ -13,7 +13,7 @@ const AnimatedText = () => {
   t('pizza')
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   animate: {
     transition: {
       staggerChildren: 0.07
@@ -27,7 +27,7 @@ const containerVariants = {
   }
 };
 
-const letterVariants = {
+const letterVariants: Variants = {
   initial: {
     y: 40,
     opacity: 0,

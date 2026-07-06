@@ -1,5 +1,5 @@
 import { IImageComponentProps } from "@/lib/utils/interfaces/card.image.component";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { twMerge } from "tailwind-merge";
 
 const ImageComponent: React.FC<IImageComponentProps> = ({ src, alt, className }) => {

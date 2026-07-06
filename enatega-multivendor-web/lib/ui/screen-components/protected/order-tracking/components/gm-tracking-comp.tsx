@@ -10,7 +10,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 // Assets
 import HomeIcon from "../../../../../assets/home_icon.png";
 import RestIcon from "../../../../../assets/rest_icon.png";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import TrackingRider from "./trackingRider";
 import { useTranslations } from "next-intl";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";

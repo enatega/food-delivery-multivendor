@@ -2,7 +2,7 @@
 
 import { useCallback, useState, type FC } from "react";
 import { Rating } from "primereact/rating";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { twMerge } from "tailwind-merge";
 import {
   IOrder,

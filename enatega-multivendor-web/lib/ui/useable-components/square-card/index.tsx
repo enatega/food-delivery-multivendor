@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import React from "react";
 // import { ClockSvg, CycleSvg, FaceSvg } from "@/lib/utils/assets/svg";
 // import IconWithTitle from "../icon-with-title";

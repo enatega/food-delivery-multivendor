@@ -43,7 +43,7 @@ import { Dialog } from "primereact/dialog";
 import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { useTranslations } from "next-intl";
 
 export default function RestaurantDetailsScreen() {

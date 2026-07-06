@@ -1,6 +1,6 @@
 "use client";
 import useNearByRestaurantsPreview from "@/lib/hooks/useNearByRestaurantsPreview";
-import { FC, useEffect, useState } from "react";
+import { FC, use, useEffect, useState } from "react";
 import Loader from "./components/Loader";
 import DisplayError from "./components/DisplayError";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
@@ -14,11 +14,12 @@ import { isRestaurantOpen } from "../../../../lib/utils/constants/isRestaurantOp
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 interface MapViewPageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 const MapView: FC<MapViewPageProps> = ({ params }) => {
+    const { slug } = use(params);
     const [animationData, setAnimationData] = useState<null | object>(null);
 
     useEffect(() => {
@@ -27,8 +28,6 @@ const MapView: FC<MapViewPageProps> = ({ params }) => {
             .then(setAnimationData)
             .catch((err) => console.error("Failed to load Lottie JSON", err));
     }, []);
-
-    const { slug } = params;
 
     const { error, loading, restaurantsData, groceriesData } =
         useNearByRestaurantsPreview(true, 1, 110);

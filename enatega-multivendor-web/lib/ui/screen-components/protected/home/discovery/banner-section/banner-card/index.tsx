@@ -1,6 +1,6 @@
 // core
 import React from "react";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 // interface
 import { IBannerItemProps } from "@/lib/utils/interfaces";
 import { useRouter } from "next/navigation";

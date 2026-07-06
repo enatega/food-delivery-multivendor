@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
+import Image from '@/lib/ui/useable-components/safe-image';
 import { useRouter } from 'next/navigation'
 
 interface TilesData {

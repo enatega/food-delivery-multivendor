@@ -170,7 +170,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       headers: {
         authorization: token ? `Bearer ${token}` : "",
         nonce: nonce || '',
-        'bop-auth': `Bearer ${metricsToken}` || '',
+        'bop-auth': metricsToken ? `Bearer ${metricsToken}` : '',
         userId: userId ?? "",
         isAuth: !!token,
         "X-Client-Type": "web"

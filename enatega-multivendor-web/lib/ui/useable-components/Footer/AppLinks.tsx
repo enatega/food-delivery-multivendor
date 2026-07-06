@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { hasValidAuthToken } from "@/lib/utils/methods/auth";
 
 const PlayStoreLink =

@@ -59,7 +59,7 @@ import { toSlug } from "@/lib/utils/methods";
 import ReviewsModal from "@/lib/ui/useable-components/reviews-modal";
 import InfoModal from "@/lib/ui/useable-components/info-modal";
 import ChatSvg from "@/lib/utils/assets/svg/chat";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
 import { ToastContext } from "@/lib/context/global/toast.context";

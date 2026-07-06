@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 
 export default function ShopTypeScreen() {
     const params = useParams();
-    const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+    const slug = (Array.isArray(params.slug) ? params.slug[0] : params.slug) ?? "";
   // const t = useTranslations();
   const limit = 10;
 

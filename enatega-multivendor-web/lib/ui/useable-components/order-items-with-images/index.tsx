@@ -1,7 +1,5 @@
 import { IOrder } from "@/lib/utils/interfaces";
-import Image from "next/image";
-
-
+import Image from '@/lib/ui/useable-components/safe-image';
 interface IOrderItemsWithImagesProps {
     order?: IOrder;
 }

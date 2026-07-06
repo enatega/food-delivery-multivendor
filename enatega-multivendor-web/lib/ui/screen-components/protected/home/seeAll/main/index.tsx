@@ -25,7 +25,7 @@ const RESTAURANT_SLUGS = new Set(["popular-restaurants", "popular-stores"]);
 function SeeAllSection() {
   const router = useRouter();
   const params = useParams();
-  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  const slug = (Array.isArray(params.slug) ? params.slug[0] : params.slug) ?? "";
 
   const [isModalOpen, setIsModalOpen] = useState({ value: false, id: "" });
   const [items, setItems] = useState<IRestaurant[]>([]);

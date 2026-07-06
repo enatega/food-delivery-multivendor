@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { IOrderTrackingDetail } from "@/lib/utils/interfaces/order-tracking-detail.interface";
 import CancelOrderModal from "./cancelOrderModal";
 import CancelOrderSuccessModal from "./cancel-order-success-modal";
