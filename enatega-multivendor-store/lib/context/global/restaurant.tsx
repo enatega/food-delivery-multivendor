@@ -22,19 +22,16 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
       try {
         const printerStr = await AsyncStorage.getItem("printer");
         if (printerStr) setPrinter(JSON.parse(printerStr));
-      } catch (error) {
-        console.error("Error fetching printer data from AsyncStorage:", error);
+      } catch {
       }
     })();
   }, []);
 
   const { loading, error, data, subscribeToMore, refetch, networkStatus } =
     useQuery(GET_ORDERS, {
-      fetchPolicy: "network-only",
-      pollInterval: 5000,
-      onError: (error) => {
-        console.log("GraphQL Query Error:", error);
-      },
+      fetchPolicy: "cache-and-network",
+      pollInterval: 60000,
+      onError: () => {},
     });
 
   let unsubscribe = null;
@@ -58,11 +55,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
         } else {
           setNotificationToken(null);
         }
-      } catch (error) {
-        console.error(
-          "Error fetching notification token from SecureStore:",
-          error,
-        );
+      } catch {
       }
     }
     GetToken();
@@ -70,7 +63,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
 
   const subscribeToMoreOrders = async () => {
     try {
-      const restaurant = await AsyncStorage.getItem("restaurantId");
+      const restaurant = await AsyncStorage.getItem("store-id");
       if (!restaurant) return;
       unsubscribe = subscribeToMore({
         document: SUBSCRIBE_PLACE_ORDER,
@@ -86,12 +79,9 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
           }
           return prev;
         },
-        onError: (error) => {
-          console.error("Subscription Error:", error);
-        },
+        onError: () => {},
       });
-    } catch (error) {
-      console.error("Error in subscribeToMoreOrders:", error);
+    } catch {
     }
   };
 

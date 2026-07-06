@@ -40,9 +40,7 @@ export default function AnimatedSplashScreen({
       await SplashScreen.hideAsync();
       // Load stuff
       await Promise.all([]);
-    } catch (e) {
-      const err = e as Error;
-      console.log(err);
+    } catch {
       // Handle errors
     } finally {
       setAppReady(true);

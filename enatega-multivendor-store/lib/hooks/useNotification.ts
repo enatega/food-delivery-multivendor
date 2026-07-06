@@ -10,7 +10,7 @@ import { GET_RESTAURANT_BY_ID, SAVE_TOKEN } from "@/lib/api/graphql";
 
 export default function useNotification() {
   const [getStore, { data }] = useLazyQuery(GET_RESTAURANT_BY_ID, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     // variables: { id: userId },
   });
   const [sendTokenToBackend, { loading }] = useMutation(SAVE_TOKEN);
@@ -80,21 +80,11 @@ export default function useNotification() {
         response.notification.request.content.data
       ) {
         const { _id } = response.notification.request.content.data;
-
-        console.log("notification response", response);
-
-        // const { data } = await client.query({
-        //   query: STORE_ORDERS,
-        //   fetchPolicy: "network-only",
-        // });
-        // const order = data.riderOrders.find((o: IOrder) => o._id === _id);
         const lastNotificationHandledId = await AsyncStorage.getItem(
           "@lastNotificationHandledId"
         );
         if (lastNotificationHandledId === _id) return;
         await AsyncStorage.setItem("@lastNotificationHandledId", _id);
-        // router.navigate("/order-detail");
-        // router.setParams({ itemId: _id, order });
       }
     },
     []

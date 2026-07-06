@@ -49,7 +49,6 @@ export interface IStoreProfile {
   };
   zone: Zone;
   username: string;
-  password: string;
   minimumOrder: number;
   sections: string;
   rating: number;

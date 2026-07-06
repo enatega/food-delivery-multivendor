@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-undef
 module.exports = function (api) {
   api.cache(true);
+  const isProduction = process.env.NODE_ENV === "production";
+
   return {
     presets: [
       [
@@ -10,5 +12,6 @@ module.exports = function (api) {
       ],
       "nativewind/babel",
     ],
+    plugins: isProduction ? ["transform-remove-console"] : [],
   };
 };
