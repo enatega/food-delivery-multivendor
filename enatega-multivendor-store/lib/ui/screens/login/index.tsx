@@ -1,6 +1,6 @@
 // Core
 import { Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 // React Native
 import {
@@ -33,12 +33,11 @@ const initial: ILoginInitialValues = {
 const LoginScreen = () => {
   // States
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [initialValues, setInitialValues] = useState(initial);
 
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { onLogin, creds } = useLogin();
+  const { onLogin } = useLogin();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
@@ -48,16 +47,6 @@ const LoginScreen = () => {
     } catch {
     }
   };
-
-  const onInit = () => {
-    if (!creds?.username) return;
-    setInitialValues(creds);
-  };
-
-  // Use Effect
-  useEffect(() => {
-    onInit();
-  }, [creds]);
 
   return (
     <KeyboardAvoidingView
@@ -75,7 +64,7 @@ const LoginScreen = () => {
           // contentContainerStyle={{ height: height * 1 }}
         >
           <Formik
-            initialValues={initialValues}
+            initialValues={initial}
             enableReinitialize={true}
             validationSchema={SignInSchema}
             onSubmit={onLoginHandler}
