@@ -29,6 +29,7 @@ import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 // Components
 import { useApptheme } from "@/lib/context/theme.context";
 import formatNumber from "@/lib/utils/methods/num-formatter";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useEffect, useState } from "react";
 import { showMessage } from "react-native-flash-message";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -66,6 +67,7 @@ export default function EarningsMain() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId, setModalVisible } = useUserContext();
+  const tabBarHeight = useBottomTabBarHeight();
 
   // Queries
   const [
@@ -178,7 +180,7 @@ export default function EarningsMain() {
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
   return (
     <GestureHandlerRootView
-      style={{ backgroundColor: appTheme.themeBackground }}
+      style={{ backgroundColor: appTheme.themeBackground, flex: 1 }}
     >
       <EarningsBarChart
         data={barData}
@@ -232,13 +234,12 @@ export default function EarningsMain() {
           </Text>
         </TouchableOpacity>
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList
           data={recentTransaction}
-          contentContainerStyle={{ paddingBottom: 30 }}
+          contentContainerStyle={{ paddingBottom: tabBarHeight + 24 }}
           contentContainerClassName="scroll-smooth"
           keyExtractor={(item) => item._id}
-          style={{ height: "55%" }}
           ListEmptyComponent={renderEmptyState}
           renderItem={renderEarningItem}
         />

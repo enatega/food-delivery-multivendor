@@ -19,6 +19,7 @@ import RecentTransaction from "../recent-transactions";
 // Hooks
 import { useUserContext } from "@/lib/context/global/user.context";
 import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 
@@ -49,6 +50,7 @@ export default function WalletMain() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId } = useUserContext();
+  const tabBarHeight = useBottomTabBarHeight();
 
   // States
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
@@ -319,6 +321,7 @@ export default function WalletMain() {
             className="w-full h-full flex-1 basis-32 -mt-12"
             ListHeaderComponent={renderTransactionsHeader}
             data={storeTransactionData?.transactionHistory?.data}
+            contentContainerStyle={{ paddingBottom: tabBarHeight + 24 }}
             ListEmptyComponent={<NoRecordFound />}
             keyExtractor={(item, index) =>
               `${item.createdAt}-${item.status}-${index}`

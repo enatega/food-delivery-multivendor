@@ -17,8 +17,44 @@ export default function DocumentsSection() {
   const { appTheme, currentTheme, toggleTheme } = useApptheme();
   const { t } = useTranslation();
   const { dataProfile } = useUserContext();
+  const businessDetails = dataProfile?.bussinessDetails;
+  const hasBusinessDetails = !!(
+    businessDetails?.bankName ||
+    businessDetails?.accountName ||
+    businessDetails?.accountNumber ||
+    businessDetails?.accountCode
+  );
+
+  const DetailRow = ({
+    label,
+    value,
+  }: {
+    label: string;
+    value?: string | number | null;
+  }) => (
+    <View
+      className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
+      style={{ borderColor: appTheme.borderLineColor }}
+    >
+      <Text
+        style={{
+          color: appTheme.fontMainColor,
+        }}
+      >
+        {label}
+      </Text>
+      {value ? (
+        <Text style={{ color: appTheme.fontSecondColor, flexShrink: 1 }}>
+          {String(value)}
+        </Text>
+      ) : (
+        <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />
+      )}
+    </View>
+  );
+
   return (
-    <View className="flex flex-col h-[20%] w-full justify-between items-center">
+    <View className="flex flex-col w-full items-center">
       <View
         className="flex flex-col gap-3 items-start justify-center px-5 w-full border-b-2 py-3"
         style={{ borderColor: appTheme.borderLineColor }}
@@ -37,24 +73,33 @@ export default function DocumentsSection() {
             onPress={() => router.push("/bank-management")}
           >
             <Text className="font-semibold text-[#0EA5E9]">
-              {dataProfile?.bussinessDetails?.accountNumber
-                ? t("Update")
-                : t("Add")}
+              {hasBusinessDetails ? t("Update") : t("Add")}
             </Text>
           </TouchableOpacity>
         </View>
         <View
-          className={`${dataProfile?.bussinessDetails?.accountNumber ? "bg-[#E0F2FE]" : "bg-[#FEE2E2]"} p-2 border rounded-3xl border-[#E0F2FE]`}
+          className={`${hasBusinessDetails ? "bg-[#E0F2FE]" : "bg-[#FEE2E2]"} p-2 border rounded-3xl border-[#E0F2FE]`}
         >
           <Text
-            className={`${dataProfile?.bussinessDetails?.accountNumber ? "text-[#0D99FF]" : "text-[#991B1B]"} font-semibold`}
+            className={`${hasBusinessDetails ? "text-[#0D99FF]" : "text-[#991B1B]"} font-semibold`}
           >
-            {dataProfile?.bussinessDetails?.accountNumber
-              ? t("Submitted Data")
-              : t("Missing Data")}
+            {hasBusinessDetails ? t("Submitted Data") : t("Missing Data")}
           </Text>
         </View>
       </View>
+      <DetailRow label={t("Bank Name")} value={businessDetails?.bankName} />
+      <DetailRow
+        label={t("Account Name")}
+        value={businessDetails?.accountName}
+      />
+      <DetailRow
+        label={t("Account Number")}
+        value={businessDetails?.accountNumber}
+      />
+      <DetailRow
+        label={t("IBAN_SWIFT_BSB")}
+        value={businessDetails?.accountCode}
+      />
       <View>
         <Text
           className="font-bold m-3"

@@ -1,5 +1,6 @@
 // Core
 import { FlatList, View } from "react-native";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 // Interfaces
 import { IStoreEarningsDetailProps } from "@/lib/utils/interfaces/earning.interface";
@@ -23,6 +24,7 @@ export default function EarningsDetailStacks({
 }: IStoreEarningsDetailProps) {
   // Hooks
   const { appTheme } = useApptheme();
+  const tabBarHeight = useBottomTabBarHeight();
 
   const renderItem = ({
     item: earning,
@@ -67,7 +69,7 @@ export default function EarningsDetailStacks({
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: 200,
+          paddingBottom: tabBarHeight + 24,
         }}
       />
     </View>

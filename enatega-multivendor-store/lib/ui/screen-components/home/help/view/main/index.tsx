@@ -1,5 +1,6 @@
 import { useApptheme } from "@/lib/context/theme.context";
 import { FAQs } from "@/lib/utils/constants";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
 import { useFocusEffect } from "expo-router";
@@ -20,6 +21,7 @@ export default function HelpMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const tabBarHeight = useBottomTabBarHeight();
 
   const openWhatsAppStore = () => {
     const appStoreUrl =
@@ -80,23 +82,27 @@ export default function HelpMain() {
 
   return (
     <View
-      className="flex-1 w-full dark:bg-gray-900 pb-16"
+      className="flex-1 w-full dark:bg-gray-900"
       style={{ backgroundColor: appTheme.screenBackground }}
     >
       <StatusBar barStyle="light-content" />
 
-      <View className="h-[90%] p-4">
+      <View className="flex-1 p-4">
         <FlatList
           className="flex flex-col w-[99%] ml-1 overflow-x-hidden"
           data={FAQs}
           keyExtractor={(item) => "Faq-" + item.id}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 24 }}
           ItemSeparatorComponent={ItemSeparator}
           renderItem={({ item }) => renderFaqItem({ item })}
         />
       </View>
 
-      <View className="w-full flex items-center mt-4">
+      <View
+        className="w-full flex items-center mt-4"
+        style={{ marginBottom: tabBarHeight + 16 }}
+      >
         <TouchableOpacity
           activeOpacity={0.7}
           className="w-[90%] h-12 rounded-full bg-green-500 flex flex-row items-center justify-center gap-2 shadow-lg"

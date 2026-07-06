@@ -6,6 +6,7 @@ import { IStoreEarningsArray } from "@/lib/utils/interfaces/rider-earnings.inter
 
 // Components
 import { NoRecordFound } from "@/lib/ui/useable-components";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { FlatList, View } from "react-native";
 import OrderStack from "../order-stack";
 
@@ -22,6 +23,7 @@ export default function EarningsOrderDetailsMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { storeOrdersEarnings } = useUserContext();
+  const tabBarHeight = useBottomTabBarHeight();
 
   // UseEffects
   useEffect(() => {
@@ -52,14 +54,14 @@ export default function EarningsOrderDetailsMain() {
 
   if (!recentOrderEarnings.length) return <NoRecordFound />;
   return (
-    <View style={{ backgroundColor: appTheme.themeBackground, height: "100%" }}>
+    <View style={{ backgroundColor: appTheme.themeBackground, flex: 1 }}>
       <FlatList
         data={recentOrderEarnings}
         contentContainerClassName="scroll-smooth"
+        contentContainerStyle={{ paddingBottom: tabBarHeight + 24 }}
         keyExtractor={(item, index) =>
           `${item.orderDetails.orderId}-${item.date}-${index}`
         }
-        style={{ height: "55%" }}
         ListEmptyComponent={<NoRecordFound />}
         renderItem={({ item, index }) => renderOrderItem({ item, index })}
       />
