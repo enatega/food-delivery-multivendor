@@ -8,6 +8,7 @@ import { STORE_PROFILE } from "@/lib/apollo/queries";
 import { useApptheme } from "@/lib/context/theme.context";
 import { timeToMinutes } from "@/lib/utils/methods/helpers/work-schedule";
 import { TWeekDays } from "@/lib/utils/types/restaurant";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -53,6 +54,7 @@ export default function WorkScheduleMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const tabBarHeight = useBottomTabBarHeight();
   // States
   const [schedule, setSchedule] = useState<WorkSchedule[]>();
   const [dropdown, setDropdown] = useState<{
@@ -406,7 +408,7 @@ export default function WorkScheduleMain() {
     <TouchableWithoutFeedback onPress={closeDropdown}>
       <View className="flex-1 items-center">
         <View
-          className="p-2 h-[80%] w-full"
+          className="flex-1 p-2 w-full"
           style={{ backgroundColor: appTheme.themeBackground }}
         >
           <FlatList
@@ -414,21 +416,23 @@ export default function WorkScheduleMain() {
             keyExtractor={(item) => item.day}
             scrollEnabled={true}
             scrollEventThrottle={16}
+            contentContainerStyle={{ paddingBottom: 24 }}
             renderItem={({ item, index }) => renderScheduleItem({ item, index })}
           />
         </View>
-        <UpdateScheduleBtn
-          isUpatingSchedule={isUpatingSchedule}
-          onHandlerSubmit={onHandlerSubmit}
-          width={width}
-        />
+        <View className="w-full px-2" style={{ marginBottom: tabBarHeight + 16 }}>
+          <UpdateScheduleBtn
+            isUpatingSchedule={isUpatingSchedule}
+            onHandlerSubmit={onHandlerSubmit}
+            width={width}
+          />
+        </View>
         {/* Animated Dropdown */}
         {dropdown && (
           <Animated.View
-            className="mb-[6rem]"
             style={{
               position: "absolute",
-              bottom: -80,
+              bottom: tabBarHeight + 8,
               left: 5,
               right: 5,
               backgroundColor: appTheme.themeBackground,
