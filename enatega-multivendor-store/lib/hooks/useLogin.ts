@@ -27,6 +27,7 @@ const useLogin = () => {
   const [login, { data: storeLoginData }] = useMutation(STORE_LOGIN, {
     onCompleted,
     onError,
+    fetchPolicy: "no-cache",
   });
 
   useQuery(DEFAULT_STORE_CREDS, {
@@ -55,7 +56,19 @@ const useLogin = () => {
       return rawMessage;
     }
 
-    return "Invalid credentials";
+    if (
+      errorCode === "UNAUTHENTICATED" ||
+      normalizedMessage.includes("invalid credential") ||
+      normalizedMessage.includes("invalid credentials") ||
+      normalizedMessage.includes("invalid username") ||
+      normalizedMessage.includes("invalid password") ||
+      normalizedMessage.includes("incorrect password") ||
+      normalizedMessage.includes("user not found")
+    ) {
+      return "Invalid credentials";
+    }
+
+    return rawMessage || "Login failed";
   }
 
   // Handlers
@@ -146,6 +159,11 @@ const useLogin = () => {
           username: username,
           password: password,
           notificationToken: notificationToken,
+        },
+        context: {
+          headers: {
+            authorization: "",
+          },
         },
       });
 

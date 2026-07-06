@@ -9,6 +9,7 @@ import { NO_ORDER_PROMPT, ORDER_DISPATCH_TYPE } from "@/lib/utils/constants";
 // Interface
 import { IOrderTabsComponentProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 // Hook
 import { useApptheme } from "@/lib/context/theme.context";
@@ -26,6 +27,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   // Hooks
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
+  const tabBarHeight = useBottomTabBarHeight();
   const {
     loading,
     error,
@@ -130,7 +132,10 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         ) : orders?.length > 0 ? (
           <FlatList
             className="w-full"
-            contentContainerStyle={style.listContent}
+            contentContainerStyle={[
+              style.listContent,
+              { paddingBottom: tabBarHeight + 24 },
+            ]}
             keyExtractor={(item) => item._id}
             data={orders}
             showsVerticalScrollIndicator={false}
