@@ -1,13 +1,10 @@
 // Core
-import { useState } from 'react';
-
-// Prime React
-import { FilterMatchMode } from 'primereact/api';
+import { useEffect, useState } from 'react';
 
 // Interface and Types
 import {
   IQueryResult,
-  IStaffGQLResponse,
+  IStaffPaginatedGQLResponse,
   IStaffMainComponentsProps,
   IStaffResponse,
 } from '@/lib/utils/interfaces';
@@ -16,13 +13,13 @@ import {
 import Table from '@/lib/ui/useable-components/table';
 import { STAFF_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/staff-columns';
 import StaffTableHeader from '../header/table-header';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 // Utilities and Data
 import { IActionMenuItem } from '@/lib/utils/interfaces/action-menu.interface';
-import { generateDummyStaff } from '@/lib/utils/dummy';
 
 // GraphQL
-import { GET_STAFFS } from '@/lib/api/graphql/queries/staff';
+import { GET_STAFFS_PAGINATED } from '@/lib/api/graphql/queries/staff';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import CustomDialog from '@/lib/ui/useable-components/delete-dialog';
 import useToast from '@/lib/hooks/useToast';
@@ -44,29 +41,34 @@ export default function StaffMain({
     []
   );
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const [filters, setFilters] = useState({
-    global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
 
   // Query
-  const { data, loading } = useQueryGQL(GET_STAFFS, {
-    fetchPolicy: 'cache-and-network',
-  }) as IQueryResult<IStaffGQLResponse | undefined, undefined>;
+  const { data, loading } = useQueryGQL(GET_STAFFS_PAGINATED, {
+    page: currentPage,
+    limit: rowsPerPage,
+    search: debouncedSearch || undefined,
+  }, {
+    fetchPolicy: 'network-only',
+  }) as IQueryResult<IStaffPaginatedGQLResponse | undefined, undefined>;
 
   // For global search
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const _filters = { ...filters };
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
+    setGlobalFilterValue(e.target.value);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   //Mutation
   const [mutateDelete, { loading: mutationLoading }] = useMutation(
     DELETE_STAFF,
     {
-      refetchQueries: [{ query: GET_STAFFS }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 
@@ -84,7 +86,6 @@ export default function StaffMain({
       label: t('Delete'),
       command: (data?: IStaffResponse) => {
         if (data) {
-          console.log(data);
           setDeleteId(data._id);
         }
       },
@@ -100,12 +101,18 @@ export default function StaffMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={data?.staffs || (loading ? generateDummyStaff() : [])}
-        filters={filters}
+        data={data?.staffsPaginated?.data || []}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         loading={loading}
         columns={STAFF_TABLE_COLUMNS({ menuItems })}
+        totalRecords={data?.staffsPaginated?.totalCount ?? 0}
+        currentPage={data?.staffsPaginated?.currentPage ?? currentPage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
       <CustomDialog
         loading={mutationLoading}
@@ -116,8 +123,7 @@ export default function StaffMain({
         onConfirm={() => {
           mutateDelete({
             variables: { id: deleteId },
-            onCompleted: (res) => {
-              console.log('Delete Response:', res);
+            onCompleted: () => {
               showToast({
                 type: 'success',
                 title: t('Success'),
@@ -126,8 +132,7 @@ export default function StaffMain({
               });
               setDeleteId('');
             },
-            onError: (e) => {
-              console.error('Delete Error:', e);
+            onError: () => {
               showToast({
                 type: 'error',
                 title: t('Error'),

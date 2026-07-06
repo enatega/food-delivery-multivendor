@@ -8,9 +8,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ISeverityStyles } from "../interfaces/toast.interface";
 
-
-export const ENV: "DEV" | "STAGE" | "PROD" = "STAGE";
-
 // Prices
 export const APP_NAME = "Enatega";
 export const LOGO_URL = "/";

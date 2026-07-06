@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { memo } from 'react';
 import { Card } from 'primereact/card';
 import { Avatar } from 'primereact/avatar';
 import { IUserResponse } from '@/lib/utils/interfaces/users.interface';
@@ -30,4 +30,4 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
   return <Card header={header} className="shadow-sm border  rounded-xl"></Card>;
 };
 
-export default UserCard;
+export default memo(UserCard);

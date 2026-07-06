@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { PermissionsAndroid, Platform } from "react-native";
 
 // Hooks
@@ -9,7 +9,7 @@ import useOrders from "./useOrders";
 import { IOrder } from "../utils/interfaces/order.interface";
 
 // Methods
-import { printAsync, selectPrinterAsync } from "../utils/methods/print";
+import { selectPrinterAsync } from "../utils/methods/print";
 
 // Context
 import { ConfigurationContext } from "../context/global/configuration.context";
@@ -22,6 +22,13 @@ export default function usePrintOrder() {
   const configuration = useContext(ConfigurationContext);
   const { printer, setPrinter } = useContext(Restaurant.Context);
   const { loading, error, data } = useOrders();
+  const ordersById = useMemo(
+    () =>
+      Object.fromEntries(
+        (data?.restaurantOrders ?? []).map((order: IOrder) => [order._id, order]),
+      ) as Record<string, IOrder>,
+    [data?.restaurantOrders],
+  );
 
   // States
   const [status, setStatus] = useState("Idle");
@@ -64,7 +71,6 @@ export default function usePrintOrder() {
       });
       setStatus(`Printed successfully`);
     } catch (err: any) {
-      console.log(err);
       setStatus("Print failed: " + err.message);
     }
   };
@@ -99,13 +105,13 @@ export default function usePrintOrder() {
           return false;
         }
 
-        /**
-         * Please use some kind of get-by-id API to fetch the order details
-         * Current approach is very unoptmized and will down drastically if store order exceeds certain number.
-         */
-        const order = data.restaurantOrders.find(
-          (order: IOrder) => order._id === id
-        );
+        const order = ordersById[id];
+        if (!order) {
+          FlashMessageComponent({
+            message: "Order not found for printing.",
+          });
+          return false;
+        }
 
         await printReceipt({
           ...order,
@@ -114,7 +120,6 @@ export default function usePrintOrder() {
         return true;
       }
     } catch (err) {
-      console.log({ err });
       FlashMessageComponent({
         message:
           err?.message || "Something went wrong while printing the receipt.",

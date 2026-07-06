@@ -46,7 +46,7 @@ export default function RestaurantStats({
       ending_date: dateFilter?.endDate,
     },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       debounceMs: 300,
     }
   ) as IQueryResult<

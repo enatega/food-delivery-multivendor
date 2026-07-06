@@ -601,7 +601,6 @@
   "Store has been added successfully": "Магазин успешно добавлен",
   "New Store": "Новый магазин",
   "Create Store": "Создать магазин",
-  "Store Creation Failed - Please select a vendor.": "Не удалось создать магазин - Выберите продавца.",
   "Store Creation  Failed": "Не удалось создать магазин",
   "Save & Next": "Сохранить и далее",
   "Add Timings": "Добавить часы",
@@ -654,7 +653,6 @@
   "Transferred": "Переведено",
   "Requested": "Запрошено",
   "Zone has been": "Зона была",
-  "Something went wrong. Please try again": "Что-то пошло не так. Попробуйте снова",
   "Something went wrong, Please try again": "Что-то пошло не так, попробуйте снова",
   "Add Zone": "Добавить зону",
   "Delete Zone": "Удалить зону",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "Ставка комиссии обновлена для",
   "Error updating commission rate for": "Ошибка при обновлении ставки комиссии для",
   "Error Fetching Restaurants": "Ошибка при получении ресторанов",
-  "An error occurred while fetching restaurants. Please try again later.": "Произошла ошибка при получении ресторанов. Попробуйте позже.",
   "Set Commission Rate": "Установить ставку комиссии",
   "Amplitude Configuration Updated": "Конфигурация Amplitude обновлена",
   "Web Amplitude API Key": "Ключ API Web Amplitude",
@@ -793,7 +790,6 @@
   "Order Time": "Время заказа",
   "By signing up, you agree to our": "Регистрируясь, вы соглашаетесь с нашими",
   "and": "и",
-  "We have sent OTP code to john@email.com": "Мы отправили код OTP на john@email.com",
   "Please check your inbox": "Пожалуйста, проверьте ваш почтовый ящик",
   "Valid for 1min": "Действителен 1 минуту",
   "Resend OTP": "Отправить OTP повторно",
@@ -1113,5 +1109,9 @@
     "weak": "Слабый",
     "medium": "Средний",
     "strong": "Сильный"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Не удалось создать магазин - Выберите продавца.",
+  "Something went wrong - Please try again": "Что-то пошло не так. Попробуйте снова",
+  "An error occurred while fetching restaurants - Please try again later": "Произошла ошибка при получении ресторанов. Попробуйте позже.",
+  "We have sent OTP code to your email": "Мы отправили код OTP на john@email.com"
 }

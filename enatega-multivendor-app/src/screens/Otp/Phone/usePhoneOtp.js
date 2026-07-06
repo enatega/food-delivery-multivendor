@@ -7,6 +7,7 @@ import { theme } from '../../../utils/themeColors'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import UserContext from '../../../context/User'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import AuthContext from '../../../context/Auth'
 
 import useEnvVars from '../../../../environment'
 
@@ -32,7 +33,8 @@ const usePhoneOtp = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [seconds, setSeconds] = useState(30)
-  const { name, phone, screen } = route?.params || {}
+  const { name, phone, screen, token } = route?.params || {}
+  const { setTokenAsync } = useContext(AuthContext)
 
   function onError(error) {
     if (error.networkError) {
@@ -64,11 +66,14 @@ const usePhoneOtp = () => {
     }
   }
 
-  function onUpdateUserCompleted(data) {
+  async function onUpdateUserCompleted(data) {
     FlashMessage({
       message: t('numberVerified')
     })
-    if (!profile?.name) {
+    if (token) {
+      await setTokenAsync(token)
+      navigation.navigate('Main')
+    } else if (!profile?.name) {
       navigation.navigate('Profile', { editName: true })
     } else if (screen === 'Checkout') {
       navigation.navigate('Checkout')
@@ -98,13 +103,14 @@ const usePhoneOtp = () => {
 
   const onCodeFilled = async (otp_code) => {
     if (configuration?.skipMobileVerification) {
-      mutateUser({
+      await mutateUser({
         variables: {
           name: name ?? profile?.name,
           phone: phone ?? profile?.phone,
           phoneIsVerified: true
         }
       })
+      return
     }
 
     const { data } = await verifyOTP({
@@ -115,7 +121,7 @@ const usePhoneOtp = () => {
     })
 
     if (data?.verifyOtp) {
-      mutateUser({
+      await mutateUser({
         variables: {
           name: name ?? profile?.name,
           phone: phone ?? profile?.phone,
@@ -168,7 +174,7 @@ const usePhoneOtp = () => {
     if (!configuration.skipMobileVerification) {
       onSendOTPHandler()
     }
-  }, [configuration,  phone])
+  }, [configuration, phone])
 
   useEffect(() => {
     let timer = null

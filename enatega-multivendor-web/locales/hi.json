@@ -412,7 +412,6 @@
   "please_enter_valid_otp_message": "कृपया एक वैध OTP दर्ज करें",
   "verify_your_mobile_number_label": "अपना फ़ोन नंबर सत्यापित करें",
   "otp_valid_for_10_minutes_label": "10 मिनट के लिए वैध",
-  "your@email.com": "your@email.com",
   "continue_label": "जारी रखें",
   "resend_otp_label": "OTP पुनः भेजें",
   "login_label": "लॉगिन",
@@ -651,7 +650,6 @@
   "The_minimum_amount_of_(": " (",
   ")_for_your_order_has_not_been_reached": ") की न्यूनतम राशि आपके ऑर्डर के लिए नहीं पहुंची गई है।",
   "missing_address": "पता गायब",
-  "Select_your_address.": "अपना पता चुनें।",
   "DeliveryTime": "डिलीवरी समय",
   "SalesTax": "बिक्री कर",
   "Contact": "संपर्क",
@@ -917,6 +915,8 @@
   "active_orders_message": "आपके पास वर्तमान में {{count}} सक्रिय {{orderText}} हैं। आप अपना खाता तभी हटा सकते हैं जब आपकी सभी ऑर्डर पूरी हो जाएँ।",
   "order": "ऑर्डर",
   "ok": "ठीक है",
-   "loading_orders": "ऑर्डर्स लोड हो रहे हैं...",
-  "show_more_orders": "अधिक ऑर्डर देखें"
+  "loading_orders": "ऑर्डर्स लोड हो रहे हैं...",
+  "show_more_orders": "अधिक ऑर्डर देखें",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "अपना पता चुनें।"
 }

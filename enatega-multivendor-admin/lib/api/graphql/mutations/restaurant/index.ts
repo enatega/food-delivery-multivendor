@@ -24,7 +24,6 @@ export const CREATE_RESTAURANT = gql`
       shopType
       orderId
       logo
-      password
       location {
         coordinates
       }
@@ -98,7 +97,6 @@ export const EDIT_RESTAURANT = gql`
       slug
       address
       username
-      password
       location {
         coordinates
       }
@@ -140,7 +138,6 @@ export const DUPLICATE_RESTAURANT = gql`
       shopType
       orderId
       logo
-      password
       location {
         coordinates
       }

@@ -16,6 +16,7 @@ import LoginInForSavedAddresses from "@/lib/ui/useable-components/LoginForSavedA
 import AuthModal from "../../authentication";
 import { useAuth } from "@/lib/context/auth/auth.context";
 import { useTranslations } from "next-intl";
+import { hasValidAuthToken } from "@/lib/utils/methods/auth";
 
 const Start: React.FC = () => {
   // Hooks
@@ -26,9 +27,7 @@ const Start: React.FC = () => {
     useAuth();
 
   const handleModalToggle = () => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-    if (!token || !userId) {
+    if (!hasValidAuthToken()) {
       setIsAuthModalVisible((prev) => {
         if (prev) {
           setActivePanel(0);

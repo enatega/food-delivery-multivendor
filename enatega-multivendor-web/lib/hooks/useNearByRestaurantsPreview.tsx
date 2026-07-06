@@ -10,6 +10,11 @@ import {
 // context
 import { useUserAddress } from "../context/address/address.context";
 
+// Stable empty-array reference so `queryData` keeps a constant identity while
+// data is unloaded. Returning a fresh `[]` each render churns downstream
+// `useMemo`/effect dependencies and can trigger render loops under React 19.
+const EMPTY_RESTAURANTS: IRestaurant[] = [];
+
 const useNearByRestaurantsPreview = (
   enabled = true,
   page = 1,
@@ -35,7 +40,7 @@ const useNearByRestaurantsPreview = (
     });
 
   const queryData: IRestaurant[] =
-    data?.nearByRestaurantsPreview?.restaurants ?? [];
+    data?.nearByRestaurantsPreview?.restaurants ?? EMPTY_RESTAURANTS;
 
   const groceriesData: IRestaurant[] =
     queryData?.filter(

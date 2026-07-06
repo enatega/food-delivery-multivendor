@@ -4,7 +4,7 @@ import { ICuisine } from '@/lib/utils/interfaces/cuisine.interface';
 
 // Components
 import ActionMenu from '../../action-menu';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Hooks
 import { useMemo } from 'react';

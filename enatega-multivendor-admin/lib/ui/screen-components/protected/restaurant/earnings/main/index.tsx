@@ -9,7 +9,6 @@ import {
   IEarningsRestaurantMainComponentProps,
 } from '@/lib/utils/interfaces/earnings.interface';
 import { EARNING_COLUMNS } from '@/lib/ui/useable-components/table/columns/earning-column';
-import { generateSkeletonTransactionHistory } from '@/lib/utils/dummy';
 import EarningRestaurantTableHeader from '../header/table-header';
 import { UserTypeEnum } from '@/lib/utils/interfaces';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
@@ -133,8 +132,7 @@ export default function EarningsRestaurantMain({
           />
         }
         data={
-          data?.earnings?.data?.earnings ||
-          (loading ? generateSkeletonTransactionHistory() : [])
+          data?.earnings?.data?.earnings || []
         }
         filters={filters}
         setSelectedData={setSelectedEarnings}

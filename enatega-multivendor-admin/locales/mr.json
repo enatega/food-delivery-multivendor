@@ -601,7 +601,6 @@
   "last_login": "शेवटचा लॉगिन",
   "New Store": "नवीन दुकान",
   "Create Store": "दुकान तयार करा",
-  "Store Creation Failed - Please select a vendor.": "दुकान निर्मिती अयशस्वी - कृपया व्हेंडर निवडा.",
   "Store Creation  Failed": "दुकान निर्मिती अयशस्वी",
   "Save & Next": "साठवा आणि पुढे",
   "Add Timings": "वेळ जोडा",
@@ -654,7 +653,6 @@
   "Transferred": "हस्तांतरित",
   "Requested": "विनंती केली",
   "Zone has been": "झोन",
-  "Something went wrong. Please try again": "काहीतरी चुकले. पुन्हा प्रयत्न करा",
   "Something went wrong, Please try again": "काहीतरी चुकले, पुन्हा प्रयत्न करा",
   "Add Zone": "झोन जोडा",
   "Delete Zone": "झोन हटवा",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "कमिशन दर अपडेट झाले",
   "Error updating commission rate for": "कमिशन दर अपडेट करताना त्रुटी",
   "Error Fetching Restaurants": "रेस्टॉरंट्स मिळवताना त्रुटी",
-  "An error occurred while fetching restaurants. Please try again later.": "रेस्टॉरंट्स मिळवताना त्रुटी आली. कृपया नंतर पुन्हा प्रयत्न करा.",
   "Set Commission Rate": "कमिशन दर सेट करा",
   "Amplitude Configuration Updated": "ॲम्प्लिट्यूड कॉन्फिगरेशन अपडेट झाले",
   "Web Amplitude API Key": "वेब ॲम्प्लिट्यूड API की",
@@ -793,7 +790,6 @@
   "Order Time": "ऑर्डर वेळ",
   "By signing up, you agree to our": "साइन अप करून, तुम्ही आमच्या",
   "and": "आणि",
-  "We have sent OTP code to john@email.com": "आम्ही OTP कोड john@email.com ला पाठवला आहे",
   "Please check your inbox": "कृपया तुमचे इनबॉक्स तपासा",
   "Valid for 1min": "१ मिनिटांसाठी वैध",
   "Resend OTP": "OTP पुन्हा पाठवा",
@@ -1113,5 +1109,9 @@
     "weak": "कमजोर",
     "medium": "मध्यम",
     "strong": "मजबूत"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "दुकान निर्मिती अयशस्वी - कृपया व्हेंडर निवडा.",
+  "Something went wrong - Please try again": "काहीतरी चुकले. पुन्हा प्रयत्न करा",
+  "An error occurred while fetching restaurants - Please try again later": "रेस्टॉरंट्स मिळवताना त्रुटी आली. कृपया नंतर पुन्हा प्रयत्न करा.",
+  "We have sent OTP code to your email": "आम्ही OTP कोड john@email.com ला पाठवला आहे"
 }

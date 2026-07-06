@@ -1,9 +1,7 @@
 "use client";
 
-import getEnv from "@/environment";
 // GQL
 import { GET_CONFIG } from "@/lib/api/graphql/queries";
-import { ENV } from "@/lib/utils/constants";
 
 // Interfaces
 import { IConfigProps } from "@/lib/utils/interfaces";
@@ -16,6 +14,8 @@ import { Libraries } from "@react-google-maps/api";
 import React, { ReactNode, useContext } from "react";
 
 const ConfigurationContext = React.createContext({} as IConfigProps);
+const GOOGLE_WEB_CLIENT_ID_REGEX =
+  /^[a-zA-Z0-9-]+\.apps\.googleusercontent\.com$/;
 
 export const ConfigurationProvider = ({
   children,
@@ -23,16 +23,17 @@ export const ConfigurationProvider = ({
   children: ReactNode;
 }) => {
   const { loading, data, error } = useQuery(GET_CONFIG);
-
-
-  console.log("data : ", data)
   const configuration =
     loading || error || !data.configuration ?
       { currency: "", currencySymbol: "", deliveryRate: 0, costType: "perKM" }
     : data.configuration;
 
   
-  const GOOGLE_CLIENT_ID = configuration.webClientID;
+  const GOOGLE_CLIENT_ID = GOOGLE_WEB_CLIENT_ID_REGEX.test(
+    configuration.webClientID ?? "",
+  )
+    ? configuration.webClientID
+    : "not_found";
   const STRIPE_PUBLIC_KEY = configuration.publishableKey;
   const PAYPAL_KEY = configuration.clientId;
   const GOOGLE_MAPS_KEY = configuration.googleApiKey;
@@ -58,8 +59,7 @@ export const ConfigurationProvider = ({
   const FIREBASE_MEASUREMENT_ID = configuration?.measurementId;
   const FIREBASE_VAPID_KEY = configuration?.vapidKey;
   const FIREBASE_AUTH_DOMAIN = configuration?.authDomain;
-
-  const { SERVER_URL } = getEnv(ENV);
+  const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL ?? "";
 
   return (
     <ConfigurationContext.Provider

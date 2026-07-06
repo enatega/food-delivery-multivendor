@@ -51,7 +51,7 @@ const RestaurantDuplicateDialog = ({
   // API
   const vendorResponse = useQueryGQL(
     GET_VENDORS,
-    { fetchPolicy: 'network-only' },
+    { fetchPolicy: 'cache-and-network' },
     {
       debounceMs: 300,
     }

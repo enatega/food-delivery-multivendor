@@ -13,6 +13,15 @@ export interface ICouponRestaurantGQLResponse {
   restaurantCoupons: ICouponRestaurantResponse[];
 }
 
+export interface ICouponRestaurantPaginatedGQLResponse {
+  restaurantCouponsPaginated: {
+    data: ICouponRestaurantResponse[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 export interface ICouponRestaurantHeaderProps extends IGlobalComponentProps {
   setIsAddCouponVisible: (visible: boolean) => void;
 }

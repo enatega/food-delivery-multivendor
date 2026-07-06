@@ -1,7 +1,7 @@
 "use client";
 
 // core
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
 

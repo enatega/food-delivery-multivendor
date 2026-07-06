@@ -1,46 +1,34 @@
 // Expo
 import * as Notifications from "expo-notifications";
-import { Href, useRouter } from "expo-router";
+import { Href, Redirect, useRouter } from "expo-router";
 
 // Core
-import { useCallback, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Context
-import { useLocationContext } from "@/lib/context/global/location.context";
+import { AuthContext } from "@/lib/context/global/auth.context";
 
 // API
 import { RIDER_ORDERS } from "@/lib/apollo/queries";
 
 // Constant
-import { RIDER_TOKEN, ROUTES } from "@/lib/utils/constants";
+import { ROUTES } from "@/lib/utils/constants";
 
-// Service
-import setupApollo from "@/lib/apollo";
+// Apollo
+import { useApolloClient } from "@apollo/client";
 
 // Interfaces
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
-import { useUserContext } from "@/lib/context/global/user.context";
 
 function App() {
-  const client = setupApollo();
+  const client = useApolloClient();
   const router = useRouter();
-  const { locationPermission } = useLocationContext();
-  const { dataProfile } = useUserContext();
-  // Handler
-
-  const init = async () => {
-    const token = await AsyncStorage.getItem(RIDER_TOKEN);
-    if (token) {
-      router.replace(ROUTES.home as Href);
-      return;
-    }
-    router.replace(ROUTES.login as Href);
-  };
+  const { token, isAuthReady } = useContext(AuthContext);
 
   // Notification Handler
-  const registerForPushNotification = async () => {
+  const registerForPushNotification = useCallback(async () => {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -54,14 +42,14 @@ function App() {
       Notifications.setNotificationHandler({
         handleNotification: async () => {
           return {
-            shouldShowAlert: false, // Prevent the app from closing
+            shouldShowAlert: false,
             shouldPlaySound: false,
             shouldSetBadge: false,
           };
         },
       });
     }
-  };
+  }, []);
 
   const handleNotification = useCallback(
     async (response: Notifications.NotificationResponse) => {
@@ -88,7 +76,7 @@ function App() {
         router.setParams({ itemId: _id, order });
       }
     },
-    []
+    [client, router]
   );
 
   // Use Effect
@@ -102,25 +90,26 @@ function App() {
   useEffect(() => {
     registerForPushNotification();
 
-    // Register a notification handler that will be called when a notification is received.
     Notifications.setNotificationHandler({
       handleNotification: async () => {
         return {
-          shouldShowAlert: false, // Prevent the app from closing
+          shouldShowAlert: false,
           shouldPlaySound: false,
           shouldSetBadge: false,
         };
       },
     });
-  }, []);
+  }, [registerForPushNotification]);
 
-  useEffect(() => {
-    init();
-  }, [locationPermission, router, dataProfile]);
+  if (!isAuthReady) {
+    return <></>;
+  }
 
-  // return <Redirect href="/(tabs)/home/orders" />;
-  // return <Redirect href="/login" />;
-  return <></>;
+  if (!token) {
+    return <Redirect href={ROUTES.login as Href} />;
+  }
+
+  return <Redirect href={ROUTES.home as Href} />;
 }
 
 export default App;

@@ -1,4 +1,5 @@
-{"checking_for_active_orders": "सक्रिय ऑर्डर तपासत आहोत",
+{
+  "checking_for_active_orders": "सक्रिय ऑर्डर तपासत आहोत",
   "no_active_orders_found": "कोणत्याही सक्रिय ऑर्डर आढळल्या नाहीत",
   "active_orders_found": "सक्रिय ऑर्डर आढळल्या",
   "checking_active_orders_message": "कृपया थांबा, आम्ही तुमच्या सक्रिय ऑर्डर तपासत आहोत...",
@@ -421,7 +422,6 @@
   "please_enter_valid_otp_message": "कृपया वैध OTP प्रविष्ट करा",
   "verify_your_mobile_number_label": "तुमचा फोन नंबर सत्यापित करा",
   "otp_valid_for_10_minutes_label": "10 मिनिटांसाठी वैध",
-  "your@email.com": "your@email.com",
   "continue_label": "सुरू ठेवा",
   "resend_otp_label": "OTP पुन्हा पाठवा",
   "login_label": "लॉगिन",
@@ -660,7 +660,6 @@
   "The_minimum_amount_of_(": "ची किमान रक्कम (",
   ")_for_your_order_has_not_been_reached": ") तुमच्या ऑर्डरसाठी गाठली गेली नाही.",
   "missing_address": "पत्ता गहाळ",
-  "Select_your_address.": "तुमचा पत्ता निवडा.",
   "DeliveryTime": "डिलिव्हरी वेळ",
   "SalesTax": "विक्री कर",
   "Contact": "संपर्क",
@@ -917,5 +916,7 @@
   "Saturday": "शनिवार",
   "Sunday": "रविवार",
   "loading_orders": "ऑर्डर लोड करत आहे...",
-  "show_more_orders": "अधिक ऑर्डर दाखवा"
+  "show_more_orders": "अधिक ऑर्डर दाखवा",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "तुमचा पत्ता निवडा."
 }

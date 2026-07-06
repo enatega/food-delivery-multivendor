@@ -6,8 +6,7 @@ interface StratingImageProps {
 image:string | StaticImageData
 }
 
-import  Image  from 'next/image'
-
+import Image from '@/lib/ui/useable-components/safe-image';
 const StartingImage:React.FC<StratingImageProps> = ({image}) => {
   return (
     <div className='w-full h-[200px] md:h-[500px]'>

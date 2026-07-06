@@ -1,9 +1,5 @@
 // React Native Async Storage
 
-// Expo
-import Constants from "expo-constants";
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
 import { Href, router } from "expo-router";
 
 // Contexts
@@ -19,7 +15,10 @@ import {
 import { FlashMessageComponent } from "../ui/useable-components";
 
 // Interfaces
-import { IRiderDefaultCredsResponse, IRiderLoginCompleteResponse, IRiderLoginResponse } from "../utils/interfaces/auth.interface";
+import {
+  IRiderDefaultCredsResponse,
+  IRiderLoginResponse,
+} from "../utils/interfaces/auth.interface";
 
 // Constants
 import { ROUTES } from "../utils/constants";
@@ -54,20 +53,23 @@ const useLogin = () => {
 async function onLoginCompleted({ riderLogin }: { riderLogin: IRiderLoginResponse }) {
   setIsLoading(false);
   if (riderLogin) {
-    console.log("riderLogin", riderLogin);
-    await setItem("rider-id", riderLogin.userId);
+    // Store the token (and clear the Apollo cache) before the rider-id, since
+    // writing rider-id un-skips the profile/orders queries. Doing it in this
+    // order avoids clearStore() cancelling those queries mid-flight, which
+    // left assignedOrders stuck at [] until the app was restarted.
     await setTokenAsync(riderLogin.token);
+    await setItem("rider-id", riderLogin.userId);
     router.replace(ROUTES.home as Href);
-  } 
+  }
 }
 
 // For default credentials query
 function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDefaultCredsResponse }) {
-  if (lastOrderCreds?.riderUsername && lastOrderCreds?.riderPassword) {
-    console.log("lastOrderCreds", lastOrderCreds);
+  // Only prefill the username; never fetch or auto-fill the password.
+  if (lastOrderCreds?.riderUsername) {
     setCreds({
       username: lastOrderCreds.riderUsername,
-      password: lastOrderCreds.riderPassword,
+      password: "",
     });
   }
 }
@@ -75,12 +77,14 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
   function onError(err: ApolloError) {
     const error = err as ApolloError;
     setIsLoading(false);
-    FlashMessageComponent({
-      message:
-        error?.graphQLErrors[0]?.message ??
-        error?.networkError?.message ??
-        t("Something went wrong"),
-    });
+    // Show a uniform credential error instead of the backend's message so the UI
+    // can't distinguish "user not found" from "wrong password" (enumeration).
+    const message = error?.graphQLErrors?.length
+      ? t("Invalid username or password")
+      : error?.networkError
+        ? t("Unable to connect. Please try again.")
+        : t("Something went wrong");
+    FlashMessageComponent({ message });
   }
   
   const onLogin = async (username: string, password: string) => {
@@ -98,10 +102,8 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
           timeZone,
         },
       });
-    } catch (err) {
-      const error = err as ApolloError;
-      console.log("Login error:", error);
-      FlashMessageComponent({ message: error.message || "Login failed. Please try again." });
+    } catch {
+      FlashMessageComponent({ message: t("Something went wrong") });
     } finally {
       setIsLoading(false);
     }

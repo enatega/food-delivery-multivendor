@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "Iltimos, amaldagi OTP ni kiriting",
   "verify_your_mobile_number_label": "Telefon raqamingizni tasdiqlang",
   "otp_valid_for_10_minutes_label": "10 daqiqa davomida amal qiladi",
-  "your@email.com": "your@email.com",
   "continue_label": "Davom etish",
   "resend_otp_label": "OTP ni qayta yuborish",
   "login_label": "Kirish",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "Minimal miqdor (",
   ")_for_your_order_has_not_been_reached": ") buyurtmangiz uchun yetmadi.",
   "missing_address": "Manzil yo'q",
-  "Select_your_address.": "Manzilingizni tanlang.",
   "DeliveryTime": "Yetkazib berish vaqti",
   "SalesTax": "Sotish solig'i",
   "Contact": "Aloqa",
@@ -918,5 +916,7 @@
   "Saturday": "Shanba",
   "Sunday": "Yakshanba",
   "loading_orders": "Buyurtmalar yuklanmoqda...",
-  "show_more_orders": "Ko'proq buyurtmalarni ko'rsatish"
+  "show_more_orders": "Ko'proq buyurtmalarni ko'rsatish",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "Manzilingizni tanlang."
 }

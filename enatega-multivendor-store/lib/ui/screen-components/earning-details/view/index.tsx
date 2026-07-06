@@ -52,7 +52,6 @@ export default function EarningDetailsMain({
     data: storeEarningsGraphData,
   } = useQuery(STORE_EARNINGS_GRAPH, {
     onError: (err) => {
-      console.error(err);
       showMessage({
         message:
           err.graphQLErrors[0].message ||

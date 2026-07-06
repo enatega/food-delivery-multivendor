@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+// Polyfill global.crypto.getRandomValues early so secure random is available
+// app-wide (e.g. device nonce generation). Must be imported before first use.
+import "react-native-get-random-values";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
-// import * as Sentry from "sentry-expo";
 import * as Sentry from "@sentry/react-native";
 
 import FlashMessage from "react-native-flash-message";
@@ -41,7 +43,6 @@ initSentry();
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen?.preventAutoHideAsync();
 
-
 function RootLayout() {
   // Hooks
   const [loaded] = useFonts({
@@ -63,11 +64,28 @@ function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
-  ErrorUtils.setGlobalHandler((error, isFatal) => {
-    console.log("Global Error Caught:", { error, isFatal });
-  });
+
   useEffect(() => {
     grantCameraAndGalleryPermissions();
+  }, []);
+
+  useEffect(() => {
+    const previousHandler = ErrorUtils.getGlobalHandler?.();
+
+    ErrorUtils.setGlobalHandler((error, isFatal) => {
+      console.log("Global Error Caught:", { error, isFatal });
+      Sentry.captureException(error);
+
+      if (previousHandler) {
+        previousHandler(error, isFatal);
+      }
+    });
+
+    return () => {
+      if (previousHandler) {
+        ErrorUtils.setGlobalHandler(previousHandler);
+      }
+    };
   }, []);
 
   if (!loaded) {

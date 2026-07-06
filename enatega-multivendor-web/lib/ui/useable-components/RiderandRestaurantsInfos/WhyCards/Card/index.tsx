@@ -1,7 +1,6 @@
 import React from "react";
 import { Cards } from "@/lib/utils/interfaces/Rider-restaurant.interface";
-import Image from "next/image";
-
+import Image from '@/lib/ui/useable-components/safe-image';
 const Card: React.FC<Cards> = ({ image, heading, text }) => {
   return (
     <div

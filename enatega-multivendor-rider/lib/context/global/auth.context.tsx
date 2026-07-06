@@ -1,10 +1,14 @@
-// Core
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Interfaces§
-import { RIDER_TOKEN } from "@/lib/utils/constants";
+import { RIDER_ID, RIDER_TOKEN } from "@/lib/utils/constants";
+import { getSecureItem } from "@/lib/services/secure-storage";
+import {
+  removeSecureItem,
+  setSecureItem,
+} from "@/lib/services/secure-storage";
+import { removeItem } from "@/lib/services/async-storage";
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
 import { useRouter } from "expo-router";
 
@@ -21,20 +25,53 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 
   // State
   const [token, setToken] = useState<string>("");
+  const [isAuthReady, setIsAuthReady] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrateAuth = async () => {
+      try {
+        const storedToken = await getSecureItem(RIDER_TOKEN);
+
+        if (isMounted && storedToken) {
+          setToken(storedToken);
+        }
+      } finally {
+        if (isMounted) {
+          setIsAuthReady(true);
+        }
+      }
+    };
+
+    hydrateAuth();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const setTokenAsync = async (token: string) => {
-    await AsyncStorage.setItem(RIDER_TOKEN, token);
-    client.clearStore();
+    await setSecureItem(RIDER_TOKEN, token);
+    await client.clearStore();
     setToken(token);
   };
 
   const logout = async () => {
+    setToken("");
+
     try {
-      // Clear storage first to ensure logout happens immediately
-      await AsyncStorage.multiRemove([RIDER_TOKEN, "rider-id"]);
+      await Promise.all([
+        removeSecureItem(RIDER_TOKEN),
+        removeItem(RIDER_ID),
+      ]);
 
-      // Navigate to login immediately after clearing storage
+      try {
+        await client.clearStore();
+      } catch (cacheError) {
+        console.log("Error clearing Apollo cache during logout:", cacheError);
+      }
 
-      // Stop location updates if they were started
       try {
         const hasLocationUpdates =
           await Location.hasStartedLocationUpdatesAsync("RIDER_LOCATION");
@@ -44,20 +81,16 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       } catch (locationError) {
         console.log("Error stopping location updates:", locationError);
       }
-
-      // Reset token state
-      setToken("");
-      router.replace("/login");
     } catch (e) {
-      // FlashMessageComponent({
-      //   message: `Logout failed - ${e?.message ?? "Unknown Error"}`,
-      // });
       console.log("Logout Error: ", e);
+    } finally {
+      router.replace("/login");
     }
   };
 
   const values: IAuthContext = {
     token: token ?? "",
+    isAuthReady,
     logout,
     setTokenAsync,
   };

@@ -1,4 +1,6 @@
-import { Tabs, usePathname } from "expo-router";
+import { AuthContext } from "@/lib/context/global/auth.context";
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
+import { Redirect, Tabs, usePathname } from "expo-router";
 import { Platform } from "react-native";
 
 // UI Components
@@ -12,7 +14,7 @@ import {
 
 // Hooks
 import { useApptheme } from "@/lib/context/global/theme.context";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const RootLayout = () => {
@@ -23,12 +25,21 @@ const RootLayout = () => {
   const pathName = usePathname();
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
+  const { token, isAuthReady } = useContext(AuthContext);
 
   useEffect(() => {
     if (pathName.startsWith("/wallet/success")) {
       setTabKey((prev) => prev + 1); // Force a re-render of the tab bar
     }
   }, [pathName]);
+
+  if (!isAuthReady) {
+    return <SpinnerComponent />;
+  }
+
+  if (!token) {
+    return <Redirect href="/login" />;
+  }
 
   return (
     <Tabs

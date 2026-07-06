@@ -6,12 +6,38 @@ export const GET_STAFFS = gql`
       _id
       name
       email
-      plainPassword
-      password
       phone
       # vehicleType
       isActive
       permissions
+    }
+  }
+`;
+
+export const GET_STAFFS_PAGINATED = gql`
+  query StaffsPaginated(
+    $page: Int
+    $limit: Int
+    $search: String
+    $isActive: Boolean
+  ) {
+    staffsPaginated(
+      page: $page
+      limit: $limit
+      search: $search
+      isActive: $isActive
+    ) {
+      data {
+        _id
+        name
+        email
+        phone
+        isActive
+        permissions
+      }
+      totalCount
+      currentPage
+      totalPages
     }
   }
 `;

@@ -28,7 +28,6 @@ import useToast from '@/lib/hooks/useToast';
 
 //GraphQL
 import { CREATE_STAFF, EDIT_STAFF } from '@/lib/api/graphql/mutations/staff';
-import { GET_STAFFS } from '@/lib/api/graphql/queries/staff';
 import { useMutation } from '@apollo/client';
 import CustomPhoneTextField from '@/lib/ui/useable-components/phone-input-field';
 import { useTranslations } from 'next-intl';
@@ -49,8 +48,8 @@ export default function StaffAddForm({
     phone: String(staff?.phone) ?? '',
     isActive: true,
     ...staff,
-    password: staff ? staff.plainPassword : '',
-    confirmPassword: staff ? staff.plainPassword : '',
+    password: '',
+    confirmPassword: '',
     permissions: staff
       ? staff.permissions?.map((p) => {
           return { label: p, code: p };
@@ -64,7 +63,8 @@ export default function StaffAddForm({
   // Mutation
   const mutation = staff ? EDIT_STAFF : CREATE_STAFF;
   const [mutate, { loading: mutationLoading }] = useMutation(mutation, {
-    refetchQueries: [{ query: GET_STAFFS }],
+    refetchQueries: 'active',
+    awaitRefetchQueries: true,
   });
 
   // Form Submission
@@ -79,12 +79,12 @@ export default function StaffAddForm({
             _id: staff ? staff._id : '',
             name: values.name,
             email: values.email,
-            password: values.password,
             phone: values.phone?.toString(),
             isActive: values.isActive,
             permissions: values.permissions.map((v) => {
               return v.code;
             }),
+            ...(values.password ? { password: values.password } : {}),
           },
         },
         onCompleted: () => {

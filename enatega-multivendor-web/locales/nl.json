@@ -1,4 +1,5 @@
-{"checking_for_active_orders": "Actieve bestellingen worden gecontroleerd",
+{
+  "checking_for_active_orders": "Actieve bestellingen worden gecontroleerd",
   "no_active_orders_found": "Geen actieve bestellingen gevonden",
   "active_orders_found": "Actieve bestellingen gevonden",
   "checking_active_orders_message": "Even geduld terwijl we je actieve bestellingen controleren...",
@@ -421,7 +422,6 @@
   "please_enter_valid_otp_message": "Voer een geldige OTP in",
   "verify_your_mobile_number_label": "Verifieer uw telefoonnummer",
   "otp_valid_for_10_minutes_label": "Geldig voor 10 minuten",
-  "your@email.com": "uw@email.com",
   "continue_label": "Doorgaan",
   "resend_otp_label": "OTP Opnieuw Verzenden",
   "login_label": "Inloggen",
@@ -660,7 +660,6 @@
   "The_minimum_amount_of_(": "Het minimumbedrag van (",
   ")_for_your_order_has_not_been_reached": ") voor uw bestelling is niet bereikt.",
   "missing_address": "Adres Ontbreekt",
-  "Select_your_address.": "Selecteer uw adres.",
   "DeliveryTime": "Bezorgtijd",
   "SalesTax": "Verkoopbelasting",
   "Contact": "Contact",
@@ -917,5 +916,7 @@
   "Saturday": "Zaterdag",
   "Sunday": "Zondag",
   "loading_orders": "Bestellingen laden...",
-  "show_more_orders": "Meer bestellingen tonen"
+  "show_more_orders": "Meer bestellingen tonen",
+  "your_email": "uw@email.com",
+  "Select_your_address_prompt": "Selecteer uw adres."
 }

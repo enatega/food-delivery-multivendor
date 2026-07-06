@@ -12,7 +12,7 @@ import {
 import Divider from "../custom-divider";
 import { ItemDetailSection } from "./item-section";
 import ClearCartModal from "../clear-cart-modal";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";

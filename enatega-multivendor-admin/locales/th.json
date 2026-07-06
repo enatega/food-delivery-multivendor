@@ -601,7 +601,6 @@
   "Store has been added successfully": "เพิ่มร้านเรียบร้อยแล้ว",
   "New Store": "ร้านใหม่",
   "Create Store": "สร้างร้าน",
-  "Store Creation Failed - Please select a vendor.": "สร้างร้านล้มเหลว - กรุณาเลือกผู้ขาย",
   "Store Creation  Failed": "สร้างร้านล้มเหลว",
   "Save & Next": "บันทึกและถัดไป",
   "Add Timings": "เพิ่มเวลา",
@@ -654,7 +653,6 @@
   "Transferred": "โอนแล้ว",
   "Requested": "ร้องขอแล้ว",
   "Zone has been": "โซนได้",
-  "Something went wrong. Please try again": "เกิดข้อผิดพลาดบางอย่าง กรุณาลองใหม่",
   "Something went wrong, Please try again": "เกิดข้อผิดพลาดบางอย่าง กรุณาลองใหม่",
   "Add Zone": "เพิ่มโซน",
   "Delete Zone": "ลบโซน",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "อัปเดตอัตราค่าคอมมิชชันสำหรับ",
   "Error updating commission rate for": "ข้อผิดพลาดในการอัปเดตอัตราค่าคอมมิชชันสำหรับ",
   "Error Fetching Restaurants": "ข้อผิดพลาดในการดึงร้านอาหาร",
-  "An error occurred while fetching restaurants. Please try again later.": "เกิดข้อผิดพลาดขณะดึงร้านอาหาร กรุณาลองใหม่ภายหลัง",
   "Set Commission Rate": "ตั้งค่าอัตราค่าคอมมิชชัน",
   "Amplitude Configuration Updated": "อัปเดตการกำหนดค่า Amplitude แล้ว",
   "Web Amplitude API Key": "คีย์ API Amplitude สำหรับเว็บ",
@@ -793,7 +790,6 @@
   "Order Time": "เวลาสั่งซื้อ",
   "By signing up, you agree to our": "การสมัครหมายความว่าคุณยอมรับ",
   "and": "และ",
-  "We have sent OTP code to john@email.com": "เราส่งรหัส OTP ไปที่ john@email.com",
   "Please check your inbox": "กรุณาตรวจสอบกล่องจดหมายของคุณ",
   "Valid for 1min": "ใช้ได้ 1 นาที",
   "Resend OTP": "ส่ง OTP ใหม่",
@@ -1113,5 +1109,9 @@
     "weak": "อ่อน",
     "medium": "ปานกลาง",
     "strong": "แข็งแรง"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "สร้างร้านล้มเหลว - กรุณาเลือกผู้ขาย",
+  "Something went wrong - Please try again": "เกิดข้อผิดพลาดบางอย่าง กรุณาลองใหม่",
+  "An error occurred while fetching restaurants - Please try again later": "เกิดข้อผิดพลาดขณะดึงร้านอาหาร กรุณาลองใหม่ภายหลัง",
+  "We have sent OTP code to your email": "เราส่งรหัส OTP ไปที่ john@email.com"
 }

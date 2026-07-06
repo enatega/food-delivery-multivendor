@@ -13,19 +13,27 @@ import {
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from '@apollo/client/link/ws';
-import { onError } from '@apollo/client/link/error'; // Import onError utility
 
 // Utility imports
 import { Subscription } from 'zen-observable-ts';
-import { APP_NAME } from '../utils/constants';
 
 
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
-import { getMetricsToken, getNonce, initializeNonce, shouldRefreshToken, storeMetricsToken } from '../utils/methods/security';
+import { clearMetricsData, getMetricsToken, getNonce, initializeNonce, shouldRefreshToken, storeMetricsToken } from '../utils/methods/security';
+import { clearStoredSessionState, getAccessToken, getStoredUser } from '../utils/methods/auth';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
+let isAuthRedirecting = false;
+
+function handleInvalidSession(): void {
+  if (typeof window === 'undefined' || isAuthRedirecting) return;
+  isAuthRedirecting = true;
+  clearStoredSessionState();
+  clearMetricsData();
+  window.location.assign('/authentication/login');
+}
 
 async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
   if (isRefreshing && refreshPromise) {
@@ -66,7 +74,6 @@ async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
   return refreshPromise;
 }
 
-
 export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   const { SERVER_URL, WS_SERVER_URL } = useConfiguration();
 
@@ -78,34 +85,56 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   });
 
   // WebSocketLink with error handling
-  const wsLink = new WebSocketLink(
-    new SubscriptionClient(`${WS_SERVER_URL}graphql`, {
+  const wsClient = new SubscriptionClient(`${WS_SERVER_URL}graphql`, {
       reconnect: true,
       timeout: 30000,
       lazy: true,
+      connectionParams: () => ({
+        authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : '',
+      }),
+    });
+  const wsLink = new WebSocketLink(wsClient);
+
+  const errorLink = new ApolloLink((operation, forward) =>
+    new Observable((observer) => {
+      let handle: Subscription | undefined;
+
+      const run = () => {
+        handle = forward(operation).subscribe({
+          next: observer.next.bind(observer),
+          complete: observer.complete.bind(observer),
+          error: (error) => {
+            const graphQLErrors = error?.graphQLErrors ?? [];
+            const hasInvalidSession = graphQLErrors.some(
+              (graphQLError: { extensions?: { code?: string } }) =>
+                graphQLError.extensions?.code === 'TOKEN_EXPIRED' ||
+                graphQLError.extensions?.code === 'INVALID_TOKEN',
+            );
+
+            if (hasInvalidSession) {
+              handleInvalidSession();
+            }
+
+            observer.error(error);
+          },
+        });
+      };
+
+      run();
+      return () => handle?.unsubscribe();
     })
   );
 
-  // Error Handling Link using ApolloLink's onError (for network errors)
-  const errorLink = onError(({ networkError, graphQLErrors }) => {
-    if (networkError) {
-      console.error('Network Error:', networkError);
-    }
-
-    if (graphQLErrors) {
-      graphQLErrors.forEach((error) =>
-        console.error('GraphQL Error:', error.message)
-      );
-    }
-  });
-
   const request = async (operation: Operation): Promise<void> => {
-    const data = localStorage.getItem(`user-${APP_NAME}`);
+    const data =
+      typeof window === 'undefined'
+        ? null
+        : getStoredUser();
     const operationName = operation.operationName;
-    let token = '';
-    if (data) {
-      token = JSON.parse(data).token;
-    }
+    const token =
+      getAccessToken() ||
+      data?.token ||
+      '';
 
     if (operationName !== 'MetricsGeneral' && shouldRefreshToken()) {
       await fetchMetricsToken(SERVER_URL);
@@ -118,7 +147,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       headers: {
         authorization: token ? `Bearer ${token}` : '',
         nonce: nonce || '',
-        'bop-auth': `Bearer ${metricsToken}` || '',
+        'bop-auth': metricsToken ? `Bearer ${metricsToken}` : '',
       },
     });
   };
@@ -160,7 +189,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       httpLink
     ),
     cache,
-    connectToDevTools: true,
+    connectToDevTools: process.env.NODE_ENV !== 'production',
   });
 
   return client;

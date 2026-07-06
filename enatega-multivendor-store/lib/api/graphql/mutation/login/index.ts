@@ -16,12 +16,3 @@ export const STORE_LOGIN = gql`
     }
   }
 `;
-
-export const DEFAULT_STORE_CREDS = gql`
-  query LastOrderCreds {
-    lastOrderCreds {
-      restaurantUsername
-      restaurantPassword
-    }
-  }
-`;

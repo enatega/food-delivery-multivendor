@@ -601,7 +601,6 @@
   "Store has been added successfully": "Toko berhasil ditambahkan",
   "New Store": "Toko Baru",
   "Create Store": "Buat Toko",
-  "Store Creation Failed - Please select a vendor.": "Pembuatan toko gagal - Pilih vendor.",
   "Store Creation  Failed": "Pembuatan toko gagal",
   "Save & Next": "Simpan & Berikutnya",
   "Add Timings": "Tambah Waktu",
@@ -654,7 +653,6 @@
   "Transferred": "Ditransfer",
   "Requested": "Diminta",
   "Zone has been": "Zona",
-  "Something went wrong. Please try again": "Ada yang salah. Coba lagi",
   "Something went wrong, Please try again": "Ada yang salah, Coba lagi",
   "Add Zone": "Tambah Zona",
   "Delete Zone": "Hapus Zona",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "Tarif komisi diperbarui untuk",
   "Error updating commission rate for": "Kesalahan memperbarui tarif komisi untuk",
   "Error Fetching Restaurants": "Kesalahan mengambil restoran",
-  "An error occurred while fetching restaurants. Please try again later.": "Terjadi kesalahan saat mengambil restoran. Coba lagi nanti.",
   "Set Commission Rate": "Atur Tarif Komisi",
   "Amplitude Configuration Updated": "Konfigurasi Amplitude diperbarui",
   "Web Amplitude API Key": "Kunci API Amplitude Web",
@@ -793,7 +790,6 @@
   "Order Time": "Waktu Pesanan",
   "By signing up, you agree to our": "Dengan mendaftar, Anda menyetujui",
   "and": "dan",
-  "We have sent OTP code to john@email.com": "Kami telah mengirim kode OTP ke john@email.com",
   "Please check your inbox": "Periksa kotak masuk Anda",
   "Valid for 1min": "Berlaku selama 1 menit",
   "Resend OTP": "Kirim ulang OTP",
@@ -1113,5 +1109,9 @@
     "weak": "Lemah",
     "medium": "Sedang",
     "strong": "Kuat"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Pembuatan toko gagal - Pilih vendor.",
+  "Something went wrong - Please try again": "Ada yang salah. Coba lagi",
+  "An error occurred while fetching restaurants - Please try again later": "Terjadi kesalahan saat mengambil restoran. Coba lagi nanti.",
+  "We have sent OTP code to your email": "Kami telah mengirim kode OTP ke john@email.com"
 }

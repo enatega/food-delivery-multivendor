@@ -25,7 +25,7 @@ import { useTranslations } from 'next-intl';
 export default function UserStats() {
   // Queries
   const { data, loading } = useQueryGQL(GET_DASHBOARD_USERS, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 300,
   }) as IQueryResult<IDashboardUsersResponseGraphQL | undefined, undefined>;
 

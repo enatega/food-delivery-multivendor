@@ -2,15 +2,12 @@
 
 // Core
 import { useMutation } from '@apollo/client';
-import { useState } from 'react';
-
-// Prime React
-import { FilterMatchMode } from 'primereact/api';
+import { useEffect, useState } from 'react';
 
 // Interface and Types
 import {
   IRiderResponse,
-  IRidersDataResponse,
+  IRidersPaginatedDataResponse,
   IRidersMainComponentsProps,
 } from '@/lib/utils/interfaces/rider.interface';
 
@@ -26,13 +23,13 @@ import { IActionMenuItem } from '@/lib/utils/interfaces/action-menu.interface';
 // Hooks
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 // GraphQL and Utilities
-import { DELETE_RIDER, GET_RIDERS } from '@/lib/api/graphql';
+import { DELETE_RIDER, GET_RIDERS_PAGINATED } from '@/lib/api/graphql';
 import { IQueryResult } from '@/lib/utils/interfaces';
 
 // Data
-import { generateDummyRiders } from '@/lib/utils/dummy';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
@@ -51,13 +48,19 @@ export default function RidersMain({
     []
   );
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const [filters, setFilters] = useState({
-    global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
 
   // Query
-  const { data, loading } = useQueryGQL(GET_RIDERS, {}) as IQueryResult<
-    IRidersDataResponse | undefined,
+  const { data, loading } = useQueryGQL(GET_RIDERS_PAGINATED, {
+    page: currentPage,
+    limit: rowsPerPage,
+    search: debouncedSearch || undefined,
+  }, {
+    fetchPolicy: 'network-only',
+  }) as IQueryResult<
+    IRidersPaginatedDataResponse | undefined,
     undefined
   >;
 
@@ -65,18 +68,19 @@ export default function RidersMain({
   const [mutateDelete, { loading: mutationLoading }] = useMutation(
     DELETE_RIDER,
     {
-      refetchQueries: [{ query: GET_RIDERS }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 
   // For global search
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const _filters = { ...filters };
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
+    setGlobalFilterValue(e.target.value);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   const menuItems: IActionMenuItem<IRiderResponse>[] = [
     {
@@ -115,12 +119,18 @@ export default function RidersMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={data?.riders || (loading ? generateDummyRiders() : [])}
-        filters={filters}
+        data={data?.ridersPaginated?.data || []}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         loading={loading}
         columns={RIDER_TABLE_COLUMNS({ menuItems })}
+        totalRecords={data?.ridersPaginated?.totalCount ?? 0}
+        currentPage={data?.ridersPaginated?.currentPage ?? currentPage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
       <CustomDialog
         loading={mutationLoading}

@@ -592,7 +592,6 @@
   "last_login": "마지막 로그인",
   "New Store": "새 상점",
   "Create Store": "상점 생성",
-  "Store Creation Failed - Please select a vendor.": "상점 생성 실패 - 벤더를 선택하세요.",
   "Store Creation  Failed": "상점 생성 실패",
   "Save & Next": "저장 후 다음",
   "Add Timings": "시간 추가",
@@ -654,7 +653,6 @@
   "Transferred": "전송됨",
   "Requested": "요청됨",
   "Zone has been": "구역이",
-  "Something went wrong. Please try again": "문제가 발생했습니다. 다시 시도하세요",
   "Something went wrong, Please try again": "문제가 발생했습니다. 다시 시도하세요",
   "Add Zone": "구역 추가",
   "Delete Zone": "구역 삭제",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "수수료율이 업데이트되었습니다",
   "Error updating commission rate for": "수수료율 업데이트 오류",
   "Error Fetching Restaurants": "레스토랑 가져오기 오류",
-  "An error occurred while fetching restaurants. Please try again later.": "레스토랑 가져오는 중 오류가 발생했습니다. 나중에 다시 시도하세요.",
   "Set Commission Rate": "수수료율 설정",
   "Amplitude Configuration Updated": "Amplitude 설정이 업데이트되었습니다",
   "Web Amplitude API Key": "웹 Amplitude API 키",
@@ -793,7 +790,6 @@
   "Order Time": "주문 시간",
   "By signing up, you agree to our": "등록함으로써 귀하는 당사의",
   "and": "및",
-  "We have sent OTP code to john@email.com": "john@email.com으로 OTP 코드를 전송했습니다",
   "Please check your inbox": "받은 편지함을 확인하세요",
   "Valid for 1min": "1분 동안 유효",
   "Resend OTP": "OTP 재전송",
@@ -1113,5 +1109,9 @@
     "weak": "약함",
     "medium": "중간",
     "strong": "강함"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "상점 생성 실패 - 벤더를 선택하세요.",
+  "Something went wrong - Please try again": "문제가 발생했습니다. 다시 시도하세요",
+  "An error occurred while fetching restaurants - Please try again later": "레스토랑 가져오는 중 오류가 발생했습니다. 나중에 다시 시도하세요.",
+  "We have sent OTP code to your email": "john@email.com으로 OTP 코드를 전송했습니다"
 }

@@ -6,7 +6,7 @@ import { Skeleton } from 'primereact/skeleton';
 
 // Localization
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 const LicenseDetails = ({ loading, rider }: IRiderDetailsProps) => {
   const t = useTranslations();

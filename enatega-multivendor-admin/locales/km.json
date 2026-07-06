@@ -598,7 +598,6 @@
   "Store has been added successfully": "ហាងត្រូវបានបន្ថែមដោយជោគជ័យ",
   "New Store": "ហាងថ្មី",
   "Create Store": "បង្កើតហាង",
-  "Store Creation Failed - Please select a vendor.": "ការបង្កើតហាងបរាជ័យ - សូមជ្រើសអ្នកផ្គត់ផ្គង់",
   "Save & Next": "រក្សាទុក & បន្ទាប់",
   "Add Timings": "បន្ថែមម៉ោង",
   "Timings have been added successfully": "ម៉ោងត្រូវបានបន្ថែមដោយជោគជ័យ",
@@ -650,7 +649,6 @@
   "Transferred": "បានផ្ទេរ",
   "Requested": "បានស្នើរសុំ",
   "Zone has been": "តំបន់បាន",
-  "Something went wrong. Please try again": "មានអ្វីមួយខុស។ សូមព្យាយាមម្តងទៀត",
   "Something went wrong, Please try again": "មានអ្វីមួយខុស សូមព្យាយាមម្តងទៀត",
   "Add Zone": "បន្ថែមតំបន់",
   "Delete Zone": "លុបតំបន់",
@@ -789,7 +787,6 @@
   "Order Time": "ពេលវេលាការបញ្ជាទិញ",
   "By signing up, you agree to our": "ដោយការចុះបញ្ជី អ្នកយល់ព្រមជាមួយ",
   "and": "និង",
-  "We have sent OTP code to john@email.com": "យើងបានផ្ញើកូដ OTP ទៅ john@email.com",
   "Please check your inbox": "សូមពិនិត្យប្រអប់ចំណាំរបស់អ្នក",
   "Valid for 1min": "មានសុពលភាពសម្រាប់ ១ នាទី",
   "Resend OTP": "ផ្ញើ OTP ម្តងទៀត",
@@ -1111,5 +1108,8 @@
     "weak": "ខ្សោយ",
     "medium": "មធ្យម",
     "strong": "ខ្លាំង"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "ការបង្កើតហាងបរាជ័យ - សូមជ្រើសអ្នកផ្គត់ផ្គង់",
+  "Something went wrong - Please try again": "មានអ្វីមួយខុស។ សូមព្យាយាមម្តងទៀត",
+  "We have sent OTP code to your email": "យើងបានផ្ញើកូដ OTP ទៅ john@email.com"
 }

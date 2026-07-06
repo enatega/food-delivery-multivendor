@@ -113,7 +113,18 @@ export default function EnterPassword({
 
             <div className="flex justify-end w-full">
               <span
-                onClick={() => handleChangePanel(8)}
+                onClick={async () => {
+                  if (!formData?.email) {
+                    showToast({
+                      type: "error",
+                      title: t("error"),
+                      message: t("please_enter_valid_email_address_message"),
+                    });
+                    return;
+                  }
+
+                  handleChangePanel(8);
+                }}
                 className="text-primary-color hover:underline text-sm font-medium cursor-pointer"
               >
                 {t("forgot_password_label")}

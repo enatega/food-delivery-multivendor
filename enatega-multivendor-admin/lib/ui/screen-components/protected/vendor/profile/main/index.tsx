@@ -2,7 +2,7 @@
 import { ApolloError, useMutation } from '@apollo/client';
 import { Form, Formik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Context
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -74,11 +74,11 @@ export default function VendorUpdateForms() {
             _id: vendor?._id,
             name: data?.name ?? ' ',
             email: data?.email,
-            password: data?.password,
             image: data?.image,
             lastName: data?.lastName,
             phoneNumber: `${data.phoneNumber?.toString()}`,
             firstName: data?.firstName,
+            ...(data?.password ? { password: data.password } : {}),
           },
         },
       });
@@ -91,8 +91,6 @@ export default function VendorUpdateForms() {
       });
       // setIsUpdateProfileVisible(false);
     } catch (error) {
-      console.log('error', error);
-
       showToast({
         type: 'error',
         title: t(`Edit Vendor`),
@@ -119,8 +117,8 @@ export default function VendorUpdateForms() {
       setFormValues({
         name: vendor?.name ?? '',
         email: vendor?.email ?? '',
-        password: vendor?.plainPassword ?? '',
-        confirmPassword: vendor?.plainPassword ?? '',
+        password: '',
+        confirmPassword: '',
         image: vendor?.image || '',
         phoneNumber: vendor?.phoneNumber ?? '',
         lastName: vendor?.lastName ?? '',
@@ -152,7 +150,6 @@ export default function VendorUpdateForms() {
                 isSubmitting,
                 setFieldValue,
               }) => {
-                console.log('errors', errors);
                 return (
                   <>
                     <div>

@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "សូមបញ្ចូល OTP ត្រឹមត្រូវ",
   "verify_your_mobile_number_label": "ផ្ទៀងផ្ទាត់លេខទូរស័ព្ទរបស់អ្នក",
   "otp_valid_for_10_minutes_label": "មានសុពលភាពសម្រាប់ ១០ នាទី",
-  "your@email.com": "your@email.com",
   "continue_label": "បន្ត",
   "resend_otp_label": "ផ្ញើ OTP ម្តងទៀត",
   "login_label": "ចូលគណនី",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "ចំនួនអប្បបរមា (",
   ")_for_your_order_has_not_been_reached": ") សម្រាប់ការបញ្ជាទិញរបស់អ្នកមិនទាន់ឈានដល់ទេ។",
   "missing_address": "បាត់អាសយដ្ឋាន",
-  "Select_your_address.": "ជ្រើសរើសអាសយដ្ឋានរបស់អ្នក។",
   "DeliveryTime": "ពេលវេលាដឹកជញ្ជូន",
   "SalesTax": "ពន្ធលក់",
   "Contact": "ទំនាក់ទំនង",
@@ -917,6 +915,8 @@
   "Friday": "ថ្ងៃសុក្រ",
   "Saturday": "ថ្ងៃសៅរ៍",
   "Sunday": "ថ្ងៃអាទិត្យ",
-   "loading_orders": "កំពុងផ្ទៀងផ្ទាត់ការបញ្ជាទិញ...",
-  "show_more_orders": "បង្ហាញការបញ្ជាទិញច្រើនទៀត"
+  "loading_orders": "កំពុងផ្ទៀងផ្ទាត់ការបញ្ជាទិញ...",
+  "show_more_orders": "បង្ហាញការបញ្ជាទិញច្រើនទៀត",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "ជ្រើសរើសអាសយដ្ឋានរបស់អ្នក។"
 }

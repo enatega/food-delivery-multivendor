@@ -67,7 +67,6 @@ const Layout = ({ children }: IProvider) => {
         // Request Notification Permission
         const permission = await Notification.requestPermission();
         if (permission !== 'granted') {
-          console.warn('🚨 Notification permission denied!');
           return;
         }
 
@@ -75,11 +74,9 @@ const Layout = ({ children }: IProvider) => {
         getToken(messaging, { vapidKey: FIREBASE_VAPID_KEY })
           .then((token) => {
             if (!token) {
-              console.warn('🚨 No push token received');
               return;
             }
 
-            console.log('✅ Push Token:', token);
             localStorage.setItem('messaging-token', token);
 
             client
@@ -87,14 +84,12 @@ const Layout = ({ children }: IProvider) => {
                 mutation: UPLOAD_TOKEN,
                 variables: { id: user?.userId, pushToken: token },
               })
-              .then(() => console.log('📡 Token uploaded successfully'))
               .catch((error) => console.error('🔥 Upload token error:', error));
           })
           .catch((err) => console.error('❌ getToken error:', err));
 
         // Handle foreground notifications
         onMessage(messaging, (payload) => {
-          console.log('📩 Foreground Notification:', payload);
           if (!payload.notification) return;
           const { title, body } = payload.notification;
 
@@ -103,7 +98,7 @@ const Layout = ({ children }: IProvider) => {
           });
 
           notification.onclick = () => {
-            window.open('https://multivendor-admin.ninjascode.com/dashboard');
+            window.open('/home', '_blank');
           };
         });
       }
@@ -116,9 +111,6 @@ const Layout = ({ children }: IProvider) => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/firebase-messaging-sw.js')
-        .then((registration) => {
-          console.log('✅ Service Worker Registered:', registration);
-        })
         .catch((err) => console.error('❌ Service Worker Error:', err));
     }
   }, []);

@@ -24,7 +24,6 @@ import {
   IQueryResult,
   UserTypeEnum, // Add this import if not already present
 } from '@/lib/utils/interfaces';
-import { generateDummyWithdrawRequests } from '@/lib/utils/dummy';
 import WithdrawRequestAdminTableHeader from '../header/table-header';
 
 export default function WithdrawRequestsAdminMain() {
@@ -51,7 +50,6 @@ export default function WithdrawRequestsAdminMain() {
   const selectedStatus = selectedActions.find((action) =>
     ['REQUESTED', 'TRANSFERRED', 'CANCELLED'].includes(action)
   );
-  console.log("Restaurant ID:", restaurantId); // Debugging line
   // Query with proper typing and hardcoded STORE userType
   const { data, loading } = useQuery(GET_ALL_WITHDRAW_REQUESTS, {
     variables: {
@@ -60,7 +58,7 @@ export default function WithdrawRequestsAdminMain() {
       userType: UserTypeEnum.STORE, // Hardcoded to STORE
       userId: restaurantId, // Added restaurantId
     },
-    fetchPolicy: 'network-only', // Add this line
+    fetchPolicy: 'cache-and-network',
   }) as unknown as IQueryResult<
     IGetWithDrawRequestsData | undefined,
     undefined
@@ -108,7 +106,7 @@ export default function WithdrawRequestsAdminMain() {
             setSelectedActions={setSelectedActions}
           />
         }
-        data={loading ? generateDummyWithdrawRequests() : filteredData}
+        data={filteredData}
         filters={filters}
         setSelectedData={setSelectedData}
         selectedData={selectedData}

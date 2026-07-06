@@ -15,7 +15,7 @@ interface UseQueryBySlugResult {
 }
 
 export default function useQueryBySlug(
-  slug: string,
+  slug: string | undefined,
   page: number = 1,
   limit: number
 ): UseQueryBySlugResult {

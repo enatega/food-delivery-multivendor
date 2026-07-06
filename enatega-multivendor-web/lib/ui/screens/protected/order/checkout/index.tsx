@@ -73,7 +73,7 @@ import {
 import HomeIcon from "../../../../../assets/home_icon.png";
 import RestIcon from "../../../../../assets/rest_icon.png";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { useTranslations } from "next-intl";
 import { useTheme } from "@/lib/providers/ThemeProvider";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
@@ -84,6 +84,8 @@ const COUPON_STORAGE_KEY = "applied_coupon";
 const COUPON_TEXT_STORAGE_KEY = "coupon_text";
 const COUPON_APPLIED_STORAGE_KEY = "is_coupon_applied";
 const COUPON_RESTAURANT_KEY = "coupon_restaurant_id";
+const PENDING_STRIPE_ORDER_ID_KEY = "pending_stripe_order_id";
+const PENDING_STRIPE_STARTED_AT_KEY = "pending_stripe_started_at";
 
 export default function OrderCheckoutScreen() {
   const t = useTranslations();
@@ -682,7 +684,7 @@ export default function OrderCheckoutScreen() {
     if (!userAddress) {
       showToast({
         title: t("missing_address"),
-        message: t("Select_your_address"),
+        message: t("Select_your_address_prompt"),
         type: "warn",
       });
       return false;
@@ -759,6 +761,10 @@ export default function OrderCheckoutScreen() {
   }
 
   async function onPlaceOrder() {
+    if (loadingOrderMutation) {
+      return;
+    }
+
     // Check if user is autenticated
     if (!authToken) {
       setIsAuthModalVisible(true);
@@ -818,20 +824,45 @@ export default function OrderCheckoutScreen() {
 
   async function onCompleted(data: { placeOrder: IOrder }) {
     localStorage.removeItem("orderInstructions");
-    clearCart();
-    // CLEAR COUPON FROM LOCALSTORAGE
-    onUseLocalStorage("delete", COUPON_STORAGE_KEY);
-    onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
-    onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
-    onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
     if (paymentMethod === "COD") {
+      clearCart();
+      onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
       router.replace(`/order/${data.placeOrder._id}/tracking`);
     } else if (paymentMethod === "PAYPAL") {
+      clearCart();
+      onUseLocalStorage("delete", COUPON_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_TEXT_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_APPLIED_STORAGE_KEY);
+      onUseLocalStorage("delete", COUPON_RESTAURANT_KEY);
       router.replace(`/paypal?id=${data.placeOrder._id}`);
     } else if (paymentMethod === "STRIPE") {
-      router.replace(
-        `${SERVER_URL}stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`,
+      let stripeCheckoutUrl = "";
+      try {
+        stripeCheckoutUrl = new URL(
+          `stripe/create-checkout-session?id=${data?.placeOrder?.orderId}&platform=web`,
+          SERVER_URL,
+        ).toString();
+      } catch (error) {
+        showToast({
+          title: "Checkout Configuration Error",
+          message: "Unable to start Stripe checkout. Please contact support.",
+          type: "error",
+        });
+        return;
+      }
+
+      localStorage.setItem(
+        PENDING_STRIPE_ORDER_ID_KEY,
+        data?.placeOrder?.orderId || "",
       );
+      localStorage.setItem(
+        PENDING_STRIPE_STARTED_AT_KEY,
+        Date.now().toString(),
+      );
+      router.replace(stripeCheckoutUrl);
     }
   }
 
@@ -1486,7 +1517,7 @@ export default function OrderCheckoutScreen() {
               <button
                 className="bg-primary-color text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={onPlaceOrder}
-                disabled={cart.length === 0}
+                disabled={cart.length === 0 || loadingOrderMutation}
               >
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />
@@ -1599,6 +1630,7 @@ export default function OrderCheckoutScreen() {
               <button
                 className="bg-primary-color text-gray-900 dark:text-white w-full py-2 rounded-full text-xs lg:text-[12px]"
                 onClick={onPlaceOrder}
+                disabled={cart.length === 0 || loadingOrderMutation}
               >
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />

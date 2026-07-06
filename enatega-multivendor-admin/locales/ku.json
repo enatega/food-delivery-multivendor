@@ -600,7 +600,6 @@
   "Store has been added successfully": "Dikan bi serkeftî hate zêde kirin",
   "New Store": "Dikana Nû",
   "Create Store": "Dikan biafirîne",
-  "Store Creation Failed - Please select a vendor.": "Afirandina dikanê ne serkeftî bû - Ji kerema xwe firoşkarek hilbijêre.",
   "Store Creation  Failed": "Afirandina dikanê ne serkeftî bû",
   "Save & Next": "Tomar bike & Pêş",
   "Add Timings": "Deman zêde bike",
@@ -653,7 +652,6 @@
   "Transferred": "Veguheztin",
   "Requested": "Daxwaz kirin",
   "Zone has been": "Herêm hate",
-  "Something went wrong. Please try again": "Tiştek çewt bû. Ji kerema xwe dîsa biceribîne",
   "Something went wrong, Please try again": "Tiştek çewt bû, Ji kerema xwe dîsa biceribîne",
   "Add Zone": "Herêm zêde bike",
   "Delete Zone": "Herêm jê bibe",
@@ -694,7 +692,6 @@
   "Commission rate updated for": "Rêjeya komîsyonê ji bo hate nûve kirin",
   "Error updating commission rate for": "Çewtiya nûvekirina rêjeya komîsyonê ji bo",
   "Error Fetching Restaurants": "Çewtiya stendina restoranê",
-  "An error occurred while fetching restaurants. Please try again later.": "Dema stendina restoranê çewtî çêbû. Ji kerema xwe paşê dîsa biceribîne.",
   "Set Commission Rate": "Rêjeya Komîsyonê saz bike",
   "Amplitude Configuration Updated": "Veavakirina Amplitude hate nûve kirin",
   "Web Amplitude API Key": "Mifteya API ya Web Amplitude",
@@ -792,7 +789,6 @@
   "Order Time": "Dema Fermanê",
   "By signing up, you agree to our": "Bi qeydkirinê, tu bi me re li hev dike",
   "and": "û",
-  "We have sent OTP code to john@email.com": "Me koda OTP şand john@email.com",
   "Please check your inbox": "Ji kerema xwe qutiya xwe ya e-name kontrol bike",
   "Valid for 1min": "Ji bo 1 deqîqeyê derbasdar",
   "Resend OTP": "OTP dîsa bişîne",
@@ -1099,5 +1095,9 @@
   "Connect with Stripe for payments": "Ji bo dravdanê bi Stripe girê bide",
   "Payment Required": "Dravdan pêwîst e",
   "Please complete your purchase to gain full access to the product": "Ji kerema xwe kirîna xwe temam bike ji bo gihîştina tam a hilberê",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Ji ber ku rêjeya komîsyonê nirxek % e, ew nikare ji nirxa herî zêde 100 derbas bibe"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Ji ber ku rêjeya komîsyonê nirxek % e, ew nikare ji nirxa herî zêde 100 derbas bibe",
+  "Store Creation Failed - Please select a vendor": "Afirandina dikanê ne serkeftî bû - Ji kerema xwe firoşkarek hilbijêre.",
+  "Something went wrong - Please try again": "Tiştek çewt bû. Ji kerema xwe dîsa biceribîne",
+  "An error occurred while fetching restaurants - Please try again later": "Dema stendina restoranê çewtî çêbû. Ji kerema xwe paşê dîsa biceribîne.",
+  "We have sent OTP code to your email": "Me koda OTP şand john@email.com"
 }

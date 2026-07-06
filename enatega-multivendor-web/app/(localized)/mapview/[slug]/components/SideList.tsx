@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import React, { useEffect, useRef, useState } from "react";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
 import {

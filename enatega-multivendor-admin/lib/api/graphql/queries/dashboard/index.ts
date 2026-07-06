@@ -86,17 +86,33 @@ export const GET_DASHBOARD_RESTAURANT_SALES_ORDER_COUNT_DETAILS_BY_YEAR = gql`
   }
 `;
 
-export const GET_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD = gql`
-  query GetDashboardOrderSalesDetailsByPaymentMethod(
+export const GET_RESTAURANT_DASHBOARD_ORDER_SALES_DETAILS_BY_PAYMENT_METHOD = gql`
+  query GetRestaurantDashboardOrderSalesDetailsByPaymentMethod(
     $restaurant: String!
     $starting_date: String!
     $ending_date: String!
+    $dateKeyword: String
   ) {
-    getDashboardOrderSalesDetailsByPaymentMethod(
+    getRestaurantDashboardOrderSalesDetailsByPaymentMethod(
       restaurant: $restaurant
       starting_date: $starting_date
       ending_date: $ending_date
+      dateKeyword: $dateKeyword
     ) {
+      total_orders
+      total_sales
+      total_sales_without_delivery
+      total_delivery_fee
+      pickup_total_orders
+      delivery_total_orders
+      pickup_orders
+      delivery_orders
+      pickup {
+        total_orders
+      }
+      delivery {
+        total_orders
+      }
       all {
         _type
         data {
@@ -149,6 +165,40 @@ export const GET_STORE_DETAILS_BY_VENDOR_ID = gql`
       totalSales
       pickUpCount
       deliveryCount
+    }
+  }
+`;
+
+export const GET_STORE_DETAILS_BY_VENDOR_ID_PAGINATED = gql`
+  query GetStoreDetailsByVendorIdPaginated(
+    $id: String!
+    $dateKeyword: String
+    $starting_date: String
+    $ending_date: String
+    $page: Int
+    $limit: Int
+    $search: String
+  ) {
+    getStoreDetailsByVendorIdPaginated(
+      id: $id
+      dateKeyword: $dateKeyword
+      starting_date: $starting_date
+      ending_date: $ending_date
+      page: $page
+      limit: $limit
+      search: $search
+    ) {
+      data {
+        _id
+        totalOrders
+        restaurantName
+        totalSales
+        pickUpCount
+        deliveryCount
+      }
+      totalCount
+      currentPage
+      totalPages
     }
   }
 `;

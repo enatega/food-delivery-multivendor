@@ -8,14 +8,15 @@ import { useContext, useEffect } from 'react';
 import { SidebarContext } from '@/lib/context/global/sidebar.context';
 
 // Interface & Types
-import { ILoginResponse, ISidebarContextProps } from '@/lib/utils/interfaces';
-import { onUseLocalStorage } from '@/lib/utils/methods';
-import { APP_NAME } from '@/lib/utils/constants';
+import { ISidebarContextProps } from '@/lib/utils/interfaces';
 import { DEFAULT_ROUTES } from '@/lib/utils/constants/routes';
+import { useUserContext } from '@/lib/hooks/useUser';
+import CustomLoader from '@/lib/ui/useable-components/custom-progress-indicator';
 
 export default function RootPage() {
   // Context
   const { setSelectedItem } = useContext<ISidebarContextProps>(SidebarContext);
+  const { user, loading, isSessionVerified } = useUserContext();
 
   // Hooks
   const router = useRouter();
@@ -23,14 +24,18 @@ export default function RootPage() {
   // Effects
   useEffect(() => {
     setSelectedItem({ screenName: 'Home' });
-    const user = onUseLocalStorage('get', `user-${APP_NAME}`);
-    if (user) {
-      const userInfo: ILoginResponse = JSON.parse(user);
-      router.push(DEFAULT_ROUTES[userInfo.userType]);
+    if (loading) return;
+
+    if (isSessionVerified && user) {
+      router.push(DEFAULT_ROUTES[user.userType]);
     } else {
       router.replace('/authentication/login');
     }
-  }, []);
+  }, [isSessionVerified, loading, router, setSelectedItem, user]);
+
+  if (loading) {
+    return <CustomLoader />;
+  }
 
   return <></>;
 }

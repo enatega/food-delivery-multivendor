@@ -15,6 +15,15 @@ export interface IGetCuisinesData {
   cuisines: ICuisine[];
 }
 
+export interface IGetCuisinesPaginatedData {
+  cuisinesPaginated: {
+    data: ICuisine[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 export interface IGetCuisinesVariables {}
 
 export interface IAddCuisineProps {

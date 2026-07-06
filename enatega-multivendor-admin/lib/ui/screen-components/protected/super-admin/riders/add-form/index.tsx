@@ -33,7 +33,6 @@ import useToast from '@/lib/hooks/useToast';
 import {
   CREATE_RIDER,
   EDIT_RIDER,
-  GET_RIDERS,
   GET_ZONES,
 } from '@/lib/api/graphql';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
@@ -55,9 +54,11 @@ export default function RiderAddForm({
     vehicleType: rider
       ? VEHICLE_TYPE.find((vt) => vt?.code === rider?.vehicleType) || null
       : null,
-    confirmPassword: rider?.password ?? '',
+    confirmPassword: '',
     phone: rider ? +rider.phone : null,
-    zone: rider ? { label: rider.zone.title, code: rider.zone._id } : null,
+    zone: rider?.zone
+      ? { label: rider.zone.title, code: rider.zone._id }
+      : null,
   };
 
 
@@ -73,7 +74,8 @@ export default function RiderAddForm({
   // Mutation
   const mutation = rider ? EDIT_RIDER : CREATE_RIDER;
   const [mutate, { loading: mutationLoading }] = useMutation(mutation, {
-    refetchQueries: [{ query: GET_RIDERS }],
+    refetchQueries: 'active',
+    awaitRefetchQueries: true,
   });
 
   // Form Submission
@@ -88,11 +90,11 @@ export default function RiderAddForm({
             _id: rider ? rider._id : '',
             name: values.name,
             username: values.username,
-            password: values.password,
             phone: values.phone?.toString(),
             zone: values.zone?.code,
             vehicleType: values.vehicleType?.code,
             available: rider ? rider.available : true,
+            ...(values.password ? { password: values.password } : {}),
           },
         },
         onCompleted: () => {

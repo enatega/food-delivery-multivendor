@@ -18,7 +18,7 @@ export const useShopTypes = (
   const { invoke_now, transform_to_dropdown_list } = props;
 
   const { data, loading, fetch } = useLazyQueryQL(GET_SHOP_TYPES, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 5000,
   }) as ILazyQueryResult<IGetShopTypesData | undefined, undefined>;
 

@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import OnePara from "@/lib/ui/screen-components/un-protected/TermsConditions/OnePara";
 import { useTranslations } from "next-intl";
 const TermsConditions = () => {

@@ -583,7 +583,6 @@
   "Store has been added successfully": "দোকান সফলভাবে যোগ হয়েছে",
   "New Store": "নতুন দোকান",
   "Create Store": "দোকান তৈরি করুন",
-  "Store Creation Failed - Please select a vendor.": "দোকান তৈরি ব্যর্থ - দয়া করে একটি ভেন্ডর নির্বাচন করুন।",
   "Store Creation  Failed": "দোকান তৈরি ব্যর্থ",
   "Save & Next": "সংরক্ষণ করুন ও পরবর্তী",
   "Add Timings": "সময় যোগ করুন",
@@ -636,7 +635,6 @@
   "Transferred": "স্থানান্তরিত",
   "Requested": "অনুরোধ করা হয়েছে",
   "Zone has been": "জোন",
-  "Something went wrong. Please try again": "কিছু ভুল হয়েছে। আবার চেষ্টা করুন",
   "Something went wrong, Please try again": "কিছু ভুল হয়েছে, আবার চেষ্টা করুন",
   "Add Zone": "জোন যোগ করুন",
   "Delete Zone": "জোন মুছুন",
@@ -677,7 +675,6 @@
   "Commission rate updated for": "কমিশন রেট আপডেট হয়েছে:",
   "Error updating commission rate for": "কমিশন রেট আপডেট করতে ত্রুটি:",
   "Error Fetching Restaurants": "রেস্টুরেন্ট আনতে ত্রুটি",
-  "An error occurred while fetching restaurants. Please try again later.": "রেস্টুরেন্ট আনার সময় ত্রুটি হয়েছে। পরে আবার চেষ্টা করুন।",
   "Set Commission Rate": "কমিশন রেট সেট করুন",
   "Amplitude Configuration Updated": "অ্যামপ্লিটিউড কনফিগারেশন আপডেট হয়েছে",
   "Web Amplitude API Key": "ওয়েব অ্যামপ্লিটিউড এপিআই কী",
@@ -793,7 +790,6 @@
   "Order Time": "অর্ডার সময়",
   "By signing up, you agree to our": "সাইন আপ করে আপনি আমাদের",
   "and": "এবং",
-  "We have sent OTP code to john@email.com": "আমরা john@email.com এ ওটিপি কোড পাঠিয়েছি",
   "Please check your inbox": "আপনার ইনবক্স চেক করুন",
   "Valid for 1min": "১ মিনিটের জন্য বৈধ",
   "Resend OTP": "ওটিপি পুনরায় পাঠান",
@@ -1113,5 +1109,9 @@
     "weak": "দুর্বল",
     "medium": "মাঝারি",
     "strong": "শক্তিশালী"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "দোকান তৈরি ব্যর্থ - দয়া করে একটি ভেন্ডর নির্বাচন করুন।",
+  "Something went wrong - Please try again": "কিছু ভুল হয়েছে। আবার চেষ্টা করুন",
+  "An error occurred while fetching restaurants - Please try again later": "রেস্টুরেন্ট আনার সময় ত্রুটি হয়েছে। পরে আবার চেষ্টা করুন।",
+  "We have sent OTP code to your email": "আমরা john@email.com এ ওটিপি কোড পাঠিয়েছি"
 }

@@ -11,7 +11,6 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import analytics from '../../../utils/analytics'
-import AuthContext from '../../../context/Auth'
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../../context/Configuration'
 import useEnvVars from '../../../../environment'
@@ -34,7 +33,6 @@ const useEmailOtp = (isPhoneExists) => {
   const [otpError, setOtpError] = useState(false)
   const [seconds, setSeconds] = useState(5)
   const [user] = useState(route.params?.user)
-  const { setTokenAsync } = useContext(AuthContext)
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
@@ -86,10 +84,10 @@ const useEmailOtp = (isPhoneExists) => {
         email: data.createUser.email,
         type: 'email'
       })
-      await setTokenAsync(data.createUser.token)
       navigation.navigate('PhoneOtp', {
         name: data?.createUser?.name,
-        phone: data?.createUser?.phone
+        phone: data?.createUser?.phone,
+        token: data?.createUser?.token
       })
     } catch (e) {
       console.log(e)

@@ -1,4 +1,5 @@
-{"checking_for_active_orders": "پشکنینی داواکارییە چالاکەکان",
+{
+  "checking_for_active_orders": "پشکنینی داواکارییە چالاکەکان",
   "no_active_orders_found": "هیچ داواکارییە چالاکەکان نەدۆزرایەوە",
   "active_orders_found": "داواکارییە چالاکەکان دۆزرایەوە",
   "checking_active_orders_message": "تکایە چاوەڕێ بکە، ئێمە داواکارییە چالاکەکانت پشکنین دەکەین...",
@@ -421,7 +422,6 @@
   "please_enter_valid_otp_message": "تکایە OTPی دروست بنووسە",
   "verify_your_mobile_number_label": "ژمارەی مۆبایلەکەت پشتڕاست بکەرەوە",
   "otp_valid_for_10_minutes_label": "بۆ ١٠ خولەک بەردەستە",
-  "your@email.com": "your@email.com",
   "continue_label": "درێژەبدە",
   "resend_otp_label": "OTP دووبارە بنێرە",
   "login_label": "چوونەژوورەوە",
@@ -660,7 +660,6 @@
   "The_minimum_amount_of_(": "کەمترین بڕی (",
   ")_for_your_order_has_not_been_reached": ") بۆ داواکاریەکەت گەیشتنی پێنەکراوە.",
   "missing_address": "ناونیشانی ونبووە",
-  "Select_your_address.": "ناونیشانەکەت هەڵبژێرە.",
   "DeliveryTime": "کاتی گەیاندن",
   "SalesTax": "باجی فرۆشتن",
   "Contact": "پەیوەندی",
@@ -917,5 +916,7 @@
   "Saturday": "شەممە",
   "Sunday": "یەکشەممە",
   "loading_orders": "سەرپەڕەکان بار دەکرێت  ",
-  "show_more_orders": "زیاتر نیشاندان دانی سەرپەڕەکان"
+  "show_more_orders": "زیاتر نیشاندان دانی سەرپەڕەکان",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "ناونیشانەکەت هەڵبژێرە."
 }

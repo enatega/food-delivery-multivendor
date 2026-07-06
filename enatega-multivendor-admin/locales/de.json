@@ -570,7 +570,6 @@
   "Store has been added successfully": "Laden wurde erfolgreich hinzugefügt",
   "New Store": "Neuer Laden",
   "Create Store": "Laden erstellen",
-  "Store Creation Failed - Please select a vendor.": "Erstellung des Ladens fehlgeschlagen - Bitte wählen Sie einen Anbieter.",
   "Store Creation Failed": "Erstellung des Ladens fehlgeschlagen",
   "Save & Next": "Speichern & Weiter",
   "Add Timings": "Zeiten hinzufügen",
@@ -623,7 +622,6 @@
   "Transferred": "Übertragen",
   "Requested": "Angefordert",
   "Zone has been": "Zone wurde",
-  "Something went wrong. Please try again": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut",
   "Something went wrong, Please try again": "Etwas ist schief gelaufen, Bitte versuchen Sie es erneut",
   "Add Zone": "Zone hinzufügen",
   "Delete Zone": "Zone löschen",
@@ -664,7 +662,6 @@
   "Commission rate updated for": "Provisionssatz aktualisiert für",
   "Error updating commission rate for": "Fehler beim Aktualisieren des Provisionssatzes für",
   "Error Fetching Restaurants": "Fehler beim Abrufen von Restaurants",
-  "An error occurred while fetching restaurants. Please try again later.": "Ein Fehler ist beim Abrufen der Restaurants aufgetreten. Bitte versuchen Sie es später erneut.",
   "Set Commission Rate": "Provisionssatz festlegen",
   "Amplitude Configuration Updated": "Amplitude-Konfiguration aktualisiert",
   "Web Amplitude API Key": "Web-Amplitude-API-Schlüssel",
@@ -780,7 +777,6 @@
   "Order Time": "Bestellzeit",
   "By signing up, you agree to our": "Mit Ihrer Registrierung stimmen Sie unseren",
   "and": "und",
-  "We have sent OTP code to john@email.com": "Wir haben einen OTP-Code an john@email.com gesendet",
   "Please check your inbox": "Bitte überprüfen Sie Ihren Posteingang",
   "Valid for 1min": "Gültig für 1 Minute",
   "Resend OTP": "OTP erneut senden",
@@ -1102,5 +1098,9 @@
     "weak": "Schwach",
     "medium": "Mittel",
     "strong": "Stark"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Erstellung des Ladens fehlgeschlagen - Bitte wählen Sie einen Anbieter.",
+  "Something went wrong - Please try again": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut",
+  "An error occurred while fetching restaurants - Please try again later": "Ein Fehler ist beim Abrufen der Restaurants aufgetreten. Bitte versuchen Sie es später erneut.",
+  "We have sent OTP code to your email": "Wir haben einen OTP-Code an john@email.com gesendet"
 }

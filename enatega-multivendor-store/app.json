@@ -19,7 +19,6 @@
     },
     "plugins": [
       "expo-router",
-
       [
         "expo-image-picker",
         {
@@ -30,7 +29,9 @@
       "expo-font",
       "expo-localization",
       "expo-secure-store",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-audio",
+      "expo-video"
     ],
     "platforms": [
       "ios",
@@ -42,6 +43,7 @@
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!",
         "UIBackgroundModes": [
+          "audio",
           "remote-notification"
         ],
         "ITSAppUsesNonExemptEncryption": false,

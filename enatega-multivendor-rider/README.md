@@ -42,13 +42,14 @@ To learn more about developing your project with Expo, look at the following res
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
+## Testing
+
+Jest is configured with `jest-expo`, but there are currently no committed `*.test.*`, `*.spec.*`, or `__tests__` files under `app/` or `lib/`.
+The `npm test` script is reserved for future automated test coverage.
+
 ## Join the community
 
 Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - # [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-
-# mobile-app-template
-
-> > > > > > > 09c7a49 (Initial commit)

@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "Inserisci un OTP valido",
   "verify_your_mobile_number_label": "Verifica il tuo numero di telefono",
   "otp_valid_for_10_minutes_label": "Valido per 10 minuti",
-  "your@email.com": "tua@email.com",
   "continue_label": "Continua",
   "resend_otp_label": "Reinvia OTP",
   "login_label": "Accedi",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "L'importo minimo di (",
   ")_for_your_order_has_not_been_reached": ") per il tuo ordine non è stato raggiunto.",
   "missing_address": "Indirizzo mancante",
-  "Select_your_address.": "Seleziona il tuo indirizzo.",
   "DeliveryTime": "Tempo di consegna",
   "SalesTax": "Tasse di vendita",
   "Contact": "Contatti",
@@ -917,6 +915,8 @@
   "Friday": "Venerdì",
   "Saturday": "Sabato",
   "Sunday": "Domenica",
-   "loading_orders": " Caricamento ordini...",
-  "show_more_orders": "Mostra più ordini"
+  "loading_orders": " Caricamento ordini...",
+  "show_more_orders": "Mostra più ordini",
+  "your_email": "tua@email.com",
+  "Select_your_address_prompt": "Seleziona il tuo indirizzo."
 }

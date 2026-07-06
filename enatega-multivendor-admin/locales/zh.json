@@ -550,7 +550,6 @@
   "Store has been added successfully": "商店已成功添加",
   "New Store": "新商店",
   "Create Store": "创建商店",
-  "Store Creation Failed - Please select a vendor.": "商店创建失败 - 请选择一个供应商。",
   "Store Creation Failed": "商店创建失败",
   "Save & Next": "保存并下一步",
   "Add Timings": "添加时间",
@@ -603,7 +602,6 @@
   "Transferred": "已转移",
   "Requested": "已请求",
   "Zone has been": "区域已",
-  "Something went wrong. Please try again": "出了点问题，请重试",
   "Something went wrong, Please try again": "出了点问题，请重试",
   "Add Zone": "添加区域",
   "Delete Zone": "删除区域",
@@ -644,7 +642,6 @@
   "Commission rate updated for": "佣金率已更新为",
   "Error updating commission rate for": "更新佣金率时出错",
   "Error Fetching Restaurants": "获取餐厅时出错",
-  "An error occurred while fetching restaurants. Please try again later.": "获取餐厅时发生错误，请稍后再试。",
   "Set Commission Rate": "设置佣金率",
   "Amplitude Configuration Updated": "Amplitude 配置已更新",
   "Web Amplitude API Key": "Web Amplitude API 密钥",
@@ -742,7 +739,6 @@
   "Order Time": "订单时间",
   "By signing up, you agree to our": "通过注册，您同意我们的",
   "and": "和",
-  "We have sent OTP code to john@email.com": "我们已发送 OTP 代码到 john@email.com",
   "Please check your inbox": "请检查您的收件箱",
   "Valid for 1min": "有效期为 1 分钟",
   "Resend OTP": "重新发送 OTP",
@@ -1111,5 +1107,9 @@
     "weak": "弱",
     "medium": "中",
     "strong": "强"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "商店创建失败 - 请选择一个供应商。",
+  "Something went wrong - Please try again": "出了点问题，请重试",
+  "An error occurred while fetching restaurants - Please try again later": "获取餐厅时发生错误，请稍后再试。",
+  "We have sent OTP code to your email": "我们已发送 OTP 代码到 john@email.com"
 }

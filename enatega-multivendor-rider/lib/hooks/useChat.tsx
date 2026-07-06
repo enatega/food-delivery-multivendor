@@ -83,7 +83,7 @@ export const useChatScreen = () => {
       },
     });
     return unsubscribe;
-  });
+  }, [orderId, subscribeToMessages]);
 
   useEffect(() => {
     if (chatData) {

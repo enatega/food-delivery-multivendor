@@ -183,7 +183,7 @@ export default function EmailVerification({
           {t("OTP_Code_Sent")}
         </h2>
         <p className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white mb-3 break-words">
-          {formData?.email || "your@email.com"}
+          {formData?.email || t("your_email")}
         </p>
         <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
           {t("verify_your_email_label")}

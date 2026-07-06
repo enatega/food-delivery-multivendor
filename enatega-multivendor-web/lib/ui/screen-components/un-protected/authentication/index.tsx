@@ -8,7 +8,6 @@ import {
 
 // Hooks
 import { useAuth } from "@/lib/context/auth/auth.context";
-import { useGoogleLogin } from "@react-oauth/google";
 import { useEffect, useRef, useState } from "react";
 // import { useTranslations } from "next-intl";
 
@@ -60,7 +59,10 @@ export default function AuthModal({
     }
   }, [isAuthModalVisible]);
   // get the RTL direction
-  const direction = document.documentElement.getAttribute("dir") || "ltr";
+  const direction =
+    typeof document !== "undefined"
+      ? document.documentElement.getAttribute("dir") || "ltr"
+      : "ltr";
 
   // Refs
   const authenticationPanelRef = useRef(null);
@@ -77,21 +79,23 @@ export default function AuthModal({
   } = useAuth();
   const { showToast } = useToast();
   const t = useTranslations();
-  const { SKIP_EMAIL_VERIFICATION, SKIP_MOBILE_VERIFICATION } = useConfig();
+  const {
+    GOOGLE_CLIENT_ID,
+    SKIP_EMAIL_VERIFICATION,
+    SKIP_MOBILE_VERIFICATION,
+  } = useConfig();
 
   // Login With Google
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
+  const googleLogin = async () => {
+    try {
       setIsLoading(true);
-      const userInfo = await fetch(
-        "https://www.googleapis.com/oauth2/v3/userinfo",
-        { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } }
-      );
-      const userData = await userInfo.json();
+      const idToken = await getGoogleIdToken();
+      const userData = await getGoogleUserInfo(idToken);
 
       const userLoginResponse = await handleUserLogin({
         type: "google",
         email: userData.email,
+        idToken,
         name: userData.name,
         notificationToken: "",
       });
@@ -121,12 +125,127 @@ export default function AuthModal({
         setIsLoading(false);
         console.log("userLoginResponse", userLoginResponse);
       }
-    },
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Google sign-in failed. Please try again.";
+      showToast({
+        type: "error",
+        title: t("login_error"),
+        message,
+      });
+      setIsLoading(false);
+    }
+  };
 
-    onError: (errorResponse) => {
-      console.log(errorResponse);
-    },
-  });
+  const getGoogleIdToken = () =>
+    new Promise<string>((resolve, reject) => {
+      const google = (window as Window & { google?: unknown }).google as
+        | {
+            accounts?: {
+              id?: {
+                cancel: () => void;
+                initialize: (options: Record<string, unknown>) => void;
+                prompt: (
+                  listener?: (notification: {
+                    isNotDisplayed?: () => boolean;
+                    isSkippedMoment?: () => boolean;
+                  }) => void,
+                ) => void;
+              };
+            };
+          }
+        | undefined;
+
+      if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID === "not_found") {
+        reject(
+          new Error(
+            "Social login is not configured right now. Please use email and password.",
+          ),
+        );
+        return;
+      }
+
+      if (!google?.accounts?.id) {
+        reject(
+          new Error(
+            "Social login is not configured right now. Please use email and password.",
+          ),
+        );
+        return;
+      }
+
+      const googleAccountsId = google.accounts.id;
+
+      let isSettled = false;
+      const resolveOnce = (credential?: string) => {
+        if (isSettled) return;
+        isSettled = true;
+        googleAccountsId.cancel();
+        if (credential) {
+          resolve(credential);
+          return;
+        }
+        reject(
+          new Error(
+            "Your social sign-in did not return a valid token. Please try again.",
+          ),
+        );
+      };
+
+      const rejectOnce = (message: string) => {
+        if (isSettled) return;
+        isSettled = true;
+        googleAccountsId.cancel();
+        reject(new Error(message));
+      };
+
+      googleAccountsId.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        ux_mode: "popup",
+        callback: (response: { credential?: string }) =>
+          resolveOnce(response?.credential),
+      });
+
+      googleAccountsId.prompt((notification) => {
+        if (notification?.isNotDisplayed?.()) {
+          rejectOnce(
+            "Social login is not configured right now. Please use email and password.",
+          );
+          return;
+        }
+
+        if (notification?.isSkippedMoment?.()) {
+          rejectOnce("Google sign-in was cancelled. Please try again.");
+        }
+      });
+    });
+
+  const getGoogleUserInfo = async (idToken: string) => {
+    const [, payload] = idToken.split(".");
+    if (!payload) {
+      throw new Error(
+        "Your social sign-in token is invalid or expired. Please sign in again.",
+      );
+    }
+
+    try {
+      const normalizedPayload = payload
+        .replace(/-/g, "+")
+        .replace(/_/g, "/")
+        .padEnd(Math.ceil(payload.length / 4) * 4, "=");
+      const decodedPayload = JSON.parse(atob(normalizedPayload));
+      return {
+        email: decodedPayload.email ?? "",
+        name: decodedPayload.name ?? "",
+      };
+    } catch {
+      throw new Error(
+        "Your social sign-in token is invalid or expired. Please sign in again.",
+      );
+    }
+  };
 
   // Handlers
   const handleChangePanel = (index: number) => {

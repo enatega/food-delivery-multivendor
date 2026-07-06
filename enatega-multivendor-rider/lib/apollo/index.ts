@@ -3,6 +3,7 @@ import {
   ApolloLink,
   createHttpLink,
   InMemoryCache,
+  NormalizedCacheObject,
   Observable,
   Operation,
   split,
@@ -14,19 +15,50 @@ import {
   offsetLimitPagination,
 } from "@apollo/client/utilities";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 import { Platform } from "react-native";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import useEnvVars from "../../environment";
-import { RIDER_TOKEN } from "../utils/constants";
+import { RIDER_ID, RIDER_TOKEN } from "../utils/constants";
+import { getSecureItem, removeSecureItem } from "../services/secure-storage";
 import { IRestaurantLocation } from "../utils/interfaces";
 import { calculateDistance } from "../utils/methods/custom-functions";
 import { getValidPublicToken } from "../utils/service/publicAccessService";
 import { getOrCreateNonce } from "../utils/publicAccessToken";
 
+let isAuthRedirecting = false;
+
+async function handleInvalidSession(): Promise<void> {
+  if (isAuthRedirecting) return;
+  isAuthRedirecting = true;
+
+  try {
+    await Promise.all([
+      removeSecureItem(RIDER_TOKEN),
+      AsyncStorage.removeItem(RIDER_ID),
+    ]);
+    router.replace("/login");
+  } finally {
+    setTimeout(() => {
+      isAuthRedirecting = false;
+    }, 1000);
+  }
+}
+
+// The whole app must share a single client (one cache, one WS connection),
+// so the client is created once and reused on subsequent calls.
+let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
 const setupApollo = () => {
+  // useEnvVars uses useContext, so it must run on every render to keep hook
+  // order stable — only the client construction below is skipped when cached.
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars();
+
+  if (apolloClient) {
+    return apolloClient;
+  }
 
   const cache = new InMemoryCache({
     typePolicies: {
@@ -76,18 +108,6 @@ const setupApollo = () => {
               return distance;
             },
           },
-          freeDelivery: {
-            read(/* _existing: IRestaurantLocation */) {
-              const randomValue = Math.random() * 10;
-              return randomValue > 5;
-            },
-          },
-          acceptVouchers: {
-            read(/* _existing: IRestaurantLocation */) {
-              const randomValue = Math.random() * 10;
-              return randomValue < 5;
-            },
-          },
         },
       },
     },
@@ -103,17 +123,14 @@ const setupApollo = () => {
       reconnect: true,
       lazy: true,
       connectionParams: async () => {
-        const token = await AsyncStorage.getItem(RIDER_TOKEN);
+        const token = await getSecureItem(RIDER_TOKEN);
         const publicToken = await getValidPublicToken(
           GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
-        ).catch((err) => {
-          console.log("⚠️ Could not get public token for WebSocket:", err.message);
+        ).catch(() => {
+          if (__DEV__) console.warn("Could not get public token for WebSocket");
           return null;
         });
         const nonce = await getOrCreateNonce();
-
-        console.log("🔌 WebSocket connecting with user token:", token ? "✓" : "✗");
-        console.log("🔌 WebSocket connecting with public token:", publicToken ? "✓" : "✗");
 
         return {
           authorization: token ? `Bearer ${token}` : "",
@@ -122,35 +139,24 @@ const setupApollo = () => {
         };
       },
       connectionCallback: (error) => {
-        if (error) {
-          console.error("❌ WebSocket connection error:", error);
-        } else {
-          console.log("✅ WebSocket connected successfully");
+        if (error && __DEV__) {
+          console.warn("WebSocket connection error");
         }
       },
     },
     WebSocket
   );
 
-  // Add event listeners for debugging (can be removed in production)
-  wsClient.onConnected(() => {
-    console.log("✅ WebSocket connected");
-  });
-
-  wsClient.onReconnected(() => {
-    console.log("🔄 WebSocket reconnected");
-  });
-
   const wsLink = new WebSocketLink(wsClient);
 
   const request = async (operation: Operation) => {
-    const token = await AsyncStorage.getItem(RIDER_TOKEN);
+    const token = await getSecureItem(RIDER_TOKEN);
 
     // Try to get public token, but don't fail if it's not available yet
     const publicToken = await getValidPublicToken(
       GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
-    ).catch((err) => {
-      console.log("⚠️ Could not get public token for request:", err.message);
+    ).catch(() => {
+      if (__DEV__) console.warn("Could not get public token for request");
       return null;
     });
 
@@ -201,8 +207,19 @@ const setupApollo = () => {
   );
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
+    const hasInvalidSession = (graphQLErrors || []).some(
+      (graphQLError) =>
+        graphQLError?.extensions?.code === "TOKEN_EXPIRED" ||
+        graphQLError?.extensions?.code === "INVALID_TOKEN",
+    );
+
+    if (hasInvalidSession) {
+      void handleInvalidSession();
+      return;
+    }
+
     if (graphQLErrors) {
-      graphQLErrors.forEach(({ message, locations, path }) => {
+      graphQLErrors.forEach(({ message }) => {
         // IMPORTANT: Only remove user token for actual user auth failures
         // Do NOT remove token for public auth failures (bop-auth related)
         const isPublicAuthError =
@@ -217,19 +234,14 @@ const setupApollo = () => {
           (message.toLowerCase().includes("unauthenticate") ||
            message.toLowerCase().includes("unauthorize"))
         ) {
-          console.log("❌ User authentication failed, removing rider token");
-          AsyncStorage.removeItem(RIDER_TOKEN)
+          removeSecureItem(RIDER_TOKEN)
             .then(() => {})
-            .catch((err) => console.log(err));
+            .catch(() => {});
         }
-
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        );
       });
     }
-    if (networkError) {
-      console.log(`[Network error]: ${networkError}`);
+    if (networkError && __DEV__) {
+      console.warn("Network error while processing GraphQL request");
     }
   });
 
@@ -258,6 +270,7 @@ const setupApollo = () => {
     resolvers: {},
   });
 
+  apolloClient = client;
   return client;
 };
 

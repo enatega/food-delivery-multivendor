@@ -1,6 +1,6 @@
 import React from "react";
 import { Skeleton } from "primereact/skeleton";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { TileProps } from "@/lib/utils/interfaces/Home-interfaces";
 
 const ListItem: React.FC<TileProps> = ({ item, loading = false, onClick }) => {

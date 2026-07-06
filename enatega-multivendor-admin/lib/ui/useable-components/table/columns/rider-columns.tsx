@@ -10,7 +10,7 @@ import { IActionMenuProps } from '@/lib/utils/interfaces/action-menu.interface';
 import { IRiderResponse } from '@/lib/utils/interfaces/rider.interface';
 
 // GraphQL
-import { GET_RIDERS, TOGGLE_RIDER } from '@/lib/api/graphql';
+import { TOGGLE_RIDER } from '@/lib/api/graphql';
 import { useMutation } from '@apollo/client';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useTranslations } from 'next-intl';
@@ -36,7 +36,7 @@ export const RIDER_TABLE_COLUMNS = ({
 
   // GraphQL mutation hook
   const [mutateToggle, { loading }] = useMutation(TOGGLE_RIDER, {
-    refetchQueries: [{ query: GET_RIDERS }],
+    refetchQueries: 'active',
     awaitRefetchQueries: true,
     onCompleted: () => {
       setIsLoading(false);
@@ -81,7 +81,7 @@ export const RIDER_TABLE_COLUMNS = ({
     {
       headerName: t('Zone'),
       propertyName: 'zone',
-      body: (rider: IRiderResponse) => rider.zone.title,
+      body: (rider: IRiderResponse) => rider.zone?.title ?? '-',
     },
     {
       headerName: t('Vehicle Type'),

@@ -615,7 +615,6 @@
   "Store has been added successfully": "پلورنځی په بریالیتوب سره اضافه شو",
   "New Store": "نوی پلورنځی",
   "Create Store": "پلورنځی جوړ کړئ",
-  "Store Creation Failed - Please select a vendor.": "د پلورنځي جوړول ناکام شول - مهرباني وکړئ یو پلورونکي غوره کړئ.",
   "Store Creation  Failed": "د پلورنځي جوړول ناکام شول",
   "Save & Next": "خوندي کړئ او بل",
   "Add Timings": "وختونه اضافه کړئ",
@@ -668,7 +667,6 @@
   "Transferred": "لیږدول شوی",
   "Requested": "غوښتل شوی",
   "Zone has been": "زون شو",
-  "Something went wrong. Please try again": "یو څه غلط شول. مهرباني وکړئ بیا هڅه وکړئ",
   "Something went wrong, Please try again": "یو څه غلط شول، مهرباني وکړئ بیا هڅه وکړئ",
   "Add Zone": "زون اضافه کړئ",
   "Delete Zone": "زون ړنګ کړئ",
@@ -709,7 +707,6 @@
   "Commission rate updated for": "د کمیشن نرخ لپاره تازه شو",
   "Error updating commission rate for": "د کمیشن نرخ تازه کولو تېروتنه لپاره",
   "Error Fetching Restaurants": "د رستورانتونو راوړلو تېروتنه",
-  "An error occurred while fetching restaurants. Please try again later.": "د رستورانتونو راوړلو پر مهال تېروتنه رامنځته شوه. مهرباني وکړئ وروسته بیا هڅه وکړئ.",
   "Set Commission Rate": "د کمیشن نرخ تنظیم کړئ",
   "Amplitude Configuration Updated": "د Amplitude ترتیب تازه شو",
   "Web Amplitude API Key": "د ویب Amplitude API کیلي",
@@ -807,7 +804,6 @@
   "Order Time": "د امر وخت",
   "By signing up, you agree to our": "په نوم لیکنه کولو سره، تاسو زمونږ سره موافق یاست",
   "and": "او",
-  "We have sent OTP code to john@email.com": "مونږ OTP کوډ john@email.com ته لېږلی",
   "Please check your inbox": "مهرباني وکړئ خپل ان باکس وګورئ",
   "Valid for 1min": "د ۱ دقیقې لپاره معتبر",
   "Resend OTP": "OTP بیا ولېږئ",
@@ -1114,5 +1110,9 @@
   "Connect with Stripe for payments": "د تادیو لپاره سټرایپ سره نښلول",
   "Payment Required": "تادیه اړینه ده",
   "Please complete your purchase to gain full access to the product": "مهرباني وکړئ خپل پیرود بشپړ کړئ ترڅو د محصول بشپړ لاسرسي ترلاسه کړئ",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "ځکه چې د کمیشن نرخ یو % ارزښت دی نو دا د ۱۰۰ اعظمي ارزښت څخه زیات نشي کیدی"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "ځکه چې د کمیشن نرخ یو % ارزښت دی نو دا د ۱۰۰ اعظمي ارزښت څخه زیات نشي کیدی",
+  "Store Creation Failed - Please select a vendor": "د پلورنځي جوړول ناکام شول - مهرباني وکړئ یو پلورونکي غوره کړئ.",
+  "Something went wrong - Please try again": "یو څه غلط شول. مهرباني وکړئ بیا هڅه وکړئ",
+  "An error occurred while fetching restaurants - Please try again later": "د رستورانتونو راوړلو پر مهال تېروتنه رامنځته شوه. مهرباني وکړئ وروسته بیا هڅه وکړئ.",
+  "We have sent OTP code to your email": "مونږ OTP کوډ john@email.com ته لېږلی"
 }

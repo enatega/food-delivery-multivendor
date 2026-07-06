@@ -1,14 +1,11 @@
 // Core
 import { useMutation } from '@apollo/client';
-import { useState } from 'react';
-
-// Prime React
-import { FilterMatchMode } from 'primereact/api';
+import { useEffect, useState } from 'react';
 
 // Interface and Types
 import {
   IZoneResponse,
-  IZonesResponse,
+  IZonesPaginatedResponse,
   IActionMenuItem,
   IQueryResult,
   IZoneMainComponentsProps,
@@ -29,12 +26,12 @@ import { ZONE_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/zo
 // Hooks
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useToast from '@/lib/hooks/useToast';
+import useDebounce from '@/lib/hooks/useDebounce';
 
 // GraphQL and Utilities
-import { DELETE_ZONE, GET_ZONES } from '@/lib/api/graphql';
+import { DELETE_ZONE, GET_ZONES_PAGINATED } from '@/lib/api/graphql';
 
 // Data
-import { generateDummyZones } from '@/lib/utils/dummy';
 import { useTranslations } from 'next-intl';
 
 export default function ZoneMain({
@@ -44,36 +41,41 @@ export default function ZoneMain({
   // Hooks
   const t = useTranslations();
   const { showToast } = useToast();
-  const { ISPAID_VERSION } = useConfiguration()
+  const { ISPAID_VERSION } = useConfiguration();
   // State - Table
   const [deleteId, setDeleteId] = useState('');
   const [selectedProducts, setSelectedProducts] = useState<IZoneResponse[]>([]);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const [filters, setFilters] = useState({
-    global: { value: '' as string | null, matchMode: FilterMatchMode.CONTAINS },
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(globalFilterValue, 500);
 
   // Query
-  const { data, loading } = useQueryGQL(GET_ZONES, {
-    fetchPolicy: 'cache-and-network',
-  }) as IQueryResult<IZonesResponse | undefined, undefined>;
+  const { data, loading } = useQueryGQL(GET_ZONES_PAGINATED, {
+    page: currentPage,
+    limit: rowsPerPage,
+    search: debouncedSearch || undefined,
+  }, {
+    fetchPolicy: 'network-only',
+  }) as IQueryResult<IZonesPaginatedResponse | undefined, undefined>;
 
   //Mutation
   const [mutateDelete, { loading: mutationLoading }] = useMutation(
     DELETE_ZONE,
     {
-      refetchQueries: [{ query: GET_ZONES }],
+      refetchQueries: 'active',
+      awaitRefetchQueries: true,
     }
   );
 
   // For global search
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const _filters = { ...filters };
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
+    setGlobalFilterValue(e.target.value);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   const menuItems: IActionMenuItem<IZoneResponse>[] = [
     {
@@ -117,8 +119,7 @@ export default function ZoneMain({
       });
       setDeleteId('');
     }
-
-  }
+  };
 
   return (
     <div className="pt-5">
@@ -129,12 +130,18 @@ export default function ZoneMain({
             onGlobalFilterChange={onGlobalFilterChange}
           />
         }
-        data={data?.zones || (loading ? generateDummyZones() : [])}
-        filters={filters}
+        data={data?.zonesPaginated?.data || []}
         setSelectedData={setSelectedProducts}
         selectedData={selectedProducts}
         loading={loading}
         columns={ZONE_TABLE_COLUMNS({ menuItems })}
+        totalRecords={data?.zonesPaginated?.totalCount ?? 0}
+        currentPage={data?.zonesPaginated?.currentPage ?? currentPage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(page, rowCount) => {
+          setCurrentPage(page);
+          setRowsPerPage(rowCount);
+        }}
       />
       <CustomDialog
         loading={mutationLoading}
@@ -143,7 +150,7 @@ export default function ZoneMain({
           setDeleteId('');
         }}
         onConfirm={() => {
-          handleDeleteZone()
+          handleDeleteZone();
         }}
         message={t('Are you sure you want to delete this item?')}
       />

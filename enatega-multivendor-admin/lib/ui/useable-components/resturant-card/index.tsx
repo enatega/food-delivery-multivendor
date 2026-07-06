@@ -1,7 +1,7 @@
 // Core
 import { useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 
 // Third-party libraries
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -125,8 +125,8 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
   const handleCheckboxChange = async () => {
     try {
       await deleteRestaurant({ variables: { id: _id } });
-    } catch (err) {
-      console.log({ err });
+    } catch {
+      // onError in useMutation handles the toast for failed requests
     }
   };
 

@@ -20,7 +20,6 @@ import {
   IWithDrawRequest,
 } from '@/lib/utils/interfaces/';
 import { IActionMenuProps, IQueryResult } from '@/lib/utils/interfaces';
-import { generateDummyWithdrawRequests } from '@/lib/utils/dummy';
 import useDebounce from '@/lib/hooks/useDebounce';
 
 export default function WithdrawRequestsSuperAdminMain({
@@ -66,7 +65,7 @@ export default function WithdrawRequestsSuperAdminMain({
       userType: selectedUserType,
       search: debouncedSearch,
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   }) as unknown as IQueryResult<IGetWithDrawRequestsData | undefined, any>;
 
   // Global search handler
@@ -126,7 +125,7 @@ export default function WithdrawRequestsSuperAdminMain({
             setSelectedActions={setSelectedActions}
           />
         }
-        data={loading ? generateDummyWithdrawRequests() : filteredData}
+        data={filteredData}
         filters={filters}
         setSelectedData={setSelectedData}
         selectedData={selectedData}

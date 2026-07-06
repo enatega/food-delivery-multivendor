@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react'
-import { emailExist, forgotPassword } from '../../apollo/mutations'
+import { forgotPassword } from '../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -11,37 +11,16 @@ import { useTranslation } from 'react-i18next'
 const FORGOT_PASSWORD = gql`
   ${forgotPassword}
 `
-const EMAIL = gql`
-  ${emailExist}
-`
 export const useForgotPassword = () => {
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()
   const [email, setEmail] = useState(route.params?.email || '')
   const [emailError, setEmailError] = useState(null)
-  const [otp] = useState(Math.floor(100000 + Math.random() * 900000).toString())
 
   const [mutate, { loading }] = useMutation(FORGOT_PASSWORD, {
     onCompleted,
     onError
-  })
-
-  const [mutateEmailExistsAndForgotPassword, { loading: emailExistLoading }] = useMutation(EMAIL, {
-    onCompleted: (data) => {
-      if (data?.emailExist?.userType && data?.emailExist?._id) {
-        mutate({ variables: { email: email.toLowerCase().trim() } })
-      } else {
-        FlashMessage({
-          message: t("Account not found, Please create your account.")
-        })
-      }
-    },
-    onError: (error) => {
-      FlashMessage({
-        message: t("somethingWentWrong")
-      })
-    }
   })
 
   const themeContext = useContext(ThemeContext)
@@ -65,15 +44,17 @@ export const useForgotPassword = () => {
 
   function forgotPassword() {
     if (validateCredentials()) {
-      mutateEmailExistsAndForgotPassword({ variables: { email: email.toLowerCase().trim() } })
+      mutate({ variables: { email: email.toLowerCase().trim() } })
     }
   }
 
   function onCompleted(data) {
     FlashMessage({
-      message: t('otpForResetPassword')
+      message: t('otpSentToEmail')
     })
-    navigation.navigate('ForgotPasswordOtp', { email })
+    navigation.navigate('ForgotPasswordOtp', {
+      email: email.toLowerCase().trim()
+    })
   }
 
   function onError(error) {
@@ -91,12 +72,11 @@ export const useForgotPassword = () => {
     email,
     setEmail,
     emailError,
-    otp,
     onError,
     onCompleted,
     forgotPassword,
     themeContext,
     currentTheme,
-    loading: loading || emailExistLoading
+    loading
   }
 }

@@ -614,7 +614,6 @@
   "Store has been added successfully": "Do'kon muvaffaqiyatli qo'shildi",
   "New Store": "Yangi do'kon",
   "Create Store": "Do'kon yaratish",
-  "Store Creation Failed - Please select a vendor.": "Do'kon yaratish muvaffaqiyatsiz - Iltimos, sotuvchi tanlang",
   "Store Creation  Failed": "Do'kon yaratish muvaffaqiyatsiz",
   "Save & Next": "Saqlash va keyingisi",
   "Add Timings": "Vaqt qo'shish",
@@ -667,7 +666,6 @@
   "Transferred": "O'tkazildi",
   "Requested": "So'raldi",
   "Zone has been": "Zona",
-  "Something went wrong. Please try again": "Nimadir xato ketdi. Iltimos qayta urining",
   "Something went wrong, Please try again": "Nimadir xato ketdi, Iltimos qayta urining",
   "Add Zone": "Zona qo'shish",
   "Delete Zone": "Zonani o'chirish",
@@ -708,7 +706,6 @@
   "Commission rate updated for": "Komissiya stavkasi yangilandi",
   "Error updating commission rate for": "Komissiya stavkasini yangilashda xato",
   "Error Fetching Restaurants": "Restoranlarni olishda xato",
-  "An error occurred while fetching restaurants. Please try again later.": "Restoranlarni olishda xato yuz berdi. Keyinroq qayta urining.",
   "Set Commission Rate": "Komissiya stavkasini belgilash",
   "Amplitude Configuration Updated": "Amplitude sozlamalari yangilandi",
   "Web Amplitude API Key": "Veb Amplitude API kaliti",
@@ -806,7 +803,6 @@
   "Order Time": "Buyurtma vaqti",
   "By signing up, you agree to our": "Ro'yxatdan o'tish orqali siz bizning",
   "and": "va",
-  "We have sent OTP code to john@email.com": "Biz john@email.com ga OTP kodini yubordik",
   "Please check your inbox": "Iltimos, kiruvchi xabarlarni tekshiring",
   "Valid for 1min": "1 daqiqa davomida amal qiladi",
   "Resend OTP": "OTPni qayta yuborish",
@@ -1113,5 +1109,9 @@
   "Connect with Stripe for payments": "To'lovlar uchun Stripe bilan ulaning",
   "Payment Required": "To'lov talab qilinadi",
   "Please complete your purchase to gain full access to the product": "Mahsulotga to'liq kirish uchun xaridingizni yakunlang",
-  "As commission rate is a %age value so it cannot exceed a max value of 100": "Komissiya stavkasi % qiymat bo'lgani uchun u 100 maksimal qiymatdan oshmasligi kerak"
+  "As commission rate is a %age value so it cannot exceed a max value of 100": "Komissiya stavkasi % qiymat bo'lgani uchun u 100 maksimal qiymatdan oshmasligi kerak",
+  "Store Creation Failed - Please select a vendor": "Do'kon yaratish muvaffaqiyatsiz - Iltimos, sotuvchi tanlang",
+  "Something went wrong - Please try again": "Nimadir xato ketdi. Iltimos qayta urining",
+  "An error occurred while fetching restaurants - Please try again later": "Restoranlarni olishda xato yuz berdi. Keyinroq qayta urining.",
+  "We have sent OTP code to your email": "Biz john@email.com ga OTP kodini yubordik"
 }

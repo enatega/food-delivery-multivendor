@@ -1,5 +1,5 @@
 import React from 'react'
-import Image from 'next/image'
+import Image from '@/lib/ui/useable-components/safe-image';
 import { sideCardProps } from '@/lib/utils/interfaces/Rider-restaurant.interface'
 
 const SideCard:React.FC<sideCardProps> = ({image,heading,subHeading,right=true}) => {

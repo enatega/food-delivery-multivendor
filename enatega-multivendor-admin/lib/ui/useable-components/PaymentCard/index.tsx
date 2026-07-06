@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 import { TPaymentType } from '@/lib/utils/types/payment-type';
 import { StripeSVG } from '@/lib/utils/assets/svgs/stripe';
 import { IPaymentCardProps } from '@/lib/utils/interfaces';
 import { useTranslations } from 'next-intl';
 
-export default function PaymentCard({
+function PaymentCard({
   name,
   description,
   onClick,
@@ -36,3 +36,5 @@ export default function PaymentCard({
     </div>
   );
 }
+
+export default memo(PaymentCard);

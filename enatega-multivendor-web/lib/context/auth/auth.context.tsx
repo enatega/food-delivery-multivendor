@@ -9,7 +9,9 @@ import {
   ReactNode,
   SetStateAction,
   useContext,
+  useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -20,10 +22,12 @@ import { useConfig } from "../configuration/configuration.context";
 import {
   CREATE_USER,
   EMAIL_EXISTS,
+  FORGOT_PASSWORD,
   GET_USER_PROFILE,
   LOGIN,
   PHONE_EXISTS,
   RESET_PASSWORD,
+  RESET_PASSWORD_WITH_TOKEN,
   SENT_OTP_TO_EMAIL,
   SENT_OTP_TO_PHONE,
 } from "@/lib/api/graphql";
@@ -35,7 +39,6 @@ import {
   ICreateUserArguments,
   ICreateUserData,
   ICreateUserResponse,
-  IEmailExists,
   IEmailExistsResponse,
   ILoginProfile,
   ILoginProfileResponse,
@@ -50,10 +53,23 @@ import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 
 // Google API
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
+import {
+  hasValidAuthToken,
+  invalidateClientSession,
+  setAuthTokens,
+} from "@/lib/utils/methods/auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 
 const AuthContext = createContext({} as IAuthContextProps);
+const SOCIAL_AUTH_MESSAGES = {
+  missingToken:
+    "Your social sign-in did not return a valid token. Please try again.",
+  invalidToken:
+    "Your social sign-in token is invalid or expired. Please sign in again.",
+  notConfigured:
+    "Social login is not configured right now. Please use email and password.",
+};
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   // States
@@ -78,11 +94,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   // Mutations
-  const [mutateEmailCheck] = useMutation<
+  const [checkEmailExistsMutation] = useMutation<
     IEmailExistsResponse,
     undefined | { email: string }
   >(EMAIL_EXISTS);
-  const [mutatePhoneCheck] = useMutation<
+  const [checkPhoneExistsMutation] = useMutation<
     IPhoneExistsResponse,
     undefined | { phone: string }
   >(PHONE_EXISTS);
@@ -98,19 +114,27 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     ICreateUserResponse,
     undefined | ICreateUserArguments
   >(CREATE_USER);
+  const [mutateForgotPassword] = useMutation<
+    { forgotPassword: { result: boolean } },
+    undefined | { email: string }
+  >(FORGOT_PASSWORD);
   const [mutateResetPassword] = useMutation<
     { resetPassword: { result: boolean } },
     undefined | { password: string; email: string }
   >(RESET_PASSWORD);
+  const [mutateResetPasswordWithToken] = useMutation<
+    { resetPassword: { result: boolean } },
+    undefined | { password: string; email: string; token: string }
+  >(RESET_PASSWORD_WITH_TOKEN);
 
   // Checkers
-  async function checkEmailExists(email: string): Promise<IEmailExists> {
+  const checkEmailExists = useCallback(async (email: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      const emailResponse = await mutateEmailCheck({
+      const emailResponse = await checkEmailExistsMutation({
         variables: { email: email },
       });
-      return emailResponse.data?.emailExist || ({} as IEmailExists);
+      return Boolean(emailResponse.data?.emailExist);
     } catch (err) {
       const error = err as ApolloError;
       console.error("Error while checking email:", error);
@@ -120,18 +144,18 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         message: error.cause?.message || t("error_checking_email"),
         duration: 3000
       });
-      return {} as IEmailExists;
+      return false;
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [checkEmailExistsMutation, showToast, t]);
 
-  async function checkPhoneExists(phone: string): Promise<boolean> {
+  const checkPhoneExists = useCallback(async (phone: string): Promise<boolean> => {
     try {
       setIsLoading(true);
 
-      const resp = await mutatePhoneCheck({ variables: { phone } });
-      const exists = Boolean(resp.data?.phoneExist?._id);
+      const resp = await checkPhoneExistsMutation({ variables: { phone } });
+      const exists = Boolean(resp.data?.phoneExist);
 
       // if (exists) {
       // showToast({
@@ -158,26 +182,31 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [checkPhoneExistsMutation, showToast, t]);
   // handlers
 
-  const handlePasswordReset = async (
+  const handlePasswordReset = useCallback(async (
     password: string,
     email: string,
-    setFormData: Dispatch<SetStateAction<IAuthFormData>>
+    token?: string,
+    setFormData?: Dispatch<SetStateAction<IAuthFormData>>
   ) => {
     try {
       setIsLoading(true);
-      const resetPasswordResponse = await mutateResetPassword({
-        variables: { password, email },
-      });
+      const resetPasswordResponse = token
+        ? await mutateResetPasswordWithToken({
+            variables: { password, email, token },
+          })
+        : await mutateResetPassword({
+            variables: { password, email },
+          });
       if (resetPasswordResponse?.data?.resetPassword?.result === true) {
         showToast({
           type: "success",
           title: t("password_reset"),
           message: t("password_reset_success"),
         });
-        setFormData({} as IAuthFormData);
+        setFormData?.({} as IAuthFormData);
         setActivePanel(0);
         // setIsAuthModalVisible(false);
       }
@@ -193,18 +222,59 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [mutateResetPassword, mutateResetPasswordWithToken, showToast, t]);
 
-  const handleUserLogin = async (user: IUserLoginArguments) => {
+  const handleForgotPassword = useCallback(async (email: string) => {
     try {
       setIsLoading(true);
+      await mutateForgotPassword({
+        variables: { email: email.trim().toLowerCase() },
+      });
+      showToast({
+        type: "success",
+        title: t("please_check_your_inbox_message"),
+        message: t("reset_password_email_sent_generic_message"),
+      });
+    } catch (err) {
+      const error = err as ApolloError;
+      console.error("Error while requesting password reset:", error);
+      showToast({
+        type: "error",
+        title: t("password_reset_error"),
+        message: error.cause?.message || t("error_resetting_password"),
+        duration: 3000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [mutateForgotPassword, showToast, t]);
+
+  const handleUserLogin = useCallback(async (user: IUserLoginArguments) => {
+    try {
+      setIsLoading(true);
+      if (
+        (user.type === "google" || user.type === "apple") &&
+        !user.idToken
+      ) {
+        showToast({
+          type: "error",
+          title: t("login_error"),
+          message: SOCIAL_AUTH_MESSAGES.missingToken,
+        });
+        return;
+      }
       const userResponse = await mutateLogin({
         variables: { ...user },
       });
 
       const { data } = userResponse;
-      localStorage.setItem("userId", data?.login.userId ?? "");
-      localStorage.setItem("token", data?.login.token ?? "");
+      setAuthTokens({
+        userId: data?.login.userId,
+        token: data?.login.token,
+        tokenExpiration: data?.login.tokenExpiration,
+        userType: 'USER',
+      });
+      setAuthToken(data?.login.token ?? "");
 
       return data;
     } catch (err) {
@@ -218,16 +288,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       showToast({
         type: "error",
         title: t("login_error"),
-        message: t("invalid_credentials"),
+        message: getLoginErrorMessage(error, user.type),
         // sticky: true,
       });
     } finally {
       setIsLoading(false);
       setRefetchProfileData(true);
     }
-  };
+  }, [mutateLogin, router, setAuthToken, showToast, t]);
 
-  const handleCreateUser = async (
+  const handleCreateUser = useCallback(async (
     user: ICreateUserArguments
   ): Promise<ICreateUserData> => {
     try {
@@ -239,8 +309,13 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         },
       });
       if (userData.data?.createUser && userData.data.createUser.userId) {
-        localStorage.setItem("token", userData.data.createUser.token);
-        localStorage.setItem("userId", userData.data.createUser.userId);
+        setAuthTokens({
+          userId: userData.data.createUser.userId,
+          token: userData.data.createUser.token,
+          tokenExpiration: userData.data.createUser.tokenExpiration,
+          userType: 'USER',
+        });
+        setAuthToken(userData.data.createUser.token ?? "");
         const {
           userId,
           email,
@@ -270,8 +345,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           title: t("create_user_label"),
           message: t("registration_success"),
         });
-        localStorage.setItem("token", userData.data.createUser.token);
-        localStorage.setItem("userId", userData.data.createUser.userId);
+        setAuthTokens({
+          userId: userData.data.createUser.userId,
+          token: userData.data.createUser.token,
+          tokenExpiration: userData.data.createUser.tokenExpiration,
+          userType: 'USER',
+        });
         return userData.data.createUser as ICreateUserData;
       } else {
         return {} as ICreateUserData;
@@ -290,17 +369,22 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       setRefetchProfileData(true);
     }
-  };
+  }, [createUser, showToast, t]);
   const [fetchProfile] = useLazyQuery(GET_USER_PROFILE, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
   });
   // GQL Handlers
   async function onLoginCompleted(data: ILoginProfileResponse) {
     try {
       setUser(data.login);
 
-      localStorage.setItem("token", data?.login?.token ?? "");
-      localStorage.setItem("userId", data?.login?.userId ?? "");
+      setAuthTokens({
+        userId: data?.login?.userId,
+        token: data?.login?.token,
+        tokenExpiration: data?.login?.tokenExpiration,
+        userType: 'USER',
+      });
+      setAuthToken(data?.login?.token ?? "");
       await fetchProfile();
       if (!data.login.emailIsVerified) {
         setActivePanel(5);
@@ -333,23 +417,58 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   function onLoginError(error: ApolloError) {
     console.error("Error while logging in:", error);
-    if (error.message) {
-      showToast({
-        type: "error",
-        title: t("login_error"),
-        message: error.message,
-      });
-    } else {
-      showToast({
-        type: "error",
-        title: t("login_error"),
-        message: t("invalid_credentials"),
-      });
-    }
+    showToast({
+      type: "error",
+      title: t("login_error"),
+      message: getLoginErrorMessage(error),
+    });
   }
 
+  const getLoginErrorMessage = useCallback((error: ApolloError, loginType?: string) => {
+    const rawMessage =
+      error.graphQLErrors[0]?.message ||
+      error.networkError?.message ||
+      error.message;
+    const normalizedMessage = rawMessage.toLowerCase();
+
+    if (
+      normalizedMessage.includes("not configured") ||
+      normalizedMessage.includes("not supported") ||
+      normalizedMessage.includes("social login is not configured")
+    ) {
+      return SOCIAL_AUTH_MESSAGES.notConfigured;
+    }
+
+    if (
+      normalizedMessage.includes("idtoken") ||
+      normalizedMessage.includes("identity token") ||
+      normalizedMessage.includes("missing token")
+    ) {
+      return SOCIAL_AUTH_MESSAGES.missingToken;
+    }
+
+    if (
+      (loginType === "google" || loginType === "apple") &&
+      (normalizedMessage.includes("invalid token") ||
+        normalizedMessage.includes("expired token") ||
+        normalizedMessage.includes("jwt") ||
+        normalizedMessage.includes("token"))
+    ) {
+      return SOCIAL_AUTH_MESSAGES.invalidToken;
+    }
+
+    if (
+      normalizedMessage.includes("invalid token") ||
+      normalizedMessage.includes("expired token")
+    ) {
+      return SOCIAL_AUTH_MESSAGES.invalidToken;
+    }
+
+    return rawMessage || t("invalid_credentials");
+  }, [t]);
+
   // OTP Handlers
-  async function sendOtpToEmailAddress(email: string, type?: string) {
+  const sendOtpToEmailAddress = useCallback(async (email: string, type?: string) => {
     try {
       setIsLoading(true);
       if (SKIP_EMAIL_VERIFICATION) {
@@ -394,9 +513,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [SKIP_EMAIL_VERIFICATION, TEST_OTP, sendOtpToEmail, setActivePanel, setOtp, showToast, t]);
 
-  async function sendOtpToPhoneNumber(phone: string) {
+  const sendOtpToPhoneNumber = useCallback(async (phone: string) => {
     try {
       setIsLoading(true);
       if (SKIP_MOBILE_VERIFICATION) {
@@ -438,19 +557,23 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [SKIP_MOBILE_VERIFICATION, TEST_OTP, sendOtpToPhone, setActivePanel, setOtp, showToast, t]);
 
   // Use Effects
   useEffect(() => {
     if (typeof window === "undefined") return; // ⛔ Prevent SSR execution
 
-    // Local Vars
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setAuthToken(token);
+    if (hasValidAuthToken()) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        setAuthToken(token);
+      }
+      return;
     }
-  }, [user]);
+
+    invalidateClientSession();
+    setAuthToken("");
+  }, []);
 
   useEffect(() => {
     if (typeof user?.token !== "undefined" && !!user?.token) {
@@ -461,35 +584,64 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
+  const contextValue = useMemo(
+    () => ({
+      authToken,
+      setAuthToken,
+      user,
+      setUser,
+      checkEmailExists,
+      checkPhoneExists,
+      handleUserLogin,
+      activePanel,
+      setActivePanel,
+      isAuthModalVisible,
+      setIsAuthModalVisible,
+      otp,
+      setOtp,
+      sendOtpToEmailAddress,
+      sendOtpToPhoneNumber,
+      handleForgotPassword,
+      handleCreateUser,
+      setIsLoading,
+      isLoading,
+      isRegistering,
+      setIsRegistering,
+      refetchProfileData,
+      setRefetchProfileData,
+      handlePasswordReset,
+    }),
+    [
+      authToken,
+      setAuthToken,
+      user,
+      setUser,
+      checkEmailExists,
+      checkPhoneExists,
+      handleUserLogin,
+      activePanel,
+      setActivePanel,
+      isAuthModalVisible,
+      setIsAuthModalVisible,
+      otp,
+      setOtp,
+      sendOtpToEmailAddress,
+      sendOtpToPhoneNumber,
+      handleForgotPassword,
+      handleCreateUser,
+      setIsLoading,
+      isLoading,
+      isRegistering,
+      setIsRegistering,
+      refetchProfileData,
+      setRefetchProfileData,
+      handlePasswordReset,
+    ]
+  );
+
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID ?? "not_found"}>
-      <AuthContext.Provider
-        value={{
-          authToken,
-          setAuthToken,
-          user,
-          setUser,
-          checkEmailExists,
-          checkPhoneExists,
-          handleUserLogin,
-          activePanel,
-          setActivePanel,
-          isAuthModalVisible,
-          setIsAuthModalVisible,
-          otp,
-          setOtp,
-          sendOtpToEmailAddress,
-          sendOtpToPhoneNumber,
-          handleCreateUser,
-          setIsLoading,
-          isLoading,
-          isRegistering,
-          setIsRegistering,
-          refetchProfileData,
-          setRefetchProfileData,
-          handlePasswordReset,
-        }}
-      >
+      <AuthContext.Provider value={contextValue}>
         {children}
       </AuthContext.Provider>
     </GoogleOAuthProvider>

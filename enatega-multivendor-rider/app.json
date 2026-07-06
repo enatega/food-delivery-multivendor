@@ -12,7 +12,7 @@
     },
     "icon": "./lib/assets/images/icon.png",
     "assetBundlePatterns": [
-      "**/*"
+      "lib/assets/**/*"
     ],
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -40,7 +40,8 @@
           "supportsBackgroundPlayback": true,
           "supportsPictureInPicture": true
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "platforms": [
       "ios",
@@ -49,9 +50,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.enatega.multirider",
-      "config": {
-        "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
-      },
+      "config": {},
       "icon": "./lib/assets/images/icon.png",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!",
@@ -71,9 +70,7 @@
         "ACCESS_FINE_LOCATION"
       ],
       "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
-        }
+        "googleMaps": {}
       },
       "package": "com.enatega.multirider",
       "icon": "./lib/assets/images/appIcon.png",

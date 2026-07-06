@@ -1,11 +1,5 @@
-"use client";
-import dynamic from 'next/dynamic';
-
-const StoreScreen = dynamic(
-  () => import('@/lib/ui/screens/protected/home').then(mod => mod.StoreScreen),
-  { ssr: false }
-);
+import { StoreScreen } from "@/lib/ui/screens/protected/home";
 
 export default function StorePage() {
-  return <StoreScreen/>;
+  return <StoreScreen />;
 }

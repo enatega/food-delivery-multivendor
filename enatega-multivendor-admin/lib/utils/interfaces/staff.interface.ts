@@ -11,8 +11,6 @@ export interface IStaffResponse {
   _id: string;
   name: string;
   email: string;
-  password: string;
-  plainPassword: string;
   phone: number;
   isActive: boolean;
   permissions: string[];
@@ -31,6 +29,15 @@ export interface IStaffAddFormComponentProps extends IGlobalComponentProps {
 
 export interface IStaffGQLResponse {
   staffs: IStaffResponse[];
+}
+
+export interface IStaffPaginatedGQLResponse {
+  staffsPaginated: {
+    data: IStaffResponse[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
 }
 
 export interface IStaffTableHeaderProps {

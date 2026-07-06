@@ -15,7 +15,6 @@ import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaur
 // GraphQL
 import { useMutation } from '@apollo/client';
 import { EDIT_RESTAURANT_COUPON } from '@/lib/api/graphql/mutations/coupons-restaurant';
-import { GET_RESTAURANT_COUPONS } from '@/lib/api/graphql/queries/coupons-restaurant';
 import { useTranslations } from 'next-intl';
 
 
@@ -36,7 +35,7 @@ export const COUPONS_RESTAURANT_TABLE_COLUMNS = ({
 
   // GraphQL mutation hook
   const [mutateToggle, { loading }] = useMutation(EDIT_RESTAURANT_COUPON, {
-    refetchQueries: [{ query: GET_RESTAURANT_COUPONS }],
+    refetchQueries: 'active',
     awaitRefetchQueries: true,
   });
 
@@ -58,8 +57,8 @@ export const COUPONS_RESTAURANT_TABLE_COLUMNS = ({
           },
         },
       });
-    } catch (error) {
-      console.error('Error toggling availability:', error);
+    } catch {
+      setSelectedCouponId(null);
     } finally {
       setSelectedCouponId(null);
     }

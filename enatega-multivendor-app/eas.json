@@ -4,6 +4,9 @@
       "developmentClient": true,
       "distribution": "internal",
       "channel": "development",
+      "env": {
+        "APP_ENV": "development"
+      },
       "android": {
         "buildType": "apk"
       },
@@ -15,12 +18,18 @@
       "developmentClient": false,
       "channel": "staging",
       "distribution": "internal",
+      "env": {
+        "APP_ENV": "staging"
+      },
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
       "channel": "production",
+      "env": {
+        "APP_ENV": "production"
+      },
       "ios": {
         "image": "macos-sequoia-15.6-xcode-26.2"
       }

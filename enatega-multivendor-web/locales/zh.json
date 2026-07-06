@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "请输入有效的OTP",
   "verify_your_mobile_number_label": "验证您的电话号码",
   "otp_valid_for_10_minutes_label": "10分钟内有效",
-  "your@email.com": "your@email.com",
   "continue_label": "继续",
   "resend_otp_label": "重新发送OTP",
   "login_label": "登录",
@@ -661,7 +660,6 @@
   "The_minimum_amount_of_(": "最低金额（",
   ")_for_your_order_has_not_been_reached": "）未达到您的订单要求。",
   "missing_address": "缺少地址",
-  "Select_your_address.": "选择您的地址。",
   "DeliveryTime": "配送时间",
   "SalesTax": "销售税",
   "Contact": "联系方式",
@@ -918,5 +916,7 @@
   "Saturday": "星期六",
   "Sunday": "星期日",
   "loading_orders": "正在加载订单",
-  "show_more_orders": "显示更多订单"
+  "show_more_orders": "显示更多订单",
+  "your_email": "your@email.com",
+  "Select_your_address_prompt": "选择您的地址。"
 }

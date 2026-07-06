@@ -11,11 +11,12 @@ import { LANGUAGES } from "@/lib/utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // I18n
-import { changeLanguage } from "i18next";
+import { setAppLanguage } from "@/i18next";
 
 // Hooks
 import { useApptheme } from "@/lib/context/theme.context";
 import { useContext, useState } from "react";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useTranslation } from "react-i18next";
 
 // Core
@@ -28,6 +29,7 @@ export default function LanguageMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const tabBarHeight = useBottomTabBarHeight();
   const { isSelected, setIsSelected } = useContext(AuthContext);
 
   // Handlers
@@ -38,15 +40,12 @@ export default function LanguageMain() {
 
   const handleSubmission = async () => {
     try {
-
-      console.log({isSelected})
-
       setIsChangingLang(true);
       await AsyncStorage.setItem("lang", isSelected);
-      changeLanguage(isSelected);
+      await setAppLanguage(isSelected);
       setIsChangingLang(false);
-    } catch (e) {
-      console.error(e);
+    } catch {
+      setIsChangingLang(false);
     }
   };
 
@@ -59,7 +58,7 @@ export default function LanguageMain() {
       <ScrollView
         className="w-[90%] flex-1 mt-4"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20 }}   // space before button
+        contentContainerStyle={{ paddingBottom: tabBarHeight + 24 }}
       >
         {LANGUAGES.map((lng, index) => (
           <View
@@ -91,7 +90,7 @@ export default function LanguageMain() {
       </ScrollView>
 
       {/* ---------- FIXED BUTTON ---------- */}
-      <View className="w-[90%] mb-16">
+      <View className="w-[90%]" style={{ marginBottom: tabBarHeight + 16 }}>
         <CustomContinueButton
           title={isChangingLang ? t('Please wait') : t('Update Language')}
           onPress={handleSubmission}

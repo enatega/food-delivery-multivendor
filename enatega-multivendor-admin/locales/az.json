@@ -571,7 +571,6 @@
   "Store has been added successfully": "Mağaza uğurla əlavə edildi",
   "New Store": "Yeni mağaza",
   "Create Store": "Mağaza yarat",
-  "Store Creation Failed - Please select a vendor.": "Mağaza yaradılması uğursuz oldu - Zəhmət olmasa satıcı seçin.",
   "Store Creation  Failed": "Mağaza yaradılması uğursuz oldu",
   "Save & Next": "Yadda saxla və növbəti",
   "Add Timings": "Saat əlavə et",
@@ -633,7 +632,6 @@
   "Transferred": "Köçürüldü",
   "Requested": "Sorğulandı",
   "Zone has been": "Zona",
-  "Something went wrong. Please try again": "Nə isə səhv getdi. Zəhmət olmasa yenidən cəhd edin",
   "Something went wrong, Please try again": "Nə isə səhv getdi, zəhmət olmasa yenidən cəhd edin",
   "Add Zone": "Zona əlavə et",
   "Delete Zone": "Zonanı sil",
@@ -674,7 +672,6 @@
   "Commission rate updated for": "Komissiya dərəcəsi yeniləndi:",
   "Error updating commission rate for": "Komissiya dərəcəsi yenilənmədi:",
   "Error Fetching Restaurants": "Restoranlar yüklənmədi",
-  "An error occurred while fetching restaurants. Please try again later.": "Restoranlar yüklənərkən xəta baş verdi. Zəhmət olmasa daha sonra yenidən cəhd edin.",
   "Set Commission Rate": "Komissiya dərəcəsini təyin et",
   "Amplitude Configuration Updated": "Amplitude konfiqurasiyası yeniləndi",
   "Web Amplitude API Key": "Veb Amplitude API açarı",
@@ -790,7 +787,6 @@
   "Order Time": "Sifariş vaxtı",
   "By signing up, you agree to our": "Qeydiyyatdan keçməklə, bizim",
   "and": "və",
-  "We have sent OTP code to john@email.com": "OTP kodu john@email.com ünvanına göndərildi",
   "Please check your inbox": "Zəhmət olmasa gələnlər qutunuzu yoxlayın",
   "Valid for 1min": "1 dəqiqə üçün etibarlıdır",
   "Resend OTP": "OTP-ni yenidən göndər",
@@ -1113,5 +1109,9 @@
     "weak": "Zəif",
     "medium": "Orta",
     "strong": "Güclü"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Mağaza yaradılması uğursuz oldu - Zəhmət olmasa satıcı seçin.",
+  "Something went wrong - Please try again": "Nə isə səhv getdi. Zəhmət olmasa yenidən cəhd edin",
+  "An error occurred while fetching restaurants - Please try again later": "Restoranlar yüklənərkən xəta baş verdi. Zəhmət olmasa daha sonra yenidən cəhd edin.",
+  "We have sent OTP code to your email": "OTP kodu john@email.com ünvanına göndərildi"
 }

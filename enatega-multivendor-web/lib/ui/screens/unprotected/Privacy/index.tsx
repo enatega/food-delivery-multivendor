@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import Heading from "@/lib/ui/screen-components/un-protected/TermsConditions/Heading";
 import Paragraph from "@/lib/ui/screen-components/un-protected/TermsConditions/Para";
 import { useTranslations } from "next-intl";

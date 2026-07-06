@@ -69,7 +69,6 @@ class PublicAccessTokenService {
     const refreshTime = Math.max(timeUntilExpiry - 30000, 1000);
 
     this.refreshTimer = setTimeout(async () => {
-      console.log("🔄 Auto-refreshing expired token...");
       await this.refreshToken(apolloClient);
       this.scheduleRefresh(apolloClient);
     }, refreshTime);
@@ -88,8 +87,7 @@ class PublicAccessTokenService {
       this.token = await SecureStore.getItemAsync(KEYS.TOKEN);
       const expiryStr = await SecureStore.getItemAsync(KEYS.EXPIRY);
       this.expiry = expiryStr ? parseInt(expiryStr, 10) : null;
-    } catch (error) {
-      console.error("Failed to load from storage:", error);
+    } catch {
     }
   }
 
@@ -105,7 +103,6 @@ class PublicAccessTokenService {
 
     this.refreshPromise = (async () => {
       try {
-        console.log("📡 Calling metricsGeneral API...");
         const { data } = await apolloClient.mutate({
           mutation: METRICS_GENERAL,
           context: {
@@ -125,12 +122,10 @@ class PublicAccessTokenService {
 
           await SecureStore.setItemAsync(KEYS.TOKEN, this.token);
           await SecureStore.setItemAsync(KEYS.EXPIRY, expiryTime.toString());
-          
-          console.log("✅ Token refreshed, expires at:", new Date(expiryTime).toISOString());
+
           this.scheduleRefresh(apolloClient);
         }
       } catch (error) {
-        console.error("❌ Failed to refresh token:", error);
         throw error;
       } finally {
         this.refreshPromise = null;

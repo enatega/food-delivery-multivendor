@@ -10,7 +10,7 @@ import { RELATED_ITEMS, FOOD } from "@/lib/api/graphql";
 // Hooks
 import useUser from "@/lib/hooks/useUser";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 import { useTranslations } from "next-intl";
 import useRestaurant from "@/lib/hooks/useRestaurant";
 import { IFood, IOpeningTime } from "@/lib/utils/interfaces";

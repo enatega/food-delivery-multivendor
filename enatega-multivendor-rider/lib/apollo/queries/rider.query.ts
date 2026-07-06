@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const RIDER_BY_ID = gql`
-  query Rider($id: String) {
+  query Rider($id: String!) {
     rider(id: $id) {
       _id
       location {
@@ -85,7 +85,6 @@ export const RIDER_PROFILE = gql`
         coordinates
       }
       name
-      password
       phone
       totalWalletAmount
       updatedAt
@@ -118,7 +117,7 @@ export const RIDER_PROFILE = gql`
 `;
 
 export const rider = gql`
-  query Rider($id: String) {
+  query Rider($id: String!) {
     rider(id: $id) {
       _id
       location {

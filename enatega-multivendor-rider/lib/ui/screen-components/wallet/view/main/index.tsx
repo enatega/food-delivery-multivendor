@@ -180,6 +180,7 @@ export default function WalletMain() {
     isRiderProfileLoading ||
     isRiderTransactionLoading ||
     isRiderCurrentWithdrawRequestLoading;
+  const transactions = riderTransactionData?.transactionHistory?.data ?? [];
 
   // UseEffects
   useEffect(() => {
@@ -272,23 +273,14 @@ export default function WalletMain() {
       </Text>
 
       <ScrollView style={{ backgroundColor: appTheme.themeBackground }}>
-        {riderTransactionData?.transactionHistory.data.map(
-          (transaction, index) => {
-            return (
-              <RecentTransaction
-                transaction={transaction}
-                key={transaction.createdAt}
-                isLast={
-                  riderTransactionData?.transactionHistory.data.length - 1 ===
-                  index
-                }
-              />
-            );
-          },
-        )}
-        {!riderTransactionData?.transactionHistory?.data?.length && (
-          <NoRecordFound />
-        )}
+        {transactions.map((transaction, index) => (
+          <RecentTransaction
+            transaction={transaction}
+            key={transaction.createdAt}
+            isLast={transactions.length - 1 === index}
+          />
+        ))}
+        {!transactions.length && <NoRecordFound />}
       </ScrollView>
 
       <WithdrawModal

@@ -1,19 +1,24 @@
 // Providers
 import RestaurantProvider from "@/lib/context/global/restaurant";
+import { AuthContext } from "@/lib/context/global/auth.context";
 import { SoundProvider } from "@/lib/context/global/sound.context";
-import { useUserContext } from "@/lib/context/global/user.context";
 import { useApptheme } from "@/lib/context/theme.context";
-import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 // Expo
-import { Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { StatusBar, StatusBarStyle } from "expo-status-bar";
+import { useContext } from "react";
 
 // React Native Flash Message
 import FlashMessage from "react-native-flash-message";
 
 export default function ProtectedLayout() {
   const { appTheme, currentTheme } = useApptheme();
+  const { token } = useContext(AuthContext);
+
+  if (!token) {
+    return <Redirect href="/(un-protected)/login" />;
+  }
 
   return (
     <RestaurantProvider.Provider>

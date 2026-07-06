@@ -8,10 +8,26 @@ import DatePicker, {
 } from '@react-native-community/datetimepicker'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { FontAwesome } from '@expo/vector-icons'
-import moment from 'moment'
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
 import TextDefault from '../Text/TextDefault/TextDefault'
+
+const formatPickupDate = (value) => {
+  const date = value ? new Date(value) : null
+
+  if (!date || Number.isNaN(date.getTime())) return ''
+
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = date.getDate()
+  const year = date.getFullYear()
+  const time = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  }).format(date).toLowerCase()
+
+  return `${month}-${day}-${year}, ${time}`
+}
 
 function PickUp(props) {
   const themeContext = useContext(ThemeContext)
@@ -65,7 +81,7 @@ function PickUp(props) {
                 : styles().iosDateFormat
             }
           >
-            {moment(props?.orderDate).format('MM-D-YYYY, h:mm a')}{' '}
+            {formatPickupDate(props?.orderDate)}{' '}
             {Platform.OS === 'android' && (
               <FontAwesome
                 name='edit'

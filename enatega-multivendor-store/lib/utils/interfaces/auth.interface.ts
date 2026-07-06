@@ -25,12 +25,6 @@ interface IStoreLoginResponse {
   restaurantId: string;
 }
 
-interface IStoreDefaultCredsResponse {
-  restaurantUsername: string;
-  restaurantPassword: string;
-}
-
 export interface IStoreLoginCompleteResponse {
   restaurantLogin: IStoreLoginResponse;
-  lastOrderCreds: IStoreDefaultCredsResponse;
 }

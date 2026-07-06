@@ -66,7 +66,7 @@ export default function CommissionRateMain() {
     GET_COMMISSION_RATES_PAGINATED,
     { page: currentPage, limit: rowsPerPage },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
     }
   ) as IQueryResult<CommissionRateData | undefined, IPaginationCommissionRateVars>;
 
@@ -191,7 +191,7 @@ export default function CommissionRateMain() {
         type: 'error',
         title: t('Error Fetching Restaurants'),
         message: t(
-          'An error occurred while fetching restaurants. Please try again later.'
+          'An error occurred while fetching restaurants - Please try again later'
         ),
         duration: 2000,
       });

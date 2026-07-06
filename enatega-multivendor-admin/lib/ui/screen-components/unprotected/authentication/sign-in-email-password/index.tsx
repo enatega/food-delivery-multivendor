@@ -11,7 +11,6 @@ import { Card } from 'primereact/card';
 
 // Interface
 import {
-  IOwnerLoginDataResponse,
   ISignInForm,
 } from '@/lib/utils/interfaces/forms';
 
@@ -23,10 +22,6 @@ import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-
 // Constants
 import {
   APP_NAME,
-  SELECTED_RESTAURANT,
-  SELECTED_SHOPTYPE,
-  SELECTED_VENDOR,
-  SELECTED_VENDOR_EMAIL,
   SignInErrors,
 } from '@/lib/utils/constants';
 
@@ -43,6 +38,7 @@ import { ApolloError, useMutation } from '@apollo/client';
 
 // Schema
 import { onUseLocalStorage } from '@/lib/utils/methods';
+import { setAuthTokens } from '@/lib/utils/methods/auth';
 import { SignInSchema } from '@/lib/utils/schema';
 import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/lib/hooks/useUser';
@@ -59,38 +55,13 @@ export default function LoginEmailPasswordMain() {
 
   // Hooks
   const router = useRouter();
-  const { setUser } = useUserContext();
+  const { refreshUserSession } = useUserContext();
 
   // API
   const [onLogin, { loading }] = useMutation(OWNER_LOGIN, {
     onError,
-    onCompleted,
   });
 
-  // API Handlers
-  function onCompleted({ ownerLogin }: IOwnerLoginDataResponse) {
-    onUseLocalStorage('save', `user-${APP_NAME}`, JSON.stringify(ownerLogin));
-    setUser(ownerLogin);
-    let redirect_url = DEFAULT_ROUTES[ownerLogin.userType];
-
-    if (ownerLogin?.userType === 'VENDOR') {
-      onUseLocalStorage('save', SELECTED_VENDOR, ownerLogin.userId);
-      onUseLocalStorage('save', SELECTED_VENDOR_EMAIL, ownerLogin.email);
-    }
-
-    if (ownerLogin?.userType === 'RESTAURANT') {
-      onUseLocalStorage('save', SELECTED_RESTAURANT, ownerLogin.userTypeId);
-      onUseLocalStorage('save', SELECTED_SHOPTYPE, ownerLogin?.shopType ?? '');
-    }
-
-    router.replace(redirect_url);
-
-    showToast({
-      type: 'success',
-      title: 'Login',
-      message: 'User has been logged in successfully.',
-    });
-  }
   function onError({ graphQLErrors, networkError }: ApolloError) {
     showToast({
       type: 'error',
@@ -98,17 +69,48 @@ export default function LoginEmailPasswordMain() {
       message:
         graphQLErrors[0]?.message ??
         networkError?.message ??
-        `Something went wrong. Please try again`,
+        `Something went wrong - Please try again`,
     });
   }
 
   // Handler
   const onSubmitHandler = async (data: ISignInForm) => {
     try {
-      await onLogin({
+      const response = await onLogin({
         variables: {
           ...data,
         },
+      });
+
+      const ownerLogin = response.data?.ownerLogin;
+      if (!ownerLogin) {
+        throw new Error('Unable to load session');
+      }
+
+      onUseLocalStorage('save', `user-${APP_NAME}`, JSON.stringify(ownerLogin));
+      setAuthTokens({
+        userId: ownerLogin.userId,
+        token: ownerLogin.token,
+        tokenExpiration: ownerLogin.tokenExpiration,
+        userType: ownerLogin.userType,
+      });
+
+      const verifiedUser = await refreshUserSession(ownerLogin);
+      if (!verifiedUser) {
+        showToast({
+          type: 'error',
+          title: 'Login',
+          message: 'Unable to verify your session. Please try again.',
+        });
+        return;
+      }
+
+      router.replace(DEFAULT_ROUTES[verifiedUser.userType]);
+
+      showToast({
+        type: 'success',
+        title: 'Login',
+        message: 'User has been logged in successfully.',
       });
     } catch (err) {
       showToast({

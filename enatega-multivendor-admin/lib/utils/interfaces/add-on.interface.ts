@@ -44,3 +44,12 @@ export interface IAddonByRestaurantResponse {
     __typename: string;
   };
 }
+
+export interface IAddonPaginatedByRestaurantResponse {
+  restaurantAddonsPaginated: {
+    data: IAddon[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}

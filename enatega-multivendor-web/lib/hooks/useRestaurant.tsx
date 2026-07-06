@@ -6,7 +6,7 @@ export default function useRestaurant(id: string, slug?: string) {
     GET_RESTAURANT_BY_ID_SLUG,
     {
       variables: { id, slug },
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
     }
   );
   return { data, refetch, networkStatus, loading, error };

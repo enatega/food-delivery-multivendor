@@ -558,7 +558,6 @@
   "Store has been added successfully": "تمت إضافة المتجر بنجاح",
   "New Store": "متجر جديد",
   "Create Store": "إنشاء متجر",
-  "Store Creation Failed - Please select a vendor.": "فشل إنشاء المتجر - يرجى اختيار بائع.",
   "Store Creation Failed": "فشل إنشاء المتجر",
   "Save & Next": "حفظ والتالي",
   "Add Timings": "إضافة المواعيد",
@@ -611,7 +610,6 @@
   "Transferred": "تم التحويل",
   "Requested": "تم الطلب",
   "Zone has been": "تم تحديث المنطقة",
-  "Something went wrong. Please try again": "حدث خطأ ما. يرجى المحاولة مرة أخرى",
   "Something went wrong, Please try again": "حدث خطأ ما، يرجى المحاولة مرة أخرى",
   "Add Zone": "إضافة منطقة",
   "Delete Zone": "حذف المنطقة",
@@ -652,7 +650,6 @@
   "Commission rate updated for": "تم تحديث نسبة العمولة لـ",
   "Error updating commission rate for": "خطأ في تحديث نسبة العمولة لـ",
   "Error Fetching Restaurants": "خطأ في جلب المطاعم",
-  "An error occurred while fetching restaurants. Please try again later.": "حدث خطأ أثناء جلب المطاعم. يرجى المحاولة مرة أخرى لاحقاً.",
   "Set Commission Rate": "تعيين نسبة العمولة",
   "Amplitude Configuration Updated": "تم تحديث إعدادات Amplitude",
   "Web Amplitude API Key": "مفتاح API لـ Amplitude على الويب",
@@ -783,7 +780,6 @@
   "Order Time": "وقت الطلب",
   "By signing up, you agree to our": "بالتسجيل، أنت توافق على",
   "and": "و",
-  "We have sent OTP code to john@email.com": "لقد أرسلنا رمز التحقق إلى john@email.com",
   "Please check your inbox": "يرجى التحقق من صندوق الوارد الخاص بك",
   "Valid for 1min": "صالح لمدة دقيقة واحدة",
   "Resend OTP": "إعادة إرسال رمز التحقق",
@@ -1117,5 +1113,9 @@
     "weak": "ضعيف",
     "medium": "متوسط",
     "strong": "قوي"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "فشل إنشاء المتجر - يرجى اختيار بائع.",
+  "Something went wrong - Please try again": "حدث خطأ ما. يرجى المحاولة مرة أخرى",
+  "An error occurred while fetching restaurants - Please try again later": "حدث خطأ أثناء جلب المطاعم. يرجى المحاولة مرة أخرى لاحقاً.",
+  "We have sent OTP code to your email": "لقد أرسلنا رمز التحقق إلى john@email.com"
 }

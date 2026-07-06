@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "lib": ["dom", "dom.iterable", "esnext", "webworker"],  // ✅ Added "webworker"
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "webworker"
+    ], // ✅ Added "webworker"
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,7 +16,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitAny": false,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -19,10 +24,23 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
     "target": "ES2017"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/serviceWorker.js"],
-  "exclude": ["cypress.config.ts", "cypress", "node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "public/serviceWorker.js",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "cypress.config.ts",
+    "cypress",
+    "node_modules"
+  ]
 }

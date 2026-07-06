@@ -25,7 +25,7 @@ const RESTAURANT_SLUGS = new Set(["popular-restaurants", "popular-stores"]);
 function SeeAllSection() {
   const router = useRouter();
   const params = useParams();
-  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  const slug = (Array.isArray(params.slug) ? params.slug[0] : params.slug) ?? "";
 
   const [isModalOpen, setIsModalOpen] = useState({ value: false, id: "" });
   const [items, setItems] = useState<IRestaurant[]>([]);
@@ -44,7 +44,7 @@ function SeeAllSection() {
     data: FavouriteRestaurantsData,
     loading: isFavouriteRestaurantsLoading,
   } = useQuery<IUserFavouriteQueryResponse>(GET_USER_FAVOURITE, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
   });
 
   // --- Main data ---
@@ -89,11 +89,11 @@ function SeeAllSection() {
 
   const handleUpdateIsModalOpen = useCallback(
     (value: boolean, id: string) => {
-      if (isModalOpen.value !== value || isModalOpen.id !== id) {
-        setIsModalOpen({ value, id });
-      }
+      setIsModalOpen((current) =>
+        current.value !== value || current.id !== id ? { value, id } : current
+      );
     },
-    [isModalOpen]
+    []
   );
 
   // Infinite scroll

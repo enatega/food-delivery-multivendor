@@ -53,11 +53,7 @@ export const fetchPublicAccessToken = async (
         mutation: METRICS_GENERAL,
       });
 
-      console.log("📦 metricsGeneral response received:", !!data);
-
       if (!data?.metricsGeneral) {
-        console.error("❌ No data returned from metricsGeneral");
-        console.error("Response:", JSON.stringify(data));
         throw new Error("No data returned from metricsGeneral");
       }
 
@@ -68,18 +64,7 @@ export const fetchPublicAccessToken = async (
       // Save to AsyncStorage
       await savePublicToken(token, expiry);
 
-      console.log("✅ Public access token refreshed successfully");
-      console.log("📝 Token expiry:", expiry);
-      console.log("🔑 Nonce used:", nonce);
-
       return token;
-    } catch (error: any) {
-      console.error("❌ Failed to fetch public access token:");
-      console.error("Error name:", error?.name);
-      console.error("Error message:", error?.message);
-      console.error("Network error:", error?.networkError?.message);
-      console.error("GraphQL errors:", error?.graphQLErrors?.map((e: any) => e.message));
-      throw error;
     } finally {
       tokenRefreshPromise = null;
     }
@@ -97,11 +82,9 @@ export const getValidPublicToken = async (
   const expired = await isTokenExpired();
 
   if (expired) {
-    console.log("🔄 Token expired, fetching new token...");
     try {
       return await fetchPublicAccessToken(graphqlUrl);
-    } catch (error) {
-      console.error("Failed to refresh token:", error);
+    } catch {
       return null;
     }
   }

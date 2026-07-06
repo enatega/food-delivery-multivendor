@@ -7,7 +7,6 @@ import {
   useMutation,
   useQuery,
 } from '@apollo/client';
-import { throttle } from 'lodash';
 import React, {
   useCallback,
   useContext,
@@ -16,6 +15,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { throttle } from '@/lib/utils/methods';
 
 // API and GraphQL
 import {
@@ -162,7 +162,6 @@ const CustomGoogleMapsLocationBounds: React.FC<
     []
   );
 
-  console.log('Zones........ ', zones);
   // API Handlers
   function updateCache(
     cache: ApolloCache<unknown>,

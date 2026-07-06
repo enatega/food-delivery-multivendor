@@ -48,7 +48,7 @@ export default function NameUpdateModal({
   const [
     fetchProfile
   ] = useLazyQuery(GET_USER_PROFILE, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
   });
 
   const t = useTranslations()

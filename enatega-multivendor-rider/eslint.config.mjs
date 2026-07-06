@@ -5,6 +5,7 @@ import tseslint from "typescript-eslint";
 import prettierPlugin from "eslint-plugin-prettier";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
 
 export default [
   {
@@ -21,6 +22,7 @@ export default [
       },
       globals: {
         process: "readonly",
+        module: "readonly",
         cy: "readonly",
         it: "readonly",
         React: "readonly",
@@ -35,6 +37,7 @@ export default [
       prettier: prettierPlugin,
       "unused-imports": unusedImportsPlugin,
       react: reactPlugin,
+      "react-hooks": reactHooksPlugin,
     },
     rules: {
       // Allow .tsx and .jsx extensions for JSX files
@@ -55,7 +58,7 @@ export default [
       ],
 
       // Remove unused imports automatically
-      // "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-imports": "error",
 
       // Warn on unused variables but allow unused arguments prefixed with _
       "unused-imports/no-unused-vars": "error",
@@ -66,7 +69,7 @@ export default [
 
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-explicit-any": "warn",
-      "react-hooks/exhaustive-deps": "off",
+      "react-hooks/exhaustive-deps": "warn",
     },
   },
   pluginJs.configs.recommended,

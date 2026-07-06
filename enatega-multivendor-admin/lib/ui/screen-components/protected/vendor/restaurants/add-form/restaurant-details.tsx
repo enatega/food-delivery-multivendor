@@ -168,7 +168,7 @@ export default function RestaurantDetails({
         showToast({
           type: 'error',
           title: `${vendorId ? t('Edit') : t('Create')} ${t('Vendor')}`,
-          message: `${t('Store Creation Failed, Please select a vendor')}.`,
+          message: t('Store Creation Failed - Please select a vendor'),
           duration: 2500,
         });
         return;
@@ -199,7 +199,7 @@ export default function RestaurantDetails({
       showToast({
         type: 'error',
         title: `${vendorId ? t('Edit') : t('Create')} ${t('Vendor')}`,
-        message: t(`Store Creation Failed`),
+        message: t('Store Creation Failed'),
         duration: 2500,
       });
     }
@@ -212,7 +212,7 @@ export default function RestaurantDetails({
       message:
         graphQLErrors[0]?.message ??
         networkError?.message ??
-        t(`Store Creation Failed`),
+        t('Store Creation Failed'),
       duration: 2500,
     });
   }

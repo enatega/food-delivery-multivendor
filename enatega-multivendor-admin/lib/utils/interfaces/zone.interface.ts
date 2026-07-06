@@ -48,6 +48,15 @@ export interface IZonesResponse {
   zones: IZoneResponse[];
 }
 
+export interface IZonesPaginatedResponse {
+  zonesPaginated: {
+    data: IZoneResponse[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
 export interface IZonesDataReponse {
   data: IZonesResponse;
 }

@@ -56,7 +56,6 @@ export interface IVendorReponse {
   userType: string;
   isActive: boolean;
   name?: string;
-  plainPassword?: string;
   image?: string;
   firstName?: string;
   lastName?: string;

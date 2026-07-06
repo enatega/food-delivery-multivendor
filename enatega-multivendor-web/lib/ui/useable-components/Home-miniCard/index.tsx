@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
+import Image from '@/lib/ui/useable-components/safe-image';
 import { HomeMiniCardProps } from '@/lib/utils/interfaces/Home-interfaces'
 
 

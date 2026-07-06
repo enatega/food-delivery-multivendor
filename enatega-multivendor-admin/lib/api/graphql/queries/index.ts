@@ -1,4 +1,5 @@
 export * from './addon';
+export * from './authentication';
 export * from './category';
 export * from './configuration';
 export * from './coupons';

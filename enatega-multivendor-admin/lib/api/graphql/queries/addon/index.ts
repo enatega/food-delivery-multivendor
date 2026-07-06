@@ -15,3 +15,31 @@ export const GET_ADDONS_BY_RESTAURANT_ID = gql`
     }
   }
 `;
+
+export const GET_RESTAURANT_ADDONS_PAGINATED = gql`
+  query RestaurantAddonsPaginated(
+    $restaurantId: String!
+    $page: Int
+    $limit: Int
+    $search: String
+  ) {
+    restaurantAddonsPaginated(
+      restaurantId: $restaurantId
+      page: $page
+      limit: $limit
+      search: $search
+    ) {
+      data {
+        _id
+        title
+        description
+        quantityMinimum
+        quantityMaximum
+        options
+      }
+      totalCount
+      currentPage
+      totalPages
+    }
+  }
+`;

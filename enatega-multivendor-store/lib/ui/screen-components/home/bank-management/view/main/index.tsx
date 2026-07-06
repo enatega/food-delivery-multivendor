@@ -4,6 +4,7 @@ import { STORE_PROFILE } from "@/lib/apollo/queries/store.query";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { useApptheme } from "@/lib/context/theme.context";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 // Hooks
 import { useMutation } from "@apollo/client";
@@ -25,6 +26,7 @@ export default function BankManagementMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const tabBarHeight = useBottomTabBarHeight();
 
   // Contexts
   const { userId, dataProfile } = useUserContext();
@@ -40,27 +42,6 @@ export default function BankManagementMain() {
     accountNumber: "",
     accountCode: "",
   });
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
   // Mutations
   const [mutateBankDetails, { loading: areBankDetailsLoading }] = useMutation(
     UPDATE_BUSINESS_DETAILS,
@@ -70,7 +51,6 @@ export default function BankManagementMain() {
           message: t("Failed to update bank details"),
           type: "danger",
         });
-        console.error("Failed to update bank details", error);
       },
       onCompleted: () => {
         setFormData({
@@ -148,8 +128,7 @@ export default function BankManagementMain() {
         t("Bank Details Updated"),
         t("Your bank details have been updated successfully"),
       );
-    } catch (error) {
-      console.log(error);
+    } catch {
     }
   };
 
@@ -172,15 +151,9 @@ export default function BankManagementMain() {
   }, [dataProfile?.bussinessDetails, areBankDetailsLoading]);
 
   return (
-    <View className="w-[95%] mx-auto">
+    <View className="flex-1 w-[95%] mx-auto">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        {/* <ScrollView
-          scrollEnabled={keyboardVisible}
-          contentContainerClassName={`flex flex-col justify-between items-center w-full ${keyboardVisible ? "h-[100%]" : "h-[85%]"} my-6 px-4`}
-        > */}
-        <KeyboardAvoidingView
-          className={`${keyboardVisible ? "h-[100%] " : "h-[85%"}`}
-        >
+        <KeyboardAvoidingView className="flex-1">
           <FlatList
             data={[
               <View
@@ -276,10 +249,11 @@ export default function BankManagementMain() {
                 />
               </View>,
             ]}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ paddingBottom: tabBarHeight + 24 }}
             renderItem={({ item }) => item}
           />
         </KeyboardAvoidingView>
-        {/* </ScrollView> */}
       </TouchableWithoutFeedback>
     </View>
   );

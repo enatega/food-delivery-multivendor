@@ -10,26 +10,34 @@ export interface ISignInFormErrors {
 
 export interface ISignInOwnerRestaurants {
   _id: string;
-  orderId: string;
+  orderId?: string;
   name: string;
-  image: string;
-  address: string;
+  image?: string;
+  address?: string;
 }
 
 export interface ILoginResponse {
-  shopType: string;
+  shopType?: string;
   userId: string;
   token: string;
+  tokenExpiration?: string;
+  refreshToken?: string;
+  refreshTokenExpiration?: string;
   email: string;
   name?: string;
   image?: string;
   userType: 'ADMIN' | 'STAFF' | 'VENDOR' | 'RESTAURANT';
   userTypeId?: string;
   restaurants: ISignInOwnerRestaurants[];
-  permissions?: String[];
-  __typename: string;
+  permissions?: string[];
+  isActive?: boolean;
+  __typename?: string;
 }
 
 export interface IOwnerLoginDataResponse {
   ownerLogin: ILoginResponse;
+}
+
+export interface IOwnerSessionDataResponse {
+  ownerSession: ILoginResponse;
 }

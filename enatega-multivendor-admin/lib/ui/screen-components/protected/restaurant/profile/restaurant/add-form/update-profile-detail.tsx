@@ -115,8 +115,8 @@ export default function UpdateRestaurantDetails({
     return {
       name: restaurantData?.name ?? '',
       username: restaurantData?.username ?? '',
-      password: restaurantData?.password ?? '',
-      confirmPassword: restaurantData?.password ?? '',
+      password: '',
+      confirmPassword: '',
       phoneNumber: restaurantData?.phone ?? '',
       address: restaurantData?.address ?? '',
       deliveryTime: restaurantData?.deliveryTime ?? 0,
@@ -162,11 +162,11 @@ export default function UpdateRestaurantDetails({
             deliveryTime: data.deliveryTime,
             minimumOrder: data.minOrder,
             username: data.username,
-            password: data.password,
             shopType: data.shopType?.code,
             salesTax: data.salesTax,
             orderPrefix: data.orderprefix,
             cuisines: data.cuisines.map((cuisine) => cuisine.code),
+            ...(data.password ? { password: data.password } : {}),
           },
         },
       });

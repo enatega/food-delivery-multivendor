@@ -1,29 +1,18 @@
 import { QueryResult, useQuery } from "@apollo/client";
-import {
-  LocationAccuracy,
-  LocationObject,
-  LocationSubscription,
-  requestForegroundPermissionsAsync,
-  watchPositionAsync,
-} from "expo-location";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 // Interface
 import {
   IRiderProfileResponse,
   IUserContextProps,
   IUserProviderProps,
 } from "@/lib/utils/interfaces";
-// Context
-// import { useLocationContext } from "./location.context";
 // API
-import { UPDATE_LOCATION } from "@/lib/apollo/mutations/rider.mutation";
 import { RIDER_ORDERS, RIDER_PROFILE } from "@/lib/apollo/queries";
 import {
   SUBSCRIPTION_ASSIGNED_RIDER,
   SUBSCRIPTION_ZONE_ORDERS,
 } from "@/lib/apollo/subscriptions";
 import { asyncStorageEmitter } from "@/lib/services/async-storage";
-import { RIDER_TOKEN } from "@/lib/utils/constants";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import {
   IRiderEarnings,
@@ -52,20 +41,14 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   const [userId, setUserId] = useState("");
   const [zoneId, setZoneId] = useState("");
 
-  // Refs
-  const locationListener = useRef<LocationSubscription>();
-  const coordinatesRef = useRef<LocationObject>({} as LocationObject);
-
-  // Context
-  // const { locationPermission } = useLocationContext()
-
   const {
     loading: loadingProfile,
     error: errorProfile,
     data: dataProfile,
     refetch: refetchProfile,
   } = useQuery(RIDER_PROFILE, {
-    fetchPolicy: "cache-first",
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
     skip: !userId,
     variables: {
       id: userId,
@@ -73,19 +56,19 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   }) as QueryResult<IRiderProfileResponse | undefined, { id: string }>;
 
   const {
-    client,
     loading: loadingAssigned,
     error: errorAssigned,
     data: dataAssigned,
     networkStatus: networkStatusAssigned,
     subscribeToMore,
-   refetch: refetchAssigned
+    refetch: refetchAssigned,
   } = useQuery(RIDER_ORDERS, {
-    // onCompleted,
-    // onError: error2,
-    fetchPolicy: "network-only",
+    // Orders change constantly (status updates, new assignments), so every
+    // fetch/refetch/poll must hit the network rather than falling back to
+    // cache-first, which could serve stale order lists.
+    fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
-    pollInterval: 5000,
+    pollInterval: 30000,
     skip: !userId,
     variables: {
       userId,
@@ -100,47 +83,17 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     }
   }
 
-  const trackRiderLocation = async () => {
-    locationListener.current = await watchPositionAsync(
-      {
-        accuracy: LocationAccuracy.BestForNavigation,
-        timeInterval: 60000,
-        distanceInterval: 10,
-      },
-      async (location) => {
-        try {
-          const token = await AsyncStorage.getItem(RIDER_TOKEN);
-          if (!token) return;
-          if (
-            coordinatesRef.current?.coords?.latitude ===
-              location.coords?.latitude &&
-            coordinatesRef.current?.coords?.longitude ===
-              location.coords?.longitude
-          )
-            return;
-          coordinatesRef.current = location;
-          client.mutate({
-            mutation: UPDATE_LOCATION,
-            variables: {
-              latitude: location.coords.latitude.toString(),
-              longitude: location.coords.longitude.toString(),
-            },
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    );
-  };
-
   // UseEffects
   useEffect(() => {
-    if (!dataProfile?.rider.zone._id || !dataProfile.rider._id) return;
+    const riderId = dataProfile?.rider?._id ?? userId;
+    const zoneIdValue = dataProfile?.rider?.zone?._id ?? zoneId;
+
+    if (!riderId || !zoneIdValue) return;
 
     const subscribeNewOrders = {
       unsubAssignOrder: subscribeToMore({
         document: SUBSCRIPTION_ASSIGNED_RIDER,
-        variables: { riderId: dataProfile?.rider?._id ?? userId },
+        variables: { riderId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
           if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
@@ -168,8 +121,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       }),
 
       unsubZoneOrder: subscribeToMore({
-        document: SUBSCRIPTION_ZONE_ORDERS, // Previously known as SUBSCRIPTION_UNASSIGNED_ORDER
-        variables: { zoneId: dataProfile?.rider?.zone?._id ?? zoneId },
+        document: SUBSCRIPTION_ZONE_ORDERS,
+        variables: { zoneId: zoneIdValue },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
 
@@ -188,8 +141,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
     const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders;
     return () => {
-      if (dataProfile?.rider?.zone?._id) {
-        setZoneId(dataProfile?.rider?.zone?._id);
+      if (zoneIdValue) {
+        setZoneId(zoneIdValue);
         try {
           unsubZoneOrder();
         } catch (err) {
@@ -205,13 +158,14 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         }
       }
     };
-  }, [dataProfile]);
+  }, [dataProfile, subscribeToMore, userId, zoneId]);
 
   useEffect(() => {
     if (!userId) return;
 
     refetchProfile({ id: userId });
-  }, [userId]);
+    refetchAssigned({ userId });
+  }, [refetchProfile, refetchAssigned, userId]);
 
   useEffect(() => {
     const listener = asyncStorageEmitter.addListener("rider-id", (data) => {
@@ -219,12 +173,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     });
 
     getUserId();
-    trackRiderLocation();
     return () => {
-      if (locationListener.current) {
-        locationListener?.current?.remove();
-      }
-
       if (listener) {
         listener.removeListener("rider-id", () => {
           console.log("Rider Id listerener removed");
@@ -251,7 +200,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         refetchAssigned,
         refetchProfile,
         networkStatusAssigned,
-        requestForegroundPermissionsAsync,
       }}
     >
       {children}

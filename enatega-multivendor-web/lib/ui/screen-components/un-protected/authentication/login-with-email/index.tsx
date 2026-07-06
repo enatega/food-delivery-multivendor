@@ -56,20 +56,16 @@ export default function LoginWithEmail({
 
     // Proceed only if valid
     const emailExists = await checkEmailExists(email);
-    //User Exists with non-default auth - go to password
-    if (emailExists._id && emailExists.userType !== "default") {
+    if (emailExists) {
       showToast({
         type: "success",
         title: t("Login"),
         message: t("Got_your_account_please_enter_your_password"),
-        //User exists with default auth - go to password
       });
       return handleChangePanel(7); // go to password
-    } else if (emailExists.userType === "default") {
-      return handleChangePanel(7); // go to password
-    } else {
-      handleChangePanel(2); // go to registration
     }
+
+    handleChangePanel(2); // go to registration
   };
 
   return (

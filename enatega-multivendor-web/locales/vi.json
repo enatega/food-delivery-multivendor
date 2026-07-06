@@ -422,7 +422,6 @@
   "please_enter_valid_otp_message": "Vui lòng nhập OTP hợp lệ",
   "verify_your_mobile_number_label": "Xác minh số điện thoại của bạn",
   "otp_valid_for_10_minutes_label": "Có hiệu lực trong 10 phút",
-  "your@email.com": "email@cuaban.com",
   "continue_label": "Tiếp tục",
   "resend_otp_label": "Gửi lại OTP",
   "login_label": "Đăng nhập",
@@ -660,7 +659,6 @@
   "The_minimum_amount_of_(": "Số tiền tối thiểu của (",
   ")_for_your_order_has_not_been_reached": ") cho đơn hàng của bạn chưa đạt được.",
   "missing_address": "Thiếu địa chỉ",
-  "Select_your_address.": "Chọn địa chỉ của bạn.",
   "DeliveryTime": "Thời gian giao hàng",
   "SalesTax": "Thuế bán hàng",
   "Contact": "Liên hệ",
@@ -917,5 +915,7 @@
   "Saturday": "Thứ Bảy",
   "Sunday": "Chủ Nhật",
   "loading_orders": "Đang tải đơn hàng",
-  "show_more_orders": "Hiển thị thêm đơn hàng"
+  "show_more_orders": "Hiển thị thêm đơn hàng",
+  "your_email": "email@cuaban.com",
+  "Select_your_address_prompt": "Chọn địa chỉ của bạn."
 }

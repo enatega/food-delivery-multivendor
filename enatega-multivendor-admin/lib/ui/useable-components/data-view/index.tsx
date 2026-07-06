@@ -9,6 +9,11 @@ import {
 const CustomDataView: React.FC<ICustomDataViewProps> = ({
   products,
   header,
+  rows = 5,
+  totalRecords,
+  first = 0,
+  onPage,
+  lazy = false,
 }) => {
   const itemTemplate = (review: IReview) => {
     const orderedItems = review?.createdAt
@@ -41,9 +46,13 @@ const CustomDataView: React.FC<ICustomDataViewProps> = ({
         value={products}
         itemTemplate={itemTemplate}
         paginator
-        rows={5}
+        rows={rows}
         layout="grid"
         header={header}
+        totalRecords={totalRecords}
+        first={first}
+        onPage={onPage}
+        lazy={lazy}
       />
     </div>
   );

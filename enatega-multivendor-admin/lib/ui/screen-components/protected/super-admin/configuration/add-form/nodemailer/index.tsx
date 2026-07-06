@@ -25,12 +25,12 @@ import { GET_CONFIGURATION, SAVE_EMAIL_CONFIGURATION } from '@/lib/api/graphql';
 
 const NodeMailerAddForm = () => {
   // Hooks
-  const { EMAIL_NAME, EMAIL, PASSWORD, ENABLE_EMAIL } = useConfiguration();
+  const { EMAIL_NAME, EMAIL, ENABLE_EMAIL } = useConfiguration();
   const { showToast } = useToast();
 
   const initialValues = {
     email: EMAIL,
-    password: PASSWORD,
+    password: '',
     emailName: EMAIL_NAME,
     enableEmail: ENABLE_EMAIL,
   };
@@ -43,13 +43,14 @@ const NodeMailerAddForm = () => {
   );
 
   const handleSubmit = (values: INodeMailerForm) => {
+    const password = values.password?.trim();
     mutate({
       variables: {
         configurationInput: {
           email: values.email,
           emailName: values.emailName,
-          password: values.password,
           enableEmail: values.enableEmail,
+          ...(password ? { password } : {}),
         },
       },
       onCompleted: () => {
@@ -146,6 +147,9 @@ const NodeMailerAddForm = () => {
                     }}
                   />
                 </div>
+                <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                  Leave the password blank to keep the current value.
+                </p>
               </ConfigCard>
             </Form>
           );

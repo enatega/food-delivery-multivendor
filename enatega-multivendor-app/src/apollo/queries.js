@@ -140,7 +140,6 @@ export const restaurantFragment = gql`
             phoneIsVerified
             email
             emailIsVerified
-            password
             isActive
             isOrderNotification
             isOfferNotification
@@ -175,7 +174,6 @@ export const restaurantFragment = gql`
             name
             email
             username
-            password
             phone
             image
             available
@@ -216,7 +214,6 @@ export const restaurantFragment = gql`
           image
           address
           username
-          password
           deliveryTime
           minimumOrder
           sections
@@ -251,7 +248,6 @@ export const restaurantFragment = gql`
       isActive
     }
     username
-    password
     deliveryTime
     minimumOrder
     sections
@@ -291,7 +287,6 @@ export const restaurantPreviewFragment = gql`
     logo
     address
     username
-    password
     deliveryTime
     minimumOrder
     sections
@@ -310,6 +305,8 @@ export const restaurantPreviewFragment = gql`
     tags
     reviewCount
     reviewAverage
+    freeDelivery
+    acceptVouchers
     location {
       coordinates
     }
@@ -523,7 +520,6 @@ export const getConfiguration = `query Configuration{
     skipMobileVerification
     skipEmailVerification
     costType
-    password
     publishableKey
     secretKey
   }
@@ -555,8 +551,8 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
       tax
       shopType
       distanceWithCurrentLocation @client
-      freeDelivery @client
-      acceptVouchers @client
+      freeDelivery
+      acceptVouchers
       cuisines
       reviewData{
           total
@@ -641,7 +637,6 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       image
       address
       username
-      password
       deliveryTime
       minimumOrder
       sections
@@ -661,8 +656,8 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       reviewCount
       reviewAverage
       distanceWithCurrentLocation @client
-      freeDelivery @client
-      acceptVouchers @client
+      freeDelivery
+      acceptVouchers
       location{coordinates}
       openingTimes{
         day

@@ -106,7 +106,7 @@ export default function VariationAddForm({
     GET_ADDONS_BY_RESTAURANT_ID,
     { id: restaurantId },
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       enabled: !!restaurantId,
       onCompleted: onFetchAddonsByRestaurantCompleted,
       onError: onErrorFetchAddonsByRestaurant,

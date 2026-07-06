@@ -601,7 +601,6 @@
   "delete_account": "Usuń konto",
   "New Store": "Nowy sklep",
   "Create Store": "Utwórz sklep",
-  "Store Creation Failed - Please select a vendor.": "Utworzenie sklepu nieudane - Wybierz dostawcę.",
   "Store Creation  Failed": "Utworzenie sklepu nieudane",
   "Save & Next": "Zapisz i dalej",
   "Add Timings": "Dodaj godziny",
@@ -654,7 +653,6 @@
   "Transferred": "Przesłane",
   "Requested": "Zażądano",
   "Zone has been": "Strefa została",
-  "Something went wrong. Please try again": "Coś poszło nie tak. Spróbuj ponownie",
   "Something went wrong, Please try again": "Coś poszło nie tak,, spróbuj ponownie",
   "Add Zone": "Dodaj strefę",
   "Delete Zone": "Usuń strefę",
@@ -695,7 +693,6 @@
   "Commission rate updated for": "Stawka prowizji zaktualizowana dla",
   "Error updating commission rate for": "Błąd aktualizacji stawki prowizji dla",
   "Error Fetching Restaurants": "Błąd pobierania restauracji",
-  "An error occurred while fetching restaurants. Please try again later.": "Wystąpił błąd podczas pobierania restauracji. Spróbuj później.",
   "Set Commission Rate": "Ustaw stawkę prowizji",
   "Amplitude Configuration Updated": "Konfiguracja Amplitude zaktualizowana",
   "Web Amplitude API Key": "Klucz API Amplitude dla sieci",
@@ -793,7 +790,6 @@
   "Order Time": "Czas zamówienia",
   "By signing up, you agree to our": "Rejestrując się, zgadzasz się z naszym",
   "and": "i",
-  "We have sent OTP code to john@email.com": "Wysłaliśmy kod OTP na john@email.com",
   "Please check your inbox": "Sprawdź swoją skrzynkę odbiorczą",
   "Valid for 1min": "Ważny przez 1 minutę",
   "Resend OTP": "Wyślij ponownie OTP",
@@ -1113,5 +1109,9 @@
     "weak": "Słabe",
     "medium": "Średnie",
     "strong": "Silne"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "Utworzenie sklepu nieudane - Wybierz dostawcę.",
+  "Something went wrong - Please try again": "Coś poszło nie tak. Spróbuj ponownie",
+  "An error occurred while fetching restaurants - Please try again later": "Wystąpił błąd podczas pobierania restauracji. Spróbuj później.",
+  "We have sent OTP code to your email": "Wysłaliśmy kod OTP na john@email.com"
 }

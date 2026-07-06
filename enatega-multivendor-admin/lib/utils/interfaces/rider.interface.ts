@@ -13,12 +13,11 @@ export interface IRiderResponse {
   _id: string;
   name: string;
   username: string;
-  password: string;
   phone: string;
   available: boolean;
   vehicleType: string;
   assigned: string[];
-  zone: IRiderResponseZone;
+  zone: IRiderResponseZone | null;
 }
 
 export interface ISingleRiderResponse {
@@ -27,11 +26,10 @@ export interface ISingleRiderResponse {
   name: string;
   email: string;
   username: string;
-  password: string;
   phone: string;
   available: boolean;
   assigned: string[];
-  zone: IRiderResponseZone;
+  zone: IRiderResponseZone | null;
   bussinessDetails: IBusinessDetails;
   licenseDetails: ILicenseDetails;
   vehicleDetails: IVehicleDetails;
@@ -61,6 +59,15 @@ export interface IVehicleDetails {
 // Define the structure of the query result object
 export interface IRidersDataResponse {
   riders: IRiderResponse[];
+}
+
+export interface IRidersPaginatedDataResponse {
+  ridersPaginated: {
+    data: IRiderResponse[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
 }
 
 export interface IRiderDetailDataResponse {
@@ -94,14 +101,13 @@ export interface IRiderReponse {
   _id: string;
   name: string;
   username: string;
-  password: string;
   phone: string;
   available: boolean;
   zone: {
     _id: string;
     title: string;
     __typename: 'Zone';
-  };
+  } | null;
   __typename: 'Rider';
 }
 

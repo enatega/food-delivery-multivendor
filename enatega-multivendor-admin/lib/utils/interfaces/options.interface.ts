@@ -36,3 +36,12 @@ export interface IOptionsByRestaurantResponse {
     __typename: string;
   };
 }
+
+export interface IOptionsPaginatedByRestaurantResponse {
+  restaurantOptionsPaginated: {
+    data: IOptions[];
+    totalCount: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}

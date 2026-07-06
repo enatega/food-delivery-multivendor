@@ -166,7 +166,9 @@ function Checkout(props) {
   })
 
   const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true
   })
 
   const [mutateOrder, { loading: mutateOrderLoading }] = useMutation(PLACEORDER, {

@@ -1,3 +1,5 @@
+"use client";
+
 export { default as PersonalInfoScreen } from "./personal-info";
 export { default as AddressesScreen } from "./addresses";
 export { default as SettingsScreen } from "./settings";

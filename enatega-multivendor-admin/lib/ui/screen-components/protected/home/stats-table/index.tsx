@@ -17,7 +17,7 @@ export default function StatesTable() {
   const { CURRENCY_CODE } = useConfiguration();
 
   const { data, loading } = useQueryGQL(GET_DASHBOARD_ORDERS_BY_TYPE, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 300,
   }) as IQueryResult<
     IDashboardOrdersByTypeResponseGraphQL | undefined,
@@ -27,7 +27,7 @@ export default function StatesTable() {
   const { data: salesData, loading: salesLoading } = useQueryGQL(
     GET_DASHBOARD_SALES_BY_TYPE,
     {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
       debounceMs: 300,
     }
   ) as IQueryResult<

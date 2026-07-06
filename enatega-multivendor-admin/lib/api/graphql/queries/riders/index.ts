@@ -6,7 +6,6 @@ export const GET_RIDERS = gql`
       _id
       name
       username
-      password
       phone
       available
       vehicleType
@@ -19,13 +18,49 @@ export const GET_RIDERS = gql`
   }
 `;
 
+export const GET_RIDERS_PAGINATED = gql`
+  query RidersPaginated(
+    $page: Int
+    $limit: Int
+    $search: String
+    $zone: String
+    $available: Boolean
+    $isActive: Boolean
+  ) {
+    ridersPaginated(
+      page: $page
+      limit: $limit
+      search: $search
+      zone: $zone
+      available: $available
+      isActive: $isActive
+    ) {
+      data {
+        _id
+        name
+        username
+        phone
+        available
+        vehicleType
+        assigned
+        zone {
+          _id
+          title
+        }
+      }
+      totalCount
+      currentPage
+      totalPages
+    }
+  }
+`;
+
 export const GET_RIDER = gql`
   query Rider($id: String!) {
     rider(id: $id) {
       _id
       name
       username
-      password
       phone
       available
       assigned

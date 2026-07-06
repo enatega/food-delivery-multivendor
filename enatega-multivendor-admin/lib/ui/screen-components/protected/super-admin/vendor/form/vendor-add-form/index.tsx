@@ -102,7 +102,7 @@ export default function VendorAddForm({
     loading,
     data,
   } = useLazyQueryQL(GET_VENDOR_BY_ID, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     debounceMs: 300,
   }) as ILazyQueryResult<IGetVendorResponseGraphQL | undefined, { id: string }>;
 
@@ -115,16 +115,15 @@ export default function VendorAddForm({
             _id: isEditingVendor && vendorId ? vendorId : '',
             name: data.firstName + ' ' + data.lastName,
             email: data.email,
-            password: data.password,
             image: data.image,
             firstName: data.firstName,
             lastName: data.lastName,
             phoneNumber: `${data.phoneNumber?.toString()}`,
+            ...(data.password ? { password: data.password } : {}),
           },
         },
       });
-    } catch (error) {
-      console.log('error during add vendor ==> ', error);
+    } catch {
       showToast({
         type: 'error',
         title: `${isEditingVendor ? t('Edit') : t('Create')} ${t('Vendor')}`,
@@ -155,14 +154,12 @@ export default function VendorAddForm({
 
   const onHandleSetFormValue = () => {
     if (!data) return;
-    setFormValues((prevState) => ({
-      ...initialValues,
-      ...prevState,
-      ...data?.getVendor,
-      password: data?.getVendor?.plainPassword ?? '',
-      confirmPassword: data?.getVendor?.plainPassword ?? '',
-      image: data?.getVendor?.image ?? '',
-    }));
+      setFormValues((prevState) => ({
+        ...initialValues,
+        ...prevState,
+        ...data?.getVendor,
+        image: data?.getVendor?.image ?? '',
+      }));
   };
   // Use Effects
   useEffect(() => {

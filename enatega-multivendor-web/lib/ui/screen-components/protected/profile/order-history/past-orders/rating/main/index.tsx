@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
+import Image from '@/lib/ui/useable-components/safe-image';
 // Hooks
 import useDebounceFunction from "@/lib/hooks/useDebounceForFunction";
 // Components

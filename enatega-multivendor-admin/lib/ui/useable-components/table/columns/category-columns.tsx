@@ -4,7 +4,7 @@ import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import TextIconClickable from '../../text-icon-clickable';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
+import Image from '@/lib/ui/useable-components/safe-image';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import { GET_SUBCATEGORIES_BY_PARENT_ID } from '@/lib/api/graphql/queries/sub-categories';
 
@@ -69,7 +69,6 @@ export const CATEGORY_TABLE_COLUMNS = ({
   const columns: ColumnDefinition[] = [];
 
   if (shopType === 'grocery') {
-    console.log("🚀 ~ shopType:", shopType)
     columns.push({
       headerName: t('Image'),
       propertyName: 'image',

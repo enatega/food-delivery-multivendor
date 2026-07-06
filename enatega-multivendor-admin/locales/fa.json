@@ -600,7 +600,6 @@
   "Store has been added successfully": "فروشگاه با موفقیت اضافه شد",
   "New Store": "فروشگاه جدید",
   "Create Store": "ایجاد فروشگاه",
-  "Store Creation Failed - Please select a vendor.": "ایجاد فروشگاه ناموفق بود - لطفاً یک فروشنده انتخاب کنید.",
   "Store Creation  Failed": "ایجاد فروشگاه ناموفق بود",
   "Save & Next": "ذخیره و بعدی",
   "Add Timings": "افزودن زمان‌بندی‌ها",
@@ -653,7 +652,6 @@
   "Transferred": "انتقال داده شده",
   "Requested": "درخواست شده",
   "Zone has been": "منطقه",
-  "Something went wrong. Please try again": "مشکلی پیش آمد. لطفاً دوباره تلاش کنید",
   "Something went wrong, Please try again": "مشکلی پیش آمد، لطفاً دوباره تلاش کنید",
   "Add Zone": "افزودن منطقه",
   "Delete Zone": "حذف منطقه",
@@ -694,7 +692,6 @@
   "Commission rate updated for": "نرخ کمیسیون به‌روزرسانی شد برای",
   "Error updating commission rate for": "خطا در به‌روزرسانی نرخ کمیسیون برای",
   "Error Fetching Restaurants": "خطا در دریافت رستوران‌ها",
-  "An error occurred while fetching restaurants. Please try again later.": "خطایی هنگام دریافت رستوران‌ها رخ داد. لطفاً بعداً دوباره تلاش کنید.",
   "Set Commission Rate": "تنظیم نرخ کمیسیون",
   "Amplitude Configuration Updated": "پیکربندی آمپلیتود به‌روزرسانی شد",
   "Web Amplitude API Key": "کلید API آمپلیتود وب",
@@ -792,7 +789,6 @@
   "Order Time": "زمان سفارش",
   "By signing up, you agree to our": "با ثبت‌نام، با",
   "and": "و",
-  "We have sent OTP code to john@email.com": "کد OTP را به john@email.com ارسال کردیم",
   "Please check your inbox": "لطفاً صندوق ورودی خود را بررسی کنید",
   "Valid for 1min": "معتبر برای ۱ دقیقه",
   "Resend OTP": "ارسال مجدد OTP",
@@ -1112,5 +1108,9 @@
     "weak": "ضعیف",
     "medium": "متوسط",
     "strong": "قوی"
-  }
+  },
+  "Store Creation Failed - Please select a vendor": "ایجاد فروشگاه ناموفق بود - لطفاً یک فروشنده انتخاب کنید.",
+  "Something went wrong - Please try again": "مشکلی پیش آمد. لطفاً دوباره تلاش کنید",
+  "An error occurred while fetching restaurants - Please try again later": "خطایی هنگام دریافت رستوران‌ها رخ داد. لطفاً بعداً دوباره تلاش کنید.",
+  "We have sent OTP code to your email": "کد OTP را به john@email.com ارسال کردیم"
 }
