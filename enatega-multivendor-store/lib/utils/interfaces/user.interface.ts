@@ -73,6 +73,7 @@ export interface IStoreProfile {
   tags: string;
   phone: string;
   available: boolean;
+  hasBusinessDetails: boolean;
 
   currentWalletAmount: number;
   totalWalletAmount: number;

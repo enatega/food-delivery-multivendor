@@ -17,41 +17,7 @@ export default function DocumentsSection() {
   const { appTheme, currentTheme, toggleTheme } = useApptheme();
   const { t } = useTranslation();
   const { dataProfile } = useUserContext();
-  const businessDetails = dataProfile?.bussinessDetails;
-  const hasBusinessDetails = !!(
-    businessDetails?.bankName ||
-    businessDetails?.accountName ||
-    businessDetails?.accountNumber ||
-    businessDetails?.accountCode
-  );
-
-  const DetailRow = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value?: string | number | null;
-  }) => (
-    <View
-      className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
-      style={{ borderColor: appTheme.borderLineColor }}
-    >
-      <Text
-        style={{
-          color: appTheme.fontMainColor,
-        }}
-      >
-        {label}
-      </Text>
-      {value ? (
-        <Text style={{ color: appTheme.fontSecondColor, flexShrink: 1 }}>
-          {String(value)}
-        </Text>
-      ) : (
-        <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />
-      )}
-    </View>
-  );
+  const hasBusinessDetails = !!dataProfile?.hasBusinessDetails;
 
   return (
     <View className="flex flex-col w-full items-center">
@@ -87,19 +53,6 @@ export default function DocumentsSection() {
           </Text>
         </View>
       </View>
-      <DetailRow label={t("Bank Name")} value={businessDetails?.bankName} />
-      <DetailRow
-        label={t("Account Name")}
-        value={businessDetails?.accountName}
-      />
-      <DetailRow
-        label={t("Account Number")}
-        value={businessDetails?.accountNumber}
-      />
-      <DetailRow
-        label={t("IBAN_SWIFT_BSB")}
-        value={businessDetails?.accountCode}
-      />
       <View>
         <Text
           className="font-bold m-3"
@@ -161,25 +114,6 @@ export default function DocumentsSection() {
           {dataProfile?.username ? (
             <Text style={{ color: appTheme.fontSecondColor }}>
               {dataProfile?.username}
-            </Text>
-          ) : (
-            <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />
-          )}
-        </View>
-        <View
-          className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
-          style={{ borderColor: appTheme.borderLineColor }}
-        >
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-            }}
-          >
-            {t("Wallet Amount")}
-          </Text>
-          {dataProfile?.currentWalletAmount ? (
-            <Text style={{ color: appTheme.fontSecondColor }}>
-              ${dataProfile?.currentWalletAmount?.toFixed(2)}
             </Text>
           ) : (
             <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />

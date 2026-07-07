@@ -61,16 +61,10 @@ export default function WalletMain() {
   } = useLazyQueryQL(
     RIDER_TRANSACTIONS_HISTORY,
     {},
-    {
-      userType: "RIDER",
-      userId: userId,
-    },
+    {},
   ) as ILazyQueryResult<
     IRiderTransactionHistoryResponse | undefined,
-    {
-      userType: string;
-      userId: string;
-    }
+    Record<string, never>
   >;
   const {
     data: riderProfileData,
@@ -134,7 +128,7 @@ export default function WalletMain() {
         },
         {
           query: RIDER_TRANSACTIONS_HISTORY,
-          variables: { userId: userId, userType: "RIDER" },
+          variables: {},
         },
         {
           query: RIDER_CURRENT_WITHDRAW_REQUEST,

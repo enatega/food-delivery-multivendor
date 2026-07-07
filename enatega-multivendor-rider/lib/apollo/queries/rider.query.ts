@@ -37,8 +37,8 @@ export const RIDER_EARNINGS = gql`
 `;
 
 export const RIDER_TRANSACTIONS_HISTORY = gql`
-  query TransactionHistory($userType: UserTypeEnum, $userId: String) {
-    transactionHistory(userType: $userType, userId: $userId) {
+  query TransactionHistory {
+    transactionHistory {
       data {
         status
         amountTransferred

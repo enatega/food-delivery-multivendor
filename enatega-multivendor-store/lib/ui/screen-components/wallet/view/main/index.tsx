@@ -72,16 +72,10 @@ export default function WalletMain() {
     {
       fetchPolicy: "cache-and-network",
     },
-    {
-      userType: "STORE",
-      userId: userId,
-    }
+    {}
   ) as ILazyQueryResult<
     IStoreTransactionHistoryResponse | undefined,
-    {
-      userType: string;
-      userId: string;
-    }
+    Record<string, never>
   >;
   const {
     data: storeProfileData,
@@ -208,10 +202,7 @@ export default function WalletMain() {
         userType: "STORE",
         userId: userId,
       });
-      fetchStoreTransactions({
-        userType: "STORE",
-        userId: userId,
-      });
+      fetchStoreTransactions({});
       fetchStoreCurrentWithdrawRequest({
         storeId: userId,
       });

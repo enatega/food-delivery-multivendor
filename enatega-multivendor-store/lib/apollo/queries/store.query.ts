@@ -40,8 +40,8 @@ export const STORE_EARNINGS = gql`
 `;
 
 export const STORE_TRANSACTIONS_HISTORY = gql`
-  query TransactionHistory($userType: UserTypeEnum, $userId: String) {
-    transactionHistory(userType: $userType, userId: $userId) {
+  query TransactionHistory {
+    transactionHistory {
       data {
         status
         amountTransferred
@@ -84,21 +84,13 @@ export const STORE_PROFILE = gql`
       enableNotification
       shopType
       phone
+      hasBusinessDetails
       openingTimes {
         day
         times {
           startTime
           endTime
         }
-      }
-      totalWalletAmount
-      withdrawnWalletAmount
-      currentWalletAmount
-      bussinessDetails {
-        bankName
-        accountNumber
-        accountName
-        accountCode
       }
     }
   }

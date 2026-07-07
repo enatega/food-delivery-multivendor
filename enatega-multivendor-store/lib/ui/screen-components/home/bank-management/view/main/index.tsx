@@ -4,12 +4,12 @@ import { STORE_PROFILE } from "@/lib/apollo/queries/store.query";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { useApptheme } from "@/lib/context/theme.context";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 // Hooks
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Alert, FlatList, KeyboardAvoidingView } from "react-native";
 
 // Core
@@ -26,10 +26,10 @@ export default function BankManagementMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const tabBarHeight = useBottomTabBarHeight();
+  const { bottom } = useSafeAreaInsets();
 
   // Contexts
-  const { userId, dataProfile } = useUserContext();
+  const { userId } = useUserContext();
 
   // states
   const [isError, setIsError] = useState({
@@ -46,7 +46,7 @@ export default function BankManagementMain() {
   const [mutateBankDetails, { loading: areBankDetailsLoading }] = useMutation(
     UPDATE_BUSINESS_DETAILS,
     {
-      onError: (error) => {
+      onError: () => {
         showMessage({
           message: t("Failed to update bank details"),
           type: "danger",
@@ -129,26 +129,21 @@ export default function BankManagementMain() {
         t("Your bank details have been updated successfully"),
       );
     } catch {
+      return;
     }
   };
 
   // UseEffect
   useEffect(() => {
-    if (
-      !areBankDetailsLoading &&
-      dataProfile?.bussinessDetails &&
-      Object.values(dataProfile?.bussinessDetails).length > 0
-    ) {
+    if (!areBankDetailsLoading) {
       setFormData({
-        bankName: dataProfile?.bussinessDetails.bankName ?? "",
-        accountName: dataProfile?.bussinessDetails.accountName ?? "",
-        accountNumber: String(
-          dataProfile?.bussinessDetails.accountNumber ?? "",
-        ),
-        accountCode: dataProfile?.bussinessDetails.accountCode ?? "",
+        bankName: "",
+        accountName: "",
+        accountNumber: "",
+        accountCode: "",
       });
     }
-  }, [dataProfile?.bussinessDetails, areBankDetailsLoading]);
+  }, [areBankDetailsLoading]);
 
   return (
     <View className="flex-1 w-[95%] mx-auto">
@@ -248,9 +243,9 @@ export default function BankManagementMain() {
                   onPress={handleSubmit}
                 />
               </View>,
-            ]}
+          ]}
             style={{ flex: 1 }}
-            contentContainerStyle={{ paddingBottom: tabBarHeight + 24 }}
+            contentContainerStyle={{ paddingBottom: bottom + 24 }}
             renderItem={({ item }) => item}
           />
         </KeyboardAvoidingView>
