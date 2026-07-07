@@ -39,14 +39,6 @@ async function handleInvalidSession(): Promise<void> {
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars();
 
-  const wsLink = new WebSocketLink({
-    uri: WS_GRAPHQL_URL,
-    options: {
-      reconnect: true,
-      lazy: true,
-      timeout: 30000,
-    },
-  });
   const cache = new InMemoryCache(); // eslint-disable-next-line new-cap
   const httpLink = createHttpLink({
     uri: GRAPHQL_URL,
@@ -55,6 +47,36 @@ const setupApollo = () => {
   const client = new ApolloClient({
     link: httpLink,
     cache,
+  });
+
+  // Authenticate the subscription WebSocket the same way HTTP requests are
+  // authenticated. Without connectionParams the socket connects anonymously
+  // and the server rejects `subscribePlaceOrder` (ensureRestaurantAccess),
+  // silently falling back to polling. connectionParams is evaluated on every
+  // (re)connect, so a fresh token is always sent.
+  const wsLink = new WebSocketLink({
+    uri: WS_GRAPHQL_URL,
+    options: {
+      reconnect: true,
+      lazy: true,
+      timeout: 30000,
+      connectionParams: async () => {
+        const token = await SecureStore.getItemAsync(STORE_TOKEN);
+        const nonce = PublicAccessTokenService.getNonce();
+        let publicToken: string | null = null;
+        try {
+          publicToken = await PublicAccessTokenService.getToken(client);
+        } catch {
+          publicToken = null;
+        }
+        return {
+          authorization: token ? `Bearer ${token}` : "",
+          nonce: nonce || "",
+          "bop-auth": publicToken ? `Bearer ${publicToken}` : "",
+          "x-platform": "mobile",
+        };
+      },
+    },
   });
 
   const request = async (operation: Operation) => {

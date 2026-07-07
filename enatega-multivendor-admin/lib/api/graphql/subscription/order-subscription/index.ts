@@ -137,6 +137,8 @@ export const SUBSCRIPTION_ORDER = gql`
       rider {
         _id
       }
+      completionTime
+      preparationTime
     }
   }
 `;

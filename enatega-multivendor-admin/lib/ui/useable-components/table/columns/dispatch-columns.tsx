@@ -148,7 +148,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
   const useOrderSubscription = (rowData: IActiveOrders) => {
     useSubscription(SUBSCRIPTION_ORDER, {
       variables: {
-        _id: rowData._id,
+        id: rowData._id,
       },
       fetchPolicy: 'network-only',
       onSubscriptionData: () => {
