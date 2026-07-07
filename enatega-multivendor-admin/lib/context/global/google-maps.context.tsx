@@ -1,8 +1,7 @@
 'use client';
 
-import React, { createContext } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { useJsApiLoader } from '@react-google-maps/api';
-// import { ToastContext } from '@/lib/context/global/toast.context';
 import {
   IGoogleMapsContext,
   IGoogleMapsProviderProps,
@@ -12,83 +11,60 @@ export const GoogleMapsContext = createContext<IGoogleMapsContext>(
   {} as IGoogleMapsContext
 );
 
+// Separated inner component so useJsApiLoader is ONLY called when we have a
+// real, stable apiKey. This prevents "@react-google-maps/api Loader must not
+// be called again with different options" — the singleton loader throws when
+// called first with '' and then with the real key.
+function MapsScriptLoader({
+  apiKey,
+  libraries,
+  onLoaded,
+}: {
+  apiKey: string;
+  libraries: string[];
+  onLoaded: () => void;
+}) {
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: apiKey,
+    libraries: libraries as never[],
+  });
+
+  useEffect(() => {
+    if (isLoaded) onLoaded();
+  }, [isLoaded]);
+
+  return null;
+}
+
 export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
   apiKey,
   libraries,
   children,
 }) => {
+  // Latch the first non-empty key so the loader is never re-initialized.
+  const [stableKey, setStableKey] = useState('');
+  // false until the script actually loads; components that read isLoaded
+  // directly (e.g. UpdateRestaurantLocation) must not render GoogleMap until
+  // the global `google` object exists.
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // const { showToast } = useContext(ToastContext);
-
-  // Add a state to track loading more explicitly
-  // const [manualIsLoaded, setManualIsLoaded] = useState(false);
-
-  // Use the hook from @react-google-maps/api
-  const { isLoaded: hookIsLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: apiKey,
-    libraries: libraries || ['places'],
-  });
-
-  /*   useEffect(() => {
-    console.log('GoogleMapsProvider - API Key:', apiKey);
-    console.log('GoogleMapsProvider - Libraries:', libraries);
-
-    const loadGoogleMapsScript = (key: string) => {
-      return new Promise<void>((resolve, reject) => {
-        // Check if script already exists
-        const existingScript = document.querySelector(
-          'script[src^="https://maps.googleapis.com/maps/api/js"]'
-        );
-
-        if (existingScript) {
-          console.log('Google Maps script already exists');
-          resolve();
-          return;
-        }
-
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-
-        script.onload = () => {
-          console.log('Google Maps script loaded manually');
-          setManualIsLoaded(true);
-          resolve();
-        };
-
-        script.onerror = (error) => {
-          console.error('Google Maps script load error:', error);
-          showToast({
-            type: 'error',
-            title: 'Google Maps',
-            message: 'Failed to load Google Maps script.',
-          });
-          reject(error);
-        };
-
-        document.head.appendChild(script);
-      });
-    };
-
-    // Only try to load if an API key is provided
-    if (apiKey) {
-      // loadGoogleMapsScript(apiKey).catch(console.error);
-    } else {
-      console.warn('No Google Maps API key provided');
+  useEffect(() => {
+    if (apiKey && !stableKey) {
+      setStableKey(apiKey);
     }
-  }, [apiKey, libraries]); */
-
-  // Combine loading states
-  const isLoaded = hookIsLoaded;
-
-  const value: IGoogleMapsContext = {
-    isLoaded,
-  };
+  }, [apiKey, stableKey]);
 
   return (
-    <GoogleMapsContext.Provider value={value}>
+    <GoogleMapsContext.Provider value={{ isLoaded }}>
+      {/* MapsScriptLoader mounts once when stableKey is set; children are unaffected */}
+      {stableKey && (
+        <MapsScriptLoader
+          apiKey={stableKey}
+          libraries={libraries || ['places']}
+          onLoaded={() => setIsLoaded(true)}
+        />
+      )}
       {children}
     </GoogleMapsContext.Provider>
   );

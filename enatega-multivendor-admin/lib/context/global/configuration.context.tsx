@@ -1,7 +1,7 @@
 'use client';
 
 // Core
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, startTransition } from 'react';
 
 // Interfaces§
 import {
@@ -164,7 +164,11 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
           }
         : data?.configuration;
 
-    setConfiguration(configuration);
+    // Wrap in startTransition so this low-priority update never interrupts
+    // in-progress navigation transitions (router.push is also a transition).
+    startTransition(() => {
+      setConfiguration(configuration);
+    });
   };
 
   const fetchConfiguration = useCallback(() => {

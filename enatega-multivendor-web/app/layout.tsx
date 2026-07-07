@@ -4,12 +4,67 @@ import { DirectionHandler } from "@/lib/ui/layouts/global/rtl/DirectionHandler";
 // import InstallPWA from "@/lib/ui/pwa/InstallPWA";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { headers } from "next/headers";
 import Script from "next/script";
 
 export const metadata = {
   title: "Enatega Multivendor",
   manifest: "/manifest.json",
 };
+
+/**
+ * Resolve the tenant's business name from the Host header so we can replace
+ * "Enatega" in every translation string before the page renders.
+ * This is the SINGLE place where all platform branding text is swapped.
+ * Non-tenant requests receive the original messages unchanged.
+ */
+async function resolveTenantAppName(host: string): Promise<string> {
+  if (!host || host === "localhost" || !host.includes(".localhost")) {
+    return "Enatega";
+  }
+  const slug = host.split(".")[0];
+  if (!slug) return "Enatega";
+  try {
+    const res = await fetch(
+      `http://localhost:8001/api/tenants/by-slug/${slug}`,
+      { cache: "no-store" }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      return (data.business_name as string) || "Enatega";
+    }
+  } catch {
+    // API unreachable — fall back gracefully
+  }
+  return "Enatega";
+}
+
+/**
+ * Recursively replace all occurrences of `search` inside string VALUES only.
+ * Keys are intentionally left unchanged so t() lookups keep working.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function deepReplaceValues(obj: any, search: string, replacement: string): any {
+  if (typeof obj === "string") {
+    return obj.replace(new RegExp(search, "gi"), (match) => {
+      // Preserve the case pattern of the matched word
+      if (match === match.toUpperCase()) return replacement.toUpperCase();
+      if (match[0] === match[0].toUpperCase()) {
+        return replacement[0].toUpperCase() + replacement.slice(1).toLowerCase();
+      }
+      return replacement.toLowerCase();
+    });
+  }
+  if (Array.isArray(obj)) return obj.map((v) => deepReplaceValues(v, search, replacement));
+  if (obj && typeof obj === "object") {
+    const out: Record<string, unknown> = {};
+    for (const key of Object.keys(obj)) {
+      out[key] = deepReplaceValues(obj[key], search, replacement); // key stays the same
+    }
+    return out;
+  }
+  return obj;
+}
 
 export default async function RootLayout({
   children,
@@ -23,16 +78,25 @@ export default async function RootLayout({
     rtlLocales.includes(locale) || rtlLocales.includes(baseLocale)
       ? "rtl"
       : "ltr";
-  //Providing all messages to the client
-  //side is the easiest way to get started
 
   const messages = await getMessages({ locale });
+
+  // Replace every "Enatega" occurrence in translation strings with the tenant's
+  // business name. A simple JSON.stringify → regex replace → JSON.parse is safe
+  // here because "Enatega" never appears as a JSON key — only inside string values.
+  const headersList = headers();
+  const host = headersList.get("host") || "";
+  const appName = await resolveTenantAppName(host);
+  const brandedMessages =
+    appName !== "Enatega"
+      ? (deepReplaceValues(messages, "Enatega", appName) as typeof messages)
+      : messages;
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/png" href="/favicon.png" />
-        {/* 🔥 Inline theme script to prevent flash of wrong theme */}
+        {/* Inline theme script to prevent flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -63,6 +127,43 @@ export default async function RootLayout({
           `}
         </Script>
 
+        {/* Tenant branding — applies primary/secondary colors, title, and favicon */}
+        <Script id="tenant-branding" strategy="afterInteractive">{`
+          (function() {
+            try {
+              var host = window.location.hostname;
+              var isSubdomain = host !== 'localhost' && host.split('.').length > 1 && host.endsWith('localhost');
+              if (!isSubdomain) return;
+              var slug = host.replace(/\\.localhost$/, '');
+              fetch('http://localhost:8001/api/tenants/by-slug/' + slug)
+                .then(function(r){ return r.ok ? r.json() : null; })
+                .then(function(d) {
+                  if (!d) return;
+                  var cfg = d.config || {};
+                  var root = document.documentElement;
+                  if (cfg.primaryColor) {
+                    root.style.setProperty('--primary-color', cfg.primaryColor);
+                    root.style.setProperty('--primary-dark',  cfg.primaryColor);
+                    root.style.setProperty('--primary-light', cfg.primaryColor + '22');
+                  }
+                  if (cfg.secondaryColor) {
+                    root.style.setProperty('--secondary-color', cfg.secondaryColor);
+                  }
+                  if (d.business_name) {
+                    document.title = d.business_name;
+                  }
+                  if (cfg.logoUrl) {
+                    var lnk = document.getElementById('tenant-favicon');
+                    if (!lnk) { lnk = document.createElement('link'); lnk.id = 'tenant-favicon'; lnk.rel = 'icon'; document.head.appendChild(lnk); }
+                    lnk.href = cfg.logoUrl;
+                  }
+                  window.__TENANT_BRANDING__ = d;
+                  window.dispatchEvent(new Event('tenant-branding-ready'));
+                })
+                .catch(function(){});
+            } catch(e) {}
+          })();
+        `}</Script>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#94e469" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -75,11 +176,10 @@ export default async function RootLayout({
           media="(device-width: 390px) and (device-height: 844px)
           and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
         />
-        {/* Add more media queries for other device sizes if needed */}
       </head>
-      <body className={dir === "rtl" ? "rtl" : ""}>
+      <body className={`flex flex-col flex-wrap${dir === "rtl" ? " rtl" : ""}`}>
         <ThemeProvider>
-          <NextIntlClientProvider messages={messages}>
+          <NextIntlClientProvider messages={brandedMessages}>
             <DirectionProvider dir={dir}>
               <DirectionHandler />
               {children}

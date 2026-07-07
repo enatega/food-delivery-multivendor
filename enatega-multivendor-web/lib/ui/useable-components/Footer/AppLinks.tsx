@@ -10,10 +10,20 @@ const AppleStoreLink =
 import Logo from "@/lib/utils/assets/svg/Logo";
 import { useTranslations } from "next-intl";
 
+declare global {
+  interface Window {
+    __TENANT_BRANDING__?: { business_name?: string; config?: Record<string, string> };
+  }
+}
+
 const AppLinks = () => {
 
   const t = useTranslations()
   const [isLogin, setIsLogin] = useState(false);
+  const [tenantBranding, setTenantBranding] = useState<{
+    business_name?: string;
+    config?: Record<string, string>;
+  } | null>(null);
   const router = useRouter();
   const handleButtonClick = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
@@ -29,6 +39,19 @@ const AppLinks = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const host = window.location.hostname;
+    const isSubdomain = host !== "localhost" && host.split(".").length > 1 && host.endsWith("localhost");
+    if (!isSubdomain) return;
+    const apply = () => {
+      if (window.__TENANT_BRANDING__) setTenantBranding(window.__TENANT_BRANDING__ as typeof tenantBranding);
+    };
+    apply();
+    window.addEventListener("tenant-branding-ready", apply);
+    return () => window.removeEventListener("tenant-branding-ready", apply);
+  }, []);
+
   const logoClickHandler = () => {
     if (isLogin) {
       router.push("/");
@@ -39,7 +62,21 @@ const AppLinks = () => {
   return (
     <div>
       <div className="text-[20px] mb-4 font-extrabold text-white cursor-pointer" onClick={logoClickHandler}>
-        <Logo fillColor="#FFFFFFFF" darkmode="#FFFFFFFF" />
+        {tenantBranding ? (
+          tenantBranding.config?.logoUrl ? (
+            <img
+              src={tenantBranding.config.logoUrl}
+              alt={tenantBranding.business_name || ""}
+              className="h-8 w-auto"
+            />
+          ) : (
+            <span className="text-xl font-extrabold tracking-tight text-white">
+              {tenantBranding.business_name || ""}
+            </span>
+          )
+        ) : (
+          <Logo fillColor="#FFFFFFFF" darkmode="#FFFFFFFF" />
+        )}
       </div>
 
       <div className="flex gap-2 flex-wrap">

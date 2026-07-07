@@ -1,4 +1,54 @@
+'use client';
+import { useState, useEffect } from 'react';
+
+interface TenantBranding {
+  business_name?: string;
+  logo_url?: string;
+  config?: { primaryColor?: string; secondaryColor?: string };
+}
+
+declare global {
+  interface Window { __TENANT_BRANDING__?: TenantBranding }
+}
+
 export function AppLogo() {
+  const [branding, setBranding] = useState<TenantBranding | null>(null);
+
+  useEffect(() => {
+    function load() {
+      const w = window.__TENANT_BRANDING__;
+      if (w) { setBranding(w); return; }
+      try {
+        const s = localStorage.getItem('__tenant_branding__');
+        if (s) setBranding(JSON.parse(s));
+      } catch { /* ignore */ }
+    }
+    load();
+    window.addEventListener('tenant-branding-ready', load);
+    return () => window.removeEventListener('tenant-branding-ready', load);
+  }, []);
+
+  if (branding?.logo_url) {
+    return (
+      <div className="flex items-center gap-2 p-2">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={branding.logo_url} alt={branding.business_name || 'Logo'} style={{ height: 36, maxWidth: 160, objectFit: 'contain' }} />
+      </div>
+    );
+  }
+
+  if (branding?.business_name) {
+    const p1 = branding.config?.primaryColor || '#ef4444';
+    const p2 = branding.config?.secondaryColor || '#f97316';
+    return (
+      <div className="flex items-center p-2">
+        <span style={{ background: `linear-gradient(135deg,${p1},${p2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700, fontSize: 20 }}>
+          {branding.business_name}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center justify-center relative p-2">
       <svg
@@ -102,8 +152,6 @@ export function AppLogo() {
           </linearGradient>
         </defs>
       </svg>
-
-    
     </div>
   );
 }

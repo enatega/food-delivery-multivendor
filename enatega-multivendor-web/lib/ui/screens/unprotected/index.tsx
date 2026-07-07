@@ -1,9 +1,7 @@
 'use client'
 
-// libraries
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-//Componets
 import Start from "../../screen-components/un-protected/Home/Start";
 import Cities from "../../screen-components/un-protected/Home/Cities";
 import Info from "../../screen-components/un-protected/Home/Info";
@@ -12,44 +10,62 @@ import GrowBussiness from "../../screen-components/un-protected/Home/GrowBussine
 import MiniCards from "../../screen-components/un-protected/Home/MiniCards";
 import TinyTiles from "../../useable-components/tinyTiles";
 import Couriers from "../../screen-components/un-protected/Home/ForCouriers";
+import TenantBelowFold from "../../screen-components/un-protected/Home/TenantHome";
 import { PaddingContainer } from "../../useable-components/containers";
 import { useTranslations } from "next-intl";
-import becomeStorePartnerImg from "@/lib/assets/become_store.png"
-import reachNewCustomersImg from "@/lib/assets/we_do_heavy_lifting.png"
+import becomeStorePartnerImg from "@/lib/assets/become_store.png";
+import reachNewCustomersImg from "@/lib/assets/we_do_heavy_lifting.png";
+
+function isTenantSubdomain(): boolean {
+  if (typeof window === "undefined") return false;
+  const host = window.location.hostname;
+  return host !== "localhost" && host.split(".").length > 1 && host.endsWith("localhost");
+}
 
 const Main = () => {
   const t = useTranslations("MiniCardsHomeScreen");
+  const [isTenant, setIsTenant] = useState(false);
+
+  useEffect(() => {
+    setIsTenant(isTenantSubdomain());
+  }, []);
+
   return (
     <div className="w-screen dark:bg-gray-900">
+      {/* Hero is identical for all users — no flash */}
       <Start />
-      <PaddingContainer>
-        <div className="w-full">
-          <Cities />
-          <Info />
-          <EnategaInfo />
-          <GrowBussiness />
-          <MiniCards />
-          <div className="grid grid-cols-1 md:grid-cols-2 my-[40px] gap-8">
-            <TinyTiles
-              image={
-                reachNewCustomersImg.src
-              }
-              heading={t('title5')}
-              buttonText={t('subText5')}
-              backColor={"#eaf7fc"}
-              link={"/restaurantInfo"}
-            />
-            <TinyTiles
-              image={becomeStorePartnerImg.src}
-              heading={t('title6')}
-              buttonText={t('subText6')}
-              backColor="#eaf7fc"
-              link={"/restaurantInfo"}
-            />
-          </div>
 
-          <Couriers />
-        </div>
+      <PaddingContainer>
+        {isTenant ? (
+          // Clean generic home page for white-label tenants (no Enatega imagery)
+          <TenantBelowFold />
+        ) : (
+          // Original Enatega home page sections
+          <div className="w-full">
+            <Cities />
+            <Info />
+            <EnategaInfo />
+            <GrowBussiness />
+            <MiniCards />
+            <div className="grid grid-cols-1 md:grid-cols-2 my-[40px] gap-8">
+              <TinyTiles
+                image={reachNewCustomersImg.src}
+                heading={t("title5")}
+                buttonText={t("subText5")}
+                backColor={"#eaf7fc"}
+                link={"/restaurantInfo"}
+              />
+              <TinyTiles
+                image={becomeStorePartnerImg.src}
+                heading={t("title6")}
+                buttonText={t("subText6")}
+                backColor="#eaf7fc"
+                link={"/restaurantInfo"}
+              />
+            </div>
+            <Couriers />
+          </div>
+        )}
       </PaddingContainer>
     </div>
   );

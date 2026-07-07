@@ -22,6 +22,7 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 
 // Utility imports
 import { Subscription } from "zen-observable-ts";
+import { useRef } from "react";
 // import { ENV } from "../utils/constants";
 
 import {
@@ -36,6 +37,12 @@ import { print } from 'graphql';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
+
+function isTenantSubdomain(): boolean {
+  if (typeof window === 'undefined') return false;
+  const host = window.location.hostname;
+  return host !== 'localhost' && host.split('.').length > 1 && host.endsWith('localhost');
+}
 
 async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
   if (isRefreshing && refreshPromise) {
@@ -76,8 +83,15 @@ async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
   return refreshPromise;
 }
 
-export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
-  // const { SERVER_URL, WS_SERVER_URL } = getEnv(ENV);
+// Detect tenant slug from subdomain (e.g. "myco" from "myco.localhost:3001")
+function getTenantSlug(): string | null {
+  if (typeof window === 'undefined') return null;
+  const host = window.location.hostname;
+  const isSubdomain = host !== 'localhost' && host.split('.').length > 1 && host.endsWith('localhost');
+  return isSubdomain ? host.replace(/\.localhost$/, '') : null;
+}
+
+function buildApolloClient(): ApolloClient<NormalizedCacheObject> {
   const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
   const WS_SERVER_URL = process.env.NEXT_PUBLIC_WS_SERVER_URL;
 
@@ -87,7 +101,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
 
   const httpLink = createHttpLink({
     uri: `${SERVER_URL}graphql`,
-    // useGETForQueries: true, 
+    // useGETForQueries: true,
   });
 
   // WebSocketLink with error handling
@@ -112,7 +126,9 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
           if (typeof window !== "undefined") {
             localStorage.clear();
             sessionStorage.clear();
-            if (window.location.pathname !== "/") {
+            // On tenant subdomains, don't redirect to / — it causes an
+            // auto-redirect loop because Start auto-pushes back to /discovery.
+            if (!isTenantSubdomain() && window.location.pathname !== "/") {
               window.location.href = "/";
             }
           }
@@ -131,6 +147,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
 
     const nonce = getNonce();
     const metricsToken = getMetricsToken();
+    const tenantSlug = getTenantSlug();
     operation.setContext({
       headers: {
         authorization: (token ?? "") ? `Bearer ${token ?? ""}` : "",
@@ -138,7 +155,8 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
         'bop-auth': `Bearer ${metricsToken}` || '',
         userId: userId ?? "",
         isAuth: !!token,
-        "X-Client-Type": "web"
+        "X-Client-Type": "web",
+        ...(tenantSlug ? { "x-tenant-slug": tenantSlug } : {}),
       },
     });
   };
@@ -174,7 +192,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     );
   }, wsLink);
 
-  const client = new ApolloClient({
+  return new ApolloClient({
     link: concat(
       ApolloLink.from([errorLink, terminatingLink, requestLink]),
       httpLink
@@ -182,6 +200,14 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     cache,
     connectToDevTools: true,
   });
+}
 
-  return client;
+export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
+  // Memoize the client — creating a new ApolloClient on every render clears
+  // the InMemoryCache and triggers infinite re-queries.
+  const clientRef = useRef<ApolloClient<NormalizedCacheObject> | null>(null);
+  if (!clientRef.current) {
+    clientRef.current = buildApolloClient();
+  }
+  return clientRef.current;
 };

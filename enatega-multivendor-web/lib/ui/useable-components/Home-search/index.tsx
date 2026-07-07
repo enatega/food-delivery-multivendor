@@ -140,6 +140,11 @@ if (!isLoaded || !window.google || debouncedCityName.length < 2) {
           placeholder={t('searchCity')}
           value={cityName}
           onChange={(e) => setCityName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && cityName.trim().length > 0) {
+              router.push('/discovery');
+            }
+          }}
           className="w-full border rounded-md focus:outline-none focus:ring-0 hover:outline-none hover:ring-0 border-none"
         />
       </div>

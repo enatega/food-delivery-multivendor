@@ -89,7 +89,7 @@ const Card: React.FC<ICardProps> = ({
         className={`relative w-full ${isSearchFocused ? "h-[160px]" : "h-[160px]"}`}
       >
         <Image
-          src={item?.image}
+          src={item?.image || item?.logo || "/assets/images/png/deliveryFee.webp"}
           alt={item?.name}
           fill
           className="object-cover rounded-t-md"

@@ -70,6 +70,12 @@ import { Dialog } from "primereact/dialog";
 
 import CustomButton from "@/lib/ui/useable-components/button";
 
+declare global {
+  interface Window {
+    __TENANT_BRANDING__?: { business_name?: string; config?: Record<string, string> };
+  }
+}
+
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -77,6 +83,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   const [isLogin, setIsLogin] = useState(false);
   const [logoutConfirmationVisible, setLogoutConfirmationVisible] =
     useState(false);
+  const [tenantBranding, setTenantBranding] = useState<{
+    business_name?: string;
+    config?: Record<string, string>;
+  } | null>(null);
   const t = useTranslations();
   const [, startTransition] = useTransition();
   const currentLocale = useLocale();
@@ -94,6 +104,19 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
       const dir = document.documentElement.getAttribute("dir") || "ltr";
       setPosition(dir === "rtl" ? "left" : "right");
     }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const host = window.location.hostname;
+    const isSubdomain = host !== "localhost" && host.split(".").length > 1 && host.endsWith("localhost");
+    if (!isSubdomain) return;
+    const apply = () => {
+      if (window.__TENANT_BRANDING__) setTenantBranding(window.__TENANT_BRANDING__ as typeof tenantBranding);
+    };
+    apply();
+    window.addEventListener("tenant-branding-ready", apply);
+    return () => window.removeEventListener("tenant-branding-ready", apply);
   }, []);
   // Hooks
   const router = useRouter();
@@ -387,7 +410,21 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     onClick={logoClickHandler}
                     className="text-xl font-bold text-gray-900 dark:text-white"
                   >
-                    <Logo fillColor="#000000" darkmode="#FFFFFFFF" />
+                    {tenantBranding ? (
+                      tenantBranding.config?.logoUrl ? (
+                        <img
+                          src={tenantBranding.config.logoUrl}
+                          alt={tenantBranding.business_name || ""}
+                          className="h-8 w-auto"
+                        />
+                      ) : (
+                        <span className="text-xl font-extrabold tracking-tight">
+                          {tenantBranding.business_name || ""}
+                        </span>
+                      )
+                    ) : (
+                      <Logo fillColor="#000000" darkmode="#FFFFFFFF" />
+                    )}
                   </div>
                 )}
                 {!isSearchFocused && (

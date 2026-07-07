@@ -12,11 +12,14 @@ export default function RootLayout({
 }>) {
   const { GOOGLE_MAPS_KEY, LIBRARIES } = useConfiguration();
 
-  return GOOGLE_MAPS_KEY ? (
-    <GoogleMapsProvider apiKey={GOOGLE_MAPS_KEY} libraries={LIBRARIES}>
+  // Always render GoogleMapsProvider so the component tree is stable.
+  // Conditionally mounting it based on GOOGLE_MAPS_KEY causes a full subtree
+  // remount when config loads, which makes navigation "go back" on first click.
+  // GoogleMapsProvider handles an empty key gracefully: isLoaded stays true
+  // until a real key arrives, then flips false while the script loads.
+  return (
+    <GoogleMapsProvider apiKey={GOOGLE_MAPS_KEY || ''} libraries={LIBRARIES}>
       <GlobalLayout>{children}</GlobalLayout>
     </GoogleMapsProvider>
-  ) : (
-    <GlobalLayout>{children}</GlobalLayout>
   );
 }

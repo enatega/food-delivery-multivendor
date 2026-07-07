@@ -22,7 +22,7 @@ import { APP_NAME } from '../utils/constants';
 
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { print } from 'graphql';
-import { getMetricsToken, getNonce, initializeNonce, shouldRefreshToken, storeMetricsToken } from '../utils/methods/security';
+import { clearMetricsData, getMetricsToken, getNonce, initializeNonce, shouldRefreshToken, storeMetricsToken } from '../utils/methods/security';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -86,16 +86,20 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     })
   );
 
-  // Error Handling Link using ApolloLink's onError (for network errors)
+  // Error Handling Link — clears the bop-auth token on Unauthorized so the
+  // next request triggers a fresh metricsGeneral fetch automatically.
   const errorLink = onError(({ networkError, graphQLErrors }) => {
     if (networkError) {
       console.error('Network Error:', networkError);
     }
 
     if (graphQLErrors) {
-      graphQLErrors.forEach((error) =>
-        console.error('GraphQL Error:', error.message)
-      );
+      graphQLErrors.forEach((error) => {
+        console.error('GraphQL Error:', error.message);
+        if (error.message?.startsWith('Unauthorized')) {
+          clearMetricsData();
+        }
+      });
     }
   });
 

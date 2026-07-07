@@ -113,36 +113,31 @@ export default function RootLayout({
   // }
 
   return (
-    <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <FontawesomeConfig />
-      </head>
-      <body className={"flex flex-col flex-wrap"}>
-        <PrimeReactProvider value={value}>
-          <ApolloProvider client={client}>
-            <ConfigurationProvider>
-              <ToastProvider>
-                <AuthProvider>
-                  <UserProvider>
-                    <LocationProvider>
-                      <UserAddressProvider>
-                        <SearchUIProvider>
-                          <AppLayout>
-                            <NotificationInitializer/>
-                            <FirebaseForegroundHandler/>
-                            {children}
-                            </AppLayout>
-                        </SearchUIProvider>
-                      </UserAddressProvider>
-                    </LocationProvider>
-                  </UserProvider>
-                </AuthProvider>
-              </ToastProvider>
-            </ConfigurationProvider>
-          </ApolloProvider>
-        </PrimeReactProvider>
-      </body>
-    </html>
+    <>
+      <FontawesomeConfig />
+      <PrimeReactProvider value={value}>
+        <ApolloProvider client={client}>
+          <ConfigurationProvider>
+            <ToastProvider>
+              <AuthProvider>
+                <UserProvider>
+                  <LocationProvider>
+                    <UserAddressProvider>
+                      <SearchUIProvider>
+                        <AppLayout>
+                          <NotificationInitializer/>
+                          <FirebaseForegroundHandler/>
+                          {children}
+                        </AppLayout>
+                      </SearchUIProvider>
+                    </UserAddressProvider>
+                  </LocationProvider>
+                </UserProvider>
+              </AuthProvider>
+            </ToastProvider>
+          </ConfigurationProvider>
+        </ApolloProvider>
+      </PrimeReactProvider>
+    </>
   );
 }

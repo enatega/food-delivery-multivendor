@@ -1,28 +1,17 @@
-// React and Hooks
-
-// Interfaces
 import { IGoogleMapsLoaderComponentProps } from '@/lib/utils/interfaces';
-
-// Components
 import { GoogleMapsContext } from '@/lib/context/global/google-maps.context';
 import { useContext } from 'react';
 import CustomLoader from '../../custom-progress-indicator';
-import { useEffect } from 'react';
 
 export const GoogleMapsLoader = ({
   children,
 }: IGoogleMapsLoaderComponentProps) => {
   const context = useContext(GoogleMapsContext);
 
-  console.log('GoogleMapsLoader - Context:', context);
-  console.log('GoogleMapsLoader - isLoaded:', context?.isLoaded);
-
-  useEffect(() => {
-    console.log('GoogleMapsLoader - Context changed:', context);
-  }, [context]);
-
-  if (!context?.isLoaded) {
-    console.warn('Google Maps not loaded, showing loader');
+  // context.isLoaded is undefined when no GoogleMapsProvider is in the tree
+  // (happens when no Google Maps API key is configured for this tenant).
+  // Only block rendering when the provider IS present but hasn't loaded yet (=== false).
+  if (context?.isLoaded === false) {
     return (
       <div
         style={{

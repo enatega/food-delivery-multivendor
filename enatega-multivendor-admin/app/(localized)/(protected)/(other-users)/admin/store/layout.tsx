@@ -6,17 +6,16 @@ import { RestaurantLayoutProvider } from '@/lib/context/restaurant/layout-restau
 import RestaurantLayout from '@/lib/ui/layouts/protected/restaurant';
 import { ProfileProvider } from '@/lib/context/restaurant/profile.context';
 
+function RestaurantContent({ children }: { children: React.ReactNode }) {
+  return <RestaurantLayout>{children}</RestaurantLayout>;
+}
+const ProtectedLayout = RESTAURANT_GUARD(RestaurantContent);
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const ProtectedLayout = RESTAURANT_GUARD(
-    ({ children }: { children: React.ReactNode }) => {
-      return <RestaurantLayout>{children}</RestaurantLayout>;
-    }
-  );
-
   return (
     <ProtectedLayout>
       <RestaurantLayoutProvider>
