@@ -96,7 +96,7 @@ const useDetails = (orderData: IOrder) => {
         { query: RIDER_PROFILE, variables: { id: userId } },
         {
           query: RIDER_TRANSACTIONS_HISTORY,
-          variables: { userId: userId, userType: "RIDER" },
+          variables: {},
         },
         {
           query: RIDER_CURRENT_WITHDRAW_REQUEST,

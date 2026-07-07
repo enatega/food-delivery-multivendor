@@ -222,7 +222,6 @@ export const restaurantFragment = gql`
           isAvailable
           slug
           stripeDetailsSubmitted
-          commissionRate
           tax
           notificationToken
           enableNotification
@@ -263,7 +262,6 @@ export const restaurantFragment = gql`
     }
     slug
     stripeDetailsSubmitted
-    commissionRate
     owner {
       _id
       email
@@ -295,7 +293,6 @@ export const restaurantPreviewFragment = gql`
     isAvailable
     slug
     stripeDetailsSubmitted
-    commissionRate
     tax
     notificationToken
     enableNotification
@@ -645,7 +642,6 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       isAvailable
       slug
       stripeDetailsSubmitted
-      commissionRate
       tax
       notificationToken
       enableNotification
