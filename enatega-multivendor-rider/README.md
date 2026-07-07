@@ -1,55 +1,55 @@
-# Welcome to your Expo app 👋
+# Enatega Rider App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Requirements
 
-## Get started
+- Node `v20.16.0`
+- npm
+- Xcode for iOS or Android Studio for Android
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Development
 
 ```bash
-npm run reset-project
+nvm use
+npm install
+npm run ios
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Or:
 
-## Learn more
+```bash
+npm run android
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Important
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- This is not an Expo Go project
+- It uses native modules including `expo-dev-client` and `react-native-maps`
+- Run it with a custom dev build on a simulator or emulator
 
-## Testing
+## Production
 
-Jest is configured with `jest-expo`, but there are currently no committed `*.test.*`, `*.spec.*`, or `__tests__` files under `app/` or `lib/`.
-The `npm test` script is reserved for future automated test coverage.
+This app does not currently expose dedicated `build:production` npm scripts.
+Use EAS directly:
 
-## Join the community
+```bash
+nvm use
+npm install
+eas build --profile production -p all
+```
 
-Join our community of developers creating universal apps.
+Platform-specific builds:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- # [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+eas build --profile production -p ios
+eas build --profile production -p android
+```
+
+## Endpoint setup
+
+This app currently uses the committed values in `environment.ts`.
+Those defaults were left unchanged here to avoid switching local setup between hosted and local backends without confirmation.
+
+## Notes
+
+- Expo SDK: `53`
+- If sourcemap upload is needed, provide `SENTRY_AUTH_TOKEN` through CI or local environment variables

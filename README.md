@@ -236,6 +236,23 @@ The frontend source code for our solution is completely open source. However, th
 
 This section provides detailed instructions for setting up and running each component of the Enatega Multi-vendor Food Delivery Solution.
 
+### Quick Run Matrix
+
+| Module | Development | Production |
+| :--- | :--- | :--- |
+| API | `cd ../enatega-multivendor-api && npm install && npm run start:dev` | `cd ../enatega-multivendor-api && npm install && npm start` |
+| Admin | `cd enatega-multivendor-admin && nvm use && npm install && cp .env.example .env.local && npm run dev` | `cd enatega-multivendor-admin && nvm use && npm install && cp .env.example .env.local && npm run build && npm run start` |
+| Web | `cd enatega-multivendor-web && nvm use && npm install && cp .env.example .env.local && npm run dev` | `cd enatega-multivendor-web && nvm use && npm install && cp .env.example .env.local && npm run build && npm run start` |
+| Customer App | `cd enatega-multivendor-app && nvm use && npm install && npm run ios` or `npm run android` | `cd enatega-multivendor-app && nvm use && npm install && npm run build:production` |
+| Store App | `cd enatega-multivendor-store && nvm use && npm install && npm run ios` or `npm run android` | `cd enatega-multivendor-store && nvm use && npm install && eas build --profile production -p all` |
+| Rider App | `cd enatega-multivendor-rider && nvm use && npm install && npm run ios` or `npm run android` | `cd enatega-multivendor-rider && nvm use && npm install && eas build --profile production -p all` |
+
+### Recommended local full-stack order
+
+1. Start the API from `../enatega-multivendor-api`
+2. Start `enatega-multivendor-admin` or `enatega-multivendor-web`
+3. Start the mobile app you need from `enatega-multivendor-app`, `enatega-multivendor-store`, or `enatega-multivendor-rider`
+
 ### Enatega Admin Dashboard (Next.js)
 
 The admin dashboard allows you to manage restaurants, orders, riders, and more.
