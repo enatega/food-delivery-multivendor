@@ -4,9 +4,10 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION              = "20"
-  NEXT_PUBLIC_SERVER_URL    = "https://saas-demo-production-233c.up.railway.app/"
-  NEXT_PUBLIC_WS_SERVER_URL = "wss://saas-demo-production-233c.up.railway.app/"
+  NODE_VERSION                 = "20"
+  NEXT_PUBLIC_SERVER_URL       = "https://saas-demo-production-233c.up.railway.app/"
+  NEXT_PUBLIC_WS_SERVER_URL    = "wss://saas-demo-production-233c.up.railway.app/"
+  NEXT_PUBLIC_TENANT_DOMAIN    = "enatega-saas-demo.netlify.app"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

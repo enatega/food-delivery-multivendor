@@ -12,6 +12,9 @@ export const metadata = {
   manifest: "/manifest.json",
 };
 
+const _SERVER_URL_SSR   = (process.env.NEXT_PUBLIC_SERVER_URL  || 'http://localhost:8001/').replace(/\/$/, '')
+const _TENANT_DOMAIN_SSR = process.env.NEXT_PUBLIC_TENANT_DOMAIN || ''
+
 /**
  * Resolve the tenant's business name from the Host header so we can replace
  * "Enatega" in every translation string before the page renders.
@@ -19,14 +22,25 @@ export const metadata = {
  * Non-tenant requests receive the original messages unchanged.
  */
 async function resolveTenantAppName(host: string): Promise<string> {
-  if (!host || host === "localhost" || !host.includes(".localhost")) {
-    return "Enatega";
+  if (!host) return "Enatega";
+
+  // Strip port from host for comparison
+  const hostNoPort = host.split(":")[0];
+
+  let slug: string | null = null;
+  // Local dev: xpizza.localhost
+  const localMatch = hostNoPort.match(/^([^.]+)\.localhost$/);
+  if (localMatch) {
+    slug = localMatch[1];
+  } else if (_TENANT_DOMAIN_SSR && hostNoPort !== _TENANT_DOMAIN_SSR && hostNoPort.endsWith('.' + _TENANT_DOMAIN_SSR)) {
+    // Production: xpizza.enatega-saas-demo.netlify.app
+    slug = hostNoPort.slice(0, hostNoPort.length - _TENANT_DOMAIN_SSR.length - 1);
   }
-  const slug = host.split(".")[0];
+
   if (!slug) return "Enatega";
   try {
     const res = await fetch(
-      `http://localhost:8001/api/tenants/by-slug/${slug}`,
+      `${_SERVER_URL_SSR}/api/tenants/by-slug/${slug}`,
       { cache: "no-store" }
     );
     if (res.ok) {
@@ -131,11 +145,20 @@ export default async function RootLayout({
         <Script id="tenant-branding" strategy="afterInteractive">{`
           (function() {
             try {
+              var serverUrl   = '${_SERVER_URL_SSR}';
+              var tenantDomain = '${_TENANT_DOMAIN_SSR}';
               var host = window.location.hostname;
-              var isSubdomain = host !== 'localhost' && host.split('.').length > 1 && host.endsWith('localhost');
-              if (!isSubdomain) return;
-              var slug = host.replace(/\\.localhost$/, '');
-              fetch('http://localhost:8001/api/tenants/by-slug/' + slug)
+
+              var slug = null;
+              var localMatch = host.match(/^([^.]+)\\.localhost$/);
+              if (localMatch) {
+                slug = localMatch[1];
+              } else if (tenantDomain && host !== tenantDomain && host.endsWith('.' + tenantDomain)) {
+                slug = host.slice(0, host.length - tenantDomain.length - 1);
+              }
+              if (!slug) return;
+
+              fetch(serverUrl + '/api/tenants/by-slug/' + slug)
                 .then(function(r){ return r.ok ? r.json() : null; })
                 .then(function(d) {
                   if (!d) return;
