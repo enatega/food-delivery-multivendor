@@ -284,6 +284,8 @@ export const SUBSCRIPTION_ORDERS = gql`
       rider {
         _id
       }
+      completionTime
+      preparationTime
     }
   }
 `;

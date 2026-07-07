@@ -84,78 +84,75 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   }
 
   // UseEffects
+
+  // Persist the zone id once the profile loads so the subscription can still
+  // resubscribe if dataProfile is momentarily undefined. Done in its own effect
+  // (not inside the subscription cleanup) to avoid a resubscribe loop.
+  useEffect(() => {
+    const z = dataProfile?.rider?.zone?._id;
+    if (z && z !== zoneId) setZoneId(z);
+  }, [dataProfile, zoneId]);
+
   useEffect(() => {
     const riderId = dataProfile?.rider?._id ?? userId;
     const zoneIdValue = dataProfile?.rider?.zone?._id ?? zoneId;
 
     if (!riderId || !zoneIdValue) return;
 
-    const subscribeNewOrders = {
-      unsubAssignOrder: subscribeToMore({
-        document: SUBSCRIPTION_ASSIGNED_RIDER,
-        variables: { riderId },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
-            return {
-              riderOrders: [
-                subscriptionData.data.subscriptionAssignRider.order,
-                ...prev.riderOrders,
-              ],
-            };
-          } else if (
-            subscriptionData.data.subscriptionAssignRider.origin === "remove"
-          ) {
-            return {
-              riderOrders: [
-                ...prev.riderOrders.filter(
-                  (o: IOrder) =>
-                    o._id !==
-                    subscriptionData.data.subscriptionAssignRider.order._id
-                ),
-              ],
-            };
-          }
-          return prev;
-        },
-      }),
-
-      unsubZoneOrder: subscribeToMore({
-        document: SUBSCRIPTION_ZONE_ORDERS,
-        variables: { zoneId: zoneIdValue },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-
-          if (subscriptionData.data.subscriptionZoneOrders.origin === "new") {
-            return {
-              riderOrders: [
-                subscriptionData.data.subscriptionZoneOrders.order,
-                ...prev.riderOrders,
-              ],
-            };
-          }
-          return prev;
-        },
-      }),
+    // Add the order if it's not in the list yet, otherwise replace it in place.
+    // Used for "update" events (e.g. status change / assignment coming through
+    // as an update) so the list reflects them live instead of waiting on the
+    // 30s poll — and self-heals if the original "new" event was missed.
+    const upsertOrder = (orders: IOrder[] = [], order: IOrder): IOrder[] => {
+      const index = orders.findIndex((o: IOrder) => o?._id === order?._id);
+      if (index < 0) return [order, ...orders];
+      const next = [...orders];
+      next[index] = order;
+      return next;
     };
 
-    const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders;
-    return () => {
-      if (zoneIdValue) {
-        setZoneId(zoneIdValue);
-        try {
-          unsubZoneOrder();
-        } catch (err) {
-          console.log("err in unsubZoneOrder", err);
+    const unsubAssignOrder = subscribeToMore({
+      document: SUBSCRIPTION_ASSIGNED_RIDER,
+      variables: { riderId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const { origin, order } = subscriptionData.data.subscriptionAssignRider;
+        if (origin === "new" || origin === "update") {
+          return { riderOrders: upsertOrder(prev.riderOrders, order) };
+        } else if (origin === "remove") {
+          return {
+            riderOrders: (prev.riderOrders ?? []).filter(
+              (o: IOrder) => o._id !== order._id
+            ),
+          };
         }
-      }
+        return prev;
+      },
+    });
 
-      if (unsubAssignOrder) {
-        try {
-          unsubAssignOrder();
-        } catch (err) {
-          console.log("err in unsubAssignOrder", err);
+    const unsubZoneOrder = subscribeToMore({
+      document: SUBSCRIPTION_ZONE_ORDERS,
+      variables: { zoneId: zoneIdValue },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const { origin, order } = subscriptionData.data.subscriptionZoneOrders;
+        if (origin === "new" || origin === "update") {
+          return { riderOrders: upsertOrder(prev.riderOrders, order) };
         }
+        return prev;
+      },
+    });
+
+    return () => {
+      try {
+        unsubZoneOrder();
+      } catch (err) {
+        console.log("err in unsubZoneOrder", err);
+      }
+      try {
+        unsubAssignOrder();
+      } catch (err) {
+        console.log("err in unsubAssignOrder", err);
       }
     };
   }, [dataProfile, subscribeToMore, userId, zoneId]);

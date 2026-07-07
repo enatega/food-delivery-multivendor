@@ -1,4 +1,6 @@
+import { useSubscription } from "@apollo/client";
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
+import { SUBSCRIPTION_ORDER } from "@/lib/apollo/subscriptions";
 import { MAX_TIME } from "@/lib/utils/constants";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { orderSubTotal } from "@/lib/utils/methods";
@@ -45,6 +47,14 @@ const Order = ({
   const { t } = useTranslation();
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
+
+  // Keep this order's status live in real time. The subscription result is
+  // written into the normalized cache (keyed by _id), so orderStatus/isPickedUp
+  // update here without waiting for a refetch or the 60s poll.
+  useSubscription(SUBSCRIPTION_ORDER, {
+    variables: { id: order?._id },
+    skip: !order?._id,
+  });
 
   // Ref
   const timer = useRef<NodeJS.Timeout>();

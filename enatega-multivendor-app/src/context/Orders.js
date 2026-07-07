@@ -39,7 +39,10 @@ export const OrdersProvider = ({ children }) => {
 
   useEffect(() => {
     if (!profile) return
-    subscribeOrders()
+    const unsubscribe = subscribeOrders()
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe()
+    }
   }, [profile])
 
   const subscribeOrders = () => {
@@ -70,6 +73,7 @@ export const OrdersProvider = ({ children }) => {
         }
       })
       client.onResetStore(unsubscribeOrders)
+      return unsubscribeOrders
     } catch (error) {
       console.log('error subscribing order', error?.message)
     }
