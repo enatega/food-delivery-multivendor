@@ -1,4 +1,4 @@
-# Enatega Rider App
+# Enatega Customer App
 
 ## Requirements
 
@@ -28,10 +28,10 @@ npm run android
 
 ## Endpoint setup
 
-This app currently uses the committed values in `environment.ts`.
-Those defaults were left unchanged here to avoid switching local setup between hosted and local backends without confirmation.
+The app currently uses the committed environment config in `environment.config.js`.
+That file still controls whether local development targets the hosted API or a local backend.
 
 ## Notes
 
 - Expo SDK: `53`
-- If sourcemap upload is needed, provide `SENTRY_AUTH_TOKEN` through CI or local environment variables
+- If sourcemap upload is needed in CI, provide Sentry credentials through environment variables instead of committing tokens

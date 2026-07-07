@@ -1,58 +1,31 @@
-# Converting PWA to iOS Project with Capacitor
+# Enatega Customer Web
 
-These instructions will guide you through converting your existing Progressive Web App (PWA) into an iOS project that can be run on Xcode.
+## Requirements
 
-## Prerequisites
+- Node `v20.16.0`
+- npm `>=10`
 
-*   Node.js and npm installed
-*   Xcode installed
+## Local run
 
-## Steps
+```bash
+nvm use
+npm install
+cp .env.example .env.local
+npm run dev
+```
 
-1.  **Install Capacitor:**
+The app runs on `http://localhost:3000`.
 
-    ```bash
-    npm install -g @capacitor/cli @capacitor/core
-    ```
+## Backend selection
 
-2.  **Create a Capacitor Project:**
+This module supports two setup styles:
 
-    ```bash
-    mkdir ios-app
-    cd ios-app
-    npm init -y
-    npm install @capacitor/ios @capacitor/cli @capacitor/core
-    npx cap init --web-dir ../public --app-name "YourAppName" --appId "com.example.yourapp"
-    ```
+- Local backend: keep `.env.local` pointed at `http://localhost:8001/`
+- Hosted backend: replace the values in `.env.local` with a hosted `https://` API URL and matching `wss://` websocket URL
 
-    Replace `"YourAppName"` with the desired name of your iOS app.
-    Replace `"com.example.yourapp"` with a unique bundle identifier for your app.
-
-3.  **Copy Web App Assets:**
-
-    Copy the contents of your PWA's `public` directory (or whichever directory contains your web app's assets) into the `ios-app/www` directory.
-
-4.  **Add iOS Platform:**
-
-    ```bash
-    cd ios-app
-    npx cap add ios
-    ```
-
-5.  **Build iOS Project:**
-
-    ```bash
-    npx cap sync ios
-    npx cap open ios
-    ```
-
-    This will open the project in Xcode.
-
-6.  **Run in Xcode:**
-
-    In Xcode, select your target device (simulator or physical device) and run the project.
+Examples already exist in `.env.stage` and `.env.prod`.
 
 ## Notes
 
-*   You may need to configure signing certificates and provisioning profiles in Xcode to run the app on a physical device.
-*   This process creates a basic iOS wrapper around your PWA. You may need to add additional native functionality using Capacitor plugins.
+- Use `wss://` when the API is served over `https://`
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is optional and only needed for Google login
