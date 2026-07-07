@@ -8,12 +8,6 @@ import useNearByRestaurantsPreview from "@/lib/hooks/useNearByRestaurantsPreview
 import SliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/slider.loading.skeleton";
 import { useTranslations } from "next-intl";
 
-declare global {
-  interface Window {
-    __TENANT_BRANDING__?: { business_name?: string; config?: Record<string, string> };
-  }
-}
-
 const TenantBrowseSection: React.FC = () => {
   const router = useRouter();
   const t = useTranslations();

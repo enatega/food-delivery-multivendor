@@ -10,12 +10,6 @@ const AppleStoreLink =
 import Logo from "@/lib/utils/assets/svg/Logo";
 import { useTranslations } from "next-intl";
 
-declare global {
-  interface Window {
-    __TENANT_BRANDING__?: { business_name?: string; config?: Record<string, string> };
-  }
-}
-
 const AppLinks = () => {
 
   const t = useTranslations()

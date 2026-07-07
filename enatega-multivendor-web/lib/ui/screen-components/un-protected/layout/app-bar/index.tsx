@@ -70,12 +70,6 @@ import { Dialog } from "primereact/dialog";
 
 import CustomButton from "@/lib/ui/useable-components/button";
 
-declare global {
-  interface Window {
-    __TENANT_BRANDING__?: { business_name?: string; config?: Record<string, string> };
-  }
-}
-
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
   const [isCartOpen, setIsCartOpen] = useState(false);

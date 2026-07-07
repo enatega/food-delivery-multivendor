@@ -5,16 +5,6 @@ import { USER_CURRENT_LOCATION_LS_KEY } from "@/lib/utils/constants";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import { useTranslations } from "next-intl";
 
-declare global {
-  interface Window {
-    __TENANT_BRANDING__?: {
-      zone_center?: { lat: number; lng: number; title: string } | null;
-      business_name?: string;
-      [key: string]: unknown;
-    };
-  }
-}
-
 export default function ComingSoonScreen() {
   const t = useTranslations();
 
