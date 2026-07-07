@@ -5,7 +5,7 @@
 - Node `v20.16.0`
 - npm `>=10`
 
-## Local run
+## Development
 
 ```bash
 nvm use
@@ -15,6 +15,18 @@ npm run dev
 ```
 
 The app runs on `http://localhost:3000`.
+
+## Production
+
+```bash
+nvm use
+npm install
+cp .env.example .env.local
+npm run build
+npm run start
+```
+
+The production server also uses port `3000` unless `PORT` is overridden.
 
 ## Backend selection
 

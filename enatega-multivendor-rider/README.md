@@ -6,7 +6,7 @@
 - npm
 - Xcode for iOS or Android Studio for Android
 
-## Local run
+## Development
 
 ```bash
 nvm use
@@ -25,6 +25,24 @@ npm run android
 - This is not an Expo Go project
 - It uses native modules including `expo-dev-client` and `react-native-maps`
 - Run it with a custom dev build on a simulator or emulator
+
+## Production
+
+This app does not currently expose dedicated `build:production` npm scripts.
+Use EAS directly:
+
+```bash
+nvm use
+npm install
+eas build --profile production -p all
+```
+
+Platform-specific builds:
+
+```bash
+eas build --profile production -p ios
+eas build --profile production -p android
+```
 
 ## Endpoint setup
 
