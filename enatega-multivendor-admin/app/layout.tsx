@@ -24,18 +24,24 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <head>
-        {/* Tenant branding — runs on subdomains like myco.localhost:3000 */}
+        {/* Tenant branding — runs on subdomains like myco.localhost:3000 or myco.admin.saas.enatega.com */}
         <Script id="tenant-branding" strategy="afterInteractive">{`
           (function() {
             try {
+              var serverUrl   = '${(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:8001/').replace(/\/$/, '')}';
+              var tenantDomain = '${process.env.NEXT_PUBLIC_TENANT_DOMAIN || ''}';
               var host = window.location.hostname;
-              var isSubdomain = host !== 'localhost' && host.split('.').length > 1 && host.endsWith('localhost');
-              if (!isSubdomain) return;
-              var slug = host.replace(/\\.localhost$/, '');
-              var apiBase = window.location.protocol + '//localhost:' + (window.location.port || '8001').replace('3000','8001') + '/api';
-              // Always hit port 8001 for the API
-              apiBase = 'http://localhost:8001/api';
-              fetch(apiBase + '/tenants/by-slug/' + slug)
+
+              var slug = null;
+              var localMatch = host.match(/^([^.]+)\\.localhost$/);
+              if (localMatch) {
+                slug = localMatch[1];
+              } else if (tenantDomain && host !== tenantDomain && host.endsWith('.' + tenantDomain)) {
+                slug = host.slice(0, host.length - tenantDomain.length - 1);
+              }
+              if (!slug) return;
+
+              fetch(serverUrl + '/api/tenants/by-slug/' + slug)
                 .then(function(r){ return r.ok ? r.json() : null; })
                 .then(function(d) {
                   if (!d || !d.business_name) return;
