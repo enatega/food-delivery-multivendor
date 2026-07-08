@@ -36,12 +36,13 @@ const CitySearch: React.FC = () => {
 
     const geocoder = new window.google.maps.Geocoder();
 
-    // Request ONLY the geometry field. Without a `fields` mask the Places SDK
-    // returns every field (Basic + Contact + Atmosphere) and Google bills the
-    // highest SKU (Atmosphere Data). We only need the lat/lng here.
-    service.getDetails({ placeId, fields: ["geometry"] }, (place, status) => {
+    // Resolve the place to coordinates with the Geocoder instead of Places
+    // getDetails. Geocoding by placeId only returns geometry/address and is
+    // billed under the cheaper Geocoding SKU — it never triggers Places
+    // Contact or Atmosphere Data charges. We only need the lat/lng here.
+    geocoder.geocode({ placeId }, (results, status) => {
       if (
-        status === window.google.maps.places.PlacesServiceStatus.OK &&
+        status === window.google.maps.GeocoderStatus.OK &&
         results?.[0]?.geometry?.location
       ) {
         const latitude = results[0].geometry.location.lat();
