@@ -29,7 +29,8 @@ export default function useOrders() {
       (order: IOrder) => order?.orderStatus === "DELIVERED",
     );
 
-  const hasNewOrders = activeOrders?.length > 0;
+  const hasNewOrders =
+    activeOrders?.some((order: IOrder) => Boolean(order?.isRinged)) ?? false;
 
   return {
     loading,
