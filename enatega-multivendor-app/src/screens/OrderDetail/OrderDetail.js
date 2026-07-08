@@ -98,6 +98,18 @@ function OrderDetail(props) {
     order = orderData
   }
 
+  // When an order becomes DELIVERED, the active and past order lists refetch
+  // separately (see OrdersContext subscription). There is a brief window where
+  // the order is absent from BOTH lists, which previously made `order`
+  // undefined and crashed the destructuring below ("Order not found"). Keep the
+  // last successfully resolved order so the screen stays stable across that gap.
+  const lastKnownOrderRef = useRef(null)
+  if (order) {
+    lastKnownOrderRef.current = order
+  } else if (lastKnownOrderRef.current) {
+    order = lastKnownOrderRef.current
+  }
+
   useEffect(() => {
     props?.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
@@ -138,6 +150,12 @@ function OrderDetail(props) {
         errorMessage={t('orderLoadError')}
       />
     )
+  }
+
+  // Order still resolving (e.g. mid-refetch after status change) — show the
+  // spinner instead of crashing on the destructuring below.
+  if (!order) {
+    return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
 
   const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges, discountAmount } = order
