@@ -38,7 +38,10 @@ const CitySearch: React.FC = () => {
       document.createElement("div")
     );
 
-    service.getDetails({ placeId }, (place, status) => {
+    // Request ONLY the geometry field. Without a `fields` mask the Places SDK
+    // returns every field (Basic + Contact + Atmosphere) and Google bills the
+    // highest SKU (Atmosphere Data). We only need the lat/lng here.
+    service.getDetails({ placeId, fields: ["geometry"] }, (place, status) => {
       if (
         status === window.google.maps.places.PlacesServiceStatus.OK &&
         place?.geometry?.location
