@@ -41,6 +41,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
         title
         food
         description
+        image
         quantity
         variation{
           _id

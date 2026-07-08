@@ -39,6 +39,7 @@ export const placeOrder = `
         title
         food
         description
+        image
         quantity
         variation{
           _id
@@ -228,6 +229,7 @@ export const reviewOrder = `mutation ReviewOrder(
         title
         food
         description
+        image
         quantity
         variation{
           _id
