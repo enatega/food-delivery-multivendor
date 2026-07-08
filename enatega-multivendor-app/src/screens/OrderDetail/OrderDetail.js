@@ -140,7 +140,12 @@ function OrderDetail(props) {
     }
   }, [order])
 
-  if (loadingOrders) {
+  // Only show the full-screen spinner on the initial load, before we have any
+  // order to display. On a status-change refetch (loadingOrders flips true
+  // because both order lists refetch with notifyOnNetworkStatusChange), we
+  // already have `order` from the list/route param/lastKnownOrderRef, so keep
+  // the screen mounted and let it update in place instead of a circular reload.
+  if (loadingOrders && !order) {
     return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (errorOrders) {
