@@ -23,11 +23,18 @@ export default function DiscoveryScreen() {
   const { restaurantCuisinesData, groceryCuisinesData, queryData:cuisinesQueryData, error, loading } =
     useGetCuisines();
 
+  // Single fetch for ALL most-ordered sections (most-ordered, popular
+  // restaurants, popular stores, top grocery picks). Previously each of those
+  // sections called useMostOrderedRestaurants with a different limit/shopType,
+  // firing 4 separate network requests per Discovery load. We now fetch once
+  // (no shopType, larger limit) and split client-side.
   const {
     queryData,
+    restaurantsData: mostOrderedRestaurants,
+    groceriesData: mostOrderedGroceries,
     loading: mostOrderedLoading,
     error: mostorderedError,
-  } = useMostOrderedRestaurants(true, 1, 6);
+  } = useMostOrderedRestaurants(true, 1, 15);
 
   const {
     loading: restaurantsLoading,
@@ -129,13 +136,21 @@ export default function DiscoveryScreen() {
         error={!!restaurantsError}
       />
       <TopGroceryPicks
-      // // data={MostOrderedRestaurantsGroceryData}
-      // loading={mostOrderedLoading}
-      // error={!!mostorderedError}
+        data={mostOrderedGroceries}
+        loading={mostOrderedLoading}
+        error={!!mostorderedError}
       />
       <TopRatedVendors />
-      <PopularRestaurants />
-      <PopularStores />
+      <PopularRestaurants
+        data={mostOrderedRestaurants}
+        loading={mostOrderedLoading}
+        error={!!mostorderedError}
+      />
+      <PopularStores
+        data={mostOrderedGroceries}
+        loading={mostOrderedLoading}
+        error={!!mostorderedError}
+      />
     </>
   );
 }

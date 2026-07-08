@@ -2,27 +2,16 @@ export const restaurantPreviewFragment = `#graphql
 
   fragment RestaurantPreviewFields on RestaurantPreview {
     _id
-    orderId
-    orderPrefix
     name
     image
-    address
-    username
     deliveryTime
     minimumOrder
-    sections
-    rating
     isActive
     isAvailable
     slug
-    stripeDetailsSubmitted
-    commissionRate
     tax
-    notificationToken
-    enableNotification
     shopType
     cuisines
-    keywords
     tags
     reviewCount
     reviewAverage

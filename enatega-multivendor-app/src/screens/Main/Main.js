@@ -110,10 +110,19 @@ function Main(props) {
   const recentOrderRestaurantsVar = orderData?.recentOrderRestaurants
   const mostOrderedRestaurantsVar = orderData?.mostOrderedRestaurants
 
-  const { restaurantData: mostOrderedGroceryStores, loading: mostOrderedGroceryLoading, error: mostOrderedGroceryError } = useRestaurantQueries('topPicks', location, 'grocery')
+  // "Top grocery picks" is derived from the single most-ordered fetch above
+  // (grocery subset) instead of a second grocery-filtered network request.
+  const mostOrderedGroceryStores = useMemo(
+    () => (mostOrderedRestaurantsVar || []).filter(
+      (item) => item?.shopType?.toLowerCase() === 'grocery'
+    ),
+    [mostOrderedRestaurantsVar]
+  )
+  const mostOrderedGroceryLoading = orderLoading
+  const mostOrderedGroceryError = orderError
 
   const { restaurantData: nearByGroceryStores, loading: nearByGroceryStoresLoading, error: nearByGroceryStoresError } = useRestaurantQueries('grocery', location, 'grocery')
-  const { restaurantData: restaurantorders } = useRestaurantQueries('restaurant', location, 'restaurant')
+  const { restaurantData: restaurantorders, loading: restaurantordersLoading, error: restaurantordersError } = useRestaurantQueries('restaurant', location, 'restaurant')
 
   const handleActiveOrdersChange = (activeOrdersExist) => {
     setHasActiveOrders(activeOrdersExist)
@@ -406,7 +415,7 @@ function Main(props) {
             <View style={styles().flex}>
               <View style={styles().mainContentContainer}>
                 <View style={[styles().flex, styles().subContainer]}>
-                  {loading ? (
+                  {loading || restaurantordersLoading || (restaurantorders === null && !error && !restaurantordersError) ? (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
                       <ActivityIndicator size='large' color={currentTheme.spinnerColor} />
                     </View>

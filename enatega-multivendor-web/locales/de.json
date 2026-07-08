@@ -1,5 +1,5 @@
 {
-    "checking_for_active_orders": "Überprüfung aktiver Bestellungen",
+  "checking_for_active_orders": "Überprüfung aktiver Bestellungen",
   "no_active_orders_found": "Keine aktiven Bestellungen gefunden",
   "active_orders_found": "Aktive Bestellungen gefunden",
   "checking_active_orders_message": "Bitte warten Sie, während wir Ihre aktiven Bestellungen überprüfen...",
@@ -11,6 +11,7 @@
   "orders": "Bestellungen",
   "shop-types": "Ladenarten",
   "ok": "OK",
-   "loading_orders": "Bestellungen werden geladen...",
-  "show_more_orders": "Weitere Bestellungen anzeigen"
+  "loading_orders": "Bestellungen werden geladen...",
+  "show_more_orders": "Weitere Bestellungen anzeigen",
+  "Our-brands": "Our brands"
 }

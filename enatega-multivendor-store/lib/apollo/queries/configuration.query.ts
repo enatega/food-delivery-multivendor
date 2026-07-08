@@ -4,6 +4,6 @@ export const CONFIGURATION = `query Configuration{
       currency
       currencySymbol
       riderAppSentryUrl
-      googleApiKey
+      googleApiKey: googleMapsApiKey
     }
   }`;

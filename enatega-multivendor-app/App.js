@@ -6,7 +6,7 @@ import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, BackHandler, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import { ActivityIndicator, AppState, BackHandler, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
 import useEnvVars from './environment'
@@ -37,6 +37,10 @@ import {
   subscribeToSessionInvalidation,
   subscribeToSessionExpiredModalDismiss
 } from './src/utils/session'
+import {
+  initializePublicAccessToken,
+  stopPublicAccessTokenRefresh
+} from './src/services/publicAcccessService'
 
 const CLARITY_CONSENT_KEY = 'clarity_tracking_consent'
 
@@ -63,6 +67,27 @@ export default function App() {
     () => setupApolloClient({ GRAPHQL_URL, WS_GRAPHQL_URL }),
     [GRAPHQL_URL, WS_GRAPHQL_URL]
   )
+
+  // Fetch/refresh the public (MetricsGeneral) token up front and keep it fresh
+  // via a background timer, instead of refreshing only when a request finds it
+  // expired. Also refresh when the app returns to the foreground, since RN
+  // suspends timers while backgrounded.
+  useEffect(() => {
+    if (!GRAPHQL_URL) return undefined
+
+    initializePublicAccessToken(GRAPHQL_URL)
+
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') {
+        initializePublicAccessToken(GRAPHQL_URL)
+      }
+    })
+
+    return () => {
+      subscription.remove()
+      stopPublicAccessTokenRefresh()
+    }
+  }, [GRAPHQL_URL])
 
   useKeepAwake()
 

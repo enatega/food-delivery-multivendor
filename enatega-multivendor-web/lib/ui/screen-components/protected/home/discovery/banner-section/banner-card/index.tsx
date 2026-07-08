@@ -54,8 +54,7 @@ const BannerCard: React.FC<IBannerItemProps> = ({ item }) => {
             width={480}
             height={300}
             alt={item?.title}
-            objectFit="contain"
-            style={{ borderRadius: 12 }}
+            style={{ borderRadius: 12, objectFit: "contain" }}
             className="carousel-banner"
           />
         )}

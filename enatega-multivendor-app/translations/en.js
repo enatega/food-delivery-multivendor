@@ -526,6 +526,7 @@ export const en = {
   logoutMessage: 'Successfully logged out',
   somethingWentWrong: 'Something went wrong',
   checkInternet: 'Check your internet connection',
+  orderLoadError: 'We couldn’t load your order. Please pull down to refresh, or close and reopen the app.',
   selectCity: 'Select City',
   Location: 'Location',
   phoneNumberExist: 'Provided phone number already exist!',

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity, StatusBar, Platform } from 'react-native'
 import navigationService from '../../routes/navigationService'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -17,9 +17,6 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import { useTranslation } from 'react-i18next'
 import ReviewModal from '../../components/Review'
 
-const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
-const orderStatusInactive = ['DELIVERED', 'COMPLETED','CANCELLED','CANCELLEDBYREST']
-
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 
@@ -28,28 +25,15 @@ function MyOrders(props) {
   const [reviewInfo, setReviewInfo] = useState()
   const analytics = Analytics()
   const { t, i18n } = useTranslation()
-  const {
-    orders,
-    loadingOrders,
-    errorOrders,
-    reFetchOrders,
-    fetchMoreOrdersFunc,
-    networkStatusOrders
-  } = useContext(OrdersContext)
+  const { activeOrders, pastOrders, loadingActiveOrders, loadingPastOrders, errorActiveOrders, errorPastOrders, reFetchOrders } = useContext(OrdersContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [selectedTab, setSelectedTab] = useState('current')
   const inset = useSafeAreaInsets()
-  const activeOrders = useMemo(() => {
-    return orders.filter(o => orderStatusActive.includes(o.orderStatus))
-  }, [orders])
-  const pastOrders = useMemo(() => {
-    return orders.filter(o => orderStatusInactive.includes(o.orderStatus))
-  }, [orders])
-  const openReviewModal = ()=>{
+  const openReviewModal = () => {
     reviewModalRef.current.open()
   }
-  const closeReviewModal = ()=>{
+  const closeReviewModal = () => {
     reviewModalRef.current.close()
   }
 
@@ -63,19 +47,17 @@ function MyOrders(props) {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
-    StatusBar.setBarStyle(
-      themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-    )
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
   useEffect(() => {
     props?.navigation.setOptions({
       headerRight: null,
       headerLeft: () => (
         <HeaderBackButton
-          truncatedLabel=""
+          truncatedLabel=''
           backImage={() => (
             <View style={styles().backButton}>
-              <MaterialIcons name="arrow-back" size={25} color={currentTheme.newIconColor} />
+              <MaterialIcons name='arrow-back' size={25} color={currentTheme.newIconColor} />
             </View>
           )}
           onPress={() => {
@@ -105,17 +87,9 @@ function MyOrders(props) {
 
   const TabButton = ({ text, onPress, isSelected, currentTheme }) => {
     return (
-      <View
-        style={
-          isSelected
-            ? styles(currentTheme).activeTabStyles
-            : styles(currentTheme).inactiveTabStyles
-        }>
+      <View style={isSelected ? styles(currentTheme).activeTabStyles : styles(currentTheme).inactiveTabStyles}>
         <TouchableOpacity onPress={onPress}>
-          <TextDefault
-            H4
-            bold
-            textColor={isSelected ? currentTheme.newFontcolor : currentTheme.gray500}>
+          <TextDefault H4 bold textColor={isSelected ? currentTheme.newFontcolor : currentTheme.gray500}>
             {t(text)}
           </TextDefault>
         </TouchableOpacity>
@@ -123,48 +97,29 @@ function MyOrders(props) {
     )
   }
 
-  const onPressReview = (order, selectedRating)=>{
-    setReviewInfo({order, selectedRating})
+  const onPressReview = (order, selectedRating) => {
+    setReviewInfo({ order, selectedRating })
     openReviewModal()
   }
-  
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[reFetchOrders]} />
   return (
     <>
       <View style={styles(currentTheme).container}>
         <View style={styles(currentTheme).tabContainer}>
-          <TabButton
-            text={t('current')}
-            onPress={() => setSelectedTab('current')}
-            isSelected={selectedTab === 'current'}
-            currentTheme={currentTheme}
-          />
+          <TabButton text={t('current')} onPress={() => setSelectedTab('current')} isSelected={selectedTab === 'current'} currentTheme={currentTheme} />
 
-          <TabButton
-            text={t('past')}
-            onPress={() => setSelectedTab('past')}
-            isSelected={selectedTab === 'past'}
-            currentTheme={currentTheme}
-          />
+          <TabButton text={t('past')} onPress={() => setSelectedTab('past')} isSelected={selectedTab === 'past'} currentTheme={currentTheme} />
         </View>
-        {selectedTab === 'current' && (
-          <ActiveOrders
-            navigation={props?.navigation}
-            activeOrders={activeOrders}
-            loading={loadingOrders}
-            error={errorOrders}
-          />
-        )}
-        {selectedTab === 'past' && (
-          <PastOrders
-            navigation={props?.navigation}
-            pastOrders={pastOrders}
-            loading={loadingOrders}
-            error={errorOrders}
-            onPressReview={onPressReview}
-          />
-        )}
+        <View style={styles(currentTheme).listContainer}>
+          <View pointerEvents={selectedTab === 'current' ? 'auto' : 'none'} style={selectedTab === 'current' ? styles(currentTheme).visibleTabContent : styles(currentTheme).hiddenTabContent}>
+            <ActiveOrders navigation={props?.navigation} activeOrders={activeOrders} loading={loadingActiveOrders} error={errorActiveOrders} />
+          </View>
+          <View pointerEvents={selectedTab === 'past' ? 'auto' : 'none'} style={selectedTab === 'past' ? styles(currentTheme).visibleTabContent : styles(currentTheme).hiddenTabContent}>
+            <PastOrders navigation={props?.navigation} pastOrders={pastOrders} loading={loadingPastOrders} error={errorPastOrders} onPressReview={onPressReview} />
+          </View>
+        </View>
 
         <View
           style={{
@@ -173,7 +128,7 @@ function MyOrders(props) {
           }}
         />
       </View>
-      <ReviewModal ref={reviewModalRef} onOverlayPress={closeReviewModal} theme={currentTheme} orderId={reviewInfo?.order._id} rating={reviewInfo?.selectedRating}/>
+      <ReviewModal ref={reviewModalRef} onOverlayPress={closeReviewModal} theme={currentTheme} orderId={reviewInfo?.order._id} rating={reviewInfo?.selectedRating} />
     </>
   )
 }

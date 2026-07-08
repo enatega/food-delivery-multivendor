@@ -1,15 +1,11 @@
 "use client"
 import CuisinesSliderCard from "@/lib/ui/useable-components/cuisines-slider-card";
-// hook
-import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 // loading skeleton
 import CuisinesSliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/cuisines.slider.skeleton";
 
-function PopularRestaurants() {
-  const { error, loading, queryData } = useMostOrderedRestaurants(true,1,8,"restaurant");
-
-  console.log({PopularRestaurants:queryData})
-
+// Data comes from the single mostOrderedRestaurants fetch in DiscoveryScreen
+// (restaurant subset) — avoids a duplicate network call per section.
+function PopularRestaurants({ data, loading, error }: { data?: any[]; loading?: boolean; error?: boolean }) {
   if (loading) {
     return <CuisinesSliderSkeleton />;
   }
@@ -17,12 +13,11 @@ function PopularRestaurants() {
   if (error) {
     return;
   }
-  
 
   return (
     <CuisinesSliderCard
       title="Popular-restaurants"
-      data={queryData || []}
+      data={data || []}
       showLogo={true}
       cuisines={false}
     />

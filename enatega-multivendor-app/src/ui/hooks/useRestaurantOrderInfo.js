@@ -16,8 +16,16 @@ export default function useHomeRestaurants() {
     skip: !isLoggedIn
   })
 
+  // Fetch a larger set once (no shopType) so the Discovery screen can derive
+  // both the "Popular right now" and grocery "Top picks" sections client-side
+  // from this single call, instead of firing a second grocery-filtered request.
   const mostOrderedRestaurants = useQuery(mostOrderedRestaurantsQuery, {
-    variables: { latitude: location?.latitude, longitude: location?.longitude }
+    variables: {
+      latitude: location?.latitude,
+      longitude: location?.longitude,
+      page: 1,
+      limit: 15
+    }
   })
 
   const orderLoading =

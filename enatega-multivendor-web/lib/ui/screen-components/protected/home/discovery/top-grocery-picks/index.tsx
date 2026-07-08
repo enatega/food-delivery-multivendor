@@ -2,15 +2,11 @@
 "use client"
 
 import SliderCard from "@/lib/ui/useable-components/slider-card";
-// hook
 // loading skeleton
 import SliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/slider.loading.skeleton";
-import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 
-function TopGroceryPicks() {
-
-  const { error, loading, queryData } = useMostOrderedRestaurants(true, 1, 6,"grocery");
-
+// Grocery subset from the single mostOrderedRestaurants fetch in DiscoveryScreen.
+function TopGroceryPicks({ data, loading, error }: { data?: any[]; loading?: boolean; error?: boolean }) {
   if (loading) {
     return <SliderSkeleton />;
   }
@@ -19,7 +15,7 @@ function TopGroceryPicks() {
     return;
   }
 
-  return <SliderCard heading="toppicks" title="Top-grocery-picks" data={queryData || []} />;
+  return <SliderCard heading="toppicks" title="Top-grocery-picks" data={data || []} />;
 }
 
 export default TopGroceryPicks;

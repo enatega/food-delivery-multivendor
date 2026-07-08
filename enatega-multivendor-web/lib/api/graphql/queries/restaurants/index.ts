@@ -51,17 +51,48 @@ export const RESTAURANTS_FRAGMENT = gql`
   }
 `;
 
+// The carousel endpoints (recentOrder/mostOrdered/topRatedVendors Preview)
+// return the `RestaurantCarouselPreview` type, NOT `RestaurantPreview`. Spreading
+// RestaurantPreviewFields on them fails with GRAPHQL_VALIDATION_FAILED, so use
+// this dedicated fragment (same fields, all valid on the carousel type).
+export const RESTAURANTS_CAROUSEL_FRAGMENT = gql`
+  fragment RestaurantCarouselPreviewFields on RestaurantCarouselPreview {
+    _id
+    name
+    image
+    logo
+    slug
+    shopType
+    minimumOrder
+    deliveryTime
+    location {
+      coordinates
+    }
+    reviewAverage
+    cuisines
+    openingTimes {
+      day
+      times {
+        startTime
+        endTime
+      }
+    }
+    isAvailable
+    isActive
+  }
+`;
+
 export const RECENT_ORDER_RESTAURANTS = gql`
-  ${RESTAURANTS_FRAGMENT}
+  ${RESTAURANTS_CAROUSEL_FRAGMENT}
   query GetRecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
     recentOrderRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
-      ...RestaurantPreviewFields
+      ...RestaurantCarouselPreviewFields
     }
   }
 `;
 
 export const MOST_ORDER_RESTAURANTS = gql`
-  ${RESTAURANTS_FRAGMENT}
+  ${RESTAURANTS_CAROUSEL_FRAGMENT}
   query GetMostOrderedRestaurants(
     $latitude: Float!
     $longitude: Float!
@@ -76,7 +107,7 @@ export const MOST_ORDER_RESTAURANTS = gql`
       limit: $limit
       shopType: $shopType
     ) {
-      ...RestaurantPreviewFields
+      ...RestaurantCarouselPreviewFields
     }
   }
 `;

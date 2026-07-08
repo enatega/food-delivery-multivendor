@@ -6,7 +6,6 @@ import styles from './styles'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
-import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -54,7 +53,7 @@ function OrderDetail(props) {
   const id = props?.route.params ? props?.route.params?._id : null
   const orderData = props?.route.params ? props?.route.params?.order : null
   // console.log('orderData',orderData)
-  const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
+  const { loadingOrders, errorOrders, orders, reFetchOrders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
@@ -133,7 +132,12 @@ function OrderDetail(props) {
     return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (errorOrders) {
-    return <TextError text={JSON.stringify(errorOrders)} />
+    return (
+      <ErrorView
+        refetchFunctions={reFetchOrders ? [reFetchOrders] : []}
+        errorMessage={t('orderLoadError')}
+      />
+    )
   }
 
   const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges, discountAmount } = order
