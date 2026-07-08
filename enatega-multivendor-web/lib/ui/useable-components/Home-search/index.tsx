@@ -34,17 +34,15 @@ const CitySearch: React.FC = () => {
   const handleSelect = (placeId: string, description: string) => {
     if (!window.google || !isLoaded) return;
 
-    const service = new window.google.maps.places.PlacesService(
-      document.createElement("div")
-    );
+    const geocoder = new window.google.maps.Geocoder();
 
-    service.getDetails({ placeId }, (place, status) => {
+    geocoder.geocode({ placeId }, (results, status) => {
       if (
         status === window.google.maps.places.PlacesServiceStatus.OK &&
-        place?.geometry?.location
+        results?.[0]?.geometry?.location
       ) {
-        const latitude = place.geometry.location.lat();
-        const longitude = place.geometry.location.lng();
+        const latitude = results[0].geometry.location.lat();
+        const longitude = results[0].geometry.location.lng();
         console.log("longitude and latitude", longitude, latitude);
         console.log("description:", description);
         onUseLocalStorage(
