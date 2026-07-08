@@ -1,13 +1,10 @@
 "use client"
 import CuisinesSliderCard from "@/lib/ui/useable-components/cuisines-slider-card";
-// hook
-import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 // loading skeleton
 import CuisinesSliderSkeleton from "@/lib/ui/useable-components/custom-skeletons/cuisines.slider.skeleton";
 
-function PopularStores() {
-  const { error, loading, queryData } = useMostOrderedRestaurants(true,1,5,"grocery");
-
+// Grocery subset from the single mostOrderedRestaurants fetch in DiscoveryScreen.
+function PopularStores({ data, loading, error }: { data?: any[]; loading?: boolean; error?: boolean }) {
   if (loading) {
     return <CuisinesSliderSkeleton />;
   }
@@ -19,7 +16,7 @@ function PopularStores() {
   return (
     <CuisinesSliderCard
       title="Popular-stores"
-      data={queryData || []}
+      data={data || []}
       showLogo={true}
       last={true}
       cuisines={false}

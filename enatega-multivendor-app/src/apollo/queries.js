@@ -275,35 +275,28 @@ export const restaurantFragment = gql`
     shopType
   }
 `
-export const restaurantPreviewFragment = gql`
-  fragment RestaurantPreviewFields on RestaurantPreview {
+// The Discovery carousel endpoints (recentOrder/mostOrdered/topRatedVendors
+// Preview) return the `RestaurantCarouselPreview` type — a leaner type than
+// `RestaurantPreview` (no freeDelivery/acceptVouchers/rating/address/etc.), so
+// the fragment MUST be `on RestaurantCarouselPreview` or the server rejects it
+// with GRAPHQL_VALIDATION_FAILED. Only the fields the carousel cards render are
+// selected. Consumers: MainRestaurantCard -> NewRestaurantCard + isOpen(), and
+// TopBrands. Detail screens re-fetch full data by _id, so params are just
+// placeholders.
+export const restaurantCarouselPreviewFragment = gql`
+  fragment RestaurantCarouselPreviewFields on RestaurantCarouselPreview {
     _id
-    orderId
-    orderPrefix
     name
     image
     logo
-    address
-    username
     deliveryTime
     minimumOrder
-    sections
-    rating
-    isActive
-    isAvailable
-    slug
-    stripeDetailsSubmitted
     tax
-    notificationToken
-    enableNotification
+    isAvailable
     shopType
-    cuisines
-    keywords
     tags
     reviewCount
     reviewAverage
-    freeDelivery
-    acceptVouchers
     location {
       coordinates
     }
@@ -498,6 +491,105 @@ export const myOrders = `query Orders($offset:Int){
 }
 `
 
+// Split active/past order queries mirroring the customer web app. The server
+// splits orders by status (active vs completed/cancelled) and paginates with
+// page/limit/offset, which is lighter and more reliable than the single
+// unbounded `orders` query. Field selection matches `myOrders` (incl.
+// discountAmount) so every screen keeps working.
+const ordersFieldsBody = `
+    _id
+    orderId
+    id
+    restaurant{
+      _id
+      name
+      image
+      address
+      location{coordinates}
+    }
+    deliveryAddress{
+      location{coordinates}
+      deliveryAddress
+      id
+    }
+    items{
+      _id
+      id
+      title
+      food
+      description
+      quantity
+      image
+      variation{
+        _id
+        id
+        title
+        price
+        discounted
+      }
+      addons{
+        _id
+        id
+        options{
+          _id
+          id
+          title
+          description
+          price
+        }
+        title
+        description
+        quantityMinimum
+        quantityMaximum
+      }
+    }
+    user{
+      _id
+      name
+      phone
+    }
+    rider{
+      _id
+      name
+      phone
+    }
+    review{
+      _id
+      rating
+    }
+    paymentMethod
+    paidAmount
+    orderAmount
+    orderStatus
+    paymentStatus
+    tipping
+    taxationAmount
+    createdAt
+    completionTime
+    preparationTime
+    orderDate
+    expectedTime
+    isPickedUp
+    deliveryCharges
+    acceptedAt
+    pickedAt
+    deliveredAt
+    cancelledAt
+    assignedAt
+    instructions
+    discountAmount
+`
+
+export const getUsersActiveOrders = `query GetUsersActiveOrders($page:Int!,$limit:Int!,$offset:Int!){
+  getUsersActiveOrders(page:$page,limit:$limit,offset:$offset){${ordersFieldsBody}}
+}
+`
+
+export const getUsersPastOrders = `query GetUsersPastOrders($page:Int!,$limit:Int!,$offset:Int!){
+  getUsersPastOrders(page:$page,limit:$limit,offset:$offset){${ordersFieldsBody}}
+}
+`
+
 export const getConfiguration = `query Configuration{
   configuration{
     _id
@@ -507,9 +599,9 @@ export const getConfiguration = `query Configuration{
     twilioEnabled
     androidClientID 
     iOSClientID 
-    appAmplitudeApiKey 
-    googleApiKey 
-    expoClientID 
+    appAmplitudeApiKey
+    googleApiKey: googleMapsApiKey
+    expoClientID
     customerAppSentryUrl 
     termsAndConditions 
     privacyPolicy
@@ -628,26 +720,14 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
     }
     restaurants{
       _id
-      orderId
-      orderPrefix
       name
       image
-      address
-      username
       deliveryTime
       minimumOrder
-      sections
-      rating
-      isActive
       isAvailable
-      slug
-      stripeDetailsSubmitted
       tax
-      notificationToken
-      enableNotification
       shopType
       cuisines
-      keywords
       tags
       reviewCount
       reviewAverage
@@ -666,10 +746,10 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
 }
 }`
 export const topRatedVendorsInfo = gql`
-  ${restaurantPreviewFragment}
+  ${restaurantCarouselPreviewFragment}
   query TopRatedVendors($latitude: Float!, $longitude: Float!) {
     topRatedVendorsPreview(latitude: $latitude, longitude: $longitude) {
-      ...RestaurantPreviewFields
+      ...RestaurantCarouselPreviewFields
     }
   }
 `
@@ -982,10 +1062,10 @@ export const chat = `query Chat($order: ID!) {
 }`
 
 export const recentOrderRestaurantsQuery = gql`
-  ${restaurantPreviewFragment}
+  ${restaurantCarouselPreviewFragment}
   query GetRecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
     recentOrderRestaurantsPreview(latitude: $latitude, longitude: $longitude) {
-      ...RestaurantPreviewFields
+      ...RestaurantCarouselPreviewFields
     }
   }
 `
@@ -1016,10 +1096,10 @@ export const recentOrderRestaurantsPreviewQuery = gql`
 `
 
 export const mostOrderedRestaurantsQuery = gql`
-  ${restaurantPreviewFragment}
-  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!, $shopType: String) {
-    mostOrderedRestaurantsPreview(latitude: $latitude, longitude: $longitude, shopType: $shopType) {
-      ...RestaurantPreviewFields
+  ${restaurantCarouselPreviewFragment}
+  query GetMostOrderedRestaurants($latitude: Float!, $longitude: Float!, $shopType: String, $page: Int, $limit: Int) {
+    mostOrderedRestaurantsPreview(latitude: $latitude, longitude: $longitude, shopType: $shopType, page: $page, limit: $limit) {
+      ...RestaurantCarouselPreviewFields
     }
   }
 `

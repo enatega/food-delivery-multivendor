@@ -26,9 +26,10 @@ const SliderCard = <T,>({
   heading,
 }: ISliderCardComponentProps<T>) => {
   const [page, setPage] = useState(0);
-  const t = useTranslations()
+  const t = useTranslations();
   const [numVisible, setNumVisible] = useState(getNumVisible());
   const [isModalOpen, setIsModalOpen] = useState({value: false, id: ""});
+  const headingLabel = t.has(heading) ? t(heading) : heading;
 
   const handleUpdateIsModalOpen = useCallback((value: boolean, id: string) => {
     if (isModalOpen.value !== value || isModalOpen.id !== id) {
@@ -105,7 +106,7 @@ const SliderCard = <T,>({
       <div className={`mt-9 ${last && "mb-20"}`}>
         <div className="flex justify-between mx-[6px] ">
           <span className="font-inter font-bold text-xl sm:text-2xl leading-8 tracking-normal text-gray-900 dark:text-white">
-            {t(heading)}
+            {headingLabel}
           </span>
           <div className="flex items-center justify-end gap-x-2">
             {/* See All Button */}

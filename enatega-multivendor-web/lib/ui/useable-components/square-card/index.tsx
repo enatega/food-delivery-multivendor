@@ -39,7 +39,7 @@ const SquareCard: React.FC<ICuisinesCardProps> = ({
       {/* Image Container */}
       <div className="relative w-full h-[150px]">
         <Image
-          src={`${getImgSrc || "https://res.cloudinary.com/do1ia4vzf/image/upload/v1740680733/food/ehmip6g5ddtmkygpw7he.webp"}`}
+          src={getImgSrc || "/assets/images/png/freshGroceries.jpg"}
           alt={item?.name}
           fill
           className="object-cover rounded-t-md"

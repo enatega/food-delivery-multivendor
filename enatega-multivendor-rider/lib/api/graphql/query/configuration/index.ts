@@ -7,7 +7,7 @@ export const GET_CONFIGURATION = gql`
       currency
       currencySymbol
       riderAppSentryUrl
-      googleApiKey
+      googleApiKey: googleMapsApiKey
     }
   }
 `;

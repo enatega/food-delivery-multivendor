@@ -36,7 +36,7 @@ export const ConfigurationProvider = ({
     : "not_found";
   const STRIPE_PUBLIC_KEY = configuration.publishableKey;
   const PAYPAL_KEY = configuration.clientId;
-  const GOOGLE_MAPS_KEY = configuration.googleApiKey;
+  const GOOGLE_MAPS_KEY = configuration.googleMapsApiKey;
   const AMPLITUDE_API_KEY = configuration.webAmplitudeApiKey;
   const LIBRARIES = "places,drawing,geometry".split(",") as Libraries;
   const COLORS = {

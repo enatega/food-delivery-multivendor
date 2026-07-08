@@ -15,6 +15,16 @@ const styles = (props = null) =>
       flex: 1,
       backgroundColor: props !== null ? props?.themeBackground : 'transparent'
     },
+    listContainer: {
+      flex: 1
+    },
+    visibleTabContent: {
+      flex: 1
+    },
+    hiddenTabContent: {
+      ...StyleSheet.absoluteFillObject,
+      opacity: 0
+    },
     contentContainer: {
       flexGrow: 1,
       ...alignment.PBsmall
@@ -136,7 +146,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       borderBottomWidth: 3,
-      borderBottomColor: props !== null ? props?.newheaderColor : 'transparent',
+      borderBottomColor: props !== null ? props?.newheaderColor : 'transparent'
     },
     inactiveTabStyles: {
       width: '45%',

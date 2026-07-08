@@ -390,7 +390,7 @@ function Menu({ route, props }) {
   )
 
   const emptyView = () => {
-    if (loading || mutationLoading || loadingOrders) return loadingScreen()
+    if (loading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
     else {
       return (
         <View style={styles().emptyViewContainer}>
@@ -458,7 +458,7 @@ function Menu({ route, props }) {
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[refetch]} />
 
-  if (loading || mutationLoading || loadingOrders) return loadingScreen()
+  if (loading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
 
   // const searchRestaurants = (searchText) => {
   //   const data = []

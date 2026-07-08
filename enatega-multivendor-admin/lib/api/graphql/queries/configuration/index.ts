@@ -28,7 +28,7 @@ export const GET_CONFIGURATION = gql`
       customerAppSentryUrl
       restaurantAppSentryUrl
       riderAppSentryUrl
-      googleApiKey
+      googleApiKey: googleMapsApiKey
       cloudinaryUploadUrl
       cloudinaryApiKey
       webAmplitudeApiKey

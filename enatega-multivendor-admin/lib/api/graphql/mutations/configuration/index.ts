@@ -77,7 +77,7 @@ export const SAVE_GOOGLE_API_KEY_CONFIGURATION = gql`
   ) {
     saveGoogleApiKeyConfiguration(configurationInput: $configurationInput) {
       _id
-      googleApiKey
+      googleApiKey: googleMapsApiKey
     }
   }
 `;

@@ -1,6 +1,8 @@
-import NextImage, { ImageProps } from 'next/image';
+import { useEffect, useState } from "react";
+import NextImage, { ImageProps } from "next/image";
 
-const DIRECT_IMAGE_HOSTS = new Set(['assets.enatega.com']);
+const DIRECT_IMAGE_HOSTS = new Set(["assets.enatega.com"]);
+const FALLBACK_IMAGE_SRC = "/assets/images/png/freshGroceries.jpg";
 
 function shouldBypassOptimization(src: ImageProps['src']) {
   if (typeof src !== 'string') return false;
@@ -15,10 +17,29 @@ function shouldBypassOptimization(src: ImageProps['src']) {
 }
 
 export default function Image(props: ImageProps) {
+  const [imgSrc, setImgSrc] = useState(props.src);
+
+  useEffect(() => {
+    setImgSrc(props.src);
+  }, [props.src]);
+
   return (
     <NextImage
       {...props}
-      unoptimized={props.unoptimized ?? shouldBypassOptimization(props.src)}
+      src={imgSrc}
+      unoptimized={props.unoptimized ?? shouldBypassOptimization(imgSrc)}
+      onError={(event) => {
+        props.onError?.(event);
+
+        if (
+          typeof imgSrc === "string" &&
+          imgSrc !== FALLBACK_IMAGE_SRC &&
+          !imgSrc.startsWith("blob:") &&
+          !imgSrc.startsWith("data:")
+        ) {
+          setImgSrc(FALLBACK_IMAGE_SRC);
+        }
+      }}
     />
   );
 }
