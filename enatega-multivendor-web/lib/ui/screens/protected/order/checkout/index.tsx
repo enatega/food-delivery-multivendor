@@ -516,13 +516,16 @@ export default function OrderCheckoutScreen() {
 
     if (!todaysTimings) return false;
 
-    const times = todaysTimings.times.filter(
-      (t: any) =>
-        hours >= Number(t.startTime[0]) &&
-        minutes >= Number(t.startTime[1]) &&
-        hours <= Number(t.endTime[0]) &&
-        minutes <= Number(t.endTime[1]),
-    );
+    // Compare against total minutes since midnight. Comparing hours and
+    // minutes independently is wrong (e.g. for 09:00-22:00 at 10:30 it would
+    // fail `minutes <= endMinute` -> 30 <= 0), which made the web report an
+    // open restaurant as closed while the mobile app placed the order fine.
+    const currentTime = hours * 60 + minutes;
+    const times = todaysTimings.times.filter((t: any) => {
+      const startTime = Number(t.startTime[0]) * 60 + Number(t.startTime[1]);
+      const endTime = Number(t.endTime[0]) * 60 + Number(t.endTime[1]);
+      return currentTime >= startTime && currentTime <= endTime;
+    });
 
     return times.length > 0;
   };
