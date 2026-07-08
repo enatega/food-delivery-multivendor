@@ -33,11 +33,17 @@ export default async function RootLayout({
               var host = window.location.hostname;
 
               var slug = null;
+              // 1. Subdomain: xshop.localhost or xshop.admin.saas.enatega.com
               var localMatch = host.match(/^([^.]+)\\.localhost$/);
               if (localMatch) {
                 slug = localMatch[1];
               } else if (tenantDomain && host !== tenantDomain && host.endsWith('.' + tenantDomain)) {
                 slug = host.slice(0, host.length - tenantDomain.length - 1);
+              }
+              // 2. Query param fallback: admin.saas.enatega.com?tenant=xshop
+              if (!slug) {
+                var qp = new URLSearchParams(window.location.search).get('tenant');
+                if (qp) slug = qp;
               }
               if (!slug) return;
 
