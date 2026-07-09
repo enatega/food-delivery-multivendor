@@ -23,6 +23,7 @@ import { ISetOrderTimeComponentProps } from "@/lib/utils/interfaces";
 
 // Icons
 import { useApptheme } from "@/lib/context/theme.context";
+import { useSoundContext } from "@/lib/context/global/sound.context";
 import { useTranslation } from "react-i18next";
 import CustomContinueButton from "../custom-continue-button";
 import { CircleCrossIcon } from "../svg";
@@ -35,6 +36,7 @@ const SetTimeScreenAndAcceptOrder = ({
 }: ISetOrderTimeComponentProps) => {
   // Hooks
   const { appTheme } = useApptheme();
+  const { silenceRing } = useSoundContext();
   const { t } = useTranslation();
 
   // States
@@ -50,8 +52,9 @@ const SetTimeScreenAndAcceptOrder = ({
     if (isSubmitting) return;
 
     try {
+      await silenceRing();
       await acceptOrder(id, selectedTime?.toString() || "0");
-      await muteRing(orderId);
+      muteRing(orderId).catch(() => {});
       handleDismissModal();
     } catch {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
@@ -68,8 +71,9 @@ const SetTimeScreenAndAcceptOrder = ({
 
       if (status) {
         // null means it's ioS so ignore printing and true mean print wa successfull
+        await silenceRing();
         await acceptOrder(id, selectedTime?.toString() || "0");
-        await muteRing(orderId);
+        muteRing(orderId).catch(() => {});
       }
 
       setIsAcceptingOrder(false);
