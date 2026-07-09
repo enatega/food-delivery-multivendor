@@ -56,6 +56,10 @@ const GET_CUISINES = gql`
 `
 const FETCH_ALL_SHOPTYPES = FetchAllShopTypes
 
+// Number of times a transient network failure is silently retried before the
+// full-screen error is shown to the user.
+const MAX_AUTO_RETRIES = 3
+
 function Main(props) {
   const Analytics = analytics()
 
@@ -92,6 +96,39 @@ function Main(props) {
     },
     fetchPolicy: 'network-only'
   })
+
+  // A transient network failure (e.g. "Network request failed") surfaces as a
+  // networkError without an HTTP statusCode. This happens when the restaurants
+  // query refires after the address/location changes and the request is briefly
+  // interrupted. We auto-retry these instead of blowing away the whole screen.
+  const isTransientNetworkError = !!error?.networkError && !error?.networkError?.statusCode && !(error?.graphQLErrors?.length > 0)
+  const retryCountRef = useRef(0)
+  const [retriesExhausted, setRetriesExhausted] = useState(false)
+
+  // Reset the retry budget whenever the location changes (a fresh attempt).
+  useEffect(() => {
+    retryCountRef.current = 0
+    setRetriesExhausted(false)
+  }, [location?.latitude, location?.longitude])
+
+  useEffect(() => {
+    if (!error) {
+      // Recovered — restore the retry budget for the next attempt.
+      retryCountRef.current = 0
+      if (retriesExhausted) setRetriesExhausted(false)
+      return
+    }
+    if (!isTransientNetworkError) return
+    if (retryCountRef.current >= MAX_AUTO_RETRIES) {
+      if (!retriesExhausted) setRetriesExhausted(true)
+      return
+    }
+    const timer = setTimeout(() => {
+      retryCountRef.current += 1
+      refetchRestaurants().catch(() => {})
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [error, isTransientNetworkError, retriesExhausted, refetchRestaurants])
 
   const { data: banners, refetch: refetchBanners } = useQuery(GET_BANNERS, {
     fetchPolicy: 'cache-first',
@@ -404,7 +441,11 @@ function Main(props) {
     [navigation]
   )
   const userFriendlyErrorMessage = getErrorMessage(error)
-  if (error) return <ErrorView refetchFunctions={[refetchRestaurants, refetchBanners]} errorMessage={userFriendlyErrorMessage} />
+  // Keep the loading UI up while a transient failure is being auto-retried so
+  // the user never sees the full-screen "something went wrong" for a blip.
+  const isAutoRetrying = !!error && isTransientNetworkError && !retriesExhausted
+  const showErrorView = !!error && (!isTransientNetworkError || retriesExhausted)
+  if (showErrorView) return <ErrorView refetchFunctions={[refetchRestaurants, refetchBanners]} errorMessage={userFriendlyErrorMessage} />
   return (
     <>
       {!connect ? (
@@ -415,7 +456,7 @@ function Main(props) {
             <View style={styles().flex}>
               <View style={styles().mainContentContainer}>
                 <View style={[styles().flex, styles().subContainer]}>
-                  {loading || restaurantordersLoading || (restaurantorders === null && !error && !restaurantordersError) ? (
+                  {loading || isAutoRetrying || restaurantordersLoading || (restaurantorders === null && !error && !restaurantordersError) ? (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
                       <ActivityIndicator size='large' color={currentTheme.spinnerColor} />
                     </View>

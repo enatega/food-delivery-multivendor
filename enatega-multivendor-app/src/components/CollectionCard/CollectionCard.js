@@ -52,4 +52,4 @@ const CollectionCard = ({ onPress, image, name }) => {
   )
 }
 
-export default CollectionCard
+export default React.memo(CollectionCard)

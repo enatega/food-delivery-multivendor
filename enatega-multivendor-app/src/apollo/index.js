@@ -52,6 +52,28 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
           }
         }
       },
+      // The backend omits `image` on some legacy order items / restaurants
+      // (it returns undefined rather than null). A `read` policy tells Apollo
+      // the field is optional, which both silences the "Missing field 'image'"
+      // cache warnings and normalizes the absent value to null.
+      Item: {
+        fields: {
+          image: {
+            read(existing = null) {
+              return existing
+            }
+          }
+        }
+      },
+      RestaurantDetail: {
+        fields: {
+          image: {
+            read(existing = null) {
+              return existing
+            }
+          }
+        }
+      },
       RestaurantPreview: {
         fields: {
           distanceWithCurrentLocation: {

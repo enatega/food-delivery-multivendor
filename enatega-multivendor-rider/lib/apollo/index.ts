@@ -25,8 +25,7 @@ import { RIDER_ID, RIDER_TOKEN } from "../utils/constants";
 import { getSecureItem, removeSecureItem } from "../services/secure-storage";
 import { IRestaurantLocation } from "../utils/interfaces";
 import { calculateDistance } from "../utils/methods/custom-functions";
-import { getValidPublicToken } from "../utils/service/publicAccessService";
-import { getOrCreateNonce } from "../utils/publicAccessToken";
+import PublicAccessTokenService from "../services/public-access-token.service";
 
 let isAuthRedirecting = false;
 
@@ -88,6 +87,19 @@ const setupApollo = () => {
           },
         },
       },
+      // Some legacy order items come back without an `image` field (undefined
+      // rather than null). A `read` policy marks the field optional, which
+      // silences the "Missing field 'image'" cache warnings and normalizes the
+      // absent value to null.
+      Item: {
+        fields: {
+          image: {
+            read(existing = null) {
+              return existing;
+            },
+          },
+        },
+      },
       RestaurantPreview: {
         fields: {
           distanceWithCurrentLocation: {
@@ -124,18 +136,19 @@ const setupApollo = () => {
       lazy: true,
       connectionParams: async () => {
         const token = await getSecureItem(RIDER_TOKEN);
-        const publicToken = await getValidPublicToken(
-          GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
-        ).catch(() => {
-          if (__DEV__) console.warn("Could not get public token for WebSocket");
-          return null;
-        });
-        const nonce = await getOrCreateNonce();
+        const nonce = PublicAccessTokenService.getNonce();
+        let publicToken: string | null = null;
+
+        try {
+          publicToken = await PublicAccessTokenService.getToken(client);
+        } catch {
+          publicToken = null;
+        }
 
         return {
           authorization: token ? `Bearer ${token}` : "",
           "bop-auth": publicToken ? `Bearer ${publicToken}` : "",
-          nonce: nonce,
+          nonce: nonce || "",
         };
       },
       connectionCallback: (error) => {
@@ -150,17 +163,10 @@ const setupApollo = () => {
   const wsLink = new WebSocketLink(wsClient);
 
   const request = async (operation: Operation) => {
+    const skipPublicAuth =
+      operation.getContext().headers?.["x-skip-public-auth"];
     const token = await getSecureItem(RIDER_TOKEN);
-
-    // Try to get public token, but don't fail if it's not available yet
-    const publicToken = await getValidPublicToken(
-      GRAPHQL_URL ?? "https://aws-server-v2.enatega.com/graphql"
-    ).catch(() => {
-      if (__DEV__) console.warn("Could not get public token for request");
-      return null;
-    });
-
-    const nonce = await getOrCreateNonce();
+    const nonce = PublicAccessTokenService.getNonce();
 
     // Get platform-specific information for fingerprinting
     const platform = Platform.OS;
@@ -169,14 +175,15 @@ const setupApollo = () => {
     // Build headers object
     const headers: Record<string, string> = {
       authorization: token ? `Bearer ${token}` : "",
-      nonce: nonce,
+      nonce: nonce || "",
       "x-platform": platform,
       "accept-language": locale,
       "user-agent": `Yalla-Rider-App/${platform}`,
+      ...operation.getContext().headers,
     };
 
-    // Add bop-auth if we have a public token
-    if (publicToken) {
+    if (!skipPublicAuth) {
+      const publicToken = await PublicAccessTokenService.getToken(client);
       headers["bop-auth"] = `Bearer ${publicToken}`;
     }
 

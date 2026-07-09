@@ -189,12 +189,6 @@ export const RIDER_ORDERS = gql`
         name
         phone
       }
-      chat {
-        user
-        message
-        images
-        isActive
-      }
       paymentMethod
       paidAmount
       orderAmount

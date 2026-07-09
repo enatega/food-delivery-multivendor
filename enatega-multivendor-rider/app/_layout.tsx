@@ -33,10 +33,10 @@ import { LocationPermissionComp } from "@/lib/ui/useable-components";
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
 import { requestMediaLibraryPermissionsAsync } from "expo-image-picker";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import "../global.css";
-import { usePublicAccessInit } from "@/lib/hooks/usePublicAccessInit";
+import PublicAccessTokenService from "@/lib/services/public-access-token.service";
 
 initSentry();
 
@@ -49,6 +49,7 @@ function RootLayout() {
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
     Inter: require("../lib/assets/fonts/Inter.ttf"),
   });
+  const [isPublicTokenReady, setIsPublicTokenReady] = useState(false);
   const client = setupApollo();
 
   // Permissions
@@ -56,14 +57,23 @@ function RootLayout() {
     await requestMediaLibraryPermissionsAsync();
   }
 
-  usePublicAccessInit()
-
   // Use Effect
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  useEffect(() => {
+    PublicAccessTokenService.initialize(client)
+      .then(() => {
+        setIsPublicTokenReady(true);
+      })
+      .catch((error) => {
+        console.log("Public auth initialization failed:", error);
+        setIsPublicTokenReady(true);
+      });
+  }, [client]);
 
   useEffect(() => {
     grantCameraAndGalleryPermissions();
@@ -88,7 +98,7 @@ function RootLayout() {
     };
   }, []);
 
-  if (!loaded) {
+  if (!loaded || !isPublicTokenReady) {
     return null;
   }
 
