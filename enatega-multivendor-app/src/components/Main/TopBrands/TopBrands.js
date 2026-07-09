@@ -22,7 +22,7 @@ function TopBrands(props) {
   const { t, i18n } = useTranslation()
   const { location } = useContext(LocationContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  const currentTheme = useMemo(() => ({ isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }), [i18n.language, themeContext.ThemeValue])
   const navigation = useNavigation()
 
   const { loading, error, data } = useQuery(topRatedVendorsInfo, {

@@ -20,6 +20,12 @@ import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
+import {
+  logStep,
+  logError,
+  redactToken,
+  describeLoginPayload
+} from '../../utils/googleSignInLogger'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -67,12 +73,20 @@ export const useCreateAccount = () => {
   })
 
   useEffect(() => {
+    if (!response) return
+    logStep('oauth response received', { type: response?.type })
     if (response?.type === 'success') {
       const { authentication, params } = response
       const idToken = authentication?.idToken ?? params?.id_token
       const accessToken = authentication?.accessToken ?? params?.access_token
+      logStep('oauth success: extracted tokens', {
+        idTokenFromAuth: redactToken(authentication?.idToken),
+        idTokenFromParams: redactToken(params?.id_token),
+        accessToken: redactToken(accessToken)
+      })
 
       if (!idToken) {
+        logStep('oauth success: aborted — no idToken')
         FlashMessage({ message: socialLoginMessages.missingToken })
         setLoading(false)
         loginButtonSetter(null)
@@ -81,12 +95,14 @@ export const useCreateAccount = () => {
 
       fetchUserInfo({ accessToken, idToken })
     } else if (response?.type === 'error') {
+      logError('oauth error', response?.error)
       FlashMessage({
         message: `Google sign-in failed: ${response.error.message || 'Unknown error'}`
       })
       setLoading(false)
       loginButtonSetter(null)
     } else if (response?.type === 'cancel') {
+      logStep('oauth cancelled by user')
       FlashMessage({ message: 'Google sign-in cancelled.' })
       setLoading(false)
       loginButtonSetter(null)
@@ -94,17 +110,28 @@ export const useCreateAccount = () => {
   }, [response])
 
   const fetchUserInfo = async ({ accessToken, idToken }) => {
+    logStep('fetchUserInfo: start', { hasAccessToken: !!accessToken })
     try {
       let user = {}
 
       if (accessToken) {
+        logStep('fetchUserInfo: calling Google userinfo endpoint')
         const response = await fetch(
           'https://www.googleapis.com/userinfo/v2/me',
           {
             headers: { Authorization: `Bearer ${accessToken}` }
           }
         )
+        logStep('fetchUserInfo: userinfo response', { status: response.status, ok: response.ok })
         user = await response.json()
+        logStep('fetchUserInfo: userinfo parsed', {
+          email: user?.email ?? null,
+          name: user?.name ?? null,
+          hasPicture: !!user?.photo,
+          id: user?.id ?? null
+        })
+      } else {
+        logStep('fetchUserInfo: no accessToken — skipping userinfo fetch')
       }
 
       const userData = {
@@ -118,8 +145,10 @@ export const useCreateAccount = () => {
       }
 
       setGoogleUser(userData.name)
+      logStep('fetchUserInfo: handing off to mutateLogin', describeLoginPayload(userData))
       await mutateLogin(userData)
-    } catch (_error) {
+    } catch (error) {
+      logError('fetchUserInfo: caught error', error)
       FlashMessage({ message: 'Failed to retrieve Google user info.' })
       setLoading(false)
       loginButtonSetter(null)
@@ -127,8 +156,14 @@ export const useCreateAccount = () => {
   }
 
   const signIn = async () => {
+    logStep('signIn: tapped', {
+      hasIosClientId: !!IOS_CLIENT_ID_GOOGLE,
+      hasExpoClientId: !!EXPO_CLIENT_ID,
+      requestReady: !!request
+    })
     try {
       if (!IOS_CLIENT_ID_GOOGLE) {
+        logStep('signIn: aborted — not configured')
         FlashMessage({ message: socialLoginMessages.notConfigured })
         return
       }
@@ -137,17 +172,21 @@ export const useCreateAccount = () => {
       setLoading(true)
 
       if (!request) {
+        logStep('signIn: aborted — auth request not ready')
         FlashMessage({ message: 'Google sign-in is not ready. Please try again.' })
         setLoading(false)
         loginButtonSetter(null)
         return
       }
 
+      logStep('signIn: calling promptAsync')
       await promptAsync({
         useProxy: false,
         windowFeatures: 'popup'
       })
-    } catch (_error) {
+      logStep('signIn: promptAsync resolved (result handled in response effect)')
+    } catch (error) {
+      logError('signIn: caught error', error)
       FlashMessage({ message: 'Google sign-in failed unexpectedly.' })
       setLoading(false)
       loginButtonSetter(null)
@@ -177,8 +216,10 @@ export const useCreateAccount = () => {
   }
 
   async function mutateLogin(user) {
+    logStep('mutateLogin: start', describeLoginPayload(user))
     try {
       if ((user.type === 'google' || user.type === 'apple') && !user.idToken) {
+        logStep('mutateLogin: aborted — social login without idToken')
         FlashMessage({ message: socialLoginMessages.missingToken })
         setLoading(false)
         loginButtonSetter(null)
@@ -207,13 +248,18 @@ export const useCreateAccount = () => {
         }
       }
 
+      logStep('mutateLogin: firing LOGIN mutation', {
+        ...describeLoginPayload(user),
+        hasNotificationToken: !!notificationToken
+      })
       mutate({
         variables: {
           ...user,
           notificationToken
         }
       })
-    } catch (_error) {
+    } catch (error) {
+      logError('mutateLogin: caught error', error)
       setLoading(false)
       loginButtonSetter(null)
     }
@@ -233,7 +279,17 @@ export const useCreateAccount = () => {
   }
 
   async function onCompleted(data) {
+    logStep('onCompleted: LOGIN mutation succeeded', {
+      isActive: data?.login?.isActive,
+      hasToken: !!data?.login?.token,
+      token: redactToken(data?.login?.token),
+      userId: data?.login?.userId,
+      email: data?.login?.email,
+      isNewUser: data?.login?.isNewUser,
+      hasPhone: data?.login?.phone !== ''
+    })
     if (data.login.isActive === false) {
+      logStep('onCompleted: account deactivated — stopping')
       FlashMessage({ message: t('accountDeactivated') })
       setLoading(false)
       loginButtonSetter(null)
@@ -245,8 +301,10 @@ export const useCreateAccount = () => {
       FlashMessage({ message: 'Successfully logged in' })
 
       if (data?.login?.phone === '') {
+        logStep('onCompleted: no phone on account → navigate to PhoneNumber')
         navigateToPhone()
       } else {
+        logStep('onCompleted: navigate to Main')
         navigateToMain()
       }
     } finally {
@@ -256,6 +314,7 @@ export const useCreateAccount = () => {
   }
 
   function onError(error) {
+    logError('onError: LOGIN mutation failed', error)
     FlashMessage({
       message: getSocialLoginErrorMessage(error) || 'Login failed. Please try again.'
     })

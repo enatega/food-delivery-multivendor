@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { theme } from '../../../utils/themeColors'
 const { height } = Dimensions.get('window')
-const styles = (props = null) =>
+const buildStyles = (props = null) =>
   StyleSheet.create({
     // ML20: {
     //   ...alignment.MLlarge
@@ -72,5 +72,18 @@ const styles = (props = null) =>
       
     }
   })
+
+// Cache the built stylesheet per theme so it isn't rebuilt on every render.
+const NULL_KEY = { __nullTheme: true }
+const stylesCache = new WeakMap()
+
+const styles = (props = null) => {
+  const key = props ?? NULL_KEY
+  const cached = stylesCache.get(key)
+  if (cached) return cached
+  const created = buildStyles(props)
+  stylesCache.set(key, created)
+  return created
+}
 
 export default styles

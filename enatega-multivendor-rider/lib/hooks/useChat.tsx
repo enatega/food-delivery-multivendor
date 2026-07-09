@@ -54,11 +54,26 @@ export const useChatScreen = () => {
 
   //Handler
   const onSend = () => {
+    const trimmed = inputMessage?.trim();
+    if (!trimmed) return;
+
+    // Optimistically show the rider's own message immediately.
+    const newMessage = {
+      _id: Date.now().toString(),
+      text: trimmed,
+      createdAt: new Date(),
+      user: {
+        _id: dataProfile?._id ?? "",
+        name: dataProfile?.name ?? "",
+      },
+    };
+    setMessages((previousMessages: any[]) => [newMessage, ...previousMessages]);
+
     send({
       variables: {
         orderId: String(orderId),
         messageInput: {
-          message: String(inputMessage),
+          message: trimmed,
           user: {
             id: String(dataProfile?._id),
             name: String(dataProfile?.name),
@@ -78,7 +93,10 @@ export const useChatScreen = () => {
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         return {
-          chat: [subscriptionData.data.subscriptionNewMessage, ...prev.chat],
+          chat: [
+            subscriptionData.data.subscriptionNewMessage,
+            ...(prev?.chat ?? []),
+          ],
         };
       },
     });

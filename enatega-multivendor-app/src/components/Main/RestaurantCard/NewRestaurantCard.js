@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { TouchableOpacity, View, Image, Text, Alert, Platform } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -35,10 +35,13 @@ function NewRestaurantCard(props) {
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const currentTheme = useMemo(
+    () => ({
+      isRTL: i18n.dir() === 'rtl',
+      ...theme[themeContext.ThemeValue]
+    }),
+    [i18n.language, themeContext.ThemeValue]
+  )
 
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props?._id) : false

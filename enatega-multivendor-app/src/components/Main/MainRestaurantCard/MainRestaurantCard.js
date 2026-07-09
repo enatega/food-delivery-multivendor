@@ -1,5 +1,5 @@
 import React, { useContext, useCallback, useMemo } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
@@ -26,10 +26,13 @@ function MainRestaurantCard(props) {
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const currentTheme = useMemo(
+    () => ({
+      isRTL: i18n.dir() === 'rtl',
+      ...theme[themeContext.ThemeValue]
+    }),
+    [i18n.language, themeContext.ThemeValue]
+  )
 
   const orders = useMemo(() => props?.orders || [], [props?.orders])
 
@@ -39,8 +42,9 @@ function MainRestaurantCard(props) {
   }, [])
 
   if (props?.loading) return <MainLoadingUI />
-  if (props?.error) return <Text>Error: {props?.error?.message}</Text>
-  if (orders?.length <= 0) return <></>
+  // A failed/empty section should simply not render — never surface a raw
+  // error string on the discovery page. Hide the whole section instead.
+  if (props?.error || orders?.length <= 0) return <></>
   return (
     <View style={styles().orderAgainSec}>
       <View style={{ gap: scale(8) }}>

@@ -39,7 +39,7 @@ const Order = ({
   // Hooks
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
-  const { time, mutateAssignOrder, loadingAssignOrder } = useOrder({
+  const { mutateAssignOrder, loadingAssignOrder } = useOrder({
     _id,
     acceptedAt,
   } as IOrder);
@@ -47,21 +47,60 @@ const Order = ({
   const router = useRouter();
   const { location: riderLocation } = useLocationContext();
 
-  // Distance between the rider's current location and the customer's delivery
-  // address. GeoJSON stores coordinates as [longitude, latitude].
+  // Distance/time shown on the card. GeoJSON stores coordinates as
+  // [longitude, latitude].
   const riderLat = Number(riderLocation?.latitude);
   const riderLng = Number(riderLocation?.longitude);
   const customerLng = Number(deliveryAddress?.location?.coordinates?.[0]);
   const customerLat = Number(deliveryAddress?.location?.coordinates?.[1]);
-  const canShowDistance =
+  const restaurantLng = Number(restaurant?.location?.coordinates?.[0]);
+  const restaurantLat = Number(restaurant?.location?.coordinates?.[1]);
+
+  const hasRiderLocation =
     Number.isFinite(riderLat) &&
     Number.isFinite(riderLng) &&
-    Number.isFinite(customerLat) &&
-    Number.isFinite(customerLng) &&
     (riderLat !== 0 || riderLng !== 0);
-  const distanceLabel = canShowDistance
-    ? `${calculateDistance(riderLat, riderLng, customerLat, customerLng).toFixed(2)} km`
-    : "--";
+  const hasCustomerLocation =
+    Number.isFinite(customerLat) && Number.isFinite(customerLng);
+  const hasRestaurantLocation =
+    Number.isFinite(restaurantLat) && Number.isFinite(restaurantLng);
+
+  // Always render a real distance. Measure from the rider once we have their
+  // GPS fix; otherwise fall back to the restaurant -> customer leg, which is
+  // always present in the order payload. This keeps the value filled on every
+  // tab instead of showing "--".
+  let distanceKm: number | null = null;
+  if (hasRiderLocation && hasCustomerLocation) {
+    distanceKm = calculateDistance(riderLat, riderLng, customerLat, customerLng);
+  } else if (hasRestaurantLocation && hasCustomerLocation) {
+    distanceKm = calculateDistance(
+      restaurantLat,
+      restaurantLng,
+      customerLat,
+      customerLng,
+    );
+  }
+  const distanceLabel = distanceKm !== null ? `${distanceKm.toFixed(2)} km` : "--";
+
+  // Estimated travel time from the distance (km / average rider speed). The
+  // rider `riderOrders` API does not return the restaurant's configured
+  // deliveryTime, so we derive a live ETA that is always available and stays
+  // consistent with the distance shown next to it. If the backend later exposes
+  // restaurant.deliveryTime it takes precedence.
+  const AVERAGE_SPEED_KMH = 25;
+  const etaMinutes =
+    distanceKm !== null
+      ? Math.max(1, Math.round((distanceKm / AVERAGE_SPEED_KMH) * 60))
+      : null;
+
+  // Time field, consistent across every tab. (The previous value was an
+  // accept-countdown that sat at 00:00 once an order had been accepted.)
+  const deliveryTimeLabel =
+    restaurant?.deliveryTime != null
+      ? `${restaurant.deliveryTime} mins`
+      : etaMinutes !== null
+        ? `${etaMinutes} mins`
+        : null;
 
   if (
     !orderId ||
@@ -278,17 +317,15 @@ const Order = ({
 
                 {/* Price/Time/Distance */}
                 <View className="w-[99%] flex-row justify-between items-center">
-                  {time && (
-                    <View className="flex-1 flex-row justify-start  items-center gap-x-1">
-                      <ClockIcon color="#6b7280" />
-                      <Text
-                        className="font-[Inter] text-base font-medium  text-left underline-offset-auto decoration-skip-ink "
-                        style={{ color: appTheme.fontMainColor }}
-                      >
-                        {time}
-                      </Text>
-                    </View>
-                  )}
+                  <View className="flex-1 flex-row justify-start  items-center gap-x-1">
+                    <ClockIcon color="#6b7280" />
+                    <Text
+                      className="font-[Inter] text-base font-medium  text-left underline-offset-auto decoration-skip-ink "
+                      style={{ color: appTheme.fontMainColor }}
+                    >
+                      {deliveryTimeLabel ?? "--"}
+                    </Text>
+                  </View>
 
                   <View className="flex-1 flex-row justify-end items-center gap-x-1">
                     <BikeRidingIcon color="#6b7280" />
@@ -442,6 +479,7 @@ const areOrderPropsEqual = (
     prevProps.restaurant?.name === nextProps.restaurant?.name &&
     prevProps.restaurant?.address === nextProps.restaurant?.address &&
     prevProps.restaurant?.image === nextProps.restaurant?.image &&
+    prevProps.restaurant?.deliveryTime === nextProps.restaurant?.deliveryTime &&
     sameRestaurantLocation &&
     prevProps.deliveryAddress?.deliveryAddress ===
       nextProps.deliveryAddress?.deliveryAddress &&

@@ -4,7 +4,7 @@ import { alignment } from '../../utils/alignment'
 import { textStyles } from '../../utils/textStyles'
 import { theme } from '../../utils/themeColors'
 
-const styles = (props = null) =>
+const buildStyles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
@@ -189,4 +189,22 @@ const styles = (props = null) =>
       fontWeight: '600'
     }
   })
+
+// `styles(currentTheme)` is called dozens of times per rendered menu row. Each
+// call previously rebuilt the entire StyleSheet via StyleSheet.create, which is
+// expensive and, multiplied across a large menu, saturated the JS thread (UI
+// lag + dropped taps). Cache the built stylesheet per theme object so a given
+// theme is only ever built once. A WeakMap lets old theme objects be GC'd.
+const NULL_KEY = { __nullTheme: true }
+const stylesCache = new WeakMap()
+
+const styles = (props = null) => {
+  const key = props ?? NULL_KEY
+  const cached = stylesCache.get(key)
+  if (cached) return cached
+  const created = buildStyles(props)
+  stylesCache.set(key, created)
+  return created
+}
+
 export default styles

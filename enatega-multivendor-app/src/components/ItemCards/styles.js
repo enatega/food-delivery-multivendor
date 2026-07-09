@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native'
 import { scale } from '../../utils/scaling'
 const windowWidth = Dimensions.get('window').width
-const styles = (props = null) =>
+const buildStyles = (props = null) =>
   StyleSheet.create({
     popularItems: {
       flexDirection: 'column',
@@ -40,4 +40,19 @@ const styles = (props = null) =>
       marginTop: 5
     }
   })
+
+// Cache the built stylesheet per theme so repeated calls across every rendered
+// card don't rebuild the StyleSheet each time.
+const NULL_KEY = { __nullTheme: true }
+const stylesCache = new WeakMap()
+
+const styles = (props = null) => {
+  const key = props ?? NULL_KEY
+  const cached = stylesCache.get(key)
+  if (cached) return cached
+  const created = buildStyles(props)
+  stylesCache.set(key, created)
+  return created
+}
+
 export default styles

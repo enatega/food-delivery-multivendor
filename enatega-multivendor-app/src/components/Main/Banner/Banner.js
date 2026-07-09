@@ -18,6 +18,52 @@ const getMediaTypeFromUrl = (url) => {
   return videoExtensions.includes(extension) ? 'video' : 'image'
 }
 
+// Stable empty object so slides without cached media keep referential equality
+// across renders (otherwise `|| {}` would break React.memo on every render).
+const EMPTY_CACHE = {}
+
+const BannerContent = ({ item }) => (
+  <View style={styles().container}>
+    <TextDefault H3 bolder textColor='#fff' style={{ textTransform: 'capitalize', marginHorizontal: scale(5) }}>
+      {item?.title}
+    </TextDefault>
+    <TextDefault bolder textColor='#fff' style={{ marginHorizontal: scale(5), marginBottom: scale(5) }}>
+      {item?.description}
+    </TextDefault>
+  </View>
+)
+
+// Each slide is memoized so an autoplay index change only re-renders the two
+// slides whose `isActiveSlide` flips — not every mounted ImageBackground/video.
+const BannerSlide = React.memo(function BannerSlide({ item, width, cached, isActiveSlide, currentTheme, onPress }) {
+  const mediaType = getMediaTypeFromUrl(item.file)
+  const shouldRenderVideo = mediaType === 'video' && (!Platform.OS || Platform.OS !== 'android' || isActiveSlide)
+  const fallbackImage = cached.image || item?.image || item?.thumbnail || item?.previewImage
+  const videoUri = cached.video || item?.file
+
+  return (
+    <TouchableOpacity style={[styles(currentTheme).banner, { width }]} activeOpacity={0.9} onPress={() => onPress(item)}>
+      {shouldRenderVideo ? (
+        <VideoBanner style={styles().image} source={videoUri}>
+          <BannerContent item={item} />
+        </VideoBanner>
+      ) : (
+        <View style={styles().csd}>
+          {fallbackImage ? (
+            <ImageBackground source={{ uri: fallbackImage }} style={styles().imgs1} resizeMode='cover'>
+              <BannerContent item={item} />
+            </ImageBackground>
+          ) : (
+            <View style={[styles().imgs1, { backgroundColor: '#1f2937' }]}>
+              <BannerContent item={item} />
+            </View>
+          )}
+        </View>
+      )}
+    </TouchableOpacity>
+  )
+})
+
 const Banner = ({ banners }) => {
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -27,7 +73,7 @@ const Banner = ({ banners }) => {
   const [isFocused, setIsFocused] = useState(true)
   const [cachedMediaMap, setCachedMediaMap] = useState({})
 
-  const onPressBanner = (banner) => {
+  const onPressBanner = useCallback((banner) => {
     let _selectedType = ''
     let _queryType = ''
     let parameters = null
@@ -43,12 +89,12 @@ const Banner = ({ banners }) => {
         _id: banner.screen
       })
     } else {
-      /* 
-      
+      /*
+
          navigation?.getState()?.routeNames?.includes(banner.screen)
           ? banner.screen
           : name,
-          
+
       */
 
       const { name, selectedType, queryType } = BANNER_PARAMETERS[banner?.screen]
@@ -58,7 +104,7 @@ const Banner = ({ banners }) => {
         queryType: queryType ?? 'restaurant' // Use queryType if provided, otherwise default to 'restaurant'
       })
     }
-  }
+  }, [navigation])
 
   const bannersData = useMemo(() => {
     const list = banners ?? []
@@ -106,16 +152,29 @@ const Banner = ({ banners }) => {
     }
   }, [bannersData])
 
-  const renderBannerContent = (item) => (
-    <View style={styles().container}>
-      <TextDefault H3 bolder textColor='#fff' style={{ textTransform: 'capitalize', marginHorizontal: scale(5) }}>
-        {item?.title}
-      </TextDefault>
-      <TextDefault bolder textColor='#fff' style={{ marginHorizontal: scale(5), marginBottom: scale(5) }}>
-        {item?.description}
-      </TextDefault>
-    </View>
+  const renderItem = useCallback(
+    ({ item, index }) => {
+      const cacheKey = item?._id || item?.file
+      return (
+        <BannerSlide
+          item={item}
+          width={width}
+          cached={cachedMediaMap[cacheKey] || EMPTY_CACHE}
+          isActiveSlide={index === activeIndex && isFocused}
+          currentTheme={currentTheme}
+          onPress={onPressBanner}
+        />
+      )
+    },
+    [width, cachedMediaMap, activeIndex, isFocused, currentTheme, onPressBanner]
   )
+
+  const onChangeIndex = useCallback(({ index }) => setActiveIndex(index), [])
+
+  // Don't mount the autoplay slider until banners have actually loaded —
+  // rendering it with an empty list reserves a blank strip on the discovery
+  // page and makes the layout jump once data arrives.
+  if (!bannersData || bannersData.length === 0) return null
 
   return (
     <SwiperFlatList
@@ -133,46 +192,10 @@ const Banner = ({ banners }) => {
       paginationDefaultColor={currentTheme.hex}
       paginationStyleItemActive={styles().paginationItem}
       paginationStyleItemInactive={styles().paginationItem}
-      onChangeIndex={({ index }) => setActiveIndex(index)}
-      renderItem={({ item, index }) => {
-        const mediaType = getMediaTypeFromUrl(item.file)
-        const cacheKey = item?._id || item?.file
-        const cached = cachedMediaMap[cacheKey] || {}
-        const isActiveSlide = index === activeIndex && isFocused
-        const shouldRenderVideo = mediaType === 'video' && (!Platform.OS || Platform.OS !== 'android' || isActiveSlide)
-        const fallbackImage = cached.image || item?.image || item?.thumbnail || item?.previewImage
-        const videoUri = cached.video || item?.file
-
-        return (
-          <TouchableOpacity
-            style={[styles(currentTheme).banner, { width }]}
-            activeOpacity={0.9}
-            onPress={() => {
-              onPressBanner(item)
-            }}
-          >
-            {shouldRenderVideo ? (
-              <VideoBanner style={styles().image} source={videoUri}>
-                {renderBannerContent(item)}
-              </VideoBanner>
-            ) : (
-              <View style={styles().csd}>
-                {fallbackImage ? (
-                  <ImageBackground source={{ uri: fallbackImage }} style={styles().imgs1} resizeMode='cover'>
-                    {renderBannerContent(item)}
-                  </ImageBackground>
-                ) : (
-                  <View style={[styles().imgs1, { backgroundColor: '#1f2937' }]}>
-                    {renderBannerContent(item)}
-                  </View>
-                )}
-              </View>
-            )}
-          </TouchableOpacity>
-        )
-      }}
+      onChangeIndex={onChangeIndex}
+      renderItem={renderItem}
     />
   )
 }
 
-export default Banner
+export default React.memo(Banner)

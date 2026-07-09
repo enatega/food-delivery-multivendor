@@ -85,7 +85,6 @@ function Menu({ route, props }) {
   const [filterSectionApplied, setfilterSectionApplied] = useState(false)
   const [appliedFilters, setAppliedFilters] = useState(FILTER_VALUES)
   const [activeCollection, setActiveCollection] = useState()
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [isConnected, setIsConnected] = useState(false)
   const modalRef = useRef(null)
   const filtersModalRef = useRef()
@@ -527,7 +526,7 @@ function Menu({ route, props }) {
   const getItemLayout = (data, index) => ({
     length: 108,
     offset: 108 * index,
-    index: currentIndex
+    index
   })
 
   const applyFilters = () => {
@@ -618,7 +617,6 @@ function Menu({ route, props }) {
             ref={flatListRef}
             data={collectionData ?? []}
             renderItem={({ item, index }) => {
-              setCurrentIndex(index)
               return (
                 <Ripple
                   activeOpacity={0.8}
