@@ -74,7 +74,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
         variables: { restaurant },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
-          const { restaurantOrders } = prev;
+          const restaurantOrders = prev?.restaurantOrders ?? [];
           const { origin, order } = subscriptionData.data.subscribePlaceOrder;
           console.log(
             `[STORE-SUB] subscribePlaceOrder origin=${origin} orderId=${order?._id} status=${order?.orderStatus}`,
