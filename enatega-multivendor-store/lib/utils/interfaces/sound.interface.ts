@@ -4,8 +4,9 @@ import { IGlobalProviderProps } from "./global.interface";
 import { IGlobalProps } from "./global.interface";
 
 export interface ISoundContext extends IGlobalProps {
-  playSound: () => void;
-  stopSound: () => {};
+  playSound: () => Promise<void>;
+  stopSound: () => Promise<void>;
+  silenceRing: (durationMs?: number) => Promise<void>;
 }
 
 export interface ISoundContextProviderProps extends IGlobalProviderProps {}

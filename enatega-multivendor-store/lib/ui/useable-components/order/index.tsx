@@ -13,6 +13,7 @@ import SpinnerComponent from "../spinner";
 import { TimeLeftIcon } from "../svg";
 
 // Hooks
+import { useSoundContext } from "@/lib/context/global/sound.context";
 import { useApptheme } from "@/lib/context/theme.context";
 import useCancelOrder from "@/lib/hooks/useCancelOrder";
 import useOrderPickedUp from "@/lib/hooks/useOrderPickedUp";
@@ -43,6 +44,7 @@ const Order = ({
   onToggleDetails,
 }: IOrderProps) => {
   const { appTheme } = useApptheme();
+  const { silenceRing } = useSoundContext();
   const configuration = useContext(ConfigurationContext);
   const { t } = useTranslation();
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
@@ -92,7 +94,8 @@ const Order = ({
   }
 
   // Handlers
-  const onCancelOrderHandler = () => {
+  const onCancelOrderHandler = async () => {
+    await silenceRing();
     cancelOrder(order._id, "not available");
   };
 

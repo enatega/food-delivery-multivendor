@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 // UI
 import CustomTab from "@/lib/ui/useable-components/custom-tab";
@@ -38,8 +38,6 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   const tabBarHeight = useBottomTabBarHeight();
   const {
     loading,
-    error,
-    data,
     activeOrders,
     refetch,
     currentTab,
@@ -52,25 +50,18 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
 
   // States
   const [refreshing, setRefreshing] = useState(false);
-  const [orders, setOrders] = useState<IOrder[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
   const [showDetails, setShowDetails] = useState<Record<string, boolean>>({});
   // Printer States
 
   //////////
 
-  // Handlers
-  const onInitOrders = () => {
-    if (loading || error) return;
-    if (!data) return;
-
-    const _orders = activeOrders?.filter((order) =>
+  const orders =
+    activeOrders?.filter((order) =>
       currentTab === ORDER_DISPATCH_TYPE[0]
         ? !order?.isPickedUp
-        : order?.isPickedUp
-    );
-    setOrders(_orders ?? []);
-  };
+        : order?.isPickedUp,
+    ) ?? [];
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -125,11 +116,6 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
       )}
     </View>
   );
-  // Use Effect
-  useEffect(() => {
-    onInitOrders();
-  }, [data?.restaurantOrders, route.key, currentTab]);
-
   return (
     <GestureHandlerRootView style={style.gestureContainer}>
       <BottomSheetModalProvider>

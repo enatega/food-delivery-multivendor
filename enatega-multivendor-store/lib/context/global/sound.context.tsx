@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { useContext, useEffect, useState, createContext } from "react";
+import { useContext, useEffect, useRef, createContext } from "react";
 import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
 // Interface
 import {
@@ -14,10 +14,8 @@ import useOrders from "@/lib/hooks/useOrders";
 const SoundContext = createContext<ISoundContext>({} as ISoundContext);
 
 export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
-  // State
-  const [sound, setSound] = useState<ReturnType<typeof createAudioPlayer> | null>(
-    null,
-  );
+  const soundRef = useRef<ReturnType<typeof createAudioPlayer> | null>(null);
+  const silencedRef = useRef(false);
   // Context/Hooks
   const { hasNewOrders } = useOrders();
 
@@ -38,42 +36,60 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
       });
       newSound.play();
 
-      setSound(newSound);
+      soundRef.current = newSound;
     } catch {
       // Ignore audio startup failures and keep the app usable.
     }
   };
 
   const stopSound = async () => {
-    if (sound) {
-      sound.remove();
-      setSound(null);
+    if (soundRef.current) {
+      const player = soundRef.current;
+      soundRef.current = null;
+      try {
+        player.pause();
+      } catch {}
+      try {
+        await player.seekTo(0);
+      } catch {}
+      try {
+        await player.stop();
+      } catch {}
+      try {
+        player.remove();
+      } catch {}
     }
   };
 
-  // Use Effect
-  useEffect(() => {
-    if (hasNewOrders) {
-      const shouldPlaySound = hasNewOrders;
+  const silenceRing = async () => {
+    silencedRef.current = true;
+    await stopSound();
+  };
 
-      if (shouldPlaySound && !sound) {
-        playSound();
-      } else if (!shouldPlaySound && sound) {
-        stopSound();
-      }
-    } else {
+  useEffect(() => {
+    if (!hasNewOrders) {
+      silencedRef.current = false;
       stopSound();
+      return () => {
+        stopSound();
+      };
+    }
+
+    if (hasNewOrders) {
+      if (silencedRef.current) {
+        stopSound();
+      } else if (!soundRef.current) {
+        playSound();
+      }
     }
 
     return () => {
-      if (sound) {
-        stopSound();
-      }
+      stopSound();
     };
-  }, [hasNewOrders, sound]);
+  }, [hasNewOrders]);
 
   return (
-    <SoundContext.Provider value={{ playSound, stopSound }}>
+    <SoundContext.Provider value={{ playSound, stopSound, silenceRing }}>
       {children}
     </SoundContext.Provider>
   );
