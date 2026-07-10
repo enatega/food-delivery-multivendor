@@ -34,8 +34,8 @@ import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { CustomContinueButton } from "../../useable-components";
 
 const initial: ILoginInitialValues = {
-  username: "",
-  password: "",
+  username: "ryanabotreef",
+  password: "Rider@123",
 };
 
 const LoginScreen = () => {
@@ -70,7 +70,10 @@ const LoginScreen = () => {
         .catch((err) => console.log("Apollo clearStore error:", err));
 
       if (!creds?.username) return;
-      setInitialValues(creds);
+      setInitialValues({
+        username: creds.username,
+        password: creds.password || initial.password,
+      });
     } catch (err) {
       console.log("error login", err);
     }
@@ -192,6 +195,12 @@ const LoginScreen = () => {
                       {errors?.password}
                     </Text>
                   )}
+                  <Text
+                    className="text-center text-xs mb-2"
+                    style={{ color: appTheme.fontSecondColor }}
+                  >
+                    Above placeholder credentials are for testing purposes.
+                  </Text>
 
                   <CustomContinueButton
                     title={t("Login")}
