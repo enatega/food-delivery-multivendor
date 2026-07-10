@@ -19,6 +19,7 @@ import Spinner from '../../Spinner/Spinner'
 import Bicycle from '../../../assets/SVG/Bicycle'
 import { storeSearch } from '../../../utils/recentSearch'
 import Ripple from 'react-native-material-ripple'
+import { useCachedMediaUri } from '../../../utils/mediaCache'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -54,6 +55,7 @@ function NewRestaurantCard(props) {
   const shopType = props?.shopType
 
   const isRestaurantClosed = !isRestaurantOpen || !isAvailable
+  const imageUri = useCachedMediaUri(props?.image, 'image')
 
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
@@ -144,7 +146,11 @@ function NewRestaurantCard(props) {
           ]}
         >
           <View style={styles().imageContainer}>
-            <Image resizeMode='cover' source={{ uri: props?.image }} style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]} />
+            <Image
+              resizeMode='cover'
+              source={{ uri: imageUri }}
+              style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]}
+            />
             {isRestaurantClosed && (
               <View style={styles(currentTheme).closedOverlay}>
                 <TextDefault H4 textColor={currentTheme.white} bold>

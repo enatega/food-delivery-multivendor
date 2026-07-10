@@ -6,6 +6,7 @@ import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import Ripple from 'react-native-material-ripple'
 import { IMAGE_LINK } from '../../utils/constants'
+import { useCachedMediaUri } from '../../utils/mediaCache'
 
 const CollectionCard = ({ onPress, image, name }) => {
   const themeContext = useContext(ThemeContext)
@@ -19,6 +20,7 @@ const CollectionCard = ({ onPress, image, name }) => {
   React.useEffect(() => {
     setImageUri(normalizedImage)
   }, [normalizedImage])
+  const cachedImageUri = useCachedMediaUri(imageUri, 'image')
   
   return (
     <Ripple
@@ -31,7 +33,7 @@ const CollectionCard = ({ onPress, image, name }) => {
     >
       <View style={styles().brandImgContainer}>
         <Image
-          source={{ uri: imageUri }}
+          source={{ uri: cachedImageUri }}
           style={styles().collectionImage}
           resizeMode='cover'
           onError={() => {
