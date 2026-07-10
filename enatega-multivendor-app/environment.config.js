@@ -1,25 +1,25 @@
 const ENV_CONFIG = {
   development: {
-    GRAPHQL_URL: 'https://enatega-api-staging-production.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-api-staging-production.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-api-staging-production.up.railway.app/graphql',
-    SERVER_REST_URL: 'https://enatega-api-staging-production.up.railway.app/',
+    GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',
+    WS_GRAPHQL_URL: 'wss://aws-server-v2.enatega.com/graphql',
+    SERVER_URL: 'https://aws-server-v2.enatega.com/graphql',
+    SERVER_REST_URL: 'https://aws-server-v2.enatega.com/',
     GOOGLE_MAPS_API_KEY: 'AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E',
     CLARITY_ENABLED: false
   },
   staging: {
-    GRAPHQL_URL: 'https://enatega-api-staging-production.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-api-staging-production.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-api-staging-production.up.railway.app/graphql',
-    SERVER_REST_URL: 'https://enatega-api-staging-production.up.railway.app/',
+    GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',
+    WS_GRAPHQL_URL: 'wss://aws-server-v2.enatega.com/graphql',
+    SERVER_URL: 'https://aws-server-v2.enatega.com/graphql',
+    SERVER_REST_URL: 'https://aws-server-v2.enatega.com/',
     GOOGLE_MAPS_API_KEY: 'AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E',
     CLARITY_ENABLED: false
   },
   production: {
-    GRAPHQL_URL: 'https://enatega-api-staging-production.up.railway.app/graphql',
-    WS_GRAPHQL_URL: 'wss://enatega-api-staging-production.up.railway.app/graphql',
-    SERVER_URL: 'https://enatega-api-staging-production.up.railway.app/graphql',
-    SERVER_REST_URL: 'https://enatega-api-staging-production.up.railway.app/',
+    GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',
+    WS_GRAPHQL_URL: 'wss://aws-server-v2.enatega.com/graphql',
+    SERVER_URL: 'https://aws-server-v2.enatega.com/graphql',
+    SERVER_REST_URL: 'https://aws-server-v2.enatega.com/',
     GOOGLE_MAPS_API_KEY: 'AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E',
     CLARITY_ENABLED: false
   }
