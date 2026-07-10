@@ -32,6 +32,7 @@ function TopBrands(props) {
       longitude: location?.longitude
     }
   })
+
   const RenderItem = ({ item }) => (
     <TouchableOpacity style={styles().topbrandsContainer} onPress={() => navigation.navigate('Restaurant', { ...item })}>
       <View style={styles().brandImgContainer}>
