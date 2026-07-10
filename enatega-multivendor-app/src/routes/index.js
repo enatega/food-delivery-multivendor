@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -137,15 +137,21 @@ function MainNavigator() {
   return (
     <NavigationStack.Navigator
       key={isLoggedIn ? 'authed' : 'guest'}
-      screenOptions={screenOptions({
-        theme: themeContext.ThemeValue,
-        headerMenuBackground: currentTheme.headerMenuBackground,
-        backColor: currentTheme.headerBackground,
-        lineColor: currentTheme.horizontalLine,
-        textColor: currentTheme.headerText,
-        iconColor: currentTheme.iconColorPink,
-        headerShown: false
-      })}
+      screenOptions={{
+        ...screenOptions({
+          theme: themeContext.ThemeValue,
+          headerMenuBackground: currentTheme.headerMenuBackground,
+          backColor: currentTheme.headerBackground,
+          lineColor: currentTheme.horizontalLine,
+          textColor: currentTheme.headerText,
+          iconColor: currentTheme.iconColorPink,
+          headerShown: false
+        }),
+        // Default the card background to the themed background so screens never
+        // flash white during the push transition (e.g. Discovery -> Restaurant)
+        // before their content paints.
+        cardStyle: { backgroundColor: currentTheme.themeBackground }
+      }}
     >
       <NavigationStack.Screen
         name='Main'
@@ -303,9 +309,23 @@ function BottomTabNavigator() {
 
 function AppContainer() {
   const client = useApolloClient()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
   const { permissionState, setPermissionState, location } = useContext(LocationContext)
   const { isLoggedIn } = useContext(UserContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
+
+  // React Navigation's DefaultTheme paints the scene background white. During a
+  // scale/zoom push transition (e.g. Discovery -> Restaurant) the area around
+  // the scaling card shows that background, which flashes white on the dark
+  // theme. Match it to the app background so transitions never flash white.
+  const navigationTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: currentTheme.themeBackground
+    }
+  }
 
   const [isLoadingPermission, setIsLoadingPermission] = React.useState(true)
 
@@ -362,6 +382,7 @@ function AppContainer() {
   return (
     <SafeAreaProvider>
       <NavigationContainer
+        theme={navigationTheme}
         linking={linking}
         ref={(ref) => {
           navigationService.setGlobalRef(ref)

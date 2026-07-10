@@ -40,10 +40,15 @@ export const getTokenExpiry = async () => {
   return expiry
 }
 
+// Treat the token as expired a little before it actually lapses so a request
+// that is being built now isn't sent with a token that expires in flight
+// (clock skew / network latency) and comes back "Unauthorized: jwt expired".
+const EXPIRY_SKEW_MS = 15000
+
 export const isTokenExpired = async () => {
   const expiry = await getTokenExpiry()
   if (!expiry) return true
-  return new Date(expiry).getTime() <= Date.now()
+  return new Date(expiry).getTime() - EXPIRY_SKEW_MS <= Date.now()
 }
 
 export const clearPublicToken = async () => {

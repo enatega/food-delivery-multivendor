@@ -8,6 +8,122 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:650001300965:android:343a338729d8dfda6bc30c",
+        "android_client_info": {
+          "package_name": "com.enatega.customerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "650001300965-4j38ffrpa3hmdhcie8u9a9t4hkhl2t8l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.enatega.customerapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650001300965:android:a13e27c6b60a8fde6bc30c",
+        "android_client_info": {
+          "package_name": "com.enatega.deliveries.rider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650001300965:android:20b15889de12550b6bc30c",
+        "android_client_info": {
+          "package_name": "com.enatega.deliveries.store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:650001300965:android:e027e6c5c2074a426bc30c",
         "android_client_info": {
           "package_name": "com.enatega.multirider"
@@ -59,6 +175,14 @@
           }
         },
         {
+          "client_id": "650001300965-si58a6phfij5fl5ia99hg4u09folqeh0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.enatega.multivendor",
+            "certificate_hash": "652b5b5bdffb6c98358203da66284b392903a0ad"
+          }
+        },
+        {
           "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -91,6 +215,86 @@
         "mobilesdk_app_id": "1:650001300965:android:9af80d70d1b1bb1b6bc30c",
         "android_client_info": {
           "package_name": "com.enategamultivendor.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650001300965:android:c37ee9f9d17302a56bc30c",
+        "android_client_info": {
+          "package_name": "com.enategasuper.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "650001300965-li1a42avsbf4f624frcdelijpqjqudvi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.enategasuper.app",
+            "certificate_hash": "0acae9cbbbff5cb3379ba6ca7c3d064ee24bfbdd"
+          }
+        },
+        {
+          "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Arn9vDqHen1EJimV8lJfNsYOBLNcIfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "650001300965-64g2c3c54tldg7u6ilvo0diluuroncoa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650001300965:android:5074fee442c5737b6bc30c",
+        "android_client_info": {
+          "package_name": "com.enategasuperdrive.rider"
         }
       },
       "oauth_client": [

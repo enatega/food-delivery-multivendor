@@ -15,7 +15,7 @@ import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import { DAYS } from '../../utils/enums'
 import { alignment } from '../../utils/alignment'
-import TextError from '../../components/Text/TextError/TextError'
+import ErrorView from '../../components/ErrorView/ErrorView'
 import { MaterialIcons } from '@expo/vector-icons'
 import analytics from '../../utils/analytics'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
@@ -454,7 +454,7 @@ function Restaurant(props) {
       </View>
     )
   }
-  if (error) return <TextError text={JSON.stringify(error)} />
+  if (error) return <ErrorView refetchFunctions={[refetch]} />
   const restaurant = data.restaurant
 
   return (

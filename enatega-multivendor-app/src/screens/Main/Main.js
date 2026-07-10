@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback, useMemo } from 'react'
-import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, Image, RefreshControl, ActivityIndicator } from 'react-native'
+import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, Image, RefreshControl, ActivityIndicator, InteractionManager } from 'react-native'
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useLocation } from '../../ui/hooks'
@@ -210,17 +210,24 @@ function Main(props) {
     Other: CustomOtherIcon
   }
 
-  const setAddressLocation = async (address) => {
-    setLocation({
-      _id: address._id,
-      label: address.label,
-      latitude: Number(address.location.coordinates[1]),
-      longitude: Number(address.location.coordinates[0]),
-      deliveryAddress: address.deliveryAddress,
-      details: address.details
+  const setAddressLocation = (address) => {
+    // Close the sheet immediately so the tap feels instant. Switching the
+    // location re-runs every restaurant query and re-renders the whole
+    // Discovery screen; doing that synchronously here blocks the JS thread and
+    // makes the close animation stutter / appear to "do nothing". Defer it
+    // until after the close animation so the interaction stays smooth.
+    modalRef.current?.close()
+    InteractionManager.runAfterInteractions(() => {
+      setLocation({
+        _id: address._id,
+        label: address.label,
+        latitude: Number(address.location.coordinates[1]),
+        longitude: Number(address.location.coordinates[0]),
+        deliveryAddress: address.deliveryAddress,
+        details: address.details
+      })
+      mutate({ variables: { id: address._id } })
     })
-    mutate({ variables: { id: address._id } })
-    modalRef.current.close()
   }
 
   const setCurrentLocation = async () => {
