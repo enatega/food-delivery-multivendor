@@ -24,6 +24,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       order{
         _id
       orderId
+      id
       restaurant{
         _id
         name
@@ -38,6 +39,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       }
       items{
         _id
+        id
         title
         food
         description
@@ -45,14 +47,17 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
         quantity
         variation{
           _id
+          id
           title
           price
           discounted
         }
         addons{
           _id
+          id
           options{
             _id
+            id
             title
             description
             price
@@ -71,14 +76,17 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       rider{
         _id
         name
+        phone
       }
       review{
         _id
+        rating
       }
       paymentMethod
       paidAmount
       orderAmount
       orderStatus
+      paymentStatus
       tipping
       taxationAmount
       createdAt
@@ -94,6 +102,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       cancelledAt
       assignedAt
       instructions
+      discountAmount
       }
     }
   }`

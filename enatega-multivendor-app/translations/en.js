@@ -525,6 +525,7 @@ export const en = {
   addressDeletedMessage: 'Address deleted!',
   logoutMessage: 'Successfully logged out',
   somethingWentWrong: 'Something went wrong',
+  sessionRefreshFailed: 'We had trouble refreshing your session. Please pull down to refresh.',
   checkInternet: 'Check your internet connection',
   orderLoadError: 'We couldn’t load your order. Please pull down to refresh, or close and reopen the app.',
   selectCity: 'Select City',

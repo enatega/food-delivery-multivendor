@@ -1,14 +1,11 @@
-import React, { useContext, useRef } from 'react';
-import { View, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import { Modalize } from 'react-native-modalize';
-import { MaterialIcons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import TextDefault from '../../Text/TextDefault/TextDefault';
-import { alignment } from '../../../utils/alignment';
 import { scale } from '../../../utils/scaling';
 import styles from './styles';
 import { useTranslation } from'react-i18next';
-
-const { height: HEIGHT } = Dimensions.get('window')
 
 
 const MainModalize = ({
@@ -22,15 +19,87 @@ const MainModalize = ({
   profile,
   location,
 }) => {
-  const { t} = useTranslation()
+  const { t } = useTranslation()
+
+  // `styles(currentTheme)` builds a fresh StyleSheet on every call. Compute it
+  // once per render instead of ~15 times per row, which was a big chunk of the
+  // list's jank when scrolling / re-rendering the address sheet.
+  const themedStyles = useMemo(() => styles(currentTheme), [currentTheme])
+
+  const renderItem = useCallback(
+    ({ item: address }) => {
+      const IconComponent = addressIcons[address.label] || addressIcons['Other']
+      const isSelected =
+        address?._id === location?._id &&
+        ![t('currentLocation'), t('selectedLocation')].includes(location?.label)
+
+      return (
+        <View style={themedStyles.addressbtn}>
+          <TouchableOpacity
+            style={themedStyles.addressContainer}
+            activeOpacity={0.7}
+            onPress={() => setAddressLocation(address)}
+          >
+            <View style={themedStyles.addressSubContainer}>
+              <View style={themedStyles.homeIcon}>
+                {React.createElement(IconComponent, {
+                  fill: currentTheme.darkBgFont,
+                })}
+              </View>
+              <View style={themedStyles.titleAddress}>
+                <TextDefault
+                  textColor={currentTheme.darkBgFont}
+                  style={themedStyles.labelStyle}
+                >
+                  {t(address.label)}
+                </TextDefault>
+              </View>
+            </View>
+
+            <View style={themedStyles.addressTextContainer}>
+              <TextDefault textColor={currentTheme.fontSecondColor} small>
+                {address?.deliveryAddress}
+              </TextDefault>
+            </View>
+          </TouchableOpacity>
+          <View style={themedStyles.addressTick}>
+            {isSelected && (
+              <MaterialIcons
+                name='check'
+                size={scale(25)}
+                color={currentTheme.iconColorPink}
+              />
+            )}
+          </View>
+        </View>
+      )
+    },
+    [themedStyles, addressIcons, currentTheme, location, setAddressLocation, t]
+  )
+
+  const flatListProps = useMemo(
+    () => ({
+      data: isLoggedIn && profile ? profile.addresses : [],
+      ListHeaderComponent: modalHeader(),
+      ListFooterComponent: modalFooter(),
+      keyExtractor: (item) => item._id,
+      renderItem,
+      removeClippedSubviews: true,
+      initialNumToRender: 6,
+      maxToRenderPerBatch: 8,
+      windowSize: 7,
+    }),
+    [isLoggedIn, profile, modalHeader, modalFooter, renderItem]
+  )
+
   return (
     <Modalize
       ref={modalRef}
       adjustToContentHeight
       disableScrollIfPossible={false}
-      modalStyle={styles(currentTheme).modal}
-      overlayStyle={styles(currentTheme).overlay}
-      handleStyle={styles(currentTheme).handle}
+      modalStyle={themedStyles.modal}
+      overlayStyle={themedStyles.overlay}
+      handleStyle={themedStyles.handle}
       handlePosition='inside'
       modalPosition='top'
       openAnimationConfig={{
@@ -41,65 +110,9 @@ const MainModalize = ({
         timing: { duration: 400 },
         spring: { speed: 20, bounciness: 10 },
       }}
-      flatListProps={{
-        data: isLoggedIn && profile ? profile.addresses : '',
-        ListHeaderComponent: modalHeader(),
-        ListFooterComponent: modalFooter(),
-        keyExtractor: (item) => item._id,
-        renderItem: ({ item: address }) => (
-          <View style={styles(currentTheme).addressbtn}>
-            <TouchableOpacity
-              style={styles(currentTheme).addressContainer}
-              activeOpacity={0.7}
-              onPress={() => setAddressLocation(address)}
-            >
-              <View style={styles(currentTheme).addressSubContainer}>
-                <View style={[styles(currentTheme).homeIcon]}>
-                  {addressIcons[address.label]
-                    ? React.createElement(addressIcons[address.label], {
-                        fill: currentTheme.darkBgFont,
-                      })
-                    : React.createElement(addressIcons['Other'], {
-                        fill: currentTheme.darkBgFont,
-                      })}
-                </View>
-                <View style={[styles().titleAddress]}>
-                  <TextDefault
-                    textColor={currentTheme.darkBgFont}
-                    style={styles(currentTheme).labelStyle}
-                  >
-                    {t(address.label)}
-                  </TextDefault>
-                </View>
-              </View>
-              
-              <View style={styles(currentTheme).addressTextContainer}>
-                  <TextDefault
-                    // style={{ ...alignment.PLlarge }}
-                    textColor={currentTheme.fontSecondColor}
-                    small
-                  >
-                    {address?.deliveryAddress}
-                  </TextDefault>
-              </View>
-            </TouchableOpacity>
-            <View style={styles().addressTick}>
-              {address?._id === location?._id &&
-                ![t('currentLocation'), t('selectedLocation')].includes(
-                  location.label
-                ) && (
-                  <MaterialIcons
-                    name='check'
-                    size={scale(25)}
-                    color={currentTheme.iconColorPink}
-                  />
-                )}
-            </View>
-          </View>
-        ),
-      }}
+      flatListProps={flatListProps}
     ></Modalize>
   );
 };
 
-export default MainModalize;
+export default React.memo(MainModalize);
