@@ -16,8 +16,9 @@ const SoundContext = createContext<ISoundContext>({} as ISoundContext);
 export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   const soundRef = useRef<ReturnType<typeof createAudioPlayer> | null>(null);
   const silencedRef = useRef(false);
+  const silencedOrderIdsRef = useRef("");
   // Context/Hooks
-  const { hasNewOrders } = useOrders();
+  const { hasNewOrders, ringedOrderIds } = useOrders();
 
   // Handlers
   const playSound = async () => {
@@ -38,7 +39,7 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
 
       soundRef.current = newSound;
     } catch {
-      // Ignore audio startup failures and keep the app usable.
+      // no-op: keep the app usable if audio startup fails.
     }
   };
 
@@ -48,27 +49,37 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
       soundRef.current = null;
       try {
         player.pause();
-      } catch {}
+      } catch {
+        // no-op: player may already be disposed.
+      }
       try {
         await player.seekTo(0);
-      } catch {}
+      } catch {
+        // no-op: player may already be disposed.
+      }
       try {
         await player.stop();
-      } catch {}
+      } catch {
+        // no-op: player may already be disposed.
+      }
       try {
         player.remove();
-      } catch {}
+      } catch {
+        // no-op: player may already be disposed.
+      }
     }
   };
 
   const silenceRing = async () => {
     silencedRef.current = true;
+    silencedOrderIdsRef.current = ringedOrderIds;
     await stopSound();
   };
 
   useEffect(() => {
     if (!hasNewOrders) {
       silencedRef.current = false;
+      silencedOrderIdsRef.current = "";
       stopSound();
       return () => {
         stopSound();
@@ -76,9 +87,14 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
     }
 
     if (hasNewOrders) {
-      if (silencedRef.current) {
+      if (
+        silencedRef.current &&
+        silencedOrderIdsRef.current === ringedOrderIds
+      ) {
         stopSound();
       } else if (!soundRef.current) {
+        silencedRef.current = false;
+        silencedOrderIdsRef.current = "";
         playSound();
       }
     }
@@ -86,7 +102,7 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
     return () => {
       stopSound();
     };
-  }, [hasNewOrders]);
+  }, [hasNewOrders, ringedOrderIds]);
 
   return (
     <SoundContext.Provider value={{ playSound, stopSound, silenceRing }}>
