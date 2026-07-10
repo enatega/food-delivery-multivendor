@@ -16,6 +16,7 @@ import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../../utils/customFunctions'
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
+import { useCachedMediaUri } from '../../../utils/mediaCache'
 
 const { height } = Dimensions.get('window')
 function TopBrands(props) {
@@ -34,7 +35,7 @@ function TopBrands(props) {
   const RenderItem = ({ item }) => (
     <TouchableOpacity style={styles().topbrandsContainer} onPress={() => navigation.navigate('Restaurant', { ...item })}>
       <View style={styles().brandImgContainer}>
-        <Image source={{ uri: item?.logo }} style={styles().brandImg} resizeMode='contain' />
+        <Image source={{ uri: useCachedMediaUri(item?.logo, 'image') }} style={styles().brandImg} resizeMode='contain' />
       </View>
 
       <View

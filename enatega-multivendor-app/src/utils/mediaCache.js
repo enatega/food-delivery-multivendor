@@ -1,7 +1,8 @@
 import * as FileSystem from 'expo-file-system'
 import * as Crypto from 'expo-crypto'
+import { useEffect, useMemo, useState } from 'react'
 
-const CACHE_DIR = `${FileSystem.cacheDirectory}banner-media-cache/`
+const CACHE_DIR = `${FileSystem.cacheDirectory}signed-media-cache-v2/`
 const pendingDownloads = new Map()
 
 function stripQueryAndHash(url = '') {
@@ -10,7 +11,8 @@ function stripQueryAndHash(url = '') {
 
 function getFileExtension(url = '', fallback = 'bin') {
   const clean = stripQueryAndHash(url)
-  const parts = clean.split('.')
+  const filename = clean.split('/').pop() || ''
+  const parts = filename.split('.')
   const ext = parts.length > 1 ? parts.pop() : fallback
   return (ext || fallback).toLowerCase()
 }
@@ -37,22 +39,53 @@ export async function getCachedMediaUri(remoteUrl, type = 'file') {
     return localUri
   }
 
-  if (pendingDownloads.has(normalized)) {
-    return pendingDownloads.get(normalized)
+  if (pendingDownloads.has(remoteUrl)) {
+    return pendingDownloads.get(remoteUrl)
   }
 
   const downloadPromise = (async () => {
     try {
       const result = await FileSystem.downloadAsync(remoteUrl, localUri)
       if (result.status === 200) return result.uri
+      await FileSystem.deleteAsync(localUri, { idempotent: true })
       return remoteUrl
     } catch (_e) {
+      await FileSystem.deleteAsync(localUri, { idempotent: true })
       return remoteUrl
     } finally {
-      pendingDownloads.delete(normalized)
+      pendingDownloads.delete(remoteUrl)
     }
   })()
 
-  pendingDownloads.set(normalized, downloadPromise)
+  pendingDownloads.set(remoteUrl, downloadPromise)
   return downloadPromise
+}
+
+export function useCachedMediaUri(remoteUrl, type = 'image') {
+  const key = useMemo(() => stripQueryAndHash(remoteUrl || ''), [remoteUrl])
+  const [source, setSource] = useState({ key, uri: remoteUrl })
+
+  useEffect(() => {
+    let isMounted = true
+
+    if (!remoteUrl) {
+      setSource({ key, uri: remoteUrl })
+      return
+    }
+
+    setSource((current) => {
+      if (current.key !== key) return { key, uri: remoteUrl }
+      return current.uri?.startsWith('file://') ? current : { key, uri: remoteUrl }
+    })
+
+    getCachedMediaUri(remoteUrl, type).then((uri) => {
+      if (isMounted) setSource({ key, uri })
+    })
+
+    return () => {
+      isMounted = false
+    }
+  }, [remoteUrl, type, key])
+
+  return source.uri
 }
