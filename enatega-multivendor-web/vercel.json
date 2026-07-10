@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_SERVER_URL": "https://saas-demo-production-233c.up.railway.app/",
+    "NEXT_PUBLIC_WS_SERVER_URL": "wss://saas-demo-production-233c.up.railway.app/",
+    "NEXT_PUBLIC_TENANT_DOMAIN": "saas.enatega.com"
+  }
+}
