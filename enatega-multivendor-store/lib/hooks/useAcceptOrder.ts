@@ -8,6 +8,10 @@ export default function useAcceptOrder() {
     refetchQueries: [{ query: GET_ORDERS }],
   });
   const acceptOrderFunc = async (_id: string, time: string) => {
+    const preparationTime = new Date(
+      Date.now() + (parseInt(time, 10) || 0) * 60000,
+    ).toISOString();
+
     await mutateAccept({
       variables: { _id, time },
       optimisticResponse: {
@@ -15,7 +19,7 @@ export default function useAcceptOrder() {
           __typename: "Order",
           _id,
           orderStatus: "ACCEPTED",
-          preparationTime: time,
+          preparationTime,
         },
       },
       update: (cache) => {
@@ -29,13 +33,13 @@ export default function useAcceptOrder() {
           data: {
             restaurantOrders: data.restaurantOrders.map((order) =>
               order._id === _id
-                ? {
-                    ...order,
-                    orderStatus: "ACCEPTED",
-                    preparationTime: time,
-                    isRinged: false,
-                  }
-                : order,
+                  ? {
+                      ...order,
+                      orderStatus: "ACCEPTED",
+                      preparationTime,
+                      isRinged: false,
+                    }
+                  : order,
             ),
           },
         });

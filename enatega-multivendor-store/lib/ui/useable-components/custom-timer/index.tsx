@@ -11,16 +11,21 @@ interface TimerProps {
 const CountdownTimer: React.FC<TimerProps> = ({ duration }) => {
   // Hooks
   const { appTheme } = useApptheme();
+  const normalizedDuration = Math.max(0, Math.floor(duration));
 
   // States
-  const [timeLeft, setTimeLeft] = useState(duration);
+  const [timeLeft, setTimeLeft] = useState(normalizedDuration);
 
   // UseEffects
+  useEffect(() => {
+    setTimeLeft(normalizedDuration);
+  }, [normalizedDuration]);
+
   useEffect(() => {
     if (timeLeft <= 0) return;
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
     }, 1000);
 
     return () => clearInterval(timer);
