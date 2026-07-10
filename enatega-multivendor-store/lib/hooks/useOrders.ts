@@ -31,6 +31,12 @@ export default function useOrders() {
 
   const hasNewOrders =
     activeOrders?.some((order: IOrder) => Boolean(order?.isRinged)) ?? false;
+  const ringedOrderIds =
+    activeOrders
+      ?.filter((order: IOrder) => Boolean(order?.isRinged))
+      .map((order: IOrder) => order?._id)
+      .sort()
+      .join(",") ?? "";
 
   return {
     loading,
@@ -39,6 +45,7 @@ export default function useOrders() {
     refetch,
     networkStatus,
     hasNewOrders,
+    ringedOrderIds,
     activeOrders,
     processingOrders,
     deliveredOrders,
