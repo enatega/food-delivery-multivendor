@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, useEffect } from 'react'
+import { useState, useContext, useRef, useEffect, useCallback } from 'react'
 import { Alert } from 'react-native'
 import _ from 'lodash' // Import lodash
 import * as Device from 'expo-device'
@@ -12,8 +12,9 @@ import * as Notifications from 'expo-notifications'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import useNotifications from '../../utils/useNotifications'
 
 const LOGIN = gql`
   ${login}
@@ -37,6 +38,13 @@ export const useLogin = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const { setTokenAsync } = useContext(AuthContext)
+
+  // Refs to store pending login/registration data for referral screen
+  const pendingLoginDataRef = useRef(null) // { email } for login
+  const pendingRegistrationDataRef = useRef(null) // { email } for signup
+  const referralCallbacksRef = useRef({ onContinue: null, onSkip: null })
+  const referralCodeRef = useRef(null) // Store referral code for login
+  const { registerForPushNotificationsAsync } = useNotifications()
 
   const [EmailEixst, { loading }] = useMutation(EMAIL, {
     onCompleted,
@@ -91,11 +99,50 @@ export const useLogin = () => {
   }
 
   function onCompleted({ emailExist }) {
+    console.log('emailExist_____onCompleted', JSON.stringify(emailExist, null, 2));
     if (validateCredentials()) {
-      if (emailExist) {
-        setRegisteredEmail(true)
+      if (emailExist && emailExist._id) {
+        if (emailExist.userType !== 'apple' && emailExist.userType !== 'google' && emailExist.userType !== 'facebook') {
+          //  setRegisteredEmail(true)
+
+          // User exists - store email and navigate to referral screen
+          // Password will be entered after returning from referral screen
+          pendingLoginDataRef.current = {
+            email: emailRef.current
+          }
+          console.log('📧 User exists - navigating to RefralScreen for login')
+          // navigation.navigate('RefralScreen', {
+          //   emailAuthData: {
+          //     email: emailRef.current,
+          //     isLogin: true
+          //   },
+          //   onContinue: referralCallbacksRef.current.onContinue,
+          //   onSkip: referralCallbacksRef.current.onSkip
+          // })
+
+          
+            handleReferralSkip({ IsdisableGoBack: true })
+          
+        } else {
+          FlashMessage({
+            message: `${t('emailAssociatedWith')} ${emailExist.userType} ${t('continueWith')} ${emailExist.userType}`
+          })
+          navigation.navigate({ name: 'Main', merge: true })
+        }
       } else {
-        navigation.navigate('Register', { email:emailRef.current })
+        // User doesn't exist - store registration data and navigate to referral screen
+        pendingRegistrationDataRef.current = {
+          email: emailRef.current
+        }
+        console.log('📧 User does not exist - navigating to RefralScreen for signup')
+        navigation.navigate('RefralScreen', {
+          emailAuthData: {
+            email: emailRef.current,
+            isLogin: false
+          },
+          onContinue: referralCallbacksRef.current.onContinue,
+          onSkip: referralCallbacksRef.current.onSkip
+        })
       }
     }
   }
@@ -113,6 +160,10 @@ export const useLogin = () => {
   }
 
   async function onLoginCompleted(data) {
+    // Clear pending login data and referral code on successful login
+    pendingLoginDataRef.current = null
+    referralCodeRef.current = null
+
     if (data.login.isActive == false) {
       FlashMessage({ message: t('accountDeactivated') })
     } else {
@@ -128,11 +179,13 @@ export const useLogin = () => {
           name: data.login.name,
           email: data.login.email
         })
-        setTokenAsync(data.login.token)
-        navigation.navigate({
-          name: 'Main',
-          merge: true
-        })
+        if (data.login.token) {
+          await setTokenAsync(data.login.token)
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }]
+          })
+        }
       } catch (e) {
         console.log(e)
       }
@@ -149,32 +202,22 @@ export const useLogin = () => {
     }
   }
 
-  async function loginAction(email, password) {
+  async function loginAction(email, password, referralCode = null) {
     try {
       if (validateCredentials()) {
-        let notificationToken = null
-          try {
-            if (Device.isDevice) {
-              const {
-                status: existingStatus
-              } = await Notifications.getPermissionsAsync()
-              if (existingStatus === 'granted') {
-                notificationToken = (await Notifications.getExpoPushTokenAsync({
-                  projectId: Constants.expoConfig.extra.eas.projectId
-                })).data
-              }
-            }
-        } catch (error) {
-          FlashMessage({
-            message: t('errorWhileGettingNotificationToken'),
-          })
-        }
+        let token = null
+        token = await registerForPushNotificationsAsync()
+
+        // Use stored referral code if available, otherwise use passed one
+        const finalReferralCode = referralCodeRef.current !== null ? referralCodeRef.current : referralCode || null
+
         LoginMutation({
           variables: {
             email,
             password,
             type: 'default',
-            notificationToken
+            notificationToken: token,
+            referralCode: finalReferralCode
           }
         })
       }
@@ -185,6 +228,143 @@ export const useLogin = () => {
     } finally {
     }
   }
+
+  // Handle referral continue with code for email login
+  const handleReferralContinue = useCallback(
+    async (referralCode) => {
+      const loginData = pendingLoginDataRef.current
+      if (!loginData) {
+        console.error('❌ No pending login data')
+        return
+      }
+
+      console.log('🔐 Storing referral code for login:', referralCode)
+      // Store referral code and show password field
+      referralCodeRef.current = referralCode
+      setRegisteredEmail(true)
+      // Go back to Login screen to show password field
+      navigation.goBack()
+    },
+    [navigation]
+  )
+
+  // Handle referral skip for email login
+  const handleReferralSkip = useCallback(async (options = {}) => {
+    const { IsdisableGoBack = false } = options
+
+    console.log('handleReferralSkip_____login');
+    
+    const loginData = pendingLoginDataRef.current
+    if (!loginData) {
+      console.error('❌ No pending login data')
+      return
+    }
+
+    console.log('🔐 Skipping referral code for login')
+    // Don't store referral code and show password field
+    referralCodeRef.current = null
+    setRegisteredEmail(true)
+    if (IsdisableGoBack) return
+    // Go back to Login screen to show password field
+    navigation.goBack()
+  }, [navigation])
+
+  // Handle referral continue for registration (signup)
+  const handleRegistrationReferralContinue = useCallback(
+    async (referralCode) => {
+      const registrationData = pendingRegistrationDataRef.current
+      if (!registrationData) {
+        console.error('❌ No pending registration data')
+        return
+      }
+
+      console.log('📝 Navigating to Register with referral code:', referralCode)
+      navigation.navigate('Register', {
+        email: registrationData.email,
+        referralCode: referralCode
+      })
+      // Clear pending data after navigation
+      pendingRegistrationDataRef.current = null
+    },
+    [navigation]
+  )
+
+  // Handle referral skip for registration (signup)
+  const handleRegistrationReferralSkip = useCallback(async () => {
+    const registrationData = pendingRegistrationDataRef.current
+    if (!registrationData) {
+      console.error('❌ No pending registration data')
+      return
+    }
+
+    console.log('📝 Navigating to Register without referral code')
+    navigation.navigate('Register', {
+      email: registrationData.email,
+      referralCode: null
+    })
+    // Clear pending data after navigation
+    pendingRegistrationDataRef.current = null
+  }, [navigation])
+
+  // Store callbacks in ref for navigation params
+  useEffect(() => {
+    referralCallbacksRef.current = {
+      onContinue: (referralCode) => {
+        // Check if it's login or signup based on pending data
+        if (pendingLoginDataRef.current) {
+          handleReferralContinue(referralCode)
+        } else if (pendingRegistrationDataRef.current) {
+          handleRegistrationReferralContinue(referralCode)
+        }
+      },
+      onSkip: () => {
+        // Check if it's login or signup based on pending data
+        if (pendingLoginDataRef.current) {
+          handleReferralSkip()
+        } else if (pendingRegistrationDataRef.current) {
+          handleRegistrationReferralSkip()
+        }
+      }
+    }
+  }, [handleReferralContinue, handleReferralSkip, handleRegistrationReferralContinue, handleRegistrationReferralSkip])
+
+  // Navigation listener to handle fallback case when callbacks don't work
+  useFocusEffect(
+    useCallback(() => {
+      const params = navigation.getState()?.routes?.find((r) => r.name === 'Login' || r.name === 'Register')?.params
+      if (params) {
+        const { referralCode, referralSkipped } = params
+        const loginData = pendingLoginDataRef.current
+        const registrationData = pendingRegistrationDataRef.current
+
+        if (loginData) {
+          if (referralCode) {
+            console.log('🔐 Handling referral code from navigation params for login:', referralCode)
+            handleReferralContinue(referralCode)
+            // Clear params
+            navigation.setParams({ referralCode: undefined })
+          } else if (referralSkipped) {
+            console.log('🔐 Handling referral skip from navigation params for login')
+            handleReferralSkip()
+            // Clear params
+            navigation.setParams({ referralSkipped: undefined })
+          }
+        } else if (registrationData) {
+          if (referralCode) {
+            console.log('📝 Handling referral code from navigation params for signup:', referralCode)
+            handleRegistrationReferralContinue(referralCode)
+            // Clear params
+            navigation.setParams({ referralCode: undefined })
+          } else if (referralSkipped) {
+            console.log('📝 Handling referral skip from navigation params for signup')
+            handleRegistrationReferralSkip()
+            // Clear params
+            navigation.setParams({ referralSkipped: undefined })
+          }
+        }
+      }
+    }, [navigation, handleReferralContinue, handleReferralSkip, handleRegistrationReferralContinue, handleRegistrationReferralSkip])
+  )
 
   function checkEmailExist() {
     if (validateCredentials()) {

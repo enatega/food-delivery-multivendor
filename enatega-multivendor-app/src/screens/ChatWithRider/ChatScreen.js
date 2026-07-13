@@ -17,47 +17,52 @@ import { useTranslation } from 'react-i18next'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 import ConfigurationContext from '../../context/Configuration'
+import Spinner from '../../components/Spinner/Spinner'
 
 const renderInputToolbar = (props) => {
   return (
     <InputToolbar
       {...props}
       containerStyle={{
-        backgroundColor: '#90E36D',
-        paddingVertical: scale(20)
+        backgroundColor: '#0EA5E9',
+        paddingHorizontal: scale(4),
+        paddingBottom: scale(4),
+        marginHorizontal: scale(6),
+        borderRadius: scale(12)
       }}
     />
   )
 }
 
-const renderActions = (props) => {
-  return (
-    <Actions
-      {...props}
-      containerStyle={{
-        width: scale(34),
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-      icon={() => (
-        <Image
-          source={require('../../assets/images/add.png')}
-          style={styles().addImg}
-          resizeMode='contain'
-        />
-      )}
-      options={{
-        'Choose From Library': () => {
-          console.log('Choose From Library')
-        },
-        Cancel: () => {
-          console.log('Cancel')
-        }
-      }}
-      optionTintColor='#222B45'
-    />
-  )
-}
+// Todo: Can add actions later
+// const renderActions = (props) => {
+//   return (
+//     <Actions
+//       {...props}
+//       containerStyle={{
+//         width: scale(34),
+//         alignItems: 'center',
+//         justifyContent: 'center'
+//       }}
+//       icon={() => (
+//         <Image
+//           source={require('../../assets/images/add.png')}
+//           style={styles().addImg}
+//           resizeMode='contain'
+//         />
+//       )}
+//       options={{
+//         'Choose From Library': () => {
+//           console.log('Choose From Library')
+//         },
+//         Cancel: () => {
+//           console.log('Cancel')
+//         }
+//       }}
+//       optionTintColor='#222B45'
+//     />
+//   )
+// }
 const ChatScreen = ({ navigation, route }) => {
   const configuration = useContext(ConfigurationContext)
 
@@ -71,7 +76,8 @@ const ChatScreen = ({ navigation, route }) => {
     setInputMessage,
     profile,
     orderNo,
-    total
+    total,
+    loading
   } = useChatScreen({ navigation, route })
 
   const filterImages = (src) => {
@@ -107,18 +113,13 @@ const ChatScreen = ({ navigation, route }) => {
         }}
       >
         <View
+          hitSlop={15}
           style={{
-            width: scale(34),
-            justifyContent: 'center',
-            alignItems: 'center'
+            width: scale(30),
+            paddingBottom: scale(4)
           }}
         >
-          <Image
-            source={require('../../assets/images/send-icon.png')}
-            resizeMode='contain'
-            color={currentTheme.black}
-            style={styles().sendIcon}
-          />
+          <Ionicons name="paper-plane" size={scale(25)} color={currentTheme?.white} />
         </View>
       </Send>
     )
@@ -156,8 +157,8 @@ const ChatScreen = ({ navigation, route }) => {
           {...props}
           renderUsername={null}
           wrapperStyle={{
-            right: { backgroundColor: 'transparent' },
-            left: { backgroundColor: 'transparent' }
+            right: { backgroundColor: currentTheme?.lowOpacityBlue },
+            // left: { backgroundColor: '#000' }
           }}
           textStyle={{
             right: styles(currentTheme).textRight,
@@ -215,6 +216,7 @@ const ChatScreen = ({ navigation, route }) => {
       </View>
 
       <GiftedChat
+        loadEarlier={loading}
         messages={messages}
         user={{
           _id: profile?._id
@@ -230,25 +232,26 @@ const ChatScreen = ({ navigation, route }) => {
         placeholder={t('replyRider')}
         textInputProps={{
           style: {
-            width: '75%',
+            width: '85%',
             paddingHorizontal: scale(16),
             paddingVertical: scale(12),
             backgroundColor: '#fff',
             fontSize: 12,
-            borderRadius: 14
+            borderRadius: scale(12)
           },
           placeholderTextColor: '#6B7280',
           autoFocus: true
         }}
         renderTime={renderTime}
-        renderActions={renderActions}
+        // Todo: Can add actions later
+        // renderActions={renderActions}
         renderInputToolbar={renderInputToolbar}
         renderAccessory={image.length > 0 ? renderAccessory : null}
         text={inputMessage}
         onInputTextChanged={(m) => setInputMessage(m)}
         messagesContainerStyle={{ paddingBottom: scale(40) }}
       />
-      <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={-200} />
+      <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={ Platform.OS === 'android' ? -300 : -200} />
     </View>
   )
 }

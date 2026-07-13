@@ -49,7 +49,7 @@ const styles = (props = null) =>
       borderRadius: scale(6),
       backgroundColor: props !== null ? props?.themeBackground : 'white',
       padding: scale(12),
-      color: props !==null ? props?.newFontcolor : 'red',
+      color: props !== null ? props?.newFontcolor : 'red',
       shadowColor: props !== null ? props?.fontSecondColor : '#545454',
       textAlign: props?.isRTL ? 'right' : 'left'
     },
@@ -88,7 +88,10 @@ const styles = (props = null) =>
       elevation: scale(999)
     },
     headerLeftIcon: {
-      ...alignment.PLsmall
+      ...alignment.MLsmall,
+      ...alignment.Psmall,
+      backgroundColor: props !== null ? props?.colorBgTertiary : '#F4F4F5',
+      borderRadius: scale(50)
     },
     headerRightIcon: {
       ...alignment.PRsmall

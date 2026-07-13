@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState, useRef } from 'react'
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react'
 import { ActivityIndicator, View, Text } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { myOrders } from '../../apollo/queries'
@@ -29,41 +29,17 @@ const CREATE_ACTIVITY = gql`
   ${createActivity}
 `
 
-const isAllowedHost = (url, allowedHosts) => {
-  try {
-    const host = new URL(url).hostname.toLowerCase()
-    return allowedHosts.some((allowedHost) => host === allowedHost || host.endsWith(`.${allowedHost}`))
-  } catch {
-    return false
-  }
-}
-
 function HypCheckout(props) {
   const Analytics = analytics()
   const { SERVER_URL } = useEnvVars()
   const { t } = useTranslation()
   const [loading, loadingSetter] = useState(false)
-  const [isConfirmingOrder, setIsConfirmingOrder] = useState(false)
-  const [confirmationTimedOut, setConfirmationTimedOut] = useState(false)
   const { clearCart } = useContext(UserContext)
   const client = useApolloClient()
   const { _id, restaurantId, orderInput } = props?.route.params
-  const isHandlingSuccessRef = useRef(false)
-  const backendHost = useRef(null)
-  const hypAllowedHosts = useRef([])
 
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-
-  useEffect(() => {
-    try {
-      backendHost.current = new URL(SERVER_URL).hostname.toLowerCase()
-      hypAllowedHosts.current = backendHost.current ? [backendHost.current] : []
-    } catch {
-      backendHost.current = null
-      hypAllowedHosts.current = []
-    }
-  }, [SERVER_URL])
 
   // Mutations
   const [mutateOrderCreatedAndPaid] = useMutation(ORDER_CREATED_AND_PAID)
@@ -146,48 +122,25 @@ function HypCheckout(props) {
       loadingSetter(true)
     }
     if (data.url.includes('hyp/success')) {
-      if (isHandlingSuccessRef.current) return
-      isHandlingSuccessRef.current = true
-      setIsConfirmingOrder(true)
       await onNotifiyUsers()
 
-      const maxAttempts = 20
+      const result = await client.query({
+        query: MYORDERS,
+        fetchPolicy: 'network-only'
+      })
 
-      for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        try {
-          const result = await client.query({
-            query: MYORDERS,
-            fetchPolicy: 'network-only'
-          })
-
-          const order = result.data.orders.find((item) => item.orderId === _id)
-          const isPaidOrder =
-            order &&
-            (String(order.paymentStatus).toUpperCase() === 'PAID' || Number(order.paidAmount || 0) > 0)
-
-          if (isPaidOrder) {
-            await clearCart()
-            loadingSetter(false)
-            props?.navigation.reset({
-              routes: [
-                { name: 'Main' },
-                {
-                  name: 'OrderDetail',
-                  params: { _id: order._id }
-                }
-              ]
-            })
-            return
-          }
-        } catch (error) {
-          console.log('Hyp confirmation polling error', error)
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-      }
-
-      setConfirmationTimedOut(true)
+      const order = result.data.orders.find((order) => order.orderId === _id)
+      await clearCart()
       loadingSetter(false)
+      props?.navigation.reset({
+        routes: [
+          { name: 'Main' },
+          {
+            name: 'OrderDetail',
+            params: { _id: order._id }
+          }
+        ]
+      })
     } else if (data.url.includes('hyp/cancel')) {
       FlashMessage({ message: t('PaymentNotSuccessfull'), duration: 2000 })
       loadingSetter(false)
@@ -199,20 +152,11 @@ function HypCheckout(props) {
   return (
     <View style={{ flex: 1 }}>
       <WebView
-        style={{ opacity: loading || isConfirmingOrder ? 0 : 1 }}
+        style={{ opacity: loading ? 0 : 1 }}
         javaScriptEnabled={true}
         domStorageEnabled={true}
         bounces={false}
-        originWhitelist={['https://*', 'http://*']}
-        onShouldStartLoadWithRequest={(request) => {
-          const { url } = request
-          if (!url) return false
-          const allowedHosts = [...hypAllowedHosts.current]
-          if (backendHost.current) {
-            allowedHosts.push(backendHost.current)
-          }
-          return isAllowedHost(url, allowedHosts)
-        }}
+        originWhitelist={['*']}
         onLoadStart={async (e) => {
           await onCreateActivityHandler('onLoadStart:HYP', e?.description ?? '-')
           loadingSetter(true)
@@ -242,19 +186,6 @@ function HypCheckout(props) {
       />
 
       {loading ? <ActivityIndicator style={{ position: 'absolute', bottom: '50%', left: '50%' }} size='large' color='#90E36D' /> : null}
-      {isConfirmingOrder ? (
-        <View style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, backgroundColor: '#fff' }}>
-          <ActivityIndicator size="large" color="#90E36D" />
-          <Text style={{ marginTop: 20, fontSize: 22, fontWeight: '600', textAlign: 'center', color: '#111827' }}>
-            {confirmationTimedOut ? 'Payment submitted' : 'Confirming your order'}
-          </Text>
-          <Text style={{ marginTop: 12, fontSize: 15, lineHeight: 22, textAlign: 'center', color: '#4B5563' }}>
-            {confirmationTimedOut
-              ? "Your payment was submitted successfully. We're still waiting for the backend to confirm the order."
-              : "We're waiting for backend confirmation before opening your order tracking screen."}
-          </Text>
-        </View>
-      ) : null}
     </View>
   )
 }

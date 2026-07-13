@@ -42,8 +42,8 @@ export const useStyles = (theme) =>
     navigateButtonContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: theme.main,
-      borderColor: theme.main,
+      backgroundColor: theme.primaryBlue,
+      borderColor: theme.primaryBlue,
       borderWidth: 1,
       borderRadius: scale(25),
       width: scale(200)

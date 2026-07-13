@@ -1,20 +1,19 @@
-import React, { useLayoutEffect } from 'react'
-import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Image, TextInput, StatusBar } from 'react-native'
+import { useLayoutEffect } from 'react'
+import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, TextInput, StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
-import Spinner from '../../components/Spinner/Spinner'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
-import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
 import { useLogin } from './useLogin'
 import screenOptions from './screenOptions'
 import { useTranslation } from 'react-i18next'
-import { scale } from '../../utils/scaling'
-import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 import { useHeaderHeight } from '@react-navigation/elements'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import Auth from '../../assets/SVG/imageComponents/Auth'
+import ContinueWithPhoneButton from '../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
 
 function Login(props) {
   const { setEmail, password, setPassword, emailError, passwordError, registeredEmail, loading, loginLoading, loginAction, currentTheme, showPassword, setShowPassword, checkEmailExist, emailRef, themeContext, handleSetEmail } = useLogin()
@@ -42,7 +41,7 @@ function Login(props) {
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View>
-                <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
+                <Auth fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
               </View>
               <View>
                 <TextDefault
@@ -113,12 +112,8 @@ function Login(props) {
                 </View>
               </View>
 
-              <View>
-                <TouchableOpacity onPress={() => (registeredEmail ? loginAction(emailRef.current, password) : checkEmailExist())} activeOpacity={0.7} style={styles(currentTheme).btn} disabled={loading || loginLoading}>
-                  <TextDefault H4 textColor={currentTheme.black} bold>
-                    {loading || loginLoading ? <Spinner backColor='transparent' spinnerColor={currentTheme.white} size='small' /> : registeredEmail ? t('loginBtn') : t('continueBtn')}
-                  </TextDefault>
-                </TouchableOpacity>
+              <View style={styles().btnContainer}>
+                <ContinueWithPhoneButton title='continueBtn' onPress={() => (registeredEmail ? loginAction(emailRef.current, password) : checkEmailExist())} isLoading={loading} isDisabled={loading || loginLoading} />
               </View>
             </View>
           </View>

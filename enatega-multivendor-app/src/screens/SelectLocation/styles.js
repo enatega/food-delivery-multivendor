@@ -110,7 +110,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       width: '100%',
       height: '20%',
-      backgroundColor: props !== null ? props?.main : 'transparent',
+      backgroundColor: props !== null ? props?.primaryBlue : 'transparent',
       justifyContent: 'space-evenly',
       alignItems: 'center',
       alignSelf: 'center',

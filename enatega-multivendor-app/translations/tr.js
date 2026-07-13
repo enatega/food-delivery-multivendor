@@ -92,8 +92,14 @@ export const tr = {
     checkout: 'Ödeme',
     creditCart: 'Kredi/Banka Kartı',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'Kapıda Ödeme',
     thankYou: 'Teşekkür Ederiz!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'Siparişiniz onaylandı',
     orderId: 'Sipariş Kimliğiniz',
     orderAmount: 'Sipariş Tutarınız',
@@ -522,6 +528,8 @@ export const tr = {
     logoutMessage: 'Başarıyla çıkış yapıldı',
     somethingWentWrong: 'Bir şeyler ters gitti',
     checkInternet: 'İnternet bağlantınızı kontrol edin',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'Şehir Seç',
     Location: 'Konum',
     phoneNumberExist: 'Verilen telefon numarası zaten mevcut!',
@@ -656,4 +664,62 @@ export const tr = {
     "Applied Filters": 'Uygulanan Filtreler',
     "WhatsApp is not installed on the device": "WhatsApp cihazda yüklü değil",
     "Install it": "Yükle",
-  }
+    "You are all up to date": "Her şey güncel",
+    "No new notifications - come back soon": "Yeni bildirim yok - yakında tekrar gelin",
+    "Payments": "Ödemeler",
+    "Vouchers": "Kuponlar",
+    "App supports & FAQs": "Uygulama desteği ve SSS",
+    "Feedback": "Geri bildirim",
+    "My conversations": "Konuşmalarım",
+    "Change phone number": "Telefon numarasını değiştir",
+    "Change email address": "E-posta adresini değiştir",
+    "Change profile name": "Profil adını değiştir",
+    "Change or delete address": "Adresi değiştir veya sil",
+    "Delete account": "Hesabı sil",
+    "Reset Password": "Şifreyi sıfırla",
+    "Login issue": "Giriş sorunu",
+    "How do you rate our products?": "Ürünlerimizi nasıl değerlendiriyorsunuz?",
+    "Your feedback helps us serve you better.": "Geri bildiriminiz bize daha iyi hizmet vermemize yardımcı olur.",
+    "Write your experience here...": "Deneyiminizi buraya yazın...",
+    "Submit": "Gönder",
+    "Payment Methods": "Ödeme Yöntemleri",
+  "Add or Update your saved payment methods.": "Kayıtlı ödeme yöntemlerinizi ekleyin veya güncelleyin.",
+  "Default": "Varsayılan",
+  "Add payment method": "Ödeme yöntemi ekle",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

@@ -18,7 +18,7 @@ export const sendChatMessage = `mutation SendChatMessage($orderId: ID!, $message
   `
 
 export const placeOrder = `
-  mutation PlaceOrder($restaurant:String!,$orderInput:[OrderInput!]!,$paymentMethod:String!,$couponCode:String,$tipping:Float!, $taxationAmount: Float!,$address:AddressInput!, $orderDate: String!,$isPickedUp: Boolean!, $deliveryCharges: Float!, $instructions: String){
+  mutation PlaceOrder($restaurant:String!,$orderInput:[OrderInput!]!,$paymentMethod:String!,$couponCode:String,$tipping:Float!, $taxationAmount: Float!,$address:AddressInput, $orderDate: String!,$isPickedUp: Boolean!, $deliveryCharges: Float!, $instructions: String){
     placeOrder(restaurant:$restaurant,orderInput: $orderInput,paymentMethod:$paymentMethod,couponCode:$couponCode,tipping:$tipping, taxationAmount: $taxationAmount, address:$address, orderDate: $orderDate,isPickedUp: $isPickedUp, deliveryCharges:$deliveryCharges, instructions: $instructions) {
       _id
       orderId
@@ -39,7 +39,6 @@ export const placeOrder = `
         title
         food
         description
-        image
         quantity
         variation{
           _id
@@ -92,7 +91,6 @@ export const placeOrder = `
       cancelledAt
       assignedAt
       instructions
-      discountAmount
     }
   }`
 
@@ -109,8 +107,8 @@ export const forgotPassword = `mutation ForgotPassword($email:String!){
     }
   }`
 
-export const resetPassword = `mutation ResetPassword($password:String!,$email:String!,$otp:String!){
-    resetPassword(password:$password,email:$email,otp:$otp){
+export const resetPassword = `mutation ResetPassword($password:String!,$email:String!){
+    resetPassword(password:$password,email:$email){
       result
     }
   }`
@@ -229,7 +227,6 @@ export const reviewOrder = `mutation ReviewOrder(
         title
         food
         description
-        image
         quantity
         variation{
           _id
@@ -300,12 +297,21 @@ export const addFavouriteRestaurant = `mutation AddFavourite($id:String!){
 
 export const emailExist = `
   mutation EmailExist($email: String!) {
-    emailExist(email: $email)
+    emailExist(email: $email) {
+      userType
+      _id
+      email
+      referral_code
+    }
   }`
 
 export const phoneExist = `
   mutation PhoneExist($phone: String!) {
-    phoneExist(phone: $phone)
+    phoneExist(phone: $phone) {
+      userType
+      _id
+      phone
+    }
   }`
 
 export const sendOtpToEmail = `
@@ -326,12 +332,14 @@ export const Deactivate = `
   mutation deactivated($isActive: Boolean!, $email: String!) {
     Deactivate(isActive: $isActive,email: $email) {
       isActive
+      name
+      _id
     }
   }
   `
 export const login = `
-  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$idToken:String,$name:String,$notificationToken:String){
-    login(email:$email,password:$password,type:$type,appleId:$appleId,idToken:$idToken,name:$name,notificationToken:$notificationToken){
+  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$name:String,$notificationToken:String, $referralCode:String){
+    login(email:$email,password:$password,type:$type,appleId:$appleId,name:$name,notificationToken:$notificationToken, referralCode:$referralCode){
      userId
      token
      tokenExpiration
@@ -344,7 +352,7 @@ export const login = `
   }
   `
 export const createUser = `
-    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean){
+    mutation CreateUser($phone:String,$email:String,$password:String,$name:String,$notificationToken:String,$appleId:String, $emailIsVerified:Boolean, $isPhoneExists:Boolean, $referralCode:String){
         createUser(userInput:{
             phone:$phone,
             email:$email,
@@ -352,8 +360,9 @@ export const createUser = `
             name:$name,
             notificationToken:$notificationToken,
             appleId:$appleId,
-            emailIsVerified:$emailIsVerified
-            isPhoneExists:$isPhoneExists
+            emailIsVerified:$emailIsVerified,
+            isPhoneExists:$isPhoneExists,
+            referralCode:$referralCode
         }){
             userId
             token
@@ -412,9 +421,79 @@ export const createActivity = `
 `
 
 export const VERIFY_OTP = gql`
- mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
+  mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
     verifyOtp(otp: $otp, email: $email, phone: $phone) {
-        result
+      result
     }
-}
+  }
+`
+
+export const loginWithPhoneFirstStep = gql`
+  mutation LoginWithPhoneFirstStep($phone: String) {
+    loginWithPhoneFirstStep(phone: $phone) {
+      result
+      message
+    }
+  }
+`
+
+export const loginWithPhoneFinalStep = gql`
+  mutation LoginWithPhoneFinalStep($otp: String!, $phone: String!, $referralCode:String) {
+    loginWithPhoneFinalStep(otp: $otp, phone: $phone, referralCode: $referralCode) {
+      userId
+      token
+      tokenExpiration
+      name
+      phone
+      phoneIsVerified
+      email
+      emailIsVerified
+      picture
+      addresses {
+        location {
+          coordinates
+        }
+        deliveryAddress
+      }
+      isNewUser
+      userTypeId
+      onboarding
+      isActive
+    }
+  }
+`
+
+export const onBoardingComplete = gql`
+  mutation OnBoardingComplete($name: String, $notificationToken: String) {
+    onBoardingComplete(name: $name, notificationToken: $notificationToken) {
+      _id
+      name
+      email
+      phone
+      isActive
+      userType
+      phoneIsVerified
+      emailIsVerified
+      password
+      status
+      lastLogin
+      isOrderNotification
+      isOfferNotification
+      createdAt
+      updatedAt
+      addresses {
+        _id
+        location {
+          coordinates
+        }
+        deliveryAddress
+        details
+        label
+        selected
+      }
+      notificationToken
+      favourite
+      notes
+    }
+  }
 `

@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import LottieView from 'lottie-react-native'
-import React, { useEffect, useState, useRef, useMemo } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Animated, StyleSheet, View, Image } from 'react-native'
 import CartItemPlaceholder from '../../assets/images/CartItemPlaceholder.png'
 
@@ -13,41 +13,6 @@ const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) 
   const shimmerAnimation = useRef(new Animated.Value(0)).current
   const fadeAnim = useRef(new Animated.Value(0)).current
   const imagePath = require('../../assets/SVG/ShiimerImagePlaceholder.json')
-
-  // CloudFront signed URLs carry an expiring signature in the query string
-  // (?Expires=...&Signature=...&Key-Pair-Id=...). The same image therefore
-  // arrives with a different full URL every time the data is refetched, which
-  // RN's <Image> treats as a brand-new image -> cache miss -> re-download ->
-  // blank. We identify an image by its PATH (everything before the "?") so a
-  // refreshed signature does not look like a new image.
-  const pathKey = useMemo(() => {
-    if (!hasValidUrl) return null
-    const queryIndex = imageUrl.indexOf('?')
-    return queryIndex === -1 ? imageUrl : imageUrl.slice(0, queryIndex)
-  }, [imageUrl, hasValidUrl])
-
-  // Keep the first valid signed URL we saw for a given path and only swap the
-  // rendered source when the underlying image (path) actually changes. This
-  // stops an already-loaded, cached image from being invalidated just because
-  // its signature was refreshed by a background refetch. On a real remount
-  // (e.g. navigating back) the refs re-initialise to the latest signed URL.
-  const displayUrlRef = useRef(imageUrl)
-  const lastPathRef = useRef(pathKey)
-  if (pathKey !== lastPathRef.current) {
-    lastPathRef.current = pathKey
-    displayUrlRef.current = imageUrl
-  }
-  const displayUrl = displayUrlRef.current
-
-  // Reset load state only when the underlying image changes. Keying on pathKey
-  // (not the full signed URL) avoids re-triggering the shimmer on every
-  // signature refresh, while still resetting stale state for recycled list
-  // items and remounts on navigation.
-  useEffect(() => {
-    setImageLoaded(false)
-    setImageError(false)
-    fadeAnim.setValue(0)
-  }, [pathKey, fadeAnim])
 
   // Only start shimmer animation if we have a valid URL and image hasn't loaded
   useEffect(() => {
@@ -154,13 +119,8 @@ const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) 
 
       {/* Main image */}
       <Animated.Image
-        source={{ uri: displayUrl }}
+        source={{ uri: imageUrl }}
         onLoad={handleImageLoad}
-        // onLoadEnd fires even for cached images where onLoad may be skipped
-        // on iOS; this guarantees the image is revealed after navigating back.
-        onLoadEnd={() => {
-          if (!imageError) handleImageLoad()
-        }}
         onError={handleImageError}
         style={[
           StyleSheet.absoluteFill,

@@ -57,11 +57,12 @@ function ItemDetail(props) {
     })
   })
   const [selectedAddons, setSelectedAddons] = useState([])
+  const [specialInstructions, setSpecialInstructions] = useState('')
 
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
   const Analytics = analytics()
-  const { restaurant: restaurantCart, setCartRestaurant, cart, addQuantity, addCartItem, instructions, setInstructions } = useContext(UserContext)
+  const { restaurant: restaurantCart, setCartRestaurant, cart, addQuantity, addCartItem } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const inset = useSafeAreaInsets()
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
@@ -237,7 +238,7 @@ function ItemDetail(props) {
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
-      await addCartItem(food?._id, selectedVariation?._id, quantity, addons, clearFlag, instructions)
+      await addCartItem(food?._id, selectedVariation?._id, quantity, addons, clearFlag, specialInstructions)
     } else {
       await addQuantity(cartItem?.key, quantity)
     }
@@ -407,7 +408,7 @@ function ItemDetail(props) {
             <View style={styles(currentTheme).line}></View>
             <View style={styles(currentTheme).inputContainer}>
               <TitleComponent title={t('specialInstructions')} subTitle={t('anySpecificPreferences')} status={t('optional')} />
-              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={instructions} onChangeText={setInstructions} maxLength={144} textColor={currentTheme.fontMainColor} baseColor={currentTheme.lightHorizontalLine} errorColor={currentTheme.textErrorColor} tintColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} placeholderTextColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} />
+              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={144} textColor={currentTheme.fontMainColor} baseColor={currentTheme.lightHorizontalLine} errorColor={currentTheme.textErrorColor} tintColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} placeholderTextColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} />
             </View>
             {/** frequently bought together */}
             <FrequentlyBoughtTogether itemId={food?._id} restaurantId={restaurant} />

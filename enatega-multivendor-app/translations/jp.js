@@ -83,8 +83,14 @@ export const jp = {
     checkout: 'チェックアウト',
     creditCart: 'クレジット/デビットカード',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: '現金',
     thankYou: 'ありがとうございます！',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'ご注文は確認されました',
     orderId: '注文ID',
     orderAmount: '注文金額',
@@ -490,6 +496,8 @@ export const jp = {
     logoutMessage: '正常にログアウトしました',
     somethingWentWrong: '何か問題が発生しました',
     checkInternet: 'インターネット接続を確認してください',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: '都市を選択',
     Location: '場所',
     phoneNumberExist: '提供された電話番号はすでに存在します！',
@@ -620,6 +628,63 @@ export const jp = {
     "noMatchingResultsDesc": "フィルターを調整するか、他のオプションを探索して、お探しのものを見つけてください。",
     "Applied Filters": '適用されたフィルター',
     "WhatsApp is not installed on the device": "デバイスにWhatsAppがインストールされていません",
-    "Install it": "インストールする"
-  }
-  
+    "Install it": "インストールする",
+    "You are all up to date": "すべて最新です",
+    "No new notifications - come back soon": "新しい通知はありません - また後で来てください",
+    "Payments": "支払い",
+    "Vouchers": "バウチャー",
+    "App supports & FAQs": "アプリサポートとよくある質問",
+    "Feedback": "フィードバック",
+    "My conversations": "私の会話",
+    "Change phone number": "電話番号を変更",
+    "Change email address": "メールアドレスを変更",
+    "Change profile name": "プロフィール名を変更",
+    "Change or delete address": "住所を変更または削除",
+    "Delete account": "アカウントを削除",
+    "Reset Password": "パスワードをリセット",
+    "Login issue": "ログインの問題",
+    "How do you rate our products?": "当社の製品をどのように評価しますか？",
+    "Your feedback helps us serve you better.": "あなたのフィードバックは、私たちがより良いサービスを提供するのに役立ちます。",
+    "Write your experience here...": "あなたの経験をここに書いてください...",
+    "Submit": "送信",
+    "Payment Methods": "支払い方法",
+  "Add or Update your saved payment methods.": "保存された支払い方法を追加または更新します。",
+  "Default": "デフォルト",
+  "Add payment method": "支払い方法を追加",
+  "Add payment methods": "支払い方法を追加",
+  "Add a credit or debit card to quickly complete purchases.": "クレジットカードまたはデビットカードを追加して、購入を素早く完了します。",
+  "Card number": "カード番号",
+  "Expiration date": "有効期限",
+  "Expiration date (MM / YY)": "有効期限 (月/年)",
+  "CVV": "CVV",
+  "Security code": "セキュリティコード",
+  "Save": "保存",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

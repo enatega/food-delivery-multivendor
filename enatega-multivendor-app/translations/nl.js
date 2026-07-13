@@ -92,8 +92,14 @@ export const nl = {
     checkout: 'Afrekenen',
     creditCart: 'Creditcard/Betaalpas',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'Contant',
     thankYou: 'Dank je wel!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'Je bestelling is bevestigd',
     orderId: 'Je Bestel-ID',
     orderAmount: 'Je Bestelbedrag',
@@ -523,6 +529,8 @@ export const nl = {
     logoutMessage: 'Succesvol uitgelogd',
     somethingWentWrong: 'Er is iets misgegaan',
     checkInternet: 'Controleer je internetverbinding',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'Selecteer Stad',
     Location: 'Locatie',
     phoneNumberExist: 'Het opgegeven telefoonnummer bestaat al!',
@@ -658,4 +666,62 @@ export const nl = {
     "Applied Filters": 'Toegepaste Filters',
     "WhatsApp is not installed on the device": "WhatsApp is niet geïnstalleerd op het apparaat",
     "Install it": "Installeer het",
-  }
+    "You are all up to date": "Je bent helemaal bij",
+    "No new notifications - come back soon": "Geen nieuwe meldingen - kom binnenkort terug",
+    "Payments": "Betalingen",
+    "Vouchers": "Vouchers",
+    "App supports & FAQs": "App-ondersteuning en veelgestelde vragen",
+    "Feedback": "Feedback",
+    "My conversations": "Mijn gesprekken",
+    "Change phone number": "Telefoonnummer wijzigen",
+    "Change email address": "E-mailadres wijzigen",
+    "Change profile name": "Profilnaam wijzigen",
+    "Change or delete address": "Adres wijzigen of verwijderen",
+    "Delete account": "Account verwijderen",
+    "Reset Password": "Wachtwoord opnieuw instellen",
+    "Login issue": "Inlogprobleem",
+    "How do you rate our products?": "Hoe beoordeelt u onze producten?",
+    "Your feedback helps us serve you better.": "Uw feedback helpt ons u beter te bedienen.",
+    "Write your experience here...": "Schrijf hier uw ervaring...",
+    "Submit": "Verzenden",
+    "Payment Methods": "Betaalmethoden",
+  "Add or Update your saved payment methods.": "Voeg uw opgeslagen betaalmethoden toe of werk ze bij.",
+  "Default": "Standaard",
+  "Add payment method": "Betaalmethode toevoegen",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

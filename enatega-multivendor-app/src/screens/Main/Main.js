@@ -1,11 +1,11 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback, useMemo } from 'react'
-import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, Image, RefreshControl, ActivityIndicator, InteractionManager } from 'react-native'
+import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, FlatList, Image, RefreshControl, ActivityIndicator } from 'react-native'
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
-import { FetchAllShopTypes, getBanners, getCuisines, restaurantListPreview } from '../../apollo/queries'
+import { getBanners, getCuisines, restaurantListPreview } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -32,7 +32,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import CustomApartmentIcon from '../../assets/SVG/imageComponents/CustomApartmentIcon'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 import CollectionCard from '../../components/CollectionCard/CollectionCard'
-import { getErrorMessage, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
+import { sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 import { IMAGE_LINK } from '../../utils/constants'
 import useGeocoding from '../../ui/hooks/useGeocoding'
 import ForceUpdate from '../../components/Update/ForceUpdate'
@@ -40,7 +40,6 @@ import ForceUpdate from '../../components/Update/ForceUpdate'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ModalDropdown from '../../components/Picker/ModalDropdown'
 import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
-import HorizontalFlashList from '../../components/Lists/HorizontalFlashList'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -54,11 +53,6 @@ const GET_BANNERS = gql`
 const GET_CUISINES = gql`
   ${getCuisines}
 `
-const FETCH_ALL_SHOPTYPES = FetchAllShopTypes
-
-// Number of times a transient network failure is silently retried before the
-// full-screen error is shown to the user.
-const MAX_AUTO_RETRIES = 3
 
 function Main(props) {
   const Analytics = analytics()
@@ -97,45 +91,13 @@ function Main(props) {
     fetchPolicy: 'network-only'
   })
 
-  // A transient network failure (e.g. "Network request failed") surfaces as a
-  // networkError without an HTTP statusCode. This happens when the restaurants
-  // query refires after the address/location changes and the request is briefly
-  // interrupted. We auto-retry these instead of blowing away the whole screen.
-  const isTransientNetworkError = !!error?.networkError && !error?.networkError?.statusCode && !(error?.graphQLErrors?.length > 0)
-  const retryCountRef = useRef(0)
-  const [retriesExhausted, setRetriesExhausted] = useState(false)
-
-  // Reset the retry budget whenever the location changes (a fresh attempt).
-  useEffect(() => {
-    retryCountRef.current = 0
-    setRetriesExhausted(false)
-  }, [location?.latitude, location?.longitude])
-
-  useEffect(() => {
-    if (!error) {
-      // Recovered — restore the retry budget for the next attempt.
-      retryCountRef.current = 0
-      if (retriesExhausted) setRetriesExhausted(false)
-      return
-    }
-    if (!isTransientNetworkError) return
-    if (retryCountRef.current >= MAX_AUTO_RETRIES) {
-      if (!retriesExhausted) setRetriesExhausted(true)
-      return
-    }
-    const timer = setTimeout(() => {
-      retryCountRef.current += 1
-      refetchRestaurants().catch(() => {})
-    }, 800)
-    return () => clearTimeout(timer)
-  }, [error, isTransientNetworkError, retriesExhausted, refetchRestaurants])
-
+  let filteredCuisines
   const { data: banners, refetch: refetchBanners } = useQuery(GET_BANNERS, {
-    fetchPolicy: 'cache-first',
-    nextFetchPolicy: 'cache-first'
+    fetchPolicy: 'network-only'
   })
   const { data: allCuisines } = useQuery(GET_CUISINES)
-  const { data: allShopTypes } = useQuery(FETCH_ALL_SHOPTYPES)
+
+  const cus = new Set()
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
 
   function onError(error) {
@@ -147,19 +109,10 @@ function Main(props) {
   const recentOrderRestaurantsVar = orderData?.recentOrderRestaurants
   const mostOrderedRestaurantsVar = orderData?.mostOrderedRestaurants
 
-  // "Top grocery picks" is derived from the single most-ordered fetch above
-  // (grocery subset) instead of a second grocery-filtered network request.
-  const mostOrderedGroceryStores = useMemo(
-    () => (mostOrderedRestaurantsVar || []).filter(
-      (item) => item?.shopType?.toLowerCase() === 'grocery'
-    ),
-    [mostOrderedRestaurantsVar]
-  )
-  const mostOrderedGroceryLoading = orderLoading
-  const mostOrderedGroceryError = orderError
+  const { restaurantData: mostOrderedGroceryStores, loading: mostOrderedGroceryLoading, error: mostOrderedGroceryError } = useRestaurantQueries('topPicks', location, 'grocery')
 
   const { restaurantData: nearByGroceryStores, loading: nearByGroceryStoresLoading, error: nearByGroceryStoresError } = useRestaurantQueries('grocery', location, 'grocery')
-  const { restaurantData: restaurantorders, loading: restaurantordersLoading, error: restaurantordersError } = useRestaurantQueries('restaurant', location, 'restaurant')
+  const { restaurantData: restaurantorders } = useRestaurantQueries('restaurant', location, 'restaurant')
 
   const handleActiveOrdersChange = (activeOrdersExist) => {
     setHasActiveOrders(activeOrdersExist)
@@ -210,30 +163,28 @@ function Main(props) {
     Other: CustomOtherIcon
   }
 
-  const setAddressLocation = (address) => {
-    // Close the sheet immediately so the tap feels instant. Switching the
-    // location re-runs every restaurant query and re-renders the whole
-    // Discovery screen; doing that synchronously here blocks the JS thread and
-    // makes the close animation stutter / appear to "do nothing". Defer it
-    // until after the close animation so the interaction stays smooth.
-    modalRef.current?.close()
-    InteractionManager.runAfterInteractions(() => {
-      setLocation({
-        _id: address._id,
-        label: address.label,
-        latitude: Number(address.location.coordinates[1]),
-        longitude: Number(address.location.coordinates[0]),
-        deliveryAddress: address.deliveryAddress,
-        details: address.details
-      })
-      mutate({ variables: { id: address._id } })
+  const setAddressLocation = async (address) => {
+    setLocation({
+      _id: address._id,
+      label: address.label,
+      latitude: Number(address.location.coordinates[1]),
+      longitude: Number(address.location.coordinates[0]),
+      deliveryAddress: address.deliveryAddress,
+      details: address.details
     })
+    mutate({ variables: { id: address._id } })
+    modalRef.current.close()
   }
 
   const setCurrentLocation = async () => {
+    console.log('Fetching current location...')
     setBusy(true)
 
     const { error, coords } = await getCurrentLocation()
+    console.log('getCurrentLocation result:', { error, coords })
+    console.log('coords', coords)
+    console.log('coords', coords.latitude)
+    console.log('coords', coords.longitude)
 
     if (!coords || !coords.latitude || !coords.longitude) {
       console.error('Invalid coordinates:', coords)
@@ -244,6 +195,9 @@ function Main(props) {
     try {
       // Fetch the address using the geocoding hook
       const { formattedAddress, city } = await getAddress(coords.latitude, coords.longitude)
+
+      console.log('Formatted address:', formattedAddress)
+      console.log('City:', city)
 
       let address = formattedAddress || 'Unknown Address'
 
@@ -371,88 +325,28 @@ function Main(props) {
   //   return []
   // }
 
-  const restaurantCuisines = useMemo(() => {
-    if (!allCuisines?.cuisines) return []
-    return allCuisines.cuisines.filter((cuisine) => cuisine?.shopType?.toLowerCase() === 'restaurant')
-  }, [allCuisines])
+  const useCuisinesData = (shopType, allCuisines) => {
+    const cuisinesData = useMemo(() => {
+      if (!allCuisines?.cuisines) return []
 
-  const groceryCuisines = useMemo(() => {
-    if (!allCuisines?.cuisines) return []
-    return allCuisines.cuisines.filter((cuisine) => cuisine?.shopType?.toLowerCase() === 'grocery')
-  }, [allCuisines])
+      if (shopType === 'restaurant') {
+        return allCuisines.cuisines.filter((cuisine) => cuisine?.shopType?.toLowerCase() === 'restaurant')
+      } else if (shopType === 'grocery') {
+        return allCuisines.cuisines.filter((cuisine) => cuisine?.shopType?.toLowerCase() === 'grocery')
+      } else {
+        return allCuisines.cuisines
+      }
+    }, [shopType, allCuisines])
 
-  const sortedRecentOrderRestaurants = useMemo(
-    () => sortRestaurantsByOpenStatus(recentOrderRestaurantsVar || []),
-    [recentOrderRestaurantsVar]
-  )
-  const sortedMostOrderedRestaurants = useMemo(
-    () => sortRestaurantsByOpenStatus(mostOrderedRestaurantsVar || []),
-    [mostOrderedRestaurantsVar]
-  )
-  const sortedRestaurantOrders = useMemo(
-    () => sortRestaurantsByOpenStatus(restaurantorders || []),
-    [restaurantorders]
-  )
-  const sortedMostOrderedGrocery = useMemo(
-    () => sortRestaurantsByOpenStatus(mostOrderedGroceryStores || []),
-    [mostOrderedGroceryStores]
-  )
+    return cuisinesData
+  }
 
-  const keyExtractorRestaurant = useCallback((item, index) => item?._id || `${item?.name}-restaurant-${index}`, [])
-  const keyExtractorGrocery = useCallback((item, index) => item?._id || `${item?.name}-grocery-${index}`, [])
+  const restaurantCuisines = useCuisinesData('restaurant', allCuisines)
+  const groceryCuisines = useCuisinesData('grocery', allCuisines)
 
-  const renderShopTypeItem = useCallback(
-    ({ item }) => (
-      <CollectionCard
-        onPress={() => {
-          navigation.navigate('Store', {
-            collection: item.slug,
-            selectedType: item.slug,
-            isShopType: true
-          })
-        }}
-        image={item?.image}
-        name={item.name}
-      />
-    ),
-    [navigation]
-  )
+  if (error) return <ErrorView />
 
-  const renderRestaurantCuisineItem = useCallback(
-    ({ item }) => (
-      <CollectionCard
-        onPress={() => {
-          navigation.navigate('Restaurants', {
-            collection: item.name
-          })
-        }}
-        image={item?.image || IMAGE_LINK}
-        name={item.name}
-      />
-    ),
-    [navigation]
-  )
 
-  const renderGroceryCuisineItem = useCallback(
-    ({ item }) => (
-      <CollectionCard
-        onPress={() => {
-          navigation.navigate('Store', {
-            collection: item.name
-          })
-        }}
-        image={item?.image}
-        name={item.name}
-      />
-    ),
-    [navigation]
-  )
-  const userFriendlyErrorMessage = getErrorMessage(error)
-  // Keep the loading UI up while a transient failure is being auto-retried so
-  // the user never sees the full-screen "something went wrong" for a blip.
-  const isAutoRetrying = !!error && isTransientNetworkError && !retriesExhausted
-  const showErrorView = !!error && (!isTransientNetworkError || retriesExhausted)
-  if (showErrorView) return <ErrorView refetchFunctions={[refetchRestaurants, refetchBanners]} errorMessage={userFriendlyErrorMessage} />
   return (
     <>
       {!connect ? (
@@ -463,7 +357,7 @@ function Main(props) {
             <View style={styles().flex}>
               <View style={styles().mainContentContainer}>
                 <View style={[styles().flex, styles().subContainer]}>
-                  {loading || isAutoRetrying || restaurantordersLoading || (restaurantorders === null && !error && !restaurantordersError) ? (
+                  {loading ? (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
                       <ActivityIndicator size='large' color={currentTheme.spinnerColor} />
                     </View>
@@ -471,66 +365,78 @@ function Main(props) {
                     <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}>
                       <Banner banners={banners?.banners} />
                       <View style={{ gap: 16 }}>
-                        <View>{isLoggedIn && sortedRecentOrderRestaurants?.length > 0 && <>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortedRecentOrderRestaurants} loading={orderLoading} error={orderError} title={'Order it again'} queryType='orderAgain' />}</>}</View>
+                        <View>{isLoggedIn && recentOrderRestaurantsVar && recentOrderRestaurantsVar.length > 0 && <>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(recentOrderRestaurantsVar || [])} loading={orderLoading} error={orderError} title={'Order it again'} queryType='orderAgain' />}</>}</View>
 
-                        <View>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortedMostOrderedRestaurants} loading={orderLoading} error={orderError} title={t('Popular right now')} queryType='topPicks' icon='trending' />}</View>
-
-                        <View style={{ padding: 15, gap: scale(8) }}>
-                          <TextDefault bolder H4 isRTL>
-                            {t('ShopTypes')}
-                          </TextDefault>
-                          <HorizontalFlashList
-                            data={allShopTypes?.fetchAllShopTypes?.data ?? []}
-                            renderItem={renderShopTypeItem}
-                            keyExtractor={keyExtractorRestaurant}
-                            contentContainerStyle={{
-                              flexGrow: 1,
-                              paddingBottom: 5
-                            }}
-                            inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={120}
-                            itemSpacing={8}
-                          />
-                        </View                                         >
-
+                        <View>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortRestaurantsByOpenStatus(mostOrderedRestaurantsVar || [])} loading={orderLoading} error={orderError} title={t('Popular right now')} queryType='topPicks' icon='trending' />}</View>
                         <View style={{ padding: 15, gap: scale(8) }}>
                           <TextDefault bolder H4 isRTL>
                             {t('I feel like eating...')}
                           </TextDefault>
-                          <HorizontalFlashList
+                          <FlatList
                             data={restaurantCuisines ?? []}
-                            renderItem={renderRestaurantCuisineItem}
-                            keyExtractor={keyExtractorRestaurant}
+                            renderItem={({ item }) => {
+                              return (
+                                <CollectionCard
+                                  onPress={() => {
+                                    navigation.navigate('Restaurants', {
+                                      collection: item.name
+                                    })
+                                  }}
+                                  image={item?.image ? item?.image : IMAGE_LINK}
+                                  name={item.name}
+                                />
+                              )
+                            }}
+                            keyExtractor={(item, index) => item?._id || `${item?.name}-restaurant-${index}`}
                             contentContainerStyle={{
                               flexGrow: 1,
+                              gap: 8,
                               paddingBottom: 5
                             }}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
                             inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={140}
-                            itemSpacing={8}
+                            maintainVisibleContentPosition={{
+                              minIndexForVisible: 0
+                            }}
                           />
                         </View>
-                        <View>{loading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard shopType='restaurant' orders={sortedRestaurantOrders} loading={orderLoading} error={orderError} title={t('Restaurants near you')} queryType='restaurant' icon='restaurant' />}</View>
+                        <View>{loading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard shopType='restaurant' orders={sortRestaurantsByOpenStatus(restaurantorders || [])} loading={orderLoading} error={orderError} title={t('Restaurants near you')} queryType='restaurant' icon='restaurant' />}</View>
                         <View style={{ padding: 15, gap: scale(8) }}>
                           <TextDefault bolder H4 isRTL>
                             {t('Fresh finds await...')}
                           </TextDefault>
-                          <HorizontalFlashList
+                          <FlatList
                             data={groceryCuisines ?? []}
-                            renderItem={renderGroceryCuisineItem}
-                            keyExtractor={keyExtractorGrocery}
+                            renderItem={({ item }) => {
+                              return (
+                                <CollectionCard
+                                  onPress={() => {
+                                    navigation.navigate('Store', {
+                                      collection: item.name
+                                    })
+                                  }}
+                                  image={item?.image}
+                                  name={item.name}
+                                />
+                              )
+                            }}
+                            keyExtractor={(item, index) => item?._id || `${item?.name}-grocery-${index}`}
                             contentContainerStyle={{
                               flexGrow: 1,
+                              gap: 8,
                               paddingBottom: 5
                             }}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
                             inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={140}
-                            itemSpacing={8}
                           />
                         </View>
-                        {/* <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(nearByGroceryStores || [])} loading={nearByGroceryStoresLoading} error={nearByGroceryStoresError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View> */}
+                        <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(nearByGroceryStores || [])} loading={nearByGroceryStoresLoading} error={nearByGroceryStoresError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View>
 
-                        <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortedMostOrderedGrocery} loading={mostOrderedGroceryLoading} error={mostOrderedGroceryError} title={t('Top grocery picks')} queryType='topPicks' icon='store' selectedType='grocery' />}</View>
+                        <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(mostOrderedGroceryStores || [])} loading={mostOrderedGroceryLoading} error={mostOrderedGroceryError} title={t('Top grocery picks')} queryType='topPicks' icon='store' selectedType='grocery' />}</View>
                       </View>
                       <View style={styles(currentTheme, hasActiveOrders).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
                     </ScrollView>
@@ -545,7 +451,11 @@ function Main(props) {
                       </TextDefault>
                       <TextDefault style={{ textAlign: 'center', marginBottom: 10 }}>{t('Please check back later or try a different location.')}</TextDefault>
 
-                    
+                      {/* <TouchableOpacity style={styles(currentTheme).buttonContainer} onPress={() => setCitiesModalVisible(true)}>
+                        <TextDefault textColor={currentTheme.color4} style={styles().checkoutBtn} bold H4>
+                          {t('Select Different Location')}
+                        </TextDefault>
+                      </TouchableOpacity> */}
 
                       <TouchableOpacity activeOpacity={0.7} onPress={() => setCitiesModalVisible(true)} style={[styles(currentTheme).button, { opacity: 1 }]}>
                         <TextDefault textColor={currentTheme.color4} style={{ paddingHorizontal: 10 }} bold H7>

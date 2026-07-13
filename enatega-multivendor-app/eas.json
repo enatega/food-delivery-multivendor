@@ -4,9 +4,6 @@
       "developmentClient": true,
       "distribution": "internal",
       "channel": "development",
-      "env": {
-        "APP_ENV": "development"
-      },
       "android": {
         "buildType": "apk"
       },
@@ -18,27 +15,26 @@
       "developmentClient": false,
       "channel": "staging",
       "distribution": "internal",
-      "env": {
-        "APP_ENV": "staging"
-      },
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
+      "distribution": "store",
       "channel": "production",
-      "env": {
-        "APP_ENV": "production"
+      "android": {
+        "buildType": "app-bundle",
+        "autoIncrement": true
       },
       "ios": {
-        "image": "macos-sequoia-15.6-xcode-26.2"
+        "autoIncrement": true,
+        "image": "latest"
       }
     }
   },
   "submit": {
     "production": {
       "android": {
-        "serviceAccountKeyPath": "./google-service-account.json",
         "track": "production"
       },
       "ios": {
@@ -49,6 +45,7 @@
     }
   },
   "cli": {
-    "version": ">= 0.43.0"
+    "version": ">= 0.43.0",
+    "appVersionSource": "remote"
   }
 }

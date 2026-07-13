@@ -92,8 +92,14 @@ export const vi = {
     checkout: 'Thanh toán',
     creditCart: 'Thẻ tín dụng/Thẻ ghi nợ',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'Tiền mặt',
     thankYou: 'Cảm ơn bạn!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'Đơn hàng của bạn đã được xác nhận',
     orderId: 'Mã đơn hàng của bạn',
     orderAmount: 'Số tiền đơn hàng của bạn',
@@ -522,6 +528,8 @@ export const vi = {
     logoutMessage: 'Đăng xuất thành công',
     somethingWentWrong: 'Có gì đó không ổn',
     checkInternet: 'Kiểm tra kết nối internet của bạn',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'Chọn thành phố',
     Location: 'Vị trí',
     phoneNumberExist: 'Số điện thoại đã cung cấp đã tồn tại!',
@@ -655,5 +663,63 @@ export const vi = {
     "noMatchingResultsDesc": "Điều chỉnh bộ lọc của bạn để tìm kiếm những gì bạn đang tìm hoặc khám phá các lựa chọn khác.",
     "Applied Filters": 'Bộ lọc đã áp dụng',
     "WhatsApp is not installed on the device": "WhatsApp chưa được cài đặt trên thiết bị",
-    "Install it": "Cài đặt"
-  }
+    "Install it": "Cài đặt",
+    "You are all up to date": "Bạn đã cập nhật đầy đủ",
+    "No new notifications - come back soon": "Không có thông báo mới - hãy quay lại sau",
+    "Payments": "Thanh toán",
+    "Vouchers": "Phiếu giảm giá",
+    "App supports & FAQs": "Hỗ trợ ứng dụng và Câu hỏi thường gặp",
+    "Feedback": "Phản hồi",
+    "My conversations": "Cuộc trò chuyện của tôi",
+    "Change phone number": "Thay đổi số điện thoại",
+    "Change email address": "Thay đổi địa chỉ email",
+    "Change profile name": "Thay đổi tên hồ sơ",
+    "Change or delete address": "Thay đổi hoặc xóa địa chỉ",
+    "Delete account": "Xóa tài khoản",
+    "Reset Password": "Đặt lại mật khẩu",
+    "Login issue": "Vấn đề đăng nhập",
+    "How do you rate our products?": "Bạn đánh giá sản phẩm của chúng tôi như thế nào?",
+    "Your feedback helps us serve you better.": "Phản hồi của bạn giúp chúng tôi phục vụ bạn tốt hơn.",
+    "Write your experience here...": "Viết kinh nghiệm của bạn ở đây...",
+    "Submit": "Gửi",
+    "Payment Methods": "Phương thức thanh toán",
+  "Add or Update your saved payment methods.": "Thêm hoặc Cập nhật các phương thức thanh toán đã lưu của bạn.",
+  "Default": "Mặc định",
+  "Add payment method": "Thêm phương thức thanh toán",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

@@ -92,8 +92,14 @@ export const az = {
     checkout: 'Ödəniş',
     creditCart: 'Kredit/Debet Kartı',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'Nağd',
     thankYou: 'Təşəkkür edirik!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'Sifarişiniz təsdiqləndi',
     orderId: 'Sifariş ID-niz',
     orderAmount: 'Sifariş Məbləğiniz',
@@ -522,6 +528,8 @@ export const az = {
     logoutMessage: 'Uğurla çıxış edildi',
     somethingWentWrong: 'Nəsə səhv getdi',
     checkInternet: 'İnternet bağlantınızı yoxlayın',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'Şəhər Seç',
     Location: 'Məkan',
     phoneNumberExist: 'Verilən telefon nömrəsi artıq mövcuddur!',
@@ -657,4 +665,62 @@ export const az = {
     "Applied Filters": 'Tətbiq Edilmiş Filtrlər',
     "WhatsApp is not installed on the device": "WhatsApp cihazda quraşdırılmayıb",
     "Install it": "Quraşdır",
-  }
+    "You are all up to date": "Hamısı yenilənib",
+    "No new notifications - come back soon": "Yeni bildiriş yoxdur - tezliklə qayıdın",
+    "Payments": "Ödənişlər",
+    "Vouchers": "Vauçerlər",
+    "App supports & FAQs": "Tətbiq dəstəyi və tez-tez verilən suallar",
+    "Feedback": "Rəy",
+    "My conversations": "Söhbətlərim",
+    "Change phone number": "Telefon nömrəsini dəyişdir",
+    "Change email address": "E-poçt ünvanını dəyişdir",
+    "Change profile name": "Profil adını dəyişdir",
+    "Change or delete address": "Ünvanı dəyişdir və ya sil",
+    "Delete account": "Hesabı sil",
+    "Reset Password": "Şifrəni sıfırla",
+    "Login issue": "Giriş problemi",
+    "How do you rate our products?": "Məhsullarımızı necə qiymətləndirirsiniz?",
+    "Your feedback helps us serve you better.": "Rəyiniz bizə sizə daha yaxşı xidmət göstərməyə kömək edir.",
+    "Write your experience here...": "Təcrübənizi buraya yazın...",
+    "Submit": "Təqdim et",
+    "Payment Methods": "Ödəniş üsulları",
+  "Add or Update your saved payment methods.": "Yadda saxlanılan ödəniş üsullarınızı əlavə edin və ya yeniləyin.",
+  "Default": "Varsayılan",
+  "Add payment method": "Ödəniş üsulu əlavə edin",
+  "Add payment methods": "Ödəniş üsulları əlavə edin",
+  "Add a credit or debit card to quickly complete purchases.": "Alış-verişi tez tamamlamaq üçün kredit və ya debet kartı əlavə edin.",
+  "Card number": "Kart nömrəsi",
+  "Expiration date": "Bitmə tarixi",
+  "Expiration date (MM / YY)": "Bitmə tarixi (AA / İİ)",
+  "CVV": "CVV",
+  "Security code": "Təhlükəsizlik kodu",
+  "Save": "Yadda saxla",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

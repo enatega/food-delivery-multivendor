@@ -71,7 +71,7 @@ const styles = (props = null) =>
     eyeBtn: {
       zIndex: 1,
       elevation: 999,
-      ...props?.isRTL ? {marginRight: -40} : {marginLeft: -40}
+      ...(props?.isRTL ? { marginRight: -40 } : { marginLeft: -40 })
     },
     btnContainer: {
       width: '100%',
@@ -87,7 +87,7 @@ const styles = (props = null) =>
     },
     number: {
       display: 'flex',
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row'
     },
     countryCode: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -115,10 +115,28 @@ const styles = (props = null) =>
       borderColor: props !== null ? props?.errorInputBorder : '#DB4A39'
     },
     headerLeftIcon: {
-      ...alignment.PLsmall
+      ...alignment.MLsmall,
+      ...alignment.Psmall,
+      backgroundColor: props !== null ? props?.colorBgTertiary : '#F4F4F5',
+      borderRadius: scale(50)
     },
     headerRightIcon: {
       ...alignment.PRsmall
+    },
+    numberContainer: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      height: scale(50)
+    },
+    countryCodeContainer: {
+      paddingHorizontal: scale(12),
+      height: '100%',
+      justifyContent: 'center',
+      width: '20%'
+    },
+    countryCodeInner: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center'
     }
   })
 

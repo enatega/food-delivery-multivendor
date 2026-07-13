@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 
-const buildStyles = (props = null) =>
+const styles = (props = null) =>
   StyleSheet.create({
     collectionCard: {
       backgroundColor: props != null ? props?.cardBackground : '#181818',
@@ -23,19 +23,4 @@ const buildStyles = (props = null) =>
       borderTopRightRadius: 8
     },
   })
-
-// Cache the built stylesheet per theme so it isn't rebuilt on every render of
-// every card.
-const NULL_KEY = { __nullTheme: true }
-const stylesCache = new WeakMap()
-
-const styles = (props = null) => {
-  const key = props ?? NULL_KEY
-  const cached = stylesCache.get(key)
-  if (cached) return cached
-  const created = buildStyles(props)
-  stylesCache.set(key, created)
-  return created
-}
-
 export default styles

@@ -2,13 +2,29 @@ import React from 'react'
 import styles from './styles'
 import { AntDesign } from '@expo/vector-icons'
 
+
+
 const navigationOptions = props => {
+
+  
+  const goBack = () => {
+    if (props.vendorMode == "SINGLE") {
+      props.navigation.reset({
+      index: 0,
+      routes: [{ name: 'Main' }]
+    })
+    } else {
+    props?.navigation.goBack()  
+    }
+    
+  }
+
   return {
     title: null,
     // eslint-disable-next-line react/display-name
     headerRight: () => (
       <AntDesign
-        onPress={() => props?.navigation.goBack()}
+        onPress={() => goBack()}
         name="closecircleo"
         size={24}
         color={props?.iconColor}
@@ -18,7 +34,7 @@ const navigationOptions = props => {
     // eslint-disable-next-line react/display-name
     headerLeft: () => (
       <AntDesign
-        onPress={() => props?.navigation.goBack()}
+        onPress={() => goBack}
         name="arrowleft"
         size={24}
         color={props?.iconColor}

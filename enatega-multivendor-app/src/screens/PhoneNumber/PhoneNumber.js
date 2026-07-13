@@ -13,16 +13,20 @@ import { useTranslation } from 'react-i18next'
 import { Ionicons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
+import Auth from '../../assets/SVG/imageComponents/Auth'
 import PhoneNumberInput from '../../components/PhoneNumberInput'
+import ContinueWithPhoneButton from '../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
+import { useVendorModeStore } from '../../singlevendor'
 
 function PhoneNumber(props) {
-  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, currentTheme, loading, setPhoneError, isCountryLoading } = usePhoneNumber()
+  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, currentTheme, loading, setPhoneError ,isCountryLoading} = usePhoneNumber()
 
   const { t } = useTranslation()
-
+const vendorMode = useVendorModeStore(state => state.vendorMode)
   useLayoutEffect(() => {
     props?.navigation.setOptions(
       screenOptions({
+        vendorMode, 
         iconColor: currentTheme.newIconColor,
         backColor: currentTheme.themeBackground,
         fontColor: currentTheme.newFontcolor,
@@ -42,7 +46,8 @@ function PhoneNumber(props) {
           <View style={styles(currentTheme).mainContainer}>
             <View style={styles().subContainer}>
               <View>
-                <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
+                <Auth fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} width='263' height='185' />
+                {/* <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} /> */}
               </View>
               <View>
                 <TextDefault
@@ -72,34 +77,29 @@ function PhoneNumber(props) {
               <View style={styles().form}>
                 <View style={styles(currentTheme).number}>
                   <View style={[styles(currentTheme).textField, styles().countryCode, { padding: Platform.OS === 'ios' ? scale(5) : scale(12) }]}>
-                    {isCountryLoading ? (
-                      <ActivityIndicator size='small' color={currentTheme.white} />
-                    ) : (
-                      <>
-                        <CountryPicker
-                          countryCode={countryCode}
-                          onSelect={(country) => onCountrySelect(country)}
-                          withAlphaFilter
-                          withFilter
-                          flatListProps={{
-                            ListEmptyComponent: (
-                              <View style={{ paddingVertical: 20, alignItems: 'center' }}>
-                                <TextDefault H4 textColor={currentTheme.newFontcolor}>
-                                  {t('noResults') || 'No Results Found'}
-                                </TextDefault>
-                              </View>
-                            )
-                          }}
-                        />
-                        <TextDefault textColor={currentTheme.newFontcolor} style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
-                          {/* {country?.cca2} */}+{country?.callingCode[0]}
-                        </TextDefault>
-                      </>
-                    )}
+                    {
+                      isCountryLoading ?
+
+                        <ActivityIndicator size='small' color={currentTheme.white} />
+                        :
+                        <>
+                          <CountryPicker countryCode={countryCode} onSelect={(country) => onCountrySelect(country)} withAlphaFilter withFilter />
+                          <TextDefault textColor={currentTheme.newFontcolor} style={{ marginTop: Platform.OS === 'android' ? 8 : 10 }}>
+                            {/* {country?.cca2} */}+{country?.callingCode[0]}
+                          </TextDefault>
+                        </>
+                    }
                   </View>
                   <View style={[styles(currentTheme).textField, styles().phoneNumber, phoneError && styles(currentTheme).errorInput]}>
                     <View style={styles(currentTheme).phoneField}>
-                      <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.color6} style={styles(currentTheme).phoneNo} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
+                      <PhoneNumberInput
+                        setError={setPhoneError}
+                        placeholder={t('phoneNumber')}
+                        placeholderTextColor={currentTheme.color6}
+                        style={styles(currentTheme).phoneNo}
+                        countryCode={country?.callingCode[0]}
+                        value={phone}
+                        onChange={(e) => setPhone(e)} />
                     </View>
                   </View>
                 </View>
@@ -112,12 +112,15 @@ function PhoneNumber(props) {
                 )}
               </View>
             </View>
-            <View style={{ width: '100%', marginBottom: 20 }}>
+            {/* <View style={{ width: '100%', marginBottom: 20 }}>
               <TouchableOpacity onPress={() => registerAction()} activeOpacity={0.7} style={styles(currentTheme).btn}>
                 <TextDefault H4 textColor={currentTheme.color4} bold>
                   {loading ? <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.white} /> : t('textWithCodeBtn')}
                 </TextDefault>
               </TouchableOpacity>
+            </View> */}
+            <View style={styles().btnContainer}>
+              <ContinueWithPhoneButton title='continueBtn' onPress={() => registerAction()} isLoading={loading} isDisabled={loading} />
             </View>
           </View>
         </ScrollView>

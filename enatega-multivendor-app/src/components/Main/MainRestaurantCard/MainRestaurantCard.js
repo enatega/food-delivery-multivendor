@@ -1,5 +1,5 @@
-import React, { useContext, useCallback, useMemo } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import React, { useContext } from 'react'
+import { View, FlatList, Text, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
@@ -13,7 +13,6 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import { isOpen } from '../../../utils/customFunctions'
 import Ripple from 'react-native-material-ripple'
-import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 
 const ICONS = {
   grocery: 'local-grocery-store',
@@ -26,25 +25,14 @@ function MainRestaurantCard(props) {
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = useMemo(
-    () => ({
-      isRTL: i18n.dir() === 'rtl',
-      ...theme[themeContext.ThemeValue]
-    }),
-    [i18n.language, themeContext.ThemeValue]
-  )
-
-  const orders = useMemo(() => props?.orders || [], [props?.orders])
-
-  const renderRestaurantItem = useCallback(({ item }) => {
-    const restaurantOpen = isOpen(item)
-    return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
-  }, [])
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
 
   if (props?.loading) return <MainLoadingUI />
-  // A failed/empty section should simply not render — never surface a raw
-  // error string on the discovery page. Hide the whole section instead.
-  if (props?.error || orders?.length <= 0) return <></>
+  if (props?.error) return <Text>Error: {props?.error?.message}</Text>
+  if (props?.orders?.length <= 0) return <></>
   return (
     <View style={styles().orderAgainSec}>
       <View style={{ gap: scale(8) }}>
@@ -85,13 +73,18 @@ function MainRestaurantCard(props) {
             </TextDefault>
           </Ripple>
         </View>
-        <HorizontalFlashList
+        <FlatList
           style={styles().offerScroll}
-          estimatedItemSize={280}
           contentContainerStyle={{ flexGrow: 1, ...alignment.PRlarge }}
-          data={orders}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          data={props?.orders}
           keyExtractor={(item) => item._id}
-          renderItem={renderRestaurantItem}
+          renderItem={({ item }) => {
+            const restaurantOpen = isOpen(item)
+            return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
+          }}
           inverted={currentTheme?.isRTL ? true : false}
         />
       </View>
@@ -99,4 +92,4 @@ function MainRestaurantCard(props) {
   )
 }
 
-export default React.memo(MainRestaurantCard)
+export default MainRestaurantCard

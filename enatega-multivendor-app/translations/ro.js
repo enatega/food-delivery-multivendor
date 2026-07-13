@@ -92,8 +92,14 @@ export const ro = {
     checkout: 'Finalizare comandă',
     creditCart: 'Card de credit/debit',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'Numerar',
     thankYou: 'Mulțumesc!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'Comanda dumneavoastră este confirmată',
     orderId: 'ID-ul comenzii dumneavoastră',
     orderAmount: 'Suma comenzii dumneavoastră',
@@ -522,6 +528,8 @@ export const ro = {
     logoutMessage: 'Deconectat cu succes',
     somethingWentWrong: 'Ceva nu a mers bine',
     checkInternet: 'Verificați conexiunea la internet',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'Selectați orașul',
     Location: 'Locație',
     phoneNumberExist: 'Numărul de telefon furnizat există deja!',
@@ -656,4 +664,62 @@ export const ro = {
     "Applied Filters": 'Filtre aplicate',
     "WhatsApp is not installed on the device": "WhatsApp nu este instalat pe dispozitiv",
     "Install it": "Instalați-l",
-  }
+    "You are all up to date": "Ești la zi cu toate",
+    "No new notifications - come back soon": "Nu există notificări noi - reveniți în curând",
+    "Payments": "Plăți",
+    "Vouchers": "Vouchere",
+    "App supports & FAQs": "Suport aplicație și întrebări frecvente",
+    "Feedback": "Feedback",
+    "My conversations": "Conversațiile mele",
+    "Change phone number": "Schimbă numărul de telefon",
+    "Change email address": "Schimbă adresa de e-mail",
+    "Change profile name": "Schimbă numele profilului",
+    "Change or delete address": "Schimbă sau șterge adresa",
+    "Delete account": "Șterge contul",
+    "Reset Password": "Resetează parola",
+    "Login issue": "Problema de conectare",
+    "How do you rate our products?": "Cum evaluați produsele noastre?",
+    "Your feedback helps us serve you better.": "Feedback-ul dvs. ne ajută să vă servim mai bine.",
+    "Write your experience here...": "Scrieți experiența dvs. aici...",
+    "Submit": "Trimite",
+    "Payment Methods": "Metode de plată",
+  "Add or Update your saved payment methods.": "Adăugați sau actualizați metodele de plată salvate.",
+  "Default": "Implicit",
+  "Add payment method": "Adăugați metodă de plată",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

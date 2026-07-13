@@ -1,21 +1,17 @@
-import React, { useContext, useMemo } from 'react'
-import { View } from 'react-native'
+import React, { useContext } from 'react'
+import { Image, TouchableOpacity, View } from 'react-native'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import Ripple from 'react-native-material-ripple'
 import { IMAGE_LINK } from '../../utils/constants'
-import ShimmerImage from '../ShimmerImage/ShimmerImage'
 
 const CollectionCard = ({ onPress, image, name }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const normalizedImage = useMemo(() => {
-    const raw = image || IMAGE_LINK
-    return raw?.split('#')[0] || IMAGE_LINK
-  }, [image])
-
+  const imageUri = image || IMAGE_LINK
+  
   return (
     <Ripple
       activeOpacity={0.8}
@@ -26,11 +22,10 @@ const CollectionCard = ({ onPress, image, name }) => {
       rippleDuration={300}
     >
       <View style={styles().brandImgContainer}>
-        <ShimmerImage
-          imageUrl={normalizedImage}
+        <Image
+          source={{ uri: imageUri }}
           style={styles().collectionImage}
           resizeMode='cover'
-          defaultSource={{ uri: IMAGE_LINK }}
         />
       </View>
       <TextDefault
@@ -46,4 +41,4 @@ const CollectionCard = ({ onPress, image, name }) => {
   )
 }
 
-export default React.memo(CollectionCard)
+export default CollectionCard

@@ -83,8 +83,14 @@ export const fa = {
     checkout: 'تسویه حساب',
     creditCart: 'کارت اعتباری / کارت بانکی',
     paypal: 'پی پال',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'نقدی',
     thankYou: 'تشکر می کنیم!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'سفارش شما تایید شد',
     orderId: 'شناسه سفارش شما',
     orderAmount: 'مبلغ سفارش شما',
@@ -490,6 +496,8 @@ export const fa = {
     logoutMessage: 'با موفقیت خارج شدید',
     somethingWentWrong: 'مشکلی پیش آمده است',
     checkInternet: 'اتصال اینترنت خود را بررسی کنید',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'شهر را انتخاب کنید',
     Location: 'مکان',
     phoneNumberExist: 'شماره تلفن وارد شده قبلاً وجود دارد!',
@@ -621,5 +629,62 @@ export const fa = {
     "Applied Filters": 'فیلترهای اعمال شده',
     "WhatsApp is not installed on the device": 'واتس اپ روی دستگاه نصب نیست',
     "Install it": 'آن را نصب کنید',
-  }
-  
+    "You are all up to date": "همه چیز به‌روز است",
+    "No new notifications - come back soon": "هیچ اعلان جدیدی وجود ندارد - به زودی برگردید",
+    "Payments": "پرداخت‌ها",
+    "Vouchers": "کوپن‌ها",
+    "App supports & FAQs": "پشتیبانی برنامه و سوالات متداول",
+    "Feedback": "بازخورد",
+    "My conversations": "مکالمات من",
+    "Change phone number": "تغییر شماره تلفن",
+    "Change email address": "تغییر آدرس ایمیل",
+    "Change profile name": "تغییر نام پروفایل",
+    "Change or delete address": "تغییر یا حذف آدرس",
+    "Delete account": "حذف حساب کاربری",
+    "Reset Password": "بازنشانی رمز عبور",
+    "Login issue": "مشکل ورود",
+    "How do you rate our products?": "شما محصولات ما را چگونه ارزیابی می‌کنید؟",
+    "Your feedback helps us serve you better.": "نظرات شما به ما کمک می‌کند تا بهتر به شما خدمت کنیم.",
+    "Write your experience here...": "تجربه خود را اینجا بنویسید...",
+    "Submit": "ارسال",
+    "Payment Methods": "روش‌های پرداخت",
+  "Add or Update your saved payment methods.": "روش‌های پرداخت ذخیره شده خود را اضافه یا به‌روزرسانی کنید.",
+  "Default": "پیش‌فرض",
+  "Add payment method": "افزودن روش پرداخت",
+  "Add payment methods": "افزودن روش‌های پرداخت",
+  "Add a credit or debit card to quickly complete purchases.": "یک کارت اعتباری یا نقدی برای تکمیل سریع خریدها اضافه کنید.",
+  "Card number": "شماره کارت",
+  "Expiration date": "تاریخ انقضا",
+  "Expiration date (MM / YY)": "تاریخ انقضا (ماه / سال)",
+  "CVV": "CVV",
+  "Security code": "کد امنیتی",
+  "Save": "ذخیره",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

@@ -83,8 +83,14 @@ export const th = {
     checkout: 'ชำระเงิน',
     creditCart: 'บัตรเครดิต/เดบิต',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'เงินสด',
     thankYou: 'ขอบคุณ!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'ออเดอร์ของคุณได้รับการยืนยันแล้ว',
     orderId: 'รหัสออเดอร์ของคุณ',
     orderAmount: 'จำนวนเงินออเดอร์ของคุณ',
@@ -489,6 +495,8 @@ export const th = {
     logoutMessage: 'ออกจากระบบเรียบร้อยแล้ว',
     somethingWentWrong: 'มีบางอย่างผิดพลาด',
     checkInternet: 'ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณ',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'เลือกเมือง',
     Location: 'ตำแหน่ง',
     phoneNumberExist: 'หมายเลขโทรศัพท์ที่ระบุมีอยู่แล้ว!',
@@ -619,6 +627,63 @@ export const th = {
     "noMatchingResultsDesc": "ลองปรับตัวกรองของคุณหรือสำรวจตัวเลือกอื่นๆ เพื่อหาสิ่งที่คุณกำลังมองหา",
     "Applied Filters": 'ตัวกรองที่ใช้',
     "WhatsApp is not installed on the device": "WhatsApp ยังไม่ได้ถูกติดตั้งบนอุปกรณ์",
-    "Install it": "ติดตั้ง"
-}  
-  
+    "Install it": "ติดตั้ง",
+    "You are all up to date": "คุณอัปเดตแล้วทั้งหมด",
+    "No new notifications - come back soon": "ไม่มีการแจ้งเตือนใหม่ - กลับมาอีกครั้งเร็วๆ นี้",
+    "Payments": "การชำระเงิน",
+    "Vouchers": "คูปอง",
+    "App supports & FAQs": "การสนับสนุนแอปและคำถามที่พบบ่อย",
+    "Feedback": "ความคิดเห็น",
+    "My conversations": "การสนทนาของฉัน",
+    "Change phone number": "เปลี่ยนหมายเลขโทรศัพท์",
+    "Change email address": "เปลี่ยนที่อยู่อีเมล",
+    "Change profile name": "เปลี่ยนชื่อโปรไฟล์",
+    "Change or delete address": "เปลี่ยนหรือลบที่อยู่",
+    "Delete account": "ลบบัญชี",
+    "Reset Password": "รีเซ็ตรหัสผ่าน",
+    "Login issue": "ปัญหาการเข้าสู่ระบบ",
+    "How do you rate our products?": "คุณให้คะแนนผลิตภัณฑ์ของเราอย่างไร?",
+    "Your feedback helps us serve you better.": "ความคิดเห็นของคุณช่วยให้เราบริการคุณได้ดีขึ้น",
+    "Write your experience here...": "เขียนประสบการณ์ของคุณที่นี่...",
+    "Submit": "ส่ง",
+  "Payment Methods": "วิธีการชำระเงิน",
+  "Add or Update your saved payment methods.": "เพิ่มหรืออัปเดตวิธีการชำระเงินที่บันทึกไว้ของคุณ",
+  "Default": "ค่าเริ่มต้น",
+  "Add payment method": "เพิ่มวิธีการชำระเงิน",
+  "Add payment methods": "เพิ่มวิธีการชำระเงิน",
+  "Add a credit or debit card to quickly complete purchases.": "เพิ่มบัตรเครดิตหรือเดบิตเพื่อชำระเงินอย่างรวดเร็ว",
+  "Card number": "หมายเลขบัตร",
+  "Expiration date": "วันหมดอายุ",
+  "Expiration date (MM / YY)": "วันหมดอายุ (ดด / ปป)",
+  "CVV": "CVV",
+  "Security code": "รหัสความปลอดภัย",
+  "Save": "บันทึก",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

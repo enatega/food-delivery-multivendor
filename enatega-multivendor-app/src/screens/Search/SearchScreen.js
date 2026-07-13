@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useLayoutEffect, useMemo } from 'react'
+import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'
 import { View, RefreshControl, Animated, Platform, TouchableOpacity } from 'react-native'
 import { useQuery, gql } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
@@ -21,6 +21,7 @@ import { storeSearch, getRecentSearches, clearRecentSearches } from '../../utils
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 import { ScrollView } from 'react-native-gesture-handler'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
+import { escapeRegExp } from '../../utils/regex'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -45,7 +46,6 @@ const MOST_ORDERED_RESTAURANTS = gql`
 const SearchScreen = () => {
   const { t, i18n } = useTranslation()
   const [search, setSearch] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
   const { location, setLocation } = useContext(LocationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
@@ -147,15 +147,6 @@ const SearchScreen = () => {
 
   useEffect(() => {
     getRecentSearches().then((searches) => setRecentSearches(searches))
-  }, [])
-
-  useEffect(() => {
-    const trimmedSearch = search.trim()
-    const timeoutId = setTimeout(() => {
-      setDebouncedSearch(trimmedSearch)
-    }, 250)
-
-    return () => clearTimeout(timeoutId)
   }, [search])
 
   const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */ } = useCollapsibleSubHeader()
@@ -167,61 +158,36 @@ const SearchScreen = () => {
   const { restaurantData: nearByGroceryStores } = useRestaurantQueries('grocery', location, 'grocery')
 
   // Combine all restaurants and remove duplicates
-  const restaurants = useMemo(() => {
-    const allRestaurants = [
-      ...nearbyRestaurants,
-      ...topRatedRestaurants,
-      ...recentOrderRestaurants,
-      ...mostOrderedRestaurants,
-      ...(nearByGroceryStores || [])
-    ]
+  const allRestaurants = [
+    ...nearbyRestaurants,
+    ...topRatedRestaurants,
+    ...recentOrderRestaurants,
+    ...mostOrderedRestaurants,
+    ...(nearByGroceryStores || [])
+  ]
+  
+  const restaurants = allRestaurants.filter((restaurant, index, self) => 
+    index === self.findIndex(r => r._id === restaurant._id)
+  )
 
-    return allRestaurants.filter((restaurant, index, self) =>
-      index === self.findIndex((item) => item._id === restaurant._id)
-    )
-  }, [
-    nearbyRestaurants,
-    topRatedRestaurants,
-    recentOrderRestaurants,
-    mostOrderedRestaurants,
-    nearByGroceryStores
-  ])
+  const searchAllShops = (searchText) => {
+    const data = []
+    const escapedSearchText = escapeRegExp(searchText)
+    const regex = new RegExp(escapedSearchText, 'i')
 
-  const filteredRestaurants = useMemo(() => {
-    if (!debouncedSearch) return []
-
-    const normalizedSearch = debouncedSearch.toLowerCase()
-    const nameMatches = []
-    const secondaryMatches = []
-
-    restaurants.forEach((restaurant) => {
-      const restaurantName = restaurant?.name?.toLowerCase?.() || ''
-      const cuisines = restaurant?.cuisines || []
-      const tags = restaurant?.tags || []
-      const keywords = restaurant?.keywords || []
-      const matchesName = restaurantName.includes(normalizedSearch)
-      const matchesCuisine = cuisines.some((cuisine) =>
-        cuisine?.toLowerCase?.().includes(normalizedSearch)
-      )
-      const matchesTag = tags.some((tag) =>
-        tag?.toLowerCase?.().includes(normalizedSearch)
-      )
-      const matchesKeyword = keywords.some((keyword) =>
-        keyword?.toLowerCase?.().includes(normalizedSearch)
-      )
-
-      if (matchesName) {
-        nameMatches.push(restaurant)
-        return
-      }
-
-      if (matchesCuisine || matchesTag || matchesKeyword) {
-        secondaryMatches.push(restaurant)
+    restaurants?.forEach((restaurant) => {
+      const nameMatch = restaurant.name.search(regex) > -1
+      const keywordMatch = restaurant.keywords?.some((keyword) => {
+        const result = keyword.search(regex)
+        return result > -1
+      })
+      
+      if (nameMatch || keywordMatch) {
+        data.push(restaurant)
       }
     })
-
-    return [...nameMatches, ...secondaryMatches]
-  }, [debouncedSearch, restaurants])
+    return data
+  }
 
   function getUniqueTags(restaurants) {
     const allTags = new Set()
@@ -297,7 +263,7 @@ const SearchScreen = () => {
                 }}
               />
             }
-            data={sortRestaurantsByOpenStatus(filteredRestaurants)}
+            data={sortRestaurantsByOpenStatus(searchAllShops(search) || [])}
             renderItem={({ item }) => {
               const restaurantOpen = isOpen(item)
               return <NewRestaurantCard {...item} isSearch={search} fullWidth isOpen={restaurantOpen} />

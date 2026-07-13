@@ -32,6 +32,8 @@ export const ru ={
     logoutMessage: 'Выход выполнен успешно',
     somethingWentWrong: 'Что-то пошло не так',
     checkInternet: 'Проверьте ваше интернет-соединение',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'Выберите город',
     Location: 'Местоположение',
     phoneNumberExist: 'Указанный номер телефона уже существует!',
@@ -247,8 +249,14 @@ export const ru ={
     checkout: 'Оформить заказ',
     creditCart: 'Кредитная/дебетовая карта',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'Наличные',
     thankYou: 'Спасибо!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'Ваш заказ подтвержден',
     orderId: 'Ваш номер заказа',
     orderAmount: 'Сумма вашего заказа',
@@ -783,5 +791,62 @@ export const ru ={
     "Applied Filters": 'Примененные фильтры',
     "WhatsApp is not installed on the device": 'WhatsApp не установлен на устройстве',
     "Install it": 'Установите его',
-  }
-  
+    "You are all up to date": "Вы в курсе всех событий",
+    "No new notifications - come back soon": "Нет новых уведомлений - заходите скоро",
+    "Payments": "Платежи",
+    "Vouchers": "Ваучеры",
+    "App supports & FAQs": "Поддержка приложения и часто задаваемые вопросы",
+    "Feedback": "Обратная связь",
+    "My conversations": "Мои разговоры",
+    "Change phone number": "Изменить номер телефона",
+    "Change email address": "Изменить адрес электронной почты",
+    "Change profile name": "Изменить имя профиля",
+    "Change or delete address": "Изменить или удалить адрес",
+    "Delete account": "Удалить аккаунт",
+    "Reset Password": "Сбросить пароль",
+    "Login issue": "Проблема со входом",
+    "How do you rate our products?": "Как вы оцениваете наши продукты?",
+    "Your feedback helps us serve you better.": "Ваш отзыв помогает нам лучше обслуживать вас.",
+    "Write your experience here...": "Напишите свой опыт здесь...",
+    "Submit": "Отправить",
+    "Payment Methods": "Способы оплаты",
+  "Add or Update your saved payment methods.": "Добавьте или обновите сохраненные способы оплаты.",
+  "Default": "По умолчанию",
+  "Add payment method": "Добавить способ оплаты",
+  "Add payment methods": "Добавить способы оплаты",
+  "Add a credit or debit card to quickly complete purchases.": "Добавьте кредитную или дебетовую карту для быстрой оплаты покупок.",
+  "Card number": "Номер карты",
+  "Expiration date": "Срок действия",
+  "Expiration date (MM / YY)": "Срок действия (ММ / ГГ)",
+  "CVV": "CVV",
+  "Security code": "Код безопасности",
+  "Save": "Сохранить",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

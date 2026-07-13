@@ -40,8 +40,9 @@ function TextDefault(props, ref) {
   customStyles = StyleSheet.flatten([customStyles, props.style])
   return (
     <Text
+    
       numberOfLines={props.numberOfLines ? props.numberOfLines : 0}
-      style={customStyles}
+      style={[customStyles,props?.style]}
       ref={ref}
       >
       {props.children}

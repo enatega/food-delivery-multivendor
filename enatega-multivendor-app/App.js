@@ -1,15 +1,17 @@
 import { ApolloProvider } from '@apollo/client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import 'react-native-get-random-values';
+import 'react-native-get-random-values'
 // import 'expo-dev-client'
+import * as Device from 'expo-device'
 import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
-import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, AppState, BackHandler, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
+import { ActivityIndicator, BackHandler, I18nManager, LogBox, Platform, SafeAreaView, StatusBar, StyleSheet, Text, View, useColorScheme } from 'react-native'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
-import useEnvVars from './environment'
+// import * as Sentry from '@sentry/react-native';
+import useEnvVars, { isProduction } from './environment'
 import setupApolloClient from './src/apollo/index'
 import { MessageComponent } from './src/components/FlashMessage/MessageComponent'
 import ReviewModal from './src/components/Review'
@@ -24,25 +26,29 @@ import ThemeReducer from './src/ui/ThemeReducer/ThemeReducer'
 import { exitAlert } from './src/utils/androidBackButton'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
 import { theme as Theme } from './src/utils/themeColors'
+// import { requestTrackingPermissions } from './src/utils/useAppTrackingTrasparency'
 import { useKeepAwake } from 'expo-keep-awake'
 import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
+import useWatchLocation from './src/ui/hooks/useWatchLocation'
 import './i18next'
 import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
-import SessionExpiredModal from './src/components/SessionExpiredModal/SessionExpiredModal'
-import navigationService from './src/routes/navigationService'
-import {
-  shouldShowSessionExpiredModal,
-  subscribeToSessionInvalidation,
-  subscribeToSessionExpiredModalDismiss
-} from './src/utils/session'
-import {
-  initializePublicAccessToken,
-  stopPublicAccessTokenRefresh
-} from './src/services/publicAcccessService'
+import * as Clarity from '@microsoft/react-native-clarity'
+import { StripeProvider } from '@stripe/stripe-react-native'
+import RootAppContainer from './src/routes/RootAppContainer'
 
-const CLARITY_CONSENT_KEY = 'clarity_tracking_consent'
+// LogBox.ignoreLogs([
+//   // 'Warning: ...',
+//   // 'Sentry Logger ',
+//   'Constants.deviceYearClass'
+// ]) // Ignore log notification by message
+// LogBox.ignoreAllLogs() // Ignore all log notifications
+
+
+Clarity.initialize('mcdyi6urgs', {
+  logLevel: Clarity.LogLevel.Verbose, // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
+});
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -58,41 +64,20 @@ export default function App() {
   const reviewModalRef = useRef()
   const [appIsReady, setAppIsReady] = useState(false)
   const [location, setLocation] = useState(null)
+  // const responseListener = useRef()
   const [orderId, setOrderId] = useState()
   const [isUpdating, setIsUpdating] = useState(false)
-  const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false)
-  const [clarityInitialized, setClarityInitialized] = useState(false)
-  const { CLARITY_ENABLED, GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars()
-  const client = useMemo(
-    () => setupApolloClient({ GRAPHQL_URL, WS_GRAPHQL_URL }),
-    [GRAPHQL_URL, WS_GRAPHQL_URL]
-  )
+  // const { SENTRY_DSN } = useEnvVars()
+  const client = setupApolloClient()
 
-  // Fetch/refresh the public (MetricsGeneral) token up front and keep it fresh
-  // via a background timer, instead of refreshing only when a request finds it
-  // expired. Also refresh when the app returns to the foreground, since RN
-  // suspends timers while backgrounded.
-  useEffect(() => {
-    if (!GRAPHQL_URL) return undefined
-
-    initializePublicAccessToken(GRAPHQL_URL)
-
-    const subscription = AppState.addEventListener('change', (nextState) => {
-      if (nextState === 'active') {
-        initializePublicAccessToken(GRAPHQL_URL)
-      }
-    })
-
-    return () => {
-      subscription.remove()
-      stopPublicAccessTokenRefresh()
-    }
-  }, [GRAPHQL_URL])
+  const { STRIPE_PUB_KEY } = useEnvVars()
 
   useKeepAwake()
+  // useWatchLocation()
 
   // Use system theme
-  const systemTheme = useColorScheme()
+  const systemTheme = 'Light'
+  // const systemTheme = useColorScheme()
   const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
   useEffect(() => {
     try {
@@ -106,12 +91,21 @@ export default function App() {
   // For Fonts, etc
   useEffect(() => {
     const loadAppData = async () => {
+      // try {
+      //   await SplashScreen.preventAutoHideAsync()
+      // } catch (e) {
+      //   console.warn(e)
+      // }
+      // await i18n.initAsync()
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
         MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
       })
+      // await permissionForPushNotificationsAsync()
       await getActiveLocation()
+      // get stored theme
+      // await getStoredTheme()
       setAppIsReady(true)
     }
 
@@ -134,50 +128,34 @@ export default function App() {
     hideSplashScreen()
   }, [appIsReady])
 
+  // For Location
   useEffect(() => {
-    const unsubscribe = subscribeToSessionInvalidation(({ reason }) => {
-      if (shouldShowSessionExpiredModal(reason)) {
-        setSessionExpiredVisible(true)
-      }
-    })
-
-    return unsubscribe
-  }, [])
-
-  useEffect(() => {
-    const unsubscribe = subscribeToSessionExpiredModalDismiss(() => {
-      setSessionExpiredVisible(false)
-    })
-
-    return unsubscribe
-  }, [])
-
-  useEffect(() => {
-    if (__DEV__ || !CLARITY_ENABLED || clarityInitialized) return
-
-    let isMounted = true
-
-    ;(async () => {
-      try {
-        const consent = await AsyncStorage.getItem(CLARITY_CONSENT_KEY)
-        if (consent !== 'granted' || !isMounted) return
-
-        const Clarity = await import('@microsoft/react-native-clarity')
-        if (!isMounted) return
-
-        Clarity.initialize('mcdyi6urgs', {
-          logLevel: Clarity.LogLevel.None
-        })
-        setClarityInitialized(true)
-      } catch (error) {
-        console.warn('Clarity initialization skipped:', error?.message ?? error)
-      }
-    })()
-
-    return () => {
-      isMounted = false
+    if (!location) return
+    const saveLocation = async () => {
+      await AsyncStorage.setItem('location', JSON.stringify(location))
     }
-  }, [CLARITY_ENABLED, clarityInitialized])
+    saveLocation()
+  }, [location])
+
+  // For Permission
+  /*   useEffect(() => {
+    requestTrackingPermissions()
+  }, []) */
+
+  // For Sentry
+  // useEffect(() => {
+  //   // if (SENTRY_DSN) {
+  //   if (false) {
+  //     Sentry.init({
+  //       dsn: SENTRY_DSN,
+  //       enableInExpoDevelopment: !isProduction ? true : false,
+  //       environment: isProduction ? 'production' : 'development',
+  //       debug: !isProduction,
+  //       tracesSampleRate: 1.0,
+  //       enableTracing: true
+  //     })
+  //   }
+  // }, [SENTRY_DSN])
 
   // For App Update
   useEffect(() => {
@@ -203,6 +181,8 @@ export default function App() {
 
   // For Push Notification
   useEffect(() => {
+    // registerForPushNotificationsAsync()
+
     const notifSub  = Notifications.addNotificationReceivedListener((notification) => {
       if (notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
         const id = notification?.request?.content?.data?._id
@@ -241,14 +221,34 @@ export default function App() {
     }
   }
 
+  // get stored theme
+  // const getStoredTheme = async () => {
+  //   try {
+  //     const storedTheme = await AsyncStorage.getItem('appTheme')
+  //     if (storedTheme) {
+  //       console.log('Retrieved theme from storage:', storedTheme)
+  //       themeSetter({ type: storedTheme })
+  //     } else {
+  //       console.log('No theme found in storage, using default.')
+  //       await AsyncStorage.setItem('appTheme', 'Dark') // Set default theme to Pink
+  //     }
+  //   } catch (error) {
+  //     console.log('Error retrieving theme from storage:', error)
+  //   }
+  // }
+
+  // set stored theme
+  const setStoredTheme = async (newTheme) => {
+    try {
+      await AsyncStorage.setItem('appTheme', newTheme)
+    } catch (error) {
+      console.log('Error storing theme in AsyncStorage:', error)
+    }
+  }
+
   // set modal close
   const onOverlayPress = () => {
     reviewModalRef?.current?.close()
-  }
-
-  const handleSessionExpiredLogin = () => {
-    setSessionExpiredVisible(false)
-    navigationService.navigate('CreateAccount')
   }
 
   if (isUpdating) {
@@ -263,34 +263,42 @@ export default function App() {
   }
 
   return (
-    <ErrorBoundary>
-    <AnimatedSplashScreen>
-      <ApolloProvider client={client}>
-        <ThemeContext.Provider
-          value={{ ThemeValue: theme, dispatch: themeSetter }}
-        >
-          <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
-          <LocationProvider>
-            <ConfigurationProvider>
-              <AuthProvider>
-                <UserProvider>
-                  <OrdersProvider>
-                    <AppContainer />
-                    <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
-                    <SessionExpiredModal
-                      visible={sessionExpiredVisible}
-                      onLogin={handleSessionExpiredLogin}
-                    />
-                  </OrdersProvider>
-                </UserProvider>
-              </AuthProvider>
-            </ConfigurationProvider>
-          </LocationProvider>
-          <FlashMessage MessageComponent={MessageComponent} />
-        </ThemeContext.Provider>
-      </ApolloProvider>
-    </AnimatedSplashScreen>
-    </ErrorBoundary>
+    // todo8: need to get the pub key from env
+    <StripeProvider publishableKey={STRIPE_PUB_KEY}>
+      <ErrorBoundary>
+        <AnimatedSplashScreen>
+          <ApolloProvider client={client}>
+            <ThemeContext.Provider
+              // use default theme
+              value={{ ThemeValue: theme, dispatch: themeSetter }}
+              // use stored theme
+              // value={{
+              //   ThemeValue: theme,
+              //   dispatch: (action) => {
+              //     themeSetter(action)
+              //     setStoredTheme(action.type) // Save the theme in AsyncStorage when it changes
+              //   }
+              // }}
+            >
+              <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
+              <LocationProvider>
+                <ConfigurationProvider>
+                  <AuthProvider>
+                    <UserProvider>
+                      <OrdersProvider>
+                        <RootAppContainer/>
+                        <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
+                      </OrdersProvider>
+                    </UserProvider>
+                  </AuthProvider>
+                </ConfigurationProvider>
+              </LocationProvider>
+              <FlashMessage MessageComponent={MessageComponent} />
+            </ThemeContext.Provider>
+          </ApolloProvider>
+        </AnimatedSplashScreen>
+      </ErrorBoundary>
+    </StripeProvider>
   )
 }
 
@@ -303,6 +311,32 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+async function registerForPushNotificationsAsync() {
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C'
+    })
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
+    const { status } = await Notifications.requestPermissionsAsync()
+
+    if (existingStatus !== 'granted') {
+      finalStatus = status
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!')
+    }
+  } else {
+    alert('Must use physical device for Push Notifications')
+  }
+}
+
 // async function schedulePushNotification() {
 //   await Notifications.scheduleNotificationAsync({
 //     content: {
@@ -313,3 +347,4 @@ const styles = StyleSheet.create({
 //     trigger: { seconds: 10 }
 //   })
 // }
+

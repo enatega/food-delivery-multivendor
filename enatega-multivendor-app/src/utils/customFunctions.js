@@ -137,32 +137,10 @@ const sortRestaurantsByOpenStatus = (restaurants) => {
   })
 }
 
+
 const truncateText = (limit, text) => {
-  if (typeof text !== 'string') return ''
-  if (text.length <= limit) return text
-  return text.slice(0, limit) + '...'
+  if (typeof text !== "string") return "";
+  if (text.length <= limit) return text;
+  return text.slice(0, limit) + "...";
 }
-
-const getErrorMessage = (error) => {
-  if (!error) return null
-
-  // Check for the specific 429 status
-  const status = error.networkError?.statusCode
-
-  switch (status) {
-    case 400:
-      return 'Invalid request.'
-    case 401:
-      return 'Session expired. Please login.'
-    case 403:
-      return 'Access denied.'
-    case 429:
-      return 'Too many requests. Try later.'
-    case 500:
-      return 'Server error. Try again.'
-    default:
-      return 'Connection failed.'
-  }
-}
-
-export { calculateDistance, calulateRemainingTime, calculateDaysAgo, groupAndCount, sortReviews, calculateAmount, isOpen, sortRestaurantsByOpenStatus, truncateText, getErrorMessage }
+export { calculateDistance, calulateRemainingTime, calculateDaysAgo, groupAndCount, sortReviews, calculateAmount, isOpen, sortRestaurantsByOpenStatus, truncateText }

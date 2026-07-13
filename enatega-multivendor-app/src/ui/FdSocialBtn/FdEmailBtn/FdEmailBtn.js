@@ -17,7 +17,7 @@ const FdEmailBtn = props => {
 
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      activeOpacity={0.6}
       style={styles(currentTheme).mainContainer}
       onPress={props?.onPress}>
       {props?.loadingIcon ? (
@@ -27,11 +27,11 @@ const FdEmailBtn = props => {
           <MaterialIcons
             name="mail-outline"
             size={scale(18)}
-            color={currentTheme.newIconColor}
+            color={currentTheme.headerMainFontColor}
           />
           <TextDefault
             H4
-            textColor={currentTheme.newFontcolor}
+            textColor={currentTheme.headerMainFontColor}
             bold>
             {t('ContinueWithEmail')}
           </TextDefault>

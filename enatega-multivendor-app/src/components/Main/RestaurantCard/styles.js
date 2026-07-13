@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 const { height } = Dimensions.get('window')
 
-const buildStyles = (props = null) =>
+const styles = (props = null) =>
   StyleSheet.create({
     offerContainer: {
       borderRadius: 15,
@@ -110,20 +110,5 @@ const buildStyles = (props = null) =>
       alignItems: 'center',
     },
   })
-
-// NewRestaurantCard renders once per restaurant in every horizontal row on the
-// Discovery page and calls styles(currentTheme) many times per render. Cache the
-// built stylesheet per theme so it isn't rebuilt each time.
-const NULL_KEY = { __nullTheme: true }
-const stylesCache = new WeakMap()
-
-const styles = (props = null) => {
-  const key = props ?? NULL_KEY
-  const cached = stylesCache.get(key)
-  if (cached) return cached
-  const created = buildStyles(props)
-  stylesCache.set(key, created)
-  return created
-}
 
 export default styles

@@ -6,24 +6,67 @@
 import { useContext } from 'react'
 import ConfigurationContext from './src/context/Configuration'
 import * as Updates from 'expo-updates'
-const { getEnvironmentConfig } = require('./environment.config')
 
 const useEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
-  const sharedConfig = getEnvironmentConfig(env)
+  if (env === 'production' || env === 'staging') {
+    return {
+      // GRAPHQL_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
+      // WS_GRAPHQL_URL: 'wss://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
+      // SERVER_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
+      // SERVER_REST_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/',
+      // GRAPHQL_URL: 'http://192.168.1.150:8001/graphql',
+      // WS_GRAPHQL_URL: 'ws://192.168.1.150:8001/graphql',
+      // SERVER_URL: 'http://192.168.1.150:8001/graphql',
+      // SERVER_REST_URL: 'http://192.168.1.150:8001/',
+      GRAPHQL_URL: 'https://enatega-multivendor-api-production-9b09.up.railway.app/graphql',
+      WS_GRAPHQL_URL: 'wss://enatega-multivendor-api-production-9b09.up.railway.app/graphql',
+      SERVER_URL: 'https://enatega-multivendor-api-production-9b09.up.railway.app/graphql',
+      SERVER_REST_URL: 'https://enatega-multivendor-api-production-9b09.up.railway.app/',
+      IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,            
+      ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
+      AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
+      GOOGLE_MAPS_KEY: configuration?.googleApiKey,
+      EXPO_CLIENT_ID: configuration?.expoClientID,
+      SENTRY_DSN: configuration?.customerAppSentryUrl ?? 'https://4213c02977911e1b75898c93cc5517fb@o1103026.ingest.us.sentry.io/4508662470803456',
+      TERMS_AND_CONDITIONS: configuration?.termsAndConditions,
+      PRIVACY_POLICY: configuration?.privacyPolicy,
+      TEST_OTP: configuration?.testOtp,
+      GOOGLE_PACES_API_BASE_URL: configuration?.googlePlacesApiBaseUrl,
+      STRIPE_PUB_KEY: "pk_test_51Sg2AmPGUigzcBftNQElJ730o2Ly8JE5NeDWUUTVu1TuE0BwtMknd9xS9TGwdyht7J8ZcPpqVlfHBtlqB0jhdwiX00ZsB0BsFT"
+    }
+  }
 
-  return {
-    ...sharedConfig,
+  return {  
+    // GRAPHQL_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/graphql',
+    // WS_GRAPHQL_URL: 'wss://jrdw550n-8001.inc1.devtunnels.ms/graphql',
+    // SERVER_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/graphql',
+    // SERVER_REST_URL: 'https://jrdw550n-8001.inc1.devtunnels.ms/',
+      
+    // GRAPHQL_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
+    // WS_GRAPHQL_URL: 'wss://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
+    // SERVER_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/graphql',
+    // SERVER_REST_URL: 'https://fast-delivery-single-vendor-production-c2e1.up.railway.app/',
+    // GRAPHQL_URL: 'http://192.168.1.150:8001/graphql',
+    // WS_GRAPHQL_URL: 'ws://192.168.1.150:8001/graphql',
+    // SERVER_URL: 'http://192.168.1.150:8001/graphql',
+    // SERVER_REST_URL: 'http://192.168.1.150:8001/',
+
+    GRAPHQL_URL: 'https://enatega-multivendor-api-production-9b09.up.railway.app/graphql',
+      WS_GRAPHQL_URL: 'wss://enatega-multivendor-api-production-9b09.up.railway.app/graphql',
+      SERVER_URL: 'https://enatega-multivendor-api-production-9b09.up.railway.app/graphql',
+      SERVER_REST_URL: 'https://enatega-multivendor-api-production-9b09.up.railway.app/',
     IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
     AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
-    GOOGLE_MAPS_KEY: configuration?.googleApiKey || sharedConfig.GOOGLE_MAPS_API_KEY,
+    GOOGLE_MAPS_KEY: configuration?.googleApiKey,
     EXPO_CLIENT_ID: configuration?.expoClientID,
     SENTRY_DSN: configuration?.customerAppSentryUrl ?? 'https://4213c02977911e1b75898c93cc5517fb@o1103026.ingest.us.sentry.io/4508662470803456',
     TERMS_AND_CONDITIONS: configuration?.termsAndConditions,
     PRIVACY_POLICY: configuration?.privacyPolicy,
     TEST_OTP: configuration?.testOtp,
-    GOOGLE_PACES_API_BASE_URL: configuration?.googlePlacesApiBaseUrl
+    GOOGLE_PACES_API_BASE_URL: configuration?.googlePlacesApiBaseUrl,
+    STRIPE_PUB_KEY: "pk_test_51Sg2AmPGUigzcBftNQElJ730o2Ly8JE5NeDWUUTVu1TuE0BwtMknd9xS9TGwdyht7J8ZcPpqVlfHBtlqB0jhdwiX00ZsB0BsFT"
   }
 }
 

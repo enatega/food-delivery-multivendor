@@ -70,7 +70,7 @@ const LanguageModal = ({ modalVisible, setModalVisible, currentTheme, showCrossB
       const availableLanguageCodes = languageTypes.map((lang) => lang.code)
 
       // Determine which language to use
-      let languageToUse = 'en' // Default to English
+      let languageToUse = 'en'
 
       if (storedLanguageCode) {
         // Use stored language if it's valid

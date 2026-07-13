@@ -1,0 +1,188 @@
+import { StyleSheet } from 'react-native'
+import { scale, verticalScale } from '../../../utils/scaling'
+
+const styles = (currentTheme, isDisable) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: currentTheme?.themeBackground || '#FFFFFF'
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: scale(16),
+      paddingVertical: verticalScale(12),
+      backgroundColor: currentTheme?.themeBackground
+    },
+    backButton: {
+      width: scale(40),
+      height: scale(40),
+      justifyContent: 'center',
+      alignItems: 'flex-start'
+    },
+    backButtonCircle: {
+      width: scale(36),
+      height: scale(36),
+      borderRadius: scale(18),
+      backgroundColor: currentTheme?.colorBgTertiary || currentTheme?.cardBackground || '#FFFFFF',
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3
+    },
+    headerRight: {
+      width: scale(40)
+    },
+    scrollView: {
+      flex: 1
+    },
+    scrollContent: {
+      paddingHorizontal: scale(16),
+      paddingTop: verticalScale(20)
+    },
+    logoContainer: {
+      alignItems: 'center',
+      marginBottom: verticalScale(40)
+    },
+    logo: {
+      width: scale(150),
+      height: scale(60),
+      marginBottom: verticalScale(14)
+    },
+    subtitle: {
+      fontSize: scale(12)
+    },
+    plansContainer: {
+      marginBottom: verticalScale(0)
+    },
+    planCard: {
+      backgroundColor: currentTheme?.cardBackground || '#FFFFFF',
+      borderRadius: scale(12),
+      padding: scale(20),
+      marginBottom: verticalScale(16),
+      borderWidth: 2,
+      borderColor: currentTheme?.gray200 || '#E0E0E0',
+      position: 'relative',
+
+      // Premium shadow with smooth gradient
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 3
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 10,
+      elevation: 5,
+
+      // Add these for iOS to enhance the shadow
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.1,
+      shadowRadius: 10,
+
+      // For Android
+      elevation: 5
+    },
+    planCardSelected: {
+      borderColor: currentTheme?.colorTextPrimary || '#006189',
+      backgroundColor: currentTheme?.colorBgSecondary || '#CCE9F5',
+      // Blue tinted shadow for selected state
+      shadowColor: currentTheme?.primaryBlue || '#0EA5E9',
+      shadowOffset: {
+        width: 0,
+        height: 4
+      },
+      shadowOpacity: 0.15,
+      shadowRadius: 12,
+      elevation: 8
+    },
+    popularBadge: {
+      position: 'absolute',
+      top: -12,
+      right: scale(20),
+      backgroundColor: currentTheme?.singlevendorcolor || '#0090CD',
+      paddingHorizontal: scale(12),
+      paddingVertical: verticalScale(6),
+      borderRadius: scale(8)
+    },
+    popularText: {
+      fontSize: scale(12)
+    },
+    planHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start'
+    },
+    planTitleContainer: {
+      flex: 1
+    },
+    planTitle: {
+      fontSize: scale(22),
+      marginBottom: verticalScale(8)
+    },
+    planBilling: {
+      fontSize: scale(14)
+    },
+    planPriceContainer: {
+      alignItems: 'flex-end'
+    },
+    planPrice: {
+      fontSize: scale(20),
+      fontWeight: 'bold',
+      lineHeight: scale(25),
+      marginBottom: verticalScale(4)
+    },
+    planPeriod: {
+      fontSize: scale(14),
+      fontWeight: 'bold'
+    },
+    faqContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: verticalScale(20)
+    },
+    faqText: {
+      fontSize: scale(14)
+    },
+    faqLink: {
+      fontSize: scale(14),
+      textDecorationLine: 'underline'
+    },
+    bottomSection: {
+      paddingHorizontal: scale(16),
+      paddingBottom: verticalScale(24),
+      paddingTop: verticalScale(12),
+      backgroundColor: currentTheme?.themeBackground
+      // borderTopWidth: 1,
+      // borderTopColor: currentTheme?.horizontalLine || '#E0E0E0'
+    },
+    subscribeButton: {
+      width: '100%',
+      backgroundColor: isDisable ? currentTheme?.colorBgTertiary : currentTheme?.singlevendorcolor || '#0090CD',
+      borderRadius: scale(8),
+      paddingVertical: verticalScale(10),
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    subscribeButtonText: {
+      fontSize: scale(16)
+    },
+    cancelButton: {
+      backgroundColor: currentTheme?.red600 || '#DC2626',
+      paddingHorizontal: scale(12),
+      paddingVertical: verticalScale(6),
+      borderRadius: scale(8),
+      width: '50%',
+      marginTop: 10
+    },
+    verticalMargin: {
+      marginVertical: '50%'
+    }
+  })
+
+export default styles

@@ -45,6 +45,7 @@ import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import VendorModeToggle from '../../components/VendorModeToggle/VendorModeToggle'
 
 
 const RESTAURANTS = gql`
@@ -74,12 +75,11 @@ function Profile(props) {
 
   const { data, loading, error, refetch } = useQuery(RESTAURANTS, {
     variables: {
-      longitude: location?.longitude || null,
-      latitude: location?.latitude || null
+      longitude: location.longitude || null,
+      latitude: location.latitude || null
     },
     fetchPolicy: 'network-only',
-    errorPolicy: 'all',
-    skip: !location?.latitude || !location?.longitude
+    errorPolicy : "all"
   })
   const { orderLoading, orderData } = useHomeRestaurants()
 
@@ -140,6 +140,7 @@ function Profile(props) {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}
     >
+      
       <ChangePassword
         modalVisible={modelVisible}
         hideModal={() => {
@@ -147,6 +148,7 @@ function Profile(props) {
         }}
       />
       <View style={styles(currentTheme).formContainer}>
+       
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles(currentTheme).flex}
@@ -165,6 +167,9 @@ function Profile(props) {
               {t('Hi') + ' ' + profile?.name + '!'}
             </TextDefault>
             <View style={styles(currentTheme).mainContainer}>
+               <View style={[{width: '100%', alignItems: 'center',marginTop:20},styles().padding,]}>
+        <VendorModeToggle></VendorModeToggle>
+        </View>
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={[

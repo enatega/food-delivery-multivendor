@@ -83,8 +83,14 @@ export const it = {
   checkout: 'Checkout',
   creditCart: 'Carta di Credito/Debito',
   paypal: 'Paypal',
+  googlePay: 'Google Pay',
+  payUsingApplePay: 'Pay using Apple Pay',
+  payUsingGooglePay: 'Pay using Google Pay',
+  applePay: 'Apple Pay',
+  payUsingPaypal: 'Pay using Paypal',
   cod: 'Contanti',
   thankYou: 'Grazie!',
+  thanksForUsing: 'Thanks for using',
   orderConfirmed: 'Il Tuo Ordine è Confermato',
   orderId: 'Il Tuo ID Ordine',
   orderAmount: 'Importo del Tuo Ordine',
@@ -490,6 +496,8 @@ export const it = {
   logoutMessage: 'Disconnessione avvenuta con successo',
   somethingWentWrong: 'Qualcosa è andato storto',
   checkInternet: 'Controlla la tua connessione internet',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
   selectCity: 'Seleziona Città',
   Location: 'Posizione',
   phoneNumberExist: 'Il numero di telefono fornito esiste già!',
@@ -620,5 +628,63 @@ export const it = {
   noMatchingResultsDesc: 'Prova a modificare i filtri o esplora altre opzioni per trovare ciò che stai cercando.',
   'Applied Filters': 'Filtri Applicati',
   'WhatsApp is not installed on the device': 'WhatsApp non è installato sul dispositivo',
-  'Install it': 'Installalo'
+  'Install it': 'Installalo',
+  'You are all up to date': 'Sei aggiornato',
+  'No new notifications - come back soon': 'Nessuna nuova notifica - torna presto',
+  'Payments': 'Pagamenti',
+  'Vouchers': 'Buoni',
+  'App supports & FAQs': 'Supporto app e FAQ',
+  'Feedback': 'Feedback',
+  'My conversations': 'Le mie conversazioni',
+  'Change phone number': 'Cambia numero di telefono',
+  'Change email address': 'Cambia indirizzo email',
+  'Change profile name': 'Cambia nome profilo',
+  'Change or delete address': 'Cambia o elimina indirizzo',
+  'Delete account': 'Elimina account',
+  'Reset Password': 'Reimposta password',
+  'Login issue': 'Problema di accesso',
+  'How do you rate our products?': 'Come valuti i nostri prodotti?',
+  'Your feedback helps us serve you better.': 'Il tuo feedback ci aiuta a servirti meglio.',
+  'Write your experience here...': 'Scrivi la tua esperienza qui...',
+  'Submit': 'Invia',
+  "Payment Methods": "Metodi di pagamento",
+  "Add or Update your saved payment methods.": "Aggiungi o aggiorna i tuoi metodi di pagamento salvati.",
+  "Default": "Predefinito",
+  "Add payment method": "Aggiungi metodo di pagamento",
+  "Add payment methods": "Aggiungi metodi di pagamento",
+  "Add a credit or debit card to quickly complete purchases.": "Aggiungi una carta di credito o debito per completare rapidamente gli acquisti.",
+  "Card number": "Numero carta",
+  "Expiration date": "Data di scadenza",
+  "Expiration date (MM / YY)": "Data di scadenza (MM / AA)",
+  "CVV": "CVV",
+  "Security code": "Codice di sicurezza",
+  "Save": "Salva",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
 }

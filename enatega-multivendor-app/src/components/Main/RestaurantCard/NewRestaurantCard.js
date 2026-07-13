@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useContext, useMemo } from 'react'
+import React, { useContext } from 'react'
 import { TouchableOpacity, View, Image, Text, Alert, Platform } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -19,7 +19,6 @@ import Spinner from '../../Spinner/Spinner'
 import Bicycle from '../../../assets/SVG/Bicycle'
 import { storeSearch } from '../../../utils/recentSearch'
 import Ripple from 'react-native-material-ripple'
-import { useCachedMediaUri } from '../../../utils/mediaCache'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -36,13 +35,10 @@ function NewRestaurantCard(props) {
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = useMemo(
-    () => ({
-      isRTL: i18n.dir() === 'rtl',
-      ...theme[themeContext.ThemeValue]
-    }),
-    [i18n.language, themeContext.ThemeValue]
-  )
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
 
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props?._id) : false
@@ -55,7 +51,6 @@ function NewRestaurantCard(props) {
   const shopType = props?.shopType
 
   const isRestaurantClosed = !isRestaurantOpen || !isAvailable
-  const imageUri = useCachedMediaUri(props?.image, 'image')
 
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
@@ -146,11 +141,7 @@ function NewRestaurantCard(props) {
           ]}
         >
           <View style={styles().imageContainer}>
-            <Image
-              resizeMode='cover'
-              source={{ uri: imageUri }}
-              style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]}
-            />
+            <Image resizeMode='cover' source={{ uri: props?.image }} style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]} />
             {isRestaurantClosed && (
               <View style={styles(currentTheme).closedOverlay}>
                 <TextDefault H4 textColor={currentTheme.white} bold>

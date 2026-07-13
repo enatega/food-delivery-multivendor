@@ -6,7 +6,7 @@ const styles = (props = null) => {
     headerTitleContainer: {
       flex: 1,
       height: '100%',
-      width: '95%',
+      // width: '95%',
       justifyContent: 'center'
     },
     locationIcon: {
@@ -19,9 +19,10 @@ const styles = (props = null) => {
     },
     headerContainer: {
       height: '100%',
-      width: '90%',
-      paddingLeft: scale(5),
-      marginTop: scale(10)
+      // width: '100%',
+      // paddingLeft: scale(5),
+      // marginTop: scale(10),
+      // backgroundColor: 'red'
     },
   })
 }

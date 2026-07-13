@@ -1,0 +1,98 @@
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
+import React, { useContext } from 'react'
+import { AntDesign } from '@expo/vector-icons'
+import { theme } from '../../utils/themeColors'
+import ThemeContext from '../../ui/ThemeContext/ThemeContext'
+import { useTranslation } from 'react-i18next'
+
+const ProductImageOverlay = ({ hasDeal, onAddToCart, product, isAddingToCart, dealText = 'Deal', control }) => {
+  const { i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  return (
+    <>
+      {/* {hasDeal && (
+        <View style={styles(currentTheme).dealTag}>
+          <AntDesign name="tag" size={12} color={currentTheme.white} />
+          <Text style={styles(currentTheme).dealText}>{dealText}</Text>
+        </View>
+      )} */}
+
+      {control ? (
+        control
+      ) : (
+        <TouchableOpacity
+          style={styles(currentTheme).addButton}
+          onPress={
+            isAddingToCart
+              ? undefined
+              : () => {
+                  onAddToCart(product)
+                }
+          }
+        >
+          {isAddingToCart ? <ActivityIndicator size={16} /> : <AntDesign name='plus' size={16} />}
+        </TouchableOpacity>
+      )}
+    </>
+  )
+}
+
+const styles = (currentTheme) =>
+  StyleSheet.create({
+    dealTag: {
+      position: 'absolute',
+      top: 8,
+      left: 8,
+      backgroundColor: currentTheme.primaryBlue,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 4,
+      zIndex: 1
+    },
+    dealText: {
+      color: currentTheme.white,
+      fontSize: 10,
+      fontWeight: '600',
+      marginLeft: 4
+    },
+    addButton: {
+      position: 'absolute',
+      top: 8,
+      right: 8,
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: currentTheme.white,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1,
+      shadowColor: currentTheme.shadowColor,
+      shadowOffset: {
+        width: 0,
+        height: 1
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 2
+    },
+    dealBadge: {
+      position: 'absolute',
+      top: 8,
+      left: 8,
+      backgroundColor: currentTheme.primaryBlue,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 6
+    },
+
+    dealBadgeText: {
+      fontSize: 11,
+      fontWeight: '700',
+      color: '#fff'
+    }
+  })
+
+export default ProductImageOverlay

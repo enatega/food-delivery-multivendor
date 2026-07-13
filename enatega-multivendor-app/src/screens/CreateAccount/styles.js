@@ -23,23 +23,26 @@ const styles = (props = null) =>
     // GIF Container
     gifContainer: {
       flex: 1,
-      width: '100%'
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      alignContent: 'space-between'
     },
     gifImage: {
-      width: '100%',
-      height: '100%'
+      width: '90%',
+      height: '90%'
     },
 
     // Welcome Section
     welcomeSection: {
-      paddingHorizontal: scale(20),
+      paddingHorizontal: scale(10),
       paddingVertical: getResponsiveSize(scale(10)),
       alignItems: 'center'
     },
     mainTitle: {
       marginBottom: getResponsiveSize(scale(8)),
-      fontSize: getResponsiveSize(scale(28)),
-      lineHeight: getResponsiveSize(scale(32)),
+      // fontSize: getResponsiveSize(scale(28)),
+      // lineHeight: getResponsiveSize(scale(32)),
       textAlign: 'center'
     },
     subTitle: {
@@ -52,13 +55,22 @@ const styles = (props = null) =>
     // Buttons Container
     buttonsContainer: {
       paddingHorizontal: scale(20),
-      gap: getResponsiveSize(scale(10))
+      gap: getResponsiveSize(scale(10)),
+      paddingBottom: getResponsiveSize(scale(10))
     },
 
     // Guest Button
     guestButton: {
       alignItems: 'center',
       paddingVertical: getResponsiveSize(scale(12))
+    },
+
+    // via Phone Button
+    viaPhoneButton: {
+      alignItems: 'center',
+      paddingVertical: getResponsiveSize(scale(12)),
+      backgroundColor: props !== null ? props?.primary : '#000',
+      borderRadius: 6
     },
 
     // Loading State
@@ -69,17 +81,17 @@ const styles = (props = null) =>
     buttonBackground: {
       width: '100%',
       backgroundColor: props !== null ? props?.newFontcolor : '#000',
-      borderRadius: scale(30),
-      height: getResponsiveSize(height * 0.07)
+      borderRadius: scale(8),
+      height: getResponsiveSize(height * 0.06)
     },
     appleBtn: {
       width: '100%',
-      height: getResponsiveSize(height * 0.07)
+      height: getResponsiveSize(height * 0.06)
     },
 
     safeAreaViewStyles: {
       flex: 1,
-      backgroundColor: props !== null ? props?.themeBackground : '#FFF',
+      backgroundColor: props !== null ? props?.themeBackground : '#FFF'
     }
   })
 

@@ -94,7 +94,11 @@ const styles = (props = null) =>
     },
     headerRightIcon: {
       ...alignment.PRsmall
-    }
+    },
+    btnContainer: {
+      width: '100%',
+      marginTop: scale(5)
+    },
   })
 
 export default styles

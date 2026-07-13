@@ -9,20 +9,15 @@ import { useTranslation } from 'react-i18next'
 import { EvilIcons, Feather } from '@expo/vector-icons'
 import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
+import EstimatedDeliveryTime from './EstimatedDeliveryTime'
+import { useVendorModeStore } from '../../../singlevendor'
 
-function Location({
-  navigation,
-  addresses,
-  locationIconGray,
-  modalOn,
-  location: locationParam,
-  locationLabel,
-  forwardIcon = false,
-  screenName }) {
+function Location({ navigation, addresses, locationIconGray, modalOn, location: locationParam, locationLabel, forwardIcon = false, screenName }) {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const { location } = useContext(LocationContext)
+  const { vendorMode } = useVendorModeStore()
 
   let translatedLabel
   if (location?.label === 'Current Location') {
@@ -30,12 +25,9 @@ function Location({
   } else {
     translatedLabel = t(location?.label)
   }
-  const translatedAddress =
-    location?.deliveryAddress === 'Current Location'
-      ? t('currentLocation')
-      : location?.deliveryAddress
-  const onLocationPress = (event) => {
+  const translatedAddress = location?.deliveryAddress === 'Current Location' ? t('currentLocation') : !location ? t('addAddress') : location?.deliveryAddress
 
+  const onLocationPress = (event) => {
     if (screenName === 'checkout') {
       if (addresses && !addresses.length) {
         navigation.navigate('AddNewAddress', {
@@ -48,38 +40,42 @@ function Location({
           address: location
         })
       }
-    }
-    else
-      modalOn()
+    } else modalOn()
   }
   return (
-    <TouchableOpacity onPress={onLocationPress} >
+    <TouchableOpacity onPress={onLocationPress}>
       <View style={styles(currentTheme).headerTitleContainer}>
-        <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' , alignItems: 'center', justifyContent: 'center', marginHorizontal: scale(10), gap: 5 }}>
-          <View style={[styles().locationIcon, locationIconGray]}>
+        <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+          {/* Todo: can show icon in future */}
+          {/* <View style={[styles().locationIcon, locationIconGray]}>
             <EvilIcons
               name="location"
               size={scale(20)}
               color={currentTheme.secondaryText}
             />
-          </View>
+          </View> */}
           <View style={styles(currentTheme).headerContainer}>
             <View>
-              <TextDefault textColor={locationParam} numberOfLines={1} H5 bolder isRTL>
-                {translatedAddress?.slice(0, 40)}
-                ...
+              {/* Todo: need to handle address length here */}
+              <TextDefault style={{maxWidth:'98%'}}  textColor={locationParam} numberOfLines={1} H5 bolder isRTL>
+                {translatedAddress}
               </TextDefault>
             </View>
-            <TextDefault textColor={locationLabel} left isRTL>
-              {''}
-              {t(translatedLabel)}
-            </TextDefault>
+            {vendorMode === 'SINGLE' ? (
+              // <EstimatedDeliveryTime location={location} />
+              <TextDefault textColor={currentTheme.fontSecondColor} H6>
+                Lieferzeit: unter 35 Min
+              </TextDefault>
+            ) : (
+              translatedLabel && (
+                <TextDefault textColor={locationLabel} left isRTL>
+                  {''}
+                  {t(translatedLabel)}
+                </TextDefault>
+              )
+            )}
           </View>
-          {forwardIcon && <Feather
-            name= {currentTheme?.isRTL ? 'chevron-left' : 'chevron-right'}
-            size={20}
-            color={currentTheme.secondaryText}
-          />}
+          {forwardIcon && <Feather name={currentTheme?.isRTL ? 'chevron-left' : 'chevron-right'} size={20} color={currentTheme.secondaryText} />}
         </View>
       </View>
     </TouchableOpacity>

@@ -13,19 +13,14 @@ import { Feather } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import { useRoute } from '@react-navigation/native'
 import SignUpSvg from '../../../assets/SVG/imageComponents/SignUpSvg'
+import VerifyOtp from '../../../assets/SVG/imageComponents/VerifyOtp'
+import OtpErrorDialogue from '../../../components/Auth/OtpErrorDialogue/OtpErrorDialogue'
+import ResendTimer from '../../../components/ResendTimer/ResendTimer'
+import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
+import { isLoaded, isLoading } from 'expo-font'
 
 function ForgotPasswordOtp(props) {
-  const {
-    otp,
-    setOtp,
-    otpError,
-    seconds,
-    currentTheme,
-    loading,
-    onCodeFilled,
-    themeContext,
-    resendOtp
-  } = useForgotPasswordOtp()
+  const { otp, setOtp, otpError, seconds, currentTheme, loading, onCodeFilled, themeContext, resendOtp } = useForgotPasswordOtp()
 
   const route = useRoute()
   const { email } = route.params
@@ -44,113 +39,49 @@ function ForgotPasswordOtp(props) {
 
   return (
     <SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
-      <StatusBar
-        backgroundColor={currentTheme.themeBackground}
-        barStyle={
-          themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-        }
-      />
-      <ScrollView
-      style={styles().flex}
-      contentContainerStyle={{ flexGrow: 1 }}
-      showsVerticalScrollIndicator={false}
-      alwaysBounceVertical={false}>
-      <View style={styles(currentTheme).mainContainer}>
-        <View style={styles().subContainer}>
-             <View>
-                <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
-              </View>
-          <View>
-            <TextDefault
-              H2
-              bolder
-              textColor={currentTheme.newFontcolor}
-              style={{
-                ...alignment.MTlarge,
-                ...alignment.MBmedium
-              }}
-                isRTL
-            >
-              {t('forgotPassword')}
-            </TextDefault>
-            <TextDefault
-              H5
-              bold
-                textColor={currentTheme.fontSecondColor}
-                isRTL
-              // style={{
-              //   paddingBottom: scale(5)
-              // }}
-            >
-              {t('otpSentToEmail')}
-            </TextDefault>
-            {/* <TextDefault H5 bold textColor={currentTheme.newFontcolor}>
-              {email}
-            </TextDefault> */}
-          </View>
-          <View>
-            <OTPInputView
-              pinCount={6}
-              style={styles().otpInput}
-              codeInputFieldStyle={[
-                styles(currentTheme).otpBox,
-                otpError && styles(currentTheme).errorInput
-              ]}
-              codeInputHighlightStyle={{
-                borderColor: currentTheme.main
-              }}
-              autoFocusOnLoad
-              code={otp}
-              onCodeChanged={(code) => setOtp(code)}
-              onCodeFilled={(code) => {
-                onCodeFilled(code)
-              }}
-              editable
-            />
-            {otpError && (
+      <StatusBar backgroundColor={currentTheme.themeBackground} barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
+      <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
+        <View style={styles(currentTheme).mainContainer}>
+          <View style={styles().subContainer}>
+            <VerifyOtp fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
+            <View>
               <TextDefault
-                style={styles().error}
-                bold
-                  textColor={currentTheme.textErrorColor}
-                  isRTL
-              >
-                {t('wrongOtp')}
-              </TextDefault>
-            )}
-          </View>
-        </View>
-        <View style={{ ...alignment.MTlarge, width: '100%', marginBottom: 20 }}>
-          <View style={alignment.MBxSmall}>
-            <TextDefault
-              center
-              H4
-              bold
-              style={alignment.MTsmall}
-                textColor={currentTheme.fontNewColor}
+                H2
+                bolder
+                textColor={currentTheme.newFontcolor}
+                style={{
+                  ...alignment.MTlarge,
+                  ...alignment.MBmedium
+                }}
                 isRTL
-            >
-              {seconds !== 0 ? `${t('retry')} ${seconds}s` : ''}
-            </TextDefault>
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[
-              styles(currentTheme).btn,
-              seconds !== 0 && styles(currentTheme).disabledBtn
-            ]}
-            disabled={seconds !== 0}
-            onPress={() => resendOtp()}
-          >
-            {loading ? (
-              <Spinner backColor='transparent' size='small' spinnerColor={currentTheme.main} />
-            ) : (
-              <TextDefault H4 textColor={currentTheme.black} bold>
-                {t('resendOtpBtn')}
+              >
+                {t('forgotPassword')}
               </TextDefault>
-            )}
-          </TouchableOpacity>
+              <TextDefault H5 bold textColor={currentTheme.fontSecondColor} isRTL>
+                {t('otpSentToEmail')}
+              </TextDefault>
+            </View>
+            <View>
+              <OTPInputView
+                pinCount={6}
+                style={styles().otpInput}
+                codeInputFieldStyle={[styles(currentTheme).otpBox, otpError && styles(currentTheme).errorInput]}
+                codeInputHighlightStyle={{
+                  borderColor: currentTheme.primaryBlue
+                }}
+                autoFocusOnLoad
+                code={otp}
+                onCodeChanged={(code) => setOtp(code)}
+                editable
+              />
+              {otpError && <OtpErrorDialogue currentTheme={currentTheme} otpError='The code you entered is incorrect.' />}
+              <ResendTimer currentTheme={currentTheme} duration={30} onResend={() => resendOtp()} />
+            </View>
+          </View>
+          <View style={{ ...alignment.MTlarge, width: '100%', marginBottom: 20 }}>
+            <ContinueWithPhoneButton title='Verify OTP' onPress={() => onCodeFilled(otp)} isLoading={loading} isDisabled={otp.length < 6} />
+          </View>
         </View>
-      </View>
       </ScrollView>
     </SafeAreaView>
   )

@@ -1,11 +1,5 @@
-import React, { useLayoutEffect } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  StatusBar,
-  Image,
-  ScrollView
-} from 'react-native'
+import { useLayoutEffect, useEffect, useRef } from 'react'
+import { View, StatusBar, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from '../styles'
 import Spinner from '../../../components/Spinner/Spinner'
@@ -15,30 +9,22 @@ import screenOptions from '../screenOptions'
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import useEmailOtp from './useEmailOtp'
 import { useTranslation } from 'react-i18next'
-import { SimpleLineIcons } from '@expo/vector-icons'
 import { useRoute } from '@react-navigation/native'
-import { scale } from '../../../utils/scaling'
-import SignUpSvg from '../../../assets/SVG/imageComponents/SignUpSvg'
+import VerifyOtp from '../../../assets/SVG/imageComponents/VerifyOtp'
+import OtpErrorDialogue from '../../../components/Auth/OtpErrorDialogue/OtpErrorDialogue'
+import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
+import ResendTimer from '../../../components/ResendTimer/ResendTimer'
+import useKeyboardState from '../../../singlevendor/utils/useKeyboardState'
+import { useHeaderHeight } from '@react-navigation/elements'
 
 function EmailOtp(props) {
+  const scrollViewRef = useRef(null)
+  const headerHeight = useHeaderHeight()
+  const { isKeyboardVisible, keyboardHeight } = useKeyboardState()
   const route = useRoute()
   const userData = route?.params?.user
-   const isPhoneExists = route?.params?.isPhoneExists || false
-  const {
-    otp,
-    setOtp,
-    otpError,
-    seconds,
-    loading,
-    updateUserLoading,
-    onCodeFilled,
-    resendOtp,
-    currentTheme,
-    themeContext
-  } = useEmailOtp(isPhoneExists)
-
-  
- 
+  const isPhoneExists = route?.params?.isPhoneExists || false
+  const { otp, setOtp, otpError, seconds, loading, updateUserLoading, onCodeFilled, resendOtp, currentTheme, themeContext } = useEmailOtp(isPhoneExists)
 
   const { t, i18n } = useTranslation()
   useLayoutEffect(() => {
@@ -52,136 +38,82 @@ function EmailOtp(props) {
     )
   }, [props?.navigation])
 
+  useEffect(() => {
+    if (!isKeyboardVisible) return
+
+    const timer = setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true })
+    }, 120)
+
+    return () => clearTimeout(timer)
+  }, [isKeyboardVisible, keyboardHeight])
+
   return (
     <SafeAreaView style={styles(currentTheme).safeAreaViewStyles}>
-      <StatusBar
-        backgroundColor={currentTheme.themeBackground}
-        barStyle={
-          themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
-        }
-      />
-      <ScrollView
-        style={styles().flex}
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        alwaysBounceVertical={false}
-      >
-        <View style={styles(currentTheme).mainContainer}>
-          <View style={styles().subContainer}>
-            <View>
-              <SignUpSvg fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
-            </View>
-            <View>
-              <TextDefault
-                H2
-                bolder
-                textColor={currentTheme.newFontcolor}
-                style={{
-                  ...alignment.MTlarge,
-                  ...alignment.MBmedium
-                }}
-                isRTL
-              >
-                {t('verifyEmail')}
-              </TextDefault>
-              <TextDefault
-                H5
-                bold
-                textColor={currentTheme.fontSecondColor}
-                isRTL
-                // style={{
-                //   paddingBottom: scale(5)
-                // }}
-              >
-                {t('otpSentToEmail')}
-              </TextDefault>
-              {/* <TextDefault H5 bold  textColor={currentTheme.newFontcolor}>
-              {userData.email}
-            </TextDefault> */}
-            </View>
-            <View>
-              <OTPInputView
-                pinCount={6}
-                style={styles().otpInput}
-                codeInputFieldStyle={[
-                  styles(currentTheme).otpBox,
-                  otpError && styles(currentTheme).errorInput
-                ]}
-                codeInputHighlightStyle={{
-                  borderColor: currentTheme.main
-                }}
-                autoFocusOnLoad
-                code={otp}
-                onCodeChanged={(code) => setOtp(code)}
-                onCodeFilled={(code) => {
-                  onCodeFilled(code)
-                }}
-                editable
-              />
-              {otpError && (
+      <StatusBar backgroundColor={currentTheme.themeBackground} barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
+      <KeyboardAvoidingView style={styles().flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? headerHeight + 30 : 30}>
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles().flex}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: isKeyboardVisible ? (Platform.OS === 'android' ? 20  : 30) : 0
+          }}
+          showsVerticalScrollIndicator={false}
+          alwaysBounceVertical={false}
+          keyboardShouldPersistTaps='handled'
+        >
+          <View style={styles(currentTheme).mainContainer}>
+            <View style={styles().subContainer}>
+              <VerifyOtp fillColor={currentTheme.svgFill} strokeColor={currentTheme.newIconColor} />
+              <View>
                 <TextDefault
-                  style={styles(currentTheme).error}
-                  bold
-                  textColor={currentTheme.textErrorColor}
+                  H2
+                  bolder
+                  textColor={currentTheme.newFontcolor}
+                  style={{
+                    ...alignment.MTlarge,
+                    ...alignment.MBmedium
+                  }}
+                  isRTL
                 >
-                  {t('wrongOtp')}
+                  {t('verifyEmail')}
                 </TextDefault>
-              )}
-            </View>
-          </View>
-          <View>
-            {loading ||
-              (updateUserLoading && (
-                <Spinner
-                  backColor={currentTheme.themeBackground}
-                  spinnerColor={currentTheme.main}
-                  size='large'
+                <TextDefault H5 bold textColor={currentTheme.fontSecondColor} isRTL>
+                  {t('otpSentToEmail')}
+                </TextDefault>
+              </View>
+              <View>
+                <OTPInputView
+                  pinCount={6}
+                  style={styles().otpInput}
+                  codeInputFieldStyle={[styles(currentTheme).otpBox, otpError && styles(currentTheme).errorInput]}
+                  codeInputHighlightStyle={{
+                    borderColor: currentTheme.primaryBlue
+                  }}
+                  autoFocusOnLoad
+                  code={otp}
+                  onCodeChanged={(code) => setOtp(code)}
+                  editable
                 />
-              ))}
-          </View>
-          <View
-            style={{
-              ...alignment.MTlarge,
-              ...alignment.MTlarge,
-              width: '100%',
-              marginBottom: 20
-            }}
-          >
-            <View style={alignment.MBxSmall}>
-              <TextDefault
-                center
-                H4
-                bold
-                style={alignment.MTsmall}
-                textColor={currentTheme.fontNewColor}
-              >
-                {seconds === 0 ? '' : `${t('retry')} ${seconds}s`}
-              </TextDefault>
+                {otpError && <OtpErrorDialogue currentTheme={currentTheme} otpError='The code you entered is incorrect.' />}
+                <ResendTimer currentTheme={currentTheme} duration={30} onResend={() => resendOtp()} />
+              </View>
             </View>
-            {loading || updateUserLoading ? (
-              <Spinner
-                backColor={currentTheme.color3}
-                spinnerColor={currentTheme.color3}
-                size='small'
-              />
-            ) : (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={[
-                  styles(currentTheme).btn,
-                  seconds !== 0 && styles(currentTheme).disabledBtn
-                ]}
-                disabled={seconds !== 0}
-                onPress={() => resendOtp()}
-              >
-                <TextDefault H4 textColor={currentTheme.black} bold>
-                  {t('resendOtpBtn')}
-                </TextDefault>
-              </TouchableOpacity>
-            )}
+            <View>{loading || (updateUserLoading && <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} size='large' />)}</View>
+            <View
+              style={{
+                ...alignment.MTlarge,
+                ...alignment.MTlarge,
+                width: '100%',
+                marginBottom: 20
+              }}
+            >
+              {loading || updateUserLoading ? <Spinner backColor={currentTheme.color3} spinnerColor={currentTheme.color3} size='small' /> : <ContinueWithPhoneButton title='getRegistered' onPress={() => onCodeFilled(otp)} isDisabled={otp.length < 6} />}
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

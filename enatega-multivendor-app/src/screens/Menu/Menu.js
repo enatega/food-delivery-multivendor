@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect } from 'react'
-import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Image, Dimensions } from 'react-native'
+import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Image, ScrollView, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
@@ -9,7 +9,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
-import { getCuisines, RestaurantCuisines } from '../../apollo/queries'
+import { getCuisines } from '../../apollo/queries'
 import { selectAddress } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -48,14 +48,11 @@ const SELECT_ADDRESS = gql`
 const GET_CUISINES = gql`
   ${getCuisines}
 `
-const GET_RESTAURANTS_CUISINES = gql`
-  ${RestaurantCuisines}
-`
 
 export const FILTER_VALUES = {
   Sort: {
     type: FILTER_TYPE.CHECKBOX,
-    values: ['Relevance (Default)', 'Fast Delivery', 'Distance'],
+    values: ['Relevance (Default)', 'Quick Delivery', 'Distance'],
     selected: []
   },
   Offers: {
@@ -75,7 +72,6 @@ function Menu({ route, props }) {
   const selectedType = route.params?.selectedType
   const queryType = route.params?.queryType
   const collection = route.params?.collection
-  const isShopType = route.params?.isShopType
   const { t, i18n } = useTranslation()
   const { getAddress } = useGeocoding()
   const [busy, setBusy] = useState(false)
@@ -85,6 +81,7 @@ function Menu({ route, props }) {
   const [filterSectionApplied, setfilterSectionApplied] = useState(false)
   const [appliedFilters, setAppliedFilters] = useState(FILTER_VALUES)
   const [activeCollection, setActiveCollection] = useState()
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [isConnected, setIsConnected] = useState(false)
   const modalRef = useRef(null)
   const filtersModalRef = useRef()
@@ -116,29 +113,12 @@ function Menu({ route, props }) {
   const locationData = location
   const [filterApplied, setfilterApplied] = useState(false)
 
-  console.log('selected Type ::::', selectedType)
-
   const { data, refetch, networkStatus, loading, error, restaurantData, setRestaurantData, heading, subHeading, allData } = useRestaurantQueries(queryType, location, selectedType)
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
 
-  const restaurantsCuisinsVariables = isShopType ? { latitude: location.latitude || null, longitude: location.longitude || null, shopType: collection } : {}
-
-  console.log('restaurantsCuisinsVariables::', restaurantsCuisinsVariables)
-
-  const { data: cuisinesData, refetch: refetchCuisines, error: cuisinesError } = useQuery(isShopType ? GET_RESTAURANTS_CUISINES : GET_CUISINES, { variables: restaurantsCuisinsVariables })
-
-  // const allCuisines = useRef(isShopType ? { cuisines: cuisinesData?.nearByRestaurantsCuisines } : cuisinesData).current
-
-  const allCuisines = useMemo(() => {
-    if (isShopType) {
-      return { cuisines: cuisinesData?.nearByRestaurantsCuisines ?? [] }
-    }
-    return cuisinesData ?? { cuisines: [] }
-  }, [isShopType, cuisinesData])
-
-  console.log('allCuisines::restaurants cuisins', cuisinesData?.nearByRestaurantsCuisines, allCuisines, cuisinesError)
+  const { data: allCuisines, refetch: refetchCuisines } = useQuery(GET_CUISINES)
 
   const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */ } = useCollapsibleSubHeader()
 
@@ -189,19 +169,11 @@ function Menu({ route, props }) {
   }, [allCuisines])
 
   useEffect(() => {
-    console.log('all data:', allData)
-    console.log('all data:collection', collection)
     if (collection && allData) {
       setActiveCollection(collection)
       const tempData = [...allData]
-      if (isShopType) {
-        setRestaurantData(tempData)
-      } else {
-        const filteredData = tempData?.filter((item) => item?.cuisines?.includes(collection))
-        console.log('all data changed:', filteredData)
-        setRestaurantData(filteredData)
-      }
-
+      const filteredData = tempData?.filter((item) => item?.cuisines?.includes(collection))
+      setRestaurantData(filteredData)
       setfilterApplied(true)
     }
   }, [collection, route, allData])
@@ -271,27 +243,14 @@ function Menu({ route, props }) {
   // }, [routeData, allCuisines])
 
   const collectionData = useMemo(() => {
-    console.log('allCuisines collection', allCuisines?.cuisines, isShopType)
-    if (isShopType) {
+    if (routeData?.name === 'Restaurants' || routeData?.params?.shopType == 'restaurant') {
+      return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Restaurant')
+    } else if (routeData?.name === 'Store' || routeData?.params?.shopType == 'grocery') {
+      return allCuisines?.cuisines?.filter((cuisine) => cuisine?.shopType === 'Grocery')
+    } else {
       return allCuisines?.cuisines
     }
-
-    const normalizedShopType = (
-      routeData?.params?.shopType ||
-      selectedType ||
-      (routeData?.name === 'Restaurants' ? 'restaurant' : routeData?.name === 'Store' ? 'grocery' : '')
-    )?.toLowerCase()
-
-    if (normalizedShopType === 'restaurant' || normalizedShopType === 'grocery') {
-      return allCuisines?.cuisines?.filter(
-        (cuisine) => cuisine?.shopType?.toLowerCase() === normalizedShopType
-      )
-    }
-
-    return allCuisines?.cuisines
-  }, [allCuisines, isShopType, routeData, selectedType])
-
-  console.log('collectionData::', collectionData)
+  }, [routeData, allCuisines])
 
   const setCurrentLocation = async () => {
     setBusy(true)
@@ -389,7 +348,7 @@ function Menu({ route, props }) {
   )
 
   const emptyView = () => {
-    if (loading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
+    if (loading || mutationLoading || loadingOrders) return loadingScreen()
     else {
       return (
         <View style={styles().emptyViewContainer}>
@@ -457,7 +416,7 @@ function Menu({ route, props }) {
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[refetch]} />
 
-  if (loading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
+  if (loading || mutationLoading || loadingOrders) return loadingScreen()
 
   // const searchRestaurants = (searchText) => {
   //   const data = []
@@ -526,7 +485,7 @@ function Menu({ route, props }) {
   const getItemLayout = (data, index) => ({
     length: 108,
     offset: 108 * index,
-    index
+    index: currentIndex
   })
 
   const applyFilters = () => {
@@ -546,7 +505,7 @@ function Menu({ route, props }) {
 
     // Sort filter
     if (sort?.selected?.length > 0) {
-      if (sort.selected[0] === 'Fast Delivery') {
+      if (sort.selected[0] === 'Quick Delivery') {
         filteredData.sort((a, b) => a.deliveryTime - b.deliveryTime)
       } else if (sort.selected[0] === 'Distance') {
         filteredData.sort((a, b) => a.distanceWithCurrentLocation - b.distanceWithCurrentLocation)
@@ -586,8 +545,9 @@ function Menu({ route, props }) {
     setFilters(appliedFilters) // Reset filters to the last applied state
   }
 
-  const menuHeader = (
-    <View>
+  return (
+    <SafeAreaView edges={['left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
+      <ScrollView style={[styles(currentTheme).container]} stickyHeaderIndices={[2]} nestedScrollEnabled={true}>
         <View style={[styles(currentTheme).header, { paddingHorizontal: 10, paddingVertical: 6 }]}>
           <View>
             <TextDefault bolder H2 isRTL>
@@ -617,6 +577,7 @@ function Menu({ route, props }) {
             ref={flatListRef}
             data={collectionData ?? []}
             renderItem={({ item, index }) => {
+              setCurrentIndex(index)
               return (
                 <Ripple
                   activeOpacity={0.8}
@@ -653,47 +614,41 @@ function Menu({ route, props }) {
         <View style={{ backgroundColor: currentTheme?.toggler }}>{restaurantData?.length === 0 ? null : <ActiveOrdersAndSections menuPageHeading={heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants'} subHeading={subHeading ? subHeading : ''} />}</View>
 
         {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
-    </View>
-  )
-
-  return (
-    <SafeAreaView edges={['left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
-      <Animated.FlatList
-        style={[styles(currentTheme).container]}
-        ListHeaderComponent={menuHeader}
-        contentInset={{ top: containerPaddingTop }}
-        contentContainerStyle={{
-          paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
-          paddingBottom: HEIGHT * 0.34,
-          paddingHorizontal: 15,
-          gap: 16
-        }}
-        contentOffset={{ y: -containerPaddingTop }}
-        onScroll={onScroll}
-        scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={emptyView()}
-        keyExtractor={(item, index) => index.toString()}
-        refreshControl={
-          <RefreshControl
-            progressViewOffset={containerPaddingTop}
-            colors={[currentTheme.iconColorPink]}
-            refreshing={networkStatus === 4}
-            onRefresh={() => {
-              if (networkStatus === 7) {
-                refetch()
-              }
-            }}
-          />
-        }
-        data={sortRestaurantsByOpenStatus(restaurantData || [])}
-        renderItem={({ item }) => {
-          if (item && item?.image && item?._id) {
-            const restaurantOpen = isOpen(item)
-            return <NewRestaurantCard {...item} fullWidth isOpen={restaurantOpen} />
+        <Animated.FlatList
+          contentInset={{ top: containerPaddingTop }}
+          contentContainerStyle={{
+            paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
+            paddingBottom: HEIGHT * 0.34,
+            padding: 15,
+            gap: 16
+          }}
+          contentOffset={{ y: -containerPaddingTop }}
+          onScroll={onScroll}
+          scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={emptyView()}
+          keyExtractor={(item, index) => index.toString()}
+          refreshControl={
+            <RefreshControl
+              progressViewOffset={containerPaddingTop}
+              colors={[currentTheme.iconColorPink]}
+              refreshing={networkStatus === 4}
+              onRefresh={() => {
+                if (networkStatus === 7) {
+                  refetch()
+                }
+              }}
+            />
           }
-        }}
-      />
+          data={sortRestaurantsByOpenStatus(restaurantData || [])}
+          renderItem={({ item }) => {
+            if (item && item?.image && item?._id) {
+              const restaurantOpen = isOpen(item)
+              return <NewRestaurantCard {...item} fullWidth isOpen={restaurantOpen} />
+            }
+          }}
+        />
+      </ScrollView>
       <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
       <Modalize
         ref={filtersModalRef}

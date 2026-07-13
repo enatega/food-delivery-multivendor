@@ -92,8 +92,14 @@ export const gu = {
     checkout: 'ચેકઆઉટ',
     creditCart: 'ક્રેડિટ/ડેબિટ કાર્ડ',
     paypal: 'પેપાલ',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'કેશ',
     thankYou: 'આભાર!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'તમારો ઓર્ડર પુષ્ટિ થયો',
     orderId: 'તમારો ઓર્ડર આઈડી',
     orderAmount: 'તમારી ઓર્ડરની રકમ',
@@ -522,6 +528,8 @@ export const gu = {
   logoutMessage: 'સફળતાપૂર્વક લૉગઆઉટ થયું',
   somethingWentWrong: 'કંઈક ખોટું થયું',
   checkInternet: 'તમારું ઇન્ટરનેટ કનેક્શન તપાસો',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
   selectCity: 'શહેર પસંદ કરો',
   Location: 'સ્થાન',
   phoneNumberExist: 'આપેલ ફોન નંબર પહેલેથી જ અસ્તિત્વમાં છે!',
@@ -655,5 +663,63 @@ export const gu = {
   "noMatchingResultsDesc": "તમે જે શોધી રહ્યા છો તે શોધવા માટે તમારા ફિલ્ટર્સને સમાયોજિત કરો અથવા અન્ય વિકલ્પો શોધો.",
   "Applied Filters": 'લાગુ કરેલ ફિલ્ટર્સ',
   "WhatsApp is not installed on the device": "વોટ્સએપ ડિવાઇસ પર ઇન્સ્ટોલ નથી",
-  "Install it": "તેને ઇન્સ્ટોલ કરો"
+  "Install it": "તેને ઇન્સ્ટોલ કરો",
+  "You are all up to date": "તમે બધા અપડેટ છો",
+  "No new notifications - come back soon": "નવી સૂચનાઓ નથી - ટૂંક સમયમાં પાછા આવો",
+  "Payments": "પેમેન્ટ્સ",
+  "Vouchers": "વાઉચર્સ",
+  "App supports & FAQs": "એપ સપોર્ટ અને વારંવાર પૂછાયેલા પ્રશ્નો",
+  "Feedback": "પ્રતિસાદ",
+  "My conversations": "મારી વાતચીતો",
+  "Change phone number": "ફોન નંબર બદલો",
+  "Change email address": "ઇમેઇલ સરનામું બદલો",
+  "Change profile name": "પ્રોફાઇલ નામ બદલો",
+  "Change or delete address": "સરનામું બદલો અથવા કાઢી નાખો",
+  "Delete account": "એકાઉન્ટ કાઢી નાખો",
+  "Reset Password": "પાસવર્ડ રીસેટ કરો",
+  "Login issue": "લૉગિન સમસ્યા",
+  "How do you rate our products?": "તમે અમારા ઉત્પાદનોનું મૂલ્યાંકન કેવી રીતે કરો છો?",
+  "Your feedback helps us serve you better.": "તમારો પ્રતિસાદ અમને તમારી સેવા વધુ સારી રીતે કરવામાં મદદ કરે છે.",
+  "Write your experience here...": "તમારો અનુભવ અહીં લખો...",
+  "Submit": "સબમિટ કરો",
+  "Payment Methods": "ચુકવણી પદ્ધતિઓ",
+  "Add or Update your saved payment methods.": "તમારી સાચવેલી ચુકવણી પદ્ધતિઓ ઉમેરો અથવા અપડેટ કરો.",
+  "Default": "ડિફૉલ્ટ",
+  "Add payment method": "ચુકવણી પદ્ધતિ ઉમેરો",
+  "Add payment methods": "ચુકવણી પદ્ધતિઓ ઉમેરો",
+  "Add a credit or debit card to quickly complete purchases.": "ઝડપથી ખરીદી પૂર્ણ કરવા માટે ક્રેડિટ અથવા ડેબિટ કાર્ડ ઉમેરો.",
+  "Card number": "કાર્ડ નંબર",
+  "Expiration date": "સમાપ્તિ તારીખ",
+  "Expiration date (MM / YY)": "સમાપ્તિ તારીખ (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "સુરક્ષા કોડ",
+  "Save": "સાચવો",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
 }

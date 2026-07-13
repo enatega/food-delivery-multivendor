@@ -10,7 +10,8 @@ export const WrongAddressModal = ({
   theme,
   modalVisible,
   setModalVisible,
-  handleNavigation
+  handleNavigation,
+  isSingleVendor = false
 }) => {
   const { t } = useTranslation()
   const styles = useStyles(theme)
@@ -27,7 +28,9 @@ export const WrongAddressModal = ({
             </View>
             <View>
               <TextDefault H5 textColor={theme.gray500}>
-                {t('This restaurant doesn’t deliver to your location. Please explore restaurants available in your delivery area')}{'.'}
+                {isSingleVendor
+                  ? t("This restaurant doesn't deliver to your location.")
+                  : t('This restaurant doesn\'t deliver to your location. Please explore restaurants available in your delivery area') + '.'}
               </TextDefault>
             </View>
 

@@ -83,8 +83,14 @@ export const id = {
     checkout: 'Checkout',
     creditCart: 'Kartu Kredit/Debit',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'Tunai',
     thankYou: 'Terima Kasih!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'Pesanan Anda telah dikonfirmasi',
     orderId: 'ID Pesanan Anda',
     orderAmount: 'Jumlah Pesanan Anda',
@@ -490,6 +496,8 @@ export const id = {
     logoutMessage: 'Berhasil keluar',
     somethingWentWrong: 'Ada yang salah',
     checkInternet: 'Periksa koneksi internet Anda',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'Pilih Kota',
     Location: 'Lokasi',
     phoneNumberExist: 'Nomor telepon yang diberikan sudah ada!',
@@ -620,6 +628,63 @@ export const id = {
     "noMatchingResultsDesc": "Sesuaikan filter Anda atau jelajahi opsi lain untuk menemukan apa yang Anda cari.",
     "Applied Filters": 'Filter yang Diterapkan',
     "WhatsApp is not installed on the device": "WhatsApp tidak diinstal pada perangkat",
-    "Install it": "Instal"
-  }
-  
+    "Install it": "Instal",
+    "You are all up to date": "Anda sudah terbarui",
+    "No new notifications - come back soon": "Tidak ada notifikasi baru - kembali lagi nanti",
+    "Payments": "Pembayaran",
+    "Vouchers": "Voucher",
+    "App supports & FAQs": "Dukungan aplikasi & FAQ",
+    "Feedback": "Umpan balik",
+    "My conversations": "Percakapan saya",
+    "Change phone number": "Ubah nomor telepon",
+    "Change email address": "Ubah alamat email",
+    "Change profile name": "Ubah nama profil",
+    "Change or delete address": "Ubah atau hapus alamat",
+    "Delete account": "Hapus akun",
+    "Reset Password": "Atur ulang kata sandi",
+    "Login issue": "Masalah masuk",
+    "How do you rate our products?": "Bagaimana Anda menilai produk kami?",
+    "Your feedback helps us serve you better.": "Masukan Anda membantu kami melayani Anda dengan lebih baik.",
+    "Write your experience here...": "Tulis pengalaman Anda di sini...",
+    "Submit": "Kirim",
+    "Payment Methods": "Metode Pembayaran",
+  "Add or Update your saved payment methods.": "Tambahkan atau Perbarui metode pembayaran tersimpan Anda.",
+  "Default": "Default",
+  "Add payment method": "Tambahkan metode pembayaran",
+  "Add payment methods": "Tambahkan metode pembayaran",
+  "Add a credit or debit card to quickly complete purchases.": "Tambahkan kartu kredit atau debit untuk menyelesaikan pembelian dengan cepat.",
+  "Card number": "Nomor kartu",
+  "Expiration date": "Tanggal kedaluwarsa",
+  "Expiration date (MM / YY)": "Tanggal kedaluwarsa (BB / TT)",
+  "CVV": "CVV",
+  "Security code": "Kode keamanan",
+  "Save": "Simpan",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

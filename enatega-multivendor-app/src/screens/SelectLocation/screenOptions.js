@@ -32,7 +32,7 @@ const screenOptions = (props) => {
       <BackButton
         iconColor={props?.iconColor}
         icon='leftArrow'
-        prevScreen={props?.locationPrevScreen}
+        backColor={props?.backColor}
       />
     ),
     headerRight: () => (
@@ -48,5 +48,6 @@ const screenOptions = (props) => {
       />
     )
   }
+  
 }
 export default screenOptions

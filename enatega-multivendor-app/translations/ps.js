@@ -83,8 +83,14 @@ export const ps = {
     checkout: 'چیک آوټ',
     creditCart: 'کریډیټ/ډیبټ کارډ',
     paypal: 'پی پال',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'نغدې',
     thankYou: 'مننه!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'ستاسو امر تائید شو',
     orderId: 'ستاسو د امر شمېره',
     orderAmount: 'ستاسو د امر مقدار',
@@ -492,6 +498,8 @@ export const ps = {
   logoutMessage: 'په بریالیتوب سره ووتل',
   somethingWentWrong: 'یو څه غلط شو',
   checkInternet: 'خپل انټرنیټ اتصال وګورئ',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
   selectCity: 'ښار غوره کړئ',
   Location: 'ځای',
   phoneNumberExist: 'ورکړل شوې ټیلیفون شمېره لا دمخه شتون لري!',
@@ -623,4 +631,62 @@ export const ps = {
   "Applied Filters": 'پلې شوي فلټرونه',
   "WhatsApp is not installed on the device": "واټساپ په وسیله نصب شوی نه دی",
   "Install it": "نصب یې کړئ",
+  "You are all up to date": "تاسو ټول تازه یاست",
+  "No new notifications - come back soon": "نوي خبرتیاوې نشته - ژر راګرځئ",
+  "Payments": "تادیات",
+  "Vouchers": "واوچرونه",
+  "App supports & FAQs": "د اپلیکیشن ملاتړ او ډیرو پوښتل شویو پوښتنو",
+  "Feedback": "بیرته راګرځونه",
+  "My conversations": "زما خبرې اترې",
+  "Change phone number": "د تلیفون شمیره بدل کړئ",
+  "Change email address": "د بریښنالیک پته بدل کړئ",
+  "Change profile name": "د پروفایل نوم بدل کړئ",
+  "Change or delete address": "پته بدل کړئ یا حذف کړئ",
+  "Delete account": "حساب حذف کړئ",
+  "Reset Password": "پاسورډ بیا تنظیم کړئ",
+  "Login issue": "د ننوتلو ستونزه",
+  "How do you rate our products?": "تاسو زموږ محصولات څنګه ارزولی؟",
+  "Your feedback helps us serve you better.": "ستاسو نظر زموږ سره مرسته کوي چې تاسو ته غوره خدمت وړاندې کړو.",
+  "Write your experience here...": "خپل تجربه دلته ولیکئ...",
+  "Submit": "سپارل",
+  "Payment Methods": "د تادیې میتودونه",
+  "Add or Update your saved payment methods.": "خپل خوندي شوي د تادیې میتودونه اضافه یا نوي کړئ.",
+  "Default": "ڈیفالٹ",
+  "Add payment method": "د تادیې میتود اضافه کړئ",
+  "Add payment methods": "د تادیې میتودونه اضافه کړئ",
+  "Add a credit or debit card to quickly complete purchases.": "د پیرودلو چټک بشپړولو لپاره کریډیټ یا ډیبټ کارت اضافه کړئ.",
+  "Card number": "د کارت شمیره",
+  "Expiration date": "د پای نیټه",
+  "Expiration date (MM / YY)": "د پای نیټه (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "امنیتي کوډ",
+  "Save": "خوندي کړئ",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
 }

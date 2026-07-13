@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import useEnvVars from '../../environment'
 import * as amplitude from '@amplitude/analytics-react-native'
-import { getTrackingPermissions } from './useAppTrackingTrasparency'
+// import { getTrackingPermissions } from './useAppTrackingTrasparency'
 
 const Analytics = () => {
   const { AMPLITUDE_API_KEY } = useEnvVars()
@@ -48,7 +48,7 @@ const Analytics = () => {
 
   const initialize = async () => {
     try {
-      const trackingStatus = await getTrackingPermissions()
+      // const trackingStatus = await getTrackingPermissions()
       if (isInitialized || !apiKey /*  || trackingStatus !== 'granted' */) {
         return
       }
@@ -77,7 +77,7 @@ const Analytics = () => {
         identifyObj.remove(properties)
         amplitude.Identify(identifyObj)
       }
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const track = async (event, options) => {
@@ -94,7 +94,7 @@ const Analytics = () => {
       } else {
         await amplitude.track(event)
       }
-    } catch (err) {}
+    } catch (err) { }
   }
 
   useEffect(() => {

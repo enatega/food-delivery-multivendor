@@ -1,52 +1,31 @@
 import React, { useRef, useEffect } from 'react';
-import { View, StyleSheet, AppState } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 
 export default function VideoBanner(props) {
-  const appState = useRef(AppState.currentState);
-
-  // Extract URI from source - handle both string and object formats
-  const sourceUri = typeof props?.source === 'string' 
-    ? props.source 
-    : props?.source?.uri || '';
-
-  const player = useVideoPlayer(sourceUri, (player) => {
+  // Create video player instance
+  const player = useVideoPlayer(props?.source, (player) => {
     player.loop = true;
     player.muted = true;
-    if (AppState.currentState === 'active') {
-      player.play();
-    }
+    player.play();
   });
-
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      if (appState.current.match(/active/) && nextAppState === 'background') {
-        player.pause();
-      } else if (nextAppState === 'active') {
-        player.play();
-      }
-      appState.current = nextAppState;
-    });
-
-    return () => subscription?.remove();
-  }, [player]);
 
   useEffect(() => {
     const subscription = player.addListener('statusChange', (status) => {
       if (status.isLoaded) {
-        console.log('Video loaded successfully from:', sourceUri);
+        // Video is ready to play
+        console.log('Video loaded successfully');
       }
       
       if (status.error) {
-        console.error('expo-video error:', status.error);
-        console.error('Video source:', sourceUri);
+        console.log('expo-video error:', status.error);
       }
     });
 
     return () => {
       subscription?.remove();
     };
-  }, [player, sourceUri]);
+  }, [player]);
 
   return (
     <View style={[styles.container, props?.style]}>
@@ -57,7 +36,6 @@ export default function VideoBanner(props) {
         allowsPictureInPicture={false}
         nativeControls={false}
         contentFit="cover"
-        onFirstFrameRender={props?.onFirstFrameRender}
       />
       {props?.children}
     </View>

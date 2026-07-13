@@ -92,8 +92,14 @@ export const te = {
     checkout: 'చెక్‌అవుట్',
     creditCart: 'క్రెడిట్/డెబిట్ కార్డ్',
     paypal: 'పేపాల్',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'క్యాష్',
     thankYou: 'ధన్యవాదాలు!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'మీ ఆర్డర్ ధృవీకరించబడింది',
     orderId: 'మీ ఆర్డర్ ఐడీ',
     orderAmount: 'మీ ఆర్డర్ మొత్తం',
@@ -522,6 +528,8 @@ export const te = {
     logoutMessage: 'విజయవంతంగా లాగ్‌అవుట్ అయ్యారు',
     somethingWentWrong: 'ఏదో తప్పు జరిగింది',
     checkInternet: 'మీ ఇంటర్నెట్ కనెక్షన్‌ను తనిఖీ చేయండి',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'నగరాన్ని ఎంచుకోండి',
     Location: 'స్థానం',
     phoneNumberExist: 'ఇచ్చిన ఫోన్ నంబర్ ఇప్పటికే ఉంది!',
@@ -655,5 +663,63 @@ export const te = {
     "noMatchingResultsDesc": "మీరు శోధిస్తున్నది కనుగొనడానికి మీ ఫిల్టర్‌లను సర్దుబాటు చేయండి లేదా ఇతర ఎంపికలను అన్వేషించండి.",
     "Applied Filters": 'వర్తింపజేసిన ఫిల్టర్లు',
     "WhatsApp is not installed on the device": "వాట్సాప్ డివైస్‌లో ఇన్‌స్టాల్ చేయబడలేదు",
-    "Install it": "దీన్ని ఇన్‌స్టాల్ చేయండి"
-  }
+    "Install it": "దీన్ని ఇన్‌స్టాల్ చేయండి",
+    "You are all up to date": "మీరు అన్నీ నవీకరించబడ్డారు",
+    "No new notifications - come back soon": "కొత్త నోటిఫికేషన్‌లు లేవు - త్వరలో తిరిగి రండి",
+    "Payments": "చెల్లింపులు",
+    "Vouchers": "వౌచర్లు",
+    "App supports & FAQs": "అనువర్తన మద్దతు మరియు తరచుగా అడిగే ప్రశ్నలు",
+    "Feedback": "ప్రతిస్పందన",
+    "My conversations": "నా సంభాషణలు",
+    "Change phone number": "ఫోన్ నంబర్ మార్చండి",
+    "Change email address": "ఇమెయిల్ చిరునామా మార్చండి",
+    "Change profile name": "ప్రొఫైల్ పేరు మార్చండి",
+    "Change or delete address": "చిరునామాను మార్చండి లేదా తొలగించండి",
+    "Delete account": "ఖాతాను తొలగించండి",
+    "Reset Password": "పాస్‌వర్డ్ రీసెట్ చేయండి",
+    "Login issue": "లాగిన్ సమస్య",
+    "How do you rate our products?": "మీరు మా ఉత్పత్తులను ఎలా రేట్ చేస్తారు?",
+    "Your feedback helps us serve you better.": "మీ అభిప్రాయం మాకు మీకు మంచి సేవ చేయడంలో సహాయపడుతుంది.",
+    "Write your experience here...": "మీ అనుభవాన్ని ఇక్కడ వ్రాయండి...",
+    "Submit": "సమర్పించండి",
+    "Payment Methods": "చెల్లింపు పద్ధతులు",
+  "Add or Update your saved payment methods.": "మీ సేవ్ చేసిన చెల్లింపు పద్ధతులను జోడించండి లేదా నవీకరించండి.",
+  "Default": "డిఫాల్ట్",
+  "Add payment method": "చెల్లింపు పద్ధతిని జోడించండి",
+  "Add payment methods": "చెల్లింపు పద్ధతులను జోడించండి",
+  "Add a credit or debit card to quickly complete purchases.": "రక్షణగా కొనుగోలు పూర్తి చేయడానికి క్రెడిట్ లేదా డెబిట్ కార్డ్ ని జోడించండి.",
+  "Card number": "కార్డ్ నంబర్",
+  "Expiration date": "గడువు తేదీ",
+  "Expiration date (MM / YY)": "గడువు తేదీ (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "రక్షణ కోడ్",
+  "Save": "సేవ్ చేయండి",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

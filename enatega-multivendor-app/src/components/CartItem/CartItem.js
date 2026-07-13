@@ -21,54 +21,24 @@ const CartItem = (props) => {
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
-  const navigation = useNavigation()
-  
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const imageUrl =
     props?.itemImage && props?.itemImage.trim() !== ''
       ? props?.itemImage
       : IMAGE_LINK
-
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
   }
-
-  const navigateToRestaurant = () => {
-    const restaurant = props?.restaurantData
-    if (!restaurant) {
-      navigation.goBack()
-      return
-    }
-
-    const navParams = {
-      _id: restaurant._id,
-      name: restaurant.name,
-      image: restaurant.image,
-      shopType: restaurant.shopType,
-      isAvailable: restaurant.isAvailable,
-      isOpen: restaurant.openingTimes,
-      deliveryTime: restaurant.deliveryTime,
-      minimumOrder: restaurant.minimumOrder,
-      tax: restaurant.tax,
-      reviewAverage: restaurant.rating,
-      reviewCount: restaurant.reviewCount,
-      categories: restaurant.categories,
-      address: restaurant.address,
-      location: restaurant.location
-    }
-
-    if (restaurant.shopType === 'grocery') {
-      navigation.navigate('NewRestaurantDetailDesign', navParams)
-    } else {
-      navigation.navigate('Restaurant', navParams)
-    }
+  const navigation = useNavigation()
+  const navigateBack = () => {
+    navigation.goBack() // Navigate back function
   }
 
+  // Using useSharedValue for animated quantity
   const animatedQuantity = useSharedValue(1)
 
   const animateQuantityChange = () => {
@@ -185,7 +155,7 @@ const CartItem = (props) => {
               {parseFloat(props?.dealPrice).toFixed(2)}
             </TextDefault>
             <View style={styles().divider} />
-            <TouchableOpacity onPress={navigateToRestaurant}>
+            <TouchableOpacity onPress={navigateBack}>
               <TextDefault
                 textColor={currentTheme.fontFourthColor}
                 bolder

@@ -6,6 +6,7 @@ import styles from './styles'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
+import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -53,7 +54,7 @@ function OrderDetail(props) {
   const id = props?.route.params ? props?.route.params?._id : null
   const orderData = props?.route.params ? props?.route.params?.order : null
   // console.log('orderData',orderData)
-  const { loadingOrders, errorOrders, orders, reFetchOrders } = useContext(OrdersContext)
+  const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
@@ -98,18 +99,6 @@ function OrderDetail(props) {
     order = orderData
   }
 
-  // When an order becomes DELIVERED, the active and past order lists refetch
-  // separately (see OrdersContext subscription). There is a brief window where
-  // the order is absent from BOTH lists, which previously made `order`
-  // undefined and crashed the destructuring below ("Order not found"). Keep the
-  // last successfully resolved order so the screen stays stable across that gap.
-  const lastKnownOrderRef = useRef(null)
-  if (order) {
-    lastKnownOrderRef.current = order
-  } else if (lastKnownOrderRef.current) {
-    order = lastKnownOrderRef.current
-  }
-
   useEffect(() => {
     props?.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
@@ -126,7 +115,6 @@ function OrderDetail(props) {
       const initialTime = calulateRemainingTime(order)
       setRemainingTimeState(initialTime)
 
-
       const intervalId = setInterval(() => {
         const updatedTime = calulateRemainingTime(order)
         setRemainingTimeState(updatedTime)
@@ -140,30 +128,14 @@ function OrderDetail(props) {
     }
   }, [order])
 
-  // Only show the full-screen spinner on the initial load, before we have any
-  // order to display. On a status-change refetch (loadingOrders flips true
-  // because both order lists refetch with notifyOnNetworkStatusChange), we
-  // already have `order` from the list/route param/lastKnownOrderRef, so keep
-  // the screen mounted and let it update in place instead of a circular reload.
-  if (loadingOrders && !order) {
+  if (loadingOrders) {
     return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (errorOrders) {
-    return (
-      <ErrorView
-        refetchFunctions={reFetchOrders ? [reFetchOrders] : []}
-        errorMessage={t('orderLoadError')}
-      />
-    )
+    return <TextError text={JSON.stringify(errorOrders)} />
   }
 
-  // Order still resolving (e.g. mid-refetch after status change) — show the
-  // spinner instead of crashing on the destructuring below.
-  if (!order) {
-    return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
-  }
-
-  const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges, discountAmount } = order
+  const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges } = order
 
   const subTotal = total - tip - tax - deliveryCharges
 
@@ -285,7 +257,7 @@ function OrderDetail(props) {
         </View>
         <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
         <Detail navigation={props?.navigation} currencySymbol={configuration.currencySymbol} items={items} from={restaurant?.name} orderNo={order?.orderId} deliveryAddress={deliveryAddress?.deliveryAddress} subTotal={subTotal} tip={tip} tax={tax} deliveryCharges={deliveryCharges} total={total} theme={currentTheme} id={id} rider={order?.rider} orderStatus={order?.orderStatus} />
-        <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol} tip={tip} discountAmount={discountAmount} />
+        <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol} />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
         {/* Tip is not showing on the tracking page
@@ -303,7 +275,6 @@ function OrderDetail(props) {
         <View style={{ margin: scale(20) }}>
           <Button disabled={isOrderCancelable ? false : true} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
         </View>
-
       </View>
       <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle} cancelOrder={cancelOrder} loading={loadingCancel} orderStatus={order?.orderStatus} />
     </View>

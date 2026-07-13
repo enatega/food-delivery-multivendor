@@ -92,8 +92,14 @@ export const hi = {
     checkout: 'चेकआउट',
     creditCart: 'क्रेडिट/डेबिट कार्ड',
     paypal: 'पेपैल',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'नकद',
     thankYou: 'धन्यवाद!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'आपका ऑर्डर पुष्टि हो गया है',
     orderId: 'आपका ऑर्डर आईडी',
     orderAmount: 'आपकी ऑर्डर राशि',
@@ -523,6 +529,8 @@ export const hi = {
     logoutMessage: 'सफलतापूर्वक लॉग आउट हो गया',
     somethingWentWrong: 'कुछ गलत हो गया',
     checkInternet: 'अपना इंटरनेट कनेक्शन जांचें',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'शहर चुनें',
     Location: 'स्थान',
     phoneNumberExist: 'प्रदान किया गया फोन नंबर पहले से मौजूद है!',
@@ -658,4 +666,62 @@ export const hi = {
     "Applied Filters": 'लागू फिल्टर',
     "WhatsApp is not installed on the device": "डिवाइस पर WhatsApp इंस्टॉल नहीं है",
     "Install it": "इसे इंस्टॉल करें",
-  }
+    "You are all up to date": "आप सभी अपडेट हैं",
+    "No new notifications - come back soon": "कोई नई सूचनाएं नहीं - जल्दी वापस आएं",
+    "Payments": "भुगतान",
+    "Vouchers": "वाउचर",
+    "App supports & FAQs": "ऐप सपोर्ट और अक्सर पूछे जाने वाले प्रश्न",
+    "Feedback": "प्रतिक्रिया",
+    "My conversations": "मेरी बातचीत",
+    "Change phone number": "फोन नंबर बदलें",
+    "Change email address": "ईमेल पता बदलें",
+    "Change profile name": "प्रोफ़ाइल नाम बदलें",
+    "Change or delete address": "पता बदलें या हटाएं",
+    "Delete account": "खाता हटाएं",
+    "Reset Password": "पासवर्ड रीसेट करें",
+    "Login issue": "लॉगिन समस्या",
+    "How do you rate our products?": "आप हमारे उत्पादों को कैसे रेट करते हैं?",
+    "Your feedback helps us serve you better.": "आपकी प्रतिक्रिया हमें आपकी बेहतर सेवा करने में मदद करती है।",
+    "Write your experience here...": "अपना अनुभव यहाँ लिखें...",
+    "Submit": "जमा करें",
+    "Payment Methods": "भुगतान विधियां",
+  "Add or Update your saved payment methods.": "अपनी सहेजी गई भुगतान विधियों को जोड़ें या अपडेट करें।",
+  "Default": "डिफ़ॉल्ट",
+  "Add payment method": "भुगतान विधि जोड़ें",
+  "Add payment methods": "भुगतान विधियां जोड़ें",
+  "Add a credit or debit card to quickly complete purchases.": "खरीदारी जल्दी पूरी करने के लिए क्रेडिट या डेबिट कार्ड जोड़ें।",
+  "Card number": "कार्ड नंबर",
+  "Expiration date": "समाप्ति तिथि",
+  "Expiration date (MM / YY)": "समाप्ति तिथि (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "सुरक्षा कोड",
+  "Save": "सहेजें",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

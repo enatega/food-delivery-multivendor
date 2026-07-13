@@ -14,8 +14,7 @@ const styles = (props = null) =>
       position: 'absolute',
       top: 0,
       left: 0,
-      right: 0,
-      zIndex:2
+      right: 0
     },
 
     touchArea: {

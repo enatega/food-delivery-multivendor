@@ -83,8 +83,14 @@ export const bn = {
   checkout: 'চেকআউট',
   creditCart: 'ক্রেডিট/ডেবিট কার্ড',
   paypal: 'পেপ্যাল',
+  googlePay: 'Google Pay',
+  payUsingApplePay: 'Pay using Apple Pay',
+  payUsingGooglePay: 'Pay using Google Pay',
+  applePay: 'Apple Pay',
+  payUsingPaypal: 'Pay using Paypal',
   cod: 'নগদ',
   thankYou: 'ধন্যবাদ!',
+  thanksForUsing: 'Thanks for using',
   orderConfirmed: 'আপনার অর্ডার নিশ্চিত হয়েছে',
   orderId: 'আপনার অর্ডার আইডি',
   orderAmount: 'আপনার অর্ডারের পরিমাণ',
@@ -491,6 +497,8 @@ export const bn = {
   logoutMessage: 'সফলভাবে লগআউট হয়েছে',
   somethingWentWrong: 'কিছু একটা ভুল হয়েছে',
   checkInternet: 'আপনার ইন্টারনেট কানেকশন চেক করুন',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
   selectCity: 'শহর নির্বাচন করুন',
   Location: 'লোকেশন',
   phoneNumberExist: 'প্রদত্ত ফোন নম্বর ইতিমধ্যে বিদ্যমান!',
@@ -621,5 +629,63 @@ export const bn = {
   noMatchingResultsDesc: 'আপনার ফিল্টার সাজানোর মাধ্যমে বা অন্যান্য বিকল্প অন্বেষণ করে আপনি যা খুঁজছেন তা পাওয়ার চেষ্টা করুন।',
   'Applied Filters': 'প্রয়োগ করা ফিল্টার',
   'WhatsApp is not installed on the device': 'ডিভাইসে হোয়াটসঅ্যাপ ইনস্টল করা নেই',
-  'Install it': 'এটি ইনস্টল করুন'
+  'Install it': 'এটি ইনস্টল করুন',
+  'You are all up to date': 'আপনি সব আপডেট',
+  'No new notifications - come back soon': 'কোন নতুন বিজ্ঞপ্তি নেই - শীঘ্রই ফিরে আসুন',
+  'Payments': 'পেমেন্ট',
+  'Vouchers': 'ভাউচার',
+  'App supports & FAQs': 'অ্যাপ সমর্থন এবং প্রায়শই জিজ্ঞাসিত প্রশ্ন',
+  'Feedback': 'ফিডব্যাক',
+  'My conversations': 'আমার কথোপকথন',
+  'Change phone number': 'ফোন নম্বর পরিবর্তন করুন',
+  'Change email address': 'ইমেইল ঠিকানা পরিবর্তন করুন',
+  'Change profile name': 'প্রোফাইল নাম পরিবর্তন করুন',
+  'Change or delete address': 'ঠিকানা পরিবর্তন বা মুছে ফেলুন',
+  'Delete account': 'অ্যাকাউন্ট মুছে ফেলুন',
+  'Reset Password': 'পাসওয়ার্ড রিসেট করুন',
+  'Login issue': 'লগইন সমস্যা',
+  'How do you rate our products?': 'আপনি আমাদের পণ্যগুলি কীভাবে রেট করবেন?',
+  'Your feedback helps us serve you better.': 'আপনার মতামত আমাদের আপনাকে আরও ভালো সেবা দিতে সাহায্য করে।',
+  'Write your experience here...': 'আপনার অভিজ্ঞতা এখানে লিখুন...',
+  'Submit': 'জমা দিন',
+  "Payment Methods": "পেমেন্ট পদ্ধতি",
+  "Add or Update your saved payment methods.": "আপনার সংরক্ষিত পেমেন্ট পদ্ধতি যোগ বা আপডেট করুন।",
+  "Default": "ডিফল্ট",
+  "Add payment method": "পেমেন্ট পদ্ধতি যোগ করুন",
+  "Add payment methods": "পেমেন্ট পদ্ধতি যোগ করুন",
+  "Add a credit or debit card to quickly complete purchases.": "দ্রুত কেনাকাটা সম্পূর্ণ করতে একটি ক্রেডিট বা ডেবিট কার্ড যোগ করুন।",
+  "Card number": "কার্ড নম্বর",
+  "Expiration date": "মেয়াদ উত্তীর্ণের তারিখ",
+  "Expiration date (MM / YY)": "মেয়াদ উত্তীর্ণের তারিখ (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "নিরাপত্তা কোড",
+  "Save": "সংরক্ষণ করুন",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
 }

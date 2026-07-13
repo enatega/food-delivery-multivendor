@@ -92,8 +92,14 @@ export const uz = {
     checkout: 'To‘lov',
     creditCart: 'Kredit/Debet Kartasi',
     paypal: 'Paypal',
+    googlePay: 'Google Pay',
+    payUsingApplePay: 'Pay using Apple Pay',
+    payUsingGooglePay: 'Pay using Google Pay',
+    applePay: 'Apple Pay',
+    payUsingPaypal: 'Pay using Paypal',
     cod: 'Naqd',
     thankYou: 'Rahmat!',
+    thanksForUsing: 'Thanks for using',
     orderConfirmed: 'Buyurtmangiz tasdiqlandi',
     orderId: 'Buyurtma ID',
     orderAmount: 'Buyurtma Summasi',
@@ -522,6 +528,8 @@ export const uz = {
     logoutMessage: 'Muvaffaqiyatli chiqildi',
     somethingWentWrong: 'Nimadir noto‘g‘ri bo‘ldi',
     checkInternet: 'Internet aloqangizni tekshiring',
+  offlineTitle: 'You are offline',
+  offlineBadge: 'Offline',
     selectCity: 'Shaharni Tanlang',
     Location: 'Joylashuv',
     phoneNumberExist: 'Kiritilgan telefon raqami allaqachon mavjud!',
@@ -656,4 +664,62 @@ export const uz = {
     "Applied Filters": 'Qo‘llanilgan Filtrlar',
     "WhatsApp is not installed on the device": "WhatsApp qurilmada o‘rnatilmagan",
     "Install it": "Uni o‘rnating",
-  }
+    "You are all up to date": "Siz hammasi yangilangan",
+    "No new notifications - come back soon": "Yangi bildirishnomalar yo'q - tez orada qayting",
+    "Payments": "To'lovlar",
+    "Vouchers": "Vaucherlar",
+    "App supports & FAQs": "Ilova yordami va tez-tez so'raladigan savollar",
+    "Feedback": "Fikr-mulohaza",
+    "My conversations": "Mening suhbatlarim",
+    "Change phone number": "Telefon raqamini o'zgartirish",
+    "Change email address": "Elektron pochta manzilini o'zgartirish",
+    "Change profile name": "Profil nomini o'zgartirish",
+    "Change or delete address": "Manzilni o'zgartirish yoki o'chirish",
+    "Delete account": "Hisobni o'chirish",
+    "Reset Password": "Parolni tiklash",
+    "Login issue": "Kirish muammosi",
+    "How do you rate our products?": "Bizning mahsulotlarimizni qanday baholaysiz?",
+    "Your feedback helps us serve you better.": "Sizning fikr-mulohazangiz bizga sizga yaxshiroq xizmat ko'rsatishga yordam beradi.",
+    "Write your experience here...": "Tajribangizni bu yerga yozing...",
+    "Submit": "Yuborish",
+    "Payment Methods": "To'lov usullari",
+  "Add or Update your saved payment methods.": "Saqlangan to'lov usullaringizni qo'shing yoki yangilang.",
+  "Default": "Standart",
+  "Add payment method": "To'lov usulini qo'shish",
+  "Add payment methods": "Add payment methods",
+  "Add a credit or debit card to quickly complete purchases.": "Add a credit or debit card to quickly complete purchases.",
+  "Card number": "Card number",
+  "Expiration date": "Expiration date",
+  "Expiration date (MM / YY)": "Expiration date (MM / YY)",
+  "CVV": "CVV",
+  "Security code": "Security code",
+  "Save": "Save",
+
+
+
+
+
+
+
+
+
+
+  calculatingDeliveryTime: 'Calculating delivery time',
+
+
+  'Orders under': 'Orders under',
+  'are subject to a': 'are subject to a',
+  'small order fee': 'small order fee',
+
+  smallOrderFeeTitle: 'Small order fee applies',
+  spare: 'spare',
+  'Enter Card Details': 'Enter Card Details',
+  'Pay': 'Pay',
+  'Cancel': 'Cancel',
+  '2-5 Min abholbereit': '2-5 Min abholbereit',
+  'Unable to load order summary': 'Unable to load order summary',
+  'Something went wrong while calculating your order. Please try again.': 'Something went wrong while calculating your order. Please try again.',
+  'Try again': 'Try again',
+  'No favorite items yet': 'No favorite items yet',
+  'Add items to your favorites to see them here': 'Add items to your favorites to see them here',
+}

@@ -61,19 +61,30 @@ const styles = (props = null) =>
     },
 
     textRight: {
-      backgroundColor: '#E4FFD9',
       color: '#1F2937',
       padding: 10,
       marginBottom: 5
     },
     textLeft: {
-      backgroundColor: '#F3F4F6',
       color: '#1F2937',
       padding: 10,
       marginBottom: 5
     },
     addImg: {
       width: scale(20)
-    }
+    },
+    backButton: {
+      width: scale(36),
+      height: scale(36),
+      borderRadius: scale(18),
+      backgroundColor: props !== null ? props.colorBgTertiary : '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3
+    },
   })
 export default styles

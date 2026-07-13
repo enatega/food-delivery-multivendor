@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, TouchableOpacity, Image, FlatList } from 'react-native'
 import { useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -23,18 +23,41 @@ function emptyViewPastOrders() {
   const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
   const orderStatusInactive = ['DELIVERED', 'COMPLETED']
   const { orders, loadingOrders, errorOrders } = useContext(OrdersContext)
-  if (loadingOrders) return <Spinner visible={loadingOrders} backColor='transparent' spinnerColor={currentTheme.main} />
+  if (loadingOrders)
+    return (
+      <Spinner
+        visible={loadingOrders}
+        backColor='transparent'
+        spinnerColor={currentTheme.main}
+      />
+    )
   if (errorOrders) return <TextError text={errorOrders.message} />
   else {
-    const hasActiveOrders = orders.filter((o) => orderStatusActive.includes(o.orderStatus)).length > 0
+    const hasActiveOrders =
+      orders.filter((o) => orderStatusActive.includes(o.orderStatus)).length > 0
 
-    const hasPastOrders = orders.filter((o) => orderStatusInactive.includes(o.orderStatus)).length > 0
+    const hasPastOrders =
+      orders.filter((o) => orderStatusInactive.includes(o.orderStatus)).length >
+      0
     if (hasActiveOrders || hasPastOrders) return null
-    return <EmptyView title={'titleEmptyPastOrders'} description={'emptyPastOrdersDesc'} buttonText={'emptyPastOrdersBtn'} navigateTo='Discovery' />
+    return (
+      <EmptyView
+        title={'titleEmptyPastOrders'}
+        description={'emptyPastOrdersDesc'}
+        buttonText={'emptyPastOrdersBtn'}
+        navigateTo='Discovery'
+      />
+    )
   }
 }
 
-const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) => {
+const PastOrders = ({
+  navigation,
+  loading,
+  error,
+  pastOrders,
+  onPressReview
+}) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
@@ -42,16 +65,34 @@ const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) =
     ...theme[themeContext.ThemeValue]
   }
   const configuration = useContext(ConfigurationContext)
-  const { reFetchOrders, fetchMoreOrdersFunc, networkStatusOrders } = useContext(OrdersContext)
-  const renderItem = useCallback(({ item }) => <Item item={item} navigation={navigation} currentTheme={currentTheme} configuration={configuration} onPressReview={onPressReview} />, [configuration, currentTheme, navigation, onPressReview])
-  const emptyState = useMemo(() => emptyViewPastOrders(), [])
+  const { reFetchOrders, fetchMoreOrdersFunc, networkStatusOrders } =
+    useContext(OrdersContext)
+  const renderItem = ({ item }) => (
+    <Item
+      item={item}
+      navigation={navigation}
+      currentTheme={currentTheme}
+      configuration={configuration}
+      onPressReview={onPressReview}
+    />
+  )
 
   if (loading) {
     return <></>
   }
   if (error) return <TextError text={error.message} />
 
-  return <FlatList data={pastOrders} renderItem={renderItem} keyExtractor={(item) => item._id} ListEmptyComponent={emptyState} refreshing={networkStatusOrders === 4} onRefresh={() => networkStatusOrders === 7 && reFetchOrders()} onEndReached={fetchMoreOrdersFunc} initialNumToRender={6} maxToRenderPerBatch={6} windowSize={6} removeClippedSubviews />
+  return (
+    <FlatList
+      data={pastOrders}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => index.toString()}
+      ListEmptyComponent={emptyViewPastOrders()}
+      refreshing={networkStatusOrders === 4}
+      onRefresh={() => networkStatusOrders === 7 && reFetchOrders()}
+      onEndReached={fetchMoreOrdersFunc}
+    />
+  )
 }
 
 const formatDeliveredAt = (deliveredAt) => {
@@ -69,7 +110,20 @@ const formatDeliveredAt = (deliveredAt) => {
   }
 
   // Define months array for formatting
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ]
 
   // Getting components of the date
   const day = deliveryDate.getDate()
@@ -86,10 +140,23 @@ const formatDeliveredAt = (deliveredAt) => {
   return `${formattedDay} ${month} ${formattedHours}:${formattedMinutes}`
 }
 const getItems = (items) => {
-  return items.map((item) => `${item.quantity}x ${item.title}${item.variation.title ? `(${item.variation.title})` : ''}`).join('\n')
+  return items
+    .map(
+      (item) =>
+        `${item.quantity}x ${item.title}${
+          item.variation.title ? `(${item.variation.title})` : ''
+        }`
+    )
+    .join('\n')
 }
 
-const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) => {
+const Item = ({
+  item,
+  navigation,
+  currentTheme,
+  configuration,
+  onPressReview
+}) => {
   useSubscription(
     gql`
       ${subscriptionOrder}
@@ -115,7 +182,8 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
         }
       >
         <View style={styles(currentTheme).subContainer}>
-          {(item.orderStatus == 'CANCELLED' || item.orderStatus === 'CANCELLEDBYREST') && (
+          {(item.orderStatus == 'CANCELLED' ||
+            item.orderStatus === 'CANCELLEDBYREST') && (
             <View style={{ display: 'flex', paddingBottom: 10 }}>
               <View
                 style={{
@@ -126,7 +194,14 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                   padding: 8
                 }}
               >
-                <TextDefault textColor='black' uppercase bolder numberOfLines={2} style={[styles(currentTheme).restaurantName]} isRTL>
+                <TextDefault
+                  textColor='black'
+                  uppercase
+                  bolder
+                  numberOfLines={2}
+                  style={[styles(currentTheme).restaurantName]}
+                  isRTL
+                >
                   {item.orderStatus}
                 </TextDefault>
               </View>
@@ -138,7 +213,11 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
               flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
             }}
           >
-            <Image style={styles(currentTheme).restaurantImage} resizeMode='cover' source={{ uri: item?.restaurant?.image }} />
+            <Image
+              style={styles(currentTheme).restaurantImage}
+              resizeMode='cover'
+              source={{ uri: item?.restaurant?.image }}
+            />
             <View style={styles(currentTheme).textContainer2}>
               <View
                 style={{
@@ -146,12 +225,23 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                 }}
               >
                 <View style={styles().subContainerLeft}>
-                  <TextDefault textColor={currentTheme.fontMainColor} uppercase bolder numberOfLines={2} style={styles(currentTheme).restaurantName} isRTL>
+                  <TextDefault
+                    textColor={currentTheme.fontMainColor}
+                    uppercase
+                    bolder
+                    numberOfLines={2}
+                    style={styles(currentTheme).restaurantName}
+                    isRTL
+                  >
                     {item.restaurant.name}
                   </TextDefault>
                 </View>
                 <View style={styles(currentTheme).subContainerRight}>
-                  <TextDefault textColor={currentTheme.fontMainColor} bolder isRTL>
+                  <TextDefault
+                    textColor={currentTheme.fontMainColor}
+                    bolder
+                    isRTL
+                  >
                     {configuration.currencySymbol}
                     {parseFloat(item.orderAmount).toFixed(2)}
                   </TextDefault>
@@ -167,33 +257,58 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
                   textColor={currentTheme.secondaryText}
                   isRTL
                 >
-                  {item.orderStatus === 'CANCELLED' || item.orderStatus === 'CANCELLEDBYREST' ? `${t('cancelledOn')} ${formatDeliveredAt(item.cancelledAt || item.completionTime)}` : `${t('deliveredOn')} ${formatDeliveredAt(item.deliveredAt)}`}
+                  {(item.orderStatus === 'CANCELLED' || item.orderStatus === 'CANCELLEDBYREST') 
+                    ? `${t('cancelledOn')} ${formatDeliveredAt(item.cancelledAt || item.completionTime)}`
+                    : `${t('deliveredOn')} ${formatDeliveredAt(item.deliveredAt)}`
+                  }
                 </TextDefault>
-                <TextDefault numberOfLines={1} style={{ ...alignment.MTxSmall }} textColor={currentTheme.secondaryText} isRTL>
+                <TextDefault
+                  numberOfLines={1}
+                  style={{ ...alignment.MTxSmall }}
+                  textColor={currentTheme.secondaryText}
+                  isRTL
+                >
                   {getItems(item.items)}
                 </TextDefault>
               </View>
             </View>
           </View>
           <View style={styles().rateOrderContainer}>
-            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).subContainerButton} onPress={() => navigation.navigate('Reorder', { item })}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles(currentTheme).subContainerButton}
+              onPress={() => navigation.navigate('Reorder', { item })}
+            >
               <TextDefault textColor={currentTheme.black} H5 bolder B700 center>
                 {' '}
                 {t('reOrder')}
               </TextDefault>
             </TouchableOpacity>
           </View>
-          {!(item.orderStatus === 'CANCELLED' || item.orderStatus === 'CANCELLEDBYREST') && (
+          {!(
+            item.orderStatus === 'CANCELLED' ||
+            item.orderStatus === 'CANCELLEDBYREST'
+          ) && (
             <View style={styles(currentTheme).starsContainer}>
               <View>
-                <TextDefault H5 bolder textColor={currentTheme.newFontcolor} isRTL>
+                <TextDefault
+                  H5
+                  bolder
+                  textColor={currentTheme.newFontcolor}
+                  isRTL
+                >
                   {t('tapToRate')}
                 </TextDefault>
               </View>
 
               <View style={{ flexDirection: 'row', gap: 10 }}>
                 {[1, 2, 3, 4, 5].map((index) => (
-                  <StarIcon disabled={Boolean(item?.review)} key={`star-icon-${index}`} isFilled={index <= item?.review?.rating} onPress={() => onPressReview(item, index)} />
+                  <StarIcon
+                    disabled={Boolean(item?.review)}
+                    key={`star-icon-${index}`}
+                    isFilled={index <= item?.review?.rating}
+                    onPress={() => onPressReview(item, index)}
+                  />
                 ))}
               </View>
             </View>
@@ -204,4 +319,4 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
   )
 }
 
-export default React.memo(PastOrders)
+export default PastOrders

@@ -7,7 +7,6 @@ import { theme } from '../../../utils/themeColors'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import UserContext from '../../../context/User'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import AuthContext from '../../../context/Auth'
 
 import useEnvVars from '../../../../environment'
 
@@ -33,8 +32,7 @@ const usePhoneOtp = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [seconds, setSeconds] = useState(30)
-  const { name, phone, screen, token } = route?.params || {}
-  const { setTokenAsync } = useContext(AuthContext)
+  const { name, phone, screen } = route?.params || {}
 
   function onError(error) {
     if (error.networkError) {
@@ -66,14 +64,11 @@ const usePhoneOtp = () => {
     }
   }
 
-  async function onUpdateUserCompleted(data) {
+  function onUpdateUserCompleted(data) {
     FlashMessage({
       message: t('numberVerified')
     })
-    if (token) {
-      await setTokenAsync(token)
-      navigation.navigate('Main')
-    } else if (!profile?.name) {
+    if (!profile?.name) {
       navigation.navigate('Profile', { editName: true })
     } else if (screen === 'Checkout') {
       navigation.navigate('Checkout')
@@ -102,29 +97,30 @@ const usePhoneOtp = () => {
   })
 
   const onCodeFilled = async (otp_code) => {
+    const phoneToUse = phone ?? profile?.phone
+    
     if (configuration?.skipMobileVerification) {
-      await mutateUser({
+      mutateUser({
         variables: {
           name: name ?? profile?.name,
-          phone: phone ?? profile?.phone,
+          phone: phoneToUse,
           phoneIsVerified: true
         }
       })
-      return
     }
 
     const { data } = await verifyOTP({
       variables: {
         otp: otp_code,
-        phone: phone ?? profile?.phone
+        phone: phoneToUse
       }
     })
 
     if (data?.verifyOtp) {
-      await mutateUser({
+      mutateUser({
         variables: {
           name: name ?? profile?.name,
-          phone: phone ?? profile?.phone,
+          phone: phoneToUse,
           phoneIsVerified: true
         }
       })
@@ -142,7 +138,7 @@ const usePhoneOtp = () => {
         return
       }
 
-      sendOTPToPhone({ variables: { phone: profile?.phone ?? phone } })
+      sendOTPToPhone({ variables: { phone: phone ?? profile?.phone } })
     } catch (err) {
       FlashMessage({
         message: t('somethingWentWrong')
@@ -174,7 +170,7 @@ const usePhoneOtp = () => {
     if (!configuration.skipMobileVerification) {
       onSendOTPHandler()
     }
-  }, [configuration, phone])
+  }, [configuration,  phone])
 
   useEffect(() => {
     let timer = null

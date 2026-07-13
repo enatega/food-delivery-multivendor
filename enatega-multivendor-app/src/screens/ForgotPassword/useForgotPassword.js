@@ -6,17 +6,18 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next'
 
 const FORGOT_PASSWORD = gql`
   ${forgotPassword}
 `
 export const useForgotPassword = () => {
-  const { t, i18n } = useTranslation()
+  const {t, i18n} = useTranslation()
   const navigation = useNavigation()
   const route = useRoute()
   const [email, setEmail] = useState(route.params?.email || '')
   const [emailError, setEmailError] = useState(null)
+  const [otp] = useState(Math.floor(100000 + Math.random() * 900000).toString())
 
   const [mutate, { loading }] = useMutation(FORGOT_PASSWORD, {
     onCompleted,
@@ -24,7 +25,7 @@ export const useForgotPassword = () => {
   })
 
   const themeContext = useContext(ThemeContext)
-  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
 
   function validateCredentials() {
     let result = true
@@ -50,11 +51,9 @@ export const useForgotPassword = () => {
 
   function onCompleted(data) {
     FlashMessage({
-      message: t('otpSentToEmail')
+      message: t('otpForResetPassword')
     })
-    navigation.navigate('ForgotPasswordOtp', {
-      email: email.toLowerCase().trim()
-    })
+    navigation.navigate('ForgotPasswordOtp', { email })
   }
 
   function onError(error) {
@@ -72,6 +71,7 @@ export const useForgotPassword = () => {
     email,
     setEmail,
     emailError,
+    otp,
     onError,
     onCompleted,
     forgotPassword,

@@ -1,5 +1,5 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
-import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import { View, TouchableOpacity, Alert, StatusBar, Platform, Image, Dimensions, SectionList } from 'react-native'
 import Animated, { Extrapolation, interpolate, useSharedValue, Easing as EasingNode, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -15,7 +15,7 @@ import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import { DAYS } from '../../utils/enums'
 import { alignment } from '../../utils/alignment'
-import ErrorView from '../../components/ErrorView/ErrorView'
+import TextError from '../../components/Text/TextError/TextError'
 import { MaterialIcons } from '@expo/vector-icons'
 import analytics from '../../utils/analytics'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
@@ -62,15 +62,10 @@ function Restaurant(props) {
   const circle = useSharedValue(0)
   const themeContext = useContext(ThemeContext)
 
-  // Memoized so its reference is stable across renders — this keeps the cached
-  // stylesheet (keyed by this object) hot instead of rebuilding it every render.
-  const currentTheme = useMemo(
-    () => ({
-      isRTL: i18n.dir() === 'rtl',
-      ...theme[themeContext.ThemeValue]
-    }),
-    [i18n.language, themeContext.ThemeValue]
-  )
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue]
+  }
   const configuration = useContext(ConfigurationContext)
   const [selectedLabel, selectedLabelSetter] = useState(0)
   const [buttonClicked, buttonClickedSetter] = useState(false)
@@ -90,34 +85,12 @@ function Restaurant(props) {
     return client.readFragment({ id: `Food:${itemId}`, fragment: FOOD })
   }
 
-  // Memoized so the popular list (and the section array built from it) keeps a
-  // stable identity across renders instead of re-reading fragments every time.
-  const dataList = useMemo(
-    () => popularItems?.popularItems?.map((item) => fetchFoodDetails(item?.id)).filter(Boolean) ?? [],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [popularItems]
-  )
-
-  // Category sections, memoized so the SectionList receives a stable `sections`
-  // reference and only rebuilds when the underlying data actually changes.
-  const deals = useMemo(() => {
-    const cats = data?.restaurant?.categories
-    if (!cats) return []
-    const allDeals = cats.filter((cat) => cat?.foods?.length)
-    return allDeals.map((c, index) => ({
-      ...c,
-      data: c.foods,
-      index: dataList.length > 0 ? index + 1 : index
-    }))
-  }, [data?.restaurant, dataList])
-
-  const updatedDeals = useMemo(
-    () =>
-      dataList.length > 0
-        ? [{ title: 'Popular', id: 'popular', data: dataList.slice(0, 4), index: 0 }, ...deals]
-        : deals,
-    [deals, dataList]
-  )
+  const dataList =
+    popularItems &&
+    popularItems?.popularItems?.map((item) => {
+      const foodDetails = fetchFoodDetails(item?.id)
+      return foodDetails
+    })
 
   const searchHandler = () => {
     setSearchOpen(!searchOpen)
@@ -135,7 +108,7 @@ function Restaurant(props) {
       // setFilterData([])
       const filteredData = []
       deals?.forEach((category) => {
-        category?.data?.forEach((deals) => {
+        category.data.forEach((deals) => {
           filteredData.push(deals)
         })
       })
@@ -146,7 +119,7 @@ function Restaurant(props) {
       const regex = new RegExp(escapedSearchText, 'i')
       const filteredData = []
       deals.forEach((category) => {
-        category?.data?.forEach((deals) => {
+        category.data.forEach((deals) => {
           const title = deals.title.search(regex)
           if (title < 0) {
             const description = deals.description.search(regex)
@@ -454,8 +427,27 @@ function Restaurant(props) {
       </View>
     )
   }
-  if (error) return <ErrorView refetchFunctions={[refetch]} />
+  if (error) return <TextError text={JSON.stringify(error)} />
   const restaurant = data.restaurant
+  const allDeals = restaurant?.categories.filter((cat) => cat?.foods?.length)
+  const deals = allDeals.map((c, index) => ({
+    ...c,
+    data: c.foods,
+    index: dataList?.length > 0 ? index + 1 : index
+  }))
+
+  const updatedDeals =
+    dataList?.length > 0
+      ? [
+          {
+            title: 'Popular',
+            id: new Date().getTime(),
+            data: dataList?.slice(0, 4),
+            index: 0
+          },
+          ...deals
+        ]
+      : [...deals]
 
   return (
     <>

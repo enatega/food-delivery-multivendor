@@ -77,12 +77,13 @@ const useRegister = () => {
         FlashMessage({
           message: 'Phone number has been added successfully!'
         })
-        await refetchProfile()
         navigation.navigate({
           name: 'PhoneOtp',
           merge: true,
           params: {name, phone: concatPhone, screen: route?.params?.screen}
         })
+        await refetchProfile()
+       
       } else {
         mutate({
           variables: {

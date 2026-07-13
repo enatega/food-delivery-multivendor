@@ -11,6 +11,7 @@ const useGeocoding = () => {
       )
 
       // Check if the response is successful and contains results
+      console.log("get Address response::",response)
       if (
         response.data &&
         response.data.results &&
@@ -18,17 +19,14 @@ const useGeocoding = () => {
       ) {
         // Extract the formatted address from the first result
         const formattedAddress = response.data.results[0].formatted_address
-        // Search through all results to find the best city match
-        let city = null
-
-        for (const result of response.data.results) {
-          const cityComponent = result.address_components.find((component) => component.types.includes('locality') || component.types.includes('administrative_area_level_2') || component.types.includes('administrative_area_level_1'))
-
-          if (cityComponent) {
-            city = cityComponent.long_name
-            break
-          }
-        }
+        // Extract the city from the address components
+        const cityComponent = response.data.results[0].address_components.find(
+          (component) =>
+            component.types.includes('locality') ||
+            component.types.includes('administrative_area_level_2')
+        )
+        const city = cityComponent ? cityComponent.long_name : null
+        
         return { formattedAddress, city }
         
       } else {
