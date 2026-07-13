@@ -1,5 +1,5 @@
 import React, { useContext, useLayoutEffect } from 'react'
-import { View, FlatList, Image, Animated, TouchableOpacity } from 'react-native'
+import { View, FlatList, Animated, TouchableOpacity } from 'react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -10,6 +10,7 @@ import Ripple from 'react-native-material-ripple'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import CachedImage from '../../components/CachedImage'
 
 const HEADING = {
   Restaurants: 'I feel like eating',
@@ -83,7 +84,7 @@ const Collection = ({ navigation, route }) => {
               }}
             >
               <View style={styles().brandImgContainer}>
-                <Image
+                <CachedImage
                   source={{ uri: item?.image }}
                   style={styles().collectionImage}
                   resizeMode='cover'

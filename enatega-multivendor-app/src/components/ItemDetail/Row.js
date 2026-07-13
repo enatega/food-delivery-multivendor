@@ -1,4 +1,4 @@
-import { View, Image, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import React, { useContext } from 'react'
 import { scale } from '../../utils/scaling'
 import TextDefault from '../Text/TextDefault/TextDefault'
@@ -12,6 +12,7 @@ import ConfigurationContext from '../../context/Configuration'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { IMAGE_LINK } from '../../utils/constants'
+import CachedImage from '../CachedImage'
 
 const FOOD = gql`${food}`
 
@@ -41,7 +42,7 @@ export default function Row({ id, restaurant }) {
     <TouchableOpacity onPress={onAdd} style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row', marginBottom: scale(10) }}>
       {food?.image &&
       <View leftContainer >
-        <Image style={styles.image} source={{ uri: food?.image || IMAGE_LINK }}/>
+        <CachedImage style={styles.image} source={{ uri: food?.image || IMAGE_LINK }}/>
       </View>}
 
       <View mainContainer style={{ flex: 3, alignSelf: 'center', alignContent: 'center', paddingHorizontal: scale(10) }}>

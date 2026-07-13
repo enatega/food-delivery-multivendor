@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, Image, TouchableOpacity, View } from 'react-native'
+import { Alert, TouchableOpacity, View } from 'react-native'
 import { AntDesign, Feather, EvilIcons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -16,6 +16,7 @@ import Animated, {
   useSharedValue,
   withSpring
 } from 'react-native-reanimated'
+import CachedImage from '../CachedImage'
 
 const CartItem = (props) => {
   const { t, i18n } = useTranslation()
@@ -103,7 +104,7 @@ const CartItem = (props) => {
         }}
       >
         <View style={styles().suggestItemImgContainer}>
-          <Image
+          <CachedImage
             source={{ uri: imageUrl }}
             style={styles().suggestItemImg}
             resizeMode='contain'

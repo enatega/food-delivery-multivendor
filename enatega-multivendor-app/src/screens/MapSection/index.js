@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import styles from './styles'
-import { Image, View, FlatList, TouchableOpacity, Platform } from 'react-native'
+import { View, FlatList, TouchableOpacity, Platform } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useRoute } from '@react-navigation/native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -17,6 +17,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import ConfigurationContext from '../../context/Configuration'
 import { useTranslation } from 'react-i18next'
+import CachedImage from '../../components/CachedImage'
 
 export default function MapSection() {
   const { i18n } = useTranslation()
@@ -107,7 +108,7 @@ export default function MapSection() {
                 <View
                   style={styles(currentTheme).greenDot}
                 />
-                <Image
+                <CachedImage
                   source={{uri: rest?.image}}
                   width={20}
                   style={styles().markerImage}
@@ -135,7 +136,7 @@ export default function MapSection() {
                 }}
                 activeOpacity={0.8}
               >
-                <Image
+                <CachedImage
                   resizeMode='cover'
                   source={{ uri: item?.image }}
                   style={styles().restImg}

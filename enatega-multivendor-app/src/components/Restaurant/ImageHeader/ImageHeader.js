@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { View, Dimensions, Text, Image, FlatList, Platform } from 'react-native'
+import { View, Dimensions, Text, FlatList, Platform } from 'react-native'
 import {
   Ionicons,
   Entypo,
@@ -33,6 +33,7 @@ import Bicycle from '../../../assets/SVG/Bicycle'
 import ConfigurationContext from '../../../context/Configuration'
 import { useFavorite } from '../../FavButton/useFavorite'
 import Spinner from '../../Spinner/Spinner'
+import CachedImage from '../../CachedImage'
 
 const AnimatedText = Animated.createAnimatedComponent(Text)
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
@@ -288,7 +289,7 @@ function ImageTextCenterHeader(props, ref) {
           {!props?.search && !props?.loading && (
             <Animated.View style={[styles().restaurantDetails, opacity]}>
               <Animated.View>
-                <Image
+                <CachedImage
                   resizeMode='cover'
                   source={{ uri: aboutObject?.restaurantImage }}
                   style={[
@@ -326,7 +327,7 @@ function ImageTextCenterHeader(props, ref) {
               >
                 <View style={[styles(currentTheme).subContainer]} pointerEvents="box-none">
                   <View style={styles(currentTheme).titleContainer}>
-                    <Image
+                    <CachedImage
                       resizeMode='cover'
                       source={
                         aboutObject.restaurantLogo

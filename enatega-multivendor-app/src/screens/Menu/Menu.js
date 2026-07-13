@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect } from 'react'
-import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Image, Dimensions } from 'react-native'
+import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
@@ -33,6 +33,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 import { useMemo } from 'react'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
+import CachedImage from '../../components/CachedImage'
 import { Modalize } from 'react-native-modalize'
 import Filters from '../../components/Filter/FilterSlider'
 import AppliedFilters from '../../components/Filter/AppliedFilters'
@@ -630,7 +631,7 @@ function Menu({ route, props }) {
                 >
                   <View style={[styles().brandImgContainer]}>
                     <View>
-                      <Image source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
+                      <CachedImage source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
                     </View>
                     <TextDefault Normal bolder style={{ padding: 4 }} textColor={activeCollection === item.name ? currentTheme.main : currentTheme.gray700} isRTL>
                       {item.name}

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 // import { TouchableOpacity } from 'react-native-gesture-handler'
 import { TouchableOpacity } from 'react-native'
 import ShimmerImage from '../../ShimmerImage/ShimmerImage'
@@ -19,6 +19,7 @@ import Bicycle from '../../../assets/SVG/Bicycle'
 // Utils
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
+import CachedImage from '../../CachedImage'
 
 function RestaurantDetailHeader({
   restaurant,
@@ -123,7 +124,7 @@ function RestaurantDetailHeader({
         {/* Rest of the content remains the same */}
         <View style={styles(currentTheme).subContainer}>
           <View style={styles(currentTheme).titleContainer}>
-            <Image
+            <CachedImage
               resizeMode='cover'
               source={
                 restaurant?.logo

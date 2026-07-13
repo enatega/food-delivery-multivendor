@@ -9,7 +9,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import VideoBanner from './VideoBanner'
 import { BANNER_PARAMETERS } from '../../../utils/banner-routes'
 import { scale } from '../../../utils/scaling'
-import { getCachedMediaUri } from '../../../utils/mediaCache'
+import { getCachedMediaUri, useCachedMediaUri } from '../../../utils/mediaCache'
 
 // Helper function to get media type from URL
 const getMediaTypeFromUrl = (url) => {
@@ -39,6 +39,7 @@ const BannerSlide = React.memo(function BannerSlide({ item, width, cached, isAct
   const mediaType = getMediaTypeFromUrl(item.file)
   const shouldRenderVideo = mediaType === 'video' && (!Platform.OS || Platform.OS !== 'android' || isActiveSlide)
   const fallbackImage = cached.image || item?.image || item?.thumbnail || item?.previewImage
+  const imageUri = useCachedMediaUri(fallbackImage, 'image')
   const videoUri = cached.video || item?.file
 
   return (
@@ -49,8 +50,8 @@ const BannerSlide = React.memo(function BannerSlide({ item, width, cached, isAct
         </VideoBanner>
       ) : (
         <View style={styles().csd}>
-          {fallbackImage ? (
-            <ImageBackground source={{ uri: fallbackImage }} style={styles().imgs1} resizeMode='cover'>
+          {imageUri ? (
+            <ImageBackground source={{ uri: imageUri }} style={styles().imgs1} resizeMode='cover'>
               <BannerContent item={item} />
             </ImageBackground>
           ) : (

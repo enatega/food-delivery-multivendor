@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react'
-import { View, TouchableOpacity, Alert, StatusBar, Platform, Image, Dimensions, SectionList } from 'react-native'
+import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, SectionList } from 'react-native'
 import Animated, { Extrapolation, interpolate, useSharedValue, Easing as EasingNode, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
@@ -29,6 +29,7 @@ import PopularIcon from '../../assets/SVG/popular'
 
 import { escapeRegExp } from '../../utils/regex'
 import { isOpen } from '../../utils/customFunctions'
+import CachedImage from '../../components/CachedImage'
 
 const { height } = Dimensions.get('screen')
 
@@ -530,7 +531,7 @@ function Restaurant(props) {
                     >
                       <View style={styles(currentTheme).deal}>
                         {item?.image ? (
-                          <Image
+                          <CachedImage
                             style={{
                               height: scale(60),
                               width: scale(60),
@@ -695,7 +696,7 @@ function Restaurant(props) {
                       }}
                     >
                       <View style={styles(currentTheme).deal}>
-                        <Image
+                      <CachedImage
                           style={{
                             height: scale(60),
                             width: scale(60),

@@ -1,13 +1,14 @@
 import * as FileSystem from 'expo-file-system'
 import * as Crypto from 'expo-crypto'
+import { useApolloClient } from '@apollo/client'
 import { useEffect, useMemo, useState } from 'react'
+import { isSignedUrlExpired, stripQueryAndHash } from './signedMediaUrl'
 
 const CACHE_DIR = `${FileSystem.cacheDirectory}signed-media-cache-v2/`
 const pendingDownloads = new Map()
-
-function stripQueryAndHash(url = '') {
-  return url.split('#')[0].split('?')[0]
-}
+const REFRESH_COOLDOWN_MS = 5000
+let refreshPromise = null
+let lastRefreshAt = 0
 
 function getFileExtension(url = '', fallback = 'bin') {
   const clean = stripQueryAndHash(url)
@@ -39,8 +40,13 @@ export async function getCachedMediaUri(remoteUrl, type = 'file') {
     return localUri
   }
 
-  if (pendingDownloads.has(remoteUrl)) {
-    return pendingDownloads.get(remoteUrl)
+  const pending = pendingDownloads.get(normalized)
+  if (pending) {
+    const uri = await pending.promise
+    if (uri.startsWith('file://') || pending.remoteUrl === remoteUrl) return uri
+
+    // A newer signature arrived while an expired download was finishing.
+    return getCachedMediaUri(remoteUrl, type)
   }
 
   const downloadPromise = (async () => {
@@ -53,15 +59,30 @@ export async function getCachedMediaUri(remoteUrl, type = 'file') {
       await FileSystem.deleteAsync(localUri, { idempotent: true })
       return remoteUrl
     } finally {
-      pendingDownloads.delete(remoteUrl)
+      pendingDownloads.delete(normalized)
     }
   })()
 
-  pendingDownloads.set(remoteUrl, downloadPromise)
+  pendingDownloads.set(normalized, { remoteUrl, promise: downloadPromise })
   return downloadPromise
 }
 
+function refreshExpiredMedia(client) {
+  if (refreshPromise) return refreshPromise
+  if (Date.now() - lastRefreshAt < REFRESH_COOLDOWN_MS) return null
+
+  lastRefreshAt = Date.now()
+  refreshPromise = client.refetchQueries({ include: 'active' })
+    .catch(() => [])
+    .finally(() => {
+      refreshPromise = null
+    })
+
+  return refreshPromise
+}
+
 export function useCachedMediaUri(remoteUrl, type = 'image') {
+  const client = useApolloClient()
   const key = useMemo(() => stripQueryAndHash(remoteUrl || ''), [remoteUrl])
   const [source, setSource] = useState({ key, uri: remoteUrl })
 
@@ -79,13 +100,18 @@ export function useCachedMediaUri(remoteUrl, type = 'image') {
     })
 
     getCachedMediaUri(remoteUrl, type).then((uri) => {
-      if (isMounted) setSource({ key, uri })
+      if (!isMounted) return
+
+      setSource({ key, uri })
+      if (uri === remoteUrl && isSignedUrlExpired(remoteUrl)) {
+        refreshExpiredMedia(client)
+      }
     })
 
     return () => {
       isMounted = false
     }
-  }, [remoteUrl, type, key])
+  }, [client, remoteUrl, type, key])
 
   return source.uri
 }

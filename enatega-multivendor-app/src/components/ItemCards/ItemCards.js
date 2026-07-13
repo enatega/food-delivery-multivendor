@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Text, View, TouchableOpacity, Alert } from 'react-native'
+import { Text, View, TouchableOpacity, Alert } from 'react-native'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
 import { useContext } from 'react'
@@ -10,6 +10,7 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { formatNumber } from '../../utils/formatNumber'
 import { LinearGradient } from 'expo-linear-gradient'
+import CachedImage from '../CachedImage'
 
 const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
 
@@ -62,7 +63,7 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
           {item?.title}
         </TextDefault>
         <View style={{ alignItems: 'center', marginTop: 'auto' }}>
-          <Image
+          <CachedImage
             source={{ uri: imageUrl }}
             style={[
               { width: 138, height: 120, borderRadius: 8 },

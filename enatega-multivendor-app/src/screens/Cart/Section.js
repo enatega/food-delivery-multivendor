@@ -1,4 +1,4 @@
-import { View, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { View, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useContext } from 'react'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import ConfigurationContext from '../../context/Configuration'
 import { useTranslation } from 'react-i18next'
 import { IMAGE_LINK } from '../../utils/constants'
+import CachedImage from '../../components/CachedImage'
 
 const RELATED_ITEMS = gql`${relatedItemsQuery}`
 const RESTAURANT = gql`${restaurantQuery}`
@@ -52,7 +53,7 @@ const Section = ({ itemId, restaurantId }) => {
       <View style={styles(currentTheme).suggestItemContainer}>
         {imageUrl &&
           <View style={styles().suggestItemImgContainer}>
-            <Image
+            <CachedImage
               source={{ uri: imageUrl }}
               style={styles().suggestItemImg}
               resizeMode="contain"

@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import CrossCirleIcon from '../../assets/SVG/cross-circle-icon'
@@ -12,6 +12,7 @@ import gql from 'graphql-tag'
 import { useApolloClient, useMutation } from '@apollo/client'
 import { reviewOrder } from '../../apollo/mutations'
 import { useTranslation } from 'react-i18next'
+import CachedImage from '../CachedImage'
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height
 const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
@@ -87,7 +88,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
             </View>
           </View>
           <View>
-            <Image source={order?.restaurant?.image ? { uri: order?.restaurant?.image }: require('../../assets/images/food_placeholder.png') } style={styles.image}/>
+            <CachedImage source={order?.restaurant?.image ? { uri: order?.restaurant?.image }: require('../../assets/images/food_placeholder.png') } style={styles.image}/>
           </View>
         </View>
 
