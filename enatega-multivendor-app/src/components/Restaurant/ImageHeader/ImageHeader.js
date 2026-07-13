@@ -39,9 +39,10 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
+const CATEGORY_BAR_HEIGHT = scale(56)
 const HEADER_MAX_HEIGHT =
   Platform.OS === 'android' ? height * 0.65 : height * 0.61
-const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
+const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT + CATEGORY_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 
 function ImageTextCenterHeader(props, ref) {
@@ -522,7 +523,10 @@ function ImageTextCenterHeader(props, ref) {
             <FlatList
               ref={flatListRef}
               style={styles(currentTheme).flatListStyle}
-              contentContainerStyle={{ flexGrow: 1 }}
+              contentContainerStyle={{
+                flexGrow: 1,
+                paddingHorizontal: scale(15)
+              }}
               data={props?.loading ? [] : [...props?.topaBarData]}
               horizontal={true}
               ListEmptyComponent={emptyView()}

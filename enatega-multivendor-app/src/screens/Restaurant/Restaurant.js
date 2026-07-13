@@ -35,8 +35,9 @@ const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
+const CATEGORY_BAR_HEIGHT = scale(56)
 const HEADER_MAX_HEIGHT = Platform.OS === 'android' ? height * 0.65 : height * 0.61
-const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
+const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT + CATEGORY_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
 
