@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { AntDesign, Feather, EvilIcons } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -7,7 +7,6 @@ import ConfigurationContext from '../../context/Configuration'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import { alignment } from '../../utils/alignment'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { IMAGE_LINK } from '../../utils/constants'
@@ -39,35 +38,21 @@ const CartItem = (props) => {
     setIsDropdownOpen(!isDropdownOpen)
   }
 
-  const navigateToRestaurant = () => {
+  const navigateToItemDetail = () => {
     const restaurant = props?.restaurantData
-    if (!restaurant) {
-      navigation.goBack()
-      return
-    }
+    if (!restaurant || !props?.food) return
 
-    const navParams = {
-      _id: restaurant._id,
-      name: restaurant.name,
-      image: restaurant.image,
-      shopType: restaurant.shopType,
-      isAvailable: restaurant.isAvailable,
-      isOpen: restaurant.openingTimes,
-      deliveryTime: restaurant.deliveryTime,
-      minimumOrder: restaurant.minimumOrder,
-      tax: restaurant.tax,
-      reviewAverage: restaurant.rating,
-      reviewCount: restaurant.reviewCount,
-      categories: restaurant.categories,
-      address: restaurant.address,
-      location: restaurant.location
-    }
-
-    if (restaurant.shopType === 'grocery') {
-      navigation.navigate('NewRestaurantDetailDesign', navParams)
-    } else {
-      navigation.navigate('Restaurant', navParams)
-    }
+    navigation.navigate('ItemDetail', {
+      food: {
+        ...props.food,
+        restaurant: restaurant._id,
+        restaurantName: restaurant.name
+      },
+      addons: restaurant.addons || [],
+      options: restaurant.options || [],
+      restaurant: restaurant._id,
+      cartItem: props.cartItem
+    })
   }
 
   const animatedQuantity = useSharedValue(1)
@@ -186,7 +171,7 @@ const CartItem = (props) => {
               {parseFloat(props?.dealPrice).toFixed(2)}
             </TextDefault>
             <View style={styles().divider} />
-            <TouchableOpacity onPress={navigateToRestaurant}>
+            <TouchableOpacity onPress={navigateToItemDetail}>
               <TextDefault
                 textColor={currentTheme.fontFourthColor}
                 bolder

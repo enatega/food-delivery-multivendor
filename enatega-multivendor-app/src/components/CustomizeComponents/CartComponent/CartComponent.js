@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 
 function CartComponent(props) {
   const { t } = useTranslation()
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(props?.quantity || 1)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   function onAdd() {
@@ -34,7 +34,7 @@ function CartComponent(props) {
           ]}
           onPress={onRemove}>
           <AntDesign
-            name={props?.quantity < 2 ? 'delete' : 'minus'}
+            name={quantity < 2 ? 'delete' : 'minus'}
             size={scale(18)}
             color={currentTheme.color4}
           />
