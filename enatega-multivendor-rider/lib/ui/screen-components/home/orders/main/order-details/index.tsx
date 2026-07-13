@@ -320,6 +320,18 @@ export default function OrderDetailScreen() {
 
   if (!localOrder) return;
 
+  const hasValidRiderLocation = isValidCoordinate(locationPin?.location);
+  const hasValidRestaurantLocation = isValidCoordinate(
+    restaurantAddressPin?.location,
+  );
+  const hasValidDeliveryLocation = isValidCoordinate(
+    deliveryAddressPin?.location,
+  );
+  const canRenderMap =
+    hasValidRiderLocation ||
+    hasValidRestaurantLocation ||
+    hasValidDeliveryLocation;
+
   return (
     <>
       <GestureHandlerRootView
@@ -356,7 +368,11 @@ export default function OrderDetailScreen() {
               />
             </TouchableOpacity>
           </View>
-          {locationPin && GOOGLE_MAPS_KEY ? (
+          {!GOOGLE_MAPS_KEY ? (
+            <View className="flex-1 justify-center items-center">
+              <SpinnerComponent size="large" />
+            </View>
+          ) : canRenderMap ? (
             <MapView
               style={{
                 width: "100%",
@@ -369,8 +385,18 @@ export default function OrderDetailScreen() {
               zoomControlEnabled={true}
               rotateEnabled={false}
               initialRegion={{
-                latitude: locationPin?.location?.latitude ?? 0.0,
-                longitude: locationPin?.location?.longitude ?? 0.0,
+                latitude:
+                  (hasValidRiderLocation && locationPin?.location?.latitude) ||
+                  (hasValidRestaurantLocation &&
+                    restaurantAddressPin?.location?.latitude) ||
+                  deliveryAddressPin?.location?.latitude ||
+                  0.0,
+                longitude:
+                  (hasValidRiderLocation && locationPin?.location?.longitude) ||
+                  (hasValidRestaurantLocation &&
+                    restaurantAddressPin?.location?.longitude) ||
+                  deliveryAddressPin?.location?.longitude ||
+                  0.0,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}
@@ -505,7 +531,7 @@ export default function OrderDetailScreen() {
                 className="text-lg "
                 style={{ color: appTheme.fontSecondColor }}
               >
-                {t("Please check for permissions.")}
+                {t("Location data is unavailable.")}
               </Text>
             </View>
           )}
