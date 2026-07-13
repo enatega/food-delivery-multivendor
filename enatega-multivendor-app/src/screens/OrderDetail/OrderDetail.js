@@ -25,8 +25,9 @@ import { PriceRow } from '../../components/OrderDetail/PriceRow'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
 import { CancelModal } from '../../components/OrderDetail/CancelModal'
 import Button from '../../components/Button/Button'
-import { gql, useMutation } from '@apollo/client'
+import { gql, useMutation, useSubscription } from '@apollo/client'
 import { cancelOrder as cancelOrderMutation } from '../../apollo/mutations'
+import { subscriptionOrder } from '../../apollo/subscriptions'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { calulateRemainingTime } from '../../utils/customFunctions'
 import { Instructions } from '../../components/Checkout/Instructions'
@@ -44,6 +45,40 @@ import ErrorView from '../../components/ErrorView/ErrorView'
 const CANCEL_ORDER = gql`
   ${cancelOrderMutation}
 `
+const SUBSCRIPTION_ORDER = gql`
+  ${subscriptionOrder}
+`
+
+const ORDER_STATUS_RANK = {
+  [ORDER_STATUS_ENUM.PENDING]: 1,
+  [ORDER_STATUS_ENUM.ACCEPTED]: 2,
+  [ORDER_STATUS_ENUM.ASSIGNED]: 3,
+  [ORDER_STATUS_ENUM.PICKED]: 4,
+  [ORDER_STATUS_ENUM.DELIVERED]: 5,
+  [ORDER_STATUS_ENUM.COMPLETED]: 6,
+  [ORDER_STATUS_ENUM.CANCELLED]: 7,
+  [ORDER_STATUS_ENUM.CANCELLEDBYREST]: 7
+}
+
+function mergeOrderState(current, incoming) {
+  if (!current) return incoming ?? null
+  if (!incoming) return current
+
+  const currentRank = ORDER_STATUS_RANK[current?.orderStatus] ?? 0
+  const incomingRank = ORDER_STATUS_RANK[incoming?.orderStatus] ?? 0
+
+  if (incomingRank < currentRank) {
+    return {
+      ...incoming,
+      ...current
+    }
+  }
+
+  return {
+    ...current,
+    ...incoming
+  }
+}
 
 function OrderDetail(props) {
   // console.log("propsdata",props?.route.params)
@@ -104,11 +139,31 @@ function OrderDetail(props) {
   // undefined and crashed the destructuring below ("Order not found"). Keep the
   // last successfully resolved order so the screen stays stable across that gap.
   const lastKnownOrderRef = useRef(null)
+  const [screenOrder, setScreenOrder] = useState(order ?? orderData ?? null)
   if (order) {
     lastKnownOrderRef.current = order
   } else if (lastKnownOrderRef.current) {
     order = lastKnownOrderRef.current
   }
+
+  useEffect(() => {
+    if (order) {
+      setScreenOrder((current) => mergeOrderState(current, order))
+    }
+  }, [order])
+
+  useSubscription(SUBSCRIPTION_ORDER, {
+    variables: { id },
+    skip: !id,
+    onSubscriptionData: ({ subscriptionData }) => {
+      const updatedOrder = subscriptionData?.data?.subscriptionOrder
+      if (!updatedOrder) return
+      setScreenOrder((current) => mergeOrderState(current, updatedOrder))
+      lastKnownOrderRef.current = mergeOrderState(lastKnownOrderRef.current, updatedOrder)
+    }
+  })
+
+  order = mergeOrderState(order, screenOrder)
 
   useEffect(() => {
     props?.navigation.setOptions({

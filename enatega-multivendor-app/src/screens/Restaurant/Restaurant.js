@@ -35,8 +35,9 @@ const { height } = Dimensions.get('screen')
 // Animated Section List component
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
 const TOP_BAR_HEIGHT = height * 0.05
+const CATEGORY_BAR_HEIGHT = scale(56)
 const HEADER_MAX_HEIGHT = Platform.OS === 'android' ? height * 0.65 : height * 0.61
-const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
+const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT + CATEGORY_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
 
@@ -52,6 +53,7 @@ function Restaurant(props) {
   const { _id: restaurantId } = props.route.params
   const Analytics = analytics()
   const { t, i18n } = useTranslation()
+  const insets = useSafeAreaInsets()
   const scrollRef = useRef(null)
   const flatListRef = useRef(null)
   const navigation = useNavigation()
@@ -426,7 +428,7 @@ function Restaurant(props) {
   if (loading) {
     return (
       <View style={[styles(currentTheme).flex]}>
-        <ImageHeader iconColor={iconColor} iconSize={iconSize} iconBackColor={iconBackColor} iconRadius={iconRadius} iconTouchWidth={iconTouchWidth} iconTouchHeight={iconTouchHeight} restaurantName={propsData?.name ?? data?.restaurant?.name} restaurantId={propsData?._id} restaurantImage={propsData?.image ?? data?.restaurant?.image} restaurant={null} topaBarData={[]} loading={loading} minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder} tax={propsData?.tax ?? data?.restaurant?.tax} updatedDeals={[]} searchOpen={searchOpen} showSearchResults={showSearchResults} setSearch={setSearch} search={search} searchHandler={searchHandler} searchPopupHandler={searchPopupHandler} translationY={translationY} />
+        <ImageHeader iconColor={iconColor} iconSize={iconSize} iconBackColor={iconBackColor} iconRadius={iconRadius} iconTouchWidth={iconTouchWidth} iconTouchHeight={iconTouchHeight} restaurantName={propsData?.name ?? data?.restaurant?.name} restaurantId={propsData?._id} restaurantImage={propsData?.image ?? data?.restaurant?.image} restaurant={null} topaBarData={[]} loading={loading} minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder} tax={propsData?.tax ?? data?.restaurant?.tax} updatedDeals={[]} searchOpen={searchOpen} showSearchResults={showSearchResults} setSearch={setSearch} search={search} searchHandler={searchHandler} searchPopupHandler={searchPopupHandler} translationY={translationY} topInset={insets.top} />
 
         <View
           style={[
@@ -463,6 +465,7 @@ function Restaurant(props) {
         <Animated.View style={styles(currentTheme).flex}>
           <ImageHeader
             ref={flatListRef}
+            topInset={insets.top}
             iconColor={iconColor}
             iconSize={iconSize}
             iconBackColor={iconBackColor}

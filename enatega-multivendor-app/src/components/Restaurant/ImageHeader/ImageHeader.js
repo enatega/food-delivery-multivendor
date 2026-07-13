@@ -39,9 +39,10 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
+const CATEGORY_BAR_HEIGHT = scale(56)
 const HEADER_MAX_HEIGHT =
   Platform.OS === 'android' ? height * 0.65 : height * 0.61
-const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT
+const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT + CATEGORY_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 
 function ImageTextCenterHeader(props, ref) {
@@ -54,6 +55,7 @@ function ImageTextCenterHeader(props, ref) {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const topInset = props?.topInset ?? 0
   const { location } = useContext(LocationContext)
   const configuration = useContext(ConfigurationContext)
   const newheaderColor = currentTheme.backgroundColor
@@ -171,7 +173,7 @@ function ImageTextCenterHeader(props, ref) {
     <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
       <Animated.View style={[headerHeightWithoutTopbar]}>
         <Animated.View style={[styles().overlayContainer]}>
-          <View style={[styles().fixedViewNavigation]}>
+          <View style={[styles().fixedViewNavigation, { paddingTop: topInset }]}>
             <View style={styles().backIcon}>
               {props?.searchOpen ? (
                 <AnimatedTouchable
@@ -522,7 +524,10 @@ function ImageTextCenterHeader(props, ref) {
             <FlatList
               ref={flatListRef}
               style={styles(currentTheme).flatListStyle}
-              contentContainerStyle={{ flexGrow: 1 }}
+              contentContainerStyle={{
+                flexGrow: 1,
+                paddingHorizontal: scale(15)
+              }}
               data={props?.loading ? [] : [...props?.topaBarData]}
               horizontal={true}
               ListEmptyComponent={emptyView()}

@@ -41,8 +41,8 @@ function ItemDetail(props) {
   const { food, addons, options, restaurant } = props?.route?.params
 
   // States
-  const [listZindex, setListZindex] = useState(0)
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false)
+  const [specialInstructions, setSpecialInstructions] = useState('')
   const [selectedVariation, setSelectedVariation] = useState({
     ...food?.variations[0],
     addons: food?.variations[0].addons?.map((fa) => {
@@ -61,7 +61,7 @@ function ItemDetail(props) {
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
   const Analytics = analytics()
-  const { restaurant: restaurantCart, setCartRestaurant, cart, addQuantity, addCartItem, instructions, setInstructions } = useContext(UserContext)
+  const { restaurant: restaurantCart, setCartRestaurant, cart, addQuantity, addCartItem } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const inset = useSafeAreaInsets()
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
@@ -111,7 +111,7 @@ function ItemDetail(props) {
       }
     }
     Track()
-  })
+  }, [Analytics, food?._id, food?.restaurantName, food?.title, restaurant])
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
@@ -237,7 +237,7 @@ function ItemDetail(props) {
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
-      await addCartItem(food?._id, selectedVariation?._id, quantity, addons, clearFlag, instructions)
+      await addCartItem(food?._id, selectedVariation?._id, quantity, addons, clearFlag, specialInstructions)
     } else {
       await addQuantity(cartItem?.key, quantity)
     }
@@ -338,26 +338,8 @@ function ItemDetail(props) {
         <Animated.ScrollView
           ref={scrollViewRef}
           onScroll={scrollHandler}
-          style={[styles(currentTheme).scrollViewStyle, { zIndex: listZindex }]}
+          style={styles(currentTheme).scrollViewStyle}
           scrollEventThrottle={1}
-          onScrollEndDrag={(e) => {
-            if (e?.nativeEvent?.contentOffset?.y >= 70) {
-              setListZindex(4)
-              calculatePrice()
-            } else {
-              setListZindex(1)
-              calculatePrice()
-            }
-          }}
-          onMomentumScrollEnd={(e) => {
-            if (e?.nativeEvent?.contentOffset?.y >= 70) {
-              setListZindex(4)
-              calculatePrice()
-            } else {
-              setListZindex(1)
-              calculatePrice()
-            }
-          }}
           contentContainerStyle={{
             // paddingTop: HEADER_MAX_HEIGHT,
             paddingBottom: scale(Math.round(height * 0.09))
@@ -407,14 +389,17 @@ function ItemDetail(props) {
             <View style={styles(currentTheme).line}></View>
             <View style={styles(currentTheme).inputContainer}>
               <TitleComponent title={t('specialInstructions')} subTitle={t('anySpecificPreferences')} status={t('optional')} />
-              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={instructions} onChangeText={setInstructions} maxLength={144} textColor={currentTheme.fontMainColor} baseColor={currentTheme.lightHorizontalLine} errorColor={currentTheme.textErrorColor} tintColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} placeholderTextColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} />
+              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={144} textColor={currentTheme.fontMainColor} baseColor={currentTheme.lightHorizontalLine} errorColor={currentTheme.textErrorColor} tintColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} placeholderTextColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} />
             </View>
             {/** frequently bought together */}
             <FrequentlyBoughtTogether itemId={food?._id} restaurantId={restaurant} />
           </View>
         </Animated.ScrollView>
 
-        <Animated.View style={[styles(currentTheme).titleContainer, { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding: 2 }, animatedTitleStyle]}>
+        <Animated.View
+          pointerEvents='none'
+          style={[styles(currentTheme).titleContainer, { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding: 2 }, animatedTitleStyle]}
+        >
           <HeadingComponent title={food?.title} price={calculatePrice()} />
         </Animated.View>
         <View style={{ backgroundColor: currentTheme.themeBackground, zIndex: 10 }}>

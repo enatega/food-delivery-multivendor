@@ -27,6 +27,7 @@ function CartComponent(props) {
       <View style={styles(currentTheme).actionContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           style={[
             styles(currentTheme).actionContainerBtns,
             styles(currentTheme).minusBtn
@@ -46,6 +47,7 @@ function CartComponent(props) {
         </View>
         <TouchableOpacity
           activeOpacity={0.7}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           style={[
             styles(currentTheme).actionContainerBtns,
             styles(currentTheme).plusBtn
