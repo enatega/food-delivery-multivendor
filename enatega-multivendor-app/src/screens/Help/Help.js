@@ -169,7 +169,7 @@ const Help = (props) => {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           renderItem={({ item }) => (
             <Accordion heading={t(item.heading)}>
-              <TextDefault textColor={currentTheme.newFontcolor} isRTL>
+              <TextDefault textColor={currentTheme.newFontcolor} isRTL style={styles(currentTheme).faqAnswer}>
                 {t(item.description)}
               </TextDefault>
             </Accordion>

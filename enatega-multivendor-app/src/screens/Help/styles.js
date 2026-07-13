@@ -72,6 +72,9 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       gap: scale(10)
+    },
+    faqAnswer: {
+      lineHeight: scale(18)
     }
   })
 export default styles
