@@ -1,0 +1,11 @@
+[build]
+command = "npm run build"
+
+[build.environment]
+NODE_VERSION = "20"
+NPM_VERSION = "10"
+NEXT_PUBLIC_SERVER_URL = "https://enatega-multivendor-api-production-9b09.up.railway.app/"
+NEXT_PUBLIC_WS_SERVER_URL = "wss://enatega-multivendor-api-production-9b09.up.railway.app/"
+
+[[plugins]]
+package = "@netlify/plugin-nextjs"
