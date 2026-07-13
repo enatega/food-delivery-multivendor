@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
@@ -17,6 +17,9 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   const [notificationToken, setNotificationToken] = useState<string | null>(
     null,
   );
+  const unsubscribeRef = useRef<null | (() => void)>(null);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const subscribedRestaurantRef = useRef<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -35,20 +38,12 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   const { loading, error, data, subscribeToMore, refetch, networkStatus } =
     useQuery(GET_ORDERS, {
       fetchPolicy: "cache-and-network",
-      onError: () => {},
+      onError: (queryError) => {
+        console.log(
+          `[STORE-SUB] initial orders query failed: ${queryError.message}`,
+        );
+      },
     });
-
-  let unsubscribe = null;
-
-  useEffect(() => {
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    subscribeToMoreOrders();
-  }, []);
 
   useEffect(() => {
     async function GetToken() {
@@ -65,11 +60,41 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
     GetToken();
   }, []);
 
-  const subscribeToMoreOrders = async () => {
+  const clearRetryTimer = useCallback(() => {
+    if (retryTimerRef.current) {
+      clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
+  }, []);
+
+  const cleanupSubscription = useCallback(() => {
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+      unsubscribeRef.current = null;
+    }
+    subscribedRestaurantRef.current = null;
+  }, []);
+
+  const subscribeToMoreOrders = useCallback(async (force = false) => {
     try {
       const restaurant = await AsyncStorage.getItem("store-id");
-      if (!restaurant) return;
-      unsubscribe = subscribeToMore({
+      if (!restaurant) {
+        console.log("[STORE-SUB] store-id missing; subscription skipped");
+        return;
+      }
+
+      if (
+        !force &&
+        unsubscribeRef.current &&
+        subscribedRestaurantRef.current === restaurant
+      ) {
+        return;
+      }
+
+      clearRetryTimer();
+      cleanupSubscription();
+
+      unsubscribeRef.current = subscribeToMore({
         document: SUBSCRIBE_PLACE_ORDER,
         variables: { restaurant },
         updateQuery: (prev, { subscriptionData }) => {
@@ -108,11 +133,32 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
           }
           return prev;
         },
-        onError: () => {},
+        onError: (subscriptionError) => {
+          console.log(
+            `[STORE-SUB] subscription failed: ${subscriptionError.message}`,
+          );
+          cleanupSubscription();
+          clearRetryTimer();
+          retryTimerRef.current = setTimeout(() => {
+            refetch().catch(() => {});
+            void subscribeToMoreOrders(true);
+          }, 1500);
+        },
       });
+      subscribedRestaurantRef.current = restaurant;
+      console.log(`[STORE-SUB] subscribed restaurant=${restaurant}`);
     } catch {
+      cleanupSubscription();
     }
-  };
+  }, [cleanupSubscription, clearRetryTimer, refetch, subscribeToMore]);
+
+  useEffect(() => {
+    void subscribeToMoreOrders();
+    return () => {
+      clearRetryTimer();
+      cleanupSubscription();
+    };
+  }, [cleanupSubscription, clearRetryTimer, subscribeToMoreOrders]);
 
   return (
     <Context.Provider

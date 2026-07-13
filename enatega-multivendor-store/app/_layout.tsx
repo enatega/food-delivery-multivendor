@@ -58,8 +58,7 @@ function RootLayout() {
   });
 
   const [isTokenReady, setIsTokenReady] = useState(false);
-  
-  const client = setupApollo();
+  const [client] = useState(() => setupApollo());
 
   // Use Effect
   useEffect(() => {
