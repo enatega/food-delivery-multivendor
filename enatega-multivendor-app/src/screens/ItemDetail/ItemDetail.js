@@ -41,7 +41,6 @@ function ItemDetail(props) {
   const { food, addons, options, restaurant } = props?.route?.params
 
   // States
-  const [listZindex, setListZindex] = useState(0)
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false)
   const [selectedVariation, setSelectedVariation] = useState({
     ...food?.variations[0],
@@ -111,7 +110,7 @@ function ItemDetail(props) {
       }
     }
     Track()
-  })
+  }, [Analytics, food?._id, food?.restaurantName, food?.title, restaurant])
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: null,
@@ -338,26 +337,8 @@ function ItemDetail(props) {
         <Animated.ScrollView
           ref={scrollViewRef}
           onScroll={scrollHandler}
-          style={[styles(currentTheme).scrollViewStyle, { zIndex: listZindex }]}
+          style={styles(currentTheme).scrollViewStyle}
           scrollEventThrottle={1}
-          onScrollEndDrag={(e) => {
-            if (e?.nativeEvent?.contentOffset?.y >= 70) {
-              setListZindex(4)
-              calculatePrice()
-            } else {
-              setListZindex(1)
-              calculatePrice()
-            }
-          }}
-          onMomentumScrollEnd={(e) => {
-            if (e?.nativeEvent?.contentOffset?.y >= 70) {
-              setListZindex(4)
-              calculatePrice()
-            } else {
-              setListZindex(1)
-              calculatePrice()
-            }
-          }}
           contentContainerStyle={{
             // paddingTop: HEADER_MAX_HEIGHT,
             paddingBottom: scale(Math.round(height * 0.09))
@@ -414,7 +395,10 @@ function ItemDetail(props) {
           </View>
         </Animated.ScrollView>
 
-        <Animated.View style={[styles(currentTheme).titleContainer, { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding: 2 }, animatedTitleStyle]}>
+        <Animated.View
+          pointerEvents='none'
+          style={[styles(currentTheme).titleContainer, { opacity: 1, height: 35, marginTop: -12, zIndex: 9, padding: 2 }, animatedTitleStyle]}
+        >
           <HeadingComponent title={food?.title} price={calculatePrice()} />
         </Animated.View>
         <View style={{ backgroundColor: currentTheme.themeBackground, zIndex: 10 }}>
