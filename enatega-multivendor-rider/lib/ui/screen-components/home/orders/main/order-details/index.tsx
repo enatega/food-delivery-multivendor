@@ -569,30 +569,32 @@ export default function OrderDetailScreen() {
                 )}
               </View>
 
-              {/* Pick Up Order */}
-              <View className="w-[90%] flex-row items-center gap-x-2 mb-4">
-                <View>
-                  <HomeIcon
-                    width={30}
-                    height={30}
-                    color={appTheme.fontMainColor}
-                  />
-                </View>
-                <View>
-                  <Text
-                    className="font-[Inter] text-base font-semibold leading-6 text-left underline-offset-auto decoration-skip-ink "
-                    style={{ color: appTheme.fontSecondColor }}
-                  >
-                    {t("Pickup Order")}
-                  </Text>
-                  <Text
-                    className="font-[Inter] text-base font-bold leading-6 text-left underline-offset-auto decoration-skip-ink "
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    {localOrder?.restaurant?.address ?? "-"}
-                  </Text>
-                </View>
-              </View>
+              {/* Pickup / Delivery Address */}
+<View className="w-[90%] flex-row items-center gap-x-2 mb-4">
+  <View>
+    <HomeIcon
+      width={30}
+      height={30}
+      color={appTheme.fontMainColor}
+    />
+  </View>
+  <View>
+    <Text
+      className="font-[Inter] text-base font-semibold leading-6 text-left underline-offset-auto decoration-skip-ink "
+      style={{ color: appTheme.fontSecondColor }}
+    >
+      {localOrder?.orderStatus === "PICKED" ? t("To") : t("From")}
+    </Text>
+    <Text
+      className="font-[Inter] text-base font-bold leading-6 text-left underline-offset-auto decoration-skip-ink "
+      style={{ color: appTheme.fontMainColor }}
+    >
+      {localOrder?.orderStatus === "PICKED"
+        ? (deliveryAddressPin?.label ?? "-")
+        : (localOrder?.restaurant?.address ?? "-")}
+    </Text>
+  </View>
+</View>
 
               {/* Payment Method */}
               <View className="flex-1 flex-row justify-between items-center mb-4">
