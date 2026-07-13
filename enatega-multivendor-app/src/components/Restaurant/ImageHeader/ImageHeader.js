@@ -55,6 +55,7 @@ function ImageTextCenterHeader(props, ref) {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const topInset = props?.topInset ?? 0
   const { location } = useContext(LocationContext)
   const configuration = useContext(ConfigurationContext)
   const newheaderColor = currentTheme.backgroundColor
@@ -172,7 +173,7 @@ function ImageTextCenterHeader(props, ref) {
     <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
       <Animated.View style={[headerHeightWithoutTopbar]}>
         <Animated.View style={[styles().overlayContainer]}>
-          <View style={[styles().fixedViewNavigation]}>
+          <View style={[styles().fixedViewNavigation, { paddingTop: topInset }]}>
             <View style={styles().backIcon}>
               {props?.searchOpen ? (
                 <AnimatedTouchable

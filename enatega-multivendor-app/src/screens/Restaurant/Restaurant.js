@@ -53,6 +53,7 @@ function Restaurant(props) {
   const { _id: restaurantId } = props.route.params
   const Analytics = analytics()
   const { t, i18n } = useTranslation()
+  const insets = useSafeAreaInsets()
   const scrollRef = useRef(null)
   const flatListRef = useRef(null)
   const navigation = useNavigation()
@@ -427,7 +428,7 @@ function Restaurant(props) {
   if (loading) {
     return (
       <View style={[styles(currentTheme).flex]}>
-        <ImageHeader iconColor={iconColor} iconSize={iconSize} iconBackColor={iconBackColor} iconRadius={iconRadius} iconTouchWidth={iconTouchWidth} iconTouchHeight={iconTouchHeight} restaurantName={propsData?.name ?? data?.restaurant?.name} restaurantId={propsData?._id} restaurantImage={propsData?.image ?? data?.restaurant?.image} restaurant={null} topaBarData={[]} loading={loading} minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder} tax={propsData?.tax ?? data?.restaurant?.tax} updatedDeals={[]} searchOpen={searchOpen} showSearchResults={showSearchResults} setSearch={setSearch} search={search} searchHandler={searchHandler} searchPopupHandler={searchPopupHandler} translationY={translationY} />
+        <ImageHeader iconColor={iconColor} iconSize={iconSize} iconBackColor={iconBackColor} iconRadius={iconRadius} iconTouchWidth={iconTouchWidth} iconTouchHeight={iconTouchHeight} restaurantName={propsData?.name ?? data?.restaurant?.name} restaurantId={propsData?._id} restaurantImage={propsData?.image ?? data?.restaurant?.image} restaurant={null} topaBarData={[]} loading={loading} minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder} tax={propsData?.tax ?? data?.restaurant?.tax} updatedDeals={[]} searchOpen={searchOpen} showSearchResults={showSearchResults} setSearch={setSearch} search={search} searchHandler={searchHandler} searchPopupHandler={searchPopupHandler} translationY={translationY} topInset={insets.top} />
 
         <View
           style={[
@@ -464,6 +465,7 @@ function Restaurant(props) {
         <Animated.View style={styles(currentTheme).flex}>
           <ImageHeader
             ref={flatListRef}
+            topInset={insets.top}
             iconColor={iconColor}
             iconSize={iconSize}
             iconBackColor={iconBackColor}
