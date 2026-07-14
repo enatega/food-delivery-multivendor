@@ -48,7 +48,7 @@
     "expo-localization": "~16.1.5",
     "expo-location": "~18.1.5",
     "expo-network": "~7.1.5",
-    "expo-notifications": "~0.31.3",
+    "expo-notifications": "~56.0.18",
     "expo-router": "~5.1.0",
     "expo-secure-store": "~14.2.4",
     "expo-splash-screen": "~0.30.9",
