@@ -120,7 +120,6 @@
     "react-native-webview": "13.13.5",
     "react-navigation-collapsible": "^6.3.0",
     "rn-placeholder": "^3.0.1",
-    "sentry-expo": "~7.0.0",
     "subscriptions-transport-ws": "^0.11.0",
     "uglify-js": "^3.17.4",
     "uuid": "^11.0.2"
