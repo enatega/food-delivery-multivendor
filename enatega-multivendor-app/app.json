@@ -119,7 +119,13 @@
       "expo-localization",
       "expo-web-browser",
       "expo-video",
-      "expo-apple-authentication"
+      "expo-apple-authentication",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Camera is needed to scan QR codes."
+        }
+      ]
     ],
     "extra": {
       "eas": {
