@@ -10,6 +10,7 @@
     "format": "prettier --write '**/*.js'",
     "lint:fix": "eslint . --ext .js --fix",
     "postinstall": "patch-package",
+    "eas-build-pre-install": "node scripts/prepare-tenant-icon.js",
     "build:staging": "eas build --profile staging -p all",
     "build:staging:android": "eas build --profile staging -p android",
     "build:staging:ios": "eas build --profile staging -p ios",
