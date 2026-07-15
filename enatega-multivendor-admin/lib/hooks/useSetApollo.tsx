@@ -27,6 +27,13 @@ import { clearMetricsData, getMetricsToken, getNonce, initializeNonce, shouldRef
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
 
+function getSlugFromHostname(): string {
+  if (typeof window === 'undefined') return '';
+  const parts = window.location.hostname.split('.');
+  if (parts.length >= 3) return parts[0];
+  return '';
+}
+
 async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
   if (isRefreshing && refreshPromise) {
     return refreshPromise;
@@ -118,11 +125,13 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     const nonce = getNonce();
     const metricsToken = getMetricsToken();
 
+    const tenantSlug = getSlugFromHostname();
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : '',
         nonce: nonce || '',
         'bop-auth': `Bearer ${metricsToken}` || '',
+        ...(tenantSlug ? { 'x-tenant-slug': tenantSlug } : {}),
       },
     });
   };
