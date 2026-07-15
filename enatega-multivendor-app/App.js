@@ -35,14 +35,9 @@ import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
 import * as Clarity from '@microsoft/react-native-clarity';
-
-
-// LogBox.ignoreLogs([
-//   // 'Warning: ...',
-//   // 'Sentry Logger ',
-//   'Constants.deviceYearClass'
-// ]) // Ignore log notification by message
-// LogBox.ignoreAllLogs() // Ignore all log notifications
+import TenantProvider from './src/tenant/TenantProvider'
+import { useTenant } from './src/tenant/TenantContext'
+import TenantSelectionScreen from './src/tenant/screens/TenantSelectionScreen'
 
 if (!__DEV__) {
   Clarity.initialize('mcdyi6urgs', {
@@ -60,55 +55,52 @@ Notifications.setNotificationHandler({
   }
 })
 
+// Root — TenantProvider wraps everything so tenant state is available before Apollo is created
 export default function App() {
+  return (
+    <TenantProvider>
+      <AppCore />
+    </TenantProvider>
+  )
+}
+
+// AppCore reads the tenant then sets up Apollo with the tenant's API URL
+function AppCore() {
+  const { tenant, isLoading: tenantLoading } = useTenant()
   const reviewModalRef = useRef()
   const [appIsReady, setAppIsReady] = useState(false)
   const [location, setLocation] = useState(null)
-  // const responseListener = useRef()
   const [orderId, setOrderId] = useState()
   const [isUpdating, setIsUpdating] = useState(false)
-  // const { SENTRY_DSN } = useEnvVars()
-  const client = setupApolloClient()
+
+  // Apollo is initialized with the tenant's apiBaseUrl (or null = default URL from environment.js)
+  const client = setupApolloClient(tenant?.apiBaseUrl || null)
 
   useKeepAwake()
-  // useWatchLocation()
 
-  // Use system theme
   const systemTheme = useColorScheme()
   const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
   useEffect(() => {
     try {
       themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
     } catch (error) {
-      // Error retrieving data
       console.log('Theme Error : ', error.message)
     }
   }, [systemTheme])
 
-  // For Fonts, etc
   useEffect(() => {
     const loadAppData = async () => {
-      // try {
-      //   await SplashScreen.preventAutoHideAsync()
-      // } catch (e) {
-      //   console.warn(e)
-      // }
-      // await i18n.initAsync()
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
         MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
       })
-      // await permissionForPushNotificationsAsync()
       await getActiveLocation()
-      // get stored theme
-      // await getStoredTheme()
       setAppIsReady(true)
     }
 
     loadAppData()
     const backHandler = BackHandler.addEventListener('hardwareBackPress', exitAlert);
-
 
     return () => {
       backHandler.remove()
@@ -117,46 +109,15 @@ export default function App() {
 
   useEffect(() => {
     if (!appIsReady) return
-
-    const hideSplashScreen = async () => {
-      await SplashScreen.hideAsync()
-    }
-
-    hideSplashScreen()
+    SplashScreen.hideAsync()
   }, [appIsReady])
 
-  // For Location
   useEffect(() => {
     if (!location) return
-    const saveLocation = async () => {
-      await AsyncStorage.setItem('location', JSON.stringify(location))
-    }
-    saveLocation()
+    AsyncStorage.setItem('location', JSON.stringify(location))
   }, [location])
 
-  // For Permission
-/*   useEffect(() => {
-    requestTrackingPermissions()
-  }, []) */
-
-  // For Sentry
-  // useEffect(() => {
-  //   // if (SENTRY_DSN) {
-  //   if (false) {
-  //     Sentry.init({
-  //       dsn: SENTRY_DSN,
-  //       enableInExpoDevelopment: !isProduction ? true : false,
-  //       environment: isProduction ? 'production' : 'development',
-  //       debug: !isProduction,
-  //       tracesSampleRate: 1.0,
-  //       enableTracing: true
-  //     })
-  //   }
-  // }, [SENTRY_DSN])
-
-  // For App Update
   useEffect(() => {
-    // eslint-disable-next-line no-undef
     if (__DEV__) return
     ;(async () => {
       const { isAvailable } = await Updates.checkForUpdateAsync()
@@ -164,9 +125,7 @@ export default function App() {
         try {
           setIsUpdating(true)
           const { isNew } = await Updates.fetchUpdateAsync()
-          if (isNew) {
-            await Updates.reloadAsync()
-          }
+          if (isNew) await Updates.reloadAsync()
         } catch (error) {
           console.log('error while updating app', JSON.stringify(error))
         } finally {
@@ -176,76 +135,45 @@ export default function App() {
     })()
   }, [])
 
-  // For Push Notification
   useEffect(() => {
-    // registerForPushNotificationsAsync()
-
-    const notifSub  = Notifications.addNotificationReceivedListener((notification) => {
+    const notifSub = Notifications.addNotificationReceivedListener((notification) => {
       if (notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
         const id = notification?.request?.content?.data?._id
-        if (id) {
-          setOrderId(id)
-          reviewModalRef?.current?.open()
-        }
+        if (id) { setOrderId(id); reviewModalRef?.current?.open() }
       }
     })
-
     const responseSub = Notifications.addNotificationResponseReceivedListener((response) => {
       if (response?.notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
         const id = response?.notification?.request?.content?.data?._id
-        if (id) {
-          setOrderId(id)
-          reviewModalRef?.current?.open()
-        }
+        if (id) { setOrderId(id); reviewModalRef?.current?.open() }
       }
     })
-    return () => {
-      notifSub.remove()
-      responseSub.remove()
-    }
+    return () => { notifSub.remove(); responseSub.remove() }
   }, [])
 
-  // Handlers
-  // get active location
   async function getActiveLocation() {
     try {
       const locationStr = await AsyncStorage.getItem('location')
-      if (locationStr) {
-        setLocation(JSON.parse(locationStr))
-      }
+      if (locationStr) setLocation(JSON.parse(locationStr))
     } catch (err) {
       console.log(err)
     }
   }
 
-  // get stored theme
-  // const getStoredTheme = async () => {
-  //   try {
-  //     const storedTheme = await AsyncStorage.getItem('appTheme')
-  //     if (storedTheme) {
-  //       console.log('Retrieved theme from storage:', storedTheme)
-  //       themeSetter({ type: storedTheme })
-  //     } else {
-  //       console.log('No theme found in storage, using default.')
-  //       await AsyncStorage.setItem('appTheme', 'Dark') // Set default theme to Pink
-  //     }
-  //   } catch (error) {
-  //     console.log('Error retrieving theme from storage:', error)
-  //   }
-  // }
+  const onOverlayPress = () => reviewModalRef?.current?.close()
 
-  // set stored theme
-  const setStoredTheme = async (newTheme) => {
-    try {
-      await AsyncStorage.setItem('appTheme', newTheme)
-    } catch (error) {
-      console.log('Error storing theme in AsyncStorage:', error)
-    }
+  // While checking AsyncStorage for saved tenant — keep native splash up
+  if (tenantLoading || !appIsReady) {
+    return (
+      <View style={[styles.flex, styles.mainContainer, { backgroundColor: '#fff' }]}>
+        <ActivityIndicator size="large" color="#90E36D" />
+      </View>
+    )
   }
 
-  // set modal close
-  const onOverlayPress = () => {
-    reviewModalRef?.current?.close()
+  // No tenant saved → show selection / QR scan screen
+  if (!tenant) {
+    return <TenantSelectionScreen />
   }
 
   if (isUpdating) {
@@ -261,50 +189,35 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-    <AnimatedSplashScreen>
-      <ApolloProvider client={client}>
-        <ThemeContext.Provider
-          // use default theme
-          value={{ ThemeValue: theme, dispatch: themeSetter }}
-          // use stored theme
-          // value={{
-          //   ThemeValue: theme,
-          //   dispatch: (action) => {
-          //     themeSetter(action)
-          //     setStoredTheme(action.type) // Save the theme in AsyncStorage when it changes
-          //   }
-          // }}
-        >
-          <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
-          <LocationProvider>
-            <ConfigurationProvider>
-              <AuthProvider>
-                <UserProvider>
-                  <OrdersProvider>
-                    <AppContainer />
-                    <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
-                  </OrdersProvider>
-                </UserProvider>
-              </AuthProvider>
-            </ConfigurationProvider>
-          </LocationProvider>
-          <FlashMessage MessageComponent={MessageComponent} />
-        </ThemeContext.Provider>
-      </ApolloProvider>
-    </AnimatedSplashScreen>
+      <AnimatedSplashScreen>
+        <ApolloProvider client={client}>
+          <ThemeContext.Provider value={{ ThemeValue: theme, dispatch: themeSetter }}>
+            <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
+            <LocationProvider>
+              <ConfigurationProvider>
+                <AuthProvider>
+                  <UserProvider>
+                    <OrdersProvider>
+                      <AppContainer />
+                      <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
+                    </OrdersProvider>
+                  </UserProvider>
+                </AuthProvider>
+              </ConfigurationProvider>
+            </LocationProvider>
+            <FlashMessage MessageComponent={MessageComponent} />
+          </ThemeContext.Provider>
+        </ApolloProvider>
+      </AnimatedSplashScreen>
     </ErrorBoundary>
   )
 }
 
 const styles = StyleSheet.create({
-  flex: {
-    flex: 1
-  },
-  mainContainer: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
+  flex: { flex: 1 },
+  mainContainer: { justifyContent: 'center', alignItems: 'center' }
 })
+
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
@@ -319,25 +232,9 @@ async function registerForPushNotificationsAsync() {
     const { status: existingStatus } = await Notifications.getPermissionsAsync()
     let finalStatus = existingStatus
     const { status } = await Notifications.requestPermissionsAsync()
-
-    if (existingStatus !== 'granted') {
-      finalStatus = status
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!')
-    }
+    if (existingStatus !== 'granted') finalStatus = status
+    if (finalStatus !== 'granted') alert('Failed to get push token for push notification!')
   } else {
     alert('Must use physical device for Push Notifications')
   }
 }
-
-// async function schedulePushNotification() {
-//   await Notifications.scheduleNotificationAsync({
-//     content: {
-//       title: "You've got mail! 📬",
-//       body: 'Here is the notification body',
-//       data: { type: NOTIFICATION_TYPES.REVIEW_ORDER, _id: '65e068b2150aab288f2b821f' }
-//     },
-//     trigger: { seconds: 10 }
-//   })
-// }

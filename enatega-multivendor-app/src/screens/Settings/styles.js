@@ -102,6 +102,15 @@ const styles = (props = null) =>
       fontSize: scale(18),
       fontWeight: '600'
     },
+    switchBusinessBtn: {
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: verticalScale(14),
+      borderTopWidth: 1,
+      borderTopColor: props !== null ? props?.horizontalLine : '#E8E8E8',
+      ...alignment.MTsmall,
+    },
     versionContainer: {
       width: '100%',
       alignItems: 'center',

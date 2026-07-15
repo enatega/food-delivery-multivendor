@@ -20,7 +20,7 @@ import {
 } from '../../apollo/mutations'
 
 import gql from 'graphql-tag'
-import { useMutation } from '@apollo/client'
+import { useMutation, useApolloClient } from '@apollo/client'
 import styles from './styles'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
@@ -42,6 +42,7 @@ import i18next from '../../../i18next'
 import { useTranslation } from 'react-i18next'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import { useTenant } from '../../tenant/TenantContext'
 
 const languageTypes = [
   { value: 'English', code: 'en', index: 0 },
@@ -73,6 +74,8 @@ function Settings(props) {
     loadingProfile,
     errorProfile,
   } = useContext(UserContext)
+  const { clearTenant } = useTenant()
+  const apolloClient = useApolloClient()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
@@ -427,6 +430,18 @@ function Settings(props) {
             </TouchableOpacity>
           </View>
         </View>
+        <TouchableOpacity
+          style={[styles(currentTheme).switchBusinessBtn]}
+          activeOpacity={0.8}
+          onPress={async () => {
+            await apolloClient.clearStore().catch(() => {})
+            await clearTenant()
+          }}
+        >
+          <TextDefault textColor={currentTheme.fontSecondColor} bold>
+            🔄  Switch Business
+          </TextDefault>
+        </TouchableOpacity>
         <View style={styles().versionContainer}>
           <TextDefault textColor={currentTheme.statusSecondColor}>
             Version: {appVersion}
