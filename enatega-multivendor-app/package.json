@@ -96,7 +96,6 @@
     "react-i18next": "^14.0.1",
     "react-native": "0.79.5",
     "react-native-button": "^3.0.1",
-    "react-native-chat-ui": "^0.1.9",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "~2.24.0",
