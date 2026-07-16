@@ -5,7 +5,6 @@ import PayPalAddForm from '../../add-form/paypal';
 import DeliveryRateAddForm from '../../add-form/delivery-rate';
 import TwilioAddForm from '../../add-form/twilio';
 import SentryAddForm from '../../add-form/sentry-config';
-import GoogleApiAddForm from '../../add-form/google-api';
 import CloudinaryAddForm from '../../add-form/cloudinary';
 import AmplitudeAddForm from '../../add-form/amplitude';
 import GoogleClientAddForm from '../../add-form/google-client';
@@ -25,7 +24,6 @@ const ConfigMain = () => {
       <DeliveryRateAddForm />
       <TwilioAddForm />
       <SentryAddForm />
-      <GoogleApiAddForm />
       <CloudinaryAddForm />
       <AmplitudeAddForm />
       <GoogleClientAddForm />

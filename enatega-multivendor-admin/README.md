@@ -35,6 +35,12 @@ This module supports two setup styles:
 - Local backend: keep `.env.local` pointed at `http://localhost:8001/`
 - Hosted backend: replace the values in `.env.local` with a hosted `https://` API URL and matching `wss://` websocket URL
 
+## Google Maps
+
+- Set `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` in `.env.local` for the browser Google Maps SDK
+- Reverse geocoding is proxied through the API at `/maps/reverse-geocode`
+- Google OAuth client IDs still come from backend configuration
+
 ## Notes
 
 - The committed `.env.example` is set up for the local API in this repo
