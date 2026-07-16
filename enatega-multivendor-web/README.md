@@ -39,7 +39,7 @@ Examples already exist in `.env.stage` and `.env.prod`.
 
 ## Google setup
 
-- `GOOGLE_MAPS_API_KEY` is required for Google Maps in the browser
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` is required for Google Maps in the browser
 - `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is optional and only needed for Google login
 
 ## Notes

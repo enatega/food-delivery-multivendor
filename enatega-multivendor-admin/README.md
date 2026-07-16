@@ -37,7 +37,7 @@ This module supports two setup styles:
 
 ## Google Maps
 
-- Set `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` in `.env.local` for the browser Google Maps SDK
+- Set `GOOGLE_MAPS_API_KEY` in `.env.local` for the browser Google Maps SDK
 - Reverse geocoding is proxied through the API at `/maps/reverse-geocode`
 - Google OAuth client IDs still come from backend configuration
 
