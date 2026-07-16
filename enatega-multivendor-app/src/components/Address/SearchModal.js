@@ -20,7 +20,10 @@ import Animated, {
 } from 'react-native-reanimated'
 import axios from 'axios'
 import useEnvVars from '../../../environment'
-import CloseIcon from '../../assets/SVG/imageComponents/CloseIcon'
+import {
+  fetchPlaceAutocomplete,
+  fetchPlaceDetails
+} from '../../api/googleMapsProxy'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
@@ -40,7 +43,7 @@ export default function SearchModal({
 }) {
   const { t } = useTranslation()
   const animation = useSharedValue(0)
-  const { GOOGLE_MAPS_KEY } = useEnvVars()
+  const { SERVER_REST_URL } = useEnvVars()
   
   const [searchText, setSearchText] = useState('')
   const [predictions, setPredictions] = useState([])
@@ -57,9 +60,7 @@ export default function SearchModal({
   useEffect(() => {
     if (visible) {
       console.log('🔍 SearchModal opened - Debug Info:', {
-        hasGoogleMapsKey: !!GOOGLE_MAPS_KEY,
-        keyLength: GOOGLE_MAPS_KEY ? GOOGLE_MAPS_KEY.length : 0,
-        keyPrefix: GOOGLE_MAPS_KEY ? GOOGLE_MAPS_KEY.substring(0, 10) + '...' : 'undefined',
+        hasServerUrl: !!SERVER_REST_URL,
         themeValue: themeContext.ThemeValue,
         timestamp: new Date().toISOString()
       })
@@ -70,7 +71,7 @@ export default function SearchModal({
       setLoading(false)
       setError(null)
     }
-  }, [visible, GOOGLE_MAPS_KEY, themeContext.ThemeValue])
+  }, [visible, SERVER_REST_URL, themeContext.ThemeValue])
 
   const marginTop = useAnimatedStyle(() => {
     return {
@@ -172,9 +173,9 @@ export default function SearchModal({
       return
     }
 
-    if (!GOOGLE_MAPS_KEY) {
-      console.error('❌ GOOGLE_MAPS_KEY is missing!')
-      setError('Google Maps API key is not configured')
+    if (!SERVER_REST_URL) {
+      console.error('❌ SERVER_REST_URL is missing!')
+      setError('Location search is not configured')
       setLoading(false)
       return
     }
@@ -194,48 +195,33 @@ export default function SearchModal({
     try {
       console.log('🌐 Making API request for query:', query)
       
-      const response = await axios.get(
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json',
-        {
-          params: {
-            input: query,
-            key: GOOGLE_MAPS_KEY,
-            language: 'en',
-            // components: 'country:pk', // use to Restrict to Pakistan
-            types: 'geocode'
-          },
-          timeout: 10000,
-          cancelToken: cancelToken.token
-        }
-      )
+      const data = await fetchPlaceAutocomplete({
+        baseUrl: SERVER_REST_URL,
+        input: query,
+        language: 'en',
+        types: 'geocode',
+        cancelToken: cancelToken.token
+      })
 
-      console.log('📍 API Response status:', response.data.status)
+      console.log('📍 API Response status:', data.status)
       
-      if (response.data.status === 'OK') {
-        const formattedPredictions = response.data.predictions.map((prediction) => ({
-          id: prediction.place_id,
-          description: prediction.description,
-          placeId: prediction.place_id,
-          mainText: prediction.structured_formatting?.main_text || prediction.description,
-          secondaryText: prediction.structured_formatting?.secondary_text || ''
-        }))
-        
-        console.log('✅ Found predictions:', formattedPredictions.length)
-        setPredictions(formattedPredictions)
+      if (data.status === 'OK') {
+        console.log('✅ Found predictions:', data.predictions.length)
+        setPredictions(data.predictions)
         setError(null)
-      } else if (response.data.status === 'ZERO_RESULTS') {
+      } else if (data.status === 'ZERO_RESULTS') {
         console.log('🔍 No results found for query:', query)
         setPredictions([])
         setError(null)
       } else {
-        console.error('❌ API Error:', response.data.status, response.data.error_message)
+        console.error('❌ API Error:', data.status, data.errorMessage)
         setPredictions([])
-        setError(response.data.error_message || 'Search failed')
+        setError(data.errorMessage || 'Search failed')
         
-        if (response.data.status === 'REQUEST_DENIED') {
+        if (data.status === 'REQUEST_DENIED') {
           Alert.alert(
             'API Error', 
-            'Google Places API access denied. Please check your API key configuration.'
+            'Location search access denied. Please check your backend Maps configuration.'
           )
         }
       }
@@ -250,13 +236,8 @@ export default function SearchModal({
       
       if (error.code === 'ECONNABORTED') {
         setError('Request timed out')
-      } else if (error.response) {
-        console.error('API Error Response:', error.response.data)
-        setError('Search service unavailable')
-      } else if (error.request) {
-        setError('Network error - check your connection')
       } else {
-        setError('Search failed')
+        setError(error.message || 'Search failed')
       }
     } finally {
       setLoading(false)
@@ -265,32 +246,26 @@ export default function SearchModal({
         requestCancelTokenRef.current = null
       }
     }
-  }, [GOOGLE_MAPS_KEY])
+  }, [SERVER_REST_URL])
 
   // Get place details
   const getPlaceDetails = useCallback(async (placeId) => {
     console.log('📍 Getting place details for placeId:', placeId)
     
-    if (!GOOGLE_MAPS_KEY) {
-      console.error('❌ GOOGLE_MAPS_KEY is missing!')
+    if (!SERVER_REST_URL) {
+      console.error('❌ SERVER_REST_URL is missing!')
       return null
     }
 
     try {
-      const response = await axios.get(
-        'https://maps.googleapis.com/maps/api/place/details/json',
-        {
-          params: {
-            place_id: placeId,
-            key: GOOGLE_MAPS_KEY,
-            fields: 'geometry,formatted_address,name'
-          },
-          timeout: 10000
-        }
-      )
+      const data = await fetchPlaceDetails({
+        baseUrl: SERVER_REST_URL,
+        placeId,
+        language: 'en'
+      })
 
-      if (response.data.status === 'OK' && response.data.result) {
-        const result = response.data.result
+      if (data.status === 'OK' && data.result) {
+        const result = data.result
         console.log('✅ Got place details successfully')
         
         return {
@@ -304,14 +279,14 @@ export default function SearchModal({
           name: result.name
         }
       } else {
-        console.error('❌ Place details error:', response.data.status)
+        console.error('❌ Place details error:', data.status)
         return null
       }
     } catch (error) {
       console.error('🚨 Error getting place details:', error)
       return null
     }
-  }, [GOOGLE_MAPS_KEY])
+  }, [SERVER_REST_URL])
 
   // Handle text input change with debouncing
   const handleTextChange = useCallback((text) => {
@@ -375,8 +350,8 @@ export default function SearchModal({
     </TouchableOpacity>
   )
 
-  // Don't render if no API key
-  if (!GOOGLE_MAPS_KEY) {
+  // Don't render if backend search is not configured
+  if (!SERVER_REST_URL) {
     return (
       <Modal visible={visible} transparent animationType={'slide'} onRequestClose={onClose}>
         <View style={{ 
@@ -394,7 +369,7 @@ export default function SearchModal({
             borderColor: currentTheme.customBorder
           }}>
             <TextDefault textColor={currentTheme.newFontcolor}>
-              Google Maps API key is not configured
+              Location search is not configured
             </TextDefault>
             <TouchableOpacity 
               onPress={close} 
