@@ -1,40 +1,95 @@
-const { expo } = require("./app.json");
-
-// Fallback so the native Maps key is always baked into the build even when the
-// env vars aren't set. Replace with your own key restricted to this app's
-// package/bundle id (com.enatega.multirider). A rebuild is required after change.
-const FALLBACK_GOOGLE_MAPS_API_KEY = "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E";
-
 const iosGoogleMapsApiKey =
+  process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS ||
   process.env.IOS_GOOGLE_MAPS_API_KEY ||
-  process.env.GOOGLE_MAPS_API_KEY ||
-  FALLBACK_GOOGLE_MAPS_API_KEY;
+  process.env.GOOGLE_MAPS_API_KEY
 const androidGoogleMapsApiKey =
+  process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID ||
   process.env.ANDROID_GOOGLE_MAPS_API_KEY ||
-  process.env.GOOGLE_MAPS_API_KEY ||
-  FALLBACK_GOOGLE_MAPS_API_KEY;
+  process.env.GOOGLE_MAPS_API_KEY
 
 module.exports = {
-  ...expo,
-  ios: {
-    ...expo.ios,
-    config: {
-      ...expo.ios.config,
-      ...(iosGoogleMapsApiKey
-        ? { googleMapsApiKey: iosGoogleMapsApiKey }
-        : {}),
+  expo: {
+    name: 'Enatega Multivendor Rider',
+    description:
+      "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+    version: '1.1.85',
+    slug: 'food-delivery-rider-multivendor',
+    orientation: 'portrait',
+    splash: {
+      image: './lib/assets/images/black.png',
+      resizeMode: 'cover',
+      backgroundColor: '#000000'
     },
-  },
-  android: {
-    ...expo.android,
-    config: {
-      ...expo.android.config,
-      googleMaps: {
-        ...(expo.android.config?.googleMaps || {}),
-        ...(androidGoogleMapsApiKey
-          ? { apiKey: androidGoogleMapsApiKey }
-          : {}),
+    icon: './lib/assets/images/icon.png',
+    assetBundlePatterns: ['lib/assets/**/*'],
+    scheme: 'myapp',
+    userInterfaceStyle: 'automatic',
+    newArchEnabled: true,
+    plugins: [
+      'expo-router',
+      [
+        '@sentry/react-native/expo',
+        {
+          organization: 'ninjas-code',
+          project: 'enatega-rider-app',
+          url: 'https://sentry.io/'
+        }
+      ],
+      [
+        'expo-image-picker',
+        {
+          photosPermission:
+            'The app accesses your photos for license, vehicle plate and profile image. Please allow these to continue using the app.'
+        }
+      ],
+      'expo-font',
+      [
+        'expo-video',
+        {
+          supportsBackgroundPlayback: true,
+          supportsPictureInPicture: true
+        }
+      ],
+      'expo-secure-store'
+    ],
+    platforms: ['ios', 'android'],
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: 'com.enatega.multirider',
+      config: {
+        ...(iosGoogleMapsApiKey ? { googleMapsApiKey: iosGoogleMapsApiKey } : {})
       },
+      icon: './lib/assets/images/icon.png',
+      infoPlist: {
+        NSLocationWhenInUseUsageDescription:
+          '$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!',
+        UIBackgroundModes: ['location', 'fetch', 'remote-notification'],
+        ITSAppUsesNonExemptEncryption: false
+      }
     },
-  },
-};
+    android: {
+      versionCode: 85,
+      googleServicesFile: './google-services.json',
+      permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION'],
+      config: {
+        googleMaps: {
+          ...(androidGoogleMapsApiKey ? { apiKey: androidGoogleMapsApiKey } : {})
+        }
+      },
+      package: 'com.enatega.multirider',
+      icon: './lib/assets/images/appIcon.png',
+      adaptiveIcon: {
+        foregroundImage: './lib/assets/images/appIcon.png',
+        backgroundColor: '#ffffff'
+      }
+    },
+    extra: {
+      eas: {
+        projectId: '9144a7fc-b205-464a-8fb6-64eb66fc8743'
+      }
+    },
+    experiments: {
+      typedRoutes: true
+    }
+  }
+}
