@@ -46,7 +46,7 @@ const GoogleApiAddForm = () => {
     mutate({
       variables: {
         configurationInput: {
-          googleApiKey: values.googleApiKey,
+          googleMapsApiKey: values.googleApiKey,
         },
       },
       onCompleted: () => {

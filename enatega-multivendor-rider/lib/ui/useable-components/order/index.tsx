@@ -1,5 +1,8 @@
-import { memo, useContext } from "react";
+import { memo, useContext, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useSubscription } from "@apollo/client";
+import { SUBSCRIPTION_NEW_MESSAGE } from "@/lib/apollo/subscriptions";
+import UserContext from "@/lib/context/global/user.context";
 
 // Components
 import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
@@ -46,6 +49,21 @@ const Order = ({
   const configuration = useContext(ConfigurationContext);
   const router = useRouter();
   const { location: riderLocation } = useLocationContext();
+
+  // Unread chat indicator: flag when the customer sends a message for this
+  // order while the rider hasn't opened the chat. Only active for PICKED orders
+  // (when the chat button is shown).
+  const { dataProfile } = useContext(UserContext);
+  const [hasUnread, setHasUnread] = useState(false);
+  useSubscription(SUBSCRIPTION_NEW_MESSAGE, {
+    variables: { order: _id },
+    skip: !_id || orderStatus !== "PICKED",
+    onData: ({ data }) => {
+      const msg = data?.data?.subscriptionNewMessage;
+      if (!msg) return;
+      if (msg.user?.id !== dataProfile?._id) setHasUnread(true);
+    },
+  });
 
   // Distance/time shown on the card. GeoJSON stores coordinates as
   // [longitude, latitude].
@@ -377,6 +395,7 @@ const Order = ({
                   <View className="flex-row items-center gap-x-2">
                     <TouchableOpacity
                       onPress={() => {
+                        setHasUnread(false);
                         router.push({
                           pathname: "/chat",
                           params: {
@@ -393,6 +412,21 @@ const Order = ({
                           height={30}
                           color={appTheme.fontMainColor}
                         />
+                        {hasUnread && (
+                          <View
+                            style={{
+                              position: "absolute",
+                              top: 2,
+                              right: 2,
+                              width: 12,
+                              height: 12,
+                              borderRadius: 6,
+                              backgroundColor: "red",
+                              borderWidth: 1.5,
+                              borderColor: appTheme.themeBackground,
+                            }}
+                          />
+                        )}
                       </View>
                     </TouchableOpacity>
                     {/* Order Comment */}

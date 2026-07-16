@@ -1,12 +1,20 @@
 // Core
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 // Gifted Chat
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useChatScreen } from "@/lib/hooks/useChat";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { Bubble, GiftedChat } from "react-native-gifted-chat";
+import { Actions, Bubble, GiftedChat } from "react-native-gifted-chat";
 
 export default function ChatMain() {
   // Hooks
@@ -15,6 +23,8 @@ export default function ChatMain() {
   const {
     messages,
     onSend,
+    pickImage,
+    uploading,
     inputMessage,
     setInputMessage,
     profile,
@@ -35,6 +45,54 @@ export default function ChatMain() {
           }
         }}
       />
+    );
+  };
+
+  const renderActions = (props: any) => {
+    return (
+      <Actions
+        {...props}
+        containerStyle={{
+          width: 40,
+          height: 40,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        icon={() => (
+          <Ionicons name="image-outline" size={26} color={appTheme.primary} />
+        )}
+        // Open the gallery directly (no ActionSheetProvider needed).
+        onPressActionButton={pickImage}
+      />
+    );
+  };
+
+  const renderMessageImage = (props: any) => {
+    const uri = props?.currentMessage?.image;
+    if (!uri) return null;
+    return (
+      <Image
+        source={{ uri }}
+        resizeMode="cover"
+        style={{
+          width: 160,
+          height: 160,
+          borderRadius: 12,
+          margin: 3,
+        }}
+      />
+    );
+  };
+
+  const renderChatFooter = () => {
+    if (!uploading) return null;
+    return (
+      <View style={styles.uploadingFooter}>
+        <ActivityIndicator size="small" color={appTheme.primary} />
+        <Text style={{ color: appTheme.fontMainColor }}>
+          {t("Uploading image...")}
+        </Text>
+      </View>
     );
   };
 
@@ -94,6 +152,9 @@ export default function ChatMain() {
         }}
         alwaysShowSend
         renderBubble={renderBubble}
+        renderActions={renderActions}
+        renderMessageImage={renderMessageImage}
+        renderChatFooter={renderChatFooter}
         renderSend={renderSend}
         scrollToBottom
         scrollToBottomComponent={scrollToBottomComponent}
@@ -121,6 +182,12 @@ export default function ChatMain() {
 const styles = StyleSheet.create({
   chatContainer: {
     marginBottom: 0,
+  },
+  uploadingFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    padding: 10,
   },
   bubbleRight: {
     padding: 5,

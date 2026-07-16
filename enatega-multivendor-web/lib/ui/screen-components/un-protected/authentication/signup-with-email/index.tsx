@@ -225,6 +225,7 @@ export default function SignUpWithEmail({
           type="email"
           placeholder={t("emailLabel")}
           onChange={(e) => handleFormChange("email", e.target.value)}
+          disabled={!!formData.email}
         />
       </div>
       {/* Email Validation message */}

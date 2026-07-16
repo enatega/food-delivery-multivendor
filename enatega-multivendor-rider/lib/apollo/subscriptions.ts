@@ -102,6 +102,7 @@ export const SUBSCRIPTION_NEW_MESSAGE = gql`
     subscriptionNewMessage(order: $order) {
       id
       message
+      image
       user {
         id
         name

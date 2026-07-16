@@ -41,12 +41,12 @@ function TopBrands(props) {
 
       <View
         style={{
-          alignItems: 'left',
-          justifyContent: 'center'
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start'
         }}
       >
-        <TextDefault style={styles().brandName} textColor={currentTheme.fontThirdColor} H5 bolder>
-          {item?.name?.length > 11 ? item.name.substring(0, 11) + '...' : item.name}
+        <TextDefault style={styles().brandName} textColor={currentTheme.fontThirdColor} numberOfLines={2} ellipsizeMode='tail' bolder>
+          {item?.name}
         </TextDefault>
         <TextDefault textColor={currentTheme.fontFifthColor} normal>
           {item?.deliveryTime} mins

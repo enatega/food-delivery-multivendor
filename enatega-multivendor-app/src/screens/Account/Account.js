@@ -63,6 +63,9 @@ function Account(props) {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [selectedLanguage, setselectedLanguage] = useState('')
   const [spinnerLoading, setSpinnerLoading] = useState(false)
+  // Once the profile has rendered once, we never blank the screen for a
+  // background refetch again (prevents the toggle-triggered content flicker).
+  const hasLoadedProfileRef = useRef(false)
 
   const [orderNotification, orderNotificationSetter] = useState()
   const [offerNotification, offerNotificationSetter] = useState()
@@ -387,7 +390,13 @@ function Account(props) {
     })
   }
 
-  if (loadingProfile || spinnerLoading) return <Spinner backColor={currentTheme.CustomLoadingBG} spinnerColor={currentTheme.main} />
+  // Show the full-screen loader ONLY until the profile has loaded the first
+  // time. After that, background refetches (e.g. toggling a notification
+  // preference) may briefly flip loadingProfile true or return undefined data
+  // from the cache-first refetch — but we must never blank the screen again,
+  // or all the content below the toggles disappears and flickers back.
+  if (profile) hasLoadedProfileRef.current = true
+  if ((loadingProfile && !hasLoadedProfileRef.current) || spinnerLoading) return <Spinner backColor={currentTheme.CustomLoadingBG} spinnerColor={currentTheme.main} />
 
   if (!connect) return <ErrorView refetchFunctions={[]} />
 

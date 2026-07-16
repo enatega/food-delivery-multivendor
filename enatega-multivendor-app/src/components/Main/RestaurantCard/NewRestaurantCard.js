@@ -114,10 +114,9 @@ function NewRestaurantCard(props) {
       <Ripple 
         rippleColor={'#F5F5F5'} 
         style={[
-          { width: '100%', height: '100%' },
+          styles(currentTheme).cardSurface,
           Platform.OS === 'android' && {
-            overflow: 'hidden',
-            borderRadius: 15
+            overflow: 'hidden'
           }
         ]} 
         activeOpacity={0.8} 
@@ -127,24 +126,7 @@ function NewRestaurantCard(props) {
         rippleSize={Platform.OS === 'android' ? 150 : 200}
         disabled={false}
       >
-        <View
-          style={[
-            styles().container,
-            themeContext.ThemeValue === 'Pink' && {
-              backgroundColor: 'white',
-              borderRadius: 8,
-
-              // iOS shadow
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.05,
-              shadowRadius: 8,
-              // Android shadow
-              elevation: 2,
-              marginBottom: 5
-            }
-          ]}
-        >
+        <View style={styles(currentTheme).cardBody}>
           <View style={styles().imageContainer}>
             <Image
               resizeMode='cover'

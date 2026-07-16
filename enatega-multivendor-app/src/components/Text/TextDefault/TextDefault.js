@@ -19,32 +19,68 @@ function TextDefault(props, ref) {
   ])
   var customStyles = [defaultStyle]
 
-  if (props.bold) customStyles.push(textStyles.Bold)
-  if (props.bolder) customStyles.push(textStyles.Bolder)
-  if (props.center) customStyles.push(textStyles.Center)
-  if (props.right) customStyles.push(textStyles.Right)
-  if (props.small) customStyles.push(textStyles.Small)
-  if (props.smaller) customStyles.push(textStyles.Smaller)
-  if (props.H5) customStyles.push(textStyles.H5)
-  if (props.H4) customStyles.push(textStyles.H4)
-  if (props.H3) customStyles.push(textStyles.H3)
-  if (props.H2) customStyles.push(textStyles.H2)
-  if (props.H1) customStyles.push(textStyles.H1)
-  if (props.uppercase) customStyles.push(textStyles.UpperCase)
-  if (props.lineOver) customStyles.push(textStyles.LineOver)
-  if (props.B700) customStyles.push(textStyles.B700)
-  if (props.textItalic) customStyles.push(textStyles.TextItalic)
-  if (props.left) customStyles.push(textStyles.Left)
-  if (props.isRTL) customStyles.push(currentTheme?.isRTL ? textStyles.Right : textStyles.Left)
+  const {
+    children,
+    style,
+    numberOfLines,
+    bold,
+    bolder,
+    center,
+    right,
+    small,
+    smaller,
+    H5,
+    H4,
+    H3,
+    H2,
+    H1,
+    uppercase,
+    lineOver,
+    B700,
+    textItalic,
+    left,
+    isRTL,
+    ellipsizeMode,
+    adjustsFontSizeToFit,
+    minimumFontScale,
+    textBreakStrategy,
+    android_hyphenationFrequency,
+    ...textProps
+  } = props
 
-  customStyles = StyleSheet.flatten([customStyles, props.style])
+  if (bold) customStyles.push(textStyles.Bold)
+  if (bolder) customStyles.push(textStyles.Bolder)
+  if (center) customStyles.push(textStyles.Center)
+  if (right) customStyles.push(textStyles.Right)
+  if (small) customStyles.push(textStyles.Small)
+  if (smaller) customStyles.push(textStyles.Smaller)
+  if (H5) customStyles.push(textStyles.H5)
+  if (H4) customStyles.push(textStyles.H4)
+  if (H3) customStyles.push(textStyles.H3)
+  if (H2) customStyles.push(textStyles.H2)
+  if (H1) customStyles.push(textStyles.H1)
+  if (uppercase) customStyles.push(textStyles.UpperCase)
+  if (lineOver) customStyles.push(textStyles.LineOver)
+  if (B700) customStyles.push(textStyles.B700)
+  if (textItalic) customStyles.push(textStyles.TextItalic)
+  if (left) customStyles.push(textStyles.Left)
+  if (isRTL) customStyles.push(currentTheme?.isRTL ? textStyles.Right : textStyles.Left)
+
+  customStyles = StyleSheet.flatten([customStyles, style])
+
   return (
     <Text
-      numberOfLines={props.numberOfLines ? props.numberOfLines : 0}
+      numberOfLines={numberOfLines ? numberOfLines : 0}
+      ellipsizeMode={ellipsizeMode}
+      adjustsFontSizeToFit={adjustsFontSizeToFit}
+      minimumFontScale={minimumFontScale}
+      textBreakStrategy={textBreakStrategy}
+      android_hyphenationFrequency={android_hyphenationFrequency}
       style={customStyles}
       ref={ref}
+      {...textProps}
       >
-      {props.children}
+      {children}
     </Text>
   )
 }

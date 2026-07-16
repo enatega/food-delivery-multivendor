@@ -177,7 +177,7 @@ const styles = (props = null) =>
       position: 'absolute',
       top: 0,
       width: '100%',
-      height: '100%',
+      height: '100%'
     },
     headerTitle: {
       ...textStyles.H5,

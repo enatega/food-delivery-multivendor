@@ -1,6 +1,7 @@
 import { scale } from '../../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
+import { subtleCardShadow } from '../../../utils/cardShadows'
 const { height } = Dimensions.get('window')
 
 const buildStyles = (props = null) =>
@@ -10,6 +11,17 @@ const buildStyles = (props = null) =>
       width: scale(270),
       height: height * 0.376,
       ...alignment.MRsmall,
+      backgroundColor: props != null ? props?.cardBackground : '#181818',
+      ...subtleCardShadow
+    },
+    cardSurface: {
+      flex: 1,
+      borderRadius: 15,
+      overflow: 'hidden',
+      backgroundColor: props != null ? props?.cardBackground : '#181818'
+    },
+    cardBody: {
+      flex: 1,
       backgroundColor: props != null ? props?.cardBackground : '#181818'
     },
     overlayContainer: {

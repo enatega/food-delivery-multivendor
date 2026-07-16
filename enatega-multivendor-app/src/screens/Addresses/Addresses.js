@@ -57,7 +57,6 @@ function Addresses() {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [selectedAddressId, setSelectedAddressId] = useState(null)
   const [deleteAllModalVisible, setdeleteAllModalVisible] = useState(false)
-  const [finalConfirmVisible, setFinalConfirmVisible] = useState(false)
 
   function onCompleted() {
     setdeleteAllModalVisible(false)
@@ -88,8 +87,8 @@ function Addresses() {
       },
       headerTitleContainerStyle: {
         marginTop: '2%',
-        paddingLeft: scale(25),
-        paddingRight: scale(25),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
         height: '75%',
         marginLeft: 0
       },
@@ -111,7 +110,7 @@ function Addresses() {
               {loadingAddressMutation ? (
                 <Spinner backColor='transparent' size='small' />
               ) : (
-                <TextDefault textColor={currentTheme.red600} H5 bolder>
+                <TextDefault textColor={currentTheme.red600} H5 bolder numberOfLines={1}>
                   {t('delete')}
                 </TextDefault>
               )}
@@ -141,7 +140,7 @@ function Addresses() {
                   setSelectedAddresses([])
                 }}
               >
-                <TextDefault textColor={currentTheme.linkColor} H5 bolder>
+                <TextDefault textColor={currentTheme.linkColor} H5 bolder numberOfLines={1}>
                   {isEditMode ? t('cancel') : t('edit')}
                 </TextDefault>
               </TouchableOpacity>
@@ -191,17 +190,12 @@ function Addresses() {
     })
   }
 
-  const handleDeleteSelectedAddresses = () => {
-    setdeleteAllModalVisible(false)
-    setFinalConfirmVisible(true)
-  }
-
   const confirmBulkDelete = async () => {
     mutateBulkDelete({
       variables: { ids: selectedAddresses }
     })
     setSelectedAddresses([])
-    setFinalConfirmVisible(false)
+    setdeleteAllModalVisible(false)
   }
 
   const editMyAddress = (address) => {
@@ -217,11 +211,6 @@ function Addresses() {
     // setSelectedAddressId(null)
   }
 
-  const deleteMyAddress = () => {
-    setDeleteModalVisible(false)
-    setFinalConfirmVisible(true)
-  }
-
   const confirmSingleDelete = async () => {
     await mutate({ variables: { id: selectedAddressId._id } })
       .then((response) => {
@@ -231,7 +220,7 @@ function Addresses() {
         console.log('Mutation error:', error)
       })
     setSelectedAddressId(null)
-    setFinalConfirmVisible(false)
+    setDeleteModalVisible(false)
   }
 
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
@@ -251,7 +240,7 @@ function Addresses() {
           return (
             <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).containerSpace]} onPress={() => handleAddressSelection(address._id)} disabled={!isEditMode}>
               <View style={[styles().width100, styles(currentTheme).rowContainer]}>
-                <View style={styles(currentTheme).rowContainer}>
+                <View style={styles(currentTheme).leftGroup}>
                   {isEditMode && (
                     <View style={styles().checkboxContainer}>
                       <CheckboxBtn checked={selectedAddresses.includes(address._id)} onPress={() => handleAddressSelection(address._id)} />
@@ -280,8 +269,7 @@ function Addresses() {
                     <View style={styles(currentTheme).midContainer}>
                       <View style={styles(currentTheme).addressDetail}>
                         <TextDefault numberOfLines={1} textColor={currentTheme.darkBgFont} style={{ ...alignment.PBxSmall }} isRTL>
-                          {/* {address.deliveryAddress} */}
-                          {address.deliveryAddress.slice(0, 35) + (address.deliveryAddress.length > 35 ? '...' : '')}
+                          {address.deliveryAddress}
                         </TextDefault>
                       </View>
                     </View>
@@ -350,26 +338,16 @@ function Addresses() {
         </View>
       </View>
 
-      <DeleteEditModal modalVisible={deleteModalVisible} setModalVisible={setDeleteModalVisible} currentTheme={currentTheme} selectedAddress={selectedAddressId} loading={loadingAddressMutation} onDelete={deleteMyAddress} onEdit={editMyAddress} t={t} editButton />
+      <DeleteEditModal modalVisible={deleteModalVisible} setModalVisible={setDeleteModalVisible} currentTheme={currentTheme} selectedAddress={selectedAddressId} loading={loadingAddressMutation} onDelete={confirmSingleDelete} onEdit={editMyAddress} t={t} editButton />
 
       <DeleteEditModal
         modalVisible={deleteAllModalVisible}
         setModalVisible={setdeleteAllModalVisible}
         currentTheme={currentTheme}
         loading={loadingDeleteBulk}
-        onDelete={handleDeleteSelectedAddresses}
+        onDelete={confirmBulkDelete}
         t={t}
         deleteAllButton
-      />
-
-      <DeleteEditModal
-        modalVisible={finalConfirmVisible}
-        setModalVisible={setFinalConfirmVisible}
-        currentTheme={currentTheme}
-        selectedAddress={{ deliveryAddress: t('confirmDelete') }}
-        loading={loadingAddressMutation || loadingDeleteBulk}
-        onDelete={selectedAddresses.length > 0 ? confirmBulkDelete : confirmSingleDelete}
-        t={t}
       />
     </View>
   )

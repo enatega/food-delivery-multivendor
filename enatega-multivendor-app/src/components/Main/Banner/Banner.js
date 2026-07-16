@@ -24,10 +24,10 @@ const EMPTY_CACHE = {}
 
 const BannerContent = ({ item }) => (
   <View style={styles().container}>
-    <TextDefault H3 bolder textColor='#fff' style={{ textTransform: 'capitalize', marginHorizontal: scale(5) }}>
+    <TextDefault H2 bolder textColor='#fff' style={{ textTransform: 'capitalize', marginHorizontal: scale(15), marginBottom: scale(8) }}>
       {item?.title}
     </TextDefault>
-    <TextDefault bolder textColor='#fff' style={{ marginHorizontal: scale(5), marginBottom: scale(5) }}>
+    <TextDefault H5 bold textColor='#fff' style={{ marginHorizontal: scale(15), marginBottom: scale(15), opacity: 0.95 }}>
       {item?.description}
     </TextDefault>
   </View>

@@ -8,6 +8,7 @@ export const SEND_CHAT_MESSAGE = gql`
       data {
         id
         message
+        image
         user {
           id
           name

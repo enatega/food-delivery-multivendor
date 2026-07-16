@@ -132,10 +132,9 @@ const SearchScreen = () => {
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
-        marginTop: '2%',
+        paddingTop: scale(12),
         paddingLeft: scale(25),
         paddingRight: scale(25),
-        height: '75%',
         marginLeft: 0
       },
       headerStyle: {
@@ -355,14 +354,14 @@ const SearchScreen = () => {
               hasAnimated ? (
                 <TouchableOpacity key={index} onPress={() => handleTagPress(tag)}>
                   <View style={styles(currentTheme).tagItem}>
-                    <TextDefault>{tag}</TextDefault>
+                    <TextDefault numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
                   </View>
                 </TouchableOpacity>
               ) : (
                 <CustomItem index={index}>
                   <TouchableOpacity key={tag} onPress={() => handleTagPress(tag)}>
                     <View style={styles(currentTheme).tagItem}>
-                      <TextDefault>{tag}</TextDefault>
+                      <TextDefault numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
                     </View>
                   </TouchableOpacity>
                 </CustomItem>

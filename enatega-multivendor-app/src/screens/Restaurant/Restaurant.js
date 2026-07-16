@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react'
-import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, SectionList } from 'react-native'
+import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, SectionList, ActivityIndicator } from 'react-native'
 import Animated, { Extrapolation, interpolate, useSharedValue, Easing as EasingNode, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
@@ -81,6 +81,8 @@ function Restaurant(props) {
   const [search, setSearch] = useState('')
   const [filterData, setFilterData] = useState([])
   const [showSearchResults, setShowSearchResults] = useState(false)
+  // Item whose "+" is showing a loader while ItemDetail opens.
+  const [loadingItemId, setLoadingItemId] = useState(null)
   const { restaurant: restaurantCart, setCartRestaurant, cartCount, addCartItem, addQuantity, clearCart, checkItemCart } = useContext(UserContext)
   const { data, refetch, networkStatus, loading, error } = useRestaurant(propsData._id)
 
@@ -166,12 +168,16 @@ function Restaurant(props) {
     }
   }, [search, searchOpen])
 
-  useFocusEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar)
-    }
-    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
-  })
+  useFocusEffect(
+    useCallback(() => {
+      // Reset any item loader once we're back on this screen.
+      setLoadingItemId(null)
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(currentTheme.menuBar)
+      }
+      StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
+    }, [currentTheme.menuBar, themeContext.ThemeValue])
+  )
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_RESTAURANTS)
@@ -210,6 +216,9 @@ function Restaurant(props) {
   })
 
   const onPressItem = async (food) => {
+    // Ignore repeat/queued taps: once we navigate away this screen loses focus,
+    // so a second tap that fires while the JS thread is busy won't double-push.
+    if (!navigation.isFocused()) return
     if (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant)) {
       Alert.alert(
         '',
@@ -268,6 +277,7 @@ function Restaurant(props) {
 
   // navigate every item to itemDetails screen
   const addToCart = async (food, clearFlag) => {
+    setLoadingItemId(food?._id)
     if (clearFlag) await clearCart()
 
     navigation.navigate('ItemDetail', {
@@ -503,10 +513,10 @@ function Restaurant(props) {
               {filterData.map((item, index) => (
                 <View key={index}>
                   <TouchableOpacity
-                    style={
-                      // styles(currentTheme).searchDealSection
-                      (styles(currentTheme).searchDealSection, { opacity: item.isOutOfStock ? 0.5 : 1 })
-                    }
+                    style={[
+                      styles(currentTheme).searchDealSection,
+                      { opacity: item.isOutOfStock ? 0.5 : 1 }
+                    ]}
                     activeOpacity={0.7}
                     onPress={() => {
                       if (item.isOutOfStock) {
@@ -533,10 +543,11 @@ function Restaurant(props) {
                         {item?.image ? (
                           <CachedImage
                             style={{
-                              height: scale(60),
-                              width: scale(60),
-                              borderRadius: 30
+                              height: scale(48),
+                              width: scale(48),
+                              borderRadius: scale(24)
                             }}
+                            resizeMode='cover'
                             source={{ uri: item?.image }}
                           />
                         ) : null}
@@ -562,7 +573,11 @@ function Restaurant(props) {
                         </View>
                       </View>
                       <View style={styles(currentTheme).addToCart}>
-                        <MaterialIcons name='add' size={scale(20)} color={currentTheme.themeBackground} />
+                        {loadingItemId === item._id ? (
+                          <ActivityIndicator size='small' color={currentTheme.themeBackground} />
+                        ) : (
+                          <MaterialIcons name='add' size={scale(20)} color={currentTheme.themeBackground} />
+                        )}
                       </View>
                     </View>
                     {/* )} */}
@@ -576,9 +591,7 @@ function Restaurant(props) {
               style={[
                 {
                   flexGrow: 1,
-                  paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-                  marginTop: HEADER_MIN_HEIGHT,
-                  zIndex: -1
+                  paddingTop: HEADER_MAX_HEIGHT
                 }
                 // zIndexAnimation
               ]}
@@ -587,6 +600,7 @@ function Restaurant(props) {
               }}
               ref={scrollRef}
               sections={updatedDeals}
+              extraData={loadingItemId}
               scrollEventThrottle={1}
               stickySectionHeadersEnabled={false}
               showsVerticalScrollIndicator={false}
@@ -597,7 +611,7 @@ function Restaurant(props) {
                 onScrollEndSnapToEdge(event)
               }}
               onScroll={scrollHandler}
-              keyExtractor={(item, index) => item + index}
+              keyExtractor={(item, index) => item?._id ?? String(index)}
               // contentContainerStyle={{ paddingBottom: 150 }}
               renderSectionHeader={({ section: { title, data } }) => {
                 if (title === 'Popular') {
@@ -670,10 +684,10 @@ function Restaurant(props) {
                 }
                 return (
                   <TouchableOpacity
-                    style={
-                      // styles(currentTheme).dealSection
-                      [{ paddingHorizontal: scale(12) }, (styles(currentTheme).dealSection, { opacity: item.isOutOfStock ? 0.5 : 1 })]
-                    }
+                    style={[
+                      styles(currentTheme).dealSection,
+                      { paddingHorizontal: scale(12), opacity: item.isOutOfStock ? 0.5 : 1 }
+                    ]}
                     activeOpacity={0.7}
                     onPress={() => {
                       if (item?.isOutOfStock) {
@@ -698,10 +712,11 @@ function Restaurant(props) {
                       <View style={styles(currentTheme).deal}>
                       <CachedImage
                           style={{
-                            height: scale(60),
-                            width: scale(60),
-                            borderRadius: 30
+                            height: scale(48),
+                            width: scale(48),
+                            borderRadius: scale(24)
                           }}
+                          resizeMode='cover'
                           source={{ uri: imageUrl }}
                         />
                         <View style={styles(currentTheme).flex}>
@@ -728,7 +743,11 @@ function Restaurant(props) {
                         </View>
                       </View>
                       <View style={styles(currentTheme).addToCart}>
-                        <MaterialIcons name='add' size={scale(20)} color={currentTheme.themeBackground} />
+                        {loadingItemId === item._id ? (
+                          <ActivityIndicator size='small' color={currentTheme.themeBackground} />
+                        ) : (
+                          <MaterialIcons name='add' size={scale(20)} color={currentTheme.themeBackground} />
+                        )}
                       </View>
                     </View>
                     {/* )} */}

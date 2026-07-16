@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Image, KeyboardAvoidingView, Platform, View } from 'react-native'
+import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, View } from 'react-native'
 import {
   GiftedChat,
   Bubble,
@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 import ConfigurationContext from '../../context/Configuration'
+import CachedImage from '../../components/CachedImage'
 
 const renderInputToolbar = (props) => {
   return (
@@ -30,40 +31,14 @@ const renderInputToolbar = (props) => {
   )
 }
 
-const renderActions = (props) => {
-  return (
-    <Actions
-      {...props}
-      containerStyle={{
-        width: scale(34),
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-      icon={() => (
-        <Image
-          source={require('../../assets/images/add.png')}
-          style={styles().addImg}
-          resizeMode='contain'
-        />
-      )}
-      options={{
-        'Choose From Library': () => {
-          console.log('Choose From Library')
-        },
-        Cancel: () => {
-          console.log('Cancel')
-        }
-      }}
-      optionTintColor='#222B45'
-    />
-  )
-}
 const ChatScreen = ({ navigation, route }) => {
   const configuration = useContext(ConfigurationContext)
 
   const {
     messages,
     onSend,
+    pickImage,
+    uploading,
     currentTheme,
     image,
     setImage,
@@ -73,6 +48,29 @@ const ChatScreen = ({ navigation, route }) => {
     orderNo,
     total
   } = useChatScreen({ navigation, route })
+
+  const renderActions = (props) => {
+    return (
+      <Actions
+        {...props}
+        containerStyle={{
+          width: scale(34),
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        icon={() => (
+          <Image
+            source={require('../../assets/images/add.png')}
+            style={styles().addImg}
+            resizeMode='contain'
+          />
+        )}
+        // Open the gallery directly instead of GiftedChat's ActionSheet
+        // (which needs an ActionSheetProvider the app doesn't mount).
+        onPressActionButton={pickImage}
+      />
+    )
+  }
 
   const filterImages = (src) => {
     setImage(image.filter((item) => item !== src))
@@ -137,6 +135,18 @@ const ChatScreen = ({ navigation, route }) => {
           {t('chatWithRider')}
         </TextDefault> */}
       </View>
+    )
+  }
+
+  const renderMessageImage = (props) => {
+    const uri = props?.currentMessage?.image
+    if (!uri) return null
+    return (
+      <CachedImage
+        source={{ uri }}
+        resizeMode='cover'
+        style={{ width: scale(160), height: scale(160), borderRadius: scale(12), margin: scale(3) }}
+      />
     )
   }
 
@@ -221,6 +231,7 @@ const ChatScreen = ({ navigation, route }) => {
         }}
         alwaysShowSend={true}
         renderBubble={renderBubble}
+        renderMessageImage={renderMessageImage}
         renderSend={renderSend}
         scrollToBottom
         scrollToBottomComponent={scrollToBottomComponent}
@@ -244,6 +255,14 @@ const ChatScreen = ({ navigation, route }) => {
         renderActions={renderActions}
         renderInputToolbar={renderInputToolbar}
         renderAccessory={image.length > 0 ? renderAccessory : null}
+        renderChatFooter={() =>
+          uploading ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, padding: scale(10) }}>
+              <ActivityIndicator size='small' color={currentTheme.main} />
+              <TextDefault textColor={currentTheme.fontSecondColor}>{t('uploadingImage')}</TextDefault>
+            </View>
+          ) : null
+        }
         text={inputMessage}
         onInputTextChanged={(m) => setInputMessage(m)}
         messagesContainerStyle={{ paddingBottom: scale(40) }}

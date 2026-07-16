@@ -171,9 +171,12 @@ function ImageTextCenterHeader(props, ref) {
   }
 
   return (
-    <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
+    <Animated.View
+      pointerEvents='box-none'
+      style={[styles(currentTheme).mainContainer, headerHeight]}
+    >
       <Animated.View style={[headerHeightWithoutTopbar]}>
-        <Animated.View style={[styles().overlayContainer]}>
+        <Animated.View style={[styles().overlayContainer]} pointerEvents='box-none'>
           <View style={[styles().fixedViewNavigation, { paddingTop: topInset }]}>
             <View style={styles().backIcon}>
               {props?.searchOpen ? (
@@ -395,50 +398,66 @@ function ImageTextCenterHeader(props, ref) {
                   activeOpacity={0.7}
                   style={styles(currentTheme).ratingBox}
                   onPress={() => {
-                    navigation.navigate('Reviews', {
-                      restaurantObject: { ...aboutObject, isOpen: null },
-                      tab: false
-                    })
+                    if ((aboutObject?.reviewsCount ?? 0) > 0) {
+                      navigation.navigate('Reviews', {
+                        restaurantObject: { ...aboutObject, isOpen: null },
+                        tab: false
+                      })
+                    }
                   }}
                 >
-                  <FontAwesome5
-                    name='smile'
+                  <MaterialCommunityIcons
+                    name='star-outline'
                     size={scale(20)}
                     color={currentTheme.newIconColor}
                   />
 
-                  <TextDefault
-                    textColor={currentTheme.fontNewColor}
-                    bold
-                    H5
-                    isRTL
-                  >
-                    {aboutObject?.average}
-                  </TextDefault>
-                  <TextDefault
-                    textColor={currentTheme.fontNewColor}
-                    bold
-                    H5
-                    isRTL
-                  >
-                    {aboutObject?.reviewsCount ?? 0} review(s)
-                  </TextDefault>
+                  {(aboutObject?.reviewsCount ?? 0) > 0 ? (
+                    <>
+                      <TextDefault
+                        textColor={currentTheme.fontNewColor}
+                        bold
+                        H5
+                        isRTL
+                      >
+                        {aboutObject?.average}
+                      </TextDefault>
+                      <TextDefault
+                        textColor={currentTheme.fontNewColor}
+                        H5
+                        isRTL
+                      >
+                        ({aboutObject?.reviewsCount ?? 0} {t('reviews')})
+                      </TextDefault>
+                    </>
+                  ) : (
+                    <TextDefault
+                      textColor={currentTheme.fontNewColor}
+                      bold
+                      H5
+                      isRTL
+                    >
+                      {t('noReviewsYet') ?? 'No reviews yet'}
+                    </TextDefault>
+                  )}
                 </AnimatedTouchable>
-                <AnimatedTouchable
-                  style={styles(currentTheme).seeReviewsBtn}
-                  activeOpacity={0.8}
-                  disabled={props?.loading}
-                  onPress={() => {
-                    navigation.navigate('Reviews', {
-                      restaurantObject: { ...aboutObject, isOpen: null },
-                      tab: false
-                    })
-                  }}
-                >
-                  <TextDefault bolder textColor={currentTheme.main}>
-                    {t('seeReviews')}
-                  </TextDefault>
-                </AnimatedTouchable>
+                {(aboutObject?.reviewsCount ?? 0) > 0 && (
+                  <AnimatedTouchable
+                    style={styles(currentTheme).seeReviewsBtn}
+                    activeOpacity={0.8}
+                    disabled={props?.loading}
+                    onPress={() => {
+                      navigation.navigate('Reviews', {
+                        restaurantObject: { ...aboutObject, isOpen: null },
+                        tab: false
+                      })
+                    }}
+                  >
+                    <TextDefault bolder textColor={currentTheme.main}>
+                      {t('seeReviews')}
+                    </TextDefault>
+                  </AnimatedTouchable>
+                )}
               </View>
 
               <View

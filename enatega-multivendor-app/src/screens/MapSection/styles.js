@@ -5,29 +5,22 @@ import { scale } from '../../utils/scaling'
 const styles = (props = null) =>
   StyleSheet.create({
     map: {
-      width: width,
-      height: height
+      ...StyleSheet.absoluteFillObject
     },
-    markerContainer: {
-      flex: 1,
-      flexDirection: 'row',
-      gap: 4,
-      alignItems: 'flex-end'
-    },
-    greenDot: {
-      height: 18,
-      width: 18,
+    // Single circular pin: green ring acts as border + fallback when the image is missing.
+    markerPin: {
+      height: 40,
+      width: 40,
+      borderRadius: 20,
       backgroundColor: props !== null ? props?.main : '#90E36D',
-      borderRadius: scale(9),
-      borderWidth: 1
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     markerImage: {
-      height: 30,        // Reduced to 30
-      width: 30,         // Reduced to 30
-      borderRadius: 15,  // Half of width/height
-      overflow: 'hidden',
-      borderWidth: 2,
-      borderColor: '#fff'
+      height: 36,
+      width: 36,
+      borderRadius: 18,
+      overflow: 'hidden'
     },
     userMarkerImage: {
       height: 25,
@@ -45,11 +38,17 @@ const styles = (props = null) =>
     },
     restCard: {
       flexDirection: 'row',
+      alignItems: 'center',
       width: 310,
       backgroundColor: props !== null ? props?.white : 'white',
       padding: 16,
       borderRadius: scale(8),
-      gap: 16
+      gap: 16,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 6,
+      elevation: 4
     },
     restImg: {
       height: 60,

@@ -151,6 +151,7 @@ function NewRestaurantDetailDesign(props) {
 
       {/* Main Header */}
       <Animated.View
+        pointerEvents='box-none'
         style={[
           styles(currentTheme).headerContainer,
           {
@@ -161,8 +162,8 @@ function NewRestaurantDetailDesign(props) {
       >
         {/* Original Header */}
         <Animated.View
+          pointerEvents='box-none'
           style={{ opacity: headerOpacity }}
-          pointerEvents={collapsedHeaderOpacity._value > 0.1 ? 'none' : 'auto'}
         >
           <RestaurantDetailHeader
             restaurant={mergedRestaurant}
@@ -176,7 +177,7 @@ function NewRestaurantDetailDesign(props) {
 
         {/* Collapsed Header */}
         <Animated.View
-          pointerEvents={collapsedHeaderOpacity._value > 0.1 ? 'auto' : 'none'}
+          pointerEvents='box-none'
           style={[
             {
               opacity: collapsedHeaderOpacity,
@@ -212,7 +213,7 @@ function NewRestaurantDetailDesign(props) {
         <View
           style={[
             styles(currentTheme).contentContainer,
-            { marginTop: HEADER_MAX_HEIGHT }
+            { paddingTop: HEADER_MAX_HEIGHT }
           ]}
         >
           <RestaurantSections

@@ -159,7 +159,12 @@ function Profile(props) {
           >
             <TextDefault
               bolder
-              style={[{ fontSize: scale(30) }, styles().padding]}
+              style={[
+                { fontSize: scale(30), lineHeight: scale(38) },
+                styles().padding,
+                alignment.PTlarge,
+                alignment.PBmedium
+              ]}
               isRTL
             >
               {t('Hi') + ' ' + profile?.name + '!'}

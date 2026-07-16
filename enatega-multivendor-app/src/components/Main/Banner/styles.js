@@ -29,6 +29,8 @@ const styles = (props = null) =>
       backgroundColor: 'rgba(0,0,0,0.3)',
       alignItems: props?.isRTL ? 'flex-end' : 'flex-start',
       justifyContent: 'flex-end',
+      paddingVertical: scale(20),
+      paddingHorizontal: scale(15)
     },
     pagination: {
       position: 'relative',

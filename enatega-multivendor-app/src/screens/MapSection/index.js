@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import styles from './styles'
-import { View, FlatList, TouchableOpacity, Platform } from 'react-native'
+import { View, FlatList, TouchableOpacity, Platform, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useRoute } from '@react-navigation/native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -18,6 +18,27 @@ import { theme } from '../../utils/themeColors'
 import ConfigurationContext from '../../context/Configuration'
 import { useTranslation } from 'react-i18next'
 import CachedImage from '../../components/CachedImage'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+// Track view changes only until the image loads, then freeze the marker.
+// (Prevents Android from constantly re-snapshotting markers, while still showing the image.)
+function RestaurantMarker({ coord, image, currentTheme, onPress }) {
+  const [tracks, setTracks] = useState(true)
+  return (
+    <Marker coordinate={coord} tracksViewChanges={tracks} onPress={onPress}>
+      <View style={styles(currentTheme).markerPin}>
+        <CachedImage
+          source={{ uri: image }}
+          style={styles().markerImage}
+          resizeMode='cover'
+          // Keep re-snapshotting briefly after load so Android captures the
+          // painted image, not the empty green pin behind it.
+          onLoadEnd={() => setTimeout(() => setTracks(false), 800)}
+        />
+      </View>
+    </Marker>
+  )
+}
 
 export default function MapSection() {
   const { i18n } = useTranslation()
@@ -30,6 +51,7 @@ export default function MapSection() {
   const restaurants = route?.params?.restaurants
   const [visibleMarkerIndex, setVisibleMarkerIndex] = useState(0)
   const configuration = useContext(ConfigurationContext)
+  const insets = useSafeAreaInsets()
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -62,7 +84,7 @@ export default function MapSection() {
 }, [visibleMarkerIndex])
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <MapView
         ref={mapRef}
         style={styles().map}
@@ -83,7 +105,7 @@ export default function MapSection() {
           longitudeDelta: 0.0421
         }}
       >
-        <Marker coordinate={location} title='Current Address'>
+        <Marker coordinate={location} title='Current Address' tracksViewChanges={false}>
           <Image source={require('../../assets/images/user.png')} style={styles().userMarkerImage} />
         </Marker>
         {restaurants &&
@@ -93,9 +115,11 @@ export default function MapSection() {
               longitude: parseFloat(rest.location.coordinates[0])
             }
             return (
-              <Marker
-                coordinate={coord}
+              <RestaurantMarker
                 key={index}
+                coord={coord}
+                image={rest?.image}
+                currentTheme={currentTheme}
                 onPress={() => {
                   if (rest.shopType === 'grocery' || rest.shopType === 'store') {
                     navigation.navigate('NewRestaurantDetailDesign', { ...rest })
@@ -103,23 +127,12 @@ export default function MapSection() {
                     navigation.navigate('Restaurant', { ...rest })
                   }
                 }}
-                style={styles().markerContainer}
-              >
-                <View
-                  style={styles(currentTheme).greenDot}
-                />
-                <CachedImage
-                  source={{uri: rest?.image}}
-                  width={20}
-                  style={styles().markerImage}
-                />
-                
-              </Marker>
+              />
             )
           })}
       </MapView>
       <View
-        style={styles().restContainer}
+        style={[styles().restContainer, { bottom: insets.bottom + 24 }]}
       >
         <FlatList
           data={restaurants}

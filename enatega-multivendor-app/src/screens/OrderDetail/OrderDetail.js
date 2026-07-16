@@ -3,7 +3,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 import styles from './styles'
-import React, { useContext, useEffect, useState, useRef } from 'react'
+import React, { useContext, useEffect, useState, useRef, useCallback } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import ConfigurationContext from '../../context/Configuration'
@@ -20,14 +20,15 @@ import { useTranslation } from 'react-i18next'
 import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 
 import { ProgressBar, checkStatus } from '../../components/Main/ActiveOrders/ProgressBar'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { PriceRow } from '../../components/OrderDetail/PriceRow'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
 import { CancelModal } from '../../components/OrderDetail/CancelModal'
 import Button from '../../components/Button/Button'
 import { gql, useMutation, useSubscription } from '@apollo/client'
 import { cancelOrder as cancelOrderMutation } from '../../apollo/mutations'
-import { subscriptionOrder } from '../../apollo/subscriptions'
+import { subscriptionOrder, subscriptionNewMessage } from '../../apollo/subscriptions'
+import { useUserContext } from '../../context/User'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { calulateRemainingTime } from '../../utils/customFunctions'
 import { Instructions } from '../../components/Checkout/Instructions'
@@ -47,6 +48,10 @@ const CANCEL_ORDER = gql`
 `
 const SUBSCRIPTION_ORDER = gql`
   ${subscriptionOrder}
+`
+
+const SUBSCRIPTION_NEW_MESSAGE = gql`
+  ${subscriptionNewMessage}
 `
 
 const ORDER_STATUS_RANK = {
@@ -162,6 +167,28 @@ function OrderDetail(props) {
       lastKnownOrderRef.current = mergeOrderState(lastKnownOrderRef.current, updatedOrder)
     }
   })
+
+  // Unread rider-chat indicator for the "Let's Chat with rider" card.
+  const { profile } = useUserContext()
+  const [hasUnreadMessage, setHasUnreadMessage] = useState(false)
+
+  useSubscription(SUBSCRIPTION_NEW_MESSAGE, {
+    variables: { order: id },
+    skip: !id,
+    onSubscriptionData: ({ subscriptionData }) => {
+      const msg = subscriptionData?.data?.subscriptionNewMessage
+      if (!msg) return
+      // Flag only messages from the rider, not the customer's own.
+      if (msg.user?.id !== profile?._id) setHasUnreadMessage(true)
+    }
+  })
+
+  // Returning to this screen (e.g. after reading the chat) clears the flag.
+  useFocusEffect(
+    useCallback(() => {
+      setHasUnreadMessage(false)
+    }, [])
+  )
 
   order = mergeOrderState(order, screenOrder)
 
@@ -339,7 +366,7 @@ function OrderDetail(props) {
           )}
         </View>
         <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
-        <Detail navigation={props?.navigation} currencySymbol={configuration.currencySymbol} items={items} from={restaurant?.name} orderNo={order?.orderId} deliveryAddress={deliveryAddress?.deliveryAddress} subTotal={subTotal} tip={tip} tax={tax} deliveryCharges={deliveryCharges} total={total} theme={currentTheme} id={id} rider={order?.rider} orderStatus={order?.orderStatus} />
+        <Detail navigation={props?.navigation} currencySymbol={configuration.currencySymbol} items={items} from={restaurant?.name} orderNo={order?.orderId} deliveryAddress={deliveryAddress?.deliveryAddress} subTotal={subTotal} tip={tip} tax={tax} deliveryCharges={deliveryCharges} total={total} theme={currentTheme} id={id} rider={order?.rider} orderStatus={order?.orderStatus} hasUnread={hasUnreadMessage} onChatOpen={() => setHasUnreadMessage(false)} />
         <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol} tip={tip} discountAmount={discountAmount} />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>

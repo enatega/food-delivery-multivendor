@@ -12,6 +12,7 @@ import styles from './styles'
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../context/Configuration'
+import OrdersContext from '../../context/Orders'
 import { ProgressBar } from '../Main/ActiveOrders/ProgressBar'
 import { calulateRemainingTime } from '../../utils/customFunctions'
 import Spinner from '../Spinner/Spinner'
@@ -26,6 +27,7 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
     ...theme[themeContext.ThemeValue]
   }
   const configuration = useContext(ConfigurationContext)
+  const { reFetchOrders, networkStatusActiveOrders } = useContext(OrdersContext)
 
   const emptyView = () => {
     return <EmptyView title={'titleEmptyActiveOrders'} description={'emptyActiveOrdersDesc'} buttonText={'emptyActiveOrdersBtn'} navigateTo='Discovery' />
@@ -34,12 +36,13 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
   const renderItem = useCallback(({ item }) => <Item item={item} navigation={navigation} currentTheme={currentTheme} configuration={configuration} />, [configuration, currentTheme, navigation])
   const emptyState = useMemo(() => emptyView(), [])
 
-  if (loading) {
+  // Spinner only on the first load; during pull-to-refresh keep the list mounted.
+  if (networkStatusActiveOrders === 1) {
     return <Spinner size={'small'} backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (error) return <TextError text={error.message} />
 
-  return <FlatList data={activeOrders} renderItem={renderItem} keyExtractor={(item) => item._id} ListEmptyComponent={emptyState} initialNumToRender={4} maxToRenderPerBatch={4} windowSize={5} removeClippedSubviews />
+  return <FlatList data={activeOrders} renderItem={renderItem} keyExtractor={(item) => item._id} ListEmptyComponent={emptyState} refreshing={networkStatusActiveOrders === 4} onRefresh={() => networkStatusActiveOrders === 7 && reFetchOrders()} initialNumToRender={4} maxToRenderPerBatch={4} windowSize={5} removeClippedSubviews />
 }
 
 const getItems = (items) => {

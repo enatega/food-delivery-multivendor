@@ -47,8 +47,11 @@ const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) =
   const renderItem = useCallback(({ item }) => <Item item={item} navigation={navigation} currentTheme={currentTheme} configuration={configuration} onPressReview={onPressReview} />, [configuration, currentTheme, navigation, onPressReview])
   const emptyState = useMemo(() => emptyViewPastOrders(), [])
 
-  if (loading) {
-    return <></>
+  // Only blank the screen on the very first load. During pull-to-refresh
+  // (networkStatus 4) Apollo's `loading` is also true, but we keep the list /
+  // empty-state mounted so the RefreshControl spinner shows above the content.
+  if (networkStatusOrders === 1) {
+    return <Spinner size={'small'} backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (error) return <TextError text={error.message} />
 
