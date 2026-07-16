@@ -22,9 +22,8 @@ const buildStyles = (props = null) =>
       ...alignment.MRmedium
     },
     orderAgainSec: {
-      marginHorizontal: scale(10),
-      // ...alignment.MLmedium,
-      // ...alignment.MRmedium
+      marginHorizontal: scale(15),
+      marginBottom: scale(25)
     },
     topPicksSec: {
       ...alignment.MLmedium,

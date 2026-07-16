@@ -2,6 +2,7 @@ import { verticalScale, scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
 import { StyleSheet } from 'react-native'
 import { Dimensions } from 'react-native'
+import { subtleCardShadow } from '../../../utils/cardShadows'
 const { width } = Dimensions.get('window')
 
 const styles = (props = null) =>
@@ -9,13 +10,9 @@ const styles = (props = null) =>
     banner: {
       flex: 1,
       height: scale(200),
-      shadowColor: props !== null ? props?.shadow : '#707070',
-      shadowOffset: {
-        width: 0,
-        height: 3
-      },
-      margin:0,
-      borderRadius: 8,
+      ...subtleCardShadow,
+      margin: 0,
+      borderRadius: 8
     },
     image: {
       width: '90%',

@@ -3,6 +3,7 @@ import { View, Animated, Easing } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { scale } from '../../utils/scaling'
 import { StatusBar } from 'react-native'
+import { subtleCardShadow, elevatedCardShadow } from '../../utils/cardShadows'
 
 const STATUSBAR_HEIGHT = StatusBar.currentHeight || 44
 
@@ -200,13 +201,15 @@ const RestaurantDetailSkeleton = ({ currentTheme }) => {
               key={item}
               style={styles.categoryWrapper}
             >
-              <View style={[
-                styles.categoryItemSkeleton, 
-                { backgroundColor: currentTheme.popularitemcard || currentTheme.cardBackground || '#FFFFFF' }
-              ]}>
-                <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: '100%', height: scale(100) }} />
-                <View style={styles.categoryTitleContainer}>
-                  <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: '70%', height: scale(16), borderRadius: scale(3) }} />
+              <View style={styles.categoryItemShadow}>
+                <View style={[
+                  styles.categoryItemSkeleton,
+                  { backgroundColor: currentTheme.popularitemcard || currentTheme.cardBackground || '#FFFFFF' }
+                ]}>
+                  <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: '100%', height: scale(100) }} />
+                  <View style={styles.categoryTitleContainer}>
+                    <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: '70%', height: scale(14), borderRadius: scale(3) }} />
+                  </View>
                 </View>
               </View>
             </View>
@@ -262,14 +265,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(15),
     minWidth: '45%',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+    ...elevatedCardShadow
   },
   contentContainer: {
     padding: scale(15),
@@ -347,11 +343,7 @@ const styles = StyleSheet.create({
     width: scale(140),
     borderRadius: scale(16),
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...elevatedCardShadow,
     position: 'relative'
   },
   plusButtonSkeleton: {
@@ -371,24 +363,30 @@ const styles = StyleSheet.create({
   categoriesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: -scale(5)
+    paddingHorizontal: 0
   },
   categoryWrapper: {
     width: '50%',
-    padding: scale(5)
+    paddingHorizontal: scale(8),
+    paddingBottom: scale(8)
+  },
+  categoryItemShadow: {
+    ...subtleCardShadow,
+    borderRadius: scale(16),
+    backgroundColor: 'transparent'
   },
   categoryItemSkeleton: {
     borderRadius: scale(16),
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3
+    height: scale(166)
   },
   categoryTitleContainer: {
-    padding: scale(12),
-    alignItems: 'center'
+    minHeight: scale(48),
+    paddingHorizontal: scale(10),
+    paddingTop: scale(10),
+    paddingBottom: scale(12),
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   }
 })
 

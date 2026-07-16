@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native'
 import { scale } from '../../../utils/scaling'
+import { subtleCardShadow } from '../../../utils/cardShadows'
 
 const { width } = Dimensions.get('window')
 const ITEM_WIDTH = width / 2 // Account for padding and gap
@@ -12,16 +13,7 @@ const styles = (props = null) =>
       borderRadius: scale(20),
       padding: scale(10),
       marginBottom: scale(8),
-      // marginRight: 10,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      // minHeight: 290,
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5
+      ...subtleCardShadow
     },
     imageContainer: {
       position: 'relative',
@@ -67,18 +59,9 @@ const styles = (props = null) =>
       alignItems: 'center',
       transform: [{ rotate: '45deg' }],
       width: scale(150),
-      alignItems: 'center',
-      justifyContent: 'center',
       right: scale(-35),
       top: scale(20),
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5
+      ...subtleCardShadow
     },
     outOfStockText: {
       color: '#FFFFFF',

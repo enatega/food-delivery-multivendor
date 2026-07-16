@@ -2,6 +2,7 @@ import { verticalScale, scale } from '../../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { theme } from '../../../utils/themeColors'
+import { subtleCardShadowSoft } from '../../../utils/cardShadows'
 const { height } = Dimensions.get('window')
 
 const buildStyles = (props = null) =>
@@ -11,8 +12,8 @@ const buildStyles = (props = null) =>
     },
     topbrandsSec: {
       gap: scale(8),
-      // ...alignment.PLmedium
-      marginHorizontal: scale(10)
+      marginHorizontal: scale(15),
+      marginBottom: scale(25)
     },
     topbrandsHeading:{
       ...alignment.PRmedium
@@ -20,27 +21,27 @@ const buildStyles = (props = null) =>
     },
     brandImg: {
       width: '100%',
-      // aspectRatio: 18/8,
       height: scale(70),
       objectFit: 'cover',
       borderRadius: 8,
     },
     topbrandsContainer: {
-      flexGrow: 1,
-      width: scale(90),
-      // marginTop: scale(7),
+      width: scale(96),
       ...alignment.MRmedium
     },
     brandImgContainer: {
-      backgroundColor: '#F3F4F6',
-      borderWidth: 1,
-      borderColor: '#767676',
-      borderRadius: 8
-      // padding:scale(8),
+      backgroundColor: props != null ? props?.cardBackground : '#F3F4F6',
+      borderRadius: 8,
+      ...subtleCardShadowSoft
     },
     brandName: {
-      marginTop: scale(5),
-      marginBottom: scale(2)
+      marginTop: scale(6),
+      marginBottom: scale(2),
+      // Responsive but clamped so it's neither oversized nor overflowing.
+      fontSize: Math.min(Math.max(scale(12), 11), 14),
+      lineHeight: scale(16),
+      // Reserve two lines so every card's delivery-time row aligns.
+      minHeight: scale(32)
     },
     margin: {
       ...alignment.MLmedium,
