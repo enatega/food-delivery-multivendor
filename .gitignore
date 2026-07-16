@@ -67,3 +67,6 @@ buck-out/
 web-build/
 
 # @end expo-cli
+.env
+enatega-multivendor-app/.env
+
