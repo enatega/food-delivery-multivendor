@@ -37,7 +37,11 @@ This module supports two setup styles:
 
 Examples already exist in `.env.stage` and `.env.prod`.
 
+## Google setup
+
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` is required for Google Maps in the browser
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is optional and only needed for Google login
+
 ## Notes
 
 - Use `wss://` when the API is served over `https://`
-- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is optional and only needed for Google login
