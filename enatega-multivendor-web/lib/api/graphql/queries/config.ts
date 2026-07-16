@@ -9,7 +9,6 @@ export const GET_CONFIG = gql`
       deliveryRate
       twilioEnabled
       webClientID
-      googleMapsApiKey
       webAmplitudeApiKey
       googleMapLibraries
       googleColor
