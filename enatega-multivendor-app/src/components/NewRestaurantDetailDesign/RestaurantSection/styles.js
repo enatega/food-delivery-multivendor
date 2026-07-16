@@ -6,7 +6,7 @@ import { subtleCardShadow, elevatedCardShadow } from '../../../utils/cardShadows
 
 const { width } = Dimensions.get('window')
 const GRID_HORIZONTAL_PADDING = scale(15)
-const CATEGORY_GAP = scale(16)
+const CATEGORY_GAP = scale(12)
 const CATEGORY_CARD_RADIUS = scale(16)
 const CATEGORY_IMAGE_HEIGHT = scale(100)
 const CATEGORY_TITLE_FONT_SIZE = Math.max(
@@ -46,11 +46,11 @@ const styles = (props = null) =>
       borderRadius: scale(6)
     },
     popularList: {
-      paddingRight: scale(15)
+      paddingRight: scale(10)
     },
     popularItemCard: {
       width: POPULAR_ITEM_WIDTH,
-      marginRight: scale(15),
+      marginRight: scale(10),
       backgroundColor: props?.popularitemcard,
       borderRadius: scale(16),
       overflow: 'hidden',
