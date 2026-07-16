@@ -302,14 +302,27 @@ function ImageTextCenterHeader(props, ref) {
                 />
                 <View style={styles(currentTheme).mainDetailsContainer}>
                   <View style={styles(currentTheme).subDetailsContainer}>
-                    <TextDefault textColor={currentTheme.fontMainColor}>
+                    <TextDefault
+                      textColor={currentTheme.fontMainColor}
+                      numberOfLines={1}
+                      ellipsizeMode='tail'
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.8}
+                    >
                       {t('deliveryCharges')} {configuration.currencySymbol}
                       {configuration?.deliveryRate}
                     </TextDefault>
                   </View>
 
                   <View style={styles(currentTheme).subDetailsContainer}>
-                    <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+                    <TextDefault
+                      textColor={currentTheme.fontMainColor}
+                      isRTL
+                      numberOfLines={1}
+                      ellipsizeMode='tail'
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.8}
+                    >
                       {t('minimumOrder')} {configuration.currencySymbol}{' '}
                       {aboutObject?.restaurantMinOrder}
                     </TextDefault>
@@ -483,25 +496,43 @@ function ImageTextCenterHeader(props, ref) {
                         textColor={currentTheme.fontThirdColor}
                         bold
                         isRTL
+                        numberOfLines={1}
+                        ellipsizeMode='tail'
+                        adjustsFontSizeToFit
+                        minimumFontScale={0.78}
                       >
                         {t(todayOpeningTimes?.day)}{' '}
                       </TextDefault>
                       {todayOpeningTimes?.times?.length < 1 ? (
-                        <TextDefault small bold center isRTL>
+                        <TextDefault
+                          small
+                          bold
+                          center
+                          isRTL
+                          numberOfLines={1}
+                          ellipsizeMode='tail'
+                          adjustsFontSizeToFit
+                          minimumFontScale={0.75}
+                        >
                           {t('ClosedAllDay')}
                         </TextDefault>
                       ) : (
-                        todayOpeningTimes?.times?.map((timing, index) => (
-                          <TextDefault
-                            key={index}
-                            textColor={currentTheme.fontThirdColor}
-                            bold
-                            isRTL
-                          >
-                            {timing.startTime[0]}:{timing.startTime[1]} -{' '}
-                            {timing.endTime[0]}:{timing.endTime[1]}
-                          </TextDefault>
-                        ))
+                        <TextDefault
+                          textColor={currentTheme.fontThirdColor}
+                          bold
+                          isRTL
+                          numberOfLines={1}
+                          ellipsizeMode='tail'
+                          adjustsFontSizeToFit
+                          minimumFontScale={0.7}
+                        >
+                          {todayOpeningTimes?.times
+                            ?.map(
+                              (timing) =>
+                                `${timing.startTime[0]}:${timing.startTime[1]} - ${timing.endTime[0]}:${timing.endTime[1]}`
+                            )
+                            .join('  ')}
+                        </TextDefault>
                       )}
                     </View>
                   )}
@@ -510,7 +541,14 @@ function ImageTextCenterHeader(props, ref) {
                   style={styles(currentTheme).seeReviewsBtn}
                   disabled={true}
                 >
-                  <TextDefault bolder textColor={currentTheme.main}>
+                  <TextDefault
+                    bolder
+                    textColor={currentTheme.main}
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.8}
+                  >
                     {!aboutObject?.IsOpen ? t('Closed') : t('Open')}
                   </TextDefault>
                 </AnimatedTouchable>

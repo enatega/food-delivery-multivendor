@@ -63,6 +63,10 @@ const CustomerSupport = (props) => {
       }),
     [tickets]
   )
+  const activeSupportTicket = useMemo(
+    () => sortedTickets.find((ticket) => ['open', 'inProgress'].includes(ticket?.status)),
+    [sortedTickets]
+  )
 
   const formatDate = (dateString) => {
     try {
@@ -83,6 +87,20 @@ const CustomerSupport = (props) => {
       props?.navigation.navigate('Login')
       return
     }
+
+    if (activeSupportTicket) {
+      setSelectedTicket(activeSupportTicket)
+      setIsChatModalVisible(true)
+      FlashMessage({
+        message: t(
+          'open_support_ticket_hint',
+          'You already have an open support chat. Continuing that conversation now.'
+        ),
+        duration: 2500
+      })
+      return
+    }
+
     setIsTicketModalVisible(true)
   }
 
@@ -272,6 +290,12 @@ const CustomerSupport = (props) => {
         currentTheme={currentTheme}
         onClose={() => setIsTicketModalVisible(false)}
         onCreated={handleTicketCreated}
+        onOpenExistingTicket={(ticket) => {
+          if (!ticket) return
+          setSelectedTicket(ticket)
+          setIsChatModalVisible(true)
+        }}
+        existingOpenTicket={activeSupportTicket}
         userName={profile?.name}
         userEmail={profile?.email}
       />

@@ -161,7 +161,8 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
           onPress={allowBackdropClose ? onClose : undefined}
         />
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={0}
           style={styles.sheetWrap}
         >
           <View style={[styles.sheet, { backgroundColor: currentTheme.cardBackground }]}>

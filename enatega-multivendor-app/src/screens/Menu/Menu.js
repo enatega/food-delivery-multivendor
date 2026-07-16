@@ -530,13 +530,13 @@ function Menu({ route, props }) {
     index
   })
 
-  const applyFilters = () => {
+  const applyFilters = (nextFilters = filters) => {
     let filteredData = queryType === 'orderAgain' ? [...data?.recentOrderRestaurantsPreview] : queryType === 'topPicks' ? [...data?.mostOrderedRestaurantsPreview] : queryType === 'topBrands' ? [...data?.topRatedVendorsPreview] : [...data?.nearByRestaurantsPreview?.restaurants]
 
-    const ratings = filters.Rating
-    const sort = filters.Sort
-    const offers = filters.Offers
-    const cuisines = filters.Cuisines
+    const ratings = nextFilters.Rating
+    const sort = nextFilters.Sort
+    const offers = nextFilters.Offers
+    const cuisines = nextFilters.Cuisines
 
     // Apply filters incrementally
     // Ratings filter
@@ -574,7 +574,7 @@ function Menu({ route, props }) {
     filtersModalRef.current.close()
 
     // Update applied filters state
-    setAppliedFilters(filters)
+    setAppliedFilters(nextFilters)
 
     // **Check if any filters are applied**
     const anyFilterSelected = ratings?.selected?.length > 0 || sort?.selected?.length > 0 || offers?.selected?.length > 0 || cuisines?.selected?.length > 0

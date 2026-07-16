@@ -55,9 +55,11 @@ const styles = (props = null) =>
       paddingVertical: scale(6),
       paddingHorizontal: scale(12),
       flex: 1,
+      minWidth: 0,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      gap: scale(4),
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -68,8 +70,9 @@ const styles = (props = null) =>
       elevation: 2
     },
     detailLabel: {
-      fontSize: scale(11),
-      marginRight: scale(4)
+      fontSize: scale(10),
+      marginRight: scale(2),
+      flexShrink: 1
     },
     detailValue: {
       fontWeight: 'bold'
@@ -110,13 +113,17 @@ const styles = (props = null) =>
     ratingBox: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(8)
+      gap: scale(8),
+      flex: 1,
+      minWidth: 0
     },
     reviewButton: {
       backgroundColor: props?.newButtonBackground ?? '#F3FFEE',
       borderRadius: scale(4),
       paddingVertical: scale(8),
-      paddingHorizontal: scale(12)
+      paddingHorizontal: scale(12),
+      marginLeft: scale(8),
+      flexShrink: 0
     },
     timingContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -127,13 +134,23 @@ const styles = (props = null) =>
     timingRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(5)
+      gap: scale(5),
+      flex: 1,
+      minWidth: 0
+    },
+    timingLabel: {
+      flexShrink: 1
+    },
+    timingValue: {
+      flexShrink: 1
     },
     statusButton: {
       backgroundColor: props?.newButtonBackground ?? '#F3FFEE',
       borderRadius: scale(4),
       paddingVertical: scale(8),
-      paddingHorizontal: scale(12)
+      paddingHorizontal: scale(12),
+      marginLeft: scale(8),
+      flexShrink: 0
     },
     deliveryContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

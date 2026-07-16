@@ -601,7 +601,7 @@ function Restaurant(props) {
               ref={scrollRef}
               sections={updatedDeals}
               extraData={loadingItemId}
-              scrollEventThrottle={1}
+              scrollEventThrottle={16}
               stickySectionHeadersEnabled={false}
               showsVerticalScrollIndicator={false}
               refreshing={networkStatus === 4}

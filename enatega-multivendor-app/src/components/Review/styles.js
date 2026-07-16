@@ -6,13 +6,19 @@ import { fontStyles } from '../../utils/fontStyles'
 export const styles = StyleSheet.create({
   container: theme => ({
     paddingHorizontal: scale(16),
-    paddingVertical: scale(24),
-    backgroundColor:theme.cardBackground
+    paddingTop: scale(20),
+    paddingBottom: scale(28),
+    backgroundColor: theme.cardBackground,
+    flexGrow: 1
+  }),
+  content: theme => ({
+    flexGrow: 1,
+    paddingBottom: scale(18)
   }),
   starContainer: theme => ({
     width: '100%',
     flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
-    padding: 10,
+    paddingVertical: scale(10),
     justifyContent: 'space-evenly',
     alignItems: 'center'
   }),
@@ -29,6 +35,17 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     ...alignment.MTlarge
   }),
+  summaryTextWrap: {
+    flex: 1,
+    minWidth: 0,
+    paddingRight: scale(10)
+  },
+  starRow: {
+    marginTop: scale(8)
+  },
+  feedbackSection: {
+    marginTop: scale(8)
+  },
   image: {
     height: scale(64),
     width: scale(82),
@@ -46,13 +63,16 @@ export const styles = StyleSheet.create({
     alignItems: 'center'
   }),
   modalInput: (theme)=> ({
-    height: scale(40),
+    minHeight: scale(96),
     borderWidth: 1,
     borderColor: theme != null ? theme.verticalLine : '#B8B8B8',
-    padding: 10,
-    borderRadius: 6,
+    paddingHorizontal: scale(12),
+    paddingVertical: scale(10),
+    borderRadius: 10,
     color: theme !== null ? theme.newFontcolor : '#f9f9f9',
     fontFamily: fontStyles.MuseoSans500,
-    textAlign : theme?.isRTL ? 'right' : 'left'
+    textAlign: theme?.isRTL ? 'right' : 'left',
+    backgroundColor: theme?.cardBackground,
+    marginTop: scale(4)
   })
 })

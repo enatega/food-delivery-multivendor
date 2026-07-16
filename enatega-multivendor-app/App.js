@@ -7,6 +7,7 @@ import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { ActivityIndicator, AppState, BackHandler, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
 import useEnvVars from './environment'
@@ -264,32 +265,39 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-    <AnimatedSplashScreen>
-      <ApolloProvider client={client}>
-        <ThemeContext.Provider
-          value={{ ThemeValue: theme, dispatch: themeSetter }}
-        >
-          <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
-          <LocationProvider>
-            <ConfigurationProvider>
-              <AuthProvider>
-                <UserProvider>
-                  <OrdersProvider>
-                    <AppContainer />
-                    <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
-                    <SessionExpiredModal
-                      visible={sessionExpiredVisible}
-                      onLogin={handleSessionExpiredLogin}
-                    />
-                  </OrdersProvider>
-                </UserProvider>
-              </AuthProvider>
-            </ConfigurationProvider>
-          </LocationProvider>
-          <FlashMessage MessageComponent={MessageComponent} />
-        </ThemeContext.Provider>
-      </ApolloProvider>
-    </AnimatedSplashScreen>
+      <GestureHandlerRootView style={styles.flex}>
+        <AnimatedSplashScreen>
+          <ApolloProvider client={client}>
+            <ThemeContext.Provider
+              value={{ ThemeValue: theme, dispatch: themeSetter }}
+            >
+              <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
+              <LocationProvider>
+                <ConfigurationProvider>
+                  <AuthProvider>
+                    <UserProvider>
+                      <OrdersProvider
+                        onOrderDelivered={(order) => {
+                          setOrderId(order._id)
+                          reviewModalRef?.current?.open()
+                        }}
+                      >
+                        <AppContainer />
+                        <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
+                        <SessionExpiredModal
+                          visible={sessionExpiredVisible}
+                          onLogin={handleSessionExpiredLogin}
+                        />
+                      </OrdersProvider>
+                    </UserProvider>
+                  </AuthProvider>
+                </ConfigurationProvider>
+              </LocationProvider>
+              <FlashMessage MessageComponent={MessageComponent} />
+            </ThemeContext.Provider>
+          </ApolloProvider>
+        </AnimatedSplashScreen>
+      </GestureHandlerRootView>
     </ErrorBoundary>
   )
 }

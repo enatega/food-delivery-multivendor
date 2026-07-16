@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { ScrollView, View, TouchableOpacity, FlatList } from 'react-native'
+import React, { useContext, useMemo } from 'react'
+import { ScrollView, View, TouchableOpacity } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -12,10 +12,22 @@ import { useTranslation } from 'react-i18next'
 const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+
+  const safeFilters = useMemo(() => {
+    return Object.keys(filters || {}).reduce((acc, key) => {
+      const filter = filters?.[key] || {}
+      acc[key] = {
+        ...filter,
+        values: Array.isArray(filter.values) ? filter.values : [],
+        selected: Array.isArray(filter.selected) ? filter.selected : []
+      }
+      return acc
+    }, {})
+  }, [filters])
 
   const handleValueSelection = (filterTitle, filterValue) => {
-    const selectedFilter = filters[filterTitle]
+    const selectedFilter = safeFilters[filterTitle]
     if (selectedFilter.type === FILTER_TYPE.RADIO) {
       selectedFilter.selected = [filterValue]
     } else {
@@ -26,18 +38,19 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
         )
       } else selectedFilter.selected.push(filterValue)
     }
-    setFilters({ ...filters, [filterTitle]: selectedFilter })
+    setFilters({ ...safeFilters, [filterTitle]: { ...selectedFilter } })
   }
 
   const clearFilters = () => {
-    const cleared = Object.keys(filters).reduce((acc, key) => {
-      acc[key] = { ...filters[key], selected: [] }
+    const cleared = Object.keys(safeFilters).reduce((acc, key) => {
+      acc[key] = { ...safeFilters[key], selected: [] }
       return acc
     }, {})
     setFilters(cleared)
+    applyFilters(cleared)
   }
 
-  const anySelected = Object.values(filters).some((f) => f.selected.length > 0)
+  const anySelected = Object.values(safeFilters).some((f) => (f.selected || []).length > 0)
 
   return (
   <ScrollView style={styles().container}>
@@ -45,7 +58,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
       {t('filters')}
     </TextDefault>
 
-    {Object.keys(filters).map((filter, index) => (
+    {Object.keys(safeFilters).map((filter, index) => (
       <View style={{ gap: 8 }} key={'filters-' + filter + index}>
         <TextDefault H4 bolder style={{ paddingHorizontal: 15, paddingVertical: 10 }} isRTL>
           {t(filter)}
@@ -56,7 +69,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles().flatlist}
         >
-          {filters[filter].values.map((item, idx) => (
+          {safeFilters[filter].values.map((item, idx) => (
             <TouchableOpacity
               key={item + idx}
               activeOpacity={0.8}
@@ -64,10 +77,10 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
               style={[
                 styles().filterBtn,
                 {
-                  borderColor: filters[filter].selected.includes(item)
+                  borderColor: safeFilters[filter].selected.includes(item)
                     ? currentTheme.main
                     : currentTheme.color7,
-                  backgroundColor: filters[filter].selected.includes(item)
+                  backgroundColor: safeFilters[filter].selected.includes(item)
                     ? currentTheme.main
                     : currentTheme.color1
                 }
@@ -77,7 +90,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
                 Normal
                 bolder
                 textColor={
-                  filters[filter].selected.includes(item)
+                  safeFilters[filter].selected.includes(item)
                     ? currentTheme.white
                     : currentTheme.fontMainColor
                 }

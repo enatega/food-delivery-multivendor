@@ -102,6 +102,10 @@ function MyOrders(props) {
     openReviewModal()
   }
 
+  const handleReviewSubmitted = () => {
+    props?.navigation?.navigate('Discovery')
+  }
+
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[reFetchOrders]} />
   return (
@@ -128,7 +132,14 @@ function MyOrders(props) {
           }}
         />
       </View>
-      <ReviewModal ref={reviewModalRef} onOverlayPress={closeReviewModal} theme={currentTheme} orderId={reviewInfo?.order._id} rating={reviewInfo?.selectedRating} />
+      <ReviewModal
+        ref={reviewModalRef}
+        onOverlayPress={closeReviewModal}
+        onSubmitted={handleReviewSubmitted}
+        theme={currentTheme}
+        orderId={reviewInfo?.order._id}
+        rating={reviewInfo?.selectedRating}
+      />
     </>
   )
 }

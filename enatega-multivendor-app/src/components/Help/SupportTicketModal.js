@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Modal,
   KeyboardAvoidingView,
@@ -17,16 +17,35 @@ import { scale } from '../../utils/scaling'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import { createSupportTicket } from '../../apollo/mutations'
 
-const SupportTicketModal = ({ visible, currentTheme, onClose, onCreated, userName, userEmail }) => {
+const SupportTicketModal = ({
+  visible,
+  currentTheme,
+  onClose,
+  onCreated,
+  onOpenExistingTicket,
+  existingOpenTicket,
+  userName,
+  userEmail
+}) => {
   const [reason, setReason] = useState('order related')
   const [orderId, setOrderId] = useState('')
   const [ticketTitle, setTicketTitle] = useState('')
   const [description, setDescription] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [inlineNotice, setInlineNotice] = useState('')
+
+  const isExistingOpenTicket = useMemo(
+    () => ['open', 'inProgress'].includes(existingOpenTicket?.status),
+    [existingOpenTicket]
+  )
+
+  const friendlyDuplicateMessage =
+    'You already have an open support chat. Please continue there instead of creating a new one.'
 
   const [submitTicket] = useMutation(createSupportTicket, {
     onCompleted: (data) => {
       setIsSubmitting(false)
+      setInlineNotice('')
       FlashMessage({ message: 'Support ticket created successfully' })
       onCreated?.(data?.createSupportTicket)
       onClose?.()
@@ -37,8 +56,24 @@ const SupportTicketModal = ({ visible, currentTheme, onClose, onCreated, userNam
     },
     onError: (error) => {
       setIsSubmitting(false)
+      const backendMessage =
+        error?.graphQLErrors?.[0]?.message || error?.message || 'Failed to create support ticket'
+      const isDuplicateOpenTicket =
+        /already.*open ticket|already have.*open ticket|open support chat|open ticket/i.test(
+          backendMessage
+        )
+
+      if (isDuplicateOpenTicket) {
+        setInlineNotice(friendlyDuplicateMessage)
+        if (existingOpenTicket && isExistingOpenTicket) {
+          onOpenExistingTicket?.(existingOpenTicket)
+        }
+        return
+      }
+
+      setInlineNotice(backendMessage)
       FlashMessage({
-        message: error?.graphQLErrors?.[0]?.message || error?.message || 'Failed to create support ticket',
+        message: backendMessage,
         duration: 3000
       })
     }
@@ -51,10 +86,17 @@ const SupportTicketModal = ({ visible, currentTheme, onClose, onCreated, userNam
     setTicketTitle('')
     setDescription('')
     setIsSubmitting(false)
+    setInlineNotice('')
   }, [visible])
 
   const handleSubmit = () => {
     if (isSubmitting) return
+
+    if (existingOpenTicket && isExistingOpenTicket) {
+      onOpenExistingTicket?.(existingOpenTicket)
+      onClose?.()
+      return
+    }
 
     if (!reason) {
       FlashMessage({ message: 'Please select a reason for your inquiry' })
@@ -131,6 +173,22 @@ const SupportTicketModal = ({ visible, currentTheme, onClose, onCreated, userNam
             contentContainerStyle={styles.body}
             keyboardShouldPersistTaps='handled'
           >
+            {inlineNotice ? (
+              <View
+                style={[
+                  styles.noticeBox,
+                  {
+                    backgroundColor: currentTheme.gray100,
+                    borderColor: currentTheme.primary
+                  }
+                ]}
+              >
+                <TextDefault small bold textColor={currentTheme.newFontcolor}>
+                  {inlineNotice}
+                </TextDefault>
+              </View>
+            ) : null}
+
             <View style={styles.greetingBox}>
               <TextDefault H5 bold textColor={currentTheme.newFontcolor}>
                 {`Hi ${userName || 'there'}`}
@@ -318,6 +376,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(16),
     paddingVertical: scale(14),
     paddingBottom: scale(24)
+  },
+  noticeBox: {
+    borderWidth: StyleSheet.hairlineWidth * 2,
+    borderRadius: scale(14),
+    paddingHorizontal: scale(14),
+    paddingVertical: scale(12),
+    marginBottom: scale(14)
   },
   greetingBox: {
     marginBottom: scale(14)
