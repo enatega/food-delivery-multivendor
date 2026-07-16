@@ -23,18 +23,19 @@ const styles = (props = null) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      padding: scale(15),
+      paddingTop: scale(8),
+      paddingBottom: scale(10),
       backgroundColor: props?.themeBackground
     },
     section: {
-      marginBottom: scale(25),
+      marginBottom: scale(15),
       marginHorizontal: scale(15)
     },
     sectionHeader: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: scale(12)
+      marginBottom: scale(8)
     },
     changeText: {
       fontSize: scale(16),

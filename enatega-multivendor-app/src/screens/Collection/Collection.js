@@ -78,8 +78,12 @@ const Collection = ({ navigation, route }) => {
               activeOpacity={0.7}
               style={styles(currentTheme).collectionCard}
               onPress={() => {
-                navigation.navigate(collectionType ?? 'Restaurants', {
-                  collection: item?.name
+                const selectedType = collectionType === 'Store' ? 'grocery' : 'restaurant'
+                navigation.navigate('Menu', {
+                  collectionType: collectionType,
+                  collection: item?.name,
+                  selectedType: selectedType,
+                  queryType: selectedType
                 })
               }}
             >

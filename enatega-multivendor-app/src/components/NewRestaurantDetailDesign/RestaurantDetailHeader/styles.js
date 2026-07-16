@@ -76,7 +76,7 @@ const styles = (props = null) =>
     },
     contentContainer: {
       padding: scale(15),
-      gap: scale(12)
+      gap: scale(6)
     },
     subContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

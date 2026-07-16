@@ -13,7 +13,7 @@ const buildStyles = (props = null) =>
     topbrandsSec: {
       gap: scale(8),
       marginHorizontal: scale(15),
-      marginBottom: scale(25)
+      marginBottom: scale(15)
     },
     topbrandsHeading:{
       ...alignment.PRmedium
