@@ -49,6 +49,18 @@ eas build --profile production -p android
 This app currently uses the committed values in `environment.ts`.
 Those defaults were left unchanged here to avoid switching local setup between hosted and local backends without confirmation.
 
+## Google setup
+
+- Android Firebase config is read from `google-services.json`
+- Native Google Maps keys are read from Expo env vars
+
+```bash
+EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID=
+EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS=
+```
+
+The rider app no longer relies on backend configuration for the runtime maps key.
+
 ## Notes
 
 - Expo SDK: `53`

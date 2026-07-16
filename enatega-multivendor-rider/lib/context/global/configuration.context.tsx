@@ -20,7 +20,6 @@ export const ConfigurationContext = React.createContext<
   IConfiguration | undefined
 >({
   _id: "",
-  googleApiKey: "",
   riderAppSentryUrl: "",
   currency: "",
   currencySymbol: "",
@@ -48,7 +47,6 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
         loading || error || !data
           ? {
               _id: "",
-              googleApiKey: "",
               riderAppSentryUrl: "",
               currency: "",
               currencySymbol: "",
