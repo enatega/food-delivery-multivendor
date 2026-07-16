@@ -437,7 +437,7 @@ function ImageTextCenterHeader(props, ref) {
                       H5
                       isRTL
                     >
-                      {t('noReviewsYet') ?? 'No reviews yet'}
+                      {t('noReviewsYet', 'No reviews yet')}
                     </TextDefault>
                   )}
                 </AnimatedTouchable>

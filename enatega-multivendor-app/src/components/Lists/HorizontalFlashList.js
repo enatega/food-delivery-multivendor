@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Platform } from 'react-native'
+import { View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 
 function HorizontalFlashList({
@@ -26,7 +26,9 @@ function HorizontalFlashList({
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       estimatedItemSize={estimatedItemSize}
-      removeClippedSubviews={Platform.OS === 'ios'}
+      // Keep nearby items mounted while the user swipes backward; aggressive
+      // clipping can cause a brief blank frame on horizontal carousels.
+      removeClippedSubviews={false}
       ItemSeparatorComponent={itemSpacing > 0 ? Spacer : undefined}
     />
   )

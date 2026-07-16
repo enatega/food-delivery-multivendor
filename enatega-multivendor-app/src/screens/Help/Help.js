@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { View, StatusBar, Platform, FlatList, Linking, TouchableOpacity } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { View, StatusBar, Platform, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -13,94 +13,23 @@ import navigationService from '../../routes/navigationService'
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
 import Accordion from '../../components/Accordion/Accordion'
-import { FontAwesome } from '@expo/vector-icons'
-import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import { WhatsAppNotInstalledModal } from '../../components/Help/WhatsAppNotInstalledModal'
-
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 
 const FAQs = [
-  {
-    id: 1,
-    heading: 'faq1',
-    description: 'faq1Description'
-  },
-  {
-    id: 2,
-    heading: 'faq2',
-    description: 'faq2Description'
-  },
-  {
-    id: 3,
-    heading: 'faq3',
-    description: 'faq3Description'
-  },
-  {
-    id: 4,
-    heading: 'faq4',
-    description: 'faq4Description'
-  },
-  {
-    id: 5,
-    heading: 'faq5',
-    description: 'faq5Description'
-  },
-  {
-    id: 6,
-    heading: 'faq6',
-    description: 'faq6Description'
-  },
-  {
-    id: 7,
-    heading: 'faq7',
-    description: 'faq7Description'
-  }
+  { id: 1, heading: 'faq1', description: 'faq1Description' },
+  { id: 2, heading: 'faq2', description: 'faq2Description' },
+  { id: 3, heading: 'faq3', description: 'faq3Description' },
+  { id: 4, heading: 'faq4', description: 'faq4Description' },
+  { id: 5, heading: 'faq5', description: 'faq5Description' },
+  { id: 6, heading: 'faq6', description: 'faq6Description' },
+  { id: 7, heading: 'faq7', description: 'faq7Description' }
 ]
 
 const Help = (props) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
-  const [isModalVisible, setisModalVisible] = useState(false)
-
-  const handleNavigation = () => {
-    setisModalVisible(false)
-    Linking.openURL('https://play.google.com/store/apps/details?id=com.whatsapp')
-  }
-
-  const openWhatsAppChat = async () => {
-    const phoneNumber = '+14232600408'
-
-    if (Platform.OS === 'android') {
-      const androidUrl = `whatsapp://send?phone=${phoneNumber}`
-
-      try {
-        const supported = Linking.canOpenURL(androidUrl)
-        if (supported) {
-          await Linking.openURL(androidUrl)
-        }
-      } catch (error) {
-        setisModalVisible(true)
-        console.error('Error opening URL', error)
-      }
-    } else if (Platform.OS === 'ios') {
-      const iosUrl = `https://wa.me/${phoneNumber.replace('+', '')}`
-
-      try {
-        const supported = await Linking.canOpenURL(iosUrl)
-
-        if (supported) {
-          await Linking.openURL(iosUrl)
-        } else {
-          console.log('WhatsApp is not installed on the device')
-          setisModalVisible(true)
-        }
-      } catch (error) {
-        console.error('Error opening URL', error)
-      }
-    }
-  }
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -114,7 +43,7 @@ const Help = (props) => {
       try {
         await Analytics.track('NAVIGATE_TO_FAQS')
       } catch (err) {
-        // console.log('ERORORORO =>', err)
+        // ignore analytics failure
       }
     }
     Track()
@@ -154,9 +83,9 @@ const Help = (props) => {
         />
       )
     })
-  }, [props?.navigation])
+  }, [props?.navigation, currentTheme, t])
 
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+  const { isConnected: connect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
@@ -165,8 +94,10 @@ const Help = (props) => {
       <View style={[styles(currentTheme).flex, styles(currentTheme).mainContainer]}>
         <FlatList
           data={FAQs}
-          keyExtractor={(item) => 'Faq-' + item.id}
+          keyExtractor={(item) => `Faq-${item.id}`}
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles(currentTheme).listContent}
           renderItem={({ item }) => (
             <Accordion heading={t(item.heading)}>
               <TextDefault textColor={currentTheme.newFontcolor} isRTL style={styles(currentTheme).faqAnswer}>
@@ -175,21 +106,6 @@ const Help = (props) => {
             </Accordion>
           )}
         />
-
-        <View>
-          <View style={styles(currentTheme).containerButton}>
-            <TouchableOpacity activeOpacity={0.5} style={styles(currentTheme).addButton} onPress={openWhatsAppChat}>
-              <View style={styles(currentTheme).contentContainer}>
-                <FontAwesome name='whatsapp' size={24} color={currentTheme.black} />
-                <TextDefault textColor={currentTheme.black} bold H5 style={styles(currentTheme).whatsAppText}>
-                  {t('whatsAppText')}
-                </TextDefault>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <WhatsAppNotInstalledModal theme={currentTheme} modalVisible={isModalVisible} setModalVisible={() => setisModalVisible(!isModalVisible)} handleNavigation={handleNavigation} />
       </View>
     </SafeAreaView>
   )

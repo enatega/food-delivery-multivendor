@@ -418,6 +418,41 @@ export const createActivity = `
     }
 `
 
+export const createSupportTicket = gql`
+  mutation CreateSupportTicket($ticketInput: SupportTicketInput!) {
+    createSupportTicket(ticketInput: $ticketInput) {
+      _id
+      title
+      description
+      status
+      category
+      orderId
+      otherDetails
+      createdAt
+      updatedAt
+      user {
+        _id
+        name
+        email
+      }
+    }
+  }
+`
+
+export const createTicketMessage = gql`
+  mutation CreateMessage($messageInput: MessageInput!) {
+    createMessage(messageInput: $messageInput) {
+      _id
+      content
+      senderType
+      isRead
+      ticket
+      createdAt
+      updatedAt
+    }
+  }
+`
+
 export const VERIFY_OTP = gql`
  mutation VerifyOtp($otp: String!, $email: String, $phone: String) {
     verifyOtp(otp: $otp, email: $email, phone: $phone) {

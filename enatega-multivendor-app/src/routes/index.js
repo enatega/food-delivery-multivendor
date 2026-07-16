@@ -18,6 +18,7 @@ import SaveAddress from '../screens/SaveAddress/SaveAddress'
 import RateAndReview from '../screens/RateAndReview/RateAndReview'
 import Payment from '../screens/Payment/Payment'
 import Help from '../screens/Help/Help'
+import CustomerSupport from '../screens/CustomerSupport/CustomerSupport'
 import Paypal from '../screens/Paypal/Paypal'
 import StripeCheckout from '../screens/Stripe/StripeCheckout'
 import Profile from '../screens/Profile/Profile'
@@ -191,6 +192,11 @@ function MainNavigator() {
       <NavigationStack.Screen name='Cart' component={Cart} options={SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER} />
       <NavigationStack.Screen name='Checkout' component={Checkout} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='CustomerSupport'
+        component={CustomerSupport}
+        options={SLIDE_RIGHT_WITH_CURVE_ANIM}
+      />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reviews' component={Reviews} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />

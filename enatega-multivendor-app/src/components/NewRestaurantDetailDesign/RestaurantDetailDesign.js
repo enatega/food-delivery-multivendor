@@ -21,7 +21,6 @@ import RestaurantDetailSkeleton from './RestaurantDetailSkeleton'
 
 const HEADER_MAX_HEIGHT = Platform.OS === 'ios' ? 520 : 490
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 120 : 120
-const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 
 function NewRestaurantDetailDesign(props) {
   const { t, i18n } = useTranslation()
@@ -35,6 +34,11 @@ function NewRestaurantDetailDesign(props) {
   const restaurantId = restaurant?._id
 
   const scrollOffsetY = useRef(new Animated.Value(0)).current
+
+  // Measure the real header height so the content padding matches it exactly.
+  // Header content is device-scaled, so a fixed constant leaves a gap / clips.
+  const [headerMaxHeight, setHeaderMaxHeight] = useState(HEADER_MAX_HEIGHT)
+  const headerScrollDistance = headerMaxHeight - HEADER_MIN_HEIGHT
 
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -74,19 +78,19 @@ function NewRestaurantDetailDesign(props) {
 
   // Calculate header animation values
   const headerHeight = scrollOffsetY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+    inputRange: [0, headerScrollDistance],
+    outputRange: [headerMaxHeight, HEADER_MIN_HEIGHT],
     extrapolate: 'clamp'
   })
 
   const headerOpacity = scrollOffsetY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
+    inputRange: [0, headerScrollDistance / 2],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   })
 
   const collapsedHeaderOpacity = scrollOffsetY.interpolate({
-    inputRange: [HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+    inputRange: [headerScrollDistance / 2, headerScrollDistance],
     outputRange: [0, 1],
     extrapolate: 'clamp'
   })
@@ -164,6 +168,10 @@ function NewRestaurantDetailDesign(props) {
         <Animated.View
           pointerEvents='box-none'
           style={{ opacity: headerOpacity }}
+          onLayout={(e) => {
+            const h = e.nativeEvent.layout.height
+            if (h > 0 && Math.abs(h - headerMaxHeight) > 1) setHeaderMaxHeight(h)
+          }}
         >
           <RestaurantDetailHeader
             restaurant={mergedRestaurant}
@@ -213,7 +221,7 @@ function NewRestaurantDetailDesign(props) {
         <View
           style={[
             styles(currentTheme).contentContainer,
-            { paddingTop: HEADER_MAX_HEIGHT }
+            { paddingTop: headerMaxHeight }
           ]}
         >
           <RestaurantSections

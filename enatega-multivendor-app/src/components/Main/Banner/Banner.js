@@ -182,8 +182,9 @@ const Banner = ({ banners }) => {
       autoplay
       autoplayDelay={3}
       autoplayLoop
-      removeClippedSubviews={true}
-      windowSize={3}
+      // Keep neighboring slides mounted so reverse swipes do not flash blank.
+      removeClippedSubviews={false}
+      windowSize={5}
       showPagination
       data={bannersData}
       snapToInterval={width} // Ensures only one image is visible at a time

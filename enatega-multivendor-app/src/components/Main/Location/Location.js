@@ -6,9 +6,21 @@ import { LocationContext } from '../../../context/Location'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
-import { EvilIcons, Feather } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
+import CustomHomeIcon from '../../../assets/SVG/imageComponents/CustomHomeIcon'
+import CustomWorkIcon from '../../../assets/SVG/imageComponents/CustomWorkIcon'
+import CustomApartmentIcon from '../../../assets/SVG/imageComponents/CustomApartmentIcon'
+import CustomOtherIcon from '../../../assets/SVG/imageComponents/CustomOtherIcon'
+
+// Same mapping the address bottom sheet uses, so the header icon matches it.
+const addressIcons = {
+  House: CustomHomeIcon,
+  Office: CustomWorkIcon,
+  Apartment: CustomApartmentIcon,
+  Other: CustomOtherIcon
+}
 
 function Location({
   navigation,
@@ -56,12 +68,20 @@ function Location({
     <TouchableOpacity onPress={onLocationPress} >
       <View style={styles(currentTheme).headerTitleContainer}>
         <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' , alignItems: 'center', justifyContent: 'center', marginHorizontal: scale(10), gap: 5 }}>
-          <View style={[styles().locationIcon, locationIconGray]}>
-            <EvilIcons
-              name="location"
-              size={scale(20)}
-              color={currentTheme.secondaryText}
-            />
+          <View style={[styles(currentTheme).locationIcon, locationIconGray]}>
+            {location?.label === 'Current Location' ||
+            location?.deliveryAddress === 'Current Location' ? (
+              <Feather
+                name="crosshair"
+                size={scale(18)}
+                color={currentTheme.secondaryText}
+              />
+            ) : (
+              React.createElement(
+                addressIcons[location?.label] || CustomOtherIcon,
+                { iconColor: currentTheme.secondaryText }
+              )
+            )}
           </View>
           <View style={styles(currentTheme).headerContainer}>
             <View>

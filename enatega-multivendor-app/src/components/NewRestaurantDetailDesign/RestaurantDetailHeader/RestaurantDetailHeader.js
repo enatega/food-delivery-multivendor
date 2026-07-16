@@ -184,7 +184,7 @@ function RestaurantDetailHeader({
               </>
             ) : (
               <TextDefault textColor={currentTheme.fontNewColor} bold H5>
-                {t('noReviewsYet') ?? 'No reviews yet'}
+                {t('noReviewsYet', 'No reviews yet')}
               </TextDefault>
             )}
           </View>

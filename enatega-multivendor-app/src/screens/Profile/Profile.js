@@ -295,8 +295,16 @@ function Profile(props) {
                 <ButtonContainer
                   icon={'people-outline'}
                   iconType={'Ionicons'}
-                  onPress={() => navigation.navigate('Help')}
+                  onPress={() => navigation.navigate('CustomerSupport')}
                   title={t('CustomerSupport')}
+                  currentTheme={currentTheme}
+                />
+                <View style={styles(currentTheme).line} />
+                <ButtonContainer
+                  icon={'help-circle-outline'}
+                  iconType={'Ionicons'}
+                  onPress={() => navigation.navigate('Help')}
+                  title={t('titleFAQ')}
                   currentTheme={currentTheme}
                 />
                 <View style={styles(currentTheme).line} />

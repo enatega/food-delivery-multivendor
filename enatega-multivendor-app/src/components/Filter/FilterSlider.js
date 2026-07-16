@@ -29,6 +29,16 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
     setFilters({ ...filters, [filterTitle]: selectedFilter })
   }
 
+  const clearFilters = () => {
+    const cleared = Object.keys(filters).reduce((acc, key) => {
+      acc[key] = { ...filters[key], selected: [] }
+      return acc
+    }, {})
+    setFilters(cleared)
+  }
+
+  const anySelected = Object.values(filters).some((f) => f.selected.length > 0)
+
   return (
   <ScrollView style={styles().container}>
     <TextDefault H2 bolder style={styles().heading} isRTL>
@@ -81,6 +91,18 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
         <View style={{ height: 1, backgroundColor: '#D1D5DB', marginBottom: 10 }}  />
       </View>
     ))}
+
+    {anySelected && (
+      <TouchableOpacity
+        style={styles(currentTheme).clearBtn}
+        activeOpacity={0.8}
+        onPress={clearFilters}
+      >
+        <TextDefault center bold H4 textColor={currentTheme.main}>
+          {t('clearAll', 'Clear all')}
+        </TextDefault>
+      </TouchableOpacity>
+    )}
 
     <TouchableOpacity
       style={styles(currentTheme).applyBtn}

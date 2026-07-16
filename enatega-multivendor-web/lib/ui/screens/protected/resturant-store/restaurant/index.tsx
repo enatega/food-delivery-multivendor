@@ -138,13 +138,15 @@ export default function RestaurantDetailsScreen() {
     const filteredDeals =
       (allDeals || [])
         .filter((c: ICategory) => {
-          if (filter.trim() === "") return true;
+          if (normalizedFilter === "") return true;
 
           const categoryMatches = c.title
             .toLowerCase()
-            .includes(filter.toLowerCase());
+            .includes(normalizedFilter);
           const foodsMatch = c.foods.some((food: IFood) =>
-            food.title.toLowerCase().includes(filter.toLowerCase()),
+            food.title.toLowerCase().includes(normalizedFilter) ||
+            (food.description &&
+              food.description.toLowerCase().includes(normalizedFilter)),
           );
 
           return categoryMatches || foodsMatch;
@@ -154,13 +156,13 @@ export default function RestaurantDetailsScreen() {
           index,
           foods: c.foods.filter((food) => {
             // If filter is empty, include all foods
-            if (filter.trim() === "") return true;
+            if (normalizedFilter === "") return true;
 
             // Include food if title or description matches filter
             return (
-              food.title.toLowerCase().includes(filter.toLowerCase()) ||
+              food.title.toLowerCase().includes(normalizedFilter) ||
               (food.description &&
-                food.description.toLowerCase().includes(filter.toLowerCase()))
+                food.description.toLowerCase().includes(normalizedFilter))
             );
           }),
         }))
@@ -188,15 +190,20 @@ export default function RestaurantDetailsScreen() {
     return popularDealsCategory
       ? [popularDealsCategory, ...filteredDeals]
       : filteredDeals;
-  }, [allDeals, filter, popularDealsIds]);
+  }, [allDeals, normalizedFilter, popularDealsIds]);
 
   const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
-    if (deals.length > 0 && !selectedCategory) {
-      setSelectedCategory(toSlug(deals[0]?.title)); // first category selected by default
+    if (deals.length > 0) {
+      const nextCategory = toSlug(deals[0]?.title);
+      setSelectedCategory(nextCategory); // first visible category selected by default
+      selectedCategoryRef.current = nextCategory;
+      return;
     }
-  }, [deals, selectedCategory]);
+    setSelectedCategory("");
+    selectedCategoryRef.current = "";
+  }, [deals]);
 
   const [addFavorite, { loading: addFavoriteLoading }] = useMutation(
     ADD_FAVOURITE_RESTAURANT,
@@ -284,6 +291,7 @@ export default function RestaurantDetailsScreen() {
   const [headerHeight, setHeaderHeight] = useState("64px"); // Default for desktop
   const [showReviews, setShowReviews] = useState<boolean>(false);
   const [showMoreInfo, setShowMoreInfo] = useState<boolean>(false);
+  const normalizedFilter = filter.trim().toLowerCase();
 
   // Function to check weather time exisis
   const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
@@ -366,14 +374,13 @@ export default function RestaurantDetailsScreen() {
     setSelectedCategory(id);
     selectedCategoryRef.current = id;
     const element = document.getElementById(id);
-    const container = document.body;
 
-    if (element && container) {
+    if (element) {
       const headerOffset = 120;
       const elementPosition = element.offsetTop;
       const offsetPosition = elementPosition - headerOffset;
 
-      container.scrollTo({
+      window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
@@ -465,11 +472,10 @@ export default function RestaurantDetailsScreen() {
       }
     };
 
-    const container = document.body;
-    container?.addEventListener("scroll", handleScrollUpdate);
+    window.addEventListener("scroll", handleScrollUpdate, { passive: true });
 
     return () => {
-      container?.removeEventListener("scroll", handleScrollUpdate);
+      window.removeEventListener("scroll", handleScrollUpdate);
     };
   }, [deals]);
 
@@ -647,14 +653,33 @@ export default function RestaurantDetailsScreen() {
         className="lg:top-[60px] top-[95px] sticky z-50 bg-white dark:bg-gray-900 shadow-[0_1px_1px_rgba(0,0,0,0.1)] dark:shadow-[0_1px_1px_rgba(255,255,255,0.05)]"
       >
         <PaddingContainer height={headerHeight}>
-          <div className="p-3 h-full w-full flex flex-col md:flex-row gap-2 items-center justify-between">
-            {/* Category List - Full Width on Small Screens, 80% on Larger Screens */}
-            <div className="relative w-full md:w-[80%]">
+          <div className="p-3 h-full w-full flex flex-col gap-3">
+            {/* Search Input */}
+            <div className="w-full md:max-w-[420px] md:ml-auto">
+              <CustomIconTextField
+                value={filter}
+                className="w-full h-11 rounded-full pl-10 pr-4 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
+                iconProperties={{
+                  icon: faSearch,
+                  position: "left",
+                  style: { marginTop: 0 },
+                }}
+                placeholder={t("search_for_food_items_placeholder")}
+                type="text"
+                name="search"
+                showLabel={false}
+                isLoading={loading}
+                onChange={(e) => setFilter(e.target.value)}
+              />
+            </div>
+
+            {/* Category List */}
+            <div className="relative w-full min-w-0">
               <div
-                className="h-12 w-full overflow-x-auto overflow-y-hidden flex items-center 
+                className="min-h-12 w-full overflow-x-auto overflow-y-hidden flex items-center py-1
                   [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
               >
-                <ul className="flex space-x-4 items-center w-max flex-nowrap">
+                <ul className="flex gap-3 items-center w-max flex-nowrap">
                   {(showAll ? deals : deals.slice(0, visibleItems)).map(
                     (category: ICategory, index: number) => {
                       const _slug = toSlug(category.title);
@@ -666,7 +691,7 @@ export default function RestaurantDetailsScreen() {
                               selectedCategory === _slug
                                 ? "bg-primary-light text-primary-color dark:bg-[#2E3B23] dark:text-[#D2F29E]"
                                 : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"
-                            } rounded-full px-3 py-2 text-[10px] sm:text-sm md:text-base font-medium whitespace-nowrap`}
+                            } rounded-full px-3 py-2 text-[10px] sm:text-[12px] md:text-sm font-medium whitespace-nowrap leading-none`}
                             onClick={() => handleScroll(toSlug(category.title))}
                           >
                             {category.title}
@@ -680,7 +705,7 @@ export default function RestaurantDetailsScreen() {
                     <li className="shrink-0">
                       <button
                         type="button"
-                        className="bg-blue-500 text-white dark:bg-blue-600 rounded-full px-4 py-2 font-medium text-[14px] cursor-pointer"
+                        className="bg-blue-500 text-white dark:bg-blue-600 rounded-full px-4 py-2 font-medium text-[12px] sm:text-[14px] cursor-pointer leading-none"
                         onClick={() => setShowAll(true)}
                       >
                         {t("more_button")}
@@ -691,26 +716,20 @@ export default function RestaurantDetailsScreen() {
               </div>
             </div>
 
-            {/* Search Input - 20% Width on Large Screens, Full Width on Small Screens */}
-            <div className="h-full w-full md:w-[20%]">
-              {
-                <CustomIconTextField
-                  value={filter}
-                  className="w-full md:h-10 h-9 rounded-full pl-10 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
-                  iconProperties={{
-                    icon: faSearch,
-                    position: "left",
-                    style: { marginTop: "-10px" },
-                  }}
-                  placeholder={t("search_for_food_items_placeholder")}
-                  type="text"
-                  name="search"
-                  showLabel={false}
-                  isLoading={loading}
-                  onChange={(e) => setFilter(e.target.value)}
-                />
-              }
-            </div>
+            {normalizedFilter && (
+              <div className="flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
+                <span>
+                  {deals.reduce((count, category) => count + category.foods.length, 0)} results
+                </span>
+                <button
+                  type="button"
+                  className="font-medium text-primary-color dark:text-[#D2F29E]"
+                  onClick={() => setFilter("")}
+                >
+                  Clear
+                </button>
+              </div>
+            )}
           </div>
         </PaddingContainer>
       </motion.div>
@@ -721,6 +740,13 @@ export default function RestaurantDetailsScreen() {
       <PaddingContainer className="pb-10">
         {loading ? (
           <FoodCategorySkeleton />
+        ) : normalizedFilter && deals.length === 0 ? (
+          <div className="py-10 text-center">
+            <EmptySearch />
+            <div className="mt-4 text-gray-500 dark:text-gray-400">
+              No products match "{filter.trim()}"
+            </div>
+          </div>
         ) : (
           deals.map((category: ICategory, catIndex: number) => {
             const categorySlug = toSlug(category.title);
@@ -735,43 +761,43 @@ export default function RestaurantDetailsScreen() {
                   categoryRefs.current[categorySlug] = el;
                 }}
               >
-                <h2 className="mb-4 font-inter text-gray-900 dark:text-gray-100 font-bold text-2xl sm:text-xl leading-snug tracking-tight">
+                <h2 className="mb-4 font-inter text-gray-900 dark:text-gray-100 font-bold text-xl sm:text-xl md:text-2xl leading-snug tracking-tight">
                   {category.title}
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
                   {category.foods.map((meal: IFood, mealIndex) => (
                     <div
                       key={mealIndex}
-                      className="flex gap-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm bg-white dark:bg-gray-800 p-3 relative cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+                      className="flex gap-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm bg-white dark:bg-gray-800 p-3 relative cursor-pointer transition-transform duration-300 hover:shadow-lg"
                       onClick={() => handleRestaurantClick(meal)}
                     >
                       {/* Text Content */}
-                      <div className="flex-grow text-left md:text-left space-y-2">
-                        <div className="flex flex-col lg:flex-row justify-between flex-wrap">
-                          <h3 className="text-gray-900 dark:text-gray-100  text-lg font-semibold font-inter">
+                      <div className="min-w-0 flex-1 text-left space-y-2">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1">
+                          <h3 className="text-gray-900 dark:text-gray-100 text-base sm:text-lg font-semibold font-inter break-words">
                             {meal.title}
                           </h3>
                           {meal.isOutOfStock && (
-                            <span className="text-red-500">
+                            <span className="text-red-500 text-sm shrink-0">
                               {t("out_of_stock_label")}
                             </span>
                           )}
                         </div>
 
-                        <p className="text-gray-500 text-sm dark:text-gray-400 line-clamp-2 hover:line-clamp-none">
+                        <p className="text-gray-500 text-sm dark:text-gray-400 line-clamp-2 break-words">
                           {meal.description}
                         </p>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-secondary-color dark:text-sky-400 text-lg font-semibold">
+                          <span className="text-secondary-color dark:text-sky-400 text-base sm:text-lg font-semibold">
                             {CURRENCY_SYMBOL} {meal.variations[0].price}
                           </span>
                         </div>
                       </div>
 
                       {/* Image */}
-                      <div className="flex-shrink-0 w-24 h-24 md:w-28 md:h-28">
+                      <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28">
                         <Image
                           alt={meal.title}
                           className="w-full h-full rounded-md object-cover mx-auto md:mx-0"
@@ -786,7 +812,7 @@ export default function RestaurantDetailsScreen() {
                         className={`${direction === "rtl" ? "left-2" : "right-2"} absolute top-2`}
                       >
                         <button
-                          className="bg-secondary-color rounded-full shadow-md w-6 h-6 flex items-center justify-center"
+                          className="bg-secondary-color rounded-full shadow-md w-7 h-7 flex items-center justify-center"
                           onClick={(e) => {
                             e.stopPropagation(); // Prevent triggering parent onClick
                             handleRestaurantClick(meal);
