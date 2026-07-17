@@ -776,8 +776,8 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
   }
 }
 }`
-export const restaurantListPreview = `query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
-  nearByRestaurantsPreview(latitude:$latitude,longitude:$longitude,shopType:$shopType){
+export const restaurantListPreview = `query Restaurants($latitude:Float,$longitude:Float,$shopType:String,$page:Int,$limit:Int){
+  nearByRestaurantsPreview(latitude:$latitude,longitude:$longitude,shopType:$shopType,page:$page,limit:$limit){
     offers{
       _id
       name

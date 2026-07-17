@@ -245,7 +245,7 @@ function BottomTabNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
-  const { profile: userProfile } = useContext(UserContext)
+  const { isLoggedIn } = useContext(UserContext)
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -304,7 +304,7 @@ function BottomTabNavigator() {
       />
       <Tab.Screen
         name='Profile'
-        component={userProfile ? Profile : CreateAccount}
+        component={isLoggedIn ? Profile : CreateAccount}
         options={{
           tabBarLabel: t('titleProfile')
         }}

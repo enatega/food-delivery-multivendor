@@ -88,6 +88,7 @@ const useEmailOtp = (isPhoneExists) => {
         email: data.createUser.email,
         type: 'email'
       })
+      console.log('onCreateUserCompleted data:', data,configuration?.skipMobileVerification, data?.createUser?.token)
       if (configuration?.skipMobileVerification && data?.createUser?.token) {
         await setTokenAsync(data.createUser.token)
         navigation.reset({

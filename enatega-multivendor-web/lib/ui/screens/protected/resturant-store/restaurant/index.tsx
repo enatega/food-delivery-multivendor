@@ -133,6 +133,7 @@ export default function RestaurantDetailsScreen() {
   const popularDealsIds = popularSubCategoriesList?.popularItems?.map(
     (item: any) => item.id,
   );
+  const normalizedFilter = filter.trim().toLowerCase();
 
   const deals = useMemo(() => {
     const filteredDeals =
@@ -231,6 +232,7 @@ export default function RestaurantDetailsScreen() {
   );
 
   const t = useTranslations();
+
   const handleFavoriteClick = () => {
     if (!profile) {
       // // Handle case where user is not logged in
@@ -291,7 +293,6 @@ export default function RestaurantDetailsScreen() {
   const [headerHeight, setHeaderHeight] = useState("64px"); // Default for desktop
   const [showReviews, setShowReviews] = useState<boolean>(false);
   const [showMoreInfo, setShowMoreInfo] = useState<boolean>(false);
-  const normalizedFilter = filter.trim().toLowerCase();
 
   // Function to check weather time exisis
   const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {

@@ -1,5 +1,5 @@
 import { scale } from '../../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
+import { Dimensions, Platform, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { subtleCardShadow } from '../../../utils/cardShadows'
 const { height } = Dimensions.get('window')
@@ -13,7 +13,7 @@ const buildStyles = (props = null) => {
     offerContainer: {
       borderRadius: 22,
       width: scale(270),
-      height: height * 0.376,
+      height: height * (Platform.OS === 'ios' ? 0.395 : 0.376),
       ...alignment.MRsmall,
       backgroundColor: props != null ? props?.cardBackground : '#181818',
       ...subtleCardShadow
@@ -54,9 +54,10 @@ const buildStyles = (props = null) => {
     },
     descriptionContainer: {
       paddingHorizontal: scale(12),
-      paddingVertical: scale(12),
+      paddingTop: scale(12),
+      paddingBottom: Platform.OS === 'ios' ? scale(16) : scale(12),
       width: '100%',
-      height: '35%',
+      height: Platform.OS === 'ios' ? '36%' : '35%',
       justifyContent: 'space-between',
       alignItems: 'stretch',
       gap: scale(8)

@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useContext, useEffect, useRef, useMemo, useCallback, useDeferredValue } from 'react'
 import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, FlatList, Pressable } from 'react-native'
-import Animated, { Extrapolation, interpolate, runOnJS, useSharedValue, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
+import Animated, { Extrapolation, interpolate, useSharedValue, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
@@ -73,9 +73,12 @@ function Restaurant(props) {
   const { t, i18n } = useTranslation()
   const insets = useSafeAreaInsets()
   const scrollRef = useRef(null)
-  const sectionOffsetsRef = useRef(new Map())
   const pendingCategoryRef = useRef(null)
   const pendingCategoryTimerRef = useRef(null)
+  const viewabilityConfigRef = useRef({
+    itemVisiblePercentThreshold: 15,
+    minimumViewTime: 80
+  })
   const navigation = useNavigation()
   const route = useRoute()
   const propsData = route.params
@@ -137,28 +140,8 @@ function Restaurant(props) {
 
   const restaurant = data?.restaurant
 
-  const syncActiveCategoryFromOffset = useCallback(
-    (offsetY) => {
-      if (pendingCategoryRef.current != null || categories.length === 0) return
-
-      const threshold = offsetY + CATEGORY_RAIL_HEIGHT + scale(8)
-      let nextCategoryIndex = categories[0].categoryIndex
-
-      categories.forEach((category) => {
-        const sectionOffset = sectionOffsetsRef.current.get(category.categoryIndex)
-        if (sectionOffset != null && sectionOffset <= threshold) {
-          nextCategoryIndex = category.categoryIndex
-        }
-      })
-
-      setActiveCategoryIndex((currentValue) => (currentValue === nextCategoryIndex ? currentValue : nextCategoryIndex))
-    },
-    [categories]
-  )
-
   const scrollHandler = useAnimatedScrollHandler((event) => {
     scrollY.value = event.contentOffset.y
-    runOnJS(syncActiveCategoryFromOffset)(event.contentOffset.y)
   })
 
   const dataList = useMemo(() => {
@@ -207,11 +190,32 @@ function Restaurant(props) {
   useEffect(() => {
     if (categories.length === 0) return
 
-    sectionOffsetsRef.current = new Map()
     setActiveCategoryIndex((currentValue) => {
       const hasExistingCategory = categories.some((item) => item.categoryIndex === currentValue)
       return hasExistingCategory ? currentValue : categories[0].categoryIndex
     })
+  }, [categories])
+
+  const onViewableItemsChanged = useCallback(({ viewableItems }) => {
+    if (pendingCategoryRef.current != null || categories.length === 0) return
+
+    const nextVisibleItem = viewableItems.find((viewableItem) => {
+      const row = viewableItem?.item
+      if (!row || row.categoryIndex == null) return false
+
+      return row.type === 'section-anchor' ||
+        row.type === 'section-title' ||
+        row.type === 'popular-grid' ||
+        row.type === 'food-item'
+    })
+
+    const nextCategoryIndex = nextVisibleItem?.item?.categoryIndex
+
+    if (nextCategoryIndex == null) return
+
+    setActiveCategoryIndex((currentValue) => (
+      currentValue === nextCategoryIndex ? currentValue : nextCategoryIndex
+    ))
   }, [categories])
 
   const distance = useMemo(
@@ -492,10 +496,6 @@ function Restaurant(props) {
     [categoryToRowIndexMap]
   )
 
-  const captureSectionOffset = useCallback((categoryIndex, offsetY) => {
-    sectionOffsetsRef.current.set(categoryIndex, offsetY)
-  }, [])
-
   const renderFoodPress = useCallback(
     (item) => {
       if (item?.isOutOfStock) {
@@ -522,7 +522,6 @@ function Restaurant(props) {
           categories={categories}
           activeCategoryIndex={activeCategoryIndex}
           onPressCategory={handleCategoryPress}
-          onCaptureSectionOffset={captureSectionOffset}
           displayedDeliveryMinutes={displayedDeliveryMinutes}
           scrollY={scrollY}
           currentTheme={currentTheme}
@@ -533,7 +532,7 @@ function Restaurant(props) {
         />
       )
     },
-    [aboutObject, activeCategoryIndex, captureSectionOffset, categories, configuration, currentTheme, displayedDeliveryMinutes, handleCategoryPress, renderFoodPress, restaurant, scrollY, tagCart]
+    [aboutObject, activeCategoryIndex, categories, configuration, currentTheme, displayedDeliveryMinutes, handleCategoryPress, renderFoodPress, restaurant, scrollY, tagCart]
   )
 
   const renderSearchItem = useCallback(
@@ -654,6 +653,8 @@ function Restaurant(props) {
               onRefresh={() => networkStatus === 7 && refetch()}
               onScroll={scrollHandler}
               scrollEventThrottle={16}
+              onViewableItemsChanged={onViewableItemsChanged}
+              viewabilityConfig={viewabilityConfigRef.current}
               onScrollToIndexFailed={handleScrollToIndexFailed}
               contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
               initialNumToRender={8}
@@ -705,21 +706,14 @@ const SectionTitleRow = React.memo(function SectionTitleRow({ currentTheme, titl
 })
 
 const RestaurantRow = React.memo(
-  function RestaurantRow({ row, aboutObject, categories, activeCategoryIndex, onPressCategory, onCaptureSectionOffset, displayedDeliveryMinutes, scrollY, currentTheme, restaurant, tagCart, onFoodPress, configuration }) {
+  function RestaurantRow({ row, aboutObject, categories, activeCategoryIndex, onPressCategory, displayedDeliveryMinutes, scrollY, currentTheme, restaurant, tagCart, onFoodPress, configuration }) {
     switch (row.type) {
       case 'hero':
         return <RestaurantHero aboutObject={aboutObject} displayedDeliveryMinutes={displayedDeliveryMinutes} scrollY={scrollY} fadeDistance={HERO_FADE_DISTANCE} />
       case 'category-tabs':
         return <CategoryTabsRow categories={categories} activeCategoryIndex={activeCategoryIndex} onPressCategory={onPressCategory} />
       case 'section-anchor':
-        return (
-          <View
-            style={{ height: 1, opacity: 0 }}
-            onLayout={(event) => {
-              onCaptureSectionOffset(row.categoryIndex, event.nativeEvent.layout.y)
-            }}
-          />
-        )
+        return <View style={{ height: 1, opacity: 0 }} />
       case 'popular-grid':
         return <PopularGridRow currentTheme={currentTheme} items={row.items} onPressItem={onFoodPress} restaurant={restaurant} tagCart={tagCart} title={row.title} />
       case 'section-title':
@@ -737,7 +731,6 @@ const RestaurantRow = React.memo(
     if (prevProps.tagCart !== nextProps.tagCart) return false
     if (prevProps.onFoodPress !== nextProps.onFoodPress) return false
     if (prevProps.configuration !== nextProps.configuration) return false
-    if (prevProps.onCaptureSectionOffset !== nextProps.onCaptureSectionOffset) return false
     if (prevProps.row.type === 'hero') {
       return prevProps.aboutObject === nextProps.aboutObject && prevProps.displayedDeliveryMinutes === nextProps.displayedDeliveryMinutes && prevProps.scrollY === nextProps.scrollY
     }
