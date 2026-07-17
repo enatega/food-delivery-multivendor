@@ -10,7 +10,7 @@ on:
         description: "App name shown on launcher (e.g. NATRA Delivery)"
         required: true
       tenant_icon_url:
-        description: "Public URL of the tenant logo PNG (min 1024×1024)"
+        description: "Public URL of the tenant logo PNG (min 1024x1024)"
         required: true
       callback_url:
         description: "API endpoint to POST the result to when done"
@@ -41,35 +41,54 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
+      - name: Push tenant env vars as EAS project secrets
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          # Write tenant values to a temp .env file, then push as EAS secrets.
+          # These are picked up by app.config.js and prepare-tenant-icon.js
+          # on the EAS cloud worker.
+          printf 'TENANT_SLUG=%s\nTENANT_APP_NAME=%s\nTENANT_ICON_URL=%s\n' \
+            "${{ github.event.inputs.tenant_slug }}" \
+            "${{ github.event.inputs.tenant_name }}" \
+            "${{ github.event.inputs.tenant_icon_url }}" \
+            > /tmp/.env.tenant
+          eas secret:push --scope project --env-file /tmp/.env.tenant --force
+          rm /tmp/.env.tenant
+
       - name: Build APK via EAS
         id: eas_build
         env:
-          EXPO_TOKEN:       ${{ secrets.EXPO_TOKEN }}
-          TENANT_SLUG:      ${{ github.event.inputs.tenant_slug }}
-          TENANT_APP_NAME:  ${{ github.event.inputs.tenant_name }}
-          TENANT_ICON_URL:  ${{ github.event.inputs.tenant_icon_url }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          BUILD_OUTPUT=$(eas build \
+          OUTPUT=$(eas build \
             --platform android \
             --profile tenant \
             --non-interactive \
-            --no-wait 2>&1 | tee /dev/stderr)
-          BUILD_ID=$(echo "$BUILD_OUTPUT" | grep -oP 'builds/\K[0-9a-f-]{36}' | head -1)
+            --no-wait 2>&1)
+          echo "$OUTPUT"
+          BUILD_ID=$(echo "$OUTPUT" | grep -oP 'builds/\K[0-9a-f-]{36}' | head -1)
           echo "build_id=$BUILD_ID" >> "$GITHUB_OUTPUT"
+          echo "Triggered EAS build: $BUILD_ID"
 
-      - name: Wait for build and get APK URL
-        id: apk_url
+      - name: Wait for build and capture APK URL
+        id: apk_result
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           BUILD_ID="${{ steps.eas_build.outputs.build_id }}"
-          echo "Waiting for build $BUILD_ID..."
+          if [ -z "$BUILD_ID" ]; then
+            echo "build_status=failed" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Polling build $BUILD_ID (up to 40 min)..."
           for i in $(seq 1 40); do
             sleep 60
-            STATUS=$(eas build:view "$BUILD_ID" --json 2>/dev/null | python3 -c "import sys,json; b=json.load(sys.stdin); print(b.get('status',''))" 2>/dev/null || echo "")
-            echo "[$i/40] status: $STATUS"
+            RESULT=$(eas build:view "$BUILD_ID" --json 2>/dev/null || echo '{}')
+            STATUS=$(echo "$RESULT" | python3 -c "import sys,json; b=json.load(sys.stdin); print(b.get('status',''))" 2>/dev/null || echo "")
+            echo "[$i/40] $STATUS"
             if [ "$STATUS" = "FINISHED" ]; then
-              APK_URL=$(eas build:view "$BUILD_ID" --json 2>/dev/null | python3 -c "import sys,json; b=json.load(sys.stdin); print(b.get('artifacts',{}).get('buildUrl',''))" 2>/dev/null || echo "")
+              APK_URL=$(echo "$RESULT" | python3 -c "import sys,json; b=json.load(sys.stdin); print(b.get('artifacts',{}).get('buildUrl',''))" 2>/dev/null || echo "")
               echo "apk_url=$APK_URL" >> "$GITHUB_OUTPUT"
               echo "build_status=success" >> "$GITHUB_OUTPUT"
               break
@@ -79,14 +98,22 @@ jobs:
             fi
           done
 
-      - name: Notify API of result
+      - name: Clean up EAS tenant secrets
         if: always()
         env:
-          CALLBACK_URL: ${{ github.event.inputs.callback_url }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          BUILD_STATUS="${{ steps.apk_url.outputs.build_status || 'failed' }}"
-          APK_URL="${{ steps.apk_url.outputs.apk_url || '' }}"
+          eas secret:delete --name TENANT_SLUG --scope project --non-interactive 2>/dev/null || true
+          eas secret:delete --name TENANT_APP_NAME --scope project --non-interactive 2>/dev/null || true
+          eas secret:delete --name TENANT_ICON_URL --scope project --non-interactive 2>/dev/null || true
+
+      - name: Notify API of result
+        if: always()
+        run: |
+          STATUS="${{ steps.apk_result.outputs.build_status || 'failed' }}"
+          APK_URL="${{ steps.apk_result.outputs.apk_url || '' }}"
           BUILD_ID="${{ steps.eas_build.outputs.build_id || '' }}"
-          curl -s -X POST "$CALLBACK_URL" \
+          curl -sf -X POST "${{ github.event.inputs.callback_url }}" \
             -H "Content-Type: application/json" \
-            -d "{\"slug\":\"${{ github.event.inputs.tenant_slug }}\",\"status\":\"$BUILD_STATUS\",\"apk_url\":\"$APK_URL\",\"build_id\":\"$BUILD_ID\"}"
+            -d "{\"slug\":\"${{ github.event.inputs.tenant_slug }}\",\"status\":\"$STATUS\",\"apk_url\":\"$APK_URL\",\"build_id\":\"$BUILD_ID\"}" \
+            || echo "Callback failed (non-fatal)"
