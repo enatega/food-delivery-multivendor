@@ -22,8 +22,8 @@ const getMediaTypeFromUrl = (url) => {
 // across renders (otherwise `|| {}` would break React.memo on every render).
 const EMPTY_CACHE = {}
 
-const BannerContent = ({ item }) => (
-  <View style={styles().container}>
+const BannerContent = ({ item, currentTheme }) => (
+  <View style={styles(currentTheme).container}>
     <TextDefault H2 bolder textColor='#fff' style={{ textTransform: 'capitalize', marginHorizontal: scale(15), marginBottom: scale(8) }}>
       {item?.title}
     </TextDefault>
@@ -45,18 +45,18 @@ const BannerSlide = React.memo(function BannerSlide({ item, width, cached, isAct
   return (
     <TouchableOpacity style={[styles(currentTheme).banner, { width }]} activeOpacity={0.9} onPress={() => onPress(item)}>
       {shouldRenderVideo ? (
-        <VideoBanner style={styles().image} source={videoUri}>
-          <BannerContent item={item} />
+        <VideoBanner style={styles(currentTheme).image} source={videoUri}>
+          <BannerContent item={item} currentTheme={currentTheme} />
         </VideoBanner>
       ) : (
-        <View style={styles().csd}>
+        <View style={styles(currentTheme).csd}>
           {imageUri ? (
-            <ImageBackground source={{ uri: imageUri }} style={styles().imgs1} resizeMode='cover'>
-              <BannerContent item={item} />
+            <ImageBackground source={{ uri: imageUri }} style={styles(currentTheme).imgs1} resizeMode='cover'>
+              <BannerContent item={item} currentTheme={currentTheme} />
             </ImageBackground>
           ) : (
-            <View style={[styles().imgs1, { backgroundColor: '#1f2937' }]}>
-              <BannerContent item={item} />
+            <View style={[styles(currentTheme).imgs1, { backgroundColor: '#1f2937' }]}>
+              <BannerContent item={item} currentTheme={currentTheme} />
             </View>
           )}
         </View>

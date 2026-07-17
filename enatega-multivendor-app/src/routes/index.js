@@ -120,7 +120,6 @@ function MainNavigator() {
         name='ChatWithRider'
         getComponent={() => require('../screens/ChatWithRider/ChatScreen').default}
       />
-      <NavigationStack.Screen name='Collection' component={Collection} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen
         name='MapSection'
         getComponent={() => require('../screens/MapSection').default}
@@ -192,6 +191,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='Cart' component={Cart} options={SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER} />
       <NavigationStack.Screen name='Checkout' component={Checkout} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='Collection' component={Collection} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen
         name='CustomerSupport'
         component={CustomerSupport}

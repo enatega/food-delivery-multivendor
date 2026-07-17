@@ -154,19 +154,22 @@ export default function MapSection() {
                   source={{ uri: item?.image }}
                   style={styles().restImg}
                 />
-                <View style={{ gap: 3 }}>
+                <View style={styles().restContent}>
                   <TextDefault
                     H5
                     bolder
                     textColor={currentTheme.buttonText}
+                    numberOfLines={2}
+                    style={styles().titleText}
                   >
                     {item.name}
                   </TextDefault>
                   <TextDefault
-                    numberOfLines={1}
+                    numberOfLines={2}
                     bold
                     Normal
                     textColor={currentTheme.subText}
+                    style={styles().subtitleText}
                   >
                     {item?.tags?.slice(0, 2)?.join(', ')}
                   </TextDefault>

@@ -40,6 +40,10 @@ export async function getCachedMediaUri(remoteUrl, type = 'file') {
     return localUri
   }
 
+  if (isSignedUrlExpired(remoteUrl)) {
+    return remoteUrl
+  }
+
   const pending = pendingDownloads.get(normalized)
   if (pending) {
     const uri = await pending.promise

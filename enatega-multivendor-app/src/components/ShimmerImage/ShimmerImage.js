@@ -2,15 +2,14 @@ import { LinearGradient } from 'expo-linear-gradient'
 import LottieView from 'lottie-react-native'
 import React, { useEffect, useState, useRef } from 'react'
 import { Animated, StyleSheet, View, Image } from 'react-native'
-import CartItemPlaceholder from '../../assets/images/CartItemPlaceholder.png'
 import { useCachedMediaUri } from '../../utils/mediaCache'
 
 const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) => {
-  // Check if we have a valid image URL
   const hasValidUrl = imageUrl && imageUrl.trim().length > 0
 
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const [renderUri, setRenderUri] = useState(null)
   const shimmerAnimation = useRef(new Animated.Value(0)).current
   const fadeAnim = useRef(new Animated.Value(0)).current
   const imagePath = require('../../assets/SVG/ShiimerImagePlaceholder.json')
@@ -19,6 +18,7 @@ const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) 
   // A refreshed signature keeps the existing local URI. A new path or a
   // recovered download changes it and resets recycled list rows correctly.
   useEffect(() => {
+    setRenderUri(displayUrl)
     setImageLoaded(false)
     setImageError(false)
     fadeAnim.setValue(0)
@@ -72,6 +72,13 @@ const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) 
   }
 
   const handleImageError = () => {
+    if (renderUri?.startsWith('file://') && imageUrl && renderUri !== imageUrl) {
+      setRenderUri(imageUrl)
+      setImageError(false)
+      setImageLoaded(false)
+      return
+    }
+
     setImageError(true)
     setImageLoaded(false)
   }
@@ -129,7 +136,7 @@ const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) 
 
       {/* Main image */}
       <Animated.Image
-        source={{ uri: displayUrl }}
+        source={{ uri: renderUri }}
         onLoad={handleImageLoad}
         // onLoadEnd fires even for cached images where onLoad may be skipped
         // on iOS; this guarantees the image is revealed after navigating back.

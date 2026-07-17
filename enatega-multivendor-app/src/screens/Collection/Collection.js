@@ -49,6 +49,8 @@ const Collection = ({ navigation, route }) => {
   const currentTheme = theme[themeContext.ThemeValue]
   const data = route?.params?.data ?? []
   const collectionType = route?.params?.collectionType ?? 'default'
+  const pageTitle = route?.params?.title || 'Browse Cuisines'
+  const showHeader = route?.params?.showHeader ?? false
   const { t } = useTranslation()
 
   useLayoutEffect(() => {
@@ -66,9 +68,16 @@ const Collection = ({ navigation, route }) => {
   if (!connect) return <ErrorView refetchFunctions={[]} />
   return (
     <View style={styles(currentTheme).container}>
-      <TextDefault bolder H2 isRTL>
-        {t(HEADING[collectionType])}
-      </TextDefault>
+      {showHeader ? (
+        <View style={styles(currentTheme).headingContainer}>
+          <TextDefault bolder H2 isRTL style={styles(currentTheme).headingTitle}>
+            {t(pageTitle)}
+          </TextDefault>
+          <TextDefault bold H5 isRTL textColor={currentTheme.fontNewColor}>
+            {t(HEADING[collectionType] || HEADING.default)}
+          </TextDefault>
+        </View>
+      ) : null}
       <FlatList
         numColumns={2}
         data={data ?? []}

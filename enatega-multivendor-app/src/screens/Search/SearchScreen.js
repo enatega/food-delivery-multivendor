@@ -95,7 +95,7 @@ const SearchScreen = () => {
       shopType: null,
       ip: null
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
 
   const { data: topRatedData } = useQuery(TOP_RATED_VENDORS, {
@@ -103,7 +103,8 @@ const SearchScreen = () => {
       longitude: location.longitude || null,
       latitude: location.latitude || null
     },
-    skip: !location.latitude || !location.longitude
+    skip: !location.latitude || !location.longitude,
+    fetchPolicy: 'cache-and-network'
   })
 
   const { data: recentOrderData } = useQuery(RECENT_ORDER_RESTAURANTS, {
@@ -111,7 +112,8 @@ const SearchScreen = () => {
       longitude: location.longitude || null,
       latitude: location.latitude || null
     },
-    skip: !location.latitude || !location.longitude
+    skip: !location.latitude || !location.longitude,
+    fetchPolicy: 'cache-and-network'
   })
 
   const { data: mostOrderedData } = useQuery(MOST_ORDERED_RESTAURANTS, {
@@ -119,6 +121,7 @@ const SearchScreen = () => {
       longitude: location.longitude || null,
       latitude: location.latitude || null
     },
+    fetchPolicy: 'cache-and-network',
     skip: !location.latitude || !location.longitude
   })
 

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext, useMemo } from 'react'
-import { TouchableOpacity, View, Image, Text, Alert, Platform } from 'react-native'
+import { TouchableOpacity, View, Image, Alert, Platform } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../../utils/scaling'
@@ -20,6 +20,7 @@ import Bicycle from '../../../assets/SVG/Bicycle'
 import { storeSearch } from '../../../utils/recentSearch'
 import Ripple from 'react-native-material-ripple'
 import { useCachedMediaUri } from '../../../utils/mediaCache'
+import { resolveRestaurantImage } from '../../../utils/resolveImageUrl'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -53,9 +54,17 @@ function NewRestaurantCard(props) {
   const isRestaurantOpen = props?.isOpen
   const isAvailable = props?.isAvailable
   const shopType = props?.shopType
+  const isDarkMode = themeContext.ThemeValue === 'Dark'
+  const shopLabel = shopType === 'grocery' ? t('Store') : t('Restaurant')
+  const categoryLabel = props?.categories
+    ? props.categories
+      .map((category) => category?.title)
+      .filter(Boolean)
+      .join(' • ')
+    : props?.tags?.join(' • ')
 
   const isRestaurantClosed = !isRestaurantOpen || !isAvailable
-  const imageUri = useCachedMediaUri(props?.image, 'image')
+  const imageUri = useCachedMediaUri(resolveRestaurantImage(props), 'image')
 
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
@@ -121,7 +130,7 @@ function NewRestaurantCard(props) {
         ]} 
         activeOpacity={0.8} 
         onPress={handleRestaurantClick}
-        rippleContainerBorderRadius={15}
+        rippleContainerBorderRadius={22}
         rippleDuration={Platform.OS === 'android' ? 300 : 400}
         rippleSize={Platform.OS === 'android' ? 150 : 200}
         disabled={false}
@@ -133,6 +142,13 @@ function NewRestaurantCard(props) {
               source={{ uri: imageUri }}
               style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]}
             />
+            <View style={styles(currentTheme).badgeRow}>
+              <View style={styles(currentTheme).typeBadge}>
+                <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.fontFourthColor} small bolder>
+                  {shopLabel}
+                </TextDefault>
+              </View>
+            </View>
             {isRestaurantClosed && (
               <View style={styles(currentTheme).closedOverlay}>
                 <TextDefault H4 textColor={currentTheme.white} bold>
@@ -142,36 +158,44 @@ function NewRestaurantCard(props) {
             )}
           </View>
           <View style={styles().descriptionContainer}>
-            <View style={styles(currentTheme).aboutRestaurant}>
-              <TextDefault H4 numberOfLines={1} textColor={currentTheme.fontThirdColor} bolder>
+            <View style={styles(currentTheme).titleRow}>
+              <TextDefault H4 numberOfLines={1} textColor={currentTheme.fontFourthColor} bolder style={styles(currentTheme).titleText}>
                 {props?.name}
               </TextDefault>
+              <View style={styles(currentTheme).ratingBadge}>
+                <FontAwesome5 name='star' size={12} color={currentTheme.orange} />
+                <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.fontFourthColor} small bolder>
+                  {props?.reviewAverage}
+                </TextDefault>
+              </View>
             </View>
-            <TextDefault textColor={currentTheme.gray600} numberOfLines={1} bold Normal style={styles(currentTheme).offerCategoty}>
-              {props?.categories ? props?.categories.map((category) => category?.title + ', ') : props?.tags?.join(',')}
+            <TextDefault
+              textColor={currentTheme.gray600}
+              numberOfLines={1}
+              Normal
+              style={styles(currentTheme).offerCategoty}
+            >
+              {categoryLabel}
             </TextDefault>
             <View style={styles().border} />
-            <View style={styles(currentTheme).deliveryInfo}>
-              <View style={styles(currentTheme).deliveryTime}>
-                <AntDesign name='clockcircleo' size={14} color={currentTheme.editProfileButton} />
-                <TextDefault textColor={currentTheme.editProfileButton} numberOfLines={1} bold Normal>
+            <View style={styles(currentTheme).metaRow}>
+              <View style={styles(currentTheme).metaPill}>
+                <AntDesign name='clockcircleo' size={13} color={currentTheme.editProfileButton} />
+                <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.editProfileButton} numberOfLines={1} small bolder>
                   {props?.deliveryTime + ' '}
                   {t('min')}
                 </TextDefault>
               </View>
-              <View style={styles(currentTheme).deliveryTime}>
+              <View style={styles(currentTheme).metaPill}>
                 <Bicycle color={currentTheme.newFontcolor} />
-                <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} bold Normal>
+                <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.newFontcolor} numberOfLines={1} small bolder>
                   {configuration.currencySymbol} {configuration.deliveryRate}
                 </TextDefault>
               </View>
-              <View style={styles(currentTheme).aboutRestaurant}>
-                <FontAwesome5 name='star' size={14} color={currentTheme.newFontcolor} />
-                <TextDefault textColor={currentTheme.newFontcolor} bold Normal>
-                  {props?.reviewAverage}
-                </TextDefault>
-                <TextDefault textColor={currentTheme.newFontcolor} bold Normal>
-                  ({props?.reviewCount})
+              <View style={styles(currentTheme).metaPill}>
+                <FontAwesome5 name='star' size={12} color={currentTheme.orange} />
+                <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.newFontcolor} numberOfLines={1} small bolder>
+                  {props?.reviewCount}
                 </TextDefault>
               </View>
             </View>

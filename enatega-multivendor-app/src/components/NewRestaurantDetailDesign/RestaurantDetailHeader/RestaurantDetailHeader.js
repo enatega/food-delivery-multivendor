@@ -53,6 +53,8 @@ function RestaurantDetailHeader({
 
   const isOpen = restaurant?.isAvailable
 
+  console.log('RestaurantDetailHeader render', restaurant)
+
   return (
     <View style={styles(currentTheme).mainContainer}>
       <View style={styles(currentTheme).imageContainer}>

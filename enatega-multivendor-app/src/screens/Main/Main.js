@@ -94,7 +94,7 @@ function Main(props) {
       shopType: null,
       ip: null
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
 
   // A transient network failure (e.g. "Network request failed") surfaces as a
@@ -134,8 +134,12 @@ function Main(props) {
     fetchPolicy: 'cache-first',
     nextFetchPolicy: 'cache-first'
   })
-  const { data: allCuisines } = useQuery(GET_CUISINES)
-  const { data: allShopTypes } = useQuery(FETCH_ALL_SHOPTYPES)
+  const { data: allCuisines } = useQuery(GET_CUISINES, {
+    fetchPolicy: 'cache-and-network'
+  })
+  const { data: allShopTypes } = useQuery(FETCH_ALL_SHOPTYPES, {
+    fetchPolicy: 'cache-and-network'
+  })
   const { orderLoading, orderError, orderData } = useHomeRestaurants()
 
   function onError(error) {
@@ -470,12 +474,12 @@ function Main(props) {
                   ) : restaurantorders?.length > 0 ? (
                     <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}>
                       <Banner banners={banners?.banners} />
-                      <View style={{ gap: 16 }}>
+                      <View style={{ gap: 12 }}>
                         <View>{isLoggedIn && sortedRecentOrderRestaurants?.length > 0 && <>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortedRecentOrderRestaurants} loading={orderLoading} error={orderError} title={'Order it again'} queryType='orderAgain' />}</>}</View>
 
                         <View>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortedMostOrderedRestaurants} loading={orderLoading} error={orderError} title={t('Popular right now')} queryType='topPicks' icon='trending' />}</View>
 
-                        <View style={{ padding: 15, gap: scale(8) }}>
+                        <View style={{ paddingHorizontal: 12, paddingTop: 4, gap: scale(8) }}>
                           <TextDefault bolder H4 isRTL>
                             {t('ShopTypes')}
                           </TextDefault>
@@ -493,7 +497,7 @@ function Main(props) {
                           />
                         </View                                         >
 
-                        <View style={{ padding: 15, gap: scale(8) }}>
+                        <View style={{ paddingHorizontal: 12, paddingTop: 2, gap: scale(8) }}>
                           <TextDefault bolder H4 isRTL>
                             {t('I feel like eating...')}
                           </TextDefault>

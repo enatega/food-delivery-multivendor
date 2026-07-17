@@ -22,7 +22,6 @@ import SignUpSvg from '../../../assets/SVG/imageComponents/SignUpSvg'
 
 function PhoneOtp(props) {
   const {
-    phone,
     otp,
     setOtp,
     otpError,
@@ -32,7 +31,9 @@ function PhoneOtp(props) {
     onCodeFilled,
     resendOtp,
     currentTheme,
-    themeContext
+    themeContext,
+    demoOtp,
+    isDemoOtpEnabled
   } = usePhoneOtp()
 
   const { t } = useTranslation()
@@ -85,15 +86,18 @@ function PhoneOtp(props) {
                 bold
                 textColor={currentTheme.color6}
                 isRTL
-                // style={{
-                //   paddingBottom: scale(5)
-                // }}
               >
                 {t('enterOtp')}
               </TextDefault>
-              {/* <TextDefault H5 bold textColor={currentTheme.fontfourthColor}>
-                {phone}
-              </TextDefault> */}
+              {isDemoOtpEnabled && (
+                <TextDefault
+                  H5
+                  textColor={currentTheme.color6}
+                  style={{ ...alignment.MTsmall, lineHeight: scale(20) }}
+                >
+                  {`Demo login mode is on. We're using test OTP ${demoOtp} and verifying it automatically for you.`}
+                </TextDefault>
+              )}
             </View>
             <View>
               <OTPInputView
@@ -106,13 +110,13 @@ function PhoneOtp(props) {
                 codeInputHighlightStyle={{
                   borderColor: currentTheme.iconColorPink
                 }}
-                autoFocusOnLoad
+                autoFocusOnLoad={!isDemoOtpEnabled}
                 code={otp}
                 onCodeChanged={(code) => setOtp(code)}
                 onCodeFilled={(code) => {
                   onCodeFilled(code)
                 }}
-                editable
+                editable={!isDemoOtpEnabled}
               />
               {otpError && (
                 <TextDefault
@@ -135,47 +139,49 @@ function PhoneOtp(props) {
                 />
               ))}
           </View>
-          <View style={styles().btnContainer}>
-            <View style={alignment.MBxSmall}>
-              <TextDefault
-                center
-                H4
-                bold
-                textColor={currentTheme.fontNewColor}
-                style={alignment.MTsmall}
-              >
-                {seconds !== 0 ? `${t('retry')} ${seconds}s` : ''}
-              </TextDefault>
-            </View>
-            <View>
-              {loading || updateUserLoading ? (
-                <Spinner
-                  backColor={currentTheme.color3}
-                  spinnerColor={currentTheme.color3}
-                  size='small'
-                />
-              ) : (
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={[
-                    styles(currentTheme).btn,
-                    seconds !== 0 && styles(currentTheme).disabledBtn
-                  ]}
-                  disabled={seconds !== 0}
-                  onPress={() => resendOtp()}
+          {!isDemoOtpEnabled && (
+            <View style={styles().btnContainer}>
+              <View style={alignment.MBxSmall}>
+                <TextDefault
+                  center
+                  H4
+                  bold
+                  textColor={currentTheme.fontNewColor}
+                  style={alignment.MTsmall}
                 >
-                  <TextDefault
-                    H4
-                    textColor={currentTheme.black}
-                    style={alignment.MLsmall}
-                    bold
+                  {seconds !== 0 ? `${t('retry')} ${seconds}s` : ''}
+                </TextDefault>
+              </View>
+              <View>
+                {loading || updateUserLoading ? (
+                  <Spinner
+                    backColor={currentTheme.color3}
+                    spinnerColor={currentTheme.color3}
+                    size='small'
+                  />
+                ) : (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={[
+                      styles(currentTheme).btn,
+                      seconds !== 0 && styles(currentTheme).disabledBtn
+                    ]}
+                    disabled={seconds !== 0}
+                    onPress={() => resendOtp()}
                   >
-                    {t('resendOtpBtn')}
-                  </TextDefault>
-                </TouchableOpacity>
-              )}
+                    <TextDefault
+                      H4
+                      textColor={currentTheme.black}
+                      style={alignment.MLsmall}
+                      bold
+                    >
+                      {t('resendOtpBtn')}
+                    </TextDefault>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
-          </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

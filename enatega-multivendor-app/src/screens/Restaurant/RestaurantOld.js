@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import { View, TouchableOpacity, Alert, StatusBar, Platform, Image, Dimensions, SectionList, Text } from 'react-native'
+import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, SectionList, Text } from 'react-native'
 import Animated, { Extrapolate, interpolateNode, concat, useValue, EasingNode, timing } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
@@ -18,6 +18,7 @@ import { alignment } from '../../utils/alignment'
 import TextError from '../../components/Text/TextError/TextError'
 import { MaterialIcons, Ionicons } from '@expo/vector-icons'
 import analytics from '../../utils/analytics'
+import ShimmerImage from '../../components/ShimmerImage/ShimmerImage'
 
 const { height } = Dimensions.get('screen')
 
@@ -483,16 +484,16 @@ function Restaurant(props) {
                     }}
                   >
                     <View style={styles(currentTheme).deal}>
-                      {item.image ? (
-                        <Image
-                          style={{
-                            height: scale(60),
-                            width: scale(60),
-                            borderRadius: 30
-                          }}
-                          source={{ uri: item?.image }}
-                        />
-                      ) : null}
+                      <ShimmerImage
+                        imageUrl={item?.image}
+                        style={{
+                          height: scale(60),
+                          width: scale(60),
+                          borderRadius: 30
+                        }}
+                        resizeMode='cover'
+                        defaultSource={require('../../assets/images/food_placeholder.png')}
+                      />
                       <View style={styles(currentTheme).flex}>
                         <View style={styles(currentTheme).dealDescription}>
                           <TextDefault textColor={currentTheme.fontMainColor} style={styles(currentTheme).headerText} numberOfLines={1} bolder>

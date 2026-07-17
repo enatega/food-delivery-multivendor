@@ -1,11 +1,16 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
-import React, { useState, useContext, useEffect, useRef, useMemo, useCallback } from 'react'
-import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, SectionList, ActivityIndicator } from 'react-native'
-import Animated, { Extrapolation, interpolate, useSharedValue, Easing as EasingNode, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
+import React, { useState, useContext, useEffect, useRef, useMemo, useCallback, useDeferredValue } from 'react'
+import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, FlatList, Pressable } from 'react-native'
+import Animated, { Extrapolation, interpolate, runOnJS, useSharedValue, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
-import ImageHeader from '../../components/Restaurant/ImageHeader'
+import { gql, useApolloClient, useQuery } from '@apollo/client'
+import { MaterialIcons } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
+import ImageHeader, { CategoryTabsRow } from '../../components/Restaurant/ImageHeader'
+import RestaurantHero from '../../components/Restaurant/RestaurantHero'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
+import TextError from '../../components/Text/TextError/TextError'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
 import { useRestaurant } from '../../ui/hooks'
@@ -13,34 +18,36 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../utils/scaling'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
-import { DAYS } from '../../utils/enums'
 import { alignment } from '../../utils/alignment'
-import ErrorView from '../../components/ErrorView/ErrorView'
-import { MaterialIcons } from '@expo/vector-icons'
 import analytics from '../../utils/analytics'
-import { gql, useApolloClient, useQuery } from '@apollo/client'
 import { popularItems, food } from '../../apollo/queries'
-
-import { useTranslation } from 'react-i18next'
 import ItemCard from '../../components/ItemCards/ItemCards'
-import { ScrollView } from 'react-native-gesture-handler'
 import { IMAGE_LINK } from '../../utils/constants'
 import PopularIcon from '../../assets/SVG/popular'
-
 import { escapeRegExp } from '../../utils/regex'
-import { isOpen } from '../../utils/customFunctions'
-import CachedImage from '../../components/CachedImage'
+import { calculateDistance, isOpen } from '../../utils/customFunctions'
+import { LocationContext } from '../../context/Location'
+import ShimmerImage from '../../components/ShimmerImage/ShimmerImage'
+import { resolveRestaurantImage as resolveResolvedRestaurantImage } from '../../utils/resolveImageUrl'
 
 const { height } = Dimensions.get('screen')
 
-// Animated Section List component
-const AnimatedSectionList = Animated.createAnimatedComponent(SectionList)
-const TOP_BAR_HEIGHT = height * 0.05
-const CATEGORY_BAR_HEIGHT = scale(56)
-const HEADER_MAX_HEIGHT = Platform.OS === 'android' ? height * 0.65 : height * 0.61
-const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT + CATEGORY_BAR_HEIGHT
-const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-const HALF_HEADER_SCROLL = HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList)
+const HERO_FADE_DISTANCE = height * 0.32
+const CATEGORY_RAIL_HEIGHT = scale(56)
+const LIST_BOTTOM_PADDING = scale(120)
+const POPULAR_ROW_LIMIT = 4
+
+function resolveRestaurantImage(restaurant = {}, propsData = {}) {
+  return resolveResolvedRestaurantImage({
+    imageWebp: propsData?.imageWebp || restaurant?.imageWebp,
+    image: propsData?.image || propsData?.restaurantImage || restaurant?.image || restaurant?.restaurantImage,
+    logoWebp: propsData?.logoWebp || restaurant?.logoWebp,
+    logo: propsData?.logo || restaurant?.logo,
+    imageAvif: propsData?.imageAvif || restaurant?.imageAvif,
+    logoAvif: propsData?.logoAvif || restaurant?.logoAvif
+  }) || IMAGE_LINK
+}
 
 const POPULAR_ITEMS = gql`
   ${popularItems}
@@ -49,746 +56,799 @@ const FOOD = gql`
   ${food}
 `
 
-// const concat = (...args) => args.join('')
+function wrapContentAfterWords(content = '', numWords = 5) {
+  const words = content.split(' ')
+  const wrappedContent = []
+
+  for (let i = 0; i < words.length; i += numWords) {
+    wrappedContent.push(words.slice(i, i + numWords).join(' '))
+  }
+
+  return wrappedContent.join('\n')
+}
+
 function Restaurant(props) {
   const { _id: restaurantId } = props.route.params
   const Analytics = analytics()
   const { t, i18n } = useTranslation()
   const insets = useSafeAreaInsets()
   const scrollRef = useRef(null)
-  const flatListRef = useRef(null)
+  const sectionOffsetsRef = useRef(new Map())
+  const pendingCategoryRef = useRef(null)
+  const pendingCategoryTimerRef = useRef(null)
   const navigation = useNavigation()
   const route = useRoute()
   const propsData = route.params
-  const animation = useSharedValue(0)
-  const translationY = useSharedValue(0)
-  const circle = useSharedValue(0)
+  const scrollY = useSharedValue(0)
   const themeContext = useContext(ThemeContext)
-
-  // Memoized so its reference is stable across renders — this keeps the cached
-  // stylesheet (keyed by this object) hot instead of rebuilding it every render.
   const currentTheme = useMemo(
     () => ({
       isRTL: i18n.dir() === 'rtl',
       ...theme[themeContext.ThemeValue]
     }),
-    [i18n.language, themeContext.ThemeValue]
+    [i18n, themeContext.ThemeValue]
   )
   const configuration = useContext(ConfigurationContext)
-  const [selectedLabel, selectedLabelSetter] = useState(0)
-  const [buttonClicked, buttonClickedSetter] = useState(false)
+  const { location } = useContext(LocationContext)
+  const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
   const [searchOpen, setSearchOpen] = useState(false)
   const [search, setSearch] = useState('')
-  const [filterData, setFilterData] = useState([])
-  const [showSearchResults, setShowSearchResults] = useState(false)
-  // Item whose "+" is showing a loader while ItemDetail opens.
-  const [loadingItemId, setLoadingItemId] = useState(null)
+  const deferredSearch = useDeferredValue(search)
   const { restaurant: restaurantCart, setCartRestaurant, cartCount, addCartItem, addQuantity, clearCart, checkItemCart } = useContext(UserContext)
   const { data, refetch, networkStatus, loading, error } = useRestaurant(propsData._id)
-
   const client = useApolloClient()
-  const { data: popularItems } = useQuery(POPULAR_ITEMS, {
+  const { data: popularItemsData } = useQuery(POPULAR_ITEMS, {
     variables: { restaurantId }
   })
 
-  const fetchFoodDetails = (itemId) => {
-    return client.readFragment({ id: `Food:${itemId}`, fragment: FOOD })
-  }
+  const openSearch = useCallback(() => {
+    setSearchOpen(true)
+  }, [])
 
-  // Memoized so the popular list (and the section array built from it) keeps a
-  // stable identity across renders instead of re-reading fragments every time.
-  const dataList = useMemo(
-    () => popularItems?.popularItems?.map((item) => fetchFoodDetails(item?.id)).filter(Boolean) ?? [],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [popularItems]
-  )
-
-  // Category sections, memoized so the SectionList receives a stable `sections`
-  // reference and only rebuilds when the underlying data actually changes.
-  const deals = useMemo(() => {
-    const cats = data?.restaurant?.categories
-    if (!cats) return []
-    const allDeals = cats.filter((cat) => cat?.foods?.length)
-    return allDeals.map((c, index) => ({
-      ...c,
-      data: c.foods,
-      index: dataList.length > 0 ? index + 1 : index
-    }))
-  }, [data?.restaurant, dataList])
-
-  const updatedDeals = useMemo(
-    () =>
-      dataList.length > 0
-        ? [{ title: 'Popular', id: 'popular', data: dataList.slice(0, 4), index: 0 }, ...deals]
-        : deals,
-    [deals, dataList]
-  )
-
-  const searchHandler = () => {
-    setSearchOpen(!searchOpen)
-    setShowSearchResults(!showSearchResults)
-  }
-
-  const searchPopupHandler = () => {
-    setSearchOpen(!searchOpen)
+  const closeSearch = useCallback(() => {
+    setSearchOpen(false)
     setSearch('')
-    translationY.value = 0
-  }
-
-  useEffect(() => {
-    if (search === '') {
-      // setFilterData([])
-      const filteredData = []
-      deals?.forEach((category) => {
-        category?.data?.forEach((deals) => {
-          filteredData.push(deals)
-        })
-      })
-      setFilterData(filteredData)
-      setShowSearchResults(false)
-    } else if (deals) {
-      const escapedSearchText = escapeRegExp(search)
-      const regex = new RegExp(escapedSearchText, 'i')
-      const filteredData = []
-      deals.forEach((category) => {
-        category?.data?.forEach((deals) => {
-          const title = deals.title.search(regex)
-          if (title < 0) {
-            const description = deals.description.search(regex)
-            if (description > 0) {
-              filteredData.push(deals)
-            }
-          } else {
-            filteredData.push(deals)
-          }
-        })
-      })
-      setFilterData(filteredData)
-      setShowSearchResults(true)
-    }
-  }, [search, searchOpen])
+  }, [])
 
   useFocusEffect(
     useCallback(() => {
-      // Reset any item loader once we're back on this screen.
-      setLoadingItemId(null)
       if (Platform.OS === 'android') {
         StatusBar.setBackgroundColor(currentTheme.menuBar)
       }
       StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
     }, [currentTheme.menuBar, themeContext.ThemeValue])
   )
+
   useEffect(() => {
-    async function Track() {
+    async function track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_RESTAURANTS)
     }
-    Track()
-  }, [])
+    track()
+  }, [Analytics])
+
+  useEffect(
+    () => () => {
+      if (pendingCategoryTimerRef.current) {
+        clearTimeout(pendingCategoryTimerRef.current)
+      }
+    },
+    []
+  )
+
+  const restaurant = data?.restaurant
+
+  const syncActiveCategoryFromOffset = useCallback(
+    (offsetY) => {
+      if (pendingCategoryRef.current != null || categories.length === 0) return
+
+      const threshold = offsetY + CATEGORY_RAIL_HEIGHT + scale(8)
+      let nextCategoryIndex = categories[0].categoryIndex
+
+      categories.forEach((category) => {
+        const sectionOffset = sectionOffsetsRef.current.get(category.categoryIndex)
+        if (sectionOffset != null && sectionOffset <= threshold) {
+          nextCategoryIndex = category.categoryIndex
+        }
+      })
+
+      setActiveCategoryIndex((currentValue) => (currentValue === nextCategoryIndex ? currentValue : nextCategoryIndex))
+    },
+    [categories]
+  )
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y
+    runOnJS(syncActiveCategoryFromOffset)(event.contentOffset.y)
+  })
+
+  const dataList = useMemo(() => {
+    const popularRows = popularItemsData?.popularItems ?? []
+    return popularRows.map((item) => client.readFragment({ id: `Food:${item?.id}`, fragment: FOOD })).filter(Boolean)
+  }, [client, popularItemsData])
+
+  const allDeals = useMemo(() => restaurant?.categories?.filter((category) => category?.foods?.length) ?? [], [restaurant])
+
+  const deals = useMemo(
+    () =>
+      allDeals.map((category, index) => ({
+        ...category,
+        data: category.foods,
+        index: dataList.length > 0 ? index + 1 : index
+      })),
+    [allDeals, dataList.length]
+  )
+
+  const updatedDeals = useMemo(() => {
+    if (dataList.length > 0) {
+      return [
+        {
+          title: 'Popular',
+          id: `popular-${restaurantId}`,
+          data: dataList.slice(0, POPULAR_ROW_LIMIT),
+          index: 0
+        },
+        ...deals
+      ]
+    }
+
+    return deals
+  }, [dataList, deals, restaurantId])
+
+  const categories = useMemo(
+    () =>
+      updatedDeals.map((section) => ({
+        key: `category-${section.index}`,
+        title: section.title,
+        categoryIndex: section.index
+      })),
+    [updatedDeals]
+  )
+
   useEffect(() => {
-    if (data && data?.restaurant && (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant))) {
+    if (categories.length === 0) return
+
+    sectionOffsetsRef.current = new Map()
+    setActiveCategoryIndex((currentValue) => {
+      const hasExistingCategory = categories.some((item) => item.categoryIndex === currentValue)
+      return hasExistingCategory ? currentValue : categories[0].categoryIndex
+    })
+  }, [categories])
+
+  const distance = useMemo(
+    () => calculateDistance(restaurant?.location?.coordinates?.[1], restaurant?.location?.coordinates?.[0], location?.latitude, location?.longitude),
+    [location?.latitude, location?.longitude, restaurant?.location?.coordinates]
+  )
+
+  const displayedDeliveryMinutes = useMemo(
+    () => restaurant?.estimatedDeliveryMinutes ?? restaurant?.deliveryTime ?? '...',
+    [restaurant]
+  )
+
+  const aboutObject = useMemo(
+    () => ({
+      latitude: restaurant ? restaurant.location.coordinates[1] : '',
+      longitude: restaurant ? restaurant.location.coordinates[0] : '',
+      address: restaurant ? restaurant.address : '',
+      restaurantId: propsData?._id,
+      restaurantName: propsData?.name ?? restaurant?.name,
+      restaurantImage: resolveRestaurantImage(restaurant, propsData),
+      restaurantLogo: restaurant?.logo ?? propsData?.logo ?? '',
+      restaurantCuisines: restaurant?.cuisines ?? [],
+      restaurantTax: propsData?.tax ?? restaurant?.tax,
+      restaurantMinOrder: propsData?.minimumOrder ?? restaurant?.minimumOrder,
+      deliveryTime: restaurant?.deliveryTime ?? '...',
+      minimumOrder: restaurant?.minimumOrder ?? '...',
+      average: restaurant?.reviewData?.ratings ?? '...',
+      total: restaurant?.reviewData?.total ?? '...',
+      reviews: restaurant?.reviewData?.reviews ?? '...',
+      isAvailable: restaurant?.isAvailable ?? true,
+      openingTimes: restaurant?.openingTimes ?? [],
+      phone: restaurant?.phone ?? '',
+      restaurantUrl: restaurant?.restaurantUrl ?? '',
+      IsOpen: isOpen(restaurant ?? ''),
+      reviewsCount: restaurant?.reviewCount ?? '...',
+      _id: propsData?._id
+    }),
+    [propsData, restaurant]
+  )
+
+  useEffect(() => {
+    if (restaurant && (!restaurant?.isAvailable || !isOpen(restaurant))) {
       Alert.alert(
         '',
         t('Restaurant Closed at the moment'),
         [
           {
             text: t('Go back to restaurants'),
-            onPress: () => {
-              navigation.goBack()
-            },
+            onPress: () => navigation.goBack(),
             style: 'cancel'
           },
           {
             text: t('See Menu'),
-            onPress: () => console.log('see menu')
+            onPress: () => {}
           }
         ],
         { cancelable: false }
       )
     }
-  }, [data])
+  }, [navigation, restaurant, t])
 
-  // Fixed zIndexAnimation with integer values
-  const zIndexAnimation = useAnimatedStyle(() => {
-    const zIndex = interpolate(translationY.value, [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2], [-1, 1, 99], Extrapolation.CLAMP)
-    return {
-      zIndex: Math.round(zIndex) // Ensure integer values
-    }
-  })
-
-  const onPressItem = async (food) => {
-    // Ignore repeat/queued taps: once we navigate away this screen loses focus,
-    // so a second tap that fires while the JS thread is busy won't double-push.
-    if (!navigation.isFocused()) return
-    if (!data?.restaurant?.isAvailable || !isOpen(data?.restaurant)) {
-      Alert.alert(
-        '',
-        t('restaurantClosed'),
-        [
-          {
-            text: t('backToRestaurants'),
-            onPress: () => {
-              navigation.goBack()
-            },
-            style: 'cancel'
-          },
-          {
-            text: t('seeMenu'),
-            onPress: () => console.log('see menu')
-          }
-        ],
-        { cancelable: false }
-      )
-      return
-    }
-    if (!restaurantCart || food.restaurant === restaurantCart) {
-      await addToCart(food, food.restaurant !== restaurantCart)
-    } else if (food.restaurant !== restaurantCart) {
-      Alert.alert(
-        '',
-        t('clearCartText'),
-        [
-          {
-            text: t('Cancel'),
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel'
-          },
-          {
-            text: t('okText'),
-            onPress: async () => {
-              await addToCart(food, true)
-            }
-          }
-        ],
-        { cancelable: false }
-      )
-    }
-  }
-
-  function wrapContentAfterWords(content, numWords) {
-    const words = content.split(' ')
-    const wrappedContent = []
-
-    for (let i = 0; i < words.length; i += numWords) {
-      wrappedContent.push(words.slice(i, i + numWords).join(' '))
-    }
-
-    return wrappedContent.join('\n')
-  }
-
-  // navigate every item to itemDetails screen
-  const addToCart = async (food, clearFlag) => {
-    setLoadingItemId(food?._id)
-    if (clearFlag) await clearCart()
-
-    navigation.navigate('ItemDetail', {
-      food,
-      addons: restaurant?.addons || [],
-      options: restaurant?.options || [],
-      restaurant: restaurant?._id
+  const searchResults = useMemo(() => {
+    const sourceRows = []
+    deals.forEach((category) => {
+      category.data.forEach((item) => {
+        sourceRows.push(item)
+      })
     })
-  }
 
-  function tagCart(itemId) {
-    if (checkItemCart) {
-      const cartValue = checkItemCart(itemId)
-      if (cartValue.exist) {
-        return (
-          <>
-            <View style={styles(currentTheme).triangleCorner} />
-            <TextDefault style={styles(currentTheme).tagText} numberOfLines={1} textColor={currentTheme.fontWhite} bold small center>
-              {cartValue.quantity}
-            </TextDefault>
-          </>
-        )
+    if (!deferredSearch.trim()) return sourceRows
+
+    const regex = new RegExp(escapeRegExp(deferredSearch.trim()), 'i')
+    return sourceRows.filter((item) => regex.test(item?.title ?? '') || regex.test(item?.description ?? ''))
+  }, [deals, deferredSearch])
+
+  const flatRows = useMemo(() => {
+    const rows = [{ key: 'hero', type: 'hero' }, { key: 'category-tabs', type: 'category-tabs' }]
+
+    updatedDeals.forEach((section) => {
+      rows.push({
+        key: `anchor-${section.index}`,
+        type: 'section-anchor',
+        title: section.title,
+        categoryIndex: section.index
+      })
+
+      if (section.title === 'Popular') {
+        if (section.data?.length) {
+          rows.push({
+            key: `popular-grid-${section.index}`,
+            type: 'popular-grid',
+            title: section.title,
+            categoryIndex: section.index,
+            items: section.data
+          })
+        }
+        return
       }
-    }
-    return null
-  }
 
+      rows.push({
+        key: `section-title-${section.index}`,
+        type: 'section-title',
+        title: section.title,
+        categoryIndex: section.index
+      })
+
+      section.data.forEach((item, itemIndex) => {
+        rows.push({
+          key: `food-${section.index}-${item?._id || item?.id || itemIndex}`,
+          type: 'food-item',
+          categoryIndex: section.index,
+          item
+        })
+      })
+    })
+
+    return rows
+  }, [categories.length, updatedDeals])
+
+  const categoryToRowIndexMap = useMemo(() => {
+    const indexMap = new Map()
+
+    flatRows.forEach((row, index) => {
+      if (row.categoryIndex != null && row.type !== 'hero' && row.type !== 'category-tabs' && row.type !== 'section-anchor' && !indexMap.has(row.categoryIndex)) {
+        indexMap.set(row.categoryIndex, index)
+      }
+    })
+
+    return indexMap
+  }, [flatRows])
+
+  const circleSize = scale(18)
+  const radiusSize = scale(9)
   const scaleValue = useSharedValue(1)
 
   const scaleStyles = useAnimatedStyle(() => ({
-    transform: [{ scale: Math.max(0.1, scaleValue.value) }] // Ensure minimum scale
+    transform: [{ scale: Math.max(0.1, scaleValue.value) }]
   }))
 
-  // Fixed button animation with safety checks
-  function animate() {
+  const animate = useCallback(() => {
     scaleValue.value = withRepeat(withTiming(1.5, { duration: 250 }), 2, true, () => {
-      // Ensure value returns to 1 after animation
       scaleValue.value = 1
     })
-  }
+  }, [scaleValue])
 
-  const config = (to) => ({
-    duration: 250,
-    toValue: to,
-    easing: EasingNode.inOut(EasingNode.ease)
-  })
-
-  const scrollToSection = (index) => {
-    if (scrollRef.current != null) {
-      scrollRef.current.scrollToLocation({
-        animated: true,
-        sectionIndex: index,
-        itemIndex: 0,
-        viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
-        viewPosition: 0
-      })
-    }
-  }
-
-  const onScrollEndSnapToEdge = (event) => {
-    event.persist()
-    const y = event.nativeEvent.contentOffset.y
-
-    if (y > 0 && y < HALF_HEADER_SCROLL / 2) {
-      if (scrollRef.current) {
-        withTiming(translationY.value, config(0), (finished) => {
-          if (finished) {
-            scrollRef.current.scrollToLocation({
-              animated: false,
-              sectionIndex: 0,
-              itemIndex: 0,
-              viewOffset: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT,
-              viewPosition: 0
-            })
-          }
-        })
+  const onPressItem = useCallback(
+    async (foodItem) => {
+      if (!restaurant?.isAvailable || !isOpen(restaurant)) {
+        Alert.alert(
+          '',
+          t('restaurantClosed'),
+          [
+            {
+              text: t('backToRestaurants'),
+              onPress: () => navigation.goBack(),
+              style: 'cancel'
+            },
+            {
+              text: t('seeMenu'),
+              onPress: () => {}
+            }
+          ],
+          { cancelable: false }
+        )
+        return
       }
-    } else if (HALF_HEADER_SCROLL / 2 <= y && y < HALF_HEADER_SCROLL) {
-      if (scrollRef.current) {
-        withTiming(translationY.value, config(SCROLL_RANGE), (finished) => {
-          if (finished) {
-            scrollRef.current.scrollToLocation({
-              animated: false,
-              sectionIndex: 0,
-              itemIndex: 0,
-              viewOffset: -(HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT),
-              viewPosition: 0
-            })
-          }
-        })
+
+      if (!restaurantCart || foodItem.restaurant === restaurantCart) {
+        await addToCart(foodItem, foodItem.restaurant !== restaurantCart)
+      } else {
+        Alert.alert(
+          '',
+          t('clearCartText'),
+          [
+            {
+              text: t('Cancel'),
+              onPress: () => {},
+              style: 'cancel'
+            },
+            {
+              text: t('okText'),
+              onPress: async () => {
+                await addToCart(foodItem, true)
+              }
+            }
+          ],
+          { cancelable: false }
+        )
       }
-    }
-    buttonClickedSetter(false)
-  }
+    },
+    [navigation, restaurant, restaurantCart, t]
+  )
 
-  // Fixed scroll handler with safety checks
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-    const offsetY = event.contentOffset.y
-    // Clamp the value to prevent extremely small or negative values
-    translationY.value = Math.max(0, offsetY)
-  })
+  const addToCart = useCallback(
+    async (foodItem, clearFlag) => {
+      if (foodItem.variations.length === 1 && foodItem.variations[0].addons.length === 0) {
+        await setCartRestaurant(foodItem.restaurant)
+        const result = checkItemCart(foodItem._id)
+        if (result.exist) await addQuantity(result.key)
+        else await addCartItem(foodItem._id, foodItem.variations[0]._id, 1, [], clearFlag)
+        animate()
+        return
+      }
 
-  function changeIndex(index) {
-    if (selectedLabel !== index) {
-      selectedLabelSetter(index)
-      buttonClickedSetter(true)
-      scrollToSection(index)
-      scrollToNavbar(index)
-    }
-  }
-  function scrollToNavbar(value = 0) {
-    if (flatListRef.current != null) {
-      flatListRef.current.scrollToIndex({
-        animated: true,
-        index: value,
-        viewPosition: 0.5
+      if (clearFlag) await clearCart()
+
+      navigation.navigate('ItemDetail', {
+        food: foodItem,
+        addons: restaurant.addons,
+        options: restaurant.options,
+        restaurant: restaurant._id
       })
-    }
-  }
 
-  function onViewableItemsChanged({ viewableItems }) {
-    buttonClickedSetter(false)
-    if (viewableItems.length === 0) return
-    if (selectedLabel !== viewableItems[0].section.index && buttonClicked === false) {
-      selectedLabelSetter(viewableItems[0].section.index)
-      scrollToNavbar(viewableItems[0].section.index)
-    }
-  }
+      animate()
+    },
+    [addCartItem, addQuantity, animate, clearCart, checkItemCart, navigation, restaurant, setCartRestaurant]
+  )
 
-  const iconColor = currentTheme.white
-  const iconBackColor = currentTheme.white
-  const iconRadius = scale(15)
-  const iconSize = scale(20)
-  const iconTouchHeight = scale(30)
-  const iconTouchWidth = scale(30)
+  const tagCart = useCallback(
+    (itemId) => {
+      if (checkItemCart) {
+        const cartValue = checkItemCart(itemId)
+        if (cartValue.exist) {
+          return (
+            <>
+              <View style={styles(currentTheme).triangleCorner} />
+              <TextDefault style={styles(currentTheme).tagText} numberOfLines={1} textColor={currentTheme.fontWhite} bold small center>
+                {cartValue.quantity}
+              </TextDefault>
+            </>
+          )
+        }
+      }
+      return null
+    },
+    [checkItemCart, currentTheme]
+  )
 
-  // Fixed circle size - using constants instead of interpolation to prevent precision errors
-  const circleSize = scale(18)
-  const radiusSize = scale(9)
+  const handleScrollToIndexFailed = useCallback(
+    ({ averageItemLength, index }) => {
+      scrollRef.current?.scrollToOffset({
+        animated: false,
+        offset: Math.max(0, averageItemLength * index - CATEGORY_RAIL_HEIGHT)
+      })
 
-  // If you need animation for the circle, use transform scale instead
-  const animatedCircleStyles = useAnimatedStyle(() => {
-    const progress = circle.value
-    const scaleValue = interpolate(progress, [0, 0.5, 1], [1, 1.33, 1], Extrapolation.CLAMP)
+      requestAnimationFrame(() => {
+        scrollRef.current?.scrollToIndex?.({
+          animated: true,
+          index,
+          viewOffset: CATEGORY_RAIL_HEIGHT
+        })
+      })
+    },
+    []
+  )
 
-    return {
-      transform: [{ scale: Math.max(0.1, scaleValue) }] // Ensure minimum scale
-    }
-  })
+  const handleCategoryPress = useCallback(
+    (categoryIndex) => {
+      const targetRowIndex = categoryToRowIndexMap.get(categoryIndex)
+      if (targetRowIndex == null) return
 
-  // Fixed font styles with safer interpolation
-  const fontStyles = useAnimatedStyle(() => {
-    const fontSize = interpolate(circle.value, [0, 0.5, 1], [8, 12, 8], Extrapolation.CLAMP)
-    return {
-      fontSize: Math.max(8, Math.round(fontSize)) // Ensure minimum and integer font size
-    }
-  })
+      pendingCategoryRef.current = categoryIndex
+      if (pendingCategoryTimerRef.current) {
+        clearTimeout(pendingCategoryTimerRef.current)
+      }
+      pendingCategoryTimerRef.current = setTimeout(() => {
+        pendingCategoryRef.current = null
+        pendingCategoryTimerRef.current = null
+      }, 450)
+
+      setActiveCategoryIndex((currentValue) => (currentValue === categoryIndex ? currentValue : categoryIndex))
+      scrollRef.current?.scrollToIndex?.({
+        animated: true,
+        index: targetRowIndex,
+        viewOffset: CATEGORY_RAIL_HEIGHT
+      })
+    },
+    [categoryToRowIndexMap]
+  )
+
+  const captureSectionOffset = useCallback((categoryIndex, offsetY) => {
+    sectionOffsetsRef.current.set(categoryIndex, offsetY)
+  }, [])
+
+  const renderFoodPress = useCallback(
+    (item) => {
+      if (item?.isOutOfStock) {
+        Alert.alert('Currently Unavailable', 'Item Out of Stock')
+        return
+      }
+
+      onPressItem({
+        ...item,
+        restaurant: restaurant?._id,
+        restaurantName: restaurant?.name
+      })
+    },
+    [onPressItem, restaurant]
+  )
+
+  const renderListItem = useCallback(
+    ({ item, index }) => {
+      return (
+        <RestaurantRow
+          row={item}
+          index={index}
+          aboutObject={aboutObject}
+          categories={categories}
+          activeCategoryIndex={activeCategoryIndex}
+          onPressCategory={handleCategoryPress}
+          onCaptureSectionOffset={captureSectionOffset}
+          displayedDeliveryMinutes={displayedDeliveryMinutes}
+          scrollY={scrollY}
+          currentTheme={currentTheme}
+          restaurant={restaurant}
+          tagCart={tagCart}
+          onFoodPress={renderFoodPress}
+          configuration={configuration}
+        />
+      )
+    },
+    [aboutObject, activeCategoryIndex, captureSectionOffset, categories, configuration, currentTheme, displayedDeliveryMinutes, handleCategoryPress, renderFoodPress, restaurant, scrollY, tagCart]
+  )
+
+  const renderSearchItem = useCallback(
+    ({ item }) => <FoodRow configuration={configuration} currentTheme={currentTheme} item={item} onPressItem={renderFoodPress} tagCart={tagCart} />,
+    [configuration, currentTheme, renderFoodPress, tagCart]
+  )
 
   if (loading) {
     return (
-      <View style={[styles(currentTheme).flex]}>
-        <ImageHeader iconColor={iconColor} iconSize={iconSize} iconBackColor={iconBackColor} iconRadius={iconRadius} iconTouchWidth={iconTouchWidth} iconTouchHeight={iconTouchHeight} restaurantName={propsData?.name ?? data?.restaurant?.name} restaurantId={propsData?._id} restaurantImage={propsData?.image ?? data?.restaurant?.image} restaurant={null} topaBarData={[]} loading={loading} minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder} tax={propsData?.tax ?? data?.restaurant?.tax} updatedDeals={[]} searchOpen={searchOpen} showSearchResults={showSearchResults} setSearch={setSearch} search={search} searchHandler={searchHandler} searchPopupHandler={searchPopupHandler} translationY={translationY} topInset={insets.top} />
-
-        <View
-          style={[
-            styles(currentTheme).navbarContainer,
-            styles(currentTheme).flex,
-            {
-              paddingTop: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT - TOP_BAR_HEIGHT
-            }
-          ]}
-        >
-          {Array.from(Array(10), (_, i) => (
-            <Placeholder
-              key={i}
-              Animation={(props) => <Fade {...props} style={{ backgroundColor: currentTheme.gray }} duration={600} />}
-              Left={PlaceholderMedia}
-              style={{
-                padding: 12
-              }}
-            >
-              <PlaceholderLine width={80} />
-              <PlaceholderLine width={80} />
-            </Placeholder>
-          ))}
-        </View>
-      </View>
-    )
-  }
-  if (error) return <ErrorView refetchFunctions={[refetch]} />
-  const restaurant = data.restaurant
-
-  return (
-    <>
-      <SafeAreaView style={styles(currentTheme).flex}>
-        <Animated.View style={styles(currentTheme).flex}>
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={styles(currentTheme).flex}>
+        <View style={styles(currentTheme).flex}>
           <ImageHeader
-            ref={flatListRef}
-            topInset={insets.top}
-            iconColor={iconColor}
-            iconSize={iconSize}
-            iconBackColor={iconBackColor}
-            iconRadius={iconRadius}
-            iconTouchWidth={iconTouchWidth}
-            iconTouchHeight={iconTouchHeight}
-            restaurantName={propsData?.name ?? data?.restaurant?.name}
-            restaurantId={propsData?._id}
-            restaurantImage={propsData?.image ?? data?.restaurant?.image}
-            restaurant={data?.restaurant}
-            topaBarData={updatedDeals}
-            changeIndex={changeIndex}
-            selectedLabel={selectedLabel}
-            minimumOrder={propsData?.minimumOrder ?? data?.restaurant?.minimumOrder}
-            tax={propsData?.tax ?? data?.restaurant?.tax}
-            updatedDeals={updatedDeals}
-            searchOpen={searchOpen}
-            showSearchResults={showSearchResults}
-            setSearch={setSearch}
-            search={search}
-            searchHandler={searchHandler}
-            searchPopupHandler={searchPopupHandler}
-            translationY={translationY}
+            aboutObject={{
+              restaurantId: propsData?._id,
+              restaurantName: propsData?.name,
+              restaurantImage: resolveRestaurantImage(restaurant, propsData),
+              restaurantLogo: '',
+              restaurantCuisines: [],
+              openingTimes: [],
+              IsOpen: true
+            }}
+            categories={[]}
+            activeCategoryIndex={0}
+            onPressCategory={() => {}}
+            searchOpen={false}
+            search=''
+            setSearch={() => {}}
+            searchHandler={() => {}}
+            searchPopupHandler={() => {}}
+            scrollY={scrollY}
+            insetTop={insets.top}
+            collapseDistance={HERO_FADE_DISTANCE}
+            displayedDeliveryMinutes='...'
+            showCategories={false}
           />
 
-          {showSearchResults || searchOpen ? (
-            <ScrollView
-              style={{
-                flexGrow: 1,
-                marginTop: TOP_BAR_HEIGHT,
-                backgroundColor: currentTheme.themeBackground
-              }}
-            >
-              {filterData.map((item, index) => (
-                <View key={index}>
-                  <TouchableOpacity
-                    style={[
-                      styles(currentTheme).searchDealSection,
-                      { opacity: item.isOutOfStock ? 0.5 : 1 }
-                    ]}
-                    activeOpacity={0.7}
-                    onPress={() => {
-                      if (item.isOutOfStock) {
-                        // Display an alert if the item is out of stock
-                        Alert.alert('Currently Unavailable', 'Item Out of Stock')
-                      } else {
-                        onPressItem({
-                          ...item,
-                          restaurant: restaurant?._id,
-                          restaurantName: restaurant?.name
-                        })
-                      }
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: scale(10)
-                      }}
-                    >
-                      <View style={styles(currentTheme).deal}>
-                        {item?.image ? (
-                          <CachedImage
-                            style={{
-                              height: scale(48),
-                              width: scale(48),
-                              borderRadius: scale(24)
-                            }}
-                            resizeMode='cover'
-                            source={{ uri: item?.image }}
-                          />
-                        ) : null}
-                        <View style={styles(currentTheme).flex}>
-                          <View style={styles(currentTheme).dealDescription}>
-                            <TextDefault textColor={currentTheme.fontMainColor} style={styles(currentTheme).headerText} numberOfLines={1} bolder isRTL>
-                              {item?.title}
-                            </TextDefault>
-                            <TextDefault style={styles(currentTheme).priceText} small isRTL>
-                              {wrapContentAfterWords(item?.description, 5)}
-                            </TextDefault>
-                            <View style={styles(currentTheme).dealPrice}>
-                              <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small isRTL>
-                                {configuration.currencySymbol} {parseFloat(item?.variations[0].price).toFixed(2)}
-                              </TextDefault>
-                              {item?.variations[0]?.discounted > 0 && (
-                                <TextDefault numberOfLines={1} textColor={currentTheme.fontSecondColor} style={styles(currentTheme).priceText} small lineOver isRTL>
-                                  {configuration.currencySymbol} {(item?.variations[0].price + item?.variations[0].discounted).toFixed(2)}
-                                </TextDefault>
-                              )}
-                            </View>
-                          </View>
-                        </View>
-                      </View>
-                      <View style={styles(currentTheme).addToCart}>
-                        {loadingItemId === item._id ? (
-                          <ActivityIndicator size='small' color={currentTheme.themeBackground} />
-                        ) : (
-                          <MaterialIcons name='add' size={scale(20)} color={currentTheme.themeBackground} />
-                        )}
-                      </View>
-                    </View>
-                    {/* )} */}
-                    {tagCart(item?._id)}
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </ScrollView>
-          ) : (
-            <AnimatedSectionList
-              style={[
-                {
-                  flexGrow: 1,
-                  paddingTop: HEADER_MAX_HEIGHT
-                }
-                // zIndexAnimation
-              ]}
-              contentContainerStyle={{
-                paddingBottom: HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
-              }}
-              ref={scrollRef}
-              sections={updatedDeals}
-              extraData={loadingItemId}
-              scrollEventThrottle={16}
-              stickySectionHeadersEnabled={false}
+          <View style={[styles(currentTheme).flex, { paddingTop: scale(12) }]}>
+            {Array.from(Array(10), (_, itemIndex) => (
+              <Placeholder key={itemIndex} Animation={(placeholderProps) => <Fade {...placeholderProps} style={{ backgroundColor: currentTheme.gray }} duration={600} />} Left={PlaceholderMedia} style={{ padding: 12 }}>
+                <PlaceholderLine width={80} />
+                <PlaceholderLine width={80} />
+              </Placeholder>
+            ))}
+          </View>
+        </View>
+      </SafeAreaView>
+    )
+  }
+
+  if (error) return <TextError text={JSON.stringify(error)} />
+
+  return (
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles(currentTheme).flex}>
+      <View style={styles(currentTheme).flex}>
+        {searchOpen ? (
+          <View style={styles(currentTheme).flex}>
+            <ImageHeader
+              aboutObject={aboutObject}
+              categories={categories}
+              activeCategoryIndex={activeCategoryIndex}
+              onPressCategory={handleCategoryPress}
+              searchOpen={searchOpen}
+              search={search}
+              setSearch={setSearch}
+              searchHandler={openSearch}
+              searchPopupHandler={closeSearch}
+              scrollY={scrollY}
+              insetTop={insets.top}
+              collapseDistance={HERO_FADE_DISTANCE}
+              displayedDeliveryMinutes={displayedDeliveryMinutes}
+              showCategories={false}
+            />
+
+            <FlatList
+              style={styles(currentTheme).flex}
+              data={searchResults}
+              renderItem={renderSearchItem}
+              keyExtractor={(item, index) => String(item?._id || item?.id || index)}
+              keyboardShouldPersistTaps='handled'
               showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingTop: scale(8), paddingBottom: LIST_BOTTOM_PADDING }}
+              ListEmptyComponent={
+                <View style={{ paddingTop: scale(24), alignItems: 'center', justifyContent: 'center' }}>
+                  <TextError text={t('noItemsExists')} />
+                </View>
+              }
+            />
+          </View>
+        ) : (
+          <>
+            <ImageHeader
+              aboutObject={aboutObject}
+              categories={categories}
+              activeCategoryIndex={activeCategoryIndex}
+              onPressCategory={handleCategoryPress}
+              searchOpen={false}
+              search={search}
+              setSearch={setSearch}
+              searchHandler={openSearch}
+              searchPopupHandler={closeSearch}
+              scrollY={scrollY}
+              insetTop={insets.top}
+              collapseDistance={HERO_FADE_DISTANCE}
+              displayedDeliveryMinutes={displayedDeliveryMinutes}
+              showCategories={false}
+            />
+            <AnimatedFlatList
+              style={styles(currentTheme).flex}
+              ref={scrollRef}
+              data={flatRows}
+              renderItem={renderListItem}
+              keyExtractor={(item) => item.key}
+              extraData={activeCategoryIndex}
+              stickyHeaderIndices={[1]}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps='handled'
               refreshing={networkStatus === 4}
               onRefresh={() => networkStatus === 7 && refetch()}
-              onViewableItemsChanged={onViewableItemsChanged}
-              onMomentumScrollEnd={(event) => {
-                onScrollEndSnapToEdge(event)
-              }}
               onScroll={scrollHandler}
-              keyExtractor={(item, index) => item?._id ?? String(index)}
-              // contentContainerStyle={{ paddingBottom: 150 }}
-              renderSectionHeader={({ section: { title, data } }) => {
-                if (title === 'Popular') {
-                  if (!dataList || dataList?.length === 0) {
-                    return null // Don't render the section header if dataList is empty
-                  }
-                  return (
-                    <View style={styles(currentTheme).restaurantItems}>
-                      <View style={styles(currentTheme).popularHeading}>
-                        <PopularIcon color={currentTheme.iconColorDark} />
-                        <TextDefault style={styles(currentTheme).popularText} textColor={currentTheme.fontFourthColor} bolder>
-                          {t(title)}
-                        </TextDefault>
-                      </View>
-                      <TextDefault
-                        textColor={currentTheme.fontFourthColor}
-                        style={{
-                          ...alignment.PLmedium,
-                          ...alignment.PRmedium,
-                          fontSize: scale(12),
-                          fontWeight: '400',
-                          marginTop: scale(3)
-                        }}
-                        isRTL
-                      >
-                        {t('mostOrderedNow')}
-                      </TextDefault>
-                      <View style={styles(currentTheme).popularItemCards}>
-                        {data.map((item) => (
-                          <ItemCard
-                            key={item?._id}
-                            item={item}
-                            onPressItem={() => {
-                              if (item?.isOutOfStock) {
-                                // Display an alert if the item is out of stock
-                                Alert.alert('Currently Unavailable', 'Item Out of Stock')
-                                return
-                              }
-
-                              onPressItem({
-                                ...item,
-                                restaurant: restaurant?._id,
-                                restaurantName: restaurant?.name
-                              })
-                            }}
-                            restaurant={restaurant}
-                            tagCart={tagCart}
-                          />
-                        ))}
-                      </View>
-                    </View>
-                  )
-                }
-                // Render other section headers as usual
-                return (
-                  <View style={[styles(currentTheme).sectionHeader, { marginBottom: scale(20) }]}>
-                    <TextDefault style={styles(currentTheme).sectionHeaderText} textColor={currentTheme.fontFourthColor} bolder isRTL>
-                      {title}
-                    </TextDefault>
-                  </View>
-                )
-              }}
-              renderItem={({ item, section }) => {
-                const imageUrl = item?.image && item?.image.trim() !== '' ? item?.image : IMAGE_LINK
-                if (section.title === 'Popular') {
-                  if (!dataList || dataList?.length === 0) {
-                    return null
-                  }
-                  return null
-                }
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles(currentTheme).dealSection,
-                      { paddingHorizontal: scale(12), opacity: item.isOutOfStock ? 0.5 : 1 }
-                    ]}
-                    activeOpacity={0.7}
-                    onPress={() => {
-                      if (item?.isOutOfStock) {
-                        // Display an alert if the item is out of stock
-                        Alert.alert('Currently Unavailable', 'Item Out of Stock')
-                      } else {
-                        onPressItem({
-                          ...item,
-                          restaurant: restaurant?._id,
-                          restaurantName: restaurant?.name
-                        })
-                      }
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <View style={styles(currentTheme).deal}>
-                      <CachedImage
-                          style={{
-                            height: scale(48),
-                            width: scale(48),
-                            borderRadius: scale(24)
-                          }}
-                          resizeMode='cover'
-                          source={{ uri: imageUrl }}
-                        />
-                        <View style={styles(currentTheme).flex}>
-                          <View style={styles(currentTheme).dealDescription}>
-                            <TextDefault textColor={currentTheme.fontMainColor} style={styles(currentTheme).headerText} numberOfLines={1} bolder isRTL>
-                              {item?.title}
-                            </TextDefault>
-                            {item?.description && (
-                              <TextDefault style={styles(currentTheme).priceText} small isRTL>
-                                {wrapContentAfterWords(item?.description, 5)}
-                              </TextDefault>
-                            )}
-                            <View style={styles(currentTheme).dealPrice}>
-                              <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small isRTL>
-                                {configuration.currencySymbol} {parseFloat(item?.variations[0].price).toFixed(2)}
-                              </TextDefault>
-                              {item?.variations[0]?.discounted > 0 && (
-                                <TextDefault numberOfLines={1} textColor={currentTheme.fontSecondColor} style={styles(currentTheme).priceText} small lineOver isRTL>
-                                  {configuration.currencySymbol} {(item?.variations[0].price + item?.variations[0].discounted).toFixed(2)}
-                                </TextDefault>
-                              )}
-                            </View>
-                          </View>
-                        </View>
-                      </View>
-                      <View style={styles(currentTheme).addToCart}>
-                        {loadingItemId === item._id ? (
-                          <ActivityIndicator size='small' color={currentTheme.themeBackground} />
-                        ) : (
-                          <MaterialIcons name='add' size={scale(20)} color={currentTheme.themeBackground} />
-                        )}
-                      </View>
-                    </View>
-                    {/* )} */}
-                    {tagCart(item?._id)}
-                  </TouchableOpacity>
-                )
-              }}
+              scrollEventThrottle={16}
+              onScrollToIndexFailed={handleScrollToIndexFailed}
+              contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
+              initialNumToRender={8}
+              maxToRenderPerBatch={6}
+              updateCellsBatchingPeriod={16}
+              windowSize={7}
             />
-          )}
-          {/* </View> */}
+          </>
+        )}
 
-          {cartCount > 0 && (
-            <View style={styles(currentTheme).buttonContainer}>
-              <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).button} onPress={() => navigation.navigate('Cart')}>
-                <View style={styles().buttontLeft}>
-                  <Animated.View
-                    style={[
-                      styles(currentTheme).buttonLeftCircle,
-                      {
-                        width: circleSize,
-                        height: circleSize,
-                        borderRadius: radiusSize
-                      },
-                      animatedCircleStyles, // Use the safer animation
-                      scaleStyles
-                    ]}
-                  >
-                    <Animated.Text style={[styles(currentTheme).buttonTextLeft, fontStyles]}>{cartCount}</Animated.Text>
-                  </Animated.View>
-                </View>
-                <TextDefault style={styles().buttonText} textColor={currentTheme.buttonTextPink} uppercase center bolder small>
-                  {t('viewCart')}
-                </TextDefault>
-                <View style={styles().buttonTextRight} />
-              </TouchableOpacity>
-            </View>
-          )}
-        </Animated.View>
-      </SafeAreaView>
-    </>
+        {cartCount > 0 && (
+          <View style={styles(currentTheme).buttonContainer}>
+            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).button} onPress={() => navigation.navigate('Cart')}>
+              <View style={styles().buttontLeft}>
+                <Animated.View
+                  style={[
+                    styles(currentTheme).buttonLeftCircle,
+                    {
+                      width: circleSize,
+                      height: circleSize,
+                      borderRadius: radiusSize
+                    },
+                    scaleStyles
+                  ]}
+                >
+                  <Animated.Text style={styles(currentTheme).buttonTextLeft}>{cartCount}</Animated.Text>
+                </Animated.View>
+              </View>
+              <TextDefault style={styles().buttonText} textColor={currentTheme.buttonTextPink} uppercase center bolder small>
+                {t('viewCart')}
+              </TextDefault>
+              <View style={styles().buttonTextRight} />
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   )
 }
+
+const SectionTitleRow = React.memo(function SectionTitleRow({ currentTheme, title }) {
+  return (
+    <View style={[styles(currentTheme).sectionHeader, { marginBottom: scale(20) }]}>
+      <TextDefault style={styles(currentTheme).sectionHeaderText} textColor={currentTheme.fontFourthColor} bolder isRTL>
+        {title}
+      </TextDefault>
+    </View>
+  )
+})
+
+const RestaurantRow = React.memo(
+  function RestaurantRow({ row, aboutObject, categories, activeCategoryIndex, onPressCategory, onCaptureSectionOffset, displayedDeliveryMinutes, scrollY, currentTheme, restaurant, tagCart, onFoodPress, configuration }) {
+    switch (row.type) {
+      case 'hero':
+        return <RestaurantHero aboutObject={aboutObject} displayedDeliveryMinutes={displayedDeliveryMinutes} scrollY={scrollY} fadeDistance={HERO_FADE_DISTANCE} />
+      case 'category-tabs':
+        return <CategoryTabsRow categories={categories} activeCategoryIndex={activeCategoryIndex} onPressCategory={onPressCategory} />
+      case 'section-anchor':
+        return (
+          <View
+            style={{ height: 1, opacity: 0 }}
+            onLayout={(event) => {
+              onCaptureSectionOffset(row.categoryIndex, event.nativeEvent.layout.y)
+            }}
+          />
+        )
+      case 'popular-grid':
+        return <PopularGridRow currentTheme={currentTheme} items={row.items} onPressItem={onFoodPress} restaurant={restaurant} tagCart={tagCart} title={row.title} />
+      case 'section-title':
+        return <SectionTitleRow currentTheme={currentTheme} title={row.title} />
+      case 'food-item':
+        return <FoodRow configuration={configuration} currentTheme={currentTheme} item={row.item} onPressItem={onFoodPress} tagCart={tagCart} />
+      default:
+        return null
+    }
+  },
+  (prevProps, nextProps) => {
+    if (prevProps.row !== nextProps.row) return false
+    if (prevProps.currentTheme !== nextProps.currentTheme) return false
+    if (prevProps.restaurant !== nextProps.restaurant) return false
+    if (prevProps.tagCart !== nextProps.tagCart) return false
+    if (prevProps.onFoodPress !== nextProps.onFoodPress) return false
+    if (prevProps.configuration !== nextProps.configuration) return false
+    if (prevProps.onCaptureSectionOffset !== nextProps.onCaptureSectionOffset) return false
+    if (prevProps.row.type === 'hero') {
+      return prevProps.aboutObject === nextProps.aboutObject && prevProps.displayedDeliveryMinutes === nextProps.displayedDeliveryMinutes && prevProps.scrollY === nextProps.scrollY
+    }
+    if (prevProps.row.type === 'category-tabs') {
+      return prevProps.categories === nextProps.categories && prevProps.activeCategoryIndex === nextProps.activeCategoryIndex && prevProps.onPressCategory === nextProps.onPressCategory
+    }
+    return true
+  }
+)
+
+const PopularGridRow = React.memo(function PopularGridRow({ currentTheme, items, onPressItem, restaurant, tagCart, title }) {
+  const { t } = useTranslation()
+
+  return (
+    <View style={styles(currentTheme).restaurantItems}>
+      <View style={styles(currentTheme).popularHeading}>
+        <PopularIcon color={currentTheme.iconColorDark} />
+        <TextDefault style={styles(currentTheme).popularText} textColor={currentTheme.fontFourthColor} bolder>
+          {t(title)}
+        </TextDefault>
+      </View>
+      <TextDefault
+        textColor={currentTheme.fontFourthColor}
+        style={{
+          ...alignment.PLmedium,
+          ...alignment.PRmedium,
+          fontSize: scale(12),
+          fontWeight: '400',
+          marginTop: scale(3)
+        }}
+        isRTL
+      >
+        {t('mostOrderedNow')}
+      </TextDefault>
+      <View style={styles(currentTheme).popularItemCards}>
+        {items.map((item) => (
+          <ItemCard key={item?._id} item={item} onPressItem={onPressItem} restaurant={restaurant} tagCart={tagCart} />
+        ))}
+      </View>
+    </View>
+  )
+})
+
+const FoodRow = React.memo(function FoodRow({ configuration, currentTheme, item, onPressItem, tagCart }) {
+  const imageUrl = item?.image && item?.image.trim() !== '' ? item?.image : IMAGE_LINK
+
+  return (
+    <Pressable
+      android_disableSound
+      onPress={() => onPressItem(item)}
+      style={({ pressed }) => ({
+        paddingHorizontal: scale(12),
+        paddingVertical: scale(10),
+        marginBottom: scale(10),
+        opacity: item?.isOutOfStock ? 0.5 : 1,
+        overflow: 'hidden',
+        backgroundColor: pressed ? currentTheme.main : 'transparent'
+      })}
+    >
+      {({ pressed }) => (
+        <>
+          <View
+            style={{
+              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}
+          >
+            <View style={[styles(currentTheme).deal, { backgroundColor: 'transparent' }]}>
+              <ShimmerImage
+                imageUrl={imageUrl}
+                style={{
+                  height: scale(60),
+                  width: scale(60),
+                  borderRadius: 30
+                }}
+                resizeMode='cover'
+                defaultSource={require('../../assets/images/food_placeholder.png')}
+              />
+              <View style={[styles(currentTheme).flex, { backgroundColor: 'transparent' }]}>
+                <View style={[styles(currentTheme).dealDescription, { backgroundColor: 'transparent' }]}>
+                  <TextDefault textColor={currentTheme.fontMainColor} style={[styles(currentTheme).headerText, { backgroundColor: 'transparent' }]} numberOfLines={1} bolder isRTL>
+                    {item?.title}
+                  </TextDefault>
+                  {item?.description ? (
+                    <TextDefault style={styles(currentTheme).priceText} small isRTL>
+                      {wrapContentAfterWords(item?.description, 5)}
+                    </TextDefault>
+                  ) : null}
+                  <View style={styles(currentTheme).dealPrice}>
+                    <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small isRTL>
+                      {configuration.currencySymbol} {parseFloat(item?.variations?.[0]?.price ?? 0).toFixed(2)}
+                    </TextDefault>
+                    {item?.variations?.[0]?.discounted > 0 && (
+                      <TextDefault numberOfLines={1} textColor={pressed ? currentTheme.themeBackground : currentTheme.fontSecondColor} style={styles(currentTheme).priceText} small lineOver isRTL>
+                        {configuration.currencySymbol} {(item?.variations?.[0]?.price + item?.variations?.[0]?.discounted).toFixed(2)}
+                      </TextDefault>
+                    )}
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View style={[styles(currentTheme).addToCart, pressed ? { backgroundColor: currentTheme.newButtonBackground } : null]}>
+              <MaterialIcons name='add' size={scale(20)} color={pressed ? currentTheme.main : currentTheme.themeBackground} />
+            </View>
+          </View>
+          {tagCart(item?._id)}
+        </>
+      )}
+    </Pressable>
+  )
+})
 
 export default Restaurant

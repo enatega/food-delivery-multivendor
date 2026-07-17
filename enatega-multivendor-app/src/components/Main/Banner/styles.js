@@ -12,16 +12,19 @@ const styles = (props = null) =>
       height: scale(200),
       ...subtleCardShadow,
       margin: 0,
-      borderRadius: 8
+      borderRadius: 8,
+      overflow: 'hidden',
+      backgroundColor: props?.themeBackground ?? '#fff',
+      paddingHorizontal: scale(12)
     },
     image: {
-      width: '90%',
-      alignSelf:"center",
+      width: '100%',
+      alignSelf: 'center',
       resizeMode: 'cover',
       flex: 1,
       justifyContent: 'center',
       overflow: 'hidden',
-      borderRadius: 8,
+      borderRadius: 18,
       objectFit: 'cover'
     },
     container: {
@@ -30,7 +33,8 @@ const styles = (props = null) =>
       alignItems: props?.isRTL ? 'flex-end' : 'flex-start',
       justifyContent: 'flex-end',
       paddingVertical: scale(20),
-      paddingHorizontal: scale(15)
+      paddingHorizontal: scale(18),
+      borderRadius: 18
     },
     pagination: {
       position: 'relative',
@@ -47,18 +51,17 @@ const styles = (props = null) =>
       alignSelf: 'center',
       width: "100%",
       height:"100%",
-      borderRadius: 8,
-    
+      borderRadius: 18
     },
     csd:
     {
-
-    flex: 1,
-    justifyContent: 'center', // Centers vertically
-    alignItems: 'center', // Centers horizontally
-    width: '100%',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
       height: "100%",
-    paddingHorizontal:'5%',
+      paddingHorizontal: 0,
+      backgroundColor: 'transparent'
     }
   })
 export default styles

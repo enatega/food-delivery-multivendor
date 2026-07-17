@@ -793,6 +793,7 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       _id
       name
       image
+      logo
       deliveryTime
       minimumOrder
       isAvailable

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useContext, useEffect } from 'react'
-import { View, TouchableOpacity, KeyboardAvoidingView, Platform, StatusBar, Modal, ScrollView, AppState, Linking, Switch } from 'react-native'
+import React, { useState, useRef, useContext, useEffect, useMemo } from 'react'
+import { View, TouchableOpacity, KeyboardAvoidingView, Platform, StatusBar, Modal, ScrollView, AppState, Linking, Switch, ActivityIndicator } from 'react-native'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { scale } from '../../utils/scaling'
@@ -66,6 +66,7 @@ function Account(props) {
   // Once the profile has rendered once, we never blank the screen for a
   // background refetch again (prevents the toggle-triggered content flicker).
   const hasLoadedProfileRef = useRef(false)
+  const stableProfileRef = useRef(null)
 
   const [orderNotification, orderNotificationSetter] = useState()
   const [offerNotification, offerNotificationSetter] = useState()
@@ -86,6 +87,15 @@ function Account(props) {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const resolvedProfile = useMemo(() => {
+    if (!profile) return stableProfileRef.current
+    return {
+      ...(stableProfileRef.current ?? {}),
+      ...profile
+    }
+  }, [profile])
+  const safeOrderNotification = orderNotification ?? resolvedProfile?.isOrderNotification ?? false
+  const safeOfferNotification = offerNotification ?? resolvedProfile?.isOfferNotification ?? false
 
   const [deactivated, { loading: deactivateLoading }] = useMutation(DEACTIVATE, {
     onCompleted: onCompletedDeactivate,
@@ -151,9 +161,19 @@ function Account(props) {
   }, [])
 
   useEffect(() => {
-    orderNotificationSetter(profile?.isOrderNotification)
-    offerNotificationSetter(profile?.isOfferNotification)
+    if (profile) {
+      stableProfileRef.current = {
+        ...(stableProfileRef.current ?? {}),
+        ...profile
+      }
+    }
   }, [profile])
+
+  useEffect(() => {
+    if (loading) return
+    orderNotificationSetter(resolvedProfile?.isOrderNotification ?? false)
+    offerNotificationSetter(resolvedProfile?.isOfferNotification ?? false)
+  }, [loading, resolvedProfile])
 
   useEffect(() => {
     if (!lngModalVisible) {
@@ -172,14 +192,14 @@ function Account(props) {
       let token = null
       const permission = await getPermission()
       if (permission === 'granted') {
-        if (!profile.notificationToken) {
+        if (!resolvedProfile?.notificationToken) {
           token = await Notifications.getExpoPushTokenAsync({
             projectId: Constants.expoConfig.extra.eas.projectId
           })
           uploadToken({ variables: { token: token.data } })
         }
-        offerNotificationSetter(profile?.isOfferNotification)
-        orderNotificationSetter(profile?.isOrderNotification)
+        offerNotificationSetter(resolvedProfile?.isOfferNotification)
+        orderNotificationSetter(resolvedProfile?.isOrderNotification)
       } else {
         offerNotificationSetter(false)
         orderNotificationSetter(false)
@@ -208,8 +228,8 @@ function Account(props) {
       offerNotificationSetter(false)
       orderNotificationSetter(false)
     } else {
-      offerNotificationSetter(profile?.isOfferNotification)
-      orderNotificationSetter(profile?.isOrderNotification)
+      offerNotificationSetter(resolvedProfile?.isOfferNotification)
+      orderNotificationSetter(resolvedProfile?.isOrderNotification)
     }
   }
 
@@ -293,7 +313,7 @@ function Account(props) {
   async function deactivatewithemail() {
     try {
       await deactivated({
-        variables: { isActive: false, email: profile?.email }
+        variables: { isActive: false, email: resolvedProfile?.email }
       })
       setDeleteModalVisible(false)
       await logout()
@@ -343,7 +363,7 @@ function Account(props) {
     }
 
     // Get push token if not available
-    if (!profile.notificationToken) {
+    if (!resolvedProfile?.notificationToken) {
       try {
         const token = await Notifications.getExpoPushTokenAsync({
           projectId: Constants.expoConfig.extra.eas.projectId
@@ -360,16 +380,16 @@ function Account(props) {
 
     if (notificationCheck === 'offer') {
       console.log('Updating offer notification')
-      offerNotificationSetter(!offerNotification)
-      orderNotify = orderNotification
-      offerNotify = !offerNotification
+      offerNotify = !safeOfferNotification
+      orderNotify = safeOrderNotification
+      offerNotificationSetter(offerNotify)
     }
 
     if (notificationCheck === 'order') {
       console.log('Updating order notification')
-      orderNotificationSetter(!orderNotification)
-      orderNotify = !orderNotification
-      offerNotify = offerNotification
+      orderNotify = !safeOrderNotification
+      offerNotify = safeOfferNotification
+      orderNotificationSetter(orderNotify)
     }
 
     console.log('Calling mutate with variables:', {
@@ -395,7 +415,7 @@ function Account(props) {
   // preference) may briefly flip loadingProfile true or return undefined data
   // from the cache-first refetch — but we must never blank the screen again,
   // or all the content below the toggles disappears and flickers back.
-  if (profile) hasLoadedProfileRef.current = true
+  if (resolvedProfile) hasLoadedProfileRef.current = true
   if ((loadingProfile && !hasLoadedProfileRef.current) || spinnerLoading) return <Spinner backColor={currentTheme.CustomLoadingBG} spinnerColor={currentTheme.main} />
 
   if (!connect) return <ErrorView refetchFunctions={[]} />
@@ -414,12 +434,12 @@ function Account(props) {
 
               <View style={styles(currentTheme).subContainer}>
                 <View>
-                  <ButtonContainer title={t('email')} detail={profile?.email} status={profile?.emailIsVerified ? 'verified' : 'notVerified'} onPress='null' />
+                  <ButtonContainer title={t('email')} detail={resolvedProfile?.email} status={resolvedProfile?.emailIsVerified ? 'verified' : 'notVerified'} onPress='null' />
                   <View style={styles(currentTheme).line} />
                   <ButtonContainer
                     title={t('phone')}
-                    detail={profile?.phone}
-                    status={profile?.phoneIsVerified ? 'verified' : 'notVerified'}
+                    detail={resolvedProfile?.phone}
+                    status={resolvedProfile?.phoneIsVerified ? 'verified' : 'notVerified'}
                     onPress={() =>
                       navigation.navigate('PhoneNumber', {
                         prevScreen: 'Account'
@@ -429,12 +449,12 @@ function Account(props) {
                   <View style={styles(currentTheme).line} />
                   <ButtonContainer
                     title={t('name')}
-                    detail={profile?.name}
+                    detail={resolvedProfile?.name}
                     status='null'
                     onPress={() =>
                       navigation.navigate('EditName', {
-                        name: profile?.name,
-                        phone: profile?.phone
+                        name: resolvedProfile?.name,
+                        phone: resolvedProfile?.phone
                       })
                     }
                   />
@@ -472,10 +492,10 @@ function Account(props) {
                   <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
                     <View>
                       {loading && btnText === 'order'
-                        ? <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />
+                        ? <ActivityIndicator size='small' color={currentTheme.main} />
                         : (
                           <CheckboxBtn
-                            checked={orderNotification}
+                            checked={safeOrderNotification}
                             onPress={() => {
                               updateNotificationStatus('order')
                               setBtnText('order')
@@ -507,13 +527,13 @@ function Account(props) {
                   <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
                     <Switch
                       trackColor={{ false: currentTheme.gray200 || '#d1d5db', true: currentTheme.main }}
-                      thumbColor={offerNotification ? currentTheme.white || '#ffffff' : '#f4f3f4'}
+                      thumbColor={safeOfferNotification ? currentTheme.white || '#ffffff' : '#f4f3f4'}
                       ios_backgroundColor={currentTheme.gray200 || '#d1d5db'}
                       onValueChange={() => {
                         updateNotificationStatus('offer')
                         setBtnText('offer')
                       }}
-                      value={offerNotification}
+                      value={safeOfferNotification}
                     />
                     <TouchableOpacity
                       activeOpacity={0.7}
@@ -530,7 +550,7 @@ function Account(props) {
                         </TextDefault>
                       </View>
                     </TouchableOpacity>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>{loading && btnText === 'offer' && <Spinner size='small' backColor='transparent' spinnerColor={currentTheme.main} />}</View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>{loading && btnText === 'offer' && <ActivityIndicator size='small' color={currentTheme.main} />}</View>
                   </View>
 
                   <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>

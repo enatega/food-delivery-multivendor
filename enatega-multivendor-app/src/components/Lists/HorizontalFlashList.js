@@ -1,6 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
-import { FlashList } from '@shopify/flash-list'
+import { FlatList, View } from 'react-native'
 
 function HorizontalFlashList({
   style,
@@ -15,7 +14,7 @@ function HorizontalFlashList({
   const Spacer = React.useCallback(() => <View style={{ width: itemSpacing }} />, [itemSpacing])
 
   return (
-    <FlashList
+    <FlatList
       style={style}
       horizontal
       data={data || []}
@@ -25,10 +24,15 @@ function HorizontalFlashList({
       inverted={inverted}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      estimatedItemSize={estimatedItemSize}
-      // Keep nearby items mounted while the user swipes backward; aggressive
-      // clipping can cause a brief blank frame on horizontal carousels.
+      initialNumToRender={6}
+      maxToRenderPerBatch={6}
+      updateCellsBatchingPeriod={16}
+      windowSize={7}
+      // Keep nearby items mounted while the user swipes backward so reverse
+      // swipes stay smooth instead of flashing a blank frame.
       removeClippedSubviews={false}
+      scrollEventThrottle={16}
+      decelerationRate='fast'
       ItemSeparatorComponent={itemSpacing > 0 ? Spacer : undefined}
     />
   )

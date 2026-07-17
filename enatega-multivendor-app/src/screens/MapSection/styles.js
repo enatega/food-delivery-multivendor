@@ -50,6 +50,17 @@ const styles = (props = null) =>
       shadowRadius: 6,
       elevation: 4
     },
+    restContent: {
+      flex: 1,
+      minWidth: 0,
+      gap: 3
+    },
+    titleText: {
+      flexShrink: 1
+    },
+    subtitleText: {
+      flexShrink: 1
+    },
     restImg: {
       height: 60,
       width: 60,
@@ -59,7 +70,8 @@ const styles = (props = null) =>
     restInfo: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: scale(12)
+      gap: scale(12),
+      flexWrap: 'wrap'
     },
     deliveryTime: {
       flexDirection: 'row',

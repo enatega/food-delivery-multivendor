@@ -602,9 +602,12 @@ function Menu({ route, props }) {
             style={styles(currentTheme).seeAllBtn}
             activeOpacity={0.8}
             onPress={() => {
+              const collectionType = selectedType === 'grocery' ? 'Store' : 'Restaurants'
               navigation.navigate('Collection', {
-                collectionType: routeData?.name,
-                data: collectionData
+                collectionType,
+                title: t('BrowseCuisines'),
+                data: collectionData,
+                showHeader: false
               })
             }}
           >

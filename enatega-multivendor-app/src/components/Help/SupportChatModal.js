@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -26,6 +27,7 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
   const [message, setMessage] = useState('')
   const [isSending, setIsSending] = useState(false)
   const [allowBackdropClose, setAllowBackdropClose] = useState(false)
+  const [footerHeight, setFooterHeight] = useState(scale(82))
   const scrollRef = useRef(null)
 
   const ticketId = ticket?._id
@@ -106,6 +108,27 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
       scrollRef.current?.scrollToEnd?.({ animated: true })
     })
   }, [visible, data?.getTicketMessages?.messages?.length, message])
+
+  useEffect(() => {
+    if (!visible) return
+
+    const scrollToLatest = () => {
+      requestAnimationFrame(() => {
+        scrollRef.current?.scrollToEnd?.({ animated: true })
+      })
+    }
+
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
+
+    const showSubscription = Keyboard.addListener(showEvent, scrollToLatest)
+    const hideSubscription = Keyboard.addListener(hideEvent, scrollToLatest)
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [visible])
 
   const ticketData = ticketDetailsData?.getSingleSupportTicket || ticket
   const ticketDescription = ticketData?.description?.trim()
@@ -216,8 +239,16 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                   ref={scrollRef}
                   style={styles.messagesScroll}
                   showsVerticalScrollIndicator={false}
-                  contentContainerStyle={styles.messagesContent}
+                  contentContainerStyle={[
+                    styles.messagesContent,
+                    { paddingBottom: footerHeight + scale(12) }
+                  ]}
                   keyboardShouldPersistTaps='handled'
+                  keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+                  nestedScrollEnabled
+                  onContentSizeChange={() => {
+                    scrollRef.current?.scrollToEnd?.({ animated: true })
+                  }}
                 >
                   {orderedMessages.map((msg) => {
                     const senderType = String(msg.senderType || '').toLowerCase()
@@ -266,7 +297,15 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
               )}
             </View>
 
-            <View style={[styles.footer, { borderTopColor: currentTheme.borderLight, backgroundColor: currentTheme.cardBackground }]}>
+            <View
+              onLayout={(event) => {
+                const nextFooterHeight = event?.nativeEvent?.layout?.height
+                if (nextFooterHeight) {
+                  setFooterHeight(nextFooterHeight)
+                }
+              }}
+              style={[styles.footer, { borderTopColor: currentTheme.borderLight, backgroundColor: currentTheme.cardBackground }]}
+            >
             {isClosed ? (
               <View style={styles.closedState}>
                 <TextDefault small textColor={currentTheme.gray500} center>
@@ -281,6 +320,13 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                   placeholder='Type your message here...'
                   placeholderTextColor={currentTheme.gray500}
                   multiline
+                  scrollEnabled
+                  textAlignVertical='top'
+                  onFocus={() => {
+                    requestAnimationFrame(() => {
+                      scrollRef.current?.scrollToEnd?.({ animated: true })
+                    })
+                  }}
                   style={[
                     styles.input,
                     {
