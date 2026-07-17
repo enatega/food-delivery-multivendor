@@ -45,8 +45,8 @@ import { useUserContext } from '@/lib/hooks/useUser';
 import { DEFAULT_ROUTES } from '@/lib/utils/constants/routes';
 
 const initialValues: ISignInForm = {
-  email: '',
-  password: '',
+  email: process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? '',
+  password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? '',
 };
 
 export default function LoginEmailPasswordMain() {
