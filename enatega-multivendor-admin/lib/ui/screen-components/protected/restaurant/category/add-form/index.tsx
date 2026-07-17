@@ -69,6 +69,7 @@ export default function CategoryAddForm({
     variables: {
       parentCategoryId: category?._id,
     },
+    skip: !category?._id,
   });
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
@@ -108,14 +109,16 @@ export default function CategoryAddForm({
   // Mutations
   const [deleteSubCategory, { loading: deleteSubCategoryLoading }] =
     useMutation(DELETE_SUB_CATEGORY, {
-      refetchQueries: [
-        {
-          query: GET_SUBCATEGORIES_BY_PARENT_ID,
-          variables: {
-            parentCategoryId: category?._id,
-          },
-        },
-      ],
+      refetchQueries: category?._id
+        ? [
+            {
+              query: GET_SUBCATEGORIES_BY_PARENT_ID,
+              variables: {
+                parentCategoryId: category._id,
+              },
+            },
+          ]
+        : [],
       onCompleted: () => {
         showToast({
           type: 'success',
@@ -213,8 +216,10 @@ export default function CategoryAddForm({
     }
   };
   useEffect(() => {
-    refetchSubCatrgories();
-  }, [isAddCategoryVisible]);
+    if (isAddCategoryVisible && category?._id) {
+      refetchSubCatrgories();
+    }
+  }, [category?._id, isAddCategoryVisible, refetchSubCatrgories]);
   if (subCategoriesLoading) return <CustomLoader />;
   if (!subCategoriesLoading)
     return (

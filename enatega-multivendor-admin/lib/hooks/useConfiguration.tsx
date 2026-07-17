@@ -25,7 +25,7 @@ export const useConfiguration = () => {
   const PAYPAL_KEY = configuration?.clientId;
   const PAYPAL_SECRET = configuration?.clientSecret;
   const PAYPAL_SANDBOX = configuration?.sandbox;
-  const GOOGLE_MAPS_KEY = configuration?.googleApiKey;
+  const GOOGLE_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const AMPLITUDE_API_KEY_WEB = configuration?.webAmplitudeApiKey;
   const AMPLITUDE_API_KEY_APP = configuration?.appAmplitudeApiKey;
   const LIBRARIES = 'places,drawing,geometry,visualization'.split(
