@@ -95,7 +95,7 @@ export default function CustomerTicketsMain() {
   const getStatusColor = (status: string) => {
     switch(status.toLowerCase()) {
       case 'open':
-        return 'text-blue-600 bg-blue-100';
+        return 'text-secondary-color bg-primary-light';
       case 'inprogress':
         return 'text-yellow-600 bg-yellow-100';
       case 'closed':
@@ -187,7 +187,7 @@ export default function CustomerTicketsMain() {
               <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-end">
                 <CustomButton 
                   label={t("view_messages_button")}
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300  bg-transparent"
+                  className="text-secondary-color dark:text-primary-color hover:text-primary-dark bg-transparent"
                   onClick={() => handleOpenChat(ticket._id)}
                 />
               </div>

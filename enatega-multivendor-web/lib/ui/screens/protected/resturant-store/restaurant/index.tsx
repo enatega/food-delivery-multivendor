@@ -28,11 +28,12 @@ import Confetti from "react-confetti";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import EmptySearch from "@/lib/ui/useable-components/empty-search-results";
 // Interface
-import { ICategory, IFood, IOpeningTime } from "@/lib/utils/interfaces";
+import { ICategory, IFood } from "@/lib/utils/interfaces";
 
 // Methods
 import { toSlug } from "@/lib/utils/methods";
 import ChatSvg from "@/lib/utils/assets/svg/chat";
+import { isRestaurantOpen } from "@/lib/utils/constants/isRestaurantOpen";
 import ReviewsModal from "@/lib/ui/useable-components/reviews-modal";
 import InfoModal from "@/lib/ui/useable-components/info-modal";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
@@ -43,7 +44,7 @@ import { Dialog } from "primereact/dialog";
 import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
-import Image from '@/lib/ui/useable-components/safe-image';
+import Image, { FALLBACK_IMAGE_SRC } from '@/lib/ui/useable-components/safe-image';
 import { useTranslations } from "next-intl";
 
 export default function RestaurantDetailsScreen() {
@@ -260,8 +261,8 @@ export default function RestaurantDetailsScreen() {
   const restaurantInfo = {
     _id: data?.restaurant?._id ?? "",
     name: data?.restaurant?.name ?? "...",
-    image: data?.restaurant?.image ?? "",
-    logo: data?.restaurant?.logo ?? "",
+    image: data?.restaurant?.image || FALLBACK_IMAGE_SRC,
+    logo: data?.restaurant?.logo || FALLBACK_IMAGE_SRC,
     deals: deals,
     reviewData: data?.restaurant?.reviewData ?? {},
     address: data?.restaurant?.address ?? "",
@@ -294,38 +295,12 @@ export default function RestaurantDetailsScreen() {
   const [showReviews, setShowReviews] = useState<boolean>(false);
   const [showMoreInfo, setShowMoreInfo] = useState<boolean>(false);
 
-  // Function to check weather time exisis
-  const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
-    const now = new Date();
-    const currentDay = now
-      .toLocaleString("en-US", { weekday: "short" })
-      .toUpperCase(); // e.g., "MON", "TUE", ...
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
-    if (!todayOpening) return false;
-
-    return todayOpening.times.some(({ startTime, endTime }) => {
-      const [startHour, startMinute] = startTime.map(Number);
-      const [endHour, endMinute] = endTime.map(Number);
-
-      const startTotal = startHour * 60 + startMinute;
-      const endTotal = endHour * 60 + endMinute;
-      const nowTotal = currentHour * 60 + currentMinute;
-
-      return nowTotal >= startTotal && nowTotal <= endTotal;
-    });
-  };
+  const isOpen = isRestaurantOpen(restaurantInfo);
 
   // Function to handle clicking on a restaurant
   const handleRestaurantClick = (food: IFood) => {
     if (food.isOutOfStock) return;
-    if (
-      !restaurantInfo?.isAvailable ||
-      !restaurantInfo?.isActive ||
-      !isWithinOpeningTime(restaurantInfo?.openingTimes)
-    ) {
+    if (!isOpen) {
       // Store the action we want to perform after cart confirmation
       handleUpdateIsModalOpen(true, food?._id);
       return;
@@ -611,7 +586,7 @@ export default function RestaurantDetailsScreen() {
 
             {/* Info Link */}
             <a
-              className="flex items-center gap-2 text-secondary-color dark:text-sky-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+              className="flex items-center gap-2 text-secondary-color dark:text-primary-color font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -628,7 +603,7 @@ export default function RestaurantDetailsScreen() {
 
             {/* Review Link */}
             <a
-              className="flex items-center gap-2 text-secondary-color dark:text-sky-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+              className="flex items-center gap-2 text-secondary-color dark:text-primary-color font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -706,7 +681,7 @@ export default function RestaurantDetailsScreen() {
                     <li className="shrink-0">
                       <button
                         type="button"
-                        className="bg-blue-500 text-white dark:bg-blue-600 rounded-full px-4 py-2 font-medium text-[12px] sm:text-[14px] cursor-pointer leading-none"
+                        className="bg-secondary-color hover:bg-primary-dark text-white dark:bg-primary-dark rounded-full px-4 py-2 font-medium text-[12px] sm:text-[14px] cursor-pointer leading-none"
                         onClick={() => setShowAll(true)}
                       >
                         {t("more_button")}
@@ -745,7 +720,7 @@ export default function RestaurantDetailsScreen() {
           <div className="py-10 text-center">
             <EmptySearch />
             <div className="mt-4 text-gray-500 dark:text-gray-400">
-              No products match "{filter.trim()}"
+              No products match &quot;{filter.trim()}&quot;
             </div>
           </div>
         ) : (
@@ -791,7 +766,7 @@ export default function RestaurantDetailsScreen() {
                         </p>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-secondary-color dark:text-sky-400 text-base sm:text-lg font-semibold">
+                                  <span className="text-secondary-color dark:text-primary-color text-base sm:text-lg font-semibold">
                             {CURRENCY_SYMBOL} {meal.variations[0].price}
                           </span>
                         </div>

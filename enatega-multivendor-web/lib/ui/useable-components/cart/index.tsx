@@ -13,7 +13,8 @@ import { useConfig } from "@/lib/context/configuration/configuration.context";
 import Image from '@/lib/ui/useable-components/safe-image';
 import { useTranslations } from "next-intl";
 import useRestaurant from "@/lib/hooks/useRestaurant";
-import { IFood, IOpeningTime } from "@/lib/utils/interfaces";
+import { IFood } from "@/lib/utils/interfaces";
+import { isRestaurantOpen } from "@/lib/utils/constants/isRestaurantOpen";
 import { Dialog } from "primereact/dialog";
 import FoodItemDetail from "../item-detail";
 
@@ -128,11 +129,7 @@ export default function Cart({ onClose }: CartProps) {
   const handleOpenFoodModal = async (food: IFood) => {
     if (food.isOutOfStock) return;
 
-    if (
-      !restaurantInfo?.isAvailable ||
-      !restaurantInfo?.isActive ||
-      !isWithinOpeningTime(restaurantInfo?.openingTimes)
-    ) {
+    if (!isRestaurantOpen(restaurantInfo)) {
       return;
     }
     // Add restaurant ID to the food item
@@ -154,29 +151,6 @@ export default function Cart({ onClose }: CartProps) {
     isAvailable: data?.restaurant?.isAvailable ?? true,
     openingTimes: data?.restaurant?.openingTimes ?? [],
     isActive: data?.restaurant?.isActive ?? true,
-  };
-
-  const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
-    const now = new Date();
-    const currentDay = now
-      .toLocaleString("en-US", { weekday: "short" })
-      .toUpperCase(); // e.g., "MON", "TUE", ...
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
-    if (!todayOpening) return false;
-
-    return todayOpening.times.some(({ startTime, endTime }) => {
-      const [startHour, startMinute] = startTime.map(Number);
-      const [endHour, endMinute] = endTime.map(Number);
-
-      const startTotal = startHour * 60 + startMinute;
-      const endTotal = endHour * 60 + endMinute;
-      const nowTotal = currentHour * 60 + currentMinute;
-
-      return nowTotal >= startTotal && nowTotal <= endTotal;
-    });
   };
 
   const handleCloseFoodModal = () => {

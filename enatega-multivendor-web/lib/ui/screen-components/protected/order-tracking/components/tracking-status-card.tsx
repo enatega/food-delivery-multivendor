@@ -230,10 +230,10 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
             </div>
           )}
           {orderTrackingDetails.orderStatus === "ACCEPTED" && (
-            <div className="w-8 h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900 rounded-full">
+            <div className="w-8 h-8 flex items-center justify-center bg-primary-light dark:bg-[#2E3B23] rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-blue-500"
+                className="h-5 w-5 text-secondary-color"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >

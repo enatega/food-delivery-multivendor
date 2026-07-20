@@ -11,6 +11,7 @@ const MoveableCard: React.FC<MoveableProps> = ({
   image,
   middle = false,
   height = "600px",
+  imageFit = "cover",
 }) => {
   const [responsiveHeight, setResponsiveHeight] = useState(height);
 
@@ -35,16 +36,31 @@ const MoveableCard: React.FC<MoveableProps> = ({
       style={{ height: responsiveHeight }}
     >
       {/* Image container */}
-      <Image
-        src={
-          image ||
-          "https://images.ctfassets.net/23u853certza/0V5KYLmUImbVPRBerxy9b/78c9f84e09efbde9e124e74e6eef8fad/photocard_courier_v4.jpg?w=1200&q=90&fm=webp"
-        }
-        alt="Main Image"
-        fill
-        sizes="(max-width: 700px) 100vw, 600px"
-        className={`${styles.imageContainer} c`}
-      />
+      {imageFit === "contain" ? (
+        <div className={styles.mockupImageFrame}>
+          <Image
+            src={
+              image ||
+              "https://images.ctfassets.net/23u853certza/0V5KYLmUImbVPRBerxy9b/78c9f84e09efbde9e124e74e6eef8fad/photocard_courier_v4.jpg?w=1200&q=90&fm=webp"
+            }
+            alt="Main Image"
+            fill
+            sizes="(max-width: 700px) 82vw, (max-width: 1024px) 42vw, 28vw"
+            className={`${styles.imageContainer} ${styles.mockupImage}`}
+          />
+        </div>
+      ) : (
+        <Image
+          src={
+            image ||
+            "https://images.ctfassets.net/23u853certza/0V5KYLmUImbVPRBerxy9b/78c9f84e09efbde9e124e74e6eef8fad/photocard_courier_v4.jpg?w=1200&q=90&fm=webp"
+          }
+          alt="Main Image"
+          fill
+          sizes="(max-width: 700px) 100vw, 600px"
+          className={`${styles.imageContainer} c`}
+        />
+      )}
 
       {/* Text container */}
 

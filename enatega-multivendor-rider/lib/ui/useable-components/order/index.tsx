@@ -273,7 +273,7 @@ const Order = ({
                   </Text>
                 </View>
 
-                {/* Pick Up Order */}
+                {/* Pickup Address */}
                 <View className="w-[90%] flex-row items-center gap-x-2">
                   <View>
                     <IconSymbol
@@ -288,7 +288,7 @@ const Order = ({
                       className="font-[Inter] text-base font-semibold leading-6 text-left underline-offset-auto decoration-skip-ink "
                       style={{ color: appTheme.fontMainColor }}
                     >
-                      {t("Pickup Order")}
+                      {t("Pickup Address")}
                     </Text>
                     <Text
                       className="font-[Inter] text-base font-bold leading-6 text-left underline-offset-auto decoration-skip-ink "
@@ -303,7 +303,7 @@ const Order = ({
                   </View>
                 </View>
 
-                {/* Delivery Order */}
+                {/* Delivery Address */}
                 <View className="w-[90%] flex-row items-center gap-x-2">
                   <View>
                     <IconSymbol
@@ -318,7 +318,7 @@ const Order = ({
                       className="font-[Inter] text-base font-semibold leading-6 text-left underline-offset-auto decoration-skip-ink "
                       style={{ color: appTheme.fontMainColor }}
                     >
-                      {t("Delivery Order")}
+                      {t("Delivery Address")}
                     </Text>
                     <Text
                       className="font-[Inter] text-base font-bold leading-6 text-left underline-offset-auto decoration-skip-ink "

@@ -84,7 +84,7 @@ const CustomDrawerHeader = () => {
         </Text>
           )}
         </View>
-        <View className="flex-1 pr-2">
+        <View className="flex-1 pr-2 pt-3">
           <Text
         className="font-semibold text-[16px]"
         style={{
@@ -95,14 +95,14 @@ const CustomDrawerHeader = () => {
           >
         {dataProfile?.name ?? t("store name")}
           </Text>
-          <Text
+          {/* <Text
         className="font-medium"
         style={{
           color: appTheme.secondaryTextColor,
         }}
           >
         {dataProfile?._id?.substring(0, 9)?.toUpperCase() ?? t("store id")}
-          </Text>
+          </Text> */}
         </View>
       </View>
 

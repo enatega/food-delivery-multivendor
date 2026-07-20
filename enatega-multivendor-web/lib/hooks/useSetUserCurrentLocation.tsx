@@ -40,7 +40,7 @@ export default function useSetUserCurrentLocation() {
         showToast({
           type: "info",
           title: "Ensure Current location for delivery",
-          message: ``,
+          message: `ABCCCC`,
         });
         return;
       }

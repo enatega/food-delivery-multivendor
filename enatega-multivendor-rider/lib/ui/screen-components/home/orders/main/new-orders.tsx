@@ -37,6 +37,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     loadingAssigned,
     errorAssigned,
     assignedOrders,
+    dataProfile,
     refetchAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
@@ -48,6 +49,10 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   const onInitOrders = () => {
     if (loadingAssigned || errorAssigned) return;
     if (!assignedOrders) return;
+    if (!dataProfile?.available) {
+      setOrders([]);
+      return;
+    }
 
     const _orders = assignedOrders?.filter(
       (o: IOrder) => o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
@@ -59,7 +64,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Use Effect
   useEffect(() => {
     onInitOrders();
-  }, [assignedOrders, route.key]);
+  }, [assignedOrders, dataProfile?.available, route.key]);
 
   const keyExtractor = useCallback((item: IOrder) => item._id, []);
 

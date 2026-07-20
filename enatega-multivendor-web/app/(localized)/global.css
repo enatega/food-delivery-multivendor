@@ -1,7 +1,7 @@
 @layer tailwind-base, primereact, tailwind-utilities;
 
 /* IMPORTANT: In "styled" mode you must add the PrimeReact Theme here. Do NOT include in "unstyled" mode */
-@import "primereact/resources/themes/lara-light-blue/theme.css"
+@import "primereact/resources/themes/lara-light-green/theme.css"
   layer(primereact);
 @layer tailwind-base {
   @tailwind base;
@@ -14,9 +14,13 @@
 
 :root {
   --primary-color: #75d04b;
-   --primary-light: #F3FFEE;
-   --primary-dark: #5AC12F;
-  --secondary-color: #0EA5E9;
+  --primary-light: #f3ffee;
+  --primary-dark: #5ac12f;
+  --primary-hover: #68c73e;
+  --primary-pressed: #56b02f;
+  --primary-focus: rgba(117, 208, 75, 0.32);
+  --primary-disabled: #b9e8a3;
+  --secondary-color: #75d04b;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
@@ -736,6 +740,20 @@ Discovery Caurousal
   right: -10px;
 }
 
+.custom-navigation-carousel .p-carousel-prev,
+.custom-navigation-carousel .p-carousel-next {
+  display: none !important;
+}
+
+.restaurant-card-carousel.low-count-carousel .p-carousel-items-container {
+  justify-content: flex-start !important;
+}
+
+.restaurant-card-carousel.low-count-carousel .p-carousel-item {
+  flex: 0 0 var(--slider-card-column-width) !important;
+  max-width: var(--slider-card-column-width) !important;
+}
+
 /* Remove button on smaller screens */
 @media (max-width: 768px) {
   .discovery-carousel .p-carousel-prev,
@@ -1030,5 +1048,3 @@ input:-webkit-autofill:active {
 .rtl-carousel .p-carousel-container {
   direction: ltr !important; /* Force LTR for animation */
 }
-
-

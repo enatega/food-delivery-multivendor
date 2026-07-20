@@ -126,7 +126,7 @@ function MainSection({
               <CustomButton
                 label={t("load_more")}
                 onClick={onLoadMore}
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg"
+                className="px-6 py-2 bg-secondary-color hover:bg-primary-dark text-white rounded-lg"
               />
             </div>
           )} */}

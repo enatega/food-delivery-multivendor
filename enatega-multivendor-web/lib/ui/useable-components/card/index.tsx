@@ -14,8 +14,9 @@ import IconWithTitle from "../icon-with-title";
 import { useSearchUI } from "@/lib/context/search/search.context";
 
 // Interface
-import { ICardProps, IOpeningTime } from "@/lib/utils/interfaces";
+import { ICardProps } from "@/lib/utils/interfaces";
 import { saveSearchedKeyword } from "@/lib/utils/methods";
+import { isRestaurantOpen } from "@/lib/utils/constants/isRestaurantOpen";
 import CustomDialog from "../custom-dialog";
 import { Button } from "primereact/button";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
@@ -34,29 +35,7 @@ const Card: React.FC<ICardProps> = ({
     useSearchUI();
 
   const { DELIVERY_RATE, CURRENCY_SYMBOL } = useConfig();
-
-  const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
-    const now = new Date();
-    const currentDay = now
-      .toLocaleString("en-US", { weekday: "short" })
-      .toUpperCase(); // e.g., "MON", "TUE", ...
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
-    if (!todayOpening) return false;
-
-    return todayOpening.times.some(({ startTime, endTime }) => {
-      const [startHour, startMinute] = startTime.map(Number);
-      const [endHour, endMinute] = endTime.map(Number);
-
-      const startTotal = startHour * 60 + startMinute;
-      const endTotal = endHour * 60 + endMinute;
-      const nowTotal = currentHour * 60 + currentMinute;
-
-      return nowTotal >= startTotal && nowTotal <= endTotal;
-    });
-  };
+  const isOpen = isRestaurantOpen(item);
 
   return (
     <div
@@ -66,11 +45,7 @@ const Card: React.FC<ICardProps> = ({
           : "my-[4%]"
       } dark:bg-gray-800 dark:text-white`}
       onClick={() => {
-        if (
-          !item?.isAvailable ||
-          !item?.isActive ||
-          !isWithinOpeningTime(item?.openingTimes)
-        ) {
+        if (!isOpen) {
           handleUpdateIsModalOpen(true, item._id);
           return;
         }
@@ -98,9 +73,7 @@ const Card: React.FC<ICardProps> = ({
       </div>
 
       {/* Overlay if closed */}
-      {(!item?.isAvailable ||
-        !item?.isActive ||
-        !isWithinOpeningTime(item?.openingTimes)) && (
+      {!isOpen && (
         <div className="absolute rounded-md top-0 left-0 w-full h-[160px] bg-black/50 opacity-75 z-20 flex items-center justify-center">
           <div className="text-white text-center z-30">
             <p className="text-lg font-bold">{t("closed_label")}</p>
@@ -136,7 +109,7 @@ const Card: React.FC<ICardProps> = ({
 
         {/* Icons Section */}
         <div className="flex flex-row justify-between w-[80%] sm:w-[100%] lg:w-[75%] pt-1">
-          <div className="flex items-center justify-center gap-1 text-blue-400">
+          <div className="flex items-center justify-center gap-1 text-secondary-color dark:text-primary-color">
             <span>{CURRENCY_SYMBOL}</span>
             <p className="font-light text-[10px]">{item?.minimumOrder}</p>
           </div>

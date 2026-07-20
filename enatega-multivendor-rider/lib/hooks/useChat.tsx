@@ -27,6 +27,30 @@ export const useChatScreen = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [image, setImage] = useState([]);
 
+  const normalizeMessages = (incomingMessages: any[] = []) => {
+    const uniqueMessages = new Map<string, any>();
+
+    incomingMessages.forEach((message: any, index: number) => {
+      const normalizedMessage = {
+        _id: String(message?.id ?? message?._id ?? `${message?.createdAt ?? Date.now()}-${index}`),
+        text: message?.message ?? message?.text ?? "",
+        image: message?.image || undefined,
+        createdAt: new Date(message?.createdAt ?? Date.now()),
+        user: {
+          _id: String(message?.user?.id ?? message?.user?._id ?? ""),
+          name: message?.user?.name ?? "",
+        },
+      };
+
+      uniqueMessages.set(normalizedMessage._id, normalizedMessage);
+    });
+
+    return Array.from(uniqueMessages.values()).sort(
+      (a: any, b: any) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  };
+
   // API
   const { subscribeToMore: subscribeToMessages, data: chatData } = useQuery(
     CHAT,
@@ -70,7 +94,9 @@ export const useChatScreen = () => {
         name: dataProfile?.name ?? "",
       },
     };
-    setMessages((previousMessages: any[]) => [newMessage, ...previousMessages]);
+    setMessages((previousMessages: any[]) =>
+      normalizeMessages([newMessage, ...previousMessages]),
+    );
 
     send({
       variables: {
@@ -100,7 +126,9 @@ export const useChatScreen = () => {
         name: dataProfile?.name ?? "",
       },
     };
-    setMessages((previousMessages: any[]) => [newMessage, ...previousMessages]);
+    setMessages((previousMessages: any[]) =>
+      normalizeMessages([newMessage, ...previousMessages]),
+    );
 
     send({
       variables: {
@@ -171,18 +199,7 @@ export const useChatScreen = () => {
 
   useEffect(() => {
     if (chatData) {
-      setMessages(
-        chatData?.chat?.map((message: any) => ({
-          _id: message?.id ?? "",
-          text: message?.message ?? "",
-          image: message?.image || undefined,
-          createdAt: message.createdAt,
-          user: {
-            _id: message.user.id ?? "",
-            name: message.user.name,
-          },
-        })),
-      );
+      setMessages(normalizeMessages(chatData?.chat ?? []));
     }
   }, [chatData]);
 

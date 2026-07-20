@@ -100,7 +100,7 @@ export const ItemDetailSection = <
               }
               onChange={() => handleSelect(option)}
               disabled={option.isOutOfStock}
-              className="accent-sky-600 dark:accent-sky-400 dark:bg-gray-700 dark:border-gray-600 "
+              className="accent-primary-color dark:accent-primary-color dark:bg-gray-700 dark:border-gray-600 "
             />
 
             {/* Label & Price */}

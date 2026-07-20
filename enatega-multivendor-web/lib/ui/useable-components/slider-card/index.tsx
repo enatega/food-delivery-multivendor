@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Carousel } from "primereact/carousel";
 
 import { ISliderCardComponentProps } from "@/lib/utils/interfaces";
@@ -25,11 +25,15 @@ const SliderCard = <T,>({
   last,
   heading,
 }: ISliderCardComponentProps<T>) => {
-  const [page, setPage] = useState(0);
   const t = useTranslations();
   const [numVisible, setNumVisible] = useState(getNumVisible());
   const [isModalOpen, setIsModalOpen] = useState({value: false, id: ""});
   const headingLabel = t.has(heading) ? t(heading) : heading;
+  const carouselRef = useRef<React.ElementRef<typeof Carousel>>(null);
+  const shouldUseFixedCardColumns = data?.length > 0 && data.length < numVisible;
+  const fixedColumnStyle = {
+    "--slider-card-column-width": `${100 / numVisible}%`,
+  } as React.CSSProperties;
 
   const handleUpdateIsModalOpen = useCallback((value: boolean, id: string) => {
     if (isModalOpen.value !== value || isModalOpen.id !== id) {
@@ -41,28 +45,34 @@ const SliderCard = <T,>({
   const router = useRouter();
 
   function getNumVisible() {
-    if (typeof window === "undefined") return;
-    // Get the current screen width
+    if (typeof window === "undefined") return 4;
+
     const width = window.innerWidth;
+    let visibleItems = 4;
 
-    // Find the matching responsive option
-    const option =
-      responsiveOptions.find((opt) => width <= parseInt(opt.breakpoint)) ||
-      responsiveOptions[0];
+    responsiveOptions.forEach((option) => {
+      if (width <= parseInt(option.breakpoint)) {
+        visibleItems = option.numVisible;
+      }
+    });
 
-    return option.numVisible || 0;
+    return visibleItems;
   }
 
+  const clickCarouselNavigator = (selector: ".p-carousel-prev" | ".p-carousel-next") => {
+    const carouselElement = carouselRef.current?.getElement();
+    const navigatorButton =
+      carouselElement?.querySelector<HTMLButtonElement>(selector);
+
+    navigatorButton?.click();
+  };
+
   const next = () => {
-    setPage((prevPage) =>
-      prevPage < totalPages - 1 ? prevPage + numScroll : 0
-    ); // Reset to first page at the end
+    clickCarouselNavigator(".p-carousel-next");
   };
 
   const prev = () => {
-    setPage((prevPage) =>
-      prevPage > 0 ? prevPage - numScroll : totalPages - 1
-    ); // Go to last page if at start
+    clickCarouselNavigator(".p-carousel-prev");
   };
 
   // Effects
@@ -85,10 +95,6 @@ const SliderCard = <T,>({
         .removeEventListener("change", handleDeviceChange);
     };
   }, []);
-
-  const numScroll = 1; // Scroll by 1 item
-  const totalPages =
-    Math.ceil((data?.length - (numVisible || 0)) / numScroll) + 1; // Total pages
 
   // see all click handler
   const onSeeAllClick = () => {
@@ -135,16 +141,17 @@ const SliderCard = <T,>({
         </div>
 
         <Carousel
+          ref={carouselRef}
           value={data}
-          className={`  w-["100%"] ${data?.length == 1 ? "md:w-[25%]" : "md:w-[100%]"} discovery-carousel ${isRTL ? "rtl-carousel" : ""}`} // Add RTL class
+          className={`w-full discovery-carousel custom-navigation-carousel restaurant-card-carousel ${shouldUseFixedCardColumns ? "low-count-carousel" : ""} ${isRTL ? "rtl-carousel" : ""}`}
+          style={shouldUseFixedCardColumns ? fixedColumnStyle : undefined}
           itemTemplate={(item) => <Card item={item} isModalOpen={isModalOpen} handleUpdateIsModalOpen={handleUpdateIsModalOpen} />}
           numVisible={numVisible}
           numScroll={1}
           circular
           responsiveOptions={responsiveOptions}
           showIndicators={false}
-          showNavigators={false}
-          page={page}
+          showNavigators
         />
       </div>
     )

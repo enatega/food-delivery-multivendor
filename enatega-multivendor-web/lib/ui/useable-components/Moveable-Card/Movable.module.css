@@ -14,6 +14,19 @@
   object-fit: cover;
 }
 
+.mockupImageFrame {
+  position: absolute;
+  inset: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mockupImage {
+  object-fit: contain;
+  object-position: center;
+}
+
 .textContainer {
   z-index: 10;
 }
