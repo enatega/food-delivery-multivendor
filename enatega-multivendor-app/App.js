@@ -42,8 +42,6 @@ import {
   stopPublicAccessTokenRefresh
 } from './src/services/publicAcccessService'
 
-const CLARITY_CONSENT_KEY = 'clarity_tracking_consent'
-
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
     return {
@@ -153,15 +151,12 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (__DEV__ || !CLARITY_ENABLED || clarityInitialized) return
+    if (!CLARITY_ENABLED || clarityInitialized) return
 
     let isMounted = true
 
     ;(async () => {
       try {
-        const consent = await AsyncStorage.getItem(CLARITY_CONSENT_KEY)
-        if (consent !== 'granted' || !isMounted) return
-
         const Clarity = await import('@microsoft/react-native-clarity')
         if (!isMounted) return
 
