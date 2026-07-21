@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { getZones } from '../apollo/queries'
 import NetInfo from '@react-native-community/netinfo'
+import { DEMO_DEFAULT_LOCATION, ENABLE_DEMO_DEFAULT_LOCATION } from '../utils/demoDefaultLocation'
 // import * as Network from 'expo-network';
 
 const GET_ZONES = gql`
@@ -12,7 +13,8 @@ const GET_ZONES = gql`
 export const LocationContext = createContext()
 
 export const LocationProvider = ({ children }) => {
-  const [location, setLocation] = useState(null)
+  const [location, setLocation] = useState(ENABLE_DEMO_DEFAULT_LOCATION ? DEMO_DEFAULT_LOCATION : null)
+  const [isLocationLoaded, setIsLocationLoaded] = useState(ENABLE_DEMO_DEFAULT_LOCATION)
   const [cities, setCities] = useState([])
   const [permissionState, setPermissionState] = useState(null)
   const [isConnected, setIsConnected] = useState(false)
@@ -44,12 +46,19 @@ export const LocationProvider = ({ children }) => {
   useEffect(() => {
     const getActiveLocation = async () => {
       try {
+        if (ENABLE_DEMO_DEFAULT_LOCATION) {
+          setLocation(DEMO_DEFAULT_LOCATION)
+          return
+        }
+
         const locationStr = await AsyncStorage.getItem('location')
         if (locationStr) {
           setLocation(JSON.parse(locationStr))
         }
       } catch (err) {
         console.log(err)
+      } finally {
+        setIsLocationLoaded(true)
       }
     }
 
@@ -117,12 +126,13 @@ export const LocationProvider = ({ children }) => {
   const locationContextValue = useMemo(() => ({
     location,
     setLocation,
+    isLocationLoaded,
     cities,
     loading,
     isConnected,
     permissionState,
     setPermissionState
-  }), [location, cities, loading, isConnected, permissionState])
+  }), [location, isLocationLoaded, cities, loading, isConnected, permissionState])
 
   return (
     <LocationContext.Provider value={locationContextValue}>

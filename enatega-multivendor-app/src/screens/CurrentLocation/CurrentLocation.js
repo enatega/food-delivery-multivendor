@@ -23,6 +23,7 @@ import { checkLocationInCities } from '../../utils/locationUtil'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import useWatchLocation from '../../ui/hooks/useWatchLocation'
+import { DEMO_DEFAULT_LOCATION, ENABLE_DEMO_DEFAULT_LOCATION } from '../../utils/demoDefaultLocation'
 
 export default function CurrentLocation() {
   const Analytics = analytics()
@@ -43,7 +44,7 @@ export default function CurrentLocation() {
 
   const { getAddress } = useGeocoding()
 
-  const { cities, setLocation, permissionState, setPermissionState } = useContext(LocationContext)
+  const { cities, location, setLocation, isLocationLoaded, permissionState, setPermissionState } = useContext(LocationContext)
 
   const checkLocationPermission = async () => {
     setLoading(true)
@@ -138,10 +139,23 @@ export default function CurrentLocation() {
     setLoading(true)
 
     // Handle permission request result
-    if (!permissionState) return
+    if (!permissionState || !isLocationLoaded) return
 
     if (!permissionState?.granted) {
       console.log('Location permission not granted')
+      setLoading(false)
+      return
+    }
+
+    if (location) {
+      setLoading(false)
+      return
+    }
+
+    if (!location && ENABLE_DEMO_DEFAULT_LOCATION) {
+      setLocation(DEMO_DEFAULT_LOCATION)
+      setLoading(false)
+      navigation.navigate('Main')
       return
     }
 
@@ -201,7 +215,7 @@ export default function CurrentLocation() {
 
   useEffect(() => {
     getCurrentLocationOnStart()
-  }, [permissionState, permission])
+  }, [permissionState, permission, isLocationLoaded, location])
 
   useEffect(() => {
     checkCityMatch()
