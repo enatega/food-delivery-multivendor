@@ -82,18 +82,19 @@ function Main(props) {
   const locationData = location
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const [citiesModalVisible, setCitiesModalVisible] = useState(false)
+  const restaurantVariables = useMemo(() => ({
+    longitude: location?.longitude || null,
+    latitude: location?.latitude || null,
+    shopType: null,
+    ip: null
+  }), [location?.longitude, location?.latitude])
   const {
     data,
     loading,
     error,
     refetch: refetchRestaurants
   } = useQuery(RESTAURANTS, {
-    variables: {
-      longitude: location?.longitude || null,
-      latitude: location?.latitude || null,
-      shopType: null,
-      ip: null
-    },
+    variables: restaurantVariables,
     fetchPolicy: 'cache-and-network'
   })
 

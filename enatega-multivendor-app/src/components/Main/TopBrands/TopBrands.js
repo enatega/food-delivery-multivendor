@@ -26,12 +26,13 @@ function TopBrands(props) {
   const themeContext = useContext(ThemeContext)
   const currentTheme = useMemo(() => ({ isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }), [i18n.language, themeContext.ThemeValue])
   const navigation = useNavigation()
+  const topBrandsVariables = useMemo(() => ({
+    latitude: location?.latitude,
+    longitude: location?.longitude
+  }), [location?.latitude, location?.longitude])
 
   const { loading, error, data } = useQuery(topRatedVendorsInfo, {
-    variables: {
-      latitude: location?.latitude,
-      longitude: location?.longitude
-    },
+    variables: topBrandsVariables,
     fetchPolicy: 'cache-and-network'
   })
 
