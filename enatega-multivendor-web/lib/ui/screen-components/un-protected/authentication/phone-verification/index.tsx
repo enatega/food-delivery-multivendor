@@ -13,7 +13,6 @@ import { ApolloError, useMutation } from "@apollo/client";
 import { useAuth } from "@/lib/context/auth/auth.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import useToast from "@/lib/hooks/useToast";
-import useUser from "@/lib/hooks/useUser";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import useVerifyOtp from "@/lib/hooks/useVerifyOtp";
@@ -32,9 +31,11 @@ export default function PhoneVerification({
   // const [isResendingOtp, setIsResendingOtp] = useState(false);
   const [userotp, setuserOtp] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const autoSubmittedRef = useRef(false);
 
   // Hooks
   const { SKIP_MOBILE_VERIFICATION, TEST_OTP } = useConfig();
+  const demoOtp = TEST_OTP || "111111";
   const t = useTranslations();
   const {
     user,
@@ -48,7 +49,6 @@ export default function PhoneVerification({
     handleCreateUser,
   } = useAuth();
   const { showToast } = useToast();
-  const { profile } = useUser();
   const { verifyOTP, error } = useVerifyOtp();
 
   // Mutations
@@ -67,9 +67,87 @@ export default function PhoneVerification({
   });
 
   // Handlers
+  const completePhoneVerification = async () => {
+    if (isRegistering) {
+      const userData = await handleCreateUser({
+        email: formData?.email,
+        phone: formData?.phone,
+        name: formData?.name,
+        password: formData?.password,
+        isPhoneExists: formData?.isPhoneExists,
+      });
+
+      if (!userData.phoneIsVerified) {
+        await updateUser({
+          variables: {
+            name: userData?.name ?? "",
+            phone: userData?.phone,
+            phoneIsVerified: true,
+          },
+        });
+      }
+
+      setOtp("");
+      setPhoneOtp("");
+
+      showToast({
+        type: "success",
+        title: t("phone_verification_label"),
+        message: t("your_phone_number_verified_successfully_message"),
+      });
+      showToast({
+        type: "success",
+        title: t("register_label"),
+        message: t("successfully_registered_your_account_message"),
+      });
+
+      setIsRegistering(false);
+      handleChangePanel(0);
+      setIsAuthModalVisible(false);
+      return;
+    }
+
+    const args = isRegistering
+      ? {
+          name: user?.name ?? "",
+          phoneIsVerified: true,
+        }
+      : {
+          phone: user?.phone,
+          name: user?.name ?? "",
+          phoneIsVerified: true,
+        };
+
+    const userData = await updateUser({
+      variables: args,
+    });
+
+    setOtp("");
+    setPhoneOtp("");
+    if (!userData.data?.updateUser?.emailIsVerified && !user?.email) {
+      handleChangePanel(5);
+    } else if (!userData.data?.updateUser?.emailIsVerified && user?.email) {
+      handleChangePanel(3);
+    } else {
+      handleChangePanel(0);
+      setIsAuthModalVisible(false);
+    }
+
+    showToast({
+      type: "success",
+      title: t("update_phone_name_verification_success_title"),
+      message: t("update_phone_name_verification_success_msg"),
+    });
+  };
+
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
+
+      if (SKIP_MOBILE_VERIFICATION) {
+        await completePhoneVerification();
+        return;
+      }
 
       const otpResponse = await verifyOTP({
         variables: {
@@ -81,77 +159,7 @@ export default function PhoneVerification({
       console.log("OTP Response:", otpResponse);
 
       if (otpResponse.data?.verifyOtp && (!!formData?.phone || !!user?.phone)) {
-        if (isRegistering) {
-          const userData = await handleCreateUser({
-            email: formData?.email,
-            phone: formData?.phone,
-            name: formData?.name,
-            password: formData?.password,
-            isPhoneExists: formData?.isPhoneExists,
-          });
-
-          if (!userData.phoneIsVerified) {
-            await updateUser({
-              variables: {
-                name: userData?.name ?? "",
-                phone: userData?.phone,
-                phoneIsVerified: true,
-              },
-            });
-          }
-
-          setOtp("");
-          setPhoneOtp("");
-
-          showToast({
-            type: "success",
-            title: t("phone_verification_label"),
-            message: t("your_phone_number_verified_successfully_message"),
-          });
-          showToast({
-            type: "success",
-            title: t("register_label"),
-            message: t("successfully_registered_your_account_message"), // put an exclamation mark at the end of this sentence in the translations
-          });
-
-          setIsRegistering(false);
-          handleChangePanel(0);
-          setIsAuthModalVisible(false);
-        } else {
-          const args = isRegistering
-            ? {
-                name: user?.name ?? "",
-                phoneIsVerified: true,
-              }
-            : {
-                phone: user?.phone,
-                name: user?.name ?? "",
-                phoneIsVerified: true,
-              };
-
-          const userData = await updateUser({
-            variables: args,
-          });
-
-          setOtp("");
-          setPhoneOtp("");
-          if (!userData.data?.updateUser?.emailIsVerified && !user?.email) {
-            handleChangePanel(5);
-          } else if (
-            !userData.data?.updateUser?.emailIsVerified &&
-            user?.email
-          ) {
-            handleChangePanel(3);
-          } else {
-            handleChangePanel(0);
-            setIsAuthModalVisible(false);
-          }
-          return showToast({
-            type: "success",
-            title: t("update_phone_name_verification_success_title"),
-            message: t("update_phone_name_verification_success_msg"),
-          });
-        }
+        await completePhoneVerification();
       } else {
         showToast({
           type: "error",
@@ -192,23 +200,6 @@ export default function PhoneVerification({
 
   // UseEffects
   useEffect(() => {
-    if (SKIP_MOBILE_VERIFICATION) {
-      setOtp(TEST_OTP);
-      showToast({
-        type: "success",
-        title: t("phone_verification_label"),
-        message: t("your_phone_number_verified_successfully_message"),
-      });
-      if (!profile?.emailIsVerified) {
-        handleChangePanel(5);
-      } else {
-        handleChangePanel(0);
-        setIsAuthModalVisible(false);
-      }
-    }
-  }, [SKIP_MOBILE_VERIFICATION]);
-
-  useEffect(() => {
     inputRefs.current = inputRefs.current.slice(0, 6);
 
     // Set initial values from phoneOtp if it exists
@@ -217,6 +208,24 @@ export default function PhoneVerification({
       setuserOtp(otpArray.concat(Array(6 - otpArray.length).fill("")));
     }
   }, []);
+
+  useEffect(() => {
+    if (!SKIP_MOBILE_VERIFICATION || autoSubmittedRef.current) return;
+
+    const otpDigits = demoOtp.slice(0, 6).split("");
+    const filledOtp = otpDigits.concat(Array(Math.max(0, 6 - otpDigits.length)).fill(""));
+
+    autoSubmittedRef.current = true;
+    setuserOtp(filledOtp);
+    setPhoneOtp(demoOtp);
+    setOtp(demoOtp);
+
+    const timer = window.setTimeout(() => {
+      void handleSubmit();
+    }, 150);
+
+    return () => window.clearTimeout(timer);
+  }, [SKIP_MOBILE_VERIFICATION, demoOtp]);
 
   // useEffect for displaying otp verification error
   useEffect(() => {
@@ -247,6 +256,11 @@ export default function PhoneVerification({
         <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
           {t("please_check_your_inbox_message_1")}
         </p>
+        {SKIP_MOBILE_VERIFICATION && (
+          <p className="text-sm text-emerald-700 dark:text-emerald-400 mb-6">
+            {`Demo login mode is on. We're using test OTP ${demoOtp} and verifying it automatically for you.`}
+          </p>
+        )}
       </div>
       <div className="w-full mb-6">
         <div className="flex justify-center flex-wrap gap-2">
@@ -261,6 +275,7 @@ export default function PhoneVerification({
               maxLength={1}
               aria-label={`OTP digit ${index + 1}`}
               value={userotp[index]}
+              readOnly={SKIP_MOBILE_VERIFICATION}
               onChange={(e) => {
                 const value = e.target.value.replace(/\D/, ""); // Only digits
                 const updatedOtp = [...userotp];

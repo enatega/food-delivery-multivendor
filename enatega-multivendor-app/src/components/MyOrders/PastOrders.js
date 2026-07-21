@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react'
-import { View, TouchableOpacity, Image, FlatList } from 'react-native'
+import { View, TouchableOpacity, FlatList } from 'react-native'
 import { useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
 import { subscriptionOrder } from '../../apollo/subscriptions'
@@ -18,6 +18,7 @@ import StarIcon from '../../../src/assets/SVG/imageComponents/starIcon'
 import { scale } from '../../utils/scaling'
 import EmptyView from '../EmptyView/EmptyView'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
+import CachedImage from '../CachedImage'
 
 function emptyViewPastOrders() {
   const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
@@ -46,8 +47,11 @@ const PastOrders = ({ navigation, loading, error, pastOrders, onPressReview }) =
   const renderItem = useCallback(({ item }) => <Item item={item} navigation={navigation} currentTheme={currentTheme} configuration={configuration} onPressReview={onPressReview} />, [configuration, currentTheme, navigation, onPressReview])
   const emptyState = useMemo(() => emptyViewPastOrders(), [])
 
-  if (loading) {
-    return <></>
+  // Only blank the screen on the very first load. During pull-to-refresh
+  // (networkStatus 4) Apollo's `loading` is also true, but we keep the list /
+  // empty-state mounted so the RefreshControl spinner shows above the content.
+  if (networkStatusOrders === 1) {
+    return <Spinner size={'small'} backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (error) return <TextError text={error.message} />
 
@@ -138,7 +142,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
               flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
             }}
           >
-            <Image style={styles(currentTheme).restaurantImage} resizeMode='cover' source={{ uri: item?.restaurant?.image }} />
+            <CachedImage style={styles(currentTheme).restaurantImage} resizeMode='cover' source={{ uri: item?.restaurant?.image }} />
             <View style={styles(currentTheme).textContainer2}>
               <View
                 style={{

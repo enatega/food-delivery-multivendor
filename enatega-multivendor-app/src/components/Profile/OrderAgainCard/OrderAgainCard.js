@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext } from 'react'
-import { TouchableOpacity, View, Image } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -10,6 +10,7 @@ import {
   FontAwesome5,
 } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import CachedImage from '../../CachedImage'
 
 function OrderAgainCard(props) {
   const { t } = useTranslation()
@@ -25,7 +26,7 @@ function OrderAgainCard(props) {
         activeOpacity={1}
         onPress={() => navigation.navigate('Restaurant', { ...props })}>
         <View style={styles().imageContainer}>
-          <Image
+          <CachedImage
             resizeMode="cover"
             source={{ uri: props.image }}
             style={styles().restaurantImage}

@@ -345,41 +345,34 @@ const RestaurantSections = ({
 
   const renderCategoryItem = ({ item, index }) => {
     const content = (
-      <TouchableOpacity 
+      <View style={styles(currentTheme).categoryCardShadow}>
+        <TouchableOpacity
         style={[
-          styles(currentTheme).categoryCard,
-          // Cross-platform shadow with subtle appearance
-          {
-            // iOS shadow - subtle and professional
-            shadowColor: '#000000',
-            shadowOffset: {
-              width: 0,
-              height: 2, // Reduced for subtlety
-            },
-            shadowOpacity: 0.08, // Much lighter opacity
-            shadowRadius: 3, // Smaller radius for crisp shadow
-            // Android shadow
-            elevation: 3, // Reduced elevation for consistency
-            // Ensure the shadow container has proper background
-            backgroundColor: currentTheme.themeBackground || '#FFFFFF',
-            // Add these for iOS shadow fix
-            borderRadius: scale(16), // Make sure border radius is here
-            overflow: 'visible', // Important for shadow visibility
-          }
-        ]} 
+          styles(currentTheme).categoryCard
+        ]}
         onPress={() => handleCategoryClick(item)}
-      > 
-        <ShimmerImage 
-          imageUrl={item.url} 
-          style={styles(currentTheme).categoryImage} 
-          resizeMode='cover' 
-        />
-        <TextDefault numberOfLines={1} style={styles(currentTheme).categoryTitle}>
-          {item.category_name}
-        </TextDefault>
-      </TouchableOpacity>
+        activeOpacity={0.9}
+      >
+          <ShimmerImage
+            imageUrl={item.url}
+            style={styles(currentTheme).categoryImage}
+            resizeMode='cover'
+          />
+          <View style={styles(currentTheme).categoryTitleContainer}>
+            <TextDefault
+              numberOfLines={2}
+              ellipsizeMode='tail'
+              textBreakStrategy='simple'
+              android_hyphenationFrequency='none'
+              style={styles(currentTheme).categoryTitle}
+            >
+              {item.category_name}
+            </TextDefault>
+          </View>
+        </TouchableOpacity>
+      </View>
     )
-  
+
     if (!hasCategoriesAnimated) {
       return <AnimatedItem index={index}>{content}</AnimatedItem>
     }

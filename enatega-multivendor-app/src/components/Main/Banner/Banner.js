@@ -9,7 +9,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import VideoBanner from './VideoBanner'
 import { BANNER_PARAMETERS } from '../../../utils/banner-routes'
 import { scale } from '../../../utils/scaling'
-import { getCachedMediaUri } from '../../../utils/mediaCache'
+import { getCachedMediaUri, useCachedMediaUri } from '../../../utils/mediaCache'
 
 // Helper function to get media type from URL
 const getMediaTypeFromUrl = (url) => {
@@ -22,12 +22,12 @@ const getMediaTypeFromUrl = (url) => {
 // across renders (otherwise `|| {}` would break React.memo on every render).
 const EMPTY_CACHE = {}
 
-const BannerContent = ({ item }) => (
-  <View style={styles().container}>
-    <TextDefault H3 bolder textColor='#fff' style={{ textTransform: 'capitalize', marginHorizontal: scale(5) }}>
+const BannerContent = ({ item, currentTheme }) => (
+  <View style={styles(currentTheme).container}>
+    <TextDefault H2 bolder textColor='#fff' style={{ textTransform: 'capitalize', marginHorizontal: scale(15), marginBottom: scale(8) }}>
       {item?.title}
     </TextDefault>
-    <TextDefault bolder textColor='#fff' style={{ marginHorizontal: scale(5), marginBottom: scale(5) }}>
+    <TextDefault H5 bold textColor='#fff' style={{ marginHorizontal: scale(15), marginBottom: scale(15), opacity: 0.95 }}>
       {item?.description}
     </TextDefault>
   </View>
@@ -39,23 +39,24 @@ const BannerSlide = React.memo(function BannerSlide({ item, width, cached, isAct
   const mediaType = getMediaTypeFromUrl(item.file)
   const shouldRenderVideo = mediaType === 'video' && (!Platform.OS || Platform.OS !== 'android' || isActiveSlide)
   const fallbackImage = cached.image || item?.image || item?.thumbnail || item?.previewImage
+  const imageUri = useCachedMediaUri(fallbackImage, 'image')
   const videoUri = cached.video || item?.file
 
   return (
     <TouchableOpacity style={[styles(currentTheme).banner, { width }]} activeOpacity={0.9} onPress={() => onPress(item)}>
       {shouldRenderVideo ? (
-        <VideoBanner style={styles().image} source={videoUri}>
-          <BannerContent item={item} />
+        <VideoBanner style={styles(currentTheme).image} source={videoUri}>
+          <BannerContent item={item} currentTheme={currentTheme} />
         </VideoBanner>
       ) : (
-        <View style={styles().csd}>
-          {fallbackImage ? (
-            <ImageBackground source={{ uri: fallbackImage }} style={styles().imgs1} resizeMode='cover'>
-              <BannerContent item={item} />
+        <View style={styles(currentTheme).csd}>
+          {imageUri ? (
+            <ImageBackground source={{ uri: imageUri }} style={styles(currentTheme).imgs1} resizeMode='cover'>
+              <BannerContent item={item} currentTheme={currentTheme} />
             </ImageBackground>
           ) : (
-            <View style={[styles().imgs1, { backgroundColor: '#1f2937' }]}>
-              <BannerContent item={item} />
+            <View style={[styles(currentTheme).imgs1, { backgroundColor: '#1f2937' }]}>
+              <BannerContent item={item} currentTheme={currentTheme} />
             </View>
           )}
         </View>
@@ -181,8 +182,9 @@ const Banner = ({ banners }) => {
       autoplay
       autoplayDelay={3}
       autoplayLoop
-      removeClippedSubviews={true}
-      windowSize={3}
+      // Keep neighboring slides mounted so reverse swipes do not flash blank.
+      removeClippedSubviews={false}
+      windowSize={5}
       showPagination
       data={bannersData}
       snapToInterval={width} // Ensures only one image is visible at a time

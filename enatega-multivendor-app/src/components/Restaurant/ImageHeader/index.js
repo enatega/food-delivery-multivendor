@@ -1,2 +1,4 @@
-import ImageHeader from './ImageHeader'
+import ImageHeader, { CategoryTabsRow } from './ImageHeader'
+
+export { CategoryTabsRow }
 export default ImageHeader

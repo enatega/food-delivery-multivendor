@@ -2,6 +2,7 @@
 import type React from "react";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import { flushSync } from "react-dom";
 // Api
 import { DEACTIVATE_USER, GET_USER_PROFILE } from "@/lib/api/graphql";
 import { useMutation, useQuery, ApolloError } from "@apollo/client";
@@ -87,17 +88,27 @@ export default function SettingsMain() {
     // You can use a mutation to update the user's settings
   };
   //  handle Logout
-  const handleLogout = async () => {
-    // Add your logout logic here
-    // e.g., clear cookies, redirect to login page, etc.
-    setAuthToken("");
-    await logout();
+  const handleLogout = () => {
+    flushSync(() => {
+      setLogoutConfirmationVisible(false);
+    });
+
+    if (typeof window !== "undefined") {
+      window.sessionStorage.removeItem("pending_app_toast");
+    }
+
     showToast({
       type: "success",
       title: t("logoutSuccessToastTitle"),
       message: t("logoutSuccessToastMessage"),
     });
-    router.push("/");
+
+    window.setTimeout(() => {
+      setAuthToken("");
+      void logout().finally(() => {
+        router.push("/");
+      });
+    }, 100);
   };
 
 
@@ -214,7 +225,7 @@ const handleConfirmDelete = async () => {
             <h1
               title={t("updatePhoneTitle")}
               onClick={handleUpdatePhoneModal}
-              className="font-medium text-blue-700 dark:text-blue-400 text-base md:text-lg  cursor-pointer"
+              className="font-medium text-secondary-color dark:text-primary-color hover:text-primary-dark text-base md:text-lg cursor-pointer"
             >
               {profileData?.profile?.phone || "N/A"}
             </h1>
@@ -232,7 +243,7 @@ const handleConfirmDelete = async () => {
           <h1
             title={t("updateNameTitle")}
             onClick={handleUpdateNameModal}
-            className="font-medium text-blue-700 dark:text-blue-400 text-base md:text-lg  cursor-pointer"
+            className="font-medium text-secondary-color dark:text-primary-color hover:text-primary-dark text-base md:text-lg cursor-pointer"
           >
             {profileData?.profile?.name || "N/A"}
           </h1>

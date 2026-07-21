@@ -8,6 +8,7 @@ import { theme } from '../../../utils/themeColors'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import UserContext from '../../../context/User'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import AuthContext from '../../../context/Auth'
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import analytics from '../../../utils/analytics'
@@ -24,10 +25,13 @@ const CREATEUSER = gql`
 const useEmailOtp = (isPhoneExists) => {
   const { TEST_OTP } = useEnvVars()
   const Analytics = analytics()
+  const autoSubmittedRef = useRef(false)
+  const demoOtp = TEST_OTP || '111111'
 
   const { t } = useTranslation()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
+  const { setTokenAsync } = useContext(AuthContext)
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
@@ -84,6 +88,22 @@ const useEmailOtp = (isPhoneExists) => {
         email: data.createUser.email,
         type: 'email'
       })
+      console.log('onCreateUserCompleted data:', data,configuration?.skipMobileVerification, data?.createUser?.token)
+      if (configuration?.skipMobileVerification && data?.createUser?.token) {
+        await setTokenAsync(data.createUser.token)
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Main',
+              params: {
+                screen: 'Discovery'
+              }
+            }
+          ]
+        })
+        return
+      }
       navigation.navigate('PhoneOtp', {
         name: data?.createUser?.name,
         phone: data?.createUser?.phone,
@@ -187,16 +207,17 @@ const useEmailOtp = (isPhoneExists) => {
   useEffect(() => {
     let timer = null
     if (!configuration) return
-    if (configuration.skipEmailVerification) {
-      setOtp(TEST_OTP)
+    if (configuration.skipEmailVerification && !autoSubmittedRef.current) {
+      autoSubmittedRef.current = true
+      setOtp(demoOtp)
       timer = setTimeout(async () => {
-        await onCodeFilled(TEST_OTP)
-      }, 3000)
+        await onCodeFilled(demoOtp)
+      }, 300)
     }
     return () => {
       timer && clearTimeout(timer)
     }
-  }, [configuration])
+  }, [configuration, demoOtp])
 
   return {
     otp,
@@ -209,7 +230,9 @@ const useEmailOtp = (isPhoneExists) => {
     onCodeFilled,
     resendOtp,
     currentTheme,
-    themeContext
+    themeContext,
+    demoOtp,
+    isDemoOtpEnabled: Boolean(configuration?.skipEmailVerification)
   }
 }
 

@@ -4,8 +4,7 @@ import {
   FlatList,
   TouchableOpacity,
   StatusBar,
-  Platform,
-  Image
+  Platform
 } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -26,6 +25,7 @@ import Analytics from '../../utils/analytics'
 import OrdersContext from '../../context/Orders'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { useTranslation } from 'react-i18next'
+import CachedImage from '../../components/CachedImage'
 
 const orderStatusActive = ['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED']
 const orderStatusInactive = ['DELIVERED', 'COMPLETED']
@@ -179,7 +179,7 @@ function MyOrders(props) {
               })
             }>
             <View style={styles(currentTheme).subContainer}>
-              <Image
+              <CachedImage
                 style={styles(currentTheme).restaurantImage}
                 resizeMode="cover"
                 source={{ uri: item?.restaurant?.image }}

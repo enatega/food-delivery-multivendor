@@ -38,14 +38,11 @@ const HEADER_MIN_HEIGHT = TOP_BAR_HEIGHT
 const SCROLL_RANGE = HEADER_MAX_HEIGHT
 
 function ItemDetail(props) {
-  const { food, addons, options, restaurant } = props?.route?.params
+  const { food, addons, options, restaurant, cartItem: editCartItem } = props?.route?.params
 
-  // States
-  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false)
-  const [specialInstructions, setSpecialInstructions] = useState('')
-  const [selectedVariation, setSelectedVariation] = useState({
-    ...food?.variations[0],
-    addons: food?.variations[0].addons?.map((fa) => {
+  const getVariationWithAddons = (variation) => ({
+    ...variation,
+    addons: variation?.addons?.map((fa) => {
       const addon = addons?.find((a) => a._id === fa)
       const addonOptions = addon?.options?.map((ao) => {
         return options?.find((o) => o._id === ao)
@@ -56,12 +53,24 @@ function ItemDetail(props) {
       }
     })
   })
-  const [selectedAddons, setSelectedAddons] = useState([])
+
+  const getSelectedAddons = () => {
+    return editCartItem?.addons?.map((addon) => ({
+      ...addon,
+      options: addon?.options?.map((option) => options?.find((opt) => opt._id === option._id) || option)
+    })) || []
+  }
+
+  // States
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false)
+  const [specialInstructions, setSpecialInstructions] = useState(editCartItem?.specialInstructions || '')
+  const [selectedVariation, setSelectedVariation] = useState(getVariationWithAddons(food?.variations?.find((variation) => variation._id === editCartItem?.variation?._id) || food?.variations[0]))
+  const [selectedAddons, setSelectedAddons] = useState(getSelectedAddons)
 
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
   const Analytics = analytics()
-  const { restaurant: restaurantCart, setCartRestaurant, cart, addQuantity, addCartItem } = useContext(UserContext)
+  const { restaurant: restaurantCart, setCartRestaurant, cart, updateCart, addQuantity, addCartItem } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const inset = useSafeAreaInsets()
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
@@ -209,31 +218,50 @@ function ItemDetail(props) {
       }))
     }))
 
+    const isSameCartItem = (cartItem) => {
+      if (cartItem?._id !== food?._id || cartItem?.variation?._id !== selectedVariation?._id) return false
+      if (cartItem?.addons?.length !== addons?.length) return false
+      return addons?.every((newAddon) => {
+        const cartAddon = cartItem.addons?.find((ad) => ad._id === newAddon._id)
+        if (!cartAddon || cartAddon?.options?.length !== newAddon?.options?.length) return false
+        return newAddon?.options?.every((newOption) => {
+          return cartAddon?.options?.some((op) => op._id === newOption._id)
+        })
+      })
+    }
+
+    if (editCartItem?.key) {
+      const nextCart = clearFlag ? [] : cart.filter((cartItem) => cartItem.key !== editCartItem.key)
+      const cartItem = {
+        ...editCartItem,
+        _id: food?._id,
+        quantity,
+        variation: {
+          _id: selectedVariation?._id
+        },
+        addons,
+        specialInstructions
+      }
+      const matchingIndex = nextCart.findIndex(isSameCartItem)
+
+      if (matchingIndex > -1) {
+        nextCart[matchingIndex] = {
+          ...nextCart[matchingIndex],
+          quantity: nextCart[matchingIndex].quantity + quantity
+        }
+      } else {
+        nextCart.push(cartItem)
+      }
+
+      await setCartRestaurant(restaurant)
+      await updateCart(nextCart)
+      navigation.goBack()
+      return
+    }
+
     const cartItem = clearFlag
       ? null
-      : cart.find((cartItem) => {
-          if (cartItem?._id === food?._id && cartItem?.variation?._id === selectedVariation?._id) {
-            if (cartItem?.addons?.length === addons?.length) {
-              if (addons?.length === 0) return true
-              const addonsResult = addons?.every((newAddon) => {
-                const cartAddon = cartItem.addons?.find((ad) => ad._id === newAddon._id)
-
-                if (!cartAddon) return false
-                const optionsResult = newAddon?.options?.every((newOption) => {
-                  const cartOption = cartAddon?.options?.find((op) => op._id === newOption._id)
-
-                  if (!cartOption) return false
-                  return true
-                })
-
-                return optionsResult
-              })
-
-              return addonsResult
-            }
-          }
-          return false
-        })
+      : cart.find(isSameCartItem)
 
     if (!cartItem) {
       await setCartRestaurant(restaurant)
@@ -247,17 +275,7 @@ function ItemDetail(props) {
   const onSelectVariation = (variation) => {
     if (variation?._id) {
       setSelectedVariation({
-        ...variation,
-        addons: variation?.addons?.map((fa) => {
-          const addon = addons?.find((a) => a._id === fa)
-          const addonOptions = addon?.options?.map((ao) => {
-            return options?.find((o) => o._id === ao)
-          })
-          return {
-            ...addon,
-            options: addonOptions
-          }
-        })
+        ...getVariationWithAddons(variation)
       })
     }
   }
@@ -381,7 +399,7 @@ function ItemDetail(props) {
               {selectedVariation?.addons?.map((addon) => {
                 return (<View key={addon?._id}>
                   <TitleComponent title={addon?.title} subTitle={addon?.description} error={addon.error} status={addon?.quantityMinimum === 0 ? t('optional') : `${addon?.quantityMinimum} ${t('Required')}`} />
-                  <Options addon={addon} onSelectOption={onSelectOption} addonRefs={addonRefs} />
+                  <Options addon={addon} onSelectOption={onSelectOption} addonRefs={addonRefs} selectedAddons={selectedAddons} />
                 </View>)
               })}
             </View>
@@ -403,7 +421,7 @@ function ItemDetail(props) {
           <HeadingComponent title={food?.title} price={calculatePrice()} />
         </Animated.View>
         <View style={{ backgroundColor: currentTheme.themeBackground, zIndex: 10 }}>
-          <CartComponent onPress={onPressAddToCart} disabled={validateButton()} />
+          <CartComponent onPress={onPressAddToCart} disabled={validateButton()} quantity={editCartItem?.quantity} />
         </View>
         <View
           style={{

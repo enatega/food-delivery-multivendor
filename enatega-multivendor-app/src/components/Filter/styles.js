@@ -34,6 +34,16 @@ const styles = (props = null) =>
       marginHorizontal: 10,
       borderRadius: 50
     },
+    clearBtn: {
+      width: 'auto',
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: props !== null ? props?.main : '#90E36D',
+      padding: 16,
+      marginHorizontal: 10,
+      marginBottom: 8,
+      borderRadius: 50
+    },
     closeBtn: {
       position: 'absolute',
       ...props?.isRTL ? {left: 10,} : {right: 10,},

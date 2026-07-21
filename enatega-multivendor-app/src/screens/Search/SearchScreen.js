@@ -95,7 +95,7 @@ const SearchScreen = () => {
       shopType: null,
       ip: null
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
 
   const { data: topRatedData } = useQuery(TOP_RATED_VENDORS, {
@@ -103,7 +103,8 @@ const SearchScreen = () => {
       longitude: location.longitude || null,
       latitude: location.latitude || null
     },
-    skip: !location.latitude || !location.longitude
+    skip: !location.latitude || !location.longitude,
+    fetchPolicy: 'cache-and-network'
   })
 
   const { data: recentOrderData } = useQuery(RECENT_ORDER_RESTAURANTS, {
@@ -111,7 +112,8 @@ const SearchScreen = () => {
       longitude: location.longitude || null,
       latitude: location.latitude || null
     },
-    skip: !location.latitude || !location.longitude
+    skip: !location.latitude || !location.longitude,
+    fetchPolicy: 'cache-and-network'
   })
 
   const { data: mostOrderedData } = useQuery(MOST_ORDERED_RESTAURANTS, {
@@ -119,6 +121,7 @@ const SearchScreen = () => {
       longitude: location.longitude || null,
       latitude: location.latitude || null
     },
+    fetchPolicy: 'cache-and-network',
     skip: !location.latitude || !location.longitude
   })
 
@@ -132,10 +135,9 @@ const SearchScreen = () => {
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
-        marginTop: '2%',
+        paddingTop: scale(12),
         paddingLeft: scale(25),
         paddingRight: scale(25),
-        height: '75%',
         marginLeft: 0
       },
       headerStyle: {
@@ -355,14 +357,14 @@ const SearchScreen = () => {
               hasAnimated ? (
                 <TouchableOpacity key={index} onPress={() => handleTagPress(tag)}>
                   <View style={styles(currentTheme).tagItem}>
-                    <TextDefault>{tag}</TextDefault>
+                    <TextDefault numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
                   </View>
                 </TouchableOpacity>
               ) : (
                 <CustomItem index={index}>
                   <TouchableOpacity key={tag} onPress={() => handleTagPress(tag)}>
                     <View style={styles(currentTheme).tagItem}>
-                      <TextDefault>{tag}</TextDefault>
+                      <TextDefault numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
                     </View>
                   </TouchableOpacity>
                 </CustomItem>

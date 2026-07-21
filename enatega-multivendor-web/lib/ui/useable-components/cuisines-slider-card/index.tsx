@@ -95,6 +95,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
 
   // Check if RTL (client-side only)
   const [isRTL, setIsRTL] = useState(false);
+  const headingLabel = t.has(title) ? t(title) : title;
   useEffect(() => {
     setIsRTL(document.documentElement.dir === "rtl");
   }, []);
@@ -104,7 +105,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
       <div className={` mt-7 ${last && "mb-20"}`}>
         <div className="flex justify-between mx-[6px]">
           <span className="font-inter font-bold text-xl sm:text-2xl leading-8 tracking-normal text-gray-900 dark:text-white">
-            {t(title)}
+            {headingLabel}
           </span>
           <div className="flex items-center justify-end gap-x-2 mb-2">
             {pathname !== "/store" &&

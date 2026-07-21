@@ -30,10 +30,11 @@ const DeleteEditModal = ({
                 <View style={styles(currentTheme).modalContainer}>
                     <View style={styles(currentTheme).modalView}>
                         <View style={[styles(currentTheme).modalHead]}>
-                            <TextDefault Bold H4 textColor={currentTheme.fontMainColor} isRTL>
-                                {/* {selectedAddress?.deliveryAddress} */}
-                                {selectedAddress ? selectedAddress?.deliveryAddress : t('deleteAddressesTitle')}
-                            </TextDefault>
+                            <View style={styles().headText}>
+                                <TextDefault Bold H5 textColor={currentTheme.fontMainColor} numberOfLines={2} isRTL>
+                                    {selectedAddress ? selectedAddress?.deliveryAddress : t('deleteAddressesTitle')}
+                                </TextDefault>
+                            </View>
                             <Feather
                                 name='x-circle'
                                 size={24}

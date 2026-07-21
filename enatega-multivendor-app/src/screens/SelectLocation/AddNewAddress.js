@@ -40,12 +40,13 @@ export default function AddNewAddress(props) {
   const [searchModalVisible, setSearchModalVisible] = useState(false)
   const [cityModalVisible, setCityModalVisible] = useState(false)
   const [mapReady, setMapReady] = useState(false)
-  const [initialLocation, setInitialLocation] = useState({
-    latitude: DEFAULT_LATITUDE,
-    longitude: DEFAULT_LONGITUDE
-  })
 
   const { longitude, latitude, id, prevScreen } = props?.route.params || {}
+
+  const [initialLocation, setInitialLocation] = useState({
+    latitude: latitude || DEFAULT_LATITUDE,
+    longitude: longitude || DEFAULT_LONGITUDE
+  })
 
   const [selectedValue, setSelectedValue] = useState({
     city: '',

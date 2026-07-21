@@ -4,7 +4,7 @@ import {
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
 import { useContext } from "react";
-import { Linking, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Linking, Text, TouchableOpacity, View } from "react-native";
 
 // Context
 import { AuthContext } from "@/lib/context/global/auth.context";
@@ -35,6 +35,29 @@ export default function CustomDrawerContent(
   const { appTheme, currentTheme } = useApptheme();
   const { t } = useTranslation();
   const { logout } = useContext(AuthContext);
+
+  const handleLogoutConfirmation = () => {
+    Alert.alert(
+      t("Logout"),
+      t(
+        "Are you sure you want to logout?",
+        "Are you sure you want to logout?"
+      ),
+      [
+        {
+          text: t("Cancel", "Cancel"),
+          style: "cancel",
+        },
+        {
+          text: t("Logout"),
+          style: "destructive",
+          onPress: () => {
+            if (logout) logout();
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <DrawerContentScrollView
@@ -229,9 +252,7 @@ export default function CustomDrawerContent(
         {/* Logout Button */}
 
         <TouchableOpacity
-          onPress={() => {
-            if (logout) logout();
-          }}
+          onPress={handleLogoutConfirmation}
           className="flex-row justify-between items-center px-4 py-4 border-b-[0.5px]"
           style={{ borderColor: appTheme.borderLineColor }}
         >

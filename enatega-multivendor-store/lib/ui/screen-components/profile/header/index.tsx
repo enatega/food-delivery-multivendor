@@ -47,7 +47,7 @@ export default function ProfileHeader() {
                 style={{
                   color: appTheme.primary,
                   textShadowColor: appTheme.black,
-                  textShadowOffset: { width: 22, height: 22 },
+                  textShadowOffset: { width: 24, height: 22 },
                   textShadowRadius: 40,
                 }}
               >
@@ -80,7 +80,7 @@ export default function ProfileHeader() {
           >
             {dataProfile?.name ?? t("store name")}
           </Text>
-          <Text
+          {/* <Text
             className="font-medium my-1"
             style={{
               color: appTheme.fontMainColor,
@@ -91,7 +91,7 @@ export default function ProfileHeader() {
             }}
           >
             {dataProfile?._id.substring(0, 9).toUpperCase() ?? t("store id")}
-          </Text>
+          </Text> */}
         </View>
       </View>
     </ImageBackground>

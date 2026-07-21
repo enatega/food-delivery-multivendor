@@ -42,32 +42,44 @@ const styles = (props = null) =>
     },
     deliveryDetailsOverlay: {
       position: 'absolute',
-      bottom: scale(10),
-      width: '100%',
-      paddingHorizontal: scale(15),
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      gap: scale(5)
+      bottom: scale(12),
+      left: scale(15),
+      right: scale(15),
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(10)
     },
     detailPill: {
       backgroundColor: props?.themeBackground ?? 'white',
-      borderRadius: scale(20),
-      paddingVertical: scale(5),
-      paddingHorizontal: scale(15),
-      minWidth: '45%',
+      borderRadius: scale(16),
+      paddingVertical: scale(6),
+      paddingHorizontal: scale(12),
+      flex: 1,
+      minWidth: 0,
+      flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
+      gap: scale(4),
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
-        height: 2
+        height: 1
       },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5
+      shadowOpacity: 0.12,
+      shadowRadius: 2.5,
+      elevation: 2
+    },
+    detailLabel: {
+      fontSize: scale(10),
+      marginRight: scale(2),
+      flexShrink: 1
+    },
+    detailValue: {
+      fontWeight: 'bold'
     },
     contentContainer: {
       padding: scale(15),
-      gap: scale(12)
+      gap: scale(6)
     },
     subContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -101,13 +113,17 @@ const styles = (props = null) =>
     ratingBox: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(8)
+      gap: scale(8),
+      flex: 1,
+      minWidth: 0
     },
     reviewButton: {
       backgroundColor: props?.newButtonBackground ?? '#F3FFEE',
       borderRadius: scale(4),
       paddingVertical: scale(8),
-      paddingHorizontal: scale(12)
+      paddingHorizontal: scale(12),
+      marginLeft: scale(8),
+      flexShrink: 0
     },
     timingContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -118,13 +134,23 @@ const styles = (props = null) =>
     timingRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(5)
+      gap: scale(5),
+      flex: 1,
+      minWidth: 0
+    },
+    timingLabel: {
+      flexShrink: 1
+    },
+    timingValue: {
+      flexShrink: 1
     },
     statusButton: {
       backgroundColor: props?.newButtonBackground ?? '#F3FFEE',
       borderRadius: scale(4),
       paddingVertical: scale(8),
-      paddingHorizontal: scale(12)
+      paddingHorizontal: scale(12),
+      marginLeft: scale(8),
+      flexShrink: 0
     },
     deliveryContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

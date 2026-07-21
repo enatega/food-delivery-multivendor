@@ -28,9 +28,9 @@ export const useStyles = (theme) => StyleSheet.create({
         ...alignment.Psmall,
     },
     topContainer: {
-        flex: 1,
-        maxHeight: scale(40),
-        alignItems: theme?.isRTL ? 'flex-start' : 'flex-end'
+        alignItems: theme?.isRTL ? 'flex-start' : 'flex-end',
+        paddingTop: scale(8),
+        ...(theme?.isRTL ? { paddingLeft: scale(6) } : { paddingRight: scale(6) })
     },
     closeButton: {
         backgroundColor: theme.newButtonBackground,

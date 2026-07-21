@@ -30,6 +30,9 @@ function TopPicks(props) {
         horizontal={true}
         data={props?.mostOrderedRestaurants}
         keyExtractor={(item) => item._id}
+        removeClippedSubviews={false}
+        initialNumToRender={4}
+        windowSize={5}
         renderItem={({ item }) => {
           return <NewRestaurantCard {...item} />
         }}

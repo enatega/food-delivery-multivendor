@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, TouchableOpacity, Image } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import { useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
 import { subscriptionOrder } from '../../apollo/subscriptions'
@@ -11,6 +11,7 @@ import TextError from '../Text/TextError/TextError'
 import { alignment } from '../../utils/alignment'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
+import CachedImage from '../CachedImage'
 
 const ActiveOrders = ({
   navigation,
@@ -62,7 +63,7 @@ const Item = ({ item, navigation, currentTheme }) => {
       activeOpacity={0.7}
       onPress={() => navigation.navigate('OrderDetail', { _id: item._id })}>
       <View style={styles(currentTheme).container}>
-        <Image
+        <CachedImage
           style={styles(currentTheme).image}
           resizeMode="cover"
           source={{ uri: item.restaurant.image }}

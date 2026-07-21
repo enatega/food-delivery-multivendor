@@ -25,6 +25,7 @@ interface IIconProperties {
 export interface ITextFieldProps extends IGlobalTextFieldProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
+  disabled?: boolean;
 }
 export interface IIconTextFieldProps extends IGlobalTextFieldProps {
   iconProperties: IIconProperties;

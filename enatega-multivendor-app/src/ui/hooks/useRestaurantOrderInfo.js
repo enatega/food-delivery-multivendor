@@ -13,7 +13,8 @@ export default function useHomeRestaurants() {
 
   const recentOrderRestaurants = useQuery(recentOrderRestaurantsQuery, {
     variables: { latitude: location?.latitude, longitude: location?.longitude },
-    skip: !isLoggedIn
+    skip: !isLoggedIn,
+    fetchPolicy: 'cache-and-network'
   })
 
   // Fetch a larger set once (no shopType) so the Discovery screen can derive
@@ -25,7 +26,8 @@ export default function useHomeRestaurants() {
       longitude: location?.longitude,
       page: 1,
       limit: 15
-    }
+    },
+    fetchPolicy: 'cache-and-network'
   })
 
   const orderLoading =

@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
-import React, { useRef, useContext, useLayoutEffect, useState, useEffect } from 'react'
-import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Image, Dimensions } from 'react-native'
+import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback } from 'react'
+import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
@@ -33,6 +33,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 import { useMemo } from 'react'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
+import CachedImage from '../../components/CachedImage'
 import { Modalize } from 'react-native-modalize'
 import Filters from '../../components/Filter/FilterSlider'
 import AppliedFilters from '../../components/Filter/AppliedFilters'
@@ -89,6 +90,7 @@ function Menu({ route, props }) {
   const modalRef = useRef(null)
   const filtersModalRef = useRef()
   const flatListRef = useRef(null)
+  const onEndReachedDuringMomentum = useRef(false)
   const [itemWidth, setItemWidth] = useState(0)
   const navigation = useNavigation()
   const routeData = useRoute()
@@ -118,7 +120,23 @@ function Menu({ route, props }) {
 
   console.log('selected Type ::::', selectedType)
 
-  const { data, refetch, networkStatus, loading, error, restaurantData, setRestaurantData, heading, subHeading, allData } = useRestaurantQueries(queryType, location, selectedType)
+  const {
+    data,
+    refetch,
+    networkStatus,
+    error,
+    restaurantData,
+    setRestaurantData,
+    heading,
+    subHeading,
+    allData,
+    fetchMoreRestaurants,
+    hasMore,
+    isFetchingMore,
+    isNearbyPaginatedQuery,
+    isInitialLoading,
+    isRefreshing
+  } = useRestaurantQueries(queryType, location, selectedType)
   const [mutate, { loading: mutationLoading }] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -189,22 +207,10 @@ function Menu({ route, props }) {
   }, [allCuisines])
 
   useEffect(() => {
-    console.log('all data:', allData)
-    console.log('all data:collection', collection)
-    if (collection && allData) {
+    if (collection) {
       setActiveCollection(collection)
-      const tempData = [...allData]
-      if (isShopType) {
-        setRestaurantData(tempData)
-      } else {
-        const filteredData = tempData?.filter((item) => item?.cuisines?.includes(collection))
-        console.log('all data changed:', filteredData)
-        setRestaurantData(filteredData)
-      }
-
-      setfilterApplied(true)
     }
-  }, [collection, route, allData])
+  }, [collection, route])
 
   const onOpen = () => {
     const modal = modalRef.current
@@ -389,7 +395,7 @@ function Menu({ route, props }) {
   )
 
   const emptyView = () => {
-    if (loading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
+    if (isInitialLoading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
     else {
       return (
         <View style={styles().emptyViewContainer}>
@@ -454,10 +460,31 @@ function Menu({ route, props }) {
     )
   }
 
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
-  if (!connect) return <ErrorView refetchFunctions={[refetch]} />
+  const renderedRestaurants = useMemo(
+    () => sortRestaurantsByOpenStatus(restaurantData || []),
+    [restaurantData]
+  )
 
-  if (loading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
+  const renderRestaurantItem = useCallback(({ item }) => {
+    if (item && item?.image && item?._id) {
+      const restaurantOpen = isOpen(item)
+      return <NewRestaurantCard {...item} fullWidth isOpen={restaurantOpen} />
+    }
+
+    return null
+  }, [])
+
+  const renderListFooter = useCallback(() => {
+    if (!isNearbyPaginatedQuery || !isFetchingMore) return <View style={{ height: 24 }} />
+
+    return (
+      <View style={{ paddingVertical: 12, alignItems: 'center', backgroundColor: 'transparent' }}>
+        <Spinner backColor='transparent' spinnerColor={currentTheme.main} />
+      </View>
+    )
+  }, [currentTheme.main, isFetchingMore, isNearbyPaginatedQuery])
+
+  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
 
   // const searchRestaurants = (searchText) => {
   //   const data = []
@@ -506,14 +533,9 @@ function Menu({ route, props }) {
     if (activeCollection === collection.name) {
       // If the same collection is clicked again, deselect it
       setActiveCollection(null)
-      setRestaurantData(allData) // Reset to show all data
       setfilterApplied(false)
     } else {
       setActiveCollection(collection.name)
-
-      const tempData = [...allData]
-      const filteredData = tempData?.filter((item) => item?.cuisines?.includes(collection.name))
-      setRestaurantData(filteredData)
       setfilterApplied(true)
     }
   }
@@ -529,54 +551,84 @@ function Menu({ route, props }) {
     index
   })
 
-  const applyFilters = () => {
-    let filteredData = queryType === 'orderAgain' ? [...data?.recentOrderRestaurantsPreview] : queryType === 'topPicks' ? [...data?.mostOrderedRestaurantsPreview] : queryType === 'topBrands' ? [...data?.topRatedVendorsPreview] : [...data?.nearByRestaurantsPreview?.restaurants]
+  const buildVisibleRestaurantData = useCallback(
+    (sourceData = [], nextFilters = appliedFilters, selectedCollection = activeCollection) => {
+      let filteredData = [...(sourceData || [])]
 
-    const ratings = filters.Rating
-    const sort = filters.Sort
-    const offers = filters.Offers
-    const cuisines = filters.Cuisines
-
-    // Apply filters incrementally
-    // Ratings filter
-    if (ratings?.selected?.length > 0) {
-      const numericRatings = ratings.selected?.map(extractRating)
-      filteredData = filteredData.filter((item) => item?.reviewAverage >= Math.min(...numericRatings))
-    }
-
-    // Sort filter
-    if (sort?.selected?.length > 0) {
-      if (sort.selected[0] === 'Fast Delivery') {
-        filteredData.sort((a, b) => a.deliveryTime - b.deliveryTime)
-      } else if (sort.selected[0] === 'Distance') {
-        filteredData.sort((a, b) => a.distanceWithCurrentLocation - b.distanceWithCurrentLocation)
+      if (selectedCollection) {
+        if (isShopType) {
+          filteredData = [...filteredData]
+        } else {
+          filteredData = filteredData.filter((item) => item?.cuisines?.includes(selectedCollection))
+        }
       }
-    }
 
-    // Offers filter
-    if (offers?.selected?.length > 0) {
-      if (offers.selected.includes('Free Delivery')) {
-        filteredData = filteredData.filter((item) => item?.freeDelivery)
-      }
-      if (offers.selected.includes('Accept Vouchers')) {
-        filteredData = filteredData.filter((item) => item?.acceptVouchers)
-      }
-    }
+      const ratings = nextFilters.Rating
+      const sort = nextFilters.Sort
+      const offers = nextFilters.Offers
+      const cuisines = nextFilters.Cuisines
 
-    // Cuisine filter
-    if (cuisines?.selected?.length > 0) {
-      filteredData = filteredData.filter((item) => item.cuisines.some((cuisine) => cuisines?.selected?.includes(cuisine)))
-    }
+      if (ratings?.selected?.length > 0) {
+        const numericRatings = ratings.selected?.map(extractRating)
+        filteredData = filteredData.filter((item) => item?.reviewAverage >= Math.min(...numericRatings))
+      }
+
+      if (sort?.selected?.length > 0) {
+        if (sort.selected[0] === 'Fast Delivery') {
+          filteredData.sort((a, b) => a.deliveryTime - b.deliveryTime)
+        } else if (sort.selected[0] === 'Distance') {
+          filteredData.sort((a, b) => a.distanceWithCurrentLocation - b.distanceWithCurrentLocation)
+        }
+      }
+
+      if (offers?.selected?.length > 0) {
+        if (offers.selected.includes('Free Delivery')) {
+          filteredData = filteredData.filter((item) => item?.freeDelivery)
+        }
+        if (offers.selected.includes('Accept Vouchers')) {
+          filteredData = filteredData.filter((item) => item?.acceptVouchers)
+        }
+      }
+
+      if (cuisines?.selected?.length > 0) {
+        filteredData = filteredData.filter((item) => item.cuisines.some((cuisine) => cuisines?.selected?.includes(cuisine)))
+      }
+
+      return filteredData
+    },
+    [activeCollection, appliedFilters, isShopType]
+  )
+
+  useEffect(() => {
+    const visibleData = buildVisibleRestaurantData(allData, appliedFilters, activeCollection)
+    setRestaurantData(visibleData)
+
+    const anyFilterSelected = Boolean(activeCollection) ||
+      appliedFilters?.Rating?.selected?.length > 0 ||
+      appliedFilters?.Sort?.selected?.length > 0 ||
+      appliedFilters?.Offers?.selected?.length > 0 ||
+      appliedFilters?.Cuisines?.selected?.length > 0
+
+    setfilterApplied(anyFilterSelected)
+    setfilterSectionApplied(anyFilterSelected)
+  }, [activeCollection, allData, appliedFilters, buildVisibleRestaurantData, setRestaurantData])
+
+  const applyFilters = (nextFilters = filters) => {
+    const filteredData = buildVisibleRestaurantData(allData, nextFilters, activeCollection)
+    const ratings = nextFilters.Rating
+    const sort = nextFilters.Sort
+    const offers = nextFilters.Offers
+    const cuisines = nextFilters.Cuisines
 
     // Set filtered data
     setRestaurantData(filteredData)
     filtersModalRef.current.close()
 
     // Update applied filters state
-    setAppliedFilters(filters)
+    setAppliedFilters(nextFilters)
 
     // **Check if any filters are applied**
-    const anyFilterSelected = ratings?.selected?.length > 0 || sort?.selected?.length > 0 || offers?.selected?.length > 0 || cuisines?.selected?.length > 0
+    const anyFilterSelected = !!activeCollection || ratings?.selected?.length > 0 || sort?.selected?.length > 0 || offers?.selected?.length > 0 || cuisines?.selected?.length > 0
 
     setfilterApplied(anyFilterSelected)
     setfilterSectionApplied(anyFilterSelected)
@@ -585,6 +637,10 @@ function Menu({ route, props }) {
   const resetFilters = () => {
     setFilters(appliedFilters) // Reset filters to the last applied state
   }
+
+  if (!connect) return <ErrorView refetchFunctions={[refetch]} />
+
+  if (isInitialLoading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
 
   const menuHeader = (
     <View>
@@ -601,9 +657,12 @@ function Menu({ route, props }) {
             style={styles(currentTheme).seeAllBtn}
             activeOpacity={0.8}
             onPress={() => {
+              const collectionType = selectedType === 'grocery' ? 'Store' : 'Restaurants'
               navigation.navigate('Collection', {
-                collectionType: routeData?.name,
-                data: collectionData
+                collectionType,
+                title: t('BrowseCuisines'),
+                data: collectionData,
+                showHeader: false
               })
             }}
           >
@@ -630,7 +689,7 @@ function Menu({ route, props }) {
                 >
                   <View style={[styles().brandImgContainer]}>
                     <View>
-                      <Image source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
+                      <CachedImage source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
                     </View>
                     <TextDefault Normal bolder style={{ padding: 4 }} textColor={activeCollection === item.name ? currentTheme.main : currentTheme.gray700} isRTL>
                       {item.name}
@@ -673,12 +732,13 @@ function Menu({ route, props }) {
         scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={emptyView()}
-        keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={renderListFooter}
+        keyExtractor={(item, index) => item?._id || index.toString()}
         refreshControl={
           <RefreshControl
             progressViewOffset={containerPaddingTop}
             colors={[currentTheme.iconColorPink]}
-            refreshing={networkStatus === 4}
+            refreshing={isRefreshing && !isFetchingMore}
             onRefresh={() => {
               if (networkStatus === 7) {
                 refetch()
@@ -686,13 +746,37 @@ function Menu({ route, props }) {
             }}
           />
         }
-        data={sortRestaurantsByOpenStatus(restaurantData || [])}
-        renderItem={({ item }) => {
-          if (item && item?.image && item?._id) {
-            const restaurantOpen = isOpen(item)
-            return <NewRestaurantCard {...item} fullWidth isOpen={restaurantOpen} />
+        data={renderedRestaurants}
+        renderItem={renderRestaurantItem}
+        onEndReached={() => {
+          if (
+            onEndReachedDuringMomentum.current ||
+            !isNearbyPaginatedQuery ||
+            !hasMore ||
+            isFetchingMore ||
+            isRefreshing ||
+            isInitialLoading
+          ) {
+            return
+          }
+
+          onEndReachedDuringMomentum.current = true
+          if (renderedRestaurants.length > 0) {
+            fetchMoreRestaurants()
           }
         }}
+        onMomentumScrollBegin={() => {
+          onEndReachedDuringMomentum.current = false
+        }}
+        onScrollBeginDrag={() => {
+          onEndReachedDuringMomentum.current = false
+        }}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={8}
+        maxToRenderPerBatch={8}
+        updateCellsBatchingPeriod={50}
+        windowSize={7}
+        removeClippedSubviews
       />
       <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
       <Modalize

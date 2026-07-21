@@ -51,7 +51,6 @@ export default function CurrentLocation() {
 
     if (status === 'granted') {
       setLoading(false)
-      navigation.replace('Main')
     } else if (status === 'denied') {
       // Permission denied but can ask again
       // Show the Allow Location screen

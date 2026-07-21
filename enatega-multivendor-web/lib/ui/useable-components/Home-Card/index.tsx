@@ -20,11 +20,11 @@ const HomeCard:React.FC<HomeCardProps> = ({image,heading,subText,link}) => {
    }
 
   return (
-    <div>
-      <MoveableCard image={image} height={"320px"}/>
+    <div className="flex h-full flex-col">
+      <MoveableCard image={image} height={"320px"} imageFit="contain" />
       <div className='my-8'>
         <h1 className='font-extrabold text-[22px] my-2 dark:text-white'>{heading}</h1>
-        <button onClick={navigate} className='text-[#03c3e8] cursor-pointer'>{subText}</button>
+        <button onClick={navigate} className='text-secondary-color hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:text-primary-color cursor-pointer'>{subText}</button>
       </div>
     </div>
   )

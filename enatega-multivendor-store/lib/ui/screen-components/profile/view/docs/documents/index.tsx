@@ -38,16 +38,23 @@ export default function DocumentsSection() {
             className="top-6"
             onPress={() => router.push("/bank-management")}
           >
-            <Text className="font-semibold text-[#0EA5E9]">
+            <Text className="font-semibold" style={{ color: appTheme.primary }}>
               {hasBusinessDetails ? t("Update") : t("Add")}
             </Text>
           </TouchableOpacity>
         </View>
         <View
-          className={`${hasBusinessDetails ? "bg-[#E0F2FE]" : "bg-[#FEE2E2]"} p-2 border rounded-3xl border-[#E0F2FE]`}
+          className="p-2 border rounded-3xl"
+          style={{
+            backgroundColor: hasBusinessDetails
+              ? appTheme.lowOpacityPrimaryColor
+              : "#FEE2E2",
+            borderColor: hasBusinessDetails ? appTheme.primary : "#FEE2E2",
+          }}
         >
           <Text
-            className={`${hasBusinessDetails ? "text-[#0D99FF]" : "text-[#991B1B]"} font-semibold`}
+            className="font-semibold"
+            style={{ color: hasBusinessDetails ? appTheme.primary : "#991B1B" }}
           >
             {hasBusinessDetails ? t("Submitted Data") : t("Missing Data")}
           </Text>
@@ -150,6 +157,7 @@ export default function DocumentsSection() {
               );
             }}
             circleActiveColor={appTheme.primary}
+            backgroundInactive={appTheme.primary}
             backgroundActive={appTheme.primary}
             activeTextStyle={{ color: appTheme.black }}
             value={currentTheme === "dark"}

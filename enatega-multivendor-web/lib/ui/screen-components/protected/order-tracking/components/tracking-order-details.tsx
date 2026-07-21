@@ -114,7 +114,7 @@ function TrackingOrderDetails({
             <h1 className="text-gray-700 dark:text-gray-300">
               {t("order_details_subheading")} #{" "}
             </h1>
-            <h1 className="text-blue-600 dark:text-blue-400">
+            <h1 className="text-secondary-color dark:text-primary-color">
               {orderTrackingDetails?.orderId}
             </h1>
           </div>
@@ -173,7 +173,7 @@ function TrackingOrderDetails({
                 )}
               </div>
             </div>
-            <span className="text-blue-600 dark:text-blue-400 font-semibold">
+            <span className="text-secondary-color dark:text-primary-color font-semibold">
               {formatCurrency(calculateItemTotal(item))}
             </span>
           </div>

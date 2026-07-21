@@ -2,6 +2,7 @@ import { verticalScale, scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
 import { StyleSheet } from 'react-native'
 import { Dimensions } from 'react-native'
+import { subtleCardShadow } from '../../../utils/cardShadows'
 const { width } = Dimensions.get('window')
 
 const styles = (props = null) =>
@@ -9,22 +10,21 @@ const styles = (props = null) =>
     banner: {
       flex: 1,
       height: scale(200),
-      shadowColor: props !== null ? props?.shadow : '#707070',
-      shadowOffset: {
-        width: 0,
-        height: 3
-      },
-      margin:0,
+      ...subtleCardShadow,
+      margin: 0,
       borderRadius: 8,
+      overflow: 'hidden',
+      backgroundColor: props?.themeBackground ?? '#fff',
+      paddingHorizontal: scale(12)
     },
     image: {
-      width: '90%',
-      alignSelf:"center",
+      width: '100%',
+      alignSelf: 'center',
       resizeMode: 'cover',
       flex: 1,
       justifyContent: 'center',
       overflow: 'hidden',
-      borderRadius: 8,
+      borderRadius: 18,
       objectFit: 'cover'
     },
     container: {
@@ -32,6 +32,9 @@ const styles = (props = null) =>
       backgroundColor: 'rgba(0,0,0,0.3)',
       alignItems: props?.isRTL ? 'flex-end' : 'flex-start',
       justifyContent: 'flex-end',
+      paddingVertical: scale(20),
+      paddingHorizontal: scale(18),
+      borderRadius: 18
     },
     pagination: {
       position: 'relative',
@@ -48,18 +51,17 @@ const styles = (props = null) =>
       alignSelf: 'center',
       width: "100%",
       height:"100%",
-      borderRadius: 8,
-    
+      borderRadius: 18
     },
     csd:
     {
-
-    flex: 1,
-    justifyContent: 'center', // Centers vertically
-    alignItems: 'center', // Centers horizontally
-    width: '100%',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
       height: "100%",
-    paddingHorizontal:'5%',
+      paddingHorizontal: 0,
+      backgroundColor: 'transparent'
     }
   })
 export default styles

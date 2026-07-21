@@ -10,7 +10,7 @@ function TrackingHelpCard() {
             <span className="text-2xl">💬</span>
             <div>
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{t("need_help_with_order_text")}</p>
-                <Link href={"/profile/getHelp"} className="text-blue-600 dark:text-blue-400 text-sm hover:underline">{t("get_help_link_text")}</Link>
+                <Link href={"/profile/getHelp"} className="text-secondary-color dark:text-primary-color text-sm hover:text-primary-dark hover:underline">{t("get_help_link_text")}</Link>
             </div>
         </div>
     )

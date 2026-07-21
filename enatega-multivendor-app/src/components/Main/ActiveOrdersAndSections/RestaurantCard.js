@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext } from 'react'
-import { TouchableOpacity, View, Image, Text } from 'react-native'
+import { TouchableOpacity, View, Text } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { alignment } from '../../../utils/alignment'
@@ -10,6 +10,7 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
 import { Ionicons } from '@expo/vector-icons'
 import {useTranslation} from 'react-i18next'
+import CachedImage from '../../CachedImage'
 
 function RestaurantCard(props) {
 
@@ -26,7 +27,7 @@ function RestaurantCard(props) {
         activeOpacity={1}
         onPress={() => navigation.navigate('Restaurant', { ...props })}>
         <View style={styles().imageContainer}>
-          <Image
+          <CachedImage
             resizeMode="cover"
             source={{ uri: props?.image }}
             style={styles().restaurantImage}

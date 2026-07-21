@@ -595,7 +595,7 @@ export default function OrderDetailScreen() {
                 )}
               </View>
 
-              {/* Pick Up Order */}
+              {/* Pickup Address */}
               <View className="w-[90%] flex-row items-center gap-x-2 mb-4">
                 <View>
                   <HomeIcon
@@ -609,7 +609,7 @@ export default function OrderDetailScreen() {
                     className="font-[Inter] text-base font-semibold leading-6 text-left underline-offset-auto decoration-skip-ink "
                     style={{ color: appTheme.fontSecondColor }}
                   >
-                    {t("Pickup Order")}
+                    {t("Pickup Address")}
                   </Text>
                   <Text
                     className="font-[Inter] text-base font-bold leading-6 text-left underline-offset-auto decoration-skip-ink "

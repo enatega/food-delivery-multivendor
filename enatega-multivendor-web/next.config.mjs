@@ -60,7 +60,7 @@ const nextConfig = {
 
   images: {
     // domains: ["storage.googleapis.com"],
-    unoptimized: false,
+    unoptimized: true,
     dangerouslyAllowSVG: false,
     remotePatterns: [
       {

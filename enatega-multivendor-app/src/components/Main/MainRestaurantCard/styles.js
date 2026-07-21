@@ -9,7 +9,7 @@ const buildStyles = (props = null) =>
     //   ...alignment.MLlarge
     // },
     offerScroll: {
-      height: height * 0.386,
+      height: height * 0.402,
       width: '100%'
     },
     ItemTitle: {
@@ -22,9 +22,8 @@ const buildStyles = (props = null) =>
       ...alignment.MRmedium
     },
     orderAgainSec: {
-      marginHorizontal: scale(10),
-      // ...alignment.MLmedium,
-      // ...alignment.MRmedium
+      marginHorizontal: scale(12),
+      marginBottom: scale(8)
     },
     topPicksSec: {
       ...alignment.MLmedium,

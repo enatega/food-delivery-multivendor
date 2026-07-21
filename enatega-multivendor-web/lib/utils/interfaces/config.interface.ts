@@ -9,8 +9,8 @@ export interface IConfigProps {
   LIBRARIES: Libraries;
   COLORS: { GOOGLE: string };
   SENTRY_DSN: string;
-  SKIP_EMAIL_VERIFICATION: string;
-  SKIP_MOBILE_VERIFICATION: string;
+  SKIP_EMAIL_VERIFICATION: boolean;
+  SKIP_MOBILE_VERIFICATION: boolean;
   CURRENCY: string;
   CURRENCY_SYMBOL: string;
   DELIVERY_RATE: number;

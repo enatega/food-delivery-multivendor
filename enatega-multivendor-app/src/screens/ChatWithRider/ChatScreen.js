@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Image, KeyboardAvoidingView, Platform, View } from 'react-native'
+import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, View } from 'react-native'
 import {
   GiftedChat,
   Bubble,
@@ -8,6 +8,8 @@ import {
   Actions,
   Time
 } from 'react-native-gifted-chat'
+import { useHeaderHeight } from '@react-navigation/elements'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useChatScreen } from './useChatScreen'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { Ionicons, Entypo } from '@expo/vector-icons'
@@ -17,6 +19,7 @@ import { useTranslation } from 'react-i18next'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 import ConfigurationContext from '../../context/Configuration'
+import CachedImage from '../../components/CachedImage'
 
 const renderInputToolbar = (props) => {
   return (
@@ -30,40 +33,16 @@ const renderInputToolbar = (props) => {
   )
 }
 
-const renderActions = (props) => {
-  return (
-    <Actions
-      {...props}
-      containerStyle={{
-        width: scale(34),
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-      icon={() => (
-        <Image
-          source={require('../../assets/images/add.png')}
-          style={styles().addImg}
-          resizeMode='contain'
-        />
-      )}
-      options={{
-        'Choose From Library': () => {
-          console.log('Choose From Library')
-        },
-        Cancel: () => {
-          console.log('Cancel')
-        }
-      }}
-      optionTintColor='#222B45'
-    />
-  )
-}
 const ChatScreen = ({ navigation, route }) => {
   const configuration = useContext(ConfigurationContext)
+  const headerHeight = useHeaderHeight()
+  const insets = useSafeAreaInsets()
 
   const {
     messages,
     onSend,
+    pickImage,
+    uploading,
     currentTheme,
     image,
     setImage,
@@ -73,6 +52,29 @@ const ChatScreen = ({ navigation, route }) => {
     orderNo,
     total
   } = useChatScreen({ navigation, route })
+
+  const renderActions = (props) => {
+    return (
+      <Actions
+        {...props}
+        containerStyle={{
+          width: scale(34),
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        icon={() => (
+          <Image
+            source={require('../../assets/images/add.png')}
+            style={styles().addImg}
+            resizeMode='contain'
+          />
+        )}
+        // Open the gallery directly instead of GiftedChat's ActionSheet
+        // (which needs an ActionSheetProvider the app doesn't mount).
+        onPressActionButton={pickImage}
+      />
+    )
+  }
 
   const filterImages = (src) => {
     setImage(image.filter((item) => item !== src))
@@ -140,6 +142,18 @@ const ChatScreen = ({ navigation, route }) => {
     )
   }
 
+  const renderMessageImage = (props) => {
+    const uri = props?.currentMessage?.image
+    if (!uri) return null
+    return (
+      <CachedImage
+        source={{ uri }}
+        resizeMode='cover'
+        style={{ width: scale(160), height: scale(160), borderRadius: scale(12), margin: scale(3) }}
+      />
+    )
+  }
+
   const renderBubble = (props) => {
     return (
       <View>
@@ -196,7 +210,11 @@ const ChatScreen = ({ navigation, route }) => {
   }
 
   return (
-    <View style={styles(currentTheme).chatSec}>
+    <KeyboardAvoidingView
+      style={styles(currentTheme).chatSec}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? headerHeight : 0}
+    >
       <View style={styles(currentTheme).orderDetails}>
         <View style={styles(currentTheme).orderNoSec}>
           <TextDefault textColor={currentTheme.fontFourthColor} normal bold>
@@ -214,42 +232,56 @@ const ChatScreen = ({ navigation, route }) => {
         </TextDefault>
       </View>
 
-      <GiftedChat
-        messages={messages}
-        user={{
-          _id: profile?._id
-        }}
-        alwaysShowSend={true}
-        renderBubble={renderBubble}
-        renderSend={renderSend}
-        scrollToBottom
-        scrollToBottomComponent={scrollToBottomComponent}
-        renderAvatar={null}
-        renderChatEmpty={renderChatEmpty}
-        inverted={Platform.OS !== 'web' || messages.length === 0}
-        placeholder={t('replyRider')}
-        textInputProps={{
-          style: {
-            width: '75%',
-            paddingHorizontal: scale(16),
-            paddingVertical: scale(12),
-            backgroundColor: '#fff',
-            fontSize: 12,
-            borderRadius: 14
-          },
-          placeholderTextColor: '#6B7280',
-          autoFocus: true
-        }}
-        renderTime={renderTime}
-        renderActions={renderActions}
-        renderInputToolbar={renderInputToolbar}
-        renderAccessory={image.length > 0 ? renderAccessory : null}
-        text={inputMessage}
-        onInputTextChanged={(m) => setInputMessage(m)}
-        messagesContainerStyle={{ paddingBottom: scale(40) }}
-      />
-      <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={-200} />
-    </View>
+      <View style={styles().giftedChatWrap}>
+        <GiftedChat
+          messages={messages}
+          user={{
+            _id: profile?._id
+          }}
+          alwaysShowSend={true}
+          renderBubble={renderBubble}
+          renderMessageImage={renderMessageImage}
+          renderSend={renderSend}
+          scrollToBottom
+          scrollToBottomComponent={scrollToBottomComponent}
+          renderAvatar={null}
+          renderChatEmpty={renderChatEmpty}
+          inverted={Platform.OS !== 'web' || messages.length === 0}
+          placeholder={t('replyRider')}
+          keyboardShouldPersistTaps='handled'
+          bottomOffset={Platform.OS === 'ios' ? insets.bottom : 0}
+          textInputProps={{
+            style: {
+              width: '75%',
+              paddingHorizontal: scale(16),
+              paddingVertical: scale(12),
+              backgroundColor: '#fff',
+              fontSize: 12,
+              borderRadius: 14
+            },
+            placeholderTextColor: '#6B7280',
+            autoFocus: true
+          }}
+          renderTime={renderTime}
+          renderActions={renderActions}
+          renderInputToolbar={renderInputToolbar}
+          renderAccessory={image.length > 0 ? renderAccessory : null}
+          renderChatFooter={() =>
+            uploading ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, padding: scale(10) }}>
+                <ActivityIndicator size='small' color={currentTheme.main} />
+                <TextDefault textColor={currentTheme.fontSecondColor}>{t('uploadingImage')}</TextDefault>
+              </View>
+            ) : null
+          }
+          text={inputMessage}
+          onInputTextChanged={(m) => setInputMessage(m)}
+          messagesContainerStyle={{
+            paddingBottom: scale(16) + insets.bottom
+          }}
+        />
+      </View>
+    </KeyboardAvoidingView>
   )
 }
 

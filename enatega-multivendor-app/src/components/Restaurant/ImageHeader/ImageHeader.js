@@ -1,580 +1,292 @@
-import React, { useContext, useEffect } from 'react'
-import { View, Dimensions, Text, Image, FlatList, Platform } from 'react-native'
-import {
-  Ionicons,
-  Entypo,
-  SimpleLineIcons,
-  MaterialCommunityIcons,
-  FontAwesome5,
-  AntDesign
-} from '@expo/vector-icons'
-import styles from './styles'
+import React, { memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Entypo, Ionicons, SimpleLineIcons } from '@expo/vector-icons'
+import Animated, { Extrapolation, interpolate, interpolateColor, useAnimatedStyle } from 'react-native-reanimated'
+import { useNavigation } from '@react-navigation/native'
+import { RectButton } from 'react-native-gesture-handler'
+import { useTranslation } from 'react-i18next'
+import Search from '../../../components/Main/Search/Search'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { useNavigation } from '@react-navigation/native'
-import { DAYS } from '../../../utils/enums'
-import { RectButton, TouchableOpacity } from 'react-native-gesture-handler'
 import { scale } from '../../../utils/scaling'
-import { alignment } from '../../../utils/alignment'
-import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
-import { useTranslation } from 'react-i18next'
-import Search from '../../../components/Main/Search/Search'
-import { calculateDistance, isOpen } from '../../../utils/customFunctions'
-import { LocationContext } from '../../../context/Location'
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle
-} from 'react-native-reanimated'
-import FavoriteButton from '../../FavButton/FavouriteButton'
-import Bicycle from '../../../assets/SVG/Bicycle'
-import ConfigurationContext from '../../../context/Configuration'
-import { useFavorite } from '../../FavButton/useFavorite'
-import Spinner from '../../Spinner/Spinner'
+import styles from './styles'
+import { resolveLogoImage } from '../../../utils/resolveImageUrl'
 
 const AnimatedText = Animated.createAnimatedComponent(Text)
-const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity)
 
-const { height } = Dimensions.get('screen')
-const TOP_BAR_HEIGHT = height * 0.05
-const CATEGORY_BAR_HEIGHT = scale(56)
-const HEADER_MAX_HEIGHT =
-  Platform.OS === 'android' ? height * 0.65 : height * 0.61
-const HEADER_MIN_HEIGHT = height * 0.07 + TOP_BAR_HEIGHT + CATEGORY_BAR_HEIGHT
-const SCROLL_RANGE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
+const CATEGORY_RAIL_HEIGHT = scale(56)
 
-function ImageTextCenterHeader(props, ref) {
-  const { t, i18n } = useTranslation()
-  const { translationY } = props
-  const flatListRef = ref
-  const navigation = useNavigation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
-  const topInset = props?.topInset ?? 0
-  const { location } = useContext(LocationContext)
-  const configuration = useContext(ConfigurationContext)
-  const newheaderColor = currentTheme.backgroundColor
-  const cartContainer = currentTheme.gray500
+function normalizeCategories({ categories = [], topBarData = [], updatedDeals = [] }) {
+  if (categories.length > 0) return categories
 
-  const aboutObject = {
-    latitude: props?.restaurant
-      ? props?.restaurant.location.coordinates[1]
-      : '',
-    longitude: props?.restaurant
-      ? props?.restaurant.location.coordinates[0]
-      : '',
-    address: props?.restaurant ? props?.restaurant.address : '',
-    restaurantId: props?.restaurantId,
-    restaurantName: props?.restaurantName,
-    restaurantImage: props?.restaurantImage,
-    restaurantLogo: props?.restaurant ? props?.restaurant.logo : '',
-    restaurantCuisines: props?.restaurant ? props?.restaurant.cuisines : '',
-    restaurantTax: props?.tax,
-    restaurantMinOrder: props?.minimumOrder,
-    deliveryTime: props?.restaurant ? props?.restaurant.deliveryTime : '...',
-    minimumOrder: props?.restaurant ? props?.restaurant.minimumOrder : '...',
-    average: props?.restaurant ? props?.restaurant?.reviewData?.ratings : '...',
-    total: props?.restaurant ? props?.restaurant?.reviewData?.total : '...',
-    reviews: props?.restaurant ? props?.restaurant?.reviewData?.reviews : '...',
-    isAvailable: props?.restaurant ? props?.restaurant?.isAvailable : true,
-    openingTimes: props?.restaurant ? props?.restaurant?.openingTimes : [],
-    phone: props?.restaurant ? props?.restaurant?.phone : '',
-    restaurantUrl: props?.restaurant ? props?.restaurant?.restaurantUrl : '',
-    IsOpen: isOpen(props?.restaurant ? props?.restaurant : ''),
-    reviewsCount: props?.restaurant ? props?.restaurant?.reviewCount : '...',
-    reviewsAverage: props?.reviewAverage,
-    _id: props?.restaurantId
-  }
+  const source = Array.isArray(updatedDeals) && updatedDeals.length > 0 ? updatedDeals : topBarData
+  return (source ?? []).map((section, index) => ({
+    key: `category-${section?.index ?? index}`,
+    title: section?.title,
+    categoryIndex: section?.index ?? index
+  }))
+}
 
-  const { isFavorite, loading: favLoading, toggleFavorite } = useFavorite(aboutObject?.restaurantId)
+function CategoryTabsBase({ categories, activeCategoryIndex, onPressCategory, currentTheme, t }) {
+  const categoryListRef = useRef(null)
+  const categoryLayoutsRef = useRef(new Map())
+  const categoryContentWidthRef = useRef(0)
+  const [categoryListWidth, setCategoryListWidth] = useState(0)
+  const [layoutVersion, setLayoutVersion] = useState(0)
 
-  const currentDayShort = new Date()
-    .toLocaleString('en-US', { weekday: 'short' })
-    .toUpperCase()
+  useEffect(() => {
+    if (!categoryListRef.current || categoryListWidth === 0) return
+    const activeLayout = categoryLayoutsRef.current.get(activeCategoryIndex)
+    if (!activeLayout) return
 
-  const todayOpeningTimes = aboutObject?.openingTimes.find(
-    (opening) => opening.day === currentDayShort
-  )
+    const maxOffset = Math.max(0, categoryContentWidthRef.current - categoryListWidth)
+    const centeredOffset = activeLayout.x + activeLayout.width / 2 - categoryListWidth / 2
+    const offset = Math.min(Math.max(0, centeredOffset), maxOffset)
 
-  const minutesOpacity = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        translationY.value,
-        [0, TOP_BAR_HEIGHT, SCROLL_RANGE / 2],
-        [0, 0.8, 1],
-        Extrapolation.CLAMP
-      )
-    }
-  })
+    categoryListRef.current.scrollTo({
+      animated: true,
+      x: offset,
+      y: 0
+    })
+  }, [activeCategoryIndex, categoryListWidth, layoutVersion])
 
-  const headerHeight = useAnimatedStyle(() => {
-    return {
-      height: interpolate(
-        translationY.value,
-        [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-        [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-        Extrapolation.CLAMP
-      )
-    }
-  })
-
-  const headerHeightWithoutTopbar = useAnimatedStyle(() => {
-    return {
-      height: interpolate(
-        translationY.value,
-        [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
-        [
-          HEADER_MAX_HEIGHT - TOP_BAR_HEIGHT,
-          HEADER_MIN_HEIGHT - TOP_BAR_HEIGHT
-        ],
-        Extrapolation.CLAMP
-      )
-    }
-  })
-
-  const opacity = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        translationY.value,
-        [0, height * 0.05, SCROLL_RANGE / 2],
-        [1, 0.8, 0],
-        Extrapolation.CLAMP
-      )
-    }
-  })
-
-  const distance = calculateDistance(
-    aboutObject?.latitude,
-    aboutObject?.longitude,
-    location?.latitude,
-    location?.longitude
-  )
-
-  const emptyView = () => {
-    return (
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <TextError text={t('noItemsExists')} />
-      </View>
-    )
-  }
+  if (!categories.length) return null
 
   return (
-    <Animated.View style={[styles(currentTheme).mainContainer, headerHeight]}>
-      <Animated.View style={[headerHeightWithoutTopbar]}>
-        <Animated.View style={[styles().overlayContainer]}>
-          <View style={[styles().fixedViewNavigation, { paddingTop: topInset }]}>
-            <View style={styles().backIcon}>
-              {props?.searchOpen ? (
-                <AnimatedTouchable
-                  activeOpacity={0.7}
-                  style={[
-                    styles(currentTheme).touchArea,
-                    {
-                      // backgroundColor: props?.themeBackground,
-                      borderRadius: props?.iconRadius,
-                      height: props?.iconTouchHeight
-                    }
-                  ]}
-                  onPress={props?.searchPopupHandler}
-                >
-                  <Entypo
-                    name='cross'
-                    color={currentTheme.newIconColor}
-                    size={scale(22)}
-                  />
-                </AnimatedTouchable>
-              ) : (
-                <AnimatedTouchable
-                  activeOpacity={0.7}
-                  style={[
-                    styles(currentTheme).touchArea,
-                    {
-                      // backgroundColor: props?.themeBackground,
-                      borderRadius: props?.iconRadius,
-                      height: props?.iconTouchHeight
-                    }
-                  ]}
-                  onPress={() => navigation.goBack()}
-                >
-                  <Ionicons
-                    name='arrow-back'
-                    color={currentTheme.newIconColor}
-                    size={scale(22)}
-                  />
-                </AnimatedTouchable>
-              )}
-            </View>
-            <View style={styles().center}>
-              {!props?.searchOpen && (
-                <AnimatedText
-                  numberOfLines={1}
-                  style={[styles(currentTheme).headerTitle, minutesOpacity]}
-                >
-                  {t('delivery')} {aboutObject.deliveryTime} {t('Min')}
-                </AnimatedText>
-              )}
-            </View>
-            <View style={styles().fixedIcons}>
-              {props?.searchOpen ? (
-                <>
-                  <Search
-                    setSearch={props?.setSearch}
-                    search={props?.search}
-                    newheaderColor={newheaderColor}
-                    cartContainer={cartContainer}
-                    placeHolder={t('searchItems')}
-                  />
-                </>
-              ) : (
-                <>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={[
-                      styles(currentTheme).touchArea,
-                      {
-                        // backgroundColor: props?.themeBackground,
-                        borderRadius: props?.iconRadius,
-                        height: props?.iconTouchHeight
-                      }
-                    ]}
-                    onPress={() => {
-                      navigation.navigate('About', {
-                        restaurantObject: { ...aboutObject },
-                        tab: false
-                      })
-                    }}
-                  >
-                    <SimpleLineIcons
-                      name='info'
-                      size={scale(17)}
-                      color={currentTheme.newIconColor}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={[
-                      styles(currentTheme).touchArea,
-                      {
-                        // backgroundColor: props?.themeBackground,
-                        borderRadius: props?.iconRadius,
-                        height: props?.iconTouchHeight
-                      }
-                    ]}
-                    onPress={props?.searchHandler}
-                  >
-                    <Ionicons
-                      name='search-outline'
-                      style={{
-                        fontSize: props?.iconSize
-                      }}
-                      color={currentTheme.newIconColor}
-                    />
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
-          </View>
-          {!props?.search && !props?.loading && (
-            <Animated.View style={[styles().restaurantDetails, opacity]}>
-              <Animated.View>
-                <Image
-                  resizeMode='cover'
-                  source={{ uri: aboutObject?.restaurantImage }}
-                  style={[
-                    styles().mainRestaurantImg,
-                    props?.searchOpen ? { opacity: 0 } : {}
-                  ]}
-                />
-                <View style={styles(currentTheme).mainDetailsContainer}>
-                  <View style={styles(currentTheme).subDetailsContainer}>
-                    <TextDefault textColor={currentTheme.fontMainColor}>
-                      {t('deliveryCharges')} {configuration.currencySymbol}
-                      {configuration?.deliveryRate}
-                    </TextDefault>
-                  </View>
+    <View
+      style={styles(currentTheme).categoriesContainer}
+      onLayout={(event) => {
+        setCategoryListWidth(event.nativeEvent.layout.width)
+      }}
+    >
+      <ScrollView
+        ref={categoryListRef}
+        horizontal
+        inverted={currentTheme.isRTL}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles(currentTheme).categoriesContent}
+        keyboardShouldPersistTaps='handled'
+        onContentSizeChange={(width) => {
+          categoryContentWidthRef.current = width
+          setLayoutVersion((value) => value + 1)
+        }}
+      >
+        {categories.map((item) => {
+          const isActive = item.categoryIndex === activeCategoryIndex
 
-                  <View style={styles(currentTheme).subDetailsContainer}>
-                    <TextDefault textColor={currentTheme.fontMainColor} isRTL>
-                      {t('minimumOrder')} {configuration.currencySymbol}{' '}
-                      {aboutObject?.restaurantMinOrder}
-                    </TextDefault>
-                  </View>
-                </View>
-              </Animated.View>
-              <Animated.View
-                pointerEvents="box-none"
-                style={[
-                  {
-                    display: 'flex',
-                    gap: scale(10),
-                    marginBottom: scale(10),
-                    ...alignment.PLmedium,
-                    ...alignment.PRmedium
-                  }
-                ]}
-              >
-                <View style={[styles(currentTheme).subContainer]} pointerEvents="box-none">
-                  <View style={styles(currentTheme).titleContainer}>
-                    <Image
-                      resizeMode='cover'
-                      source={
-                        aboutObject.restaurantLogo
-                          ? { uri: aboutObject.restaurantLogo }
-                          : require('../../../assets/images/defaultLogo.png')
-                      }
-                      style={[styles().restaurantImg]}
-                    />
-                    <TextDefault
-                      numberOfLines={2}
-                      H3
-                      bolder
-                      textColor={currentTheme.fontThirdColor}
-                      style={{ flex: 1, flexShrink: 1, marginRight: scale(10) }}
-                    >
-                      {aboutObject?.restaurantName}
-                    </TextDefault>
-                  </View>
-                  <AnimatedTouchable
-                    activeOpacity={0.7}
-                    disabled={favLoading}
-                    onPress={toggleFavorite}
-                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-                    style={{
-                      minWidth: scale(44),
-                      minHeight: scale(44),
-                      padding: scale(8),
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}
-                  >
-                    {favLoading ? (
-                      <Spinner
-                        size={'small'}
-                        backColor={'transparent'}
-                        spinnerColor={currentTheme.iconColorDark}
-                      />
-                    ) : (
-                      <AntDesign
-                        name={isFavorite ? 'heart' : 'hearto'}
-                        size={scale(24)}
-                        color={currentTheme.newIconColor}
-                      />
-                    )}
-                  </AnimatedTouchable>
-                </View>
-                <TextDefault
-                  textColor={currentTheme.fontThirdColor}
-                  H5
-                  bold
-                  isRTL
-                >
-                  {aboutObject?.restaurantCuisines?.join(', ')}
-                </TextDefault>
-              </Animated.View>
-
-              <View
-                style={{
-                  flexDirection: currentTheme.isRTL ? 'row-reverse' : 'row',
-                  justifyContent: 'space-between',
-                  marginTop: scale(5)
-                }}
-              >
-                <AnimatedTouchable
-                  activeOpacity={0.7}
-                  style={styles(currentTheme).ratingBox}
-                  onPress={() => {
-                    navigation.navigate('Reviews', {
-                      restaurantObject: { ...aboutObject, isOpen: null },
-                      tab: false
-                    })
-                  }}
-                >
-                  <FontAwesome5
-                    name='smile'
-                    size={scale(20)}
-                    color={currentTheme.newIconColor}
-                  />
-
-                  <TextDefault
-                    textColor={currentTheme.fontNewColor}
-                    bold
-                    H5
-                    isRTL
-                  >
-                    {aboutObject?.average}
-                  </TextDefault>
-                  <TextDefault
-                    textColor={currentTheme.fontNewColor}
-                    bold
-                    H5
-                    isRTL
-                  >
-                    {aboutObject?.reviewsCount ?? 0} review(s)
-                  </TextDefault>
-                </AnimatedTouchable>
-                <AnimatedTouchable
-                  style={styles(currentTheme).seeReviewsBtn}
-                  activeOpacity={0.8}
-                  disabled={props?.loading}
-                  onPress={() => {
-                    navigation.navigate('Reviews', {
-                      restaurantObject: { ...aboutObject, isOpen: null },
-                      tab: false
-                    })
-                  }}
-                >
-                  <TextDefault bolder textColor={currentTheme.main}>
-                    {t('seeReviews')}
-                  </TextDefault>
-                </AnimatedTouchable>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
-                  justifyContent: 'space-between',
-                  marginTop: scale(5)
-                }}
-              >
-                <View
-                  activeOpacity={0.7}
-                  style={styles(currentTheme).ratingBox}
-                >
-                  <MaterialCommunityIcons
-                    name='timer-outline'
-                    size={scale(20)}
-                    color={currentTheme.newIconColor}
-                  />
-
-                  {todayOpeningTimes && (
-                    <View style={styles(currentTheme).timingRow}>
-                      <TextDefault
-                        textColor={currentTheme.fontThirdColor}
-                        bold
-                        isRTL
-                      >
-                        {t(todayOpeningTimes?.day)}{' '}
-                      </TextDefault>
-                      {todayOpeningTimes?.times?.length < 1 ? (
-                        <TextDefault small bold center isRTL>
-                          {t('ClosedAllDay')}
-                        </TextDefault>
-                      ) : (
-                        todayOpeningTimes?.times?.map((timing, index) => (
-                          <TextDefault
-                            key={index}
-                            textColor={currentTheme.fontThirdColor}
-                            bold
-                            isRTL
-                          >
-                            {timing.startTime[0]}:{timing.startTime[1]} -{' '}
-                            {timing.endTime[0]}:{timing.endTime[1]}
-                          </TextDefault>
-                        ))
-                      )}
-                    </View>
-                  )}
-                </View>
-                <AnimatedTouchable
-                  style={styles(currentTheme).seeReviewsBtn}
-                  disabled={true}
-                >
-                  <TextDefault bolder textColor={currentTheme.main}>
-                    {!aboutObject?.IsOpen ? t('Closed') : t('Open')}
-                  </TextDefault>
-                </AnimatedTouchable>
-              </View>
-
-              <View
-                style={[
-                  styles(currentTheme).ratingBox,
-                  { marginTop: scale(5) }
-                ]}
-              >
-                <Bicycle size={20} color={currentTheme.newFontcolor} />
-
-                <TextDefault
-                  textColor={currentTheme.fontNewColor}
-                  bold
-                  H5
-                  isRTL
-                >
-                  {aboutObject.deliveryTime} {t('Min')}
-                </TextDefault>
-              </View>
-            </Animated.View>
-          )}
-        </Animated.View>
-      </Animated.View>
-
-      {!props?.search && (
-        <>
-          {!props?.loading && (
-            <FlatList
-              ref={flatListRef}
-              style={styles(currentTheme).flatListStyle}
-              contentContainerStyle={{
-                flexGrow: 1,
-                paddingHorizontal: scale(15)
+          return (
+            <View
+              key={item.key}
+              onLayout={(event) => {
+                categoryLayoutsRef.current.set(item.categoryIndex, event.nativeEvent.layout)
+                setLayoutVersion((value) => value + 1)
               }}
-              data={props?.loading ? [] : [...props?.topaBarData]}
-              horizontal={true}
-              ListEmptyComponent={emptyView()}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              inverted={currentTheme.isRTL ? true : false}
-              renderItem={({ item, index }) => (
-                <View
-                  style={
-                    props?.selectedLabel === index
-                      ? styles(currentTheme).activeHeader
-                      : null
-                  }
-                >
-                  <RectButton
-                    rippleColor={currentTheme.rippleColor}
-                    onPress={() => props?.changeIndex(index)}
-                    style={styles(currentTheme).headerContainer}
-                  >
-                    <View style={styles().navbarTextContainer}>
-                      <TextDefault
-                        style={
-                          props?.selectedLabel === index
-                            ? textStyles.Bolder
-                            : textStyles.H5
-                        }
-                        textColor={
-                          props?.selectedLabel === index
-                            ? currentTheme.newButtonText
-                            : currentTheme.gray500
-                        }
-                        center
-                        H5
-                      >
-                        {t(item.title)}
-                      </TextDefault>
-                    </View>
-                  </RectButton>
-                </View>
-              )}
-            />
+              style={isActive ? styles(currentTheme).activeHeader : styles(currentTheme).inactiveHeader}
+            >
+              <RectButton
+                rippleColor={currentTheme.rippleColor}
+                onPress={() => onPressCategory(item.categoryIndex)}
+                style={styles(currentTheme).headerContainer}
+              >
+                <TextDefault style={isActive ? textStyles.Bolder : textStyles.H5} textColor={isActive ? currentTheme.newButtonText : currentTheme.gray500} center H5>
+                  {t(item.title)}
+                </TextDefault>
+              </RectButton>
+            </View>
+          )
+        })}
+      </ScrollView>
+    </View>
+  )
+}
+
+function resolveAboutObject({ aboutObject, restaurant, restaurantId, restaurantName, restaurantImage, minimumOrder, tax }) {
+  if (aboutObject) return aboutObject
+
+  return {
+    latitude: restaurant ? restaurant.location?.coordinates?.[1] : '',
+    longitude: restaurant ? restaurant.location?.coordinates?.[0] : '',
+    address: restaurant ? restaurant.address : '',
+    restaurantId,
+    restaurantName,
+    restaurantImage,
+    restaurantLogo: resolveLogoImage(restaurant),
+    restaurantCuisines: restaurant ? restaurant.cuisines : [],
+    restaurantTax: tax,
+    restaurantMinOrder: minimumOrder,
+    deliveryTime: restaurant ? restaurant.deliveryTime : '...',
+    minimumOrder: restaurant ? restaurant.minimumOrder : '...',
+    average: restaurant ? restaurant?.reviewData?.ratings : '...',
+    total: restaurant ? restaurant?.reviewData?.total : '...',
+    reviews: restaurant ? restaurant?.reviewData?.reviews : '...',
+    isAvailable: restaurant ? restaurant?.isAvailable : true,
+    openingTimes: restaurant ? restaurant?.openingTimes : [],
+    phone: restaurant ? restaurant?.phone : '',
+    restaurantUrl: restaurant ? restaurant?.restaurantUrl : '',
+    IsOpen: true,
+    reviewsCount: restaurant ? restaurant?.reviewCount : '...',
+    _id: restaurantId
+  }
+}
+
+function HeaderContent({
+  aboutObject,
+  categories,
+  activeCategoryIndex,
+  onPressCategory,
+  searchOpen,
+  search,
+  setSearch,
+  searchHandler,
+  searchPopupHandler,
+  scrollY,
+  insetTop,
+  collapseDistance,
+  displayedDeliveryMinutes,
+  showCategories = true
+}) {
+  const navigation = useNavigation()
+  const { t, i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = useMemo(
+    () => ({
+      isRTL: i18n.dir() === 'rtl',
+      ...theme[themeContext.ThemeValue]
+    }),
+    [i18n, themeContext.ThemeValue]
+  )
+
+  const topBarHeight = insetTop + scale(52)
+  const headerHeight = topBarHeight + (showCategories && !searchOpen && categories.length > 0 ? CATEGORY_RAIL_HEIGHT : 0)
+
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    borderBottomColor: searchOpen ? currentTheme.newBorderColor : interpolateColor(scrollY.value, [0, collapseDistance * 0.3], ['rgba(0,0,0,0)', currentTheme.newBorderColor])
+  }))
+
+  const backgroundAnimatedStyle = useAnimatedStyle(() => ({
+    backgroundColor: currentTheme.themeBackground,
+    opacity: searchOpen ? 1 : interpolate(scrollY.value, [0, collapseDistance * 0.14, collapseDistance * 0.28], [0, 0.82, 1], Extrapolation.CLAMP)
+  }))
+
+  const titleAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollY.value, [0, collapseDistance * 0.35, collapseDistance * 0.8], [0, 0.5, 1], Extrapolation.CLAMP)
+  }))
+
+  return (
+    <Animated.View style={[styles(currentTheme).container, containerAnimatedStyle, { height: headerHeight }]}>
+      <Animated.View pointerEvents='none' style={[styles(currentTheme).backgroundFill, backgroundAnimatedStyle]} />
+      <View style={[styles(currentTheme).topRow, { paddingTop: insetTop }]}>
+        <View style={styles(currentTheme).leadingArea}>
+          {searchOpen ? (
+            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={searchPopupHandler}>
+              <Entypo name='cross' color={currentTheme.newIconColor} size={scale(22)} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={() => navigation.goBack()}>
+              <Ionicons name='arrow-back' color={currentTheme.newIconColor} size={scale(22)} />
+            </TouchableOpacity>
           )}
-        </>
-      )}
+        </View>
+
+        <View style={styles(currentTheme).centerArea}>
+          {searchOpen ? (
+            <Search setSearch={setSearch} search={search} newheaderColor={currentTheme.backgroundColor} cartContainer={currentTheme.gray500} placeHolder={t('searchItems')} />
+          ) : (
+            <AnimatedText numberOfLines={1} style={[styles(currentTheme).headerTitle, titleAnimatedStyle]}>
+              {t('delivery')} {displayedDeliveryMinutes} {t('Min')}
+            </AnimatedText>
+          )}
+        </View>
+
+        {!searchOpen && (
+          <View style={styles(currentTheme).trailingArea}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles(currentTheme).touchArea}
+              onPress={() => {
+                navigation.navigate('About', {
+                  restaurantObject: { ...aboutObject },
+                  tab: false
+                })
+              }}
+            >
+              <SimpleLineIcons name='info' size={scale(17)} color={currentTheme.newIconColor} />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={searchHandler}>
+              <Ionicons name='search-outline' style={{ fontSize: scale(20) }} color={currentTheme.newIconColor} />
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+
+      {showCategories && !searchOpen && <CategoryTabsBase categories={categories} activeCategoryIndex={activeCategoryIndex} onPressCategory={onPressCategory} currentTheme={currentTheme} t={t} />}
     </Animated.View>
   )
 }
 
-export default React.forwardRef(ImageTextCenterHeader)
+function ImageHeader(props) {
+  const resolvedAboutObject = resolveAboutObject(props)
+  const resolvedCategories = normalizeCategories(props)
+  const collapseDistance = props.collapseDistance ?? 0
+  const scrollY = props.scrollY ?? { value: 0 }
+  const insetTop = props.insetTop ?? props.topInset ?? 0
+  const displayedDeliveryMinutes = props.displayedDeliveryMinutes ?? resolvedAboutObject.deliveryTime ?? '...'
+
+  if (props.loading || props.topBarData || props.updatedDeals) {
+    return (
+      <HeaderContent
+        aboutObject={resolvedAboutObject}
+        categories={resolvedCategories}
+        activeCategoryIndex={props.activeCategoryIndex ?? 0}
+        onPressCategory={props.onPressCategory ?? (() => {})}
+        searchOpen={props.searchOpen ?? false}
+        search={props.search ?? ''}
+        setSearch={props.setSearch ?? (() => {})}
+        searchHandler={props.searchHandler ?? (() => {})}
+        searchPopupHandler={props.searchPopupHandler ?? (() => {})}
+        scrollY={props.translationY ?? scrollY}
+        insetTop={insetTop}
+        collapseDistance={collapseDistance}
+        displayedDeliveryMinutes={displayedDeliveryMinutes}
+        showCategories={props.showCategories ?? true}
+      />
+    )
+  }
+
+  return (
+    <HeaderContent
+      aboutObject={resolvedAboutObject}
+      categories={resolvedCategories}
+      activeCategoryIndex={props.activeCategoryIndex ?? 0}
+      onPressCategory={props.onPressCategory ?? (() => {})}
+      searchOpen={props.searchOpen ?? false}
+      search={props.search ?? ''}
+      setSearch={props.setSearch ?? (() => {})}
+      searchHandler={props.searchHandler ?? (() => {})}
+      searchPopupHandler={props.searchPopupHandler ?? (() => {})}
+      scrollY={scrollY}
+      insetTop={insetTop}
+      collapseDistance={collapseDistance}
+      displayedDeliveryMinutes={displayedDeliveryMinutes}
+      showCategories={props.showCategories ?? true}
+    />
+  )
+}
+
+export const CategoryTabsRow = memo(function CategoryTabsRow({ categories, activeCategoryIndex, onPressCategory }) {
+  const { t, i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = useMemo(
+    () => ({
+      isRTL: i18n.dir() === 'rtl',
+      ...theme[themeContext.ThemeValue]
+    }),
+    [i18n, themeContext.ThemeValue]
+  )
+
+  return <CategoryTabsBase categories={categories} activeCategoryIndex={activeCategoryIndex} onPressCategory={onPressCategory} currentTheme={currentTheme} t={t} />
+})
+
+export default memo(ImageHeader)

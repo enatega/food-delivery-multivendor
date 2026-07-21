@@ -14,17 +14,22 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       flexWrap: 'wrap',
-      ...alignment.MTsmall,
-      ...alignment.PxSmall
+      rowGap: scale(10),
+      columnGap: scale(10),
+      ...alignment.MTmedium,
+      ...alignment.PLmedium,
+      ...alignment.PRmedium
     },
     tagItem: {
       backgroundColor: props !== null ? props?.main : '#90E36D',
-      margin: scale(5),
+      minHeight: scale(40),
+      maxWidth: scale(220),
+      justifyContent: 'center',
       paddingVertical: scale(10),
-      paddingHorizontal: scale(15),
-      borderRadius: scale(10)
+      paddingHorizontal: scale(16),
+      borderRadius: scale(20)
     },
     emptyViewContainer:{
       flex: 1,
@@ -72,7 +77,7 @@ const styles = (props = null) =>
       gap: scale(10)
     },
     searchbar: {
-      ...alignment.Psmall
+      ...alignment.Pmedium
     }
   })
 export default styles

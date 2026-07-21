@@ -47,7 +47,8 @@ const buildStyles = (props = null) =>
     },
     dealSection: {
       ...alignment.PLsmall,
-      ...alignment.PRsmall
+      ...alignment.PRsmall,
+      paddingVertical: scale(10)
     },
     deal: {
       width: '80%',

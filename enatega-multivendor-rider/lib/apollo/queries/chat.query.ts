@@ -5,6 +5,7 @@ export const CHAT = gql`
     chat(order: $order) {
       id
       message
+      image
       user {
         id
         name

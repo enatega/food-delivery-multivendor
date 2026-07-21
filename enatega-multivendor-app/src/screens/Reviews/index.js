@@ -5,13 +5,14 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
+import { alignment } from '../../utils/alignment'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
-import { alignment } from '../../utils/alignment'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import StarRating from '../../assets/SVG/small-star-icon'
 import Button from '../../components/Button/Button'
 import ReviewCard from '../../components/Review/ReviewCard'
+import Spinner from '../../components/Spinner/Spinner'
 import { GET_REVIEWS_BY_RESTAURANT } from '../../apollo/queries'
 import { useQuery, gql } from '@apollo/client'
 
@@ -56,6 +57,11 @@ const Reviews = ({ navigation, route }) => {
     highest: t('HighestRating'),
     lowest: t('LowestRating')
   }
+  const filterOptions = [
+    { key: 'newest', label: sortingParams.newest },
+    { key: 'highest', label: sortingParams.highest },
+    { key: 'lowest', label: sortingParams.lowest }
+  ]
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -99,11 +105,18 @@ const Reviews = ({ navigation, route }) => {
         />
       )
     })
-  }, [navigation])
+  }, [navigation, currentTheme, t, restaurant.restaurantName])
   const sorted = reviews && reviews?.length ? sortReviews([...reviews], sortBy) : []
 
 
   const calculatePercentages = (groups, total) => {
+    if (!total || total <= 0) {
+      return Object.keys(groups || {}).reduce((acc, key) => {
+        acc[key] = 0
+        return acc
+      }, {})
+    }
+
     // Calculate raw percentages
     const rawPercentages = {}
     let totalInteger = 0
@@ -146,31 +159,52 @@ const Reviews = ({ navigation, route }) => {
   // Calculate percentages once before rendering
   const percentages = calculatePercentages(reviewGroups, total)
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
-  if (!connect) return <ErrorView refetchFunctions={[refetch]}/>
+  const { isConnected: connect } = useNetworkStatus()
+  if (!connect) return <ErrorView refetchFunctions={[refetch]} />
+  if (loading) {
+    return (
+      <Spinner
+        backColor={currentTheme.themeBackground}
+        spinnerColor={currentTheme.primary}
+      />
+    )
+  }
+  if (error) return <ErrorView refetchFunctions={[refetch]} />
   return (
     <View style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}>
-      <ScrollView style={[styles.container]}>
-        <View>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={[
+          styles.container,
+          { backgroundColor: currentTheme.themeBackground }
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.sectionSpacing}>
           <View
-            style={{
-              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
-              justifyContent: 'space-between',
-              ...alignment.MTsmall,
-              ...alignment.MBsmall
-            }}
+            style={[
+              styles.summaryRow,
+              {
+                flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
+              }
+            ]}
           >
             <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
               {t('allRatings')} ({total ?? '0 Reviews'})
             </TextDefault>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.ratingValueRow}>
               <StarRating />
-              <TextDefault bold H3 textColor={currentTheme.newFontcolor}>
+              <TextDefault
+                bold
+                H3
+                textColor={currentTheme.newFontcolor}
+                style={styles.ratingValueText}
+              >
                 {rating}
               </TextDefault>
             </View>
           </View>
-          <View>
+          <View style={styles.ratingBreakdownSection}>
             {Object.keys(reviewGroups)
               .sort((a, b) => b - a)
               .map((i, index) => {
@@ -179,37 +213,29 @@ const Reviews = ({ navigation, route }) => {
                 return (
                   <View
                     key={`${index}-rate`}
-                    style={{
-                      flexDirection: currentTheme?.isRTL
-                        ? 'row-reverse'
-                        : 'row',
-                      justifyContent: 'space-evenly',
-                      alignItems: 'center',
-                      marginVertical: scale(5)
-                    }}
+                    style={[
+                      styles.ratingBreakdownRow,
+                      {
+                        flexDirection: currentTheme?.isRTL
+                          ? 'row-reverse'
+                          : 'row'
+                      }
+                    ]}
                   >
                     <View
-                      style={{
-                        flexDirection: currentTheme?.isRTL
-                          ? 'row-reverse'
-                          : 'row',
-                        alignItems: currentTheme?.isRTL
-                          ? 'flex-start'
-                          : 'flex-end'
-                      }}
+                      style={[
+                        styles.ratingLabelContainer,
+                        {
+                          flexDirection: currentTheme?.isRTL
+                            ? 'row-reverse'
+                            : 'row'
+                        }
+                      ]}
                     >
-                      <TextDefault> {i} </TextDefault>
+                      <TextDefault style={styles.ratingLabel}>{i}</TextDefault>
                       <StarRating isFilled={true} />
                     </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: currentTheme?.isRTL
-                          ? 'row-reverse'
-                          : 'row',
-                        marginHorizontal: scale(10)
-                      }}
-                    >
+                    <View style={styles.ratingBarTrack}>
                       <View
                         style={{
                           height: scale(5),
@@ -227,7 +253,7 @@ const Reviews = ({ navigation, route }) => {
                     </View>
                     <View
                       style={{
-                        width: '10%',
+                        minWidth: scale(34),
                         alignItems: currentTheme?.isRTL
                           ? 'flex-start'
                           : 'flex-end'
@@ -242,39 +268,63 @@ const Reviews = ({ navigation, route }) => {
               })}
           </View>
         </View>
-        <View style={{ ...alignment.MTsmall }}>
+        <View style={styles.reviewsSection}>
           <TextDefault textColor={currentTheme.gray900} H3 bold isRTL>
             {t('titleReviews')}
           </TextDefault>
           <View
-            style={{
-              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
-              ...alignment.MTsmall
-            }}
+            style={[
+              styles.filtersRow,
+              {
+                flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
+              }
+            ]}
           >
-            {Object.keys(sortingParams).map((key) => (
-              <Button
-                key={key}
-                textProps={{ textColor: currentTheme.color4 }}
-                buttonProps={{ onPress: () => setSortBy(key) }}
-                text={sortingParams[key]}
-                textStyles={styles.text}
-                buttonStyles={{
-                  backgroundColor:
-                    sortBy === key
-                      ? currentTheme.primary
-                      : currentTheme.gray200,
-                  margin: scale(10),
-                  borderRadius: scale(10)
-                }}
-              />
-            ))}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              nestedScrollEnabled
+              contentContainerStyle={[
+                styles.filtersContent,
+                {
+                  flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
+                }
+              ]}
+            >
+              {filterOptions.map((item, index) => (
+                <Button
+                  key={item.key}
+                  textProps={{
+                    textColor: currentTheme.color4,
+                    numberOfLines: 1,
+                    adjustsFontSizeToFit: true,
+                    minimumFontScale: 0.82
+                  }}
+                  buttonProps={{ onPress: () => setSortBy(item.key) }}
+                  text={item.label}
+                  textStyles={styles.filterText}
+                  buttonStyles={[
+                    styles.filterButton,
+                    {
+                      backgroundColor:
+                        sortBy === item.key
+                          ? currentTheme.primary
+                          : currentTheme.gray200,
+                      marginRight:
+                        index === filterOptions.length - 1
+                          ? 0
+                          : scale(10)
+                    }
+                  ]}
+                />
+              ))}
+            </ScrollView>
           </View>
-          <View style={{ ...alignment.MBlarge }}>
+          <View style={styles.reviewsList}>
             {sorted.map((review) => (
               <ReviewCard
                 key={review._id}
-                name={review.order.user.name}
+                name={review.order?.user?.name}
                 description={review.description}
                 rating={review.rating}
                 date={calculateDaysAgo(review.createdAt)}
@@ -282,11 +332,53 @@ const Reviews = ({ navigation, route }) => {
               />
             ))}
           </View>
-          <View style={{ ...alignment.MTlarge }}>
+          <View style={styles.emptyStateContainer}>
             {sorted.length === 0 ? (
-              <TextDefault center H4 bold>
-                {t('unReadReviews')}
-              </TextDefault>
+              <View
+                style={[
+                  styles.emptyStateCard,
+                  {
+                    backgroundColor: currentTheme.cardBackground,
+                    borderColor: currentTheme.borderLight
+                  }
+                ]}
+              >
+                <View
+                  style={[
+                    styles.emptyStateIllustration,
+                    { backgroundColor: currentTheme.gray200 }
+                  ]}
+                >
+                  <MaterialIcons
+                    name='rate-review'
+                    size={scale(42)}
+                    color={currentTheme.primary}
+                  />
+                  <View style={styles.emptyStateBadge}>
+                    <StarRating isFilled />
+                  </View>
+                </View>
+                <TextDefault
+                  center
+                  H3
+                  bold
+                  textColor={currentTheme.gray900}
+                  style={styles.emptyStateTitle}
+                >
+                  {t('noReviewsYet', 'No Reviews Yet')}
+                </TextDefault>
+                <TextDefault
+                  center
+                  H5
+                  textColor={currentTheme.gray500}
+                  style={styles.emptyStateDescription}
+                >
+                  {t(
+                    'noReviewsYetDescription',
+                    'Once reviews are shared, they will appear here.'
+                  )}
+                </TextDefault>
+              </View>
             ) : null}
           </View>
         </View>

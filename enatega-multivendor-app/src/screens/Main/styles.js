@@ -192,8 +192,8 @@ const styles = (props = null, hasActiveOrders = false) =>
       paddingLeft: scale(38)
     },
     topBrandsMargin: {
-      marginBottom: hasActiveOrders ? MODAL_HEIGHT : 0,
-      ...alignment.MTmedium
+      marginBottom: hasActiveOrders ? scale(84) : scale(8),
+      ...alignment.MTsmall
     },
     buttonContainer: {
       ...alignment.PLmedium,

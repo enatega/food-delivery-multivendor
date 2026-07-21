@@ -24,7 +24,7 @@ module.exports = () => {
   return {
     name: 'Enatega Multi',
     scheme: 'enategamultivendor',
-    version: '1.1.26',
+    version: '1.1.27',
     description:
       "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     slug: 'enategamultivendor',
@@ -37,8 +37,8 @@ module.exports = () => {
     },
     splash: {
       image: './assets/splash.png',
-      resizeMode: 'cover',
-      backgroundColor: '#ffffff'
+      resizeMode: "cover",
+        "backgroundColor": "#000000"
     },
     platforms: ['ios', 'android'],
     orientation: 'portrait',
@@ -48,8 +48,8 @@ module.exports = () => {
     ios: {
       splash: {
         image: './assets/splash.png',
-        resizeMode: 'cover',
-        backgroundColor: '#ffffff'
+        resizeMode: "cover",
+          "backgroundColor": "#000000"
       },
       entitlements: {
         'com.apple.developer.networking.wifi-info': true,
@@ -82,14 +82,14 @@ module.exports = () => {
       androidCollapsedTitle: 'Enatega Multivendor'
     },
     android: {
-      versionCode: 126,
+      versionCode: 127,
       package: 'com.enatega.multivendor',
       userInterfaceStyle: 'automatic',
       googleServicesFile: './google-services.json',
       splash: {
         image: './assets/splash.png',
         resizeMode: 'cover',
-        backgroundColor: '#ffffff'
+        backgroundColor: '#000000'
       },
       config: {
         ...(androidGoogleMapsApiKey

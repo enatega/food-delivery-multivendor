@@ -34,7 +34,12 @@ const styles = (props = null) =>
     modalHead: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       ...alignment.PBsmall,
+    },
+    headText: {
+      flex: 1,
+      marginRight: scale(10),
     },
     btn: {
       display: 'flex',

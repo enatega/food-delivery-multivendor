@@ -250,7 +250,7 @@ export const UserProvider = (props) => {
   }, [logout])
 
   const userContextValue = useMemo(() => ({
-    isLoggedIn: !!token && dataProfile && !!dataProfile?.profile,
+    isLoggedIn: !!token,
     loadingProfile: loadingProfile && calledProfile,
     errorProfile,
     profile: dataProfile && dataProfile?.profile ? dataProfile?.profile : null,

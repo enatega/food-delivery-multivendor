@@ -22,10 +22,12 @@ function HomeHeadingSection({
 }) {
 
   const t = useTranslations()
+  const headingTitle = t.has(title) ? t(title) : title;
+
   return (
     <div className="flex justify-between items-center mx-[6px] mb-8">
       <span className="font-inter font-bold text-2xl sm:text-4xl leading-8 tracking-normal text-gray-900 dark:text-white">
-        {t(title)}
+        {headingTitle}
       </span>
       <div className="flex items-center gap-4">
         <MapViewButton />
