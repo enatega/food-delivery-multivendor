@@ -20,6 +20,10 @@ const ENV_CONFIG = {
     // SERVER_URL: 'http://192.168.1.175:8001/graphql',
     // SERVER_REST_URL: 'http://192.168.1.175:8001/',
     CLARITY_ENABLED: true
+    // GRAPHQL_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/graphql',
+    // WS_GRAPHQL_URL: 'wss://3086ptqf-8001.inc1.devtunnels.ms/graphql',
+    // SERVER_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/graphql',
+    // SERVER_REST_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/',
   },
   production: {
     GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',

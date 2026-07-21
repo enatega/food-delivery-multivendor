@@ -1,7 +1,8 @@
 import { useState, useContext } from 'react'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import { emailRegex, passRegex, nameRegex, phoneRegex } from '../../utils/regex'
+import { emailRegex, passRegex, nameRegex } from '../../utils/regex'
+import { isValidPhoneNumber, getPhoneExample, toE164 } from '../../utils/phone'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import gql from 'graphql-tag'
@@ -84,8 +85,9 @@ const useRegister = () => {
     if (!phone) {
       setPhoneError(t('mobileErr1'))
       result = false
-    } else if (!phoneRegex.test(phone)) {
-      setPhoneError(t('mobileErr2'))
+    } else if (!isValidPhoneNumber(phone, country?.cca2)) {
+      const example = getPhoneExample(country?.cca2)
+      setPhoneError(example ? t('mobileErrFormat', { example }) : t('mobileErr2'))
       result = false
     }
 
@@ -110,7 +112,7 @@ const useRegister = () => {
   function registerAction() {
     if (validateCredentials()) {
       phoneExist({
-        variables: { phone: ''.concat('+', country.callingCode[0], phone) }
+        variables: { phone: toE164(phone, country?.cca2) }
       })
     }
   }
@@ -136,7 +138,7 @@ const useRegister = () => {
             onPress: () => {
               navigation.navigate('EmailOtp', {
                 user: {
-                  phone: '+'.concat(country.callingCode[0]).concat(phone),
+                  phone: toE164(phone, country?.cca2),
                   email: email.toLowerCase().trim(),
                   password: password,
                   name: firstname + ' ' + lastname
@@ -151,7 +153,7 @@ const useRegister = () => {
     } else {
       navigation.navigate('EmailOtp', {
         user: {
-          phone: '+'.concat(country.callingCode[0]).concat(phone),
+          phone: toE164(phone, country?.cca2),
           email: email.toLowerCase().trim(),
           password: password,
           name: firstname + ' ' + lastname
@@ -195,6 +197,7 @@ const useRegister = () => {
     email,
     setEmail,
     emailError,
+    isEmailLocked: !!route.params?.email,
     firstname,
     setFirstname,
     firstnameError,

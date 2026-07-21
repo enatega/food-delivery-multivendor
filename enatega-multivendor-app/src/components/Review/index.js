@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { Dimensions, Image, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import CrossCirleIcon from '../../assets/SVG/cross-circle-icon'
@@ -12,17 +12,19 @@ import gql from 'graphql-tag'
 import { useApolloClient, useMutation } from '@apollo/client'
 import { reviewOrder } from '../../apollo/mutations'
 import { useTranslation } from 'react-i18next'
+import CachedImage from '../CachedImage'
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height
-const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
-const SNAP_HEIGHT = MODAL_HEIGHT
+const BASE_MODAL_HEIGHT = Math.min(Math.floor(SCREEN_HEIGHT * 0.38), 320)
+const EXPANDED_MODAL_HEIGHT = Math.min(Math.floor(SCREEN_HEIGHT * 0.72), 560)
+const SNAP_HEIGHT = EXPANDED_MODAL_HEIGHT
 
 const ORDER = gql`${order}`
 const REVIEWORDER = gql`
   ${reviewOrder}
 `
 
-function Review({ onOverlayPress, theme, orderId, rating }, ref) {
+function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
 
   const { t } = useTranslation()
 
@@ -33,6 +35,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
   function onCompleted() {
     setDescription('')
     ref?.current?.close()
+    onSubmitted?.()
   }
   function onError(error) {
     console.log(JSON.stringify(error))
@@ -41,6 +44,7 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
   const [showSection, setShowSection] = useState(false)
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState()
+  const isFeedbackVisible = showSection || rating > 0
   const onSelectRating = (rating) => {
     if (!showSection) { setShowSection(true) }
     ratingRef.current = rating
@@ -69,60 +73,103 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
     }
   };
   return (
-    <Modalize snapPoint={SNAP_HEIGHT} handlePosition='inside' ref={ref} withHandle={false} adjustToContentHeight modalStyle={{ borderWidth: StyleSheet.hairlineWidth }} onOverlayPress={onOverlayPress}>
-      <View style={styles.container(theme)}>
-        <View style={styles.headingContainer(theme)}>
-          <TextDefault bolder H3 textColor={theme.gray900}>
-            {t('howWasOrder')}
-          </TextDefault>
-          <TouchableOpacity onPress={onCompleted}>
-            <CrossCirleIcon stroke={theme.newIconColor}/>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.itemContainer(theme)}>
-          <View style={{ justifyContent: 'space-evenly' }}>
-            {order?.items?.slice(0, 2).map((item, index) => (<TextDefault key={`${item.food}-${index}`} H5 bold textColor={theme.gray900} isRTL >{item.title}</TextDefault>))}
+    <Modalize
+      snapPoint={SNAP_HEIGHT}
+      modalHeight={isFeedbackVisible ? EXPANDED_MODAL_HEIGHT : BASE_MODAL_HEIGHT}
+      handlePosition='inside'
+      ref={ref}
+      withHandle={false}
+      adjustToContentHeight={false}
+      keyboardAvoidingBehavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardAvoidingOffset={Platform.OS === 'ios' ? 24 : 0}
+      modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}
+      onOverlayPress={onOverlayPress}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container(theme)}
+      >
+        <ScrollView
+          keyboardShouldPersistTaps='handled'
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.content(theme)}
+        >
+          <View style={styles.headingContainer(theme)}>
+            <TextDefault bolder H3 textColor={theme.gray900}>
+              {t('howWasOrder')}
+            </TextDefault>
+            <TouchableOpacity onPress={onCompleted}>
+              <CrossCirleIcon stroke={theme.newIconColor}/>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.itemContainer(theme)}>
+            <View style={styles.summaryTextWrap}>
+              {order?.items?.slice(0, 2).map((item, index) => (
+                <TextDefault
+                  key={`${item.food}-${index}`}
+                  H5
+                  bold
+                  textColor={theme.gray900}
+                  isRTL
+                  numberOfLines={1}
+                  ellipsizeMode='tail'
+                >
+                  {item.title}
+                </TextDefault>
+              ))}
+              <View>
+                {order?.deliveredAt && (
+                  <TextDefault
+                    textColor={theme.gray500}
+                    isRTL
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                  >
+                    {new Date(order?.deliveredAt).toString()}
+                  </TextDefault>
+                )}
+              </View>
+            </View>
             <View>
-              {order?.deliveredAt && <TextDefault textColor={theme.gray500} isRTL>{(new Date(order?.deliveredAt).toString())}</TextDefault>}
+              <CachedImage source={order?.restaurant?.image ? { uri: order?.restaurant?.image }: require('../../assets/images/food_placeholder.png') } style={styles.image}/>
             </View>
           </View>
-          <View>
-            <Image source={order?.restaurant?.image ? { uri: order?.restaurant?.image }: require('../../assets/images/food_placeholder.png') } style={styles.image}/>
+
+          <View style={styles.starRow}>
+            <StarRating numberOfStars={5} onSelect={onSelectRating} defaultRating={rating} theme={theme} />
           </View>
-        </View>
 
-        <View style={{ flexDirection: 'row' }}>
-          <StarRating numberOfStars={5} onSelect={onSelectRating} defaultRating={rating} theme={theme} />
-        </View>
-
-        {(showSection || rating>0) && <View>
-          <TextDefault textColor={theme.gray900} H4 bolder style={{ marginVertical: scale(8) }} isRTL >{t('tellAboutExp')} {order?.restaurant?.name}</TextDefault>
-          {/* <OutlinedTextField
-            label={t('review')}
-            placeholder={t('typeHere')}
-            fontSize={scale(12)}
-            maxLength={200}
-            textAlignVertical="top"
-            baseColor={theme.verticalLine}
-            multiline={true}
-            onChangeText={setDescription}
-            placeholderTextColor={theme.newFontcolor}
-            textColor={theme.newFontcolor}
-          /> */}
-          <TextInput
-            label={t('review')}
-            placeholder={t('typeHere')}
-            placeholderTextColor={theme.placeholderColor}
-            value={description}
-            onChangeText={(text) => setDescription(text)}
-            style={styles.modalInput(theme)}
-          />
-          <Button text={t('submit')}
-            buttonProps={{ onPress: onSubmit,disabled: loading }}
-            buttonStyles={{ borderRadius: 15, backgroundColor: theme.primary, margin: 10, opacity: loading ? 0.6 : 1, }} textStyles={{ margin: 10, alignSelf: 'center' }}
-            textProps={{ H4: true, bold: true, textColor: theme.black }}/>
-        </View>}
-      </View>
+          {isFeedbackVisible && (
+            <View style={styles.feedbackSection}>
+              <TextDefault textColor={theme.gray900} H4 bolder style={{ marginVertical: scale(8) }} isRTL>
+                {t('tellAboutExp')} {order?.restaurant?.name}
+              </TextDefault>
+              <TextInput
+                placeholder={t('typeHere')}
+                placeholderTextColor={theme.placeholderColor}
+                value={description}
+                onChangeText={(text) => setDescription(text)}
+                multiline
+                textAlignVertical='top'
+                scrollEnabled
+                style={styles.modalInput(theme)}
+              />
+              <Button
+                text={t('submit')}
+                buttonProps={{ onPress: onSubmit, disabled: loading }}
+                buttonStyles={{
+                  borderRadius: 15,
+                  backgroundColor: theme.primary,
+                  marginTop: scale(12),
+                  opacity: loading ? 0.6 : 1
+                }}
+                textStyles={{ marginVertical: scale(10), alignSelf: 'center' }}
+                textProps={{ H4: true, bold: true, textColor: theme.black }}
+              />
+            </View>
+          )}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Modalize>
   )
 }

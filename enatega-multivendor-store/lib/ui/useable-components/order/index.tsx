@@ -520,25 +520,23 @@ const Order = ({
 
         {/* Order Instructions */}
         {order?.instructions && (
-          <View
-            className="rounded-[4px] p-2"
-            style={{ backgroundColor: appTheme.lowOpacityPrimaryColor }}
-          >
+          <View className="py-2">
             <Text
               style={{
-                color: appTheme.fontMainColor,
-                fontSize: 18,
+                color: appTheme.primary,
+                fontSize: 14,
                 fontWeight: "600",
               }}
             >
-              {t("Comment")}
+              {t("Special Instructions")}
             </Text>
             <Text
               style={{
                 color: appTheme.fontMainColor,
-                fontSize: 18,
-                fontWeight: "600",
+                fontSize: 16,
+                fontWeight: "400",
                 fontStyle: "italic",
+                marginTop: 4,
               }}
             >
               {order?.instructions}

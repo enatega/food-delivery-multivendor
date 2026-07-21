@@ -5,8 +5,17 @@ const styles = (props = null) =>
     container: {
       flex: 1,
       backgroundColor: props !== null ? props?.headerMenuBackground : '#fff',
-      padding: 10,
-      gap: 16
+      paddingHorizontal: 14,
+      paddingTop: 8,
+      gap: 12
+    },
+    headingContainer: {
+      paddingTop: 4,
+      paddingBottom: 4,
+      gap: 4
+    },
+    headingTitle: {
+      marginBottom: 0
     },
     collectionCard: {
       backgroundColor: props != null ? props?.cardBackground : '#181818',
@@ -34,7 +43,8 @@ const styles = (props = null) =>
       gap: 8
     },
     contentContainerStyle: {
-      gap: 16,
+      gap: 12,
+      paddingTop: 4,
       paddingBottom: 50
     }
   })

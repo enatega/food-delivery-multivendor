@@ -23,6 +23,18 @@ import { invalidateUserSession } from '../utils/session'
 import { FlashMessage } from '../ui/FlashMessage/FlashMessage'
 import i18n from '../../i18next'
 
+const getNextFetchPolicy = (currentFetchPolicy, context) => {
+  if (context?.reason === 'variables-changed') {
+    return context.initialFetchPolicy
+  }
+
+  if (currentFetchPolicy === 'network-only' || currentFetchPolicy === 'cache-and-network') {
+    return 'cache-first'
+  }
+
+  return currentFetchPolicy
+}
+
 const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
   const publicOperations = new Set(['ForgotPassword', 'VerifyOtp', 'ResetPassword'])
 
@@ -70,6 +82,11 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       RestaurantDetail: {
         fields: {
           image: {
+            read(existing = null) {
+              return existing
+            }
+          },
+          logo: {
             read(existing = null) {
               return existing
             }
@@ -242,7 +259,20 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
   const client = new ApolloClient({
     link: ApolloLink.from([errorLink, terminatingLink]),
     cache,
-    resolvers: {}
+    resolvers: {},
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: getNextFetchPolicy,
+        notifyOnNetworkStatusChange: false,
+        returnPartialData: true,
+        errorPolicy: 'all'
+      },
+      query: {
+        fetchPolicy: 'cache-first',
+        errorPolicy: 'all'
+      }
+    }
   })
 
   return client

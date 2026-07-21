@@ -7,7 +7,7 @@ import RiderChatIcon from '../../../assets/SVG/rider-chat'
 import ChatIcon from '../../../assets/SVG/chat-icon'
 import { scale } from '../../../utils/scaling'
 
-export const ChatButton = ({ onPress, theme, title, description }) => {
+export const ChatButton = ({ onPress, theme, title, description, hasUnread }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.chatButton(theme)}>
       <View>
@@ -29,7 +29,24 @@ export const ChatButton = ({ onPress, theme, title, description }) => {
         </TextDefault>
       </View>
       <View style={styles.chatIcon(theme)}>
-        <ChatIcon fill={theme.white} stroke={theme.black}/>
+        <View>
+          <ChatIcon fill={theme.white} stroke={theme.black}/>
+          {hasUnread && (
+            <View
+              style={{
+                position: 'absolute',
+                top: -scale(2),
+                right: -scale(2),
+                width: scale(10),
+                height: scale(10),
+                borderRadius: scale(5),
+                backgroundColor: 'red',
+                borderWidth: 1,
+                borderColor: theme.white
+              }}
+            />
+          )}
+        </View>
       </View>
 
     </TouchableOpacity>

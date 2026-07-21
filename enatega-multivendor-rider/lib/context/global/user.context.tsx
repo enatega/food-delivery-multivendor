@@ -74,6 +74,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       userId,
     },
   });
+  const isRiderAvailable = Boolean(dataProfile?.rider?.available);
 
   async function getUserId() {
     const id = await AsyncStorage.getItem("rider-id");
@@ -130,22 +131,24 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       },
     });
 
-    const unsubZoneOrder = subscribeToMore({
-      document: SUBSCRIPTION_ZONE_ORDERS,
-      variables: { zoneId: zoneIdValue },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const { origin, order } = subscriptionData.data.subscriptionZoneOrders;
-        if (origin === "new" || origin === "update") {
-          return { riderOrders: upsertOrder(prev.riderOrders, order) };
-        }
-        return prev;
-      },
-    });
+    const unsubZoneOrder = isRiderAvailable
+      ? subscribeToMore({
+          document: SUBSCRIPTION_ZONE_ORDERS,
+          variables: { zoneId: zoneIdValue },
+          updateQuery: (prev, { subscriptionData }) => {
+            if (!subscriptionData.data) return prev;
+            const { origin, order } = subscriptionData.data.subscriptionZoneOrders;
+            if (origin === "new" || origin === "update") {
+              return { riderOrders: upsertOrder(prev.riderOrders, order) };
+            }
+            return prev;
+          },
+        })
+      : null;
 
     return () => {
       try {
-        unsubZoneOrder();
+        unsubZoneOrder?.();
       } catch (err) {
         console.log("err in unsubZoneOrder", err);
       }
@@ -155,7 +158,15 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         console.log("err in unsubAssignOrder", err);
       }
     };
-  }, [dataProfile, subscribeToMore, userId, zoneId]);
+  }, [dataProfile, isRiderAvailable, subscribeToMore, userId, zoneId]);
+
+  const filteredAssignedOrders = (dataAssigned?.riderOrders ?? []).filter(
+    (order: IOrder) =>
+      isRiderAvailable ||
+      order?.orderStatus !== "ACCEPTED" ||
+      Boolean(order?.rider) ||
+      Boolean(order?.isPickedUp)
+  );
 
   useEffect(() => {
     if (!userId) return;
@@ -193,7 +204,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         loadingAssigned,
         errorAssigned,
         assignedOrders:
-          loadingAssigned || errorAssigned ? [] : dataAssigned?.riderOrders,
+          loadingAssigned || errorAssigned ? [] : filteredAssignedOrders,
         refetchAssigned,
         refetchProfile,
         networkStatusAssigned,

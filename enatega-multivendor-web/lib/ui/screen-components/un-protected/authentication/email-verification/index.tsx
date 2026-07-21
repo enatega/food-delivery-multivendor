@@ -20,10 +20,12 @@ export default function EmailVerification({
 }: IEmailVerificationProps) {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const autoSubmittedRef = useRef(false);
   const [isResendingOtp, setIsResendingOtp] = useState(false);
 
   const t = useTranslations();
   const { SKIP_EMAIL_VERIFICATION, TEST_OTP } = useConfig();
+  const demoOtp = TEST_OTP || "111111";
   const { verifyOTP, error } = useVerifyOtp();
   const {
     setIsAuthModalVisible,
@@ -77,25 +79,54 @@ export default function EmailVerification({
     inputRefs.current[Math.min(pasted.length, 5)]?.focus();
   };
   // handler
-  const handleSubmit = async () => {
-    if (SKIP_EMAIL_VERIFICATION) {
-      setStoredOtp(TEST_OTP);
+  const completeEmailVerification = async () => {
+    const userData = await handleCreateUser({
+      email: formData?.email,
+      phone: formData?.phone,
+      name: formData?.name,
+      password: formData?.password,
+      emailIsVerified: true,
+      isPhoneExists: formData?.isPhoneExists || false,
+    });
+
+    setStoredOtp("");
+    setEmailOtp("");
+
+    if (userData?.phone && !userData?.phoneIsVerified) {
+      setIsRegistering(false);
+      await sendOtpToPhoneNumber(userData.phone);
+      handleChangePanel(6);
+      return;
+    }
+
+    showToast({
+      type: "success",
+      title: t("email_verification_label"),
+      message: t("your_email_verified_successfully_message"),
+    });
+
+    if (profile?.phoneIsVerified) {
       showToast({
         type: "success",
-        title: t("email_verification_label"),
-        message: t("your_email_verified_successfully_message"),
+        title: t("Login"),
+        message: t("login_success_message"),
       });
-      if (profile?.phoneIsVerified) {
-        showToast({
-          type: "success",
-          title: t("Login"),
-          message: t("login_success_message"),
-        });
-        handleChangePanel(0);
-        setIsAuthModalVisible(false);
-      }
-      setStoredOtp("");
-      setEmailOtp("");
+    }
+
+    handleChangePanel(0);
+    setIsAuthModalVisible(false);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+    });
+  };
+
+  const handleSubmit = async () => {
+    if (SKIP_EMAIL_VERIFICATION) {
+      setStoredOtp(demoOtp);
+      await completeEmailVerification();
       return;
     }
 
@@ -107,42 +138,7 @@ export default function EmailVerification({
     });
 
     if (otpResponse.data?.verifyOtp.result && !!formData?.email) {
-      // Create user with isPhoneExists flag if set in formData
-      const userData = await handleCreateUser({
-        email: formData?.email,
-        phone: formData?.phone,
-        name: formData?.name,
-        password: formData?.password,
-        emailIsVerified: true,
-        isPhoneExists: formData?.isPhoneExists || false,
-      });
-
-      setStoredOtp("");
-      setEmailOtp("");
-
-      // Check if phone number needs verification after user creation
-      if (userData?.phone && !userData?.phoneIsVerified) {
-        setIsRegistering(false);
-        // Send OTP to phone number before redirecting to phone verification
-        await sendOtpToPhoneNumber(userData.phone);
-        handleChangePanel(6); // Go to phone verification panel (panel 6, not 4)
-        return;
-      }
-
-      showToast({
-        type: "success",
-        title: t("email_verification_label"),
-        message: t("your_email_verified_successfully_message"),
-      });
-
-      handleChangePanel(0);
-      setIsAuthModalVisible(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        password: "",
-      });
+      await completeEmailVerification();
     } else {
       showToast({
         type: "error",
@@ -176,6 +172,23 @@ export default function EmailVerification({
     }
   }, [error]);
 
+  useEffect(() => {
+    if (!SKIP_EMAIL_VERIFICATION || autoSubmittedRef.current) return;
+
+    const otpDigits = demoOtp.slice(0, 6).split("");
+    const filledOtp = otpDigits.concat(Array(Math.max(0, 6 - otpDigits.length)).fill(""));
+
+    autoSubmittedRef.current = true;
+    setOtp(filledOtp);
+    setEmailOtp(demoOtp);
+
+    const timer = window.setTimeout(() => {
+      void handleSubmit();
+    }, 150);
+
+    return () => window.clearTimeout(timer);
+  }, [SKIP_EMAIL_VERIFICATION, demoOtp]);
+
   return (
     <div className="flex flex-col items-start justify-start w-full h-full px-4 py-6 md:px-8 dark:bg-gray-900 dark:text-gray-100">
       <div className="flex flex-col justify-start text-left w-full">
@@ -188,6 +201,11 @@ export default function EmailVerification({
         <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
           {t("verify_your_email_label")}
         </p>
+        {SKIP_EMAIL_VERIFICATION && (
+          <p className="text-sm text-emerald-700 dark:text-emerald-400 mb-6">
+            {`Demo login mode is on. We're using test OTP ${demoOtp} and verifying it automatically for you.`}
+          </p>
+        )}
       </div>
 
       <div className="w-full mb-6">
@@ -205,6 +223,7 @@ export default function EmailVerification({
               onChange={(e) => handleChange(e, i)}
               onKeyDown={(e) => handleKeyDown(e, i)}
               onPaste={i === 0 ? handlePaste : undefined}
+              readOnly={SKIP_EMAIL_VERIFICATION}
               className="w-9 h-10 sm:w-10 sm:h-12 md:w-14 md:h-16 text-xl text-center border border-gray-300 dark:bg-gray-800  rounded-lg focus:outline-none focus:border-primary-color focus:ring-2 focus:ring-primary-color focus:ring-opacity-20"
               autoFocus={i === 0}
             />

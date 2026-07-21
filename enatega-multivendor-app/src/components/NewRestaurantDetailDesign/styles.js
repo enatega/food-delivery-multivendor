@@ -52,7 +52,7 @@ const styles = (props = null) => StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingBottom: scale(20)
+    paddingBottom: scale(10)
   },
   buttonContainer: {
     width: '100%',

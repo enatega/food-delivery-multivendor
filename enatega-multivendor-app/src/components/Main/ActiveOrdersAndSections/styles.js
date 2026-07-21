@@ -1,7 +1,7 @@
 import { verticalScale, scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
+import { subtleCardShadow } from '../../../utils/cardShadows'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -20,14 +20,12 @@ const styles = (props = null) =>
     },
     offerContainer: {
       backgroundColor: props != null ? props?.cartContainer : 'white',
-      elevation: 3,
-      shadowColor: theme.Pink.white,
-
       height: scale(200),
       borderRadius: 25,
       width: scale(228),
       ...alignment.MBmedium,
-      ...alignment.MTxSmall
+      ...alignment.MTxSmall,
+      ...subtleCardShadow
     },
     imageContainer: {
       position: 'relative',

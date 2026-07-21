@@ -6,7 +6,7 @@ import { callNumber } from '../../utils/callNumber'
 import gql from 'graphql-tag'
 import { chat } from '../../apollo/queries'
 import { subscriptionNewMessage } from '../../apollo/subscriptions'
-import { sendChatMessage } from '../../apollo/mutations'
+import { sendChatMessage, uploadImageToS3 } from '../../apollo/mutations'
 import { useMutation, useQuery } from '@apollo/client'
 import { Alert, Platform, StatusBar, View } from 'react-native'
 import { useUserContext } from '../../context/User'
@@ -38,12 +38,21 @@ export const useChatScreen = ({ navigation, route }) => {
       onError
     }
   )
+  const [uploadImage] = useMutation(
+    gql`
+      ${uploadImageToS3}
+    `,
+    { onError }
+  )
+  const [uploading, setUploading] = useState(false)
+
   useEffect(() => {
     if (chatData) {
       setMessages(
         chatData.chat.map(message => ({
           _id: message.id,
           text: message.message,
+          image: message.image || undefined,
           createdAt: message.createdAt,
           user: {
             _id: message.user.id,
@@ -135,7 +144,7 @@ export const useChatScreen = ({ navigation, route }) => {
   })
   const onSend = () => {
     if (!inputMessage?.trim()) return
-    
+
     const newMessage = {
       _id: Date.now().toString(),
       text: inputMessage.trim(),
@@ -145,10 +154,10 @@ export const useChatScreen = ({ navigation, route }) => {
         name: profile.name
       }
     }
-    
+
     // Optimistically update messages
     setMessages(previousMessages => [newMessage, ...previousMessages])
-    
+
     send({
       variables: {
         orderId: orderId,
@@ -165,9 +174,76 @@ export const useChatScreen = ({ navigation, route }) => {
     setImage([])
   }
 
+  // Optimistically add an image-only message, then persist it.
+  const sendImageMessage = (imageUrl) => {
+    const newMessage = {
+      _id: Date.now().toString(),
+      text: '',
+      image: imageUrl,
+      createdAt: new Date(),
+      user: {
+        _id: profile._id,
+        name: profile.name
+      }
+    }
+    setMessages(previousMessages => [newMessage, ...previousMessages])
+    send({
+      variables: {
+        orderId: orderId,
+        messageInput: {
+          message: '',
+          image: imageUrl,
+          user: {
+            id: profile._id,
+            name: profile.name
+          }
+        }
+      }
+    })
+  }
+
+  // Pick from gallery -> upload to S3 -> send the returned URL.
+  const pickImage = async () => {
+    // Lazy-require so merely opening the chat never touches the native module.
+    // (It throws at import if the dev client wasn't rebuilt with expo-image-picker.)
+    let ImagePicker
+    try {
+      ImagePicker = require('expo-image-picker')
+    } catch (e) {
+      Alert.alert(t('permissionRequired'), t('imagePickerUnavailable'))
+      return
+    }
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert(t('permissionRequired'), t('galleryPermissionMessage'))
+      return
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.6,
+      base64: true
+    })
+    if (result.canceled) return
+    const asset = result.assets?.[0]
+    if (!asset?.base64) return
+    try {
+      setUploading(true)
+      const { data } = await uploadImage({ variables: { image: `data:image/jpeg;base64,${asset.base64}` } })
+      const imageUrl = data?.uploadImageToS3?.imageUrl
+      if (!imageUrl) throw new Error(t('imageUploadFailed'))
+      sendImageMessage(imageUrl)
+    } catch (error) {
+      Alert.alert('Error', error.message)
+    } finally {
+      setUploading(false)
+    }
+  }
+
   return {
     messages,
     onSend,
+    pickImage,
+    uploading,
     currentTheme,
     image,
     setImage,

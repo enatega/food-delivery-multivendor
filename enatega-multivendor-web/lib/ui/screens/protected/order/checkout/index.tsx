@@ -45,8 +45,8 @@ import { useAuth } from "@/lib/context/auth/auth.context";
 import { InfoSvg } from "@/lib/utils/assets/svg";
 
 // Constants
-import { DAYS } from "@/lib/utils/constants/orders";
 import { PAYMENT_METHOD_LIST } from "@/lib/utils/constants";
+import { isRestaurantOpen } from "@/lib/utils/constants/isRestaurantOpen";
 
 // API
 import { PLACE_ORDER, VERIFY_COUPON, ORDERS } from "@/lib/api/graphql";
@@ -55,7 +55,6 @@ import { PLACE_ORDER, VERIFY_COUPON, ORDERS } from "@/lib/api/graphql";
 import {
   ICoupon,
   ICouponData,
-  IOpeningTime,
   IOrder,
 } from "@/lib/utils/interfaces";
 
@@ -503,32 +502,7 @@ export default function OrderCheckoutScreen() {
     });
   }
 
-  const onCheckIsOpen = () => {
-    if (!finalRestaurantData?.restaurant) return false;
-
-    const date = new Date();
-    const day = date.getDay();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const todaysTimings = finalRestaurantData.restaurant.openingTimes?.find(
-      (o: any) => o.day === DAYS[day],
-    );
-
-    if (!todaysTimings) return false;
-
-    // Compare against total minutes since midnight. Comparing hours and
-    // minutes independently is wrong (e.g. for 09:00-22:00 at 10:30 it would
-    // fail `minutes <= endMinute` -> 30 <= 0), which made the web report an
-    // open restaurant as closed while the mobile app placed the order fine.
-    const currentTime = hours * 60 + minutes;
-    const times = todaysTimings.times.filter((t: any) => {
-      const startTime = Number(t.startTime[0]) * 60 + Number(t.startTime[1]);
-      const endTime = Number(t.endTime[0]) * 60 + Number(t.endTime[1]);
-      return currentTime >= startTime && currentTime <= endTime;
-    });
-
-    return times.length > 0;
-  };
+  const onCheckIsOpen = () => isRestaurantOpen(finalRestaurantData?.restaurant);
 
   // API Handlers
   const onApplyCoupon = () => {
@@ -618,29 +592,6 @@ export default function OrderCheckoutScreen() {
 
   // This is the fixed validateOrder function inside your OrderCheckoutScreen.js file
 
-  const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
-    const now = new Date();
-    const currentDay = now
-      .toLocaleString("en-US", { weekday: "short" })
-      .toUpperCase(); // e.g., "MON", "TUE", ...
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
-    if (!todayOpening) return false;
-
-    return todayOpening.times.some(({ startTime, endTime }) => {
-      const [startHour, startMinute] = startTime.map(Number);
-      const [endHour, endMinute] = endTime.map(Number);
-
-      const startTotal = startHour * 60 + startMinute;
-      const endTotal = endHour * 60 + endMinute;
-      const nowTotal = currentHour * 60 + currentMinute;
-
-      return nowTotal >= startTotal && nowTotal <= endTotal;
-    });
-  };
-
   function validateOrder() {
     if (!finalRestaurantData?.restaurant) {
       showToast({
@@ -651,12 +602,7 @@ export default function OrderCheckoutScreen() {
       return false;
     }
 
-    if (
-      !finalRestaurantData.restaurant.isAvailable ||
-      !finalRestaurantData.restaurant.isActive ||
-      !isWithinOpeningTime(finalRestaurantData.restaurant.openingTimes) ||
-      !onCheckIsOpen()
-    ) {
+    if (!onCheckIsOpen()) {
       // toggleCloseModal();
       showToast({
         title: t("restaurant_label"),

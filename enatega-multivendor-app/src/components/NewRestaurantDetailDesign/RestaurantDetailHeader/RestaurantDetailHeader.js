@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 // import { TouchableOpacity } from 'react-native-gesture-handler'
 import { TouchableOpacity } from 'react-native'
 import ShimmerImage from '../../ShimmerImage/ShimmerImage'
@@ -19,6 +19,7 @@ import Bicycle from '../../../assets/SVG/Bicycle'
 // Utils
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
+import CachedImage from '../../CachedImage'
 
 function RestaurantDetailHeader({
   restaurant,
@@ -51,6 +52,8 @@ function RestaurantDetailHeader({
   }, [navigation, restaurant])
 
   const isOpen = restaurant?.isAvailable
+
+  console.log('RestaurantDetailHeader render', restaurant)
 
   return (
     <View style={styles(currentTheme).mainContainer}>
@@ -104,16 +107,50 @@ function RestaurantDetailHeader({
         {/* Delivery details overlay */}
         <View style={styles(currentTheme).deliveryDetailsOverlay}>
           <View style={styles(currentTheme).detailPill}>
-            <TextDefault textColor={currentTheme.fontMainColor}>
-              {t('deliveryCharges')} {configuration.currencySymbol}
-              {configuration?.deliveryRate}
+            <TextDefault
+              small
+              numberOfLines={1}
+              ellipsizeMode='tail'
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
+              textColor={currentTheme.fontMainColor}
+              style={styles(currentTheme).detailLabel}
+            >
+              {t('deliveryCharges')}
+            </TextDefault>
+            <TextDefault
+              numberOfLines={1}
+              ellipsizeMode='tail'
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
+              textColor={currentTheme.fontMainColor}
+              bold
+            >
+              {configuration.currencySymbol}{configuration?.deliveryRate}
             </TextDefault>
           </View>
 
           <View style={styles(currentTheme).detailPill}>
-            <TextDefault textColor={currentTheme.fontMainColor}>
-              {t('minimumOrder')} {configuration.currencySymbol}{' '}
-              {restaurant?.minimumOrder}
+            <TextDefault
+              small
+              numberOfLines={1}
+              ellipsizeMode='tail'
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
+              textColor={currentTheme.fontMainColor}
+              style={styles(currentTheme).detailLabel}
+            >
+              {t('minimumOrder')}
+            </TextDefault>
+            <TextDefault
+              numberOfLines={1}
+              ellipsizeMode='tail'
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
+              textColor={currentTheme.fontMainColor}
+              bold
+            >
+              {configuration.currencySymbol}{restaurant?.minimumOrder}
             </TextDefault>
           </View>
         </View>
@@ -123,7 +160,7 @@ function RestaurantDetailHeader({
         {/* Rest of the content remains the same */}
         <View style={styles(currentTheme).subContainer}>
           <View style={styles(currentTheme).titleContainer}>
-            <Image
+            <CachedImage
               resizeMode='cover'
               source={
                 restaurant?.logo
@@ -163,28 +200,38 @@ function RestaurantDetailHeader({
 
         <View style={styles(currentTheme).infoContainer}>
           <View style={styles(currentTheme).ratingBox}>
-            <FontAwesome5
-              name='smile'
+            <MaterialCommunityIcons
+              name='star-outline'
               size={scale(20)}
               color={currentTheme.newIconColor}
             />
-            <TextDefault textColor={currentTheme.fontNewColor} bold H5>
-              {restaurant?.reviewData?.ratings ?? '0'}
-            </TextDefault>
-            <TextDefault textColor={currentTheme.fontNewColor} bold H5>
-              ({restaurant?.reviewData?.total ?? '0'} {t('reviews')})
-            </TextDefault>
+            {restaurant?.reviewData?.total > 0 ? (
+              <>
+                <TextDefault textColor={currentTheme.fontNewColor} bold H5>
+                  {restaurant?.reviewData?.ratings}
+                </TextDefault>
+                <TextDefault textColor={currentTheme.fontNewColor} H5>
+                  ({restaurant?.reviewData?.total} {t('reviews')})
+                </TextDefault>
+              </>
+            ) : (
+              <TextDefault textColor={currentTheme.fontNewColor} bold H5>
+                {t('noReviewsYet', 'No reviews yet')}
+              </TextDefault>
+            )}
           </View>
 
-          <TouchableOpacity
-            style={styles(currentTheme).reviewButton}
-            activeOpacity={0.8}
-            onPress={handleNavigateToReviews}
-          >
-            <TextDefault bolder textColor={currentTheme.main}>
-              {t('seeReviews')}
-            </TextDefault>
-          </TouchableOpacity>
+          {restaurant?.reviewData?.total > 0 && (
+            <TouchableOpacity
+              style={styles(currentTheme).reviewButton}
+              activeOpacity={0.8}
+              onPress={handleNavigateToReviews}
+            >
+              <TextDefault bolder textColor={currentTheme.main}>
+                {t('seeReviews')}
+              </TextDefault>
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles(currentTheme).timingContainer}>
@@ -196,24 +243,47 @@ function RestaurantDetailHeader({
             />
             {todayOpeningTimes && (
               <View style={styles(currentTheme).timingRow}>
-                <TextDefault textColor={currentTheme.fontThirdColor} bold>
+                <TextDefault
+                  numberOfLines={1}
+                  ellipsizeMode='tail'
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.78}
+                  textColor={currentTheme.fontThirdColor}
+                  bold
+                  style={styles(currentTheme).timingLabel}
+                >
                   {t(todayOpeningTimes?.day)}{' '}
                 </TextDefault>
                 {todayOpeningTimes?.times?.length < 1 ? (
-                  <TextDefault small bold center>
+                  <TextDefault
+                    small
+                    bold
+                    center
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.75}
+                    style={styles(currentTheme).timingValue}
+                  >
                     {t('ClosedAllDay')}
                   </TextDefault>
                 ) : (
-                  todayOpeningTimes?.times?.map((timing, index) => (
-                    <TextDefault
-                      key={index}
-                      textColor={currentTheme.fontThirdColor}
-                      bold
-                    >
-                      {timing.startTime[0]}:{timing.startTime[1]} -{' '}
-                      {timing.endTime[0]}:{timing.endTime[1]}
-                    </TextDefault>
-                  ))
+                  <TextDefault
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.7}
+                    textColor={currentTheme.fontThirdColor}
+                    bold
+                    style={styles(currentTheme).timingValue}
+                  >
+                    {todayOpeningTimes?.times
+                      ?.map(
+                        (timing) =>
+                          `${timing.startTime[0]}:${timing.startTime[1]} - ${timing.endTime[0]}:${timing.endTime[1]}`
+                      )
+                      .join('  ')}
+                  </TextDefault>
                 )}
               </View>
             )}
@@ -222,7 +292,14 @@ function RestaurantDetailHeader({
             style={styles(currentTheme).statusButton}
             disabled={true}
           >
-            <TextDefault bolder textColor={currentTheme.main}>
+            <TextDefault
+              bolder
+              numberOfLines={1}
+              ellipsizeMode='tail'
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
+              textColor={currentTheme.main}
+            >
               {!isOpen ? t('Closed') : t('Open')}
             </TextDefault>
           </TouchableOpacity>

@@ -69,4 +69,5 @@ web-build/
 # @end expo-cli
 .env
 enatega-multivendor-app/.env
+goodbite-multivendor-app
 

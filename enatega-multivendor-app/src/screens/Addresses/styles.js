@@ -54,6 +54,9 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
     },
+    addressDetail: {
+      flex: 1
+    },
     homeIcon: {
       color: props !== null ? props.darkBgFont : '#000',
       width: '15%',
@@ -70,7 +73,19 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      flexShrink: 0,
+      ...(props?.isRTL ? { marginRight: scale(6) } : { marginLeft: scale(6) })
+    },
+    // left group (checkbox + icon + address) — takes remaining width and lets the
+    // address text truncate so the action button on the right never gets pushed off-screen.
+    leftGroup: {
+      flex: 1,
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center'
+    },
+    actionButton: {
+      flex: 1
     },
     rowContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

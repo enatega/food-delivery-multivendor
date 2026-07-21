@@ -29,6 +29,7 @@ function Register(props) {
     email,
     setEmail,
     emailError,
+    isEmailLocked,
     firstname,
     setFirstname,
     firstnameError,
@@ -124,6 +125,7 @@ function Register(props) {
                     placeholderTextColor={currentTheme.fontSecondColor}
                     value={email}
                     onChangeText={(e) => setEmail(e)}
+                    editable={!isEmailLocked}
                   />
                   {emailError && (
                     <TextDefault
@@ -266,7 +268,7 @@ function Register(props) {
                     ]}
                   >
                     <View style={styles().phoneFieldInner}>
-                      <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.fontSecondColor} style={styles(currentTheme).phoneField} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
+                      <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.fontSecondColor} style={styles(currentTheme).phoneField} region={country?.cca2} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
                     </View>
                   </View>
                 </View>

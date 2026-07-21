@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import ConfigurationContext from '../../../context/Configuration'
 import { useNavigation } from '@react-navigation/native'
@@ -18,6 +18,7 @@ import { useMutation } from '@apollo/client'
 import Spinner from '../../Spinner/Spinner'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import { useTranslation } from 'react-i18next'
+import CachedImage from '../../CachedImage'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -71,7 +72,7 @@ function Item(props) {
       <View key={item._id} style={styles().mainContainer}>
         <View style={[styles(currentTheme).restaurantContainer]}>
           <View style={styles().imageContainer}>
-            <Image
+            <CachedImage
               resizeMode="cover"
               source={{ uri: item?.image }}
               style={styles().img}

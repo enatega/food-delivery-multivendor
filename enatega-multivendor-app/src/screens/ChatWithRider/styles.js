@@ -10,8 +10,10 @@ const styles = (props = null) =>
     },
     chatSec: {
       flex: 1,
-
       backgroundColor: props !== null ? props?.themeBackground : 'transparent'
+    },
+    giftedChatWrap: {
+      flex: 1
     },
     orderDetails: {
       borderColor: props !== null ? props?.verticalLine : 'transparent',

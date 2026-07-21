@@ -41,7 +41,7 @@ const MapView: FC<MapViewPageProps> = ({ params }) => {
     // ⭐ Enhance data with isOpen field
     const enhancedData = data?.map((restaurant: any) => ({
         ...restaurant,
-        isOpen: isRestaurantOpen(restaurant.openingTimes),  
+        isOpen: isRestaurantOpen(restaurant),
     }));
 
     return (

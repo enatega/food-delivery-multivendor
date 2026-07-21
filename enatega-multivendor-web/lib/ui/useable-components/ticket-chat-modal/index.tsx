@@ -208,7 +208,7 @@ const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
               <span
                 className={`text-xs ${
                   ticket?.status === "open"
-                    ? "text-blue-300"
+                    ? "text-primary-color"
                     : ticket?.status === "inProgress"
                       ? "text-yellow-300"
                       : "text-gray-300"

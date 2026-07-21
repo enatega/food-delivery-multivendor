@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { subtleCardShadow } from '../../utils/cardShadows'
 
 const buildStyles = (props = null) =>
   StyleSheet.create({
@@ -7,14 +8,7 @@ const buildStyles = (props = null) =>
       height: 130,
       width: 100,
       borderRadius: 8,
-      shadowColor: props !== null ? props?.iconColor : 'gray',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5
+      ...subtleCardShadow
     },
     collectionImage: {
       height: 80,

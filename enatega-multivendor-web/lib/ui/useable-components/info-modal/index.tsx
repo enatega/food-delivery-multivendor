@@ -159,7 +159,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
               href={`https://www.google.com/maps/search/?api=1&query=${mapCenter.lat},${mapCenter.lng}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline text-xs md:text-[16px] font-normal"
+              className="text-secondary-color hover:text-primary-dark hover:underline text-xs md:text-[16px] font-normal"
             >
               {t("SeeMap")}
             </a>
@@ -223,7 +223,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
               {restaurantInfo?.phone !== "N/A" ? (
                 <a
                   href={`tel:${restaurantInfo?.phone}`}
-                  className="text-blue-500 hover:underline"
+                  className="text-secondary-color hover:text-primary-dark hover:underline"
                 >
                   {restaurantInfo?.phone}
                 </a>
@@ -239,7 +239,7 @@ const InfoModal = ({ visible, onHide, restaurantInfo }: IInfoModalProps) => {
               {restaurantInfo?.username !== "N/A" ? (
                 <a
                   href={`mailto:${restaurantInfo?.username || "N/A"}`}
-                  className="text-blue-500 hover:underline"
+                  className="text-secondary-color hover:text-primary-dark hover:underline"
                 >
                   {restaurantInfo?.username}
                 </a>

@@ -330,25 +330,30 @@ export default function SearchModal({
 
   const renderPrediction = ({ item }) => (
     <TouchableOpacity
-      style={{
-        backgroundColor: currentTheme.cardBackground,
-        paddingVertical: 8,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        paddingHorizontal: 8
-      }}
+      style={styles(currentTheme).predictionRow}
       onPress={() => handlePlaceSelect(item)}
       disabled={loading}
     >
       <View style={styles(currentTheme).locationIcon}>
         <Ionicons name="location-outline" size={16} color={currentTheme.newIconColor} />
       </View>
-      <TextDefault numberOfLines={1} textColor={currentTheme.newFontcolor} style={{ flex: 1 }}>
+      <TextDefault
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        textColor={currentTheme.newFontcolor}
+        style={{ flex: 1 }}
+      >
         {item.description}
       </TextDefault>
     </TouchableOpacity>
   )
+
+  const clearSearch = () => {
+    setSearchText('')
+    setPredictions([])
+    setError(null)
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current)
+  }
 
   // Don't render if backend search is not configured
   if (!SERVER_REST_URL) {
@@ -395,6 +400,12 @@ export default function SearchModal({
       animationType={'slide'}
       onRequestClose={close}
     >
+      {/* Tap the area above the sheet (the header) to dismiss — no second back button needed */}
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles(currentTheme).dismissOverlay}
+        onPress={close}
+      />
       <Animated.View
         style={[
           styles(currentTheme).modalContainer,
@@ -403,99 +414,76 @@ export default function SearchModal({
           borderTopRightRadius,
         ]}
       >
-        <View style={[styles(currentTheme).flex, alignment.MTsmall]}>
-          <TouchableOpacity style={styles().modalTextBtn} onPress={close}>
-            <AntDesign
-              name='arrowleft'
-              size={24}
-              color={currentTheme.newIconColor}
-            />
-          </TouchableOpacity>
-          
-          {/* Full Width Container for Search */}
-          <View style={{ flex: 1, paddingHorizontal: 0 }}>
-            
-            {/* Text Input Container */}
-            <View style={{
-              borderWidth: 1,
-              borderColor: currentTheme.customBorder,
-              borderRadius: scale(6),
-              backgroundColor: currentTheme.themeBackground,
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginHorizontal: 0
-            }}>
-              <TextInput
-                style={{
-                  ...alignment.MTxSmall,
-                  color: currentTheme.newFontcolor,
-                  backgroundColor: currentTheme.themeBackground,
-                  height: 38,
-                  flex: 1,
-                  paddingHorizontal: 12,
-                  fontSize: 16
-                }}
-                placeholder={t('search')}
-                placeholderTextColor={currentTheme.fontMainColor}
-                value={searchText}
-                onChangeText={handleTextChange}
-                autoFocus={true}
-                returnKeyType="search"
-                autoCapitalize="none"
-                autoCorrect={false}
-                onSubmitEditing={() => {
-                  if (predictions.length > 0) {
-                    handlePlaceSelect(predictions[0])
-                  }
-                }}
-              />
-              {loading && (
-                <ActivityIndicator 
-                  size="small" 
-                  color={currentTheme.newIconColor} 
-                  style={{ marginRight: 12 }} 
-                />
-              )}
-            </View>
+        {/* Search input (icon + field + clear) — full width within the container margins */}
+        <View style={styles(currentTheme).searchInputRow}>
+          <Ionicons name="search" size={20} color={currentTheme.fontMainColor} />
+          <TextInput
+            style={styles(currentTheme).searchInput}
+            placeholder={t('search')}
+            placeholderTextColor={currentTheme.fontMainColor}
+            value={searchText}
+            onChangeText={handleTextChange}
+            autoFocus={true}
+            returnKeyType="search"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onSubmitEditing={() => {
+              if (predictions.length > 0) {
+                handlePlaceSelect(predictions[0])
+              }
+            }}
+          />
+          {loading ? (
+            <ActivityIndicator size="small" color={currentTheme.newIconColor} />
+          ) : searchText.length > 0 ? (
+            <TouchableOpacity onPress={clearSearch} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+              <Ionicons name="close-circle" size={20} color={currentTheme.fontMainColor} />
+            </TouchableOpacity>
+          ) : null}
+        </View>
 
-            {/* Results List Container */}
-            {(predictions.length > 0 || error || (searchText.length > 2 && !loading)) && (
+        {/* Results List Container — same left/right boundaries as the input */}
+        {(predictions.length > 0 || error || (searchText.length > 2 && !loading)) && (
+          <View style={{
+            marginTop: 8,
+            backgroundColor: currentTheme.cardBackground,
+            borderRadius: scale(8),
+            maxHeight: height * 0.4, // Limit height to 40% of screen
+            overflow: 'hidden',
+            elevation: 3,
+            shadowColor: currentTheme.shadowColor,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+          }}>
+            {error ? (
               <View style={{
-                marginTop: 8,
-                backgroundColor: currentTheme.cardBackground,
-                borderRadius: scale(6),
-                maxHeight: height * 0.4, // Limit height to 40% of screen
-                elevation: 3,
-                shadowColor: currentTheme.shadowColor,
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
+                paddingVertical: 16,
+                paddingHorizontal: 16,
+                alignItems: 'center'
               }}>
-                {error ? (
-                  <View style={{ 
-                    paddingVertical: 16, 
-                    paddingHorizontal: 16,
-                    alignItems: 'center'
-                  }}>
-                    <Ionicons name="alert-circle-outline" size={24} color="#FF6B6B" />
-                    <TextDefault 
-                      textColor="#FF6B6B"
-                      style={{ fontSize: 14, marginTop: 8, textAlign: 'center' }}
-                    >
-                      {error}
-                    </TextDefault>
-                  </View>
-                ) : predictions.length > 0 ? (
-                  <FlatList
-                    data={predictions}
-                    renderItem={renderPrediction}
-                    keyExtractor={(item) => item.id}
-                    keyboardShouldPersistTaps="handled"
-                    showsVerticalScrollIndicator={true}
-                    nestedScrollEnabled={true}
-                    style={{ flexGrow: 0 }}
-                  />
-                ) : searchText.length > 2 && !loading ? (
+                <Ionicons name="alert-circle-outline" size={24} color="#FF6B6B" />
+                <TextDefault
+                  textColor="#FF6B6B"
+                  style={{ fontSize: 14, marginTop: 8, textAlign: 'center' }}
+                >
+                  {error}
+                </TextDefault>
+              </View>
+            ) : predictions.length > 0 ? (
+              <FlatList
+                data={predictions}
+                renderItem={renderPrediction}
+                keyExtractor={(item) => item.id}
+                ItemSeparatorComponent={() => (
+                  <View style={styles(currentTheme).predictionDivider} />
+                )}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={true}
+                nestedScrollEnabled={true}
+                style={{ flexGrow: 0 }}
+              />
+            ) : searchText.length > 2 && !loading ? (
                   <View style={{
                     paddingVertical: 20,
                     alignItems: 'center'
@@ -521,8 +509,6 @@ export default function SearchModal({
                 ) : null}
               </View>
             )}
-          </View>
-        </View>
       </Animated.View>
     </Modal>
   )

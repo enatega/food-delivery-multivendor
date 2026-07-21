@@ -20,6 +20,9 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props?.themeBackground : 'transparent',
       gap: scale(10)
     },
+    listContent: {
+      paddingBottom: scale(24)
+    },
     itemContainer: {
       margin: scale(4),
       borderWidth: 1,
@@ -72,6 +75,96 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       gap: scale(10)
+    },
+    faqAnswer: {
+      lineHeight: scale(18)
+    },
+    footerSection: {
+      marginTop: scale(18),
+      paddingBottom: scale(12)
+    },
+    supportCard: {
+      backgroundColor: props !== null ? props?.cardBackground : '#fff',
+      borderRadius: scale(18),
+      padding: scale(16),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props !== null ? props?.borderLight : '#D9D9D9'
+    },
+    supportSubText: {
+      marginTop: scale(8),
+      lineHeight: scale(18)
+    },
+    supportButton: {
+      marginTop: scale(14),
+      minHeight: scale(44),
+      borderRadius: scale(22),
+      backgroundColor: props !== null ? props?.primary : '#90E36D',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: scale(16)
+    },
+    supportButtonText: {
+      marginLeft: scale(8)
+    },
+    ticketSection: {
+      marginTop: scale(18)
+    },
+    ticketSectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: scale(10)
+    },
+    ticketCard: {
+      backgroundColor: props !== null ? props?.cardBackground : '#fff',
+      borderRadius: scale(16),
+      padding: scale(14),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props !== null ? props?.borderLight : '#D9D9D9',
+      marginBottom: scale(10)
+    },
+    ticketTopRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      gap: scale(10)
+    },
+    ticketTitle: {
+      flex: 1,
+      paddingRight: scale(8)
+    },
+    statusBadge: {
+      paddingHorizontal: scale(10),
+      paddingVertical: scale(5),
+      borderRadius: scale(999)
+    },
+    ticketDescription: {
+      marginTop: scale(8),
+      lineHeight: scale(17)
+    },
+    ticketMetaRow: {
+      marginTop: scale(10),
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    emptyTicketState: {
+      paddingVertical: scale(18),
+      paddingHorizontal: scale(16),
+      borderRadius: scale(16),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props !== null ? props?.borderLight : '#D9D9D9',
+      alignItems: 'center',
+      backgroundColor: props !== null ? props?.gray100 : '#F3F4F6'
+    },
+    emptyTicketTitle: {
+      marginTop: scale(10),
+      marginBottom: scale(6),
+      textAlign: 'center'
+    },
+    emptyTicketDescription: {
+      lineHeight: scale(18)
     }
   })
 export default styles

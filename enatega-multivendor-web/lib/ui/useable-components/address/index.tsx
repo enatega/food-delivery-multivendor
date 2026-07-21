@@ -463,12 +463,12 @@ export default function UserAddressComponent(
                       height={18}
                       darkColor={
                         address.selected && !hasCurrentLocation
-                          ? "#0EA5E9"
+                          ? "#75D04B"
                           : "#ffffff"
                       }
                       color={
                         address.selected && !hasCurrentLocation
-                          ? "#0EA5E9"
+                          ? "#75D04B"
                           : undefined
                       }
                     />
@@ -478,12 +478,12 @@ export default function UserAddressComponent(
                       height={18}
                       darkColor={
                         address.selected && !hasCurrentLocation
-                          ? "#0EA5E9"
+                          ? "#75D04B"
                           : "#ffffff"
                       }
                       color={
                         address.selected && !hasCurrentLocation
-                          ? "#0EA5E9"
+                          ? "#75D04B"
                           : undefined
                       }
                     />
@@ -493,12 +493,12 @@ export default function UserAddressComponent(
                       height={18}
                       darkColor={
                         address.selected && !hasCurrentLocation
-                          ? "#0EA5E9"
+                          ? "#75D04B"
                           : "#ffffff"
                       }
                       color={
                         address.selected && !hasCurrentLocation
-                          ? "#0EA5E9"
+                          ? "#75D04B"
                           : undefined
                       }
                     />
@@ -508,12 +508,12 @@ export default function UserAddressComponent(
                       height={18}
                       darkColor={
                         address.selected && !hasCurrentLocation
-                          ? "#0EA5E9"
+                          ? "#75D04B"
                           : "#ffffff"
                       }
                       color={
                         address.selected && !hasCurrentLocation
-                          ? "#0EA5E9"
+                          ? "#75D04B"
                           : undefined
                       }
                     />
@@ -526,7 +526,7 @@ export default function UserAddressComponent(
                     {address.label}
                   </span>
                   <span
-                    className={`font-inter font-normal text-xs leading-4 tracking-normal ${address.selected && !hasCurrentLocation ? "text-sky-400" : "text-gray-400"}`}
+                    className={`font-inter font-normal text-xs leading-4 tracking-normal ${address.selected && !hasCurrentLocation ? "text-secondary-color" : "text-gray-400"}`}
                   >
                     {address.deliveryAddress}
                   </span>
@@ -699,8 +699,8 @@ export default function UserAddressComponent(
               >
                 <div>
                   {item.icon(
-                    selectedLocationType === item.name ? "#0EA5E9" : undefined,
-                    selectedLocationType === item.name ? "#0EA5E9" : undefined
+                    selectedLocationType === item.name ? "#75D04B" : undefined,
+                    selectedLocationType === item.name ? "#75D04B" : undefined
                   )}
                 </div>
                 <div className="flex flex-col gap-y-[2px]">
@@ -896,8 +896,8 @@ export default function UserAddressComponent(
               >
                 <div>
                   {item.icon(
-                    selectedLocationType === item.name ? "#0EA5E9" : undefined,
-                    selectedLocationType === item.name ? "#0EA5E9" : undefined
+                    selectedLocationType === item.name ? "#75D04B" : undefined,
+                    selectedLocationType === item.name ? "#75D04B" : undefined
                   )}
                 </div>
                 <div className="flex flex-col gap-y-[2px]">

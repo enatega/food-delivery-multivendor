@@ -24,7 +24,9 @@ import { customMapStyle } from '../../utils/customMapStyles'
 import { useTranslation } from 'react-i18next'
 import ModalDropdown from '../../components/Picker/ModalDropdown'
 import Spinner from '../../components/Spinner/Spinner'
+import { LocationContext } from '../../context/Location'
 
+// Last-resort fallback only — the map centers on the user's known location first.
 const LATITUDE = 32.953491
 const LONGITUDE = 35.211990
 const LATITUDE_DELTA = 0.02
@@ -43,12 +45,13 @@ export default function SelectLocation(props) {
   const [loading, setLoading] = useState(false)
   const mapRef = useRef()
   const { getCurrentLocation, getLocationPermission } = useLocation()
+  const { location } = useContext(LocationContext)
 
   const [coordinates, setCoordinates] = useState({
-    latitude: latitude || LATITUDE,
-    longitude: longitude || LONGITUDE,
-    latitudeDelta: latitude ? 0.003 : LATITUDE_DELTA,
-    longitudeDelta: longitude ? 0.003 : LONGITUDE_DELTA
+    latitude: latitude || location?.latitude || LATITUDE,
+    longitude: longitude || location?.longitude || LONGITUDE,
+    latitudeDelta: (latitude || location?.latitude) ? 0.003 : LATITUDE_DELTA,
+    longitudeDelta: (longitude || location?.longitude) ? 0.003 : LONGITUDE_DELTA
   })
   const [modalVisible, setModalVisible] = useState(false)
 

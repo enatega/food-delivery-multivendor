@@ -12,7 +12,7 @@ module.exports = {
     name: 'Enatega Multivendor Rider',
     description:
       "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    version: '1.1.85',
+    version: '1.1.86',
     slug: 'food-delivery-rider-multivendor',
     orientation: 'portrait',
     splash: {
@@ -68,7 +68,7 @@ module.exports = {
       }
     },
     android: {
-      versionCode: 85,
+      versionCode: 86,
       googleServicesFile: './google-services.json',
       permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION'],
       config: {

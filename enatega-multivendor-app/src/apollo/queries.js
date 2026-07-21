@@ -36,6 +36,81 @@ export const GET_REVIEWS_BY_RESTAURANT = gql`
     }
   }
 `
+
+export const GET_USER_SUPPORT_TICKETS = gql`
+  query GetSingleUserSupportTickets($input: SingleUserSupportTicketsInput!) {
+    getSingleUserSupportTickets(input: $input) {
+      tickets {
+        _id
+        title
+        description
+        status
+        category
+        orderId
+        otherDetails
+        createdAt
+        updatedAt
+        user {
+          _id
+          name
+          email
+        }
+      }
+      docsCount
+      totalPages
+      currentPage
+    }
+  }
+`
+
+export const GET_SINGLE_SUPPORT_TICKET = gql`
+  query GetSingleSupportTicket($ticketId: ID!) {
+    getSingleSupportTicket(ticketId: $ticketId) {
+      _id
+      title
+      description
+      status
+      category
+      orderId
+      otherDetails
+      createdAt
+      updatedAt
+      user {
+        _id
+        name
+        email
+        phone
+      }
+    }
+  }
+`
+
+export const GET_TICKET_MESSAGES = gql`
+  query GetTicketMessages($input: TicketMessagesInput!) {
+    getTicketMessages(input: $input) {
+      messages {
+        _id
+        content
+        senderType
+        isRead
+        createdAt
+        updatedAt
+      }
+      ticket {
+        _id
+        title
+        status
+        user {
+          _id
+          name
+        }
+      }
+      page
+      totalPages
+      docsCount
+    }
+  }
+`
 export const restaurantFragment = gql`
   fragment RestaurantFields on Restaurant {
     _id
@@ -701,8 +776,8 @@ export const restaurantList = `query Restaurants($latitude:Float,$longitude:Floa
   }
 }
 }`
-export const restaurantListPreview = `query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
-  nearByRestaurantsPreview(latitude:$latitude,longitude:$longitude,shopType:$shopType){
+export const restaurantListPreview = `query Restaurants($latitude:Float,$longitude:Float,$shopType:String,$page:Int,$limit:Int){
+  nearByRestaurantsPreview(latitude:$latitude,longitude:$longitude,shopType:$shopType,page:$page,limit:$limit){
     offers{
       _id
       name
@@ -718,6 +793,7 @@ export const restaurantListPreview = `query Restaurants($latitude:Float,$longitu
       _id
       name
       image
+      logo
       deliveryTime
       minimumOrder
       isAvailable
@@ -1049,6 +1125,7 @@ export const chat = `query Chat($order: ID!) {
   chat(order: $order) {
     id
     message
+    image
     user {
       id
       name

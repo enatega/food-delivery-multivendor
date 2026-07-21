@@ -7,7 +7,7 @@ import ThemeContext from "../../ui/ThemeContext/ThemeContext"
 import { useTranslation } from "react-i18next"
 import { theme } from "../../utils/themeColors"
 
-export default function Options({ addon, onSelectOption, addonRefs }) {
+export default function Options({ addon, onSelectOption, addonRefs, selectedAddons }) {
     const ref = useRef(null)
     const { t, i18n } = useTranslation()
     const themeContext = useContext(ThemeContext)
@@ -19,6 +19,7 @@ export default function Options({ addon, onSelectOption, addonRefs }) {
         }
     }, [addon.error])
 
+    const selectedAddon = selectedAddons?.find((selected) => selected._id === addon._id)
 
     if (addon?.quantityMinimum === 1 && addon?.quantityMaximum === 1) {
         return (
@@ -29,6 +30,7 @@ export default function Options({ addon, onSelectOption, addonRefs }) {
                 <RadioComponent
                     options={addon?.options}
                     onPress={onSelectOption.bind(this, addon)}
+                    selected={selectedAddon?.options?.[0]}
                 />
                 {addon.error && (
                     <TextDefault small textColor={currentTheme?.textErrorColor} isRTL>
@@ -46,6 +48,7 @@ export default function Options({ addon, onSelectOption, addonRefs }) {
                 <CheckComponent
                     options={addon?.options}
                     onPress={onSelectOption.bind(this, addon)}
+                    selected={selectedAddon?.options}
                 />
                 {addon.error && (
                     <TextDefault small textColor={currentTheme.textErrorColor} isRTL>

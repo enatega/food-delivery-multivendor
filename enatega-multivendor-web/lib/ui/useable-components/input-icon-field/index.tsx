@@ -30,12 +30,12 @@ export default function CustomIconTextField({
   const { icon, position, style } = iconProperties;
 
   return !isLoading ?
-      <IconField iconPosition={position}>
+      <IconField iconPosition={position} className="w-full">
         <InputIcon style={style}>
           <FontAwesomeIcon icon={icon} />
         </InputIcon>
 
-        <div className="flex flex-col gap-y-1">
+        <div className="flex w-full flex-col gap-y-1">
           {showLabel && (
             <label htmlFor="username" className="text-sm font-[500]">
               {placeholder}

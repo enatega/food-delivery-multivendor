@@ -34,7 +34,9 @@ function EmailOtp(props) {
     onCodeFilled,
     resendOtp,
     currentTheme,
-    themeContext
+    themeContext,
+    demoOtp,
+    isDemoOtpEnabled
   } = useEmailOtp(isPhoneExists)
 
   
@@ -89,15 +91,18 @@ function EmailOtp(props) {
                 bold
                 textColor={currentTheme.fontSecondColor}
                 isRTL
-                // style={{
-                //   paddingBottom: scale(5)
-                // }}
               >
                 {t('otpSentToEmail')}
               </TextDefault>
-              {/* <TextDefault H5 bold  textColor={currentTheme.newFontcolor}>
-              {userData.email}
-            </TextDefault> */}
+              {isDemoOtpEnabled && (
+                <TextDefault
+                  H5
+                  textColor={currentTheme.fontSecondColor}
+                  style={{ ...alignment.MTsmall, lineHeight: scale(20) }}
+                >
+                  {`Demo login mode is on. We're using test OTP ${demoOtp} and verifying it automatically for you.`}
+                </TextDefault>
+              )}
             </View>
             <View>
               <OTPInputView
@@ -110,13 +115,13 @@ function EmailOtp(props) {
                 codeInputHighlightStyle={{
                   borderColor: currentTheme.main
                 }}
-                autoFocusOnLoad
+                autoFocusOnLoad={!isDemoOtpEnabled}
                 code={otp}
                 onCodeChanged={(code) => setOtp(code)}
                 onCodeFilled={(code) => {
                   onCodeFilled(code)
                 }}
-                editable
+                editable={!isDemoOtpEnabled}
               />
               {otpError && (
                 <TextDefault
@@ -139,47 +144,49 @@ function EmailOtp(props) {
                 />
               ))}
           </View>
-          <View
-            style={{
-              ...alignment.MTlarge,
-              ...alignment.MTlarge,
-              width: '100%',
-              marginBottom: 20
-            }}
-          >
-            <View style={alignment.MBxSmall}>
-              <TextDefault
-                center
-                H4
-                bold
-                style={alignment.MTsmall}
-                textColor={currentTheme.fontNewColor}
-              >
-                {seconds === 0 ? '' : `${t('retry')} ${seconds}s`}
-              </TextDefault>
-            </View>
-            {loading || updateUserLoading ? (
-              <Spinner
-                backColor={currentTheme.color3}
-                spinnerColor={currentTheme.color3}
-                size='small'
-              />
-            ) : (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={[
-                  styles(currentTheme).btn,
-                  seconds !== 0 && styles(currentTheme).disabledBtn
-                ]}
-                disabled={seconds !== 0}
-                onPress={() => resendOtp()}
-              >
-                <TextDefault H4 textColor={currentTheme.black} bold>
-                  {t('resendOtpBtn')}
+          {!isDemoOtpEnabled && (
+            <View
+              style={{
+                ...alignment.MTlarge,
+                ...alignment.MTlarge,
+                width: '100%',
+                marginBottom: 20
+              }}
+            >
+              <View style={alignment.MBxSmall}>
+                <TextDefault
+                  center
+                  H4
+                  bold
+                  style={alignment.MTsmall}
+                  textColor={currentTheme.fontNewColor}
+                >
+                  {seconds === 0 ? '' : `${t('retry')} ${seconds}s`}
                 </TextDefault>
-              </TouchableOpacity>
-            )}
-          </View>
+              </View>
+              {loading || updateUserLoading ? (
+                <Spinner
+                  backColor={currentTheme.color3}
+                  spinnerColor={currentTheme.color3}
+                  size='small'
+                />
+              ) : (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={[
+                    styles(currentTheme).btn,
+                    seconds !== 0 && styles(currentTheme).disabledBtn
+                  ]}
+                  disabled={seconds !== 0}
+                  onPress={() => resendOtp()}
+                >
+                  <TextDefault H4 textColor={currentTheme.black} bold>
+                    {t('resendOtpBtn')}
+                  </TextDefault>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -15,15 +15,24 @@ const styles = (props = null) =>
       top: 0,
       left: 0,
       right: 0,
-      zIndex:2
+      zIndex:2,
+      overflow: 'hidden'
+    },
+    container: {
+      width: '100%',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+    backgroundFill: {
+      ...StyleSheet.absoluteFillObject
     },
 
     touchArea: {
-      backgroundColor: props != null ? props.themeBackground : 'white',
+      backgroundColor: 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
-      width: scale(30),
-      height: scale(30),
+      width: scale(40),
+      height: scale(40),
     },
     favouriteOverlay: {
       position: 'absolute',
@@ -48,6 +57,31 @@ const styles = (props = null) =>
       zIndex: 1,
       ...alignment.PLmedium,
       ...alignment.PRmedium,
+    },
+    topRow: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: scale(12),
+      paddingHorizontal: scale(12)
+    },
+    leadingArea: {
+      width: scale(40),
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start'
+    },
+    centerArea: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    trailingArea: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      gap: scale(8),
+      minWidth: scale(84)
     },
     fixedIcons: {
       flexDirection: 'row',
@@ -159,16 +193,18 @@ const styles = (props = null) =>
     },
     headerContainer: {
       height: '100%',
-      width: '100%',
+      width: 'auto',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      ...alignment.PLlarge,
-      ...alignment.PRlarge
+      paddingHorizontal: scale(12),
+      paddingVertical: scale(6)
     },
     activeHeader: {
       backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
-      borderRadius: scale(50),
+      borderRadius: scale(999),
+      paddingHorizontal: scale(2),
+      paddingVertical: scale(1),
     },
     heading: {
       fontWeight: 'bold'
@@ -177,7 +213,22 @@ const styles = (props = null) =>
       position: 'absolute',
       top: 0,
       width: '100%',
-      height: '100%',
+      height: '100%'
+    },
+    categoriesContainer: {
+      position: 'relative',
+      left: 0,
+      right: 0,
+      height: scale(56),
+      justifyContent: 'center',
+      backgroundColor: props != null ? props.themeBackground : 'white',
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props != null ? props.newBorderColor : '#E5E7EB'
+    },
+    categoriesContent: {
+      paddingHorizontal: scale(12),
+      paddingVertical: scale(8),
+      alignItems: 'center'
     },
     headerTitle: {
       ...textStyles.H5,

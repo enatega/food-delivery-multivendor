@@ -23,18 +23,41 @@ const UPDATEUSER = gql`
 
 const usePhoneOtp = () => {
   const { TEST_OTP } = useEnvVars()
+  const autoSubmittedRef = useRef(false)
+  const demoOtp = TEST_OTP || '111111'
   const { t } = useTranslation()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
+  const [authReady, setAuthReady] = useState(false)
   const { profile, loadingProfile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [seconds, setSeconds] = useState(30)
   const { name, phone, screen, token } = route?.params || {}
   const { setTokenAsync } = useContext(AuthContext)
+  const resolvedName = name ?? profile?.name ?? ''
+  const resolvedPhone = phone ?? profile?.phone ?? ''
+
+  useEffect(() => {
+    let isMounted = true
+
+    if (!token) {
+      setAuthReady(true)
+      return
+    }
+
+    ;(async () => {
+      await setTokenAsync(token)
+      if (isMounted) setAuthReady(true)
+    })()
+
+    return () => {
+      isMounted = false
+    }
+  }, [setTokenAsync, token])
 
   function onError(error) {
     if (error.networkError) {
@@ -67,12 +90,25 @@ const usePhoneOtp = () => {
   }
 
   async function onUpdateUserCompleted(data) {
+    if (token) {
+      await setTokenAsync(token)
+    }
+
     FlashMessage({
       message: t('numberVerified')
     })
     if (token) {
-      await setTokenAsync(token)
-      navigation.navigate('Main')
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Main',
+            params: {
+              screen: 'Discovery'
+            }
+          }
+        ]
+      })
     } else if (!profile?.name) {
       navigation.navigate('Profile', { editName: true })
     } else if (screen === 'Checkout') {
@@ -102,11 +138,16 @@ const usePhoneOtp = () => {
   })
 
   const onCodeFilled = async (otp_code) => {
+    if (token && !authReady) {
+      await setTokenAsync(token)
+      setAuthReady(true)
+    }
+
     if (configuration?.skipMobileVerification) {
       await mutateUser({
         variables: {
-          name: name ?? profile?.name,
-          phone: phone ?? profile?.phone,
+          name: resolvedName,
+          phone: resolvedPhone,
           phoneIsVerified: true
         }
       })
@@ -116,15 +157,15 @@ const usePhoneOtp = () => {
     const { data } = await verifyOTP({
       variables: {
         otp: otp_code,
-        phone: phone ?? profile?.phone
+        phone: resolvedPhone
       }
     })
 
     if (data?.verifyOtp) {
       await mutateUser({
         variables: {
-          name: name ?? profile?.name,
-          phone: phone ?? profile?.phone,
+          name: resolvedName,
+          phone: resolvedPhone,
           phoneIsVerified: true
         }
       })
@@ -178,18 +219,19 @@ const usePhoneOtp = () => {
 
   useEffect(() => {
     let timer = null
-    if (!configuration || !profile) return
-    if (configuration.skipMobileVerification) {
-      setOtp(TEST_OTP)
+    if (!configuration) return
+    if (configuration.skipMobileVerification && !autoSubmittedRef.current) {
+      autoSubmittedRef.current = true
+      setOtp(demoOtp)
       timer = setTimeout(() => {
-        onCodeFilled(TEST_OTP)
-      }, 3000)
+        onCodeFilled(demoOtp)
+      }, 300)
     }
 
     return () => {
       timer && clearTimeout(timer)
     }
-  }, [configuration, profile])
+  }, [authReady, configuration, demoOtp, onCodeFilled])
 
   return {
     otp,
@@ -203,7 +245,9 @@ const usePhoneOtp = () => {
     resendOtp,
     currentTheme,
     themeContext,
-    loadingProfile
+    loadingProfile,
+    demoOtp,
+    isDemoOtpEnabled: Boolean(configuration?.skipMobileVerification)
   }
 }
 

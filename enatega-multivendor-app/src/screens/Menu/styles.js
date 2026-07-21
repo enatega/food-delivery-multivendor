@@ -2,6 +2,7 @@ import { verticalScale, scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 
 import { alignment } from '../../utils/alignment'
+import { subtleCardShadow } from '../../utils/cardShadows'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -167,14 +168,7 @@ const styles = (props = null) =>
       height: 135,
       width: 100,
       borderRadius: 8,
-      shadowColor: props !== null ? props?.iconColor : 'gray',
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5
+      ...subtleCardShadow
     },
     collectionImage: {
       height: 80,
@@ -221,7 +215,7 @@ const styles = (props = null) =>
     },
     brandImgContainer:
     {
-      overflow:"scroll",
+      overflow: 'hidden'
     }
   })
 export default styles

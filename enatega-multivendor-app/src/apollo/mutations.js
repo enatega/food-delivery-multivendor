@@ -1,5 +1,11 @@
 import gql from 'graphql-tag'
 
+export const uploadImageToS3 = `mutation UploadImageToS3($image: String!) {
+  uploadImageToS3(image: $image) {
+    imageUrl
+  }
+}`
+
 export const sendChatMessage = `mutation SendChatMessage($orderId: ID!, $messageInput: ChatMessageInput!) {
     sendChatMessage(message: $messageInput, orderId: $orderId) {
       success
@@ -7,6 +13,7 @@ export const sendChatMessage = `mutation SendChatMessage($orderId: ID!, $message
       data {
         id
         message
+        image
         user {
           id
           name
@@ -409,6 +416,41 @@ export const createActivity = `
           details: $details
       )
     }
+`
+
+export const createSupportTicket = gql`
+  mutation CreateSupportTicket($ticketInput: SupportTicketInput!) {
+    createSupportTicket(ticketInput: $ticketInput) {
+      _id
+      title
+      description
+      status
+      category
+      orderId
+      otherDetails
+      createdAt
+      updatedAt
+      user {
+        _id
+        name
+        email
+      }
+    }
+  }
+`
+
+export const createTicketMessage = gql`
+  mutation CreateMessage($messageInput: MessageInput!) {
+    createMessage(messageInput: $messageInput) {
+      _id
+      content
+      senderType
+      isRead
+      ticket
+      createdAt
+      updatedAt
+    }
+  }
 `
 
 export const VERIFY_OTP = gql`

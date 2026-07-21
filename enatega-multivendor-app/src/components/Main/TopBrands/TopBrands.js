@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useCallback } from 'react'
-import { View, Text, Image, Dimensions } from 'react-native'
+import { View, Text, Image, Dimensions, Platform } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { alignment } from '../../../utils/alignment'
@@ -17,6 +17,7 @@ import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../../utils/customFunctions'
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 import { useCachedMediaUri } from '../../../utils/mediaCache'
+import { resolveLogoImage } from '../../../utils/resolveImageUrl'
 
 const { height } = Dimensions.get('window')
 function TopBrands(props) {
@@ -30,23 +31,24 @@ function TopBrands(props) {
     variables: {
       latitude: location?.latitude,
       longitude: location?.longitude
-    }
+    },
+    fetchPolicy: 'cache-and-network'
   })
 
   const RenderItem = ({ item }) => (
     <TouchableOpacity style={styles().topbrandsContainer} onPress={() => navigation.navigate('Restaurant', { ...item })}>
       <View style={styles().brandImgContainer}>
-        <Image source={{ uri: useCachedMediaUri(item?.logo, 'image') }} style={styles().brandImg} resizeMode='contain' />
+        <Image source={{ uri: useCachedMediaUri(resolveLogoImage(item), 'image') }} style={styles().brandImg} resizeMode='contain' />
       </View>
 
       <View
         style={{
-          alignItems: 'left',
-          justifyContent: 'center'
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start'
         }}
       >
-        <TextDefault style={styles().brandName} textColor={currentTheme.fontThirdColor} H5 bolder>
-          {item?.name?.length > 11 ? item.name.substring(0, 11) + '...' : item.name}
+        <TextDefault style={styles().brandName} textColor={currentTheme.fontThirdColor} numberOfLines={2} ellipsizeMode='tail' bolder>
+          {item?.name}
         </TextDefault>
         <TextDefault textColor={currentTheme.fontFifthColor} normal>
           {item?.deliveryTime} mins
@@ -56,22 +58,10 @@ function TopBrands(props) {
   )
 
   const topRatedVendors = useMemo(() => data?.topRatedVendorsPreview ?? [], [data])
-  const restaurantBrands = useMemo(
-    () => topRatedVendors.filter((item) => item.shopType === 'restaurant'),
-    [topRatedVendors]
-  )
-  const groceryBrands = useMemo(
-    () => topRatedVendors.filter((item) => item.shopType === 'grocery'),
-    [topRatedVendors]
-  )
-  const sortedRestaurantBrands = useMemo(
-    () => sortRestaurantsByOpenStatus(restaurantBrands || []),
-    [restaurantBrands]
-  )
-  const sortedGroceryBrands = useMemo(
-    () => sortRestaurantsByOpenStatus(groceryBrands || []),
-    [groceryBrands]
-  )
+  const restaurantBrands = useMemo(() => topRatedVendors.filter((item) => item.shopType === 'restaurant'), [topRatedVendors])
+  const groceryBrands = useMemo(() => topRatedVendors.filter((item) => item.shopType === 'grocery'), [topRatedVendors])
+  const sortedRestaurantBrands = useMemo(() => sortRestaurantsByOpenStatus(restaurantBrands || []), [restaurantBrands])
+  const sortedGroceryBrands = useMemo(() => sortRestaurantsByOpenStatus(groceryBrands || []), [groceryBrands])
 
   const renderBrandItem = useCallback(({ item }) => <RenderItem item={item} />, [])
   const renderRestaurantItem = useCallback(({ item }) => {
@@ -106,14 +96,7 @@ function TopBrands(props) {
             </TouchableOpacity>
           </View>
           <View style={{ ...alignment.PRsmall }}>
-            <HorizontalFlashList
-              data={topRatedVendors}
-              renderItem={renderBrandItem}
-              keyExtractor={(item) => item?._id}
-              contentContainerStyle={{ flexGrow: 1 }}
-              inverted={currentTheme?.isRTL ? true : false}
-              estimatedItemSize={140}
-            />
+            <HorizontalFlashList data={topRatedVendors} renderItem={renderBrandItem} keyExtractor={(item) => item?._id} contentContainerStyle={{ flexGrow: 1 }} inverted={currentTheme?.isRTL ? true : false} estimatedItemSize={140} />
           </View>
         </View>
       )}
@@ -140,15 +123,8 @@ function TopBrands(props) {
               </TextDefault>
             </TouchableOpacity>
           </View>
-          <View style={{ ...alignment.PRsmall, height: height * 0.384 }}>
-            <HorizontalFlashList
-              data={sortedRestaurantBrands}
-              renderItem={renderRestaurantItem}
-              keyExtractor={(item) => item?._id}
-              contentContainerStyle={{ flexGrow: 1 }}
-              inverted={currentTheme?.isRTL ? true : false}
-              estimatedItemSize={280}
-            />
+          <View style={[{ ...alignment.PRsmall }, { height: height * (Platform.OS === 'ios' ? 0.395 : 0.376) }]}>
+            <HorizontalFlashList data={sortedRestaurantBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={{ flexGrow: 1 }} inverted={currentTheme?.isRTL ? true : false} estimatedItemSize={280} />
           </View>
         </View>
       )}
@@ -176,14 +152,7 @@ function TopBrands(props) {
             </TouchableOpacity>
           </View>
           <View style={{ ...alignment.PRsmall }}>
-            <HorizontalFlashList
-              data={sortedGroceryBrands}
-              renderItem={renderRestaurantItem}
-              keyExtractor={(item) => item?._id}
-              contentContainerStyle={{ flexGrow: 1 }}
-              inverted={currentTheme?.isRTL ? true : false}
-              estimatedItemSize={280}
-            />
+            <HorizontalFlashList data={sortedGroceryBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={{ flexGrow: 1 }} inverted={currentTheme?.isRTL ? true : false} estimatedItemSize={280} />
           </View>
         </View>
       )}

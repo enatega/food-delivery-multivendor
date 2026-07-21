@@ -31,7 +31,7 @@ const dedupeById = (list = []) => {
   })
 }
 
-export const OrdersProvider = ({ children }) => {
+export const OrdersProvider = ({ children, onOrderDelivered }) => {
   const { profile } = useContext(UserContext)
   const [activePage, setActivePage] = useState(1)
   const [pastPage, setPastPage] = useState(1)
@@ -91,9 +91,14 @@ export const OrdersProvider = ({ children }) => {
   useSubscription(SUBSCRIPTION_ORDERS, {
     variables: { userId: profile?._id },
     skip: !profile,
-    onSubscriptionData: () => {
+    onSubscriptionData: ({ subscriptionData }) => {
       refetchActive?.()
       refetchPast?.()
+
+      const order = subscriptionData?.data?.orderStatusChanged?.order
+      if (order?.orderStatus === 'DELIVERED' && !order?.review) {
+        onOrderDelivered?.(order)
+      }
     }
   })
 

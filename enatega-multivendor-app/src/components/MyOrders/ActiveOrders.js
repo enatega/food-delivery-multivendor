@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
-import { View, TouchableOpacity, Image, FlatList } from 'react-native'
+import { View, TouchableOpacity, FlatList } from 'react-native'
 import { useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
 import { subscriptionOrder } from '../../apollo/subscriptions'
@@ -12,10 +12,12 @@ import styles from './styles'
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../context/Configuration'
+import OrdersContext from '../../context/Orders'
 import { ProgressBar } from '../Main/ActiveOrders/ProgressBar'
 import { calulateRemainingTime } from '../../utils/customFunctions'
 import Spinner from '../Spinner/Spinner'
 import EmptyView from '../EmptyView/EmptyView'
+import CachedImage from '../CachedImage'
 
 const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
   const { i18n } = useTranslation()
@@ -25,6 +27,7 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
     ...theme[themeContext.ThemeValue]
   }
   const configuration = useContext(ConfigurationContext)
+  const { reFetchOrders, networkStatusActiveOrders } = useContext(OrdersContext)
 
   const emptyView = () => {
     return <EmptyView title={'titleEmptyActiveOrders'} description={'emptyActiveOrdersDesc'} buttonText={'emptyActiveOrdersBtn'} navigateTo='Discovery' />
@@ -33,12 +36,13 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
   const renderItem = useCallback(({ item }) => <Item item={item} navigation={navigation} currentTheme={currentTheme} configuration={configuration} />, [configuration, currentTheme, navigation])
   const emptyState = useMemo(() => emptyView(), [])
 
-  if (loading) {
+  // Spinner only on the first load; during pull-to-refresh keep the list mounted.
+  if (networkStatusActiveOrders === 1) {
     return <Spinner size={'small'} backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (error) return <TextError text={error.message} />
 
-  return <FlatList data={activeOrders} renderItem={renderItem} keyExtractor={(item) => item._id} ListEmptyComponent={emptyState} initialNumToRender={4} maxToRenderPerBatch={4} windowSize={5} removeClippedSubviews />
+  return <FlatList data={activeOrders} renderItem={renderItem} keyExtractor={(item) => item._id} ListEmptyComponent={emptyState} refreshing={networkStatusActiveOrders === 4} onRefresh={() => networkStatusActiveOrders === 7 && reFetchOrders()} initialNumToRender={4} maxToRenderPerBatch={4} windowSize={5} removeClippedSubviews />
 }
 
 const getItems = (items) => {
@@ -110,7 +114,7 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
               ...alignment.PLmedium
             }}
           >
-            <Image style={styles(currentTheme).restaurantImage1} resizeMode='cover' source={{ uri: item?.restaurant?.image }} />
+            <CachedImage style={styles(currentTheme).restaurantImage1} resizeMode='cover' source={{ uri: item?.restaurant?.image }} />
             <View style={styles(currentTheme).textContainer2}>
               <View style={styles().subContainerLeft}>
                 <TextDefault textColor={currentTheme.fontMainColor} uppercase bolder numberOfLines={2} style={styles(currentTheme).orderInfo} isRTL>

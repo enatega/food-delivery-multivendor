@@ -111,6 +111,7 @@ export const subscriptionNewMessage = `subscription SubscriptionNewMessage($orde
   subscriptionNewMessage(order:$order){
     id
     message
+    image
     user {
       id
       name

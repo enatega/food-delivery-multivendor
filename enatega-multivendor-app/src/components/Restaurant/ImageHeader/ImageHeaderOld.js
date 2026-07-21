@@ -19,6 +19,7 @@ import { alignment } from '../../../utils/alignment'
 import TextError from '../../Text/TextError/TextError'
 import { textStyles } from '../../../utils/textStyles'
 import { useTranslation } from 'react-i18next'
+import ShimmerImage from '../../ShimmerImage/ShimmerImage'
 
 const { height } = Dimensions.get('screen')
 const TOP_BAR_HEIGHT = height * 0.05
@@ -96,9 +97,10 @@ function ImageTextCenterHeader(props, ref) {
           backgroundColor: 'white'
         }}
       >
-        <Animated.Image
+        <ShimmerImage
+          imageUrl={aboutObject?.restaurantImage}
           resizeMode='cover'
-          source={{ uri: aboutObject?.restaurantImage }}
+          defaultSource={require('../../../assets/images/food_placeholder.png')}
           style={[
             styles().flex,
             {

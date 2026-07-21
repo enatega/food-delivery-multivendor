@@ -49,17 +49,17 @@ import {
   ICategoryDetailsResponse,
   ICategoryV2,
   IFood,
-  IOpeningTime,
   ISubCategory,
   ISubCategoryV2,
 } from "@/lib/utils/interfaces";
 
 // Methods
 import { toSlug } from "@/lib/utils/methods";
+import { isRestaurantOpen } from "@/lib/utils/constants/isRestaurantOpen";
 import ReviewsModal from "@/lib/ui/useable-components/reviews-modal";
 import InfoModal from "@/lib/ui/useable-components/info-modal";
 import ChatSvg from "@/lib/utils/assets/svg/chat";
-import Image from '@/lib/ui/useable-components/safe-image';
+import Image, { FALLBACK_IMAGE_SRC } from '@/lib/ui/useable-components/safe-image';
 import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
 import { ToastContext } from "@/lib/context/global/toast.context";
@@ -191,7 +191,7 @@ export default function StoreDetailsScreen() {
     return (
       <div
         className="flex align-items-center px-3 py-2 cursor-pointer dark:bg-gray-700 dark:hover:bg-gray-800 "
-        onClick={() => handleScroll(_url ?? "", true)}
+        onClick={() => handleScroll(_url ?? "", false, 170)}
       >
         <span
           className={`mx-2 ${item.items && "font-semibold"} text-${
@@ -373,7 +373,6 @@ export default function StoreDetailsScreen() {
 
   // Handlers
   const handleScroll = (id: string, isParent = true, offset: number = 120) => {
-    console.log("handleScrollId", id);
     if (isParent) {
       setSelectedCategory(id);
       selectedCategoryRefs.current = id || "";
@@ -388,19 +387,22 @@ export default function StoreDetailsScreen() {
       selectedSubCategoryRefs.current = id || "";
       setSelectedSubCategory(id);
     }
-    const element = document.getElementById(id);
-    const container = document.body; // Adjust selector
 
-    if (element && container) {
-      const headerOffset = offset;
-      const elementPosition = element.offsetTop;
-      const offsetPosition = elementPosition - headerOffset;
+    window.requestAnimationFrame(() => {
+      const element = document.getElementById(id);
 
-      container.scrollTo({
+      if (!element) return;
+
+      const offsetPosition =
+        element.getBoundingClientRect().top +
+        document.body.scrollTop -
+        offset;
+
+      document.body.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
-    }
+    });
   };
 
   const handleMouseEnterCategoryPanel = () => {
@@ -409,38 +411,11 @@ export default function StoreDetailsScreen() {
     }
   };
 
-  const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
-    const now = new Date();
-    const currentDay = now
-      .toLocaleString("en-US", { weekday: "short" })
-      .toUpperCase(); // e.g., "MON", "TUE", ...
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    const todayOpening = openingTimes.find((ot) => ot.day === currentDay);
-    if (!todayOpening) return false;
-
-    return todayOpening.times.some(({ startTime, endTime }) => {
-      const [startHour, startMinute] = startTime.map(Number);
-      const [endHour, endMinute] = endTime.map(Number);
-
-      const startTotal = startHour * 60 + startMinute;
-      const endTotal = endHour * 60 + endMinute;
-      const nowTotal = currentHour * 60 + currentMinute;
-
-      return nowTotal >= startTotal && nowTotal <= endTotal;
-    });
-  };
-
   // Function to handle opening the food item modal
   const handleOpenFoodModal = (food: IFood) => {
     if (food.isOutOfStock) return;
 
-    if (
-      !restaurantInfo?.isAvailable ||
-      !restaurantInfo?.isActive ||
-      !isWithinOpeningTime(restaurantInfo?.openingTimes)
-    ) {
+    if (!isOpen) {
       handleUpdateIsModalOpen(true, food?._id);
       return;
     }
@@ -512,8 +487,8 @@ export default function StoreDetailsScreen() {
   const restaurantInfo = {
     _id: data?.restaurant?._id ?? "",
     name: data?.restaurant?.name ?? "...",
-    image: data?.restaurant?.image ?? "",
-    logo: data?.restaurant?.logo ?? "",
+    image: data?.restaurant?.image || FALLBACK_IMAGE_SRC,
+    logo: data?.restaurant?.logo || FALLBACK_IMAGE_SRC,
     reviewData: data?.restaurant?.reviewData ?? {},
     address: data?.restaurant?.address ?? "",
     deliveryCharges: data?.restaurant?.deliveryCharges ?? "",
@@ -522,6 +497,8 @@ export default function StoreDetailsScreen() {
     openingTimes: data?.restaurant?.openingTimes ?? [],
     isActive: data?.restaurant?.isActive ?? true,
   };
+
+  const isOpen = isRestaurantOpen(restaurantInfo);
 
   const restaurantInfoModalProps = {
     deliveryTime: data?.restaurant.deliveryTime ?? "30-45",
@@ -725,7 +702,7 @@ export default function StoreDetailsScreen() {
 
                 {/* Info Link */}
                 <a
-                  className="flex items-center gap-2 text-secondary-color dark:text-blue-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+                  className="flex items-center gap-2 text-secondary-color dark:text-primary-color font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
@@ -741,14 +718,14 @@ export default function StoreDetailsScreen() {
                 </a>
                 {/* Review Link */}
                 <a
-                  className="flex items-center gap-2 text-secondary-color dark:text-blue-400 font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
+                  className="flex items-center gap-2 text-secondary-color dark:text-primary-color font-inter font-normal text-sm sm:text-base md:text-lg leading-5 sm:leading-6 md:leading-7 tracking-[0px] align-middle"
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     handleSeeReviews();
                   }}
                 >
-                  <ChatSvg className="dark:fill-blue-400" />
+                  <ChatSvg className="dark:fill-primary-color" />
                   {loading ? (
                     <Skeleton width="10rem" height="1.5rem" />
                   ) : (
@@ -876,7 +853,7 @@ export default function StoreDetailsScreen() {
               </div>
             </div>
             {/* right  panel(foods) */}
-            <div className="w-full md:w-4/5 p-3 h-full overflow-y-auto">
+            <div className="w-full md:w-4/5 p-3">
               {deals.map((category: ICategoryV2, catIndex: number) => (
                 <div
                   key={catIndex}
@@ -928,7 +905,7 @@ export default function StoreDetailsScreen() {
                                 </p>
 
                                 <div className="flex items-center gap-2">
-                                  <span className="text-secondary-color dark:text-sky-400 text-lg font-semibold">
+                                  <span className="text-secondary-color dark:text-primary-color text-lg font-semibold">
                                     {CURRENCY_SYMBOL} {meal.variations[0].price}
                                   </span>
                                 </div>
@@ -953,7 +930,7 @@ export default function StoreDetailsScreen() {
                                   className={`rounded-full shadow-md w-6 h-6 flex items-center justify-center ${
                                     meal.isOutOfStock
                                       ? "bg-gray-400 dark:bg-gray-600"
-                                      : "bg-secondary-color dark:bg-sky-600"
+                                      : "bg-secondary-color dark:bg-primary-dark"
                                   }`}
                                   onClick={() => handleOpenFoodModal(meal)}
                                   type="button"

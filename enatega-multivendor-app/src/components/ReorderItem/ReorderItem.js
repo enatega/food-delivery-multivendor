@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
@@ -10,6 +10,7 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import { IMAGE_LINK } from '../../utils/constants'
 import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import { useTranslation } from 'react-i18next'
+import CachedImage from '../CachedImage'
 
 const ReorderItem = props => {
   const { t, i18n } = useTranslation()
@@ -36,7 +37,7 @@ const ReorderItem = props => {
           gap: scale(7)
         }}>
         <View style={styles().suggestItemImgContainer}>
-          <Image
+          <CachedImage
             source={{ uri: imageUrl }}
             style={styles().suggestItemImg}
             resizeMode="contain"

@@ -1,6 +1,7 @@
 import { verticalScale, scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
 import { StyleSheet } from 'react-native'
+import { subtleCardShadow } from '../../../utils/cardShadows'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -8,16 +9,7 @@ const styles = (props = null) =>
       width: scale(330),
       alignItems: 'center',
       backgroundColor: 'white',
-      shadowColor: "gray",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-
-      elevation: 5,
-    
+      ...subtleCardShadow
     },
     restaurantContainer: {
       backgroundColor: props != null ? props?.newheaderBG : 'white',

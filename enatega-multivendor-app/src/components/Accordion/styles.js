@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 
@@ -17,11 +17,19 @@ const styles = (props = null) =>
     header: {
       display: 'flex',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'flex-start',
       justifyContent: 'space-between',
       gap: 10
     },
     heading: {
-      width: '90%'
+      flex: 1,
+      lineHeight: scale(20)
+    },
+    icon: {
+      flexShrink: 0
+    },
+    body: {
+      marginTop: scale(8)
     }
   })
 export default styles

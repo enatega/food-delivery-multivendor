@@ -349,6 +349,7 @@ function Cart(props) {
     const populateAddons = addons.filter((addon) => food?.variations[0]?.addons?.includes(addon._id))
     return {
       ...cartItem,
+      food,
       optionsTitle,
       title: title,
       price: price.toFixed(2),
@@ -397,6 +398,8 @@ function Cart(props) {
                           dealName={food.title}
                           optionsTitle={food.optionsTitle}
                           itemImage={food.image}
+                          food={food.food}
+                          cartItem={cartItem}
                           itemAddons={food.addons}
                           dealPrice={(parseFloat(food.price) * food.quantity).toFixed(2)}
                           restaurantData={restaurant}
