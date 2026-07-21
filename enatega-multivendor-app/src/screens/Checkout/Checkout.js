@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react'
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, TextInput, Dimensions } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -7,7 +7,7 @@ import { useSafeAreaInsets, initialWindowMetrics } from 'react-native-safe-area-
 import { AntDesign, EvilIcons, Feather, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
-import { getTipping, orderFragment } from '../../apollo/queries'
+import { getTipping } from '../../apollo/queries'
 import { applyCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
@@ -16,6 +16,7 @@ import MapView, { PROVIDER_DEFAULT } from 'react-native-maps'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
+import OrdersContext from '../../context/Orders'
 
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
@@ -40,7 +41,8 @@ import PickUp from '../../components/Pickup'
 import { PaymentModeOption } from '../../components/Checkout/PaymentOption'
 import { isOpen } from '../../utils/customFunctions'
 import { WrongAddressModal } from '../../components/Checkout/WrongAddressModal'
-import { useCallback } from 'react'
+import { calculateOrderPricing } from '../../utils/orderPricing'
+import { populateCart } from '../../utils/populateCart'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -67,6 +69,7 @@ function Checkout(props) {
   )
 
   const configuration = useContext(ConfigurationContext)
+  const { reFetchOrders } = useContext(OrdersContext)
   const { isLoggedIn, profile, clearCart, restaurant: cartRestaurant, cart, cartCount, updateCart, isPickup, setIsPickup, instructions, coupon, setCoupon } = useContext(UserContext)
 
   const themeContext = useContext(ThemeContext)
@@ -82,10 +85,7 @@ function Checkout(props) {
   const [minimumOrder, setMinimumOrder] = useState('')
   const [orderDate, setOrderDate] = useState(new Date())
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedRestaurant, setSelectedRestaurant] = useState({})
-  const [tax, setTax] = useState(0)
   const [deliveryCharges, setDeliveryCharges] = useState(0)
-  const [restaurantName, setrestaurantName] = useState('...')
   const [voucherCode, setVoucherCode] = useState('')
   const [tip, setTip] = useState(null)
   const [tipAmount, setTipAmount] = useState('')
@@ -165,7 +165,7 @@ function Checkout(props) {
     onError: onCouponError
   })
 
-  const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
+  const { data: dataTip } = useQuery(TIPPING, {
     fetchPolicy: 'cache-first',
     nextFetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true
@@ -173,8 +173,7 @@ function Checkout(props) {
 
   const [mutateOrder, { loading: mutateOrderLoading }] = useMutation(PLACEORDER, {
     onCompleted,
-    onError,
-    update
+    onError
   })
 
   const COD_PAYMENT = {
@@ -187,6 +186,13 @@ function Checkout(props) {
   const paymentMethod = props?.route.params && props?.route.params.paymentMethod ? props?.route.params.paymentMethod : COD_PAYMENT
 
   const [selectedTip, setSelectedTip] = useState()
+  const pricing = useMemo(() => calculateOrderPricing({
+    cart,
+    discountPercent: coupon?.discount,
+    taxPercent: restaurant?.tax,
+    delivery: isPickup ? 0 : deliveryCharges,
+    tip: isPickup ? 0 : tip || selectedTip
+  }), [cart, coupon?.discount, deliveryCharges, isPickup, restaurant?.tax, selectedTip, tip])
   const inset = useSafeAreaInsets()
 
   const insets = initialWindowMetrics?.insets || { top: 0, bottom: 0, left: 0, right: 0 }
@@ -235,12 +241,14 @@ function Checkout(props) {
     }
   }, [data, location])
 
-  useFocusEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar)
-    }
-    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
-  })
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(currentTheme.menuBar)
+      }
+      StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
+    }, [currentTheme.menuBar, themeContext.ThemeValue])
+  )
 
   useEffect(() => {
     props?.navigation.setOptions({
@@ -295,7 +303,6 @@ function Checkout(props) {
   useEffect(() => {
     if (!data) return
     didFocus()
-    setrestaurantName(`${data?.restaurant.name} - ${data?.restaurant.address}`)
   }, [data])
   useEffect(() => {
     async function Track() {
@@ -338,31 +345,10 @@ function Checkout(props) {
     )
   }
 
-  function update(cache, { data: { placeOrder } }) {
-    try {
-      if (placeOrder && placeOrder.paymentMethod === 'COD') {
-        cache.modify({
-          fields: {
-            orders(existingOrders = []) {
-              const newOrder = cache.writeFragment({
-                data: placeOrder,
-                fragment: gql`
-                  ${orderFragment}
-                `
-              })
-              return [newOrder, ...existingOrders]
-            }
-          }
-        })
-      }
-    } catch (error) {
-      console.log('update error', error)
-    }
-  }
-
-  async function onCompleted(data) {
+  function onCompleted(data) {
     setOrderConfirmedTime(new Date())
-    await Analytics.track(Analytics.events.ORDER_PLACED, {
+    reFetchOrders()
+    Analytics.track(Analytics.events.ORDER_PLACED, {
       userId: data?.placeOrder.user._id,
       orderId: data?.placeOrder.orderId,
       name: data?.placeOrder.user.name,
@@ -407,7 +393,7 @@ function Checkout(props) {
   }
   function onError(error) {
     setLoadingOrder(false)
-    if (error.graphQLErrors.length) {
+    if (error?.graphQLErrors?.length) {
       if (error.graphQLErrors[0].message === "Sorry! we can't deliver to your address." || error.graphQLErrors[0].message === 'Delivery zone not found') {
         setisModalVisible(true)
       }
@@ -433,51 +419,20 @@ function Checkout(props) {
   }
 
   function calculateTip() {
-    // if (paymentMode !== 'HYP') {
-    //   return 0 // Return 0 if payment mode is not 'COD'
-    // }
-    if (isPickup) {
-      return 0 // No tip for pickup orders since no rider is involved
-    }
-    if (tip) {
-      return tip
-    } else if (selectedTip) {
-      return selectedTip
-    } else {
-      return 0
-    }
+    return pricing.tipAmount
   }
 
   function taxCalculation() {
-    const tax = data?.restaurant ? +data?.restaurant.tax : 0
-    if (tax === 0) {
-      return tax.toFixed(2)
-    }
-    const delivery = isPickup ? 0 : deliveryCharges
-    const amount = +calculatePrice(delivery, true)
-    const taxAmount = ((amount / 100) * tax).toFixed(2)
-    return taxAmount
+    return pricing.taxationAmount.toFixed(2)
   }
 
   function calculatePrice(delivery = 0, withDiscount) {
-    let itemTotal = 0
-    cart.forEach((cartItem) => {
-      itemTotal += cartItem.price * cartItem.quantity
-    })
-    if (withDiscount && coupon && coupon.discount) {
-      itemTotal = itemTotal - (coupon.discount / 100) * itemTotal
-    }
-    const deliveryAmount = delivery > 0 ? deliveryCharges : 0
-    return (itemTotal + deliveryAmount).toFixed(2)
+    const itemTotal = withDiscount ? pricing.discountedSubtotal : pricing.subtotal
+    return (itemTotal + (delivery > 0 ? deliveryCharges : 0)).toFixed(2)
   }
 
   function calculateTotal() {
-    let total = 0
-    const delivery = isPickup ? 0 : deliveryCharges
-    total += +calculatePrice(delivery, true)
-    total += +taxCalculation()
-    total += +calculateTip()
-    return parseFloat(total).toFixed(2)
+    return pricing.total.toFixed(2)
   }
 
   function validateOrder() {
@@ -509,11 +464,11 @@ function Checkout(props) {
       })
       return false
     }
-    if (profile?.phone?.length < 1) {
+    if (!profile?.phone?.length) {
       props?.navigation.navigate('PhoneNumber', { name: profile?.name, screen: 'Checkout' })
       return false
     }
-    if (profile.phone.length > 0 && !profile.phoneIsVerified) {
+    if (profile?.phone?.length > 0 && !profile?.phoneIsVerified) {
       FlashMessage({
         message: t('numberVerificationAlert')
       })
@@ -602,47 +557,17 @@ function Checkout(props) {
 
   async function didFocus() {
     const { restaurant } = data
-    setSelectedRestaurant(restaurant)
     setMinimumOrder(restaurant.minimumOrder)
-    const foods = restaurant.categories.map((c) => c.foods.flat()).flat()
-    const { addons, options } = restaurant
     try {
       if (cartCount && cart) {
-        const transformCart = cart.map((cartItem) => {
-          const food = foods.find((food) => food?._id === cartItem._id)
-          if (!food) return null
-          const variation = food?.variations.find((variation) => variation._id === cartItem.variation._id)
-          if (!variation) return null
-
-          const title = `${food?.title}${variation.title ? `(${variation.title})` : ''}`
-          let price = variation.price
-          const optionsTitle = []
-          if (cartItem.addons) {
-            cartItem.addons.forEach((addon) => {
-              const cartAddon = addons.find((add) => add._id === addon._id)
-              if (!cartAddon) return null
-              addon.options.forEach((option) => {
-                const cartOption = options.find((opt) => opt._id === option._id)
-                if (!cartOption) return null
-                price += cartOption.price
-                optionsTitle.push(cartOption.title)
-              })
-            })
-          }
-          return {
-            ...cartItem,
-            optionsTitle,
-            title: title,
-            price: price.toFixed(2)
-          }
-        })
+        const transformCart = populateCart(restaurant, cart)
 
         if (props?.navigation.isFocused()) {
-          const updatedItems = transformCart.filter((item) => item)
+          const updatedItems = transformCart.map((item) => item.cartItem)
           if (updatedItems.length === 0) await clearCart()
           await updateCart(updatedItems)
           setLoadingData(false)
-          if (transformCart.length !== updatedItems.length) {
+          if (cart.length !== updatedItems.length) {
             FlashMessage({
               message: t('itemNotAvailable')
             })
@@ -695,7 +620,7 @@ function Checkout(props) {
   }
   let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
   if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
-  if (loading || loadingData || loadingTip || mutateOrderLoading || loadingOrder) return loadginScreen()
+  if (loading || loadingData || mutateOrderLoading || loadingOrder) return loadginScreen()
 
   return (
     <>
@@ -706,7 +631,7 @@ function Checkout(props) {
               <View>
                 <View style={[styles(currentTheme).headerContainer]}>
                   <View style={styles().mapView}>
-                    <MapView style={styles().flex} scrollEnabled={false} zoomEnabled={false} zoomControlEnabled={false} rotateEnabled={false} cacheEnabled={false} initialRegion={initialRegion} customMapStyle={customMapStyle} provider={PROVIDER_DEFAULT}></MapView>
+                    <MapView style={styles().flex} scrollEnabled={false} zoomEnabled={false} zoomControlEnabled={false} rotateEnabled={false} cacheEnabled initialRegion={initialRegion} customMapStyle={customMapStyle} provider={PROVIDER_DEFAULT}></MapView>
                     <View style={styles().marker}>
                       <RestaurantMarker />
                     </View>

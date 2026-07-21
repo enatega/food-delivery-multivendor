@@ -99,12 +99,14 @@ function ItemDetail(props) {
     ...theme[themeContext.ThemeValue]
   }
 
-  useFocusEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar)
-    }
-    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
-  })
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(currentTheme.menuBar)
+      }
+      StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
+    }, [currentTheme.menuBar, themeContext.ThemeValue])
+  )
 
   useEffect(() => {
     async function Track() {
@@ -357,7 +359,7 @@ function ItemDetail(props) {
           ref={scrollViewRef}
           onScroll={scrollHandler}
           style={styles(currentTheme).scrollViewStyle}
-          scrollEventThrottle={1}
+          scrollEventThrottle={16}
           contentContainerStyle={{
             // paddingTop: HEADER_MAX_HEIGHT,
             paddingBottom: scale(Math.round(height * 0.09))

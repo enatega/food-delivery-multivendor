@@ -9,6 +9,7 @@
     "eject": "expo eject",
     "format": "prettier --write '**/*.js'",
     "lint:fix": "eslint . --ext .js --fix",
+    "check:order-pricing": "node scripts/check-order-pricing.js",
     "postinstall": "patch-package",
     "build:staging": "eas build --profile staging -p all",
     "build:staging:android": "eas build --profile staging -p android",

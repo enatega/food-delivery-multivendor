@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useContext, useMemo } from 'react'
+import React, { useCallback, useContext, useMemo } from 'react'
 import { TouchableOpacity, View, Image, Alert, Platform } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -11,7 +11,7 @@ import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { addFavouriteRestaurant } from '../../../apollo/mutations'
 import UserContext from '../../../context/User'
-import { useMutation } from '@apollo/client'
+import { useApolloClient, useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { profile, FavouriteRestaurant } from '../../../apollo/queries'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
@@ -21,6 +21,7 @@ import { storeSearch } from '../../../utils/recentSearch'
 import Ripple from 'react-native-material-ripple'
 import { useCachedMediaUri } from '../../../utils/mediaCache'
 import { resolveRestaurantImage } from '../../../utils/resolveImageUrl'
+import { RESTAURANT } from '../../../ui/hooks/useRestaurant'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -35,6 +36,7 @@ const FAVOURITERESTAURANTS = gql`
 function NewRestaurantCard(props) {
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
+  const client = useApolloClient()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = useMemo(
@@ -65,6 +67,16 @@ function NewRestaurantCard(props) {
 
   const isRestaurantClosed = !isRestaurantOpen || !isAvailable
   const imageUri = useCachedMediaUri(resolveRestaurantImage(props), 'image')
+  const restaurantId = props?._id
+
+  const prefetchRestaurant = useCallback(() => {
+    if (!restaurantId) return
+    client.query({
+      query: RESTAURANT,
+      variables: { id: restaurantId },
+      fetchPolicy: 'cache-first'
+    }).catch(() => {})
+  }, [client, restaurantId])
 
   function onCompleted() {
     FlashMessage({ message: t('favouritelistUpdated') })
@@ -129,6 +141,7 @@ function NewRestaurantCard(props) {
           }
         ]} 
         activeOpacity={0.8} 
+        onPressIn={prefetchRestaurant}
         onPress={handleRestaurantClick}
         rippleContainerBorderRadius={22}
         rippleDuration={Platform.OS === 'android' ? 300 : 400}

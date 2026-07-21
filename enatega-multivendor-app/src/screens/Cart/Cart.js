@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useLayoutEffect, useRef } from 'react'
+import React, { useState, useEffect, useContext, useLayoutEffect, useRef, useCallback, useMemo } from 'react'
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert } from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -15,12 +15,10 @@ import UserContext from '../../context/User'
 import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useRestaurant } from '../../ui/hooks'
-import { LocationContext } from '../../context/Location'
 import EmptyCart from '../../assets/SVG/imageComponents/EmptyCart'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { DAYS } from '../../utils/enums'
 import { textStyles } from '../../utils/textStyles'
-import { calculateAmount, calculateDistance } from '../../utils/customFunctions'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
@@ -33,6 +31,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import { populateCart } from '../../utils/populateCart'
 
 // Constants
 const TIPPING = gql`
@@ -43,9 +42,8 @@ function Cart(props) {
   const Analytics = analytics()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
-  const { isLoggedIn, profile, restaurant: cartRestaurant, cart, cartCount, addQuantity, removeQuantity, isPickup, setIsPickup, instructions, setInstructions, coupon } = useContext(UserContext)
+  const { isLoggedIn, profile, restaurant: cartRestaurant, cart, addQuantity, removeQuantity, instructions, setInstructions } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const { location } = useContext(LocationContext)
   const { t, i18n } = useTranslation()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -53,16 +51,18 @@ function Cart(props) {
   }
   const [loadingData, setLoadingData] = useState(true)
   const [minimumOrder, setMinimumOrder] = useState('')
-  const [selectedRestaurant, setSelectedRestaurant] = useState({})
-  const [deliveryCharges, setDeliveryCharges] = useState(0)
 
   const [orderDate, setOrderDate] = useState(new Date())
   const isCartEmpty = cart?.length === 0
   const cartLength = !isCartEmpty ? cart?.length : 0
   const { loading, data } = useRestaurant(cartRestaurant)
+  const restaurant = data?.restaurant
+  const foods = useMemo(() => restaurant?.categories?.flatMap((category) => category.foods) ?? [], [restaurant])
+  const populatedCart = useMemo(() => populateCart(restaurant, cart), [cart, restaurant])
+  const cartTotal = useMemo(() => populatedCart.reduce((total, item) => total + Number(item.price) * item.quantity, 0), [populatedCart])
 
-  const { loading: loadingTip, data: dataTip } = useQuery(TIPPING, {
-    fetchPolicy: 'network-only'
+  const { data: dataTip } = useQuery(TIPPING, {
+    fetchPolicy: 'cache-first'
   })
   const animatedQuantity = useSharedValue(1)
 
@@ -100,34 +100,14 @@ function Cart(props) {
     }
   }, [tip, data])
 
-  useEffect(() => {
-    let isSubscribed = true
-    ;(async () => {
-      if (data && data?.restaurant) {
-        const latOrigin = Number(data?.restaurant.location.coordinates[1])
-        const lonOrigin = Number(data?.restaurant.location.coordinates[0])
-        const latDest = Number(location.latitude)
-        const longDest = Number(location.longitude)
-        const distance = await calculateDistance(latOrigin, lonOrigin, latDest, longDest)
-        let costType = configuration.costType
-        let amount = calculateAmount(costType, configuration.deliveryRate, distance)
-
-        if (isSubscribed) {
-          setDeliveryCharges(amount > 0 ? amount : configuration.deliveryRate)
-        }
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(currentTheme.menuBar)
       }
-    })()
-    return () => {
-      isSubscribed = false
-    }
-  }, [data, location])
-
-  useFocusEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.menuBar)
-    }
-    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
-  })
+      StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
+    }, [currentTheme.menuBar, themeContext.ThemeValue])
+  )
 
   useLayoutEffect(() => {
     props?.navigation.setOptions({
@@ -214,32 +194,12 @@ function Cart(props) {
     )
   }
 
-  function calculatePrice(delivery = 0, withDiscount) {
-    let itemTotal = 0
-    cart.forEach((cartItem) => {
-      const food = populateFood(cartItem)
-      if (!food) return
-      itemTotal += food.price * food.quantity
-    })
-    if (withDiscount && coupon && coupon.discount) {
-      itemTotal = itemTotal - (coupon.discount / 100) * itemTotal
-    }
-    // const deliveryAmount = delivery > 0 ? deliveryCharges : 0
-    return itemTotal.toFixed(2)
-  }
-
   function calculateTotal() {
-    let total = 0
-    const delivery = isPickup ? 0 : deliveryCharges
-    total += +calculatePrice(delivery)
-    // total += +taxCalculation()
-    // total += +calculateTip()
-    return parseFloat(total).toFixed(2)
+    return cartTotal.toFixed(2)
   }
 
-  async function didFocus() {
+  function didFocus() {
     const { restaurant } = data
-    setSelectedRestaurant(restaurant)
     setMinimumOrder(restaurant.minimumOrder)
     setLoadingData(false)
   }
@@ -317,46 +277,7 @@ function Cart(props) {
       modal.open()
     }
   }
-  if (loading || loadingData || loadingTip) return loadginScreen()
-
-  const restaurant = data?.restaurant
-  const addons = restaurant?.addons
-  const options = restaurant?.options
-
-  const foods = restaurant?.categories?.map((c) => c.foods.flat()).flat()
-
-  function populateFood(cartItem) {
-    const food = foods?.find((food) => food._id === cartItem._id)
-    if (!food) return null
-    const variation = food.variations.find((variation) => variation._id === cartItem.variation._id)
-    if (!variation) return null
-
-    const title = `${food.title}${variation.title ? `(${variation.title})` : ''}`
-    let price = variation.price
-    const optionsTitle = []
-    if (cartItem.addons) {
-      cartItem.addons.forEach((addon) => {
-        const cartAddon = addons.find((add) => add._id === addon._id)
-        if (!cartAddon) return null
-        addon.options.forEach((option) => {
-          const cartOption = options.find((opt) => opt._id === option._id)
-          if (!cartOption) return null
-          price += cartOption.price
-          optionsTitle.push(cartOption.title)
-        })
-      })
-    }
-    const populateAddons = addons.filter((addon) => food?.variations[0]?.addons?.includes(addon._id))
-    return {
-      ...cartItem,
-      food,
-      optionsTitle,
-      title: title,
-      price: price.toFixed(2),
-      image: food.image,
-      addons: populateAddons
-    }
-  }
+  if (loading || loadingData) return loadginScreen()
 
   let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
   if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
@@ -388,18 +309,16 @@ function Cart(props) {
                   <TextDefault textColor={currentTheme.gray500} style={styles().totalOrder} H5 bolder isRTL>
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
-                  {cart?.map((cartItem, index) => {
-                    const food = populateFood(cartItem)
-                    if (!food) return null
+                  {populatedCart.map((food, index) => {
                     return (
-                      <View key={cartItem._id + index} style={[styles(currentTheme).itemContainer]}>
+                      <View key={food.key || food._id + index} style={[styles(currentTheme).itemContainer]}>
                         <CartItem
                           quantity={food.quantity}
                           dealName={food.title}
                           optionsTitle={food.optionsTitle}
                           itemImage={food.image}
                           food={food.food}
-                          cartItem={cartItem}
+                          cartItem={food.cartItem}
                           itemAddons={food.addons}
                           dealPrice={(parseFloat(food.price) * food.quantity).toFixed(2)}
                           restaurantData={restaurant}
@@ -415,9 +334,11 @@ function Cart(props) {
                   })}
                 </View>
               </View>
-              <View style={styles().suggestedItems}>
-                <WouldYouLikeToAddThese itemId={foods[0]._id} restaurantId={restaurant?._id} />
-              </View>
+              {foods[0] && (
+                <View style={styles().suggestedItems}>
+                  <WouldYouLikeToAddThese itemId={foods[0]._id} restaurantId={restaurant?._id} />
+                </View>
+              )}
             </ScrollView>
 
             <View style={styles().totalBillContainer}>

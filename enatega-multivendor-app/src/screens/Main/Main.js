@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback, useMemo } from 'react'
-import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, Image, RefreshControl, ActivityIndicator, InteractionManager } from 'react-native'
+import { View, SafeAreaView, TouchableOpacity, StatusBar, Platform, ScrollView, Image, RefreshControl, InteractionManager } from 'react-native'
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { useLocation } from '../../ui/hooks'
@@ -94,7 +94,8 @@ function Main(props) {
       shopType: null,
       ip: null
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first'
   })
 
   // A transient network failure (e.g. "Network request failed") surfaces as a
@@ -467,11 +468,7 @@ function Main(props) {
             <View style={styles().flex}>
               <View style={styles().mainContentContainer}>
                 <View style={[styles().flex, styles().subContainer]}>
-                  {loading || isAutoRetrying || restaurantordersLoading || (restaurantorders === null && !error && !restaurantordersError) ? (
-                    <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
-                      <ActivityIndicator size='large' color={currentTheme.spinnerColor} />
-                    </View>
-                  ) : restaurantorders?.length > 0 ? (
+                  {loading || isAutoRetrying || restaurantordersLoading || restaurantorders?.length > 0 ? (
                     <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}>
                       <Banner banners={banners?.banners} />
                       <View style={{ gap: 12 }}>

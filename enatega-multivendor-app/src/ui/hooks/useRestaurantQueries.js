@@ -121,6 +121,7 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
   const { data, refetch, fetchMore, networkStatus, loading, error } = useQuery(query, {
     variables: queryVariables,
     fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true
   })
 
