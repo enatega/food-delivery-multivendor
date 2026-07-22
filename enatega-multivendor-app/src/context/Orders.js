@@ -105,8 +105,7 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
   const reFetchOrders = useCallback(() => {
     setActivePage(1)
     setPastPage(1)
-    refetchActive?.()
-    refetchPast?.()
+    return Promise.all([refetchActive?.(), refetchPast?.()]).catch(() => [])
   }, [refetchActive, refetchPast])
 
   // Load more past orders (the long list). onEndReached in PastOrders calls
@@ -153,28 +152,25 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
   }, [loadingActive, networkStatusActive, dataActive, activePage, fetchMoreActive])
 
   const calledOrders = !!profile
+  const value = useMemo(() => ({
+    loadingOrders: (loadingActive || loadingPast) && calledOrders,
+    errorOrders: errorActive || errorPast,
+    orders,
+    reFetchOrders,
+    fetchMoreOrdersFunc,
+    networkStatusOrders: networkStatusPast,
+    activeOrders,
+    pastOrders,
+    loadingActiveOrders: loadingActive,
+    loadingPastOrders: loadingPast,
+    errorActiveOrders: errorActive,
+    errorPastOrders: errorPast,
+    fetchMoreActiveOrdersFunc,
+    networkStatusActiveOrders: networkStatusActive
+  }), [activeOrders, calledOrders, errorActive, errorPast, fetchMoreActiveOrdersFunc, fetchMoreOrdersFunc, loadingActive, loadingPast, networkStatusActive, networkStatusPast, orders, pastOrders, reFetchOrders])
 
   return (
-    <OrdersContext.Provider
-      value={{
-        // Combined (backward compatible)
-        loadingOrders: (loadingActive || loadingPast) && calledOrders,
-        errorOrders: errorActive || errorPast,
-        orders,
-        reFetchOrders,
-        fetchMoreOrdersFunc,
-        // networkStatus of the past-orders query drives PastOrders' pull-to-refresh
-        networkStatusOrders: networkStatusPast,
-        // Split lists (server-side, matching the web app)
-        activeOrders,
-        pastOrders,
-        loadingActiveOrders: loadingActive,
-        loadingPastOrders: loadingPast,
-        errorActiveOrders: errorActive,
-        errorPastOrders: errorPast,
-        fetchMoreActiveOrdersFunc,
-        networkStatusActiveOrders: networkStatusActive
-      }}>
+    <OrdersContext.Provider value={value}>
       {children}
     </OrdersContext.Provider>
   )
