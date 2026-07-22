@@ -1,0 +1,9 @@
+node_modules/
+reports/
+test-results/
+playwright-report/
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
