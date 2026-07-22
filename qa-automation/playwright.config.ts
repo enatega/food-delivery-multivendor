@@ -29,6 +29,10 @@ export default defineConfig({
     {
       name: 'unit',
       testMatch: /unit\/.*\.spec\.ts/
+    },
+    {
+      name: 'preflight',
+      testMatch: /preflight\/.*\.spec\.ts/
     }
   ],
   outputDir: 'reports/test-results'

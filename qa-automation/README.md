@@ -19,7 +19,11 @@ npm ci
 npm test
 npm run typecheck
 npm run lint
+npm run qa:validate-env
 ```
+
+`qa:validate-env` reads the Git-ignored `.env.local` and validates target
+identity only. It performs no network request and no data mutation.
 
 Browser and mobile flows will be added after the QA environment, accounts,
 fixtures, and exact Store preparation/ready state mapping are approved.

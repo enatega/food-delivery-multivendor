@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint .",
+    "qa:validate-env": "playwright test tests/preflight/environment.spec.ts --project=preflight --reporter=line",
     "test": "npm run test:unit",
     "test:unit": "playwright test tests/unit",
     "test:web": "playwright test tests/web",
@@ -17,5 +18,8 @@
     "eslint": "^10.7.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }
