@@ -36,6 +36,7 @@ import AddNewAddress from '../screens/SelectLocation/AddNewAddress'
 import CurrentLocation from '../screens/CurrentLocation'
 import ThemeContext from '../ui/ThemeContext/ThemeContext'
 import { theme } from '../utils/themeColors'
+import { ENABLE_DEMO_DEFAULT_LOCATION } from '../utils/demoDefaultLocation'
 import screenOptions from './screenOptions'
 import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
@@ -317,7 +318,7 @@ function AppContainer() {
   const client = useApolloClient()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
-  const { permissionState, setPermissionState, location } = useContext(LocationContext)
+  const { permissionState, setPermissionState, location, isLocationLoaded } = useContext(LocationContext)
   const { isLoggedIn } = useContext(UserContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
 
@@ -383,7 +384,10 @@ function AppContainer() {
   console.log('-------------')
   console.log({ permissionState, location })
 
-  if (isLoadingPermission) return
+  if (isLoadingPermission || !isLocationLoaded) return
+  const shouldShowLocationStack = ENABLE_DEMO_DEFAULT_LOCATION
+    ? !location
+    : !permissionState?.granted || !location
 
   return (
     <SafeAreaProvider>
@@ -394,7 +398,7 @@ function AppContainer() {
           navigationService.setGlobalRef(ref)
         }}
       >
-        {!permissionState?.granted || !location ? <LocationStack /> : <MainNavigator key={isLoggedIn ? 'authed' : 'guest'} />}
+        {shouldShowLocationStack ? <LocationStack /> : <MainNavigator key={isLoggedIn ? 'authed' : 'guest'} />}
 
         {/* {<LocationStack />}
         <MainNavigator /> */}

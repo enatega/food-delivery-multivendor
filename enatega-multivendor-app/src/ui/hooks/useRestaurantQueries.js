@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   mostOrderedRestaurantsQuery,
   recentOrderRestaurantsQuery,
@@ -102,20 +102,30 @@ export const useRestaurantQueries = (queryType, location, selectedType) => {
   const query = getQuery(queryType)
   const isNearbyPaginatedQuery = !['orderAgain', 'topPicks', 'topBrands'].includes(queryType)
 
-  const queryVariables = {
-    longitude: location?.longitude || null,
-    latitude: location?.latitude || null
-  }
+  const queryVariables = useMemo(() => {
+    const variables = {
+      longitude: location?.longitude || null,
+      latitude: location?.latitude || null
+    }
 
-  if (['grocery', 'restaurant','topPicks'].includes(queryType)) {
-    queryVariables.shopType = selectedType || null
-    queryVariables.ip = null
-  }
+    if (['grocery', 'restaurant', 'topPicks'].includes(queryType)) {
+      variables.shopType = selectedType || null
+      variables.ip = null
+    }
 
-  if (isNearbyPaginatedQuery) {
-    queryVariables.page = 1
-    queryVariables.limit = PAGE_LIMIT
-  }
+    if (isNearbyPaginatedQuery) {
+      variables.page = 1
+      variables.limit = PAGE_LIMIT
+    }
+
+    return variables
+  }, [
+    location?.longitude,
+    location?.latitude,
+    queryType,
+    selectedType,
+    isNearbyPaginatedQuery
+  ])
   
 
   const { data, refetch, fetchMore, networkStatus, loading, error } = useQuery(query, {
