@@ -59,7 +59,7 @@ import {
 } from "@/lib/utils/methods";
 import { hasValidAuthToken } from "@/lib/utils/methods/auth";
 
-// Constnats
+// Constants
 import {
   languageTypes,
   USER_CURRENT_LOCATION_LS_KEY,
