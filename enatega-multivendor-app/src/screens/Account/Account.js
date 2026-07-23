@@ -260,11 +260,10 @@ function Account(props) {
 
   const onCompletedDeactivate = () => {
     setDeleteModalVisible(false)
+    // The auth-gated navigator remounts to guest Discovery once logout clears
+    // the token — no manual navigation.
     logout()
       .then(() => {
-        navigation.reset({
-          routes: [{ name: 'Main' }]
-        })
         FlashMessage({ message: t('accountDeactivated'), duration: 5000 })
       })
       .catch((error) => {
@@ -296,13 +295,13 @@ function Account(props) {
       setModalVisible(false)
       await Analytics.track(Analytics.events.USER_LOGGED_OUT)
       await Analytics.identify(null, null)
+      // logout() clears the token; the auth-gated navigator remounts itself to
+      // the guest Discovery screen. No manual navigation needed (doing both
+      // caused the Login-flash -> Discovery -> refresh jank).
       await logout()
-      navigation.reset({
-        routes: [{ name: 'Main' }]
-      })
-      // navigation.closeDrawer()
       FlashMessage({ message: t('logoutMessage') })
     } catch (error) {
+      setSpinnerLoading(false)
       console.error('Error during logout:', error)
     }
   }
@@ -317,9 +316,6 @@ function Account(props) {
       })
       setDeleteModalVisible(false)
       await logout()
-      navigation.reset({
-        routes: [{ name: 'Main' }]
-      })
       FlashMessage({ message: t('accountDeactivated') })
     } catch (error) {
       console.error('Error during deactivation mutation:', error)

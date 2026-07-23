@@ -5,7 +5,6 @@ import { updateUser } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import { phoneRegex } from '../../utils/regex'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import UserContext from '../../context/User'
 import countryCallingCodes from './countryCodes'
@@ -13,6 +12,7 @@ import { useIsFocused } from '@react-navigation/native'
 import ConfigurationContext from '../../context/Configuration'
 import { useTranslation } from 'react-i18next'
 import { useCountryFromIP } from '../../utils/useCountryFromIP'
+import { getPhoneExample, isValidPhoneNumber, toE164 } from '../../utils/phone'
 
 const UPDATEUSER = gql`
   ${updateUser}
@@ -63,15 +63,16 @@ const useRegister = () => {
     if (!phone) {
       setPhoneError(t('mobileErr1'))
       result = false
-    } else if (!phoneRegex.test(phone)) {
-      setPhoneError(t('mobileErr2'))
+    } else if (!isValidPhoneNumber(phone, country?.cca2)) {
+      const example = getPhoneExample(country?.cca2)
+      setPhoneError(example ? t('mobileErrFormat', { example }) : t('mobileErr2'))
       result = false
     }
     return result
   }
 
   async function onCompleted(data) {
-    let concatPhone = '+'.concat(country.callingCode[0] ?? "").concat(phone ?? "")
+    const concatPhone = toE164(phone, country?.cca2)
     if (navigation && route && profile) {
       if (configuration.twilioEnabled) {
         FlashMessage({
@@ -115,7 +116,7 @@ const useRegister = () => {
     mutate({
       variables: {
         name: profile.name,
-        phone: '+'.concat(country.callingCode[0] ?? "").concat(phone ?? ""),
+        phone: toE164(phone, country?.cca2),
         phoneIsVerified: false
       }
     })

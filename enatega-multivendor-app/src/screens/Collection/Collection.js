@@ -12,12 +12,6 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import CachedImage from '../../components/CachedImage'
 
-const HEADING = {
-  Restaurants: 'I feel like eating',
-  Store: 'Lets shop for',
-  default: 'Collections'
-}
-
 // CustomItem component to handle animation
 const CustomItem = ({ index, children }) => {
   const scaleValue = new Animated.Value(0)
@@ -66,15 +60,26 @@ const Collection = ({ navigation, route }) => {
   const { isConnected: connect, setIsConnected: setConnect } =
     useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
+
+  const renderEmptyState = () => (
+    <View style={styles(currentTheme).emptyStateContainer}>
+      <View style={styles(currentTheme).emptyStateCard}>
+        <TextDefault bold H4 center textColor={currentTheme.fontMainColor} style={styles(currentTheme).emptyStateTitle}>
+          {t('No cuisines available')}
+        </TextDefault>
+        <TextDefault center textColor={currentTheme.fontNewColor} style={styles(currentTheme).emptyStateDescription}>
+          {t('There are no cuisines in this section right now. Please try another category or check back later.')}
+        </TextDefault>
+      </View>
+    </View>
+  )
+
   return (
     <View style={styles(currentTheme).container}>
       {showHeader ? (
         <View style={styles(currentTheme).headingContainer}>
           <TextDefault bolder H2 isRTL style={styles(currentTheme).headingTitle}>
             {t(pageTitle)}
-          </TextDefault>
-          <TextDefault bold H5 isRTL textColor={currentTheme.fontNewColor}>
-            {t(HEADING[collectionType] || HEADING.default)}
           </TextDefault>
         </View>
       ) : null}
@@ -114,6 +119,7 @@ const Collection = ({ navigation, route }) => {
         contentContainerStyle={styles().contentContainerStyle}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles().columnWrapperStyle}
+        ListEmptyComponent={renderEmptyState}
       />
     </View>
   )

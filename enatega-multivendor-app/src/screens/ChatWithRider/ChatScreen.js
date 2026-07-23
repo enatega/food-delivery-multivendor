@@ -143,7 +143,7 @@ const ChatScreen = ({ navigation, route }) => {
   }
 
   const renderMessageImage = (props) => {
-    const uri = props?.currentMessage?.image
+    const uri = props?.currentMessage?.localImage || props?.currentMessage?.image
     if (!uri) return null
     return (
       <CachedImage
@@ -248,8 +248,9 @@ const ChatScreen = ({ navigation, route }) => {
           renderChatEmpty={renderChatEmpty}
           inverted={Platform.OS !== 'web' || messages.length === 0}
           placeholder={t('replyRider')}
+          isKeyboardInternallyHandled={false}
           keyboardShouldPersistTaps='handled'
-          bottomOffset={Platform.OS === 'ios' ? insets.bottom : 0}
+          bottomOffset={0}
           textInputProps={{
             style: {
               width: '75%',

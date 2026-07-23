@@ -62,26 +62,30 @@ const styles = (props = null) =>
       width: '100%',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: scale(12),
       paddingHorizontal: scale(12)
     },
     leadingArea: {
-      width: scale(40),
+      width: scale(88),
+      minWidth: scale(88),
       alignItems: 'flex-start',
-      justifyContent: 'flex-start'
+      justifyContent: 'center',
+      zIndex: 2
     },
     centerArea: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      zIndex: 1,
+      paddingHorizontal: scale(4)
     },
     trailingArea: {
+      width: scale(88),
+      minWidth: scale(88),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-end',
       gap: scale(8),
-      minWidth: scale(84)
+      zIndex: 2
     },
     fixedIcons: {
       flexDirection: 'row',
@@ -234,8 +238,14 @@ const styles = (props = null) =>
       ...textStyles.H5,
       ...textStyles.Bolder,
       color: props != null ? props.newFontcolor : 'black',
-      flex: 1,
-      textAlign: 'center'
+      // Stretch horizontally (so textAlign centers across the full width) but keep
+      // the text's natural height so centerArea's justifyContent:'center' can
+      // vertically center it in line with the back/info/search icons. Using flex:1
+      // here made the text box fill the row height and top-aligned the glyphs,
+      // which pushed the title visibly above the icons.
+      alignSelf: 'stretch',
+      textAlign: 'center',
+      includeFontPadding: false
     },
     center: {
       flex: 1,

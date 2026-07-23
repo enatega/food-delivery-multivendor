@@ -99,7 +99,7 @@ function PhoneNumber(props) {
                   </View>
                   <View style={[styles(currentTheme).textField, styles().phoneNumber, phoneError && styles(currentTheme).errorInput]}>
                     <View style={styles(currentTheme).phoneField}>
-                      <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.color6} style={styles(currentTheme).phoneNo} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
+                      <PhoneNumberInput setError={setPhoneError} placeholder={t('phoneNumber')} placeholderTextColor={currentTheme.color6} style={styles(currentTheme).phoneNo} region={country?.cca2} countryCode={country?.callingCode[0]} value={phone} onChange={(e) => setPhone(e)} />
                     </View>
                   </View>
                 </View>

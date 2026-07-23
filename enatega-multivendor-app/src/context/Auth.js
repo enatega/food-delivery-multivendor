@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getToken, setToken as persistToken } from '../utils/secureToken'
 import {
   getJwtExpiryTime,
   isJwtTokenExpired
@@ -15,14 +15,14 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null)
 
   const setTokenAsync = async token => {
-    await AsyncStorage.setItem('token', token)
+    await persistToken(token)
     setToken(token)
   }
 
   useEffect(() => {
     let isSubscribed = true
     ;(async() => {
-      const storedToken = await AsyncStorage.getItem('token')
+      const storedToken = await getToken()
 
       if (!storedToken) {
         isSubscribed && setToken(null)

@@ -13,18 +13,13 @@ const styles = (props = null) =>
       backgroundColor: props?.themeBackground
     },
     container2: {
-      flex: 1,
-      flexDirection: 'column',
       flexDirection: 'row',
-      // gap: 15,
-      paddingHorizontal: 18,
-      paddingVertical: 10,
-      // backgroundColor: '#eee',
+      alignItems: 'center',
+      paddingHorizontal: 12,
+      paddingTop: 0,
+      paddingBottom: 0,
       backgroundColor: props?.subCategoryTopSection,
-      // backgroundColor: props?.themeBackground,
-      // borderBottomWidth: 1,
-      // borderBottomColor: props?.borderColor,
-      paddingBottom: 2
+      gap: scale(4)
     },
     backgroundColor: props?.themeBackground,
     topSectionColor: props?.subCategoryTopSection,
@@ -39,15 +34,11 @@ const styles = (props = null) =>
       paddingHorizontal: scale(15)
     },
     categoryItem: {
-      width: 180,
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(8),
-      // borderRadius: scale(20),
-      // backgroundColor: props?.gray100,
-      // marginRight: scale(2),
+      minWidth: scale(88),
+      paddingHorizontal: scale(12),
+      paddingVertical: scale(5),
       textAlign: 'center',
       alignItems: 'center',
-
       borderBottomWidth: 1,
       borderBottomColor: props !== null ? '#DAD6D6' : props?.primary
     },
@@ -64,21 +55,10 @@ const styles = (props = null) =>
     },
     // Sub Category
     subcategoryItem: {
-      width: 120,
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(6),
+      minWidth: scale(96),
+      paddingHorizontal: scale(14),
+      paddingVertical: scale(4),
       borderRadius: scale(20),
-      marginRight: scale(8),
-      textAlign: 'center',
-      alignItems: 'center'
-    },
-    // Sub Category LTR with better spacing
-    subcategoryItemltr: {
-      width: 140,
-      paddingHorizontal: scale(18),
-      paddingVertical: scale(8),
-      borderRadius: scale(20),
-      marginRight: scale(12),
       textAlign: 'center',
       alignItems: 'center'
     },

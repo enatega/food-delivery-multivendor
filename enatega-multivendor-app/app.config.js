@@ -53,7 +53,10 @@ module.exports = () => {
       },
       entitlements: {
         'com.apple.developer.networking.wifi-info': true,
-        'aps-environment': 'development'
+        // Use the production APNs gateway for production builds so push
+        // notifications are not silently rejected on App Store devices (SEC-013).
+        'aps-environment':
+          process.env.APP_ENV === 'production' ? 'production' : 'development'
       },
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
@@ -85,6 +88,9 @@ module.exports = () => {
       versionCode: 127,
       package: 'com.enatega.multivendor',
       userInterfaceStyle: 'automatic',
+      // Disable ADB/cloud backups so the AsyncStorage DB (JWT) can't be pulled
+      // off a connected device without root (SEC-002).
+      allowBackup: false,
       googleServicesFile: './google-services.json',
       splash: {
         image: './assets/splash.png',
@@ -104,6 +110,13 @@ module.exports = () => {
         'android.permission.ACCESS_FINE_LOCATION',
         'android.permission.ACCESS_COARSE_LOCATION',
         'android.permission.FOREGROUND_SERVICE'
+      ],
+      // Strip dangerous permissions that no feature uses and that library
+      // transitive manifests can pull in (tapjacking / broad storage) (SEC-006).
+      blockedPermissions: [
+        'android.permission.RECORD_AUDIO',
+        'android.permission.SYSTEM_ALERT_WINDOW',
+        'android.permission.WRITE_EXTERNAL_STORAGE'
       ],
       icon: './assets/appIcon.png',
       queries: {
@@ -148,10 +161,13 @@ module.exports = () => {
       ],
       'expo-notifications',
       'expo-font',
+      'expo-secure-store',
       'expo-localization',
       'expo-web-browser',
       'expo-video',
-      'expo-apple-authentication'
+      'expo-apple-authentication',
+      // Xcode 26 / clang fmt consteval build fix (see plugins/withFmtConstevalFix.js)
+      './plugins/withFmtConstevalFix'
     ],
     extra: {
       eas: {

@@ -15,6 +15,7 @@ import { theme } from '../../utils/themeColors'
 import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
+import ConfigurationContext from '../../context/Configuration'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import MainRestaurantCard from '../../components/Main/MainRestaurantCard/MainRestaurantCard'
@@ -67,6 +68,7 @@ function Main(props) {
   const [busy, setBusy] = useState(false)
   const { isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
+  const configuration = useContext(ConfigurationContext)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const modalRef = useRef(null)
   const navigation = useNavigation()
@@ -404,6 +406,26 @@ function Main(props) {
     () => sortRestaurantsByOpenStatus(mostOrderedGroceryStores || []),
     [mostOrderedGroceryStores]
   )
+  const hasDiscoveryContent = useMemo(() => (
+    (banners?.banners?.length ?? 0) > 0 ||
+    (sortedRecentOrderRestaurants?.length ?? 0) > 0 ||
+    (sortedMostOrderedRestaurants?.length ?? 0) > 0 ||
+    (allShopTypes?.fetchAllShopTypes?.data?.length ?? 0) > 0 ||
+    (restaurantCuisines?.length ?? 0) > 0 ||
+    (sortedRestaurantOrders?.length ?? 0) > 0 ||
+    (groceryCuisines?.length ?? 0) > 0 ||
+    (sortedMostOrderedGrocery?.length ?? 0) > 0
+  ), [
+    banners?.banners,
+    sortedRecentOrderRestaurants,
+    sortedMostOrderedRestaurants,
+    allShopTypes?.fetchAllShopTypes?.data,
+    restaurantCuisines,
+    sortedRestaurantOrders,
+    groceryCuisines,
+    sortedMostOrderedGrocery
+  ])
+  const isCustomerDemoMode = !!configuration?.enableCustomerDemoMode
 
   const keyExtractorRestaurant = useCallback((item, index) => item?._id || `${item?.name}-restaurant-${index}`, [])
   const keyExtractorGrocery = useCallback((item, index) => item?._id || `${item?.name}-grocery-${index}`, [])
@@ -470,7 +492,7 @@ function Main(props) {
             <View style={styles().flex}>
               <View style={styles().mainContentContainer}>
                 <View style={[styles().flex, styles().subContainer]}>
-                  {loading || isAutoRetrying || restaurantordersLoading || restaurantorders?.length > 0 ? (
+                  {loading || isAutoRetrying || restaurantordersLoading || orderLoading || hasDiscoveryContent ? (
                     <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}>
                       <Banner banners={banners?.banners} />
                       <View style={{ gap: 12 }}>
@@ -544,9 +566,15 @@ function Main(props) {
                   ) : (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
                       <TextDefault bold H4 style={{ textAlign: 'center', marginBottom: 4 }}>
-                        {t('We are currently not available in your location.')}
+                        {isCustomerDemoMode
+                          ? t('No restaurants are available for the selected demo zone right now.')
+                          : t('We are currently not available in your location.')}
                       </TextDefault>
-                      <TextDefault style={{ textAlign: 'center', marginBottom: 10 }}>{t('Please check back later or try a different location.')}</TextDefault>
+                      <TextDefault style={{ textAlign: 'center', marginBottom: 10 }}>
+                        {isCustomerDemoMode
+                          ? t('Please verify the configured demo zone contains active restaurants.')
+                          : t('Please check back later or try a different location.')}
+                      </TextDefault>
 
                     
 

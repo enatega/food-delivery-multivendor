@@ -6,8 +6,15 @@ const styles = (props = null) => {
     headerTitleContainer: {
       flex: 1,
       height: '100%',
-      width: '95%',
+      width: '100%',
       justifyContent: 'center'
+    },
+    row: {
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      marginHorizontal: scale(10),
+      gap: scale(8),
+      minHeight: scale(34)
     },
     locationIcon: {
       backgroundColor: props != null ? props?.iconBackground : '#E5E7EB',
@@ -19,11 +26,24 @@ const styles = (props = null) => {
       overflow: 'hidden',
     },
     headerContainer: {
-      height: '100%',
-      width: '90%',
-      paddingLeft: scale(5),
-      marginTop: scale(10)
+      flex: 1,
+      // Safety floor so the address column can never collapse to zero (which
+      // left only the location icon visible). It fills the full title width when
+      // available, but is guaranteed at least this much so the address always
+      // renders next to the icon.
+      minWidth: scale(150),
+      justifyContent: 'center'
     },
+    titleWrap: {
+      // Keep the inner text able to shrink/ellipsize within headerContainer.
+      minWidth: 0
+    },
+    titleText: {
+      lineHeight: scale(18)
+    },
+    subtitleText: {
+      lineHeight: scale(15)
+    }
   })
 }
 export default styles

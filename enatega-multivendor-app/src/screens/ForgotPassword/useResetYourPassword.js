@@ -7,6 +7,10 @@ import { theme } from '../../utils/themeColors'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useRoute, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import {
+  getResetSession,
+  clearResetSession
+} from '../../utils/resetPasswordSession'
 
 const RESET_PASSWORD = gql`
   ${resetPassword}
@@ -20,8 +24,18 @@ export const useResetYourPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordError, setPasswordError] = useState(null)
   const [confirmPasswordError, setConfirmPasswordError] = useState(null)
-  const [email] = useState(route?.params?.email)
-  const [otp] = useState(route?.params?.otp)
+  // SEC-015: the OTP is read from the ephemeral in-memory store, not nav params.
+  const initialSession = getResetSession() || {}
+  const [email] = useState(initialSession.email ?? route?.params?.email)
+  const [otp] = useState(initialSession.otp)
+
+  // Clear the OTP from memory when leaving the screen (covers backing out without
+  // completing the reset — "remove after used" for every exit path).
+  useEffect(() => {
+    return () => {
+      clearResetSession()
+    }
+  }, [])
 
   const [mutate, { loading }] = useMutation(RESET_PASSWORD, {
     onCompleted,
@@ -61,6 +75,8 @@ export const useResetYourPassword = () => {
   }
 
   function onCompleted(data) {
+    // Password changed — the OTP is spent; drop it immediately.
+    clearResetSession()
     FlashMessage({
       message: t('passwordResetSuccessfully')
     })
@@ -86,8 +102,10 @@ export const useResetYourPassword = () => {
       })
       navigation.replace('ForgotPassword', { email })
     } else if (error.networkError) {
+      // networkError.result is null on raw connectivity failures — reuse the
+      // safely-computed rawMessage and fall back to a friendly string (QUAL-008).
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message: rawMessage || t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -97,7 +115,10 @@ export const useResetYourPassword = () => {
   }
 
   function resetYourPassword() {
-    if (!email || !otp) {
+    // Re-read from the store at submit time so a background/kill/TTL clear
+    // invalidates a stale OTP even if this screen stayed mounted.
+    const currentOtp = getResetSession()?.otp
+    if (!email || !currentOtp) {
       FlashMessage({
         message: 'This OTP is expired or invalid. Please request a new one.'
       })
@@ -107,7 +128,7 @@ export const useResetYourPassword = () => {
 
     if (validateCredentials()) {
       if (password === confirmPassword) {
-        mutate({ variables: { password, email: email.toLowerCase().trim(), otp } })
+        mutate({ variables: { password, email: email.toLowerCase().trim(), otp: currentOtp } })
       } else {
         setConfirmPasswordError(t('passwordMustMatch'))
       }

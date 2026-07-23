@@ -36,7 +36,6 @@ import AddNewAddress from '../screens/SelectLocation/AddNewAddress'
 import CurrentLocation from '../screens/CurrentLocation'
 import ThemeContext from '../ui/ThemeContext/ThemeContext'
 import { theme } from '../utils/themeColors'
-import { ENABLE_DEMO_DEFAULT_LOCATION } from '../utils/demoDefaultLocation'
 import screenOptions from './screenOptions'
 import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
@@ -58,8 +57,8 @@ import Collection from '../screens/Collection/Collection'
 import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
 import UserContext from '../context/User'
+import ConfigurationContext from '../context/Configuration'
 import { Easing, Platform } from 'react-native'
-// import HypCheckout from '../screens/Hyp/HypCheckout'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
 
 const NavigationStack = createStackNavigator()
@@ -218,7 +217,6 @@ function MainNavigator() {
       <NavigationStack.Screen name='ForgotPasswordOtp' component={ForgotPasswordOtp} />
       <NavigationStack.Screen name='SelectLocation' component={SelectLocation} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       {protectedScreens}
-      {/* <NavigationStack.Screen name='HypCheckout' component={HypCheckout} /> */}
     </NavigationStack.Navigator>
   )
 }
@@ -229,7 +227,11 @@ function LocationStack() {
       <Location.Screen name='CurrentLocation' component={CurrentLocation} options={{ header: () => null }} />
       <Location.Screen name='SelectLocation' component={SelectLocation} />
       <Location.Screen name='AddNewAddress' component={AddNewAddress} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen
+      {/* Must be a Location.Screen — a child of the Location navigator must be
+          that navigator's own Screen, otherwise 'Main' is never registered here
+          and navigation.navigate('Main') throws "No navigator for screen 'Main'"
+          after address selection / OTP (QUAL-001). */}
+      <Location.Screen
         name='Main'
         component={BottomTabNavigator}
         options={{
@@ -291,6 +293,18 @@ function BottomTabNavigator() {
         options={{
           tabBarLabel: t('Store')
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('Store', {
+              selectedType: 'grocery',
+              queryType: 'grocery',
+              shopType: 'grocery',
+              collection: null,
+              isShopType: false,
+              menuTitle: null
+            })
+          }
+        })}
         initialParams={{
           selectedType: 'grocery',
           queryType: 'grocery'
@@ -319,8 +333,11 @@ function AppContainer() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { permissionState, setPermissionState, location, isLocationLoaded } = useContext(LocationContext)
+  const configuration = useContext(ConfigurationContext)
   const { isLoggedIn } = useContext(UserContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
+  const isConfigurationLoaded = configuration?.isConfigurationLoaded
+  const enableCustomerDemoMode = !!configuration?.enableCustomerDemoMode
 
   // React Navigation's DefaultTheme paints the scene background white. During a
   // scale/zoom push transition (e.g. Discovery -> Restaurant) the area around
@@ -384,8 +401,8 @@ function AppContainer() {
   console.log('-------------')
   console.log({ permissionState, location })
 
-  if (isLoadingPermission || !isLocationLoaded) return
-  const shouldShowLocationStack = ENABLE_DEMO_DEFAULT_LOCATION
+  if (isLoadingPermission || !isConfigurationLoaded || !isLocationLoaded) return
+  const shouldShowLocationStack = enableCustomerDemoMode
     ? !location
     : !permissionState?.granted || !location
 

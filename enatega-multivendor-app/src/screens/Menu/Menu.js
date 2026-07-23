@@ -70,6 +70,17 @@ export const FILTER_VALUES = {
     values: ['3+ Rating', '4+ Rating', '5 star Rating']
   }
 }
+
+const cloneFilterState = (filters = {}) =>
+  Object.keys(filters).reduce((acc, key) => {
+    const filter = filters[key] || {}
+    acc[key] = {
+      ...filter,
+      values: Array.isArray(filter.values) ? [...filter.values] : [],
+      selected: Array.isArray(filter.selected) ? [...filter.selected] : []
+    }
+    return acc
+  }, {})
 const { height: HEIGHT } = Dimensions.get('window')
 function Menu({ route, props }) {
   const Analytics = analytics()
@@ -82,9 +93,9 @@ function Menu({ route, props }) {
   const [busy, setBusy] = useState(false)
   const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
-  const [filters, setFilters] = useState(FILTER_VALUES)
+  const [filters, setFilters] = useState(() => cloneFilterState(FILTER_VALUES))
   const [filterSectionApplied, setfilterSectionApplied] = useState(false)
-  const [appliedFilters, setAppliedFilters] = useState(FILTER_VALUES)
+  const [appliedFilters, setAppliedFilters] = useState(() => cloneFilterState(FILTER_VALUES))
   const [activeCollection, setActiveCollection] = useState()
   const [isConnected, setIsConnected] = useState(false)
   const modalRef = useRef(null)
@@ -141,6 +152,28 @@ function Menu({ route, props }) {
     onError
   })
 
+  // QUAL-012: Only offer the "Free Delivery" / "Accept Vouchers" filters when at
+  // least one restaurant in the current list actually has that flag. Otherwise
+  // selecting them would always clear the list (the backend can return these
+  // fields as false/null for every restaurant). This is self-healing: as soon as
+  // the backend serves restaurants with the flag set, the option reappears.
+  const availableOffers = useMemo(() => {
+    const list = allData || []
+    return FILTER_VALUES.Offers.values.filter((offer) => {
+      if (offer === 'Free Delivery') return list.some((r) => r?.freeDelivery)
+      if (offer === 'Accept Vouchers') return list.some((r) => r?.acceptVouchers)
+      return true // other offer types are unaffected
+    })
+  }, [allData])
+
+  const displayFilters = useMemo(
+    () => ({
+      ...filters,
+      Offers: { ...filters.Offers, values: availableOffers }
+    }),
+    [filters, availableOffers]
+  )
+
   const restaurantsCuisinsVariables = isShopType ? { latitude: location.latitude || null, longitude: location.longitude || null, shopType: collection } : {}
 
   console.log('restaurantsCuisinsVariables::', restaurantsCuisinsVariables)
@@ -161,6 +194,28 @@ function Menu({ route, props }) {
   const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */ } = useCollapsibleSubHeader()
 
   const emptyViewDesc = selectedType === 'restaurant' ? t('noRestaurant') : t('noGrocery')
+  const menuPageTitle = heading
+    ? t(heading)
+    : routeData?.params?.menuTitle
+      ? t(routeData.params.menuTitle)
+      : t(
+          routeData?.name === 'Restaurants'
+            ? 'Restaurants'
+            : routeData?.name === 'Store'
+              ? 'All Stores'
+              : 'Restaurants'
+        )
+  const cuisinesHeaderTitle = activeCollection || routeData?.params?.collection || t('BrowseCuisines')
+  const emptyCuisineTitle = activeCollection
+    ? `No ${activeCollection} ${selectedType === 'grocery' ? 'stores' : 'restaurants'} yet`
+    : !filterApplied
+      ? t('notAvailableinYourArea')
+      : t('noMatchingResults')
+  const emptyCuisineDescription = activeCollection
+    ? `Try another cuisine or clear the selection to explore more ${selectedType === 'grocery' ? 'stores' : 'restaurants'}.`
+    : !filterApplied
+      ? emptyViewDesc
+      : t('noMatchingResultsDesc')
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -209,8 +264,32 @@ function Menu({ route, props }) {
   useEffect(() => {
     if (collection) {
       setActiveCollection(collection)
+    } else {
+      setActiveCollection(null)
     }
   }, [collection, route])
+
+  useEffect(() => {
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+      if (routeData?.name !== 'Store') return
+
+      setActiveCollection(null)
+      setfilterApplied(false)
+      setfilterSectionApplied(false)
+      setAppliedFilters(cloneFilterState(FILTER_VALUES))
+      setFilters(cloneFilterState(FILTER_VALUES))
+
+      navigation.setParams({
+        collection: null,
+        isShopType: false,
+        selectedType: 'grocery',
+        queryType: 'grocery',
+        menuTitle: null
+      })
+    })
+
+    return unsubscribeBlur
+  }, [navigation, routeData?.name])
 
   const onOpen = () => {
     const modal = modalRef.current
@@ -400,11 +479,18 @@ function Menu({ route, props }) {
       return (
         <View style={styles().emptyViewContainer}>
           <View style={styles(currentTheme).emptyViewBox}>
-            <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
-              {!filterApplied ? t('notAvailableinYourArea') : t('noMatchingResults')}
+            {activeCollection ? (
+              <View style={styles(currentTheme).emptyBadge}>
+                <TextDefault small bold textColor={currentTheme.main}>
+                  {cuisinesHeaderTitle}
+                </TextDefault>
+              </View>
+            ) : null}
+            <TextDefault bold H4 center textColor={currentTheme.fontMainColor} style={styles(currentTheme).emptyTitle}>
+              {emptyCuisineTitle}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontMainColor} center>
-              {!filterApplied ? emptyViewDesc : t('noMatchingResultsDesc')}
+            <TextDefault textColor={currentTheme.fontMainColor} center style={styles(currentTheme).emptyDescription}>
+              {emptyCuisineDescription}
             </TextDefault>
           </View>
         </View>
@@ -614,18 +700,20 @@ function Menu({ route, props }) {
   }, [activeCollection, allData, appliedFilters, buildVisibleRestaurantData, setRestaurantData])
 
   const applyFilters = (nextFilters = filters) => {
-    const filteredData = buildVisibleRestaurantData(allData, nextFilters, activeCollection)
-    const ratings = nextFilters.Rating
-    const sort = nextFilters.Sort
-    const offers = nextFilters.Offers
-    const cuisines = nextFilters.Cuisines
+    const normalizedFilters = cloneFilterState(nextFilters)
+    const filteredData = buildVisibleRestaurantData(allData, normalizedFilters, activeCollection)
+    const ratings = normalizedFilters.Rating
+    const sort = normalizedFilters.Sort
+    const offers = normalizedFilters.Offers
+    const cuisines = normalizedFilters.Cuisines
 
     // Set filtered data
     setRestaurantData(filteredData)
     filtersModalRef.current.close()
 
     // Update applied filters state
-    setAppliedFilters(nextFilters)
+    setAppliedFilters(normalizedFilters)
+    setFilters(normalizedFilters)
 
     // **Check if any filters are applied**
     const anyFilterSelected = !!activeCollection || ratings?.selected?.length > 0 || sort?.selected?.length > 0 || offers?.selected?.length > 0 || cuisines?.selected?.length > 0
@@ -646,11 +734,11 @@ function Menu({ route, props }) {
     <View>
         <View style={[styles(currentTheme).header, { paddingHorizontal: 10, paddingVertical: 6 }]}>
           <View>
-            <TextDefault bolder H2 isRTL>
-              {t(heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants')}
+            <TextDefault bolder H2 isRTL numberOfLines={1}>
+              {menuPageTitle}
             </TextDefault>
-            <TextDefault bold H5 isRTL>
-              {t('BrowseCuisines')}
+            <TextDefault bold H5 isRTL numberOfLines={1} textColor={currentTheme.fontNewColor}>
+              {cuisinesHeaderTitle}
             </TextDefault>
           </View>
           <Ripple
@@ -662,7 +750,7 @@ function Menu({ route, props }) {
                 collectionType,
                 title: t('BrowseCuisines'),
                 data: collectionData,
-                showHeader: false
+                showHeader: true
               })
             }}
           >
@@ -796,7 +884,7 @@ function Menu({ route, props }) {
         }}
       >
         <Filters
-          filters={filters}
+          filters={displayFilters}
           setFilters={setFilters}
           applyFilters={applyFilters}
           onClose={() => {

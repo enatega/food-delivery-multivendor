@@ -77,7 +77,9 @@ function Paypal(props) {
           query: MYORDERS,
           fetchPolicy: 'network-only'
         })
-        const order = result.data.orders.find((item) => item.orderId === _id)
+        // orders can be null on a race where the order hasn't persisted yet;
+        // default to [] so .find() never throws inside the polling loop (QUAL-003).
+        const order = (result?.data?.orders ?? []).find((item) => item.orderId === _id)
         const isPaidOrder =
           order &&
           (String(order.paymentStatus).toUpperCase() === 'PAID' || Number(order.paidAmount || 0) > 0)

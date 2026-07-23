@@ -118,7 +118,7 @@ const useRegister = () => {
   }
 
   function onCompleted({ phoneExist }) {
-    console.log('phoneExist', phoneExist)
+    if (__DEV__) console.log('phoneExist', phoneExist)
     if (phoneExist) {
       // FlashMessage({
       //   message: t('phoneNumberExist')

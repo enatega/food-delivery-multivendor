@@ -128,13 +128,15 @@ export const useLogin = () => {
           name: data.login.name,
           email: data.login.email
         })
-        setTokenAsync(data.login.token)
+        // Await token persistence before navigating so the next screen's first
+        // authenticated query does not fire with a missing token (SEC-007).
+        await setTokenAsync(data.login.token)
         navigation.navigate({
           name: 'Main',
           merge: true
         })
       } catch (e) {
-        console.log(e)
+        if (__DEV__) console.log(e)
       }
     }
   }

@@ -8,8 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Easing,
-  ActivityIndicator
+  Easing
 } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import ReAnimated, { 
@@ -204,8 +203,6 @@ const CategoryPage = ({ route, navigation }) => {
   
   // FOOD PRELOADING STATES
   const [preloadedFoodItems, setPreloadedFoodItems] = useState({})
-  const [currentFoodItems, setCurrentFoodItems] = useState([])
-  const [isChangingCategory, setIsChangingCategory] = useState(false)
 
   // Refs
   const categoryScrollRef = useRef(null)
@@ -214,7 +211,6 @@ const CategoryPage = ({ route, navigation }) => {
 
   // Reanimated values for gesture
   const translateX = useSharedValue(0)
-  const opacity = useSharedValue(1)
 
   // Hooks
   const { t, i18n } = useTranslation()
@@ -527,7 +523,6 @@ const CategoryPage = ({ route, navigation }) => {
     }
 
     swipeInProgress.current = true
-    setIsChangingCategory(true)
 
     debugLog(`=== SWIPE NAVIGATION START ===`)
     debugLog(`Swipe direction: ${direction > 0 ? 'NEXT' : 'PREVIOUS'}`)
@@ -616,7 +611,6 @@ const CategoryPage = ({ route, navigation }) => {
     // Reset swipe progress after animation
     setTimeout(() => {
       swipeInProgress.current = false
-      setIsChangingCategory(false)
     }, 300)
     
     debugLog(`=== SWIPE NAVIGATION END ===`)
@@ -658,7 +652,7 @@ const CategoryPage = ({ route, navigation }) => {
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: translateX.value }],
-      opacity: opacity.value,
+      opacity: 1
     }
   })
 
@@ -742,13 +736,11 @@ const CategoryPage = ({ route, navigation }) => {
 
     setSelectedCategoryIndex(originalIndex)
     setSelectedSubcategoryIndex(0)
-    setIsChangingCategory(true)
 
     setTimeout(() => {
       scrollCategoryToSelected(categoryScrollRef, displayIndex, true)
       setTimeout(() => {
         resetSubcategoryToCorrectPosition(originalIndex)
-        setIsChangingCategory(false)
       }, 100)
     }, 10)
   }
@@ -778,117 +770,65 @@ const CategoryPage = ({ route, navigation }) => {
     }, 10)
   }
 
-  // Memorized FlatList component with preloaded data
-  const MemoizedFlatList = React.memo(({ data }) => {
-    // Animated items component
-    const AnimatedItem = ({ index, children }) => {
-      const itemOpacity = useRef(new Animated.Value(0)).current
-
-      useEffect(() => {
-        Animated.timing(itemOpacity, {
-          toValue: 1,
-          delay: index * 40,
-          duration: 500,
-          useNativeDriver: true
-        }).start()
-      }, [])
-
-      return (
-        <Animated.View style={{ opacity: itemOpacity }}>
-          {children}
-        </Animated.View>
-      )
-    }
-
-    if (isChangingCategory) {
-      return <FoodItemsGridSkeleton currentTheme={currentTheme} count={6} />
-    }
-
+  const renderFoodItem = ({ item }) => {
     return (
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item._id}
-        numColumns={2}
-        scrollEnabled={true}
-        nestedScrollEnabled={true}
-        bounces={true}
-        style={styles.foodList}
-        showsVerticalScrollIndicator={true}
-        contentContainerStyle={{
-          flexGrow: 1,
-          gap: 20,
-          paddingHorizontal: 3,
-          paddingBottom: 100
-        }}
-        renderItem={({ item, index }) => {
-          return (
-            <AnimatedItem index={index}>
-              <View style={styles.foodItemContainer} key={item?._id}>
-                <FoodItem
-                  item={item}
-                  currentTheme={currentTheme}
-                  configuration={configuration}
-                  onPress={() => {
-                    navigation.navigate('ItemDetail', {
-                      food: {
-                        ...item,
-                        restaurant: restaurantId,
-                        restaurantName: restaurantData?.restaurant?.name
-                      },
-                      addons: restaurantData?.restaurant?.addons || [],
-                      options: restaurantData?.restaurant?.options || [],
-                      restaurant: restaurantId
-                    })
-                  }}
-                />
-              </View>
-            </AnimatedItem>
-          )
-        }}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            {!initialRender && (
-              <>
-                <LottieView
-                  source={NO_ITEM_AVAILABLE}
-                  autoPlay
-                  loop
-                  style={styles.lottie}
-                />
-                <Text
-                  style={{
-                    color:
-                      callStyles(currentTheme).backgroundColor === '#000'
-                        ? 'white'
-                        : 'black',
-                    fontSize: 20
-                  }}
-                >
-                  No Items Available
-                </Text>
-              </>
-            )}
-          </View>
-        }
-        columnWrapperStyle={{ gap: 10 }}
-        removeClippedSubviews={true}
-        initialNumToRender={8}
-        maxToRenderPerBatch={4}
-        windowSize={10}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
-      />
+      <View style={styles.foodItemContainer} key={item?._id}>
+        <FoodItem
+          item={item}
+          currentTheme={currentTheme}
+          configuration={configuration}
+          onPress={() => {
+            navigation.navigate('ItemDetail', {
+              food: {
+                ...item,
+                restaurant: restaurantId,
+                restaurantName: restaurantData?.restaurant?.name
+              },
+              addons: restaurantData?.restaurant?.addons || [],
+              options: restaurantData?.restaurant?.options || [],
+              restaurant: restaurantId
+            })
+          }}
+        />
+      </View>
     )
-  })
+  }
 
-  // Update current food items when selection changes
+  const renderFoodListEmpty = () => (
+    <View style={styles.emptyContainer}>
+      {!initialRender && (
+        <>
+          <LottieView
+            source={NO_ITEM_AVAILABLE}
+            autoPlay
+            loop
+            style={styles.lottie}
+          />
+          <Text
+            style={{
+              color:
+                callStyles(currentTheme).backgroundColor === '#000'
+                  ? 'white'
+                  : 'black',
+              fontSize: 20
+            }}
+          >
+            No Items Available
+          </Text>
+        </>
+      )}
+    </View>
+  )
+  const currentFoodItems =
+    isDataLoaded && Object.keys(preloadedFoodItems).length > 0
+      ? getCurrentFoodItems()
+      : []
+
   useEffect(() => {
-    if (isDataLoaded && Object.keys(preloadedFoodItems).length > 0) {
-      const foodItems = getCurrentFoodItems()
-      setCurrentFoodItems(foodItems)
-      debugLog(`🍕 Updated food items: ${foodItems.length} items`)
+    if (isDataLoaded) {
+      debugLog(`🍕 Updated food items: ${currentFoodItems.length} items`)
     }
-  }, [selectedCategoryIndex, selectedSubcategoryIndex, preloadedFoodItems, isDataLoaded])
+  }, [currentFoodItems.length, isDataLoaded])
 
   // Handle scroll positioning after tabs are set
   useEffect(() => {
@@ -986,66 +926,119 @@ const CategoryPage = ({ route, navigation }) => {
 
   return (
     <>
-      <GestureDetector gesture={panGesture}>
-        <View style={[callStyles(currentTheme).container, { flex: 1 }]}>
-          <StatusBar
-            barStyle={
-              themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+      <View style={[callStyles(currentTheme).container, { flex: 1 }]}>
+        <StatusBar
+          barStyle={
+            themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
+          }
+          backgroundColor='transparent'
+          translucent={true}
+        />
+
+        <CategoryPageHeader
+          navigation={navigation}
+          restaurantName={restaurantName}
+          deliveryTime={deliveryTime}
+          currentTheme={currentTheme}
+          onOpenSearch={handleOpenSearch}
+        />
+
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: callStyles(currentTheme).backgroundColor,
+              flex: 1
             }
-            backgroundColor='transparent'
-            translucent={true}
-          />
-
-          <CategoryPageHeader
-            navigation={navigation}
-            restaurantName={restaurantName}
-            deliveryTime={deliveryTime}
-            currentTheme={currentTheme}
-            onOpenSearch={handleOpenSearch}
-          />
-
-          <View
-            style={[
-              styles.container,
-              {
-                backgroundColor: callStyles(currentTheme).backgroundColor,
-                flex: 1
-              }
-            ]}
-          >
+          ]}
+        >
             {/* Category List */}
+          <View style={{ zIndex: 2, marginTop: -6 }}>
+            <ScrollView
+              horizontal
+              ref={categoryScrollRef}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoryTabsContent}
+            >
+              <View
+                style={[
+                  callStyles(currentTheme).container2,
+                  { minWidth: SCREEN_WIDTH }
+                ]}
+              >
+                {displayTabs?.map((tab, displayIndex) => {
+                  const isSelected = tab.originalIndex === selectedCategoryIndex
+                  return (
+                    <TouchableOpacity
+                      key={`${tab._id}-${displayIndex}`}
+                      style={[
+                        callStyles(currentTheme).categoryItem,
+                        isSelected && callStyles(currentTheme).selectedCategoryItem,
+                        {
+                          direction: currentTheme.isRTL ? 'rtl' : 'ltr',
+                          flexDirection: currentTheme.isRTL ? 'row-reverse' : 'row'
+                        }
+                      ]}
+                      onPress={() => handleCategoryPress(displayIndex)}
+                    >
+                      <TextDefault
+                        style={[
+                          callStyles(currentTheme).categoryText,
+                          isSelected &&
+                          callStyles(currentTheme).selectedCategoryText
+                        ]}
+                        textColor={
+                          isSelected
+                            ? currentTheme.buttonText
+                            : currentTheme.fontMainColor
+                        }
+                      >
+                        {tab.name.length > MAX_CHAR_LEN
+                          ? tab.name.slice(0, MAX_CHAR_LEN) + '...'
+                          : tab.name}
+                      </TextDefault>
+                    </TouchableOpacity>
+                  )
+                })}
+              </View>
+            </ScrollView>
+          </View>
+
+          {/* Subcategory List */}
+          {displaySubcategories?.length > 0 && (
             <View style={{ zIndex: 2 }}>
               <ScrollView
                 horizontal
-                ref={categoryScrollRef}
+                ref={subcategoryScrollRef}
                 showsHorizontalScrollIndicator={false}
+                style={{
+                  height: 36,
+                  backgroundColor: callStyles(currentTheme).topSectionColor,
+                  width: '100%'
+                }}
+                contentContainerStyle={styles.subcategoryScrollContent}
               >
-                <View
-                  style={[
-                    callStyles(currentTheme).container2,
-                    { minWidth: SCREEN_WIDTH }
-                  ]}
-                >
-                  {displayTabs?.map((tab, displayIndex) => {
-                    const isSelected = tab.originalIndex === selectedCategoryIndex
+                <View style={styles.subcategoryContainer}>
+                  {displaySubcategories?.map((sub, displayIndex) => {
+                    const isSelected = sub.originalIndex === selectedSubcategoryIndex
                     return (
                       <TouchableOpacity
-                        key={`${tab._id}-${displayIndex}`}
+                        key={`${sub._id}-${displayIndex}`}
                         style={[
-                          callStyles(currentTheme).categoryItem,
-                          isSelected && callStyles(currentTheme).selectedCategoryItem,
+                          callStyles(currentTheme).subcategoryItem,
+                          isSelected && callStyles(currentTheme).selectedSubcategoryItem,
                           {
-                            direction: currentTheme.isRTL ? "rtl" : "ltr",
-                            flexDirection: currentTheme.isRTL ? 'row-reverse' : 'row',
+                            direction: currentTheme.isRTL ? 'rtl' : 'ltr',
+                            flexDirection: currentTheme.isRTL ? 'row-reverse' : 'row'
                           }
                         ]}
-                        onPress={() => handleCategoryPress(displayIndex)}
+                        onPress={() => handleSubcategoryPress(displayIndex)}
                       >
                         <TextDefault
                           style={[
-                            callStyles(currentTheme).categoryText,
+                            callStyles(currentTheme).subcategoryText,
                             isSelected &&
-                            callStyles(currentTheme).selectedCategoryText
+                            callStyles(currentTheme).selectedSubcategoryText
                           ]}
                           textColor={
                             isSelected
@@ -1053,9 +1046,9 @@ const CategoryPage = ({ route, navigation }) => {
                               : currentTheme.fontMainColor
                           }
                         >
-                          {tab.name.length > MAX_CHAR_LEN
-                            ? tab.name.slice(0, MAX_CHAR_LEN) + '...'
-                            : tab.name}
+                          {sub.title.length > MAX_CHAR_LEN
+                            ? sub.title.slice(0, MAX_CHAR_LEN) + '...'
+                            : sub.title}
                         </TextDefault>
                       </TouchableOpacity>
                     )
@@ -1063,89 +1056,59 @@ const CategoryPage = ({ route, navigation }) => {
                 </View>
               </ScrollView>
             </View>
+          )}
 
-            {/* Subcategory List */}
-            {displaySubcategories?.length > 0 && (
-              <View style={{ zIndex: 2 }}>
-                <ScrollView
-                  horizontal
-                  ref={subcategoryScrollRef}
-                  showsHorizontalScrollIndicator={false}
-                  style={{
-                    height: 50,
-                    backgroundColor: callStyles(currentTheme).topSectionColor,
-                    width: "100%",
-                  }}
-                  contentContainerStyle={{ alignItems: "center" }}
-                >
-                  <View style={[styles.subcategoryContainer]}>
-                    {displaySubcategories?.map((sub, displayIndex) => {
-                      const isSelected = sub.originalIndex === selectedSubcategoryIndex
-                      return (
-                        <TouchableOpacity
-                          key={`${sub._id}-${displayIndex}`}
-                          style={[
-                            // ✅ CONDITIONAL STYLE BASED ON RTL/LTR
-                            currentTheme.isRTL 
-                              ? callStyles(currentTheme).subcategoryItem     // RTL: width 120
-                              : callStyles(currentTheme).subcategoryItemltr, // LTR: width 180
-                            isSelected && callStyles(currentTheme).selectedSubcategoryItem,
-                            {
-                              direction: currentTheme.isRTL ? "rtl" : "ltr",
-                              flexDirection: currentTheme.isRTL ? 'row-reverse' : 'row',
-                            }
-                          ]}
-                          onPress={() => handleSubcategoryPress(displayIndex)}
-                        >
-                          <TextDefault
-                            style={[
-                              callStyles(currentTheme).subcategoryText,
-                              isSelected &&
-                              callStyles(currentTheme).selectedSubcategoryText
-                            ]}
-                            textColor={
-                              isSelected
-                                ? currentTheme.buttonText
-                                : currentTheme.fontMainColor
-                            }
-                          >
-                            {sub.title.length > MAX_CHAR_LEN
-                              ? sub.title.slice(0, MAX_CHAR_LEN) + '...'
-                              : sub.title}
-                          </TextDefault>
-                        </TouchableOpacity>
-                      )
-                    })}
-                  </View>
-                </ScrollView>
-              </View>
-            )}
-
-            {/* Food Items List */}
+          {/* Food Items List */}
+          <GestureDetector gesture={panGesture}>
             <ReAnimated.View
               style={[
                 {
                   flex: 1,
-                  backgroundColor: callStyles(currentTheme).backgroundColor,
+                  backgroundColor: callStyles(currentTheme).backgroundColor
                 },
                 animatedStyle
               ]}
             >
-              <MemoizedFlatList data={currentFoodItems} />
+              <FlatList
+                data={currentFoodItems}
+                keyExtractor={(item) => item._id}
+                numColumns={2}
+                scrollEnabled={true}
+                nestedScrollEnabled={true}
+                bounces={true}
+                directionalLockEnabled
+                style={styles.foodList}
+                showsVerticalScrollIndicator={true}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                  gap: 20,
+                  paddingHorizontal: 3,
+                  paddingBottom: 100
+                }}
+                renderItem={renderFoodItem}
+                ListEmptyComponent={renderFoodListEmpty}
+                columnWrapperStyle={{ gap: 10 }}
+                removeClippedSubviews={false}
+                initialNumToRender={8}
+                maxToRenderPerBatch={4}
+                windowSize={10}
+                keyboardShouldPersistTaps='handled'
+                keyboardDismissMode='on-drag'
+              />
             </ReAnimated.View>
-          </View>
-
-          {/* Search Overlay */}
-          <SearchOverlay
-            isVisible={isSearchVisible}
-            onClose={handleCloseSearch}
-            currentTheme={currentTheme}
-            configuration={configuration}
-            restaurant={restaurantData?.restaurant}
-            navigation={navigation}
-          />
+          </GestureDetector>
         </View>
-      </GestureDetector>
+
+        {/* Search Overlay */}
+        <SearchOverlay
+          isVisible={isSearchVisible}
+          onClose={handleCloseSearch}
+          currentTheme={currentTheme}
+          configuration={configuration}
+          restaurant={restaurantData?.restaurant}
+          navigation={navigation}
+        />
+      </View>
 
       {cartCount > 0 && (
         <View style={callStyles(currentTheme).buttonContainer}>
@@ -1231,15 +1194,31 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
   },
+  categoryTabsContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12
+  },
+  categoryTabsContent: {
+    flexGrow: 1
+  },
+  categoryTabSkeleton: {
+    width: 80,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 12
+  },
   
   subcategoryContainer: {
-    height: 50,
+    height: 36,
     flexDirection: 'row',
     paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingVertical: 5,
+    paddingVertical: 0,
     gap: 8
+  },
+  subcategoryScrollContent: {
+    alignItems: 'center'
   },
   // Food List
   foodList: {

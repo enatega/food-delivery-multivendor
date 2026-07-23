@@ -297,7 +297,7 @@ export const useCreateAccount = () => {
     }
 
     try {
-      setTokenAsync(data.login.token)
+      await setTokenAsync(data.login.token)
       FlashMessage({ message: 'Successfully logged in' })
 
       if (data?.login?.phone === '') {

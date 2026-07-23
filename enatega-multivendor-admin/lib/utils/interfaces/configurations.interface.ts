@@ -84,6 +84,8 @@ export interface IAppConfigForm {
   termsAndConditions: string;
   privacyPolicy: string;
   testOtp: number | null;
+  enableCustomerDemoMode: boolean;
+  customerDemoZone: IDropdownSelectItem | null;
 }
 
 export interface IVerificationConfigForm {

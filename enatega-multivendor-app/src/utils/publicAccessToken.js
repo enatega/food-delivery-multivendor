@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Device from 'expo-device'
+import * as Crypto from 'expo-crypto'
 
 const STORAGE_KEYS = {
   TOKEN: '_sys_cache_v2',
@@ -10,7 +11,9 @@ const STORAGE_KEYS = {
 const generateNonce = async () => {
   const deviceId = Device.modelId || Device.osInternalBuildId || 'unknown'
   const timestamp = Date.now()
-  const random = Math.random().toString(36).substring(2, 15)
+  // Use a cryptographically secure UUID instead of Math.random() so the device
+  // fingerprint nonce is not predictable (PERF-012).
+  const random = Crypto.randomUUID()
   return `${deviceId}-${timestamp}-${random}`
 }
 

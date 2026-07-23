@@ -12,10 +12,10 @@ const styles = (props = null) =>
       alignItems: 'center',
       paddingHorizontal: scale(15),
       paddingTop: Platform.OS === 'android' ? 0 : 0,
-      paddingBottom: scale(10),
+      paddingBottom: 0,
       backgroundColor: props?.subCategoryTopSection,
-      // backgroundColor: props?.themeBackground,
-      position: 'relative' // Added for absolute positioning of center content
+      position: 'relative',
+      minHeight: scale(42)
     },
     iconButton: {
       width: scale(40),
@@ -26,20 +26,30 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     restaurantInfoContainer: {
-      flex: 2, // Allows the center section to take space and align properly
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: scale(64),
+      right: scale(64),
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      gap: 0,
+      paddingVertical: scale(2)
     },
     restaurantName: {
       fontSize: scale(16),
       color: props?.fontMainColor,
-      textAlign: 'center'
+      textAlign: 'center',
+      lineHeight: scale(18),
+      includeFontPadding: false
     },
     deliveryTime: {
       fontSize: scale(13),
       color: props?.fontSecondColor,
-      marginTop: scale(2),
-      textAlign: 'center'
+      marginTop: scale(1),
+      lineHeight: scale(13),
+      textAlign: 'center',
+      includeFontPadding: false
     },
     leftSection: {
       flex: 1,

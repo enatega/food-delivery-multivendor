@@ -10,9 +10,9 @@ import AuthContext from './Auth'
 import analytics from '../utils/analytics'
 
 import { useTranslation } from 'react-i18next'
-import navigationService from '../routes/navigationService'
 import { dismissSessionExpiredModal, isLogoutInProgress, setLogoutInProgress, subscribeToSessionInvalidation } from '../utils/session'
 import { clearPublicToken } from '../utils/publicAccessToken'
+import { deleteToken } from '../utils/secureToken'
 
 const v1options = {
   random: [0x10, 0x91, 0x56, 0xbe, 0xc4, 0xfb, 0xc1, 0xea, 0x71, 0xb4, 0xef, 0xe1, 0x67, 0x1c, 0x58, 0x36]
@@ -112,10 +112,12 @@ export const UserProvider = (props) => {
   }, [saveCoupon])
 
   const addQuantity = useCallback(async (key, quantity = 1) => {
-    const cartIndex = cart.findIndex((c) => c.key === key)
-    cart[cartIndex].quantity += quantity
-    setCart([...cart])
-    await AsyncStorage.setItem('cartItems', JSON.stringify([...cart]))
+    // Immutable update — never mutate the existing cart item objects (QUAL-009).
+    const nextCart = cart.map((c) =>
+      c.key === key ? { ...c, quantity: c.quantity + quantity } : c
+    )
+    setCart(nextCart)
+    await AsyncStorage.setItem('cartItems', JSON.stringify(nextCart))
   }, [cart])
 
   const deleteItem = useCallback(async (key) => {
@@ -130,9 +132,10 @@ export const UserProvider = (props) => {
   }, [cart])
 
   const removeQuantity = useCallback(async (key) => {
-    const cartIndex = cart.findIndex((c) => c.key === key)
-    cart[cartIndex].quantity -= 1
-    const items = [...cart.filter((c) => c.quantity > 0)]
+    // Immutable update — never mutate the existing cart item objects (QUAL-009).
+    const items = cart
+      .map((c) => (c.key === key ? { ...c, quantity: c.quantity - 1 } : c))
+      .filter((c) => c.quantity > 0)
     setCart(items)
     if (items.length === 0) setRestaurant(null)
     await AsyncStorage.setItem('cartItems', JSON.stringify(items))
@@ -191,8 +194,7 @@ export const UserProvider = (props) => {
 
   const logout = useCallback(async (options = {}) => {
     const {
-      clearStoredToken = true,
-      shouldNavigate = true
+      clearStoredToken = true
     } = options
 
     try {
@@ -200,7 +202,7 @@ export const UserProvider = (props) => {
       await dismissSessionExpiredModal()
 
       if (clearStoredToken) {
-        await AsyncStorage.removeItem('token')
+        await deleteToken()
       }
       await clearCart()
       await clearPublicToken()
@@ -226,9 +228,11 @@ export const UserProvider = (props) => {
       await client.resetStore()
       await dismissSessionExpiredModal()
 
-      if (shouldNavigate) {
-        navigationService.navigate('Login')
-      }
+      // Do NOT navigate here. The root navigator is auth-gated with
+      // key={isLoggedIn ? 'authed' : 'guest'}; clearing the token above flips
+      // that key and remounts the navigator straight to the guest Discovery
+      // screen. Navigating imperatively as well caused a double transition
+      // (Login flash -> Main) and a visible refresh — the logout jank.
     } catch (error) {
       console.log('error on logout', error)
     } finally {

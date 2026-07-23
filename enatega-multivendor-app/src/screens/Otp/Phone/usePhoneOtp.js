@@ -28,6 +28,10 @@ const usePhoneOtp = () => {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
+  // SEC-005: the OTP bypass must be inert in production builds regardless of the
+  // server-provided flag, so it can never skip phone verification for real users.
+  const isMobileVerificationSkipped =
+    __DEV__ && !!configuration?.skipMobileVerification
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
@@ -61,8 +65,11 @@ const usePhoneOtp = () => {
 
   function onError(error) {
     if (error.networkError) {
+      // networkError.result is null on raw connectivity failures — guard the
+      // chain and fall back to a friendly message instead of crashing (QUAL-004).
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message:
+          error.networkError?.result?.errors?.[0]?.message ?? t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -80,7 +87,8 @@ const usePhoneOtp = () => {
   function onUpdateUserError(error) {
     if (error.networkError) {
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message:
+          error.networkError?.result?.errors?.[0]?.message ?? t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -143,7 +151,7 @@ const usePhoneOtp = () => {
       setAuthReady(true)
     }
 
-    if (configuration?.skipMobileVerification) {
+    if (isMobileVerificationSkipped) {
       await mutateUser({
         variables: {
           name: resolvedName,
@@ -197,6 +205,9 @@ const usePhoneOtp = () => {
   }
 
   useEffect(() => {
+    // Depend on [seconds] so the interval is recreated per tick instead of on
+    // every render — otherwise the countdown resets continuously and the resend
+    // button never re-enables (PERF-003 / QUAL-005).
     const myInterval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1)
@@ -208,11 +219,11 @@ const usePhoneOtp = () => {
     return () => {
       clearInterval(myInterval)
     }
-  })
+  }, [seconds])
 
   useEffect(() => {
     if (!configuration) return
-    if (!configuration.skipMobileVerification) {
+    if (!isMobileVerificationSkipped) {
       onSendOTPHandler()
     }
   }, [configuration, phone])
@@ -220,9 +231,11 @@ const usePhoneOtp = () => {
   useEffect(() => {
     let timer = null
     if (!configuration) return
-    if (configuration.skipMobileVerification && !autoSubmittedRef.current) {
+    if (isMobileVerificationSkipped && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true
-      setOtp(demoOtp)
+      // Do NOT call setOtp(demoOtp) here — filling the controlled OTP input to
+      // pinCount makes OTPInputView fire onCodeFilled on its own, which combined
+      // with the timeout below caused a double mutateUser submission (QUAL-006).
       timer = setTimeout(() => {
         onCodeFilled(demoOtp)
       }, 300)

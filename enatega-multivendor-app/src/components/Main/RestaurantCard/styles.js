@@ -2,7 +2,15 @@ import { scale } from '../../../utils/scaling'
 import { Dimensions, Platform, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
 import { subtleCardShadow } from '../../../utils/cardShadows'
-const { height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
+
+const CARD_WIDTH = Math.max(scale(228), Math.min(scale(292), width * 0.74))
+const CARD_IMAGE_HEIGHT = Math.max(scale(150), Math.min(scale(198), CARD_WIDTH * 0.62))
+const CARD_DESCRIPTION_MIN_HEIGHT = Math.max(scale(92), Math.min(scale(118), CARD_WIDTH * 0.36))
+const CARD_HEIGHT =
+  CARD_IMAGE_HEIGHT +
+  CARD_DESCRIPTION_MIN_HEIGHT +
+  (Platform.OS === 'ios' ? scale(8) : scale(4))
 
 const buildStyles = (props = null) => {
   const isDarkMode = props?.cardBackground === '#181818' || props?.themeBackground === '#000'
@@ -12,8 +20,8 @@ const buildStyles = (props = null) => {
   return StyleSheet.create({
     offerContainer: {
       borderRadius: 22,
-      width: scale(270),
-      height: height * (Platform.OS === 'ios' ? 0.395 : 0.376),
+      width: CARD_WIDTH,
+      minHeight: CARD_HEIGHT,
       ...alignment.MRsmall,
       backgroundColor: props != null ? props?.cardBackground : '#181818',
       ...subtleCardShadow
@@ -35,7 +43,7 @@ const buildStyles = (props = null) => {
       top: 0,
       height: '100%',
       backgroundColor: 'rgba(0, 0, 0, 0)',
-      width: scale(270),
+      width: '100%',
       pointerEvents: 'box-none'
     },
     favouriteOverlay: {
@@ -55,12 +63,12 @@ const buildStyles = (props = null) => {
     descriptionContainer: {
       paddingHorizontal: scale(12),
       paddingTop: scale(12),
-      paddingBottom: Platform.OS === 'ios' ? scale(16) : scale(12),
+      paddingBottom: Platform.OS === 'ios' ? scale(10) : scale(8),
       width: '100%',
-      height: Platform.OS === 'ios' ? '36%' : '35%',
-      justifyContent: 'space-between',
+      minHeight: CARD_DESCRIPTION_MIN_HEIGHT,
+      justifyContent: 'flex-start',
       alignItems: 'stretch',
-      gap: scale(8)
+      gap: scale(6)
     },
     titleRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -78,7 +86,7 @@ const buildStyles = (props = null) => {
     },
     mainContainer: {
       paddingTop: scale(15),
-      marginBottom: scale(15),
+      marginBottom: scale(6),
       borderTopLeftRadius: scale(20),
       borderTopRightRadius: scale(20),
       borderTopColor: '#ebebeb',
@@ -93,7 +101,7 @@ const buildStyles = (props = null) => {
     imageContainer: {
       position: 'relative',
       alignItems: 'center',
-      height: '62%'
+      height: CARD_IMAGE_HEIGHT
     },
     restaurantTotalRating: {
       paddingLeft: scale(5)

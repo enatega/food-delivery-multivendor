@@ -1,6 +1,14 @@
 import { StyleSheet, Dimensions } from 'react-native'
 import { scale } from '../../utils/scaling'
 const windowWidth = Dimensions.get('window').width
+const GRID_HORIZONTAL_PADDING = scale(34)
+const GRID_GAP = scale(10)
+const CARD_WIDTH = Math.max(
+  scale(148),
+  Math.min(scale(210), (windowWidth - GRID_HORIZONTAL_PADDING - GRID_GAP) / 2)
+)
+const CARD_IMAGE_WIDTH = Math.max(scale(106), Math.min(scale(138), CARD_WIDTH - scale(24)))
+const CARD_IMAGE_HEIGHT = Math.round(CARD_IMAGE_WIDTH * 0.87)
 const buildStyles = (props = null) =>
   StyleSheet.create({
     popularItems: {
@@ -15,8 +23,9 @@ const buildStyles = (props = null) =>
       width: '100%'
     },
     card: {
-      width: windowWidth / 2 - 30, // assuming 20 is the total margin/padding
-      borderRadius: 8, // adjust border radius as per your requirement
+      width: CARD_WIDTH,
+      minHeight: Math.max(scale(214), CARD_WIDTH * 1.34),
+      borderRadius: 8,
       paddingTop: scale(17),
       paddingLeft: scale(17),
       paddingRight: scale(17),
@@ -24,6 +33,11 @@ const buildStyles = (props = null) =>
       borderColor: '#E5E7EB',
       borderWidth: 1,
       flexGrow: 1
+    },
+    image: {
+      width: CARD_IMAGE_WIDTH,
+      height: CARD_IMAGE_HEIGHT,
+      borderRadius: 8
     },
     popularMenuPrice: {
       flexDirection: 'row',
@@ -33,7 +47,7 @@ const buildStyles = (props = null) =>
       backgroundColor: '#fff',
       paddingTop: 5,
       paddingBottom: 5,
-      width: '85%',
+      width: '92%',
       borderRadius: 16,
       borderColor: '#E5E7EB',
       borderWidth: 1,

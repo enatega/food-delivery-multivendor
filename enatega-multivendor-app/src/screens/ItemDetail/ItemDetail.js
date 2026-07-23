@@ -83,12 +83,22 @@ function ItemDetail(props) {
     }
   })
   const animatedTitleStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(scrollY.value, [SCROLL_RANGE - 10, SCROLL_RANGE], [0, 1], Extrapolation.CLAMP)
+    const opacity = interpolate(
+      scrollY.value,
+      [SCROLL_RANGE * 0.992, SCROLL_RANGE],
+      [0, 1],
+      Extrapolation.CLAMP
+    )
     return {
       opacity,
       transform: [
         {
-          translateY: interpolate(scrollY.value, [0, SCROLL_RANGE], [HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT, 0], Extrapolation.CLAMP)
+          translateY: interpolate(
+            scrollY.value,
+            [0, SCROLL_RANGE * 0.992, SCROLL_RANGE],
+            [HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT, HEADER_MIN_HEIGHT * 0.06, 0],
+            Extrapolation.CLAMP
+          )
         }
       ]
     }

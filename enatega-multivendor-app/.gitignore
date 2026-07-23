@@ -72,5 +72,9 @@ google-service-account*.json
 .env.development.local
 .env.staging.local
 .env.production.local
+*.swp
+*.swm
+*.swn
+*.swo
 
 # @end expo-cli

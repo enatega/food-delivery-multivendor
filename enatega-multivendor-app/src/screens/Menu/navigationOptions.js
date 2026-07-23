@@ -4,8 +4,10 @@ import SelectedLocation from '../../components/Main/Location/Location'
 import { alignment } from '../../utils/alignment'
 import FiltersIcon from '../../assets/SVG/filter'
 import MapIcon from '../../assets/SVG/map'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View, Dimensions } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const navigationOptions = (props) => ({
   headerStyle: {
@@ -19,6 +21,10 @@ const navigationOptions = (props) => ({
   },
   headerTitleContainerStyle: {
     alignItems: 'flex-start',
+    // Give the custom headerTitle a definite width so the selected address
+    // doesn't collapse to just the icon. Narrower than Discovery because this
+    // header has two right-side icons (and an optional back button).
+    width: SCREEN_WIDTH * 0.6,
     ...alignment.MLxSmall
   },
   headerTitleAlign: 'left',

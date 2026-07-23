@@ -130,14 +130,30 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     emptyViewBox: {
-      backgroundColor: props !== null ? props?.color8 : '#000',
-      borderRadius: scale(10),
+      backgroundColor: props !== null ? props?.cardBackground : '#000',
+      borderRadius: scale(16),
       width: '85%',
-      height: verticalScale(130),
+      minHeight: verticalScale(150),
       justifyContent: 'center',
       alignItems: 'center',
       padding: scale(15),
-      marginTop: scale(30)
+      marginTop: scale(30),
+      borderWidth: 1,
+      borderColor: props?.newBorderColor || '#E5E7EB',
+      ...subtleCardShadow
+    },
+    emptyBadge: {
+      paddingVertical: scale(6),
+      paddingHorizontal: scale(12),
+      borderRadius: scale(999),
+      backgroundColor: props?.newButtonBackground || '#F3FFEE',
+      marginBottom: scale(12)
+    },
+    emptyTitle: {
+      marginBottom: scale(8)
+    },
+    emptyDescription: {
+      opacity: 0.8
     },
     homeIcon: {
       color: props !== null ? props?.darkBgFont : '#000',

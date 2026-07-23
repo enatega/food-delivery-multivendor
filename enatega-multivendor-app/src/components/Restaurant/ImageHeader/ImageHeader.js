@@ -200,25 +200,29 @@ function HeaderContent({
           )}
         </View>
 
-        {!searchOpen && (
-          <View style={styles(currentTheme).trailingArea}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles(currentTheme).touchArea}
-              onPress={() => {
-                navigation.navigate('About', {
-                  restaurantObject: { ...aboutObject },
-                  tab: false
-                })
-              }}
-            >
-              <SimpleLineIcons name='info' size={scale(17)} color={currentTheme.newIconColor} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={searchHandler}>
-              <Ionicons name='search-outline' style={{ fontSize: scale(20) }} color={currentTheme.newIconColor} />
-            </TouchableOpacity>
-          </View>
-        )}
+        <View
+          style={[
+            styles(currentTheme).trailingArea,
+            { opacity: searchOpen ? 0 : 1 }
+          ]}
+          pointerEvents={searchOpen ? 'none' : 'auto'}
+        >
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles(currentTheme).touchArea}
+            onPress={() => {
+              navigation.navigate('About', {
+                restaurantObject: { ...aboutObject },
+                tab: false
+              })
+            }}
+          >
+            <SimpleLineIcons name='info' size={scale(17)} color={currentTheme.newIconColor} />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={searchHandler}>
+            <Ionicons name='search-outline' style={{ fontSize: scale(20) }} color={currentTheme.newIconColor} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {showCategories && !searchOpen && <CategoryTabsBase categories={categories} activeCategoryIndex={activeCategoryIndex} onPressCategory={onPressCategory} currentTheme={currentTheme} t={t} />}

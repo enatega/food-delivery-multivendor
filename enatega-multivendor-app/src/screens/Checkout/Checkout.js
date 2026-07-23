@@ -61,12 +61,6 @@ const { height: HEIGHT } = Dimensions.get('window')
 
 function Checkout(props) {
   const Analytics = analytics()
-  useFocusEffect(
-    useCallback(() => {
-      // Alert.alert( "Server is currently unavailable. Please try again later.");
-      console.log('Server is currently unavailable. Please try again later.')
-    }, [])
-  )
 
   const configuration = useContext(ConfigurationContext)
   const { reFetchOrders } = useContext(OrdersContext)
@@ -105,6 +99,17 @@ function Checkout(props) {
   }
   const [isModalVisible, setisModalVisible] = useState(false)
   const [orderConfirmedTime, setOrderConfirmedTime] = useState(null)
+  // When demo mode is enabled the order should go through with whatever
+  // location is active, without forcing the user into the address flow.
+  // The `isDemoDefaultLocation` flag only lives on the location built by
+  // LocationProvider, so it is lost the moment the user picks any other
+  // location (current location, map tap, etc.). Gate on demo mode + valid
+  // coordinates instead so place order works in all demo-mode cases.
+  const isDemoDeliveryLocation = !!(
+    configuration?.enableCustomerDemoMode &&
+    location?.latitude &&
+    location?.longitude
+  )
 
   const restaurant = data?.restaurant
 
@@ -403,12 +408,10 @@ function Checkout(props) {
       })
     }
     if (error?.networkError) {
-      // console.log(`Network Error: ${networkError.message}`);
       if (error?.networkError.statusCode === 502) {
-        // FlashMessage({
-        //   message: "Server is currently unavailable. Please try again later."
-        // })
-        console.log('Server is currently unavailable. Please try again later.')
+        FlashMessage({
+          message: 'Server is currently unavailable. Please try again later.'
+        })
       }
       if (error?.networkError.statusCode === 504) {
         FlashMessage({
@@ -454,7 +457,7 @@ function Checkout(props) {
       })
       return false
     }
-    if (!isPickup && !location._id) {
+    if (!isPickup && !location?._id && !isDemoDeliveryLocation) {
       props?.navigation.navigate('CartAddress')
       return false
     }
@@ -537,7 +540,9 @@ function Checkout(props) {
             deliveryAddress: location.deliveryAddress,
             details: location.details,
             longitude: '' + location.longitude,
-            latitude: '' + location.latitude
+            latitude: '' + location.latitude,
+            isDemoDefaultLocation: !!location.isDemoDefaultLocation,
+            demoZoneId: location.demoZoneId || null
           }
         }
 

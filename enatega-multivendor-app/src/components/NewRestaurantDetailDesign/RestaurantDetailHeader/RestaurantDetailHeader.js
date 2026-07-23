@@ -14,7 +14,6 @@ import { IconButton } from 'react-native-paper'
 // Components
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import FavoriteButton from '../../FavButton/FavouriteButton'
-import Bicycle from '../../../assets/SVG/Bicycle'
 
 // Utils
 import { scale } from '../../../utils/scaling'
@@ -52,8 +51,6 @@ function RestaurantDetailHeader({
   }, [navigation, restaurant])
 
   const isOpen = restaurant?.isAvailable
-
-  console.log('RestaurantDetailHeader render', restaurant)
 
   return (
     <View style={styles(currentTheme).mainContainer}>
@@ -306,8 +303,19 @@ function RestaurantDetailHeader({
         </View>
 
         <View style={styles(currentTheme).deliveryContainer}>
-          <Bicycle size={24} color={currentTheme.newFontcolor} />
-          <TextDefault textColor={currentTheme.fontNewColor} bold H5>
+          <View style={styles(currentTheme).deliveryIconContainer}>
+            <MaterialCommunityIcons
+              name='bike-fast'
+              size={scale(18)}
+              color={currentTheme.newIconColor}
+            />
+          </View>
+          <TextDefault
+            textColor={currentTheme.fontNewColor}
+            bold
+            H5
+            style={styles(currentTheme).deliveryText}
+          >
             {restaurant?.deliveryTime} {t('Min')}
           </TextDefault>
         </View>

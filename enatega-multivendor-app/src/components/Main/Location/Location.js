@@ -7,20 +7,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useTranslation } from 'react-i18next'
 import { Feather } from '@expo/vector-icons'
-import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
-import CustomHomeIcon from '../../../assets/SVG/imageComponents/CustomHomeIcon'
-import CustomWorkIcon from '../../../assets/SVG/imageComponents/CustomWorkIcon'
-import CustomApartmentIcon from '../../../assets/SVG/imageComponents/CustomApartmentIcon'
-import CustomOtherIcon from '../../../assets/SVG/imageComponents/CustomOtherIcon'
-
-// Same mapping the address bottom sheet uses, so the header icon matches it.
-const addressIcons = {
-  House: CustomHomeIcon,
-  Office: CustomWorkIcon,
-  Apartment: CustomApartmentIcon,
-  Other: CustomOtherIcon
-}
 
 function Location({
   navigation,
@@ -67,7 +54,14 @@ function Location({
   return (
     <TouchableOpacity onPress={onLocationPress} >
       <View style={styles(currentTheme).headerTitleContainer}>
-        <View style={{ flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row' , alignItems: 'center', justifyContent: 'center', marginHorizontal: scale(10), gap: 5 }}>
+        <View
+          style={[
+            styles(currentTheme).row,
+            {
+              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row'
+            }
+          ]}
+        >
           <View style={[styles(currentTheme).locationIcon, locationIconGray]}>
             {location?.label === 'Current Location' ||
             location?.deliveryAddress === 'Current Location' ? (
@@ -77,20 +71,22 @@ function Location({
                 color={currentTheme.secondaryText}
               />
             ) : (
-              React.createElement(
-                addressIcons[location?.label] || CustomOtherIcon,
-                { iconColor: currentTheme.secondaryText }
-              )
+              <Feather
+                name='map-pin'
+                size={scale(17)}
+                color={currentTheme.secondaryText}
+              />
             )}
           </View>
           <View style={styles(currentTheme).headerContainer}>
-            <View>
-              <TextDefault textColor={locationParam} numberOfLines={1} H5 bolder isRTL>
-                {translatedAddress?.slice(0, 40)}
-                ...
+            <View style={styles(currentTheme).titleWrap}>
+              <TextDefault textColor={locationParam} numberOfLines={1} H5 bolder isRTL style={styles(currentTheme).titleText}>
+                {translatedAddress?.length > 40
+                  ? `${translatedAddress.slice(0, 40)}...`
+                  : translatedAddress}
               </TextDefault>
             </View>
-            <TextDefault textColor={locationLabel} left isRTL>
+            <TextDefault textColor={locationLabel} left isRTL style={styles(currentTheme).subtitleText}>
               {''}
               {t(translatedLabel)}
             </TextDefault>

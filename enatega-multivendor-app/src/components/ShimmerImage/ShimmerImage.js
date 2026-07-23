@@ -10,19 +10,22 @@ const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) 
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [renderUri, setRenderUri] = useState(null)
+  const previousUriRef = useRef(null)
   const shimmerAnimation = useRef(new Animated.Value(0)).current
   const fadeAnim = useRef(new Animated.Value(0)).current
   const imagePath = require('../../assets/SVG/ShiimerImagePlaceholder.json')
   const displayUrl = useCachedMediaUri(imageUrl, 'image')
 
-  // A refreshed signature keeps the existing local URI. A new path or a
-  // recovered download changes it and resets recycled list rows correctly.
   useEffect(() => {
-    setRenderUri(displayUrl)
-    setImageLoaded(false)
-    setImageError(false)
-    fadeAnim.setValue(0)
-  }, [displayUrl, fadeAnim])
+    const nextUri = displayUrl || imageUrl || null
+    if (previousUriRef.current !== nextUri) {
+      previousUriRef.current = nextUri
+      setRenderUri(nextUri)
+      setImageLoaded(false)
+      setImageError(false)
+      fadeAnim.setValue(0)
+    }
+  }, [displayUrl, imageUrl, fadeAnim])
 
   // Only start shimmer animation if we have a valid URL and image hasn't loaded
   useEffect(() => {
@@ -73,6 +76,7 @@ const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) 
 
   const handleImageError = () => {
     if (renderUri?.startsWith('file://') && imageUrl && renderUri !== imageUrl) {
+      previousUriRef.current = imageUrl
       setRenderUri(imageUrl)
       setImageError(false)
       setImageLoaded(false)
@@ -136,7 +140,7 @@ const ShimmerImage = ({ imageUrl, style, resizeMode = 'cover', defaultSource }) 
 
       {/* Main image */}
       <Animated.Image
-        source={{ uri: renderUri }}
+        source={renderUri ? { uri: renderUri } : undefined}
         onLoad={handleImageLoad}
         // onLoadEnd fires even for cached images where onLoad may be skipped
         // on iOS; this guarantees the image is revealed after navigating back.

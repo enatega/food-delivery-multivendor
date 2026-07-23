@@ -45,7 +45,7 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
         <View style={{ alignItems: 'center', marginTop: 'auto' }}>
           <ShimmerImage
             imageUrl={imageUrl}
-            style={[{ width: 138, height: 120, borderRadius: 8 }, styles().popularMenuImg]}
+            style={styles(currentTheme).image}
             resizeMode='cover'
             defaultSource={require('../../assets/images/food_placeholder.png')}
           />

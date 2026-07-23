@@ -25,12 +25,12 @@ import ThemeReducer from './src/ui/ThemeReducer/ThemeReducer'
 import { exitAlert } from './src/utils/androidBackButton'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
 import { theme as Theme } from './src/utils/themeColors'
-import { useKeepAwake } from 'expo-keep-awake'
 import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 import './i18next'
 import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
+import SentryInit from './src/components/Sentry/SentryInit'
 import SessionExpiredModal from './src/components/SessionExpiredModal/SessionExpiredModal'
 import navigationService from './src/routes/navigationService'
 import {
@@ -88,7 +88,9 @@ export default function App() {
     }
   }, [GRAPHQL_URL])
 
-  useKeepAwake()
+  // Screen keep-awake is now scoped to the active order-tracking screen
+  // (see OrderDetail) instead of being on app-wide, which drained battery
+  // on every screen (PERF-011).
 
   // Use system theme
   const systemTheme = useColorScheme()
@@ -267,8 +269,9 @@ export default function App() {
               value={{ ThemeValue: theme, dispatch: themeSetter }}
             >
               <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
-              <LocationProvider>
-                <ConfigurationProvider>
+              <ConfigurationProvider>
+                <LocationProvider>
+                  <SentryInit />
                   <AuthProvider>
                     <UserProvider>
                       <OrdersProvider
@@ -286,8 +289,8 @@ export default function App() {
                       </OrdersProvider>
                     </UserProvider>
                   </AuthProvider>
-                </ConfigurationProvider>
-              </LocationProvider>
+                </LocationProvider>
+              </ConfigurationProvider>
               <FlashMessage MessageComponent={MessageComponent} />
             </ThemeContext.Provider>
           </ApolloProvider>
