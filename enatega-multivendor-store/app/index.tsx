@@ -7,6 +7,7 @@ import Constants from "expo-constants";
 import useNotification from "@/lib/hooks/useNotification";
 import { ROUTES, STORE_TOKEN } from "@/lib/utils/constants";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
+import { getStoreId } from "@/lib/services";
 
 function App() {
   const notificationRef = useRef(true);
@@ -21,8 +22,9 @@ function App() {
 
   const init = useCallback(async () => {
     const token = await SecureStore.getItemAsync(STORE_TOKEN);
+    const storeId = await getStoreId();
 
-    if (token) {
+    if (token && storeId) {
       router.replace(ROUTES.home);
     } else {
       router.replace(ROUTES.login);

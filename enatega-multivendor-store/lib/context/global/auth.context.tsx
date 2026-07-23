@@ -6,7 +6,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // Constants
-import { STORE_TOKEN } from "@/lib/utils/constants";
+import { STORE_ID, STORE_TOKEN } from "@/lib/utils/constants";
+import { getStoreId, removeItem } from "@/lib/services";
 
 // Interfaces
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
@@ -75,7 +76,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       await Promise.all([
         client.clearStore(),
         SecureStore.deleteItemAsync(STORE_TOKEN),
-        AsyncStorage.removeItem("store-id"),
+        removeItem(STORE_ID),
+        AsyncStorage.removeItem(STORE_ID),
       ]);
 
       setToken("");
@@ -88,7 +90,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
   const checkAuth = useCallback(async () => {
     try {
       const token = await SecureStore.getItemAsync(STORE_TOKEN);
-      const storeId = await AsyncStorage.getItem("store-id");
+      const storeId = await getStoreId();
 
       if (!storeId || !token) {
         return await logout();

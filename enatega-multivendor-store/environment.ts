@@ -4,8 +4,8 @@
  ******************************/
 
 const getEnvVars = () => ({
-  GRAPHQL_URL: "https://aws-server-v2.enatega.com/graphql",
-  WS_GRAPHQL_URL: "wss://aws-server-v2.enatega.com/graphql",
+  GRAPHQL_URL: "https://7xr2d064-8001.inc1.devtunnels.ms/graphql",
+  WS_GRAPHQL_URL: "wss://7xr2d064-8001.inc1.devtunnels.ms/graphql",
 });
 
 export default getEnvVars;

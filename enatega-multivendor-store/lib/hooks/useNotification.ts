@@ -7,6 +7,7 @@ import { Alert, Platform } from "react-native";
 
 // API
 import { GET_RESTAURANT_BY_ID, SAVE_TOKEN } from "@/lib/api/graphql";
+import { getStoreId } from "@/lib/services";
 
 export default function useNotification() {
   const [storeLookupComplete, setStoreLookupComplete] = useState(false);
@@ -19,7 +20,7 @@ export default function useNotification() {
   // Handler
   const onGetStoreData = async () => {
     try {
-      const userId = await AsyncStorage.getItem("store-id");
+      const userId = await getStoreId();
       if (!userId) return;
       await getStore({
         variables: { id: userId },

@@ -9,7 +9,7 @@ import { STORE_LOGIN } from "../api/graphql/mutation/login";
 import { AuthContext } from "../context/global/auth.context";
 import { setItem } from "../services";
 import { FlashMessageComponent } from "../ui/useable-components";
-import { ROUTES } from "../utils/constants";
+import { ROUTES, STORE_ID } from "../utils/constants";
 import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
 
 const useLogin = () => {
@@ -65,7 +65,7 @@ const useLogin = () => {
     setIsLoading(false);
 
     if (restaurantLogin) {
-      await setItem("store-id", restaurantLogin?.restaurantId);
+      await setItem(STORE_ID, restaurantLogin.restaurantId);
       await setTokenAsync(restaurantLogin?.token);
       router.replace(ROUTES.home);
     }

@@ -44,10 +44,6 @@ export default function ProtectedLayout() {
             />
             <Stack.Screen name="chat" options={{ headerShown: false }} />
           </Stack>
-          {/* <Stack.Screen
-            name="bank-management"
-            options={{ headerShown: true }}
-          /> */}
           <StatusBar style={currentTheme as StatusBarStyle} />
           <FlashMessage position="bottom" />
         </>

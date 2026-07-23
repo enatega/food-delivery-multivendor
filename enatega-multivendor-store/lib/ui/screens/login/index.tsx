@@ -26,8 +26,8 @@ import { useTranslation } from "react-i18next";
 import { CustomContinueButton } from "../../useable-components";
 
 const initial: ILoginInitialValues = {
-  username: "",
-  password: "",
+  username: "FalafelTmeer@yopmail.com",
+  password: "Yalla0014yalla0014@",
 };
 
 const LoginScreen = () => {
@@ -155,6 +155,12 @@ const LoginScreen = () => {
                       {errors?.password}
                     </Text>
                   )}
+                  <Text
+                    className="text-center text-xs mb-2"
+                    style={{ color: appTheme.fontSecondColor }}
+                  >
+                    {t("Demo credentials are pre-filled for evaluation.")}
+                  </Text>
                   {/* Login Button */}
                   <CustomContinueButton
                     title={t("Login")}

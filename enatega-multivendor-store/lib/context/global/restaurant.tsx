@@ -21,6 +21,7 @@ import * as SecureStore from "expo-secure-store";
 // API
 import { GET_ORDERS } from "@/lib/apollo/queries/orders";
 import { SUBSCRIBE_PLACE_ORDER } from "@/lib/apollo/subscriptions";
+import { getStoreId } from "@/lib/services";
 import { IRestaurantProviderProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 
@@ -114,7 +115,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   const subscribeToMoreOrders = useCallback(
     async (force = false) => {
       try {
-        const restaurant = await AsyncStorage.getItem("store-id");
+        const restaurant = await getStoreId();
         if (!restaurant) {
           return;
         }

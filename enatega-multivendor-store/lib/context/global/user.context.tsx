@@ -8,7 +8,6 @@ import {
 } from "react";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { QueryResult, useQuery } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 // Interface
 import {
   IStoreProfileResponse,
@@ -24,7 +23,8 @@ import {
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Services
-import { asyncStorageEmitter } from "@/lib/services";
+import { getStoreId, storageEmitter } from "@/lib/services";
+import { STORE_ID } from "@/lib/utils/constants";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
@@ -62,15 +62,15 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   >;
 
   const getUserId = useCallback(async () => {
-    const id = await AsyncStorage.getItem("store-id");
+    const id = await getStoreId();
     if (id) {
       setUserId(id);
     }
   }, []);
 
   useEffect(() => {
-    const listener = asyncStorageEmitter.addListener(
-      "store-id",
+    const listener = storageEmitter.addListener(
+      STORE_ID,
       (data: { value?: string }) => {
         setUserId(data?.value ?? "");
       },
