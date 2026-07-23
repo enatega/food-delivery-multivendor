@@ -26,9 +26,8 @@ import { exitAlert } from './src/utils/androidBackButton'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
 import { theme as Theme } from './src/utils/themeColors'
 import { useKeepAwake } from 'expo-keep-awake'
-import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
+import EnategaJourneySplash from './src/components/Splash/EnategaJourneySplash'
 import './i18next'
-import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
 import SessionExpiredModal from './src/components/SessionExpiredModal/SessionExpiredModal'
@@ -123,15 +122,9 @@ export default function App() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!appIsReady) return
-
-    const hideSplashScreen = async () => {
-      await SplashScreen.hideAsync()
-    }
-
-    hideSplashScreen()
-  }, [appIsReady])
+  // Native splash visibility is owned by EnategaJourneySplash: it keeps the
+  // native splash up until the saved theme is resolved, then hides it in the
+  // exact same frame it draws the matching theme background itself.
 
   useEffect(() => {
     const unsubscribe = subscribeToSessionInvalidation(({ reason }) => {
@@ -261,7 +254,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <GestureHandlerRootView style={styles.flex}>
-        <AnimatedSplashScreen>
+        <EnategaJourneySplash>
           <ApolloProvider client={client}>
             <ThemeContext.Provider
               value={{ ThemeValue: theme, dispatch: themeSetter }}
@@ -291,7 +284,7 @@ export default function App() {
               <FlashMessage MessageComponent={MessageComponent} />
             </ThemeContext.Provider>
           </ApolloProvider>
-        </AnimatedSplashScreen>
+        </EnategaJourneySplash>
       </GestureHandlerRootView>
     </ErrorBoundary>
   )
