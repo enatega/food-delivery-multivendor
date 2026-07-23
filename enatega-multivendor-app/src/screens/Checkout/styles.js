@@ -27,6 +27,7 @@ const styles = (props = null) =>
       width: '30%'
     },
     screenBackground: {
+      flex: 1,
       backgroundColor: props != null ? props?.themeBackground : '#FFF'
     },
     mainContainer: {

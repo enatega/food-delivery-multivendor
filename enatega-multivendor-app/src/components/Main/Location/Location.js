@@ -52,7 +52,14 @@ function Location({
       modalOn()
   }
   return (
-    <TouchableOpacity onPress={onLocationPress} >
+    <TouchableOpacity
+      onPress={onLocationPress}
+      activeOpacity={0.7}
+      // Fill the whole title area and add a little slop so the entire address
+      // row (icon + address + label), not just the icon, opens the location modal.
+      style={styles(currentTheme).touchable}
+      hitSlop={{ top: scale(8), bottom: scale(8), left: scale(8), right: scale(8) }}
+    >
       <View style={styles(currentTheme).headerTitleContainer}>
         <View
           style={[

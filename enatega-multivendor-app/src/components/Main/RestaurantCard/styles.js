@@ -6,7 +6,7 @@ const { width } = Dimensions.get('window')
 
 const CARD_WIDTH = Math.max(scale(228), Math.min(scale(292), width * 0.74))
 const CARD_IMAGE_HEIGHT = Math.max(scale(150), Math.min(scale(198), CARD_WIDTH * 0.62))
-const CARD_DESCRIPTION_MIN_HEIGHT = Math.max(scale(92), Math.min(scale(118), CARD_WIDTH * 0.36))
+const CARD_DESCRIPTION_MIN_HEIGHT = Math.max(scale(84), Math.min(scale(106), CARD_WIDTH * 0.33))
 const CARD_HEIGHT =
   CARD_IMAGE_HEIGHT +
   CARD_DESCRIPTION_MIN_HEIGHT +
@@ -62,13 +62,13 @@ const buildStyles = (props = null) => {
     },
     descriptionContainer: {
       paddingHorizontal: scale(12),
-      paddingTop: scale(12),
-      paddingBottom: Platform.OS === 'ios' ? scale(10) : scale(8),
+      paddingTop: scale(10),
+      paddingBottom: Platform.OS === 'ios' ? scale(6) : scale(5),
       width: '100%',
       minHeight: CARD_DESCRIPTION_MIN_HEIGHT,
       justifyContent: 'flex-start',
       alignItems: 'stretch',
-      gap: scale(6)
+      gap: scale(5)
     },
     titleRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -83,6 +83,9 @@ const buildStyles = (props = null) => {
     offerCategoty: {
       width: '100%',
       textAlign: props?.isRTL ? 'right' : 'left'
+    },
+    categoryText: {
+      lineHeight: scale(20)
     },
     mainContainer: {
       paddingTop: scale(15),
@@ -119,7 +122,8 @@ const buildStyles = (props = null) => {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: scale(8),
-      flexWrap: 'wrap'
+      flexWrap: 'wrap',
+      marginTop: 'auto'
     },
     metaPill: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

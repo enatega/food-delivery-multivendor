@@ -2,14 +2,17 @@ import React from 'react'
 import { Pressable, View } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 
-export const PaymentModeOption = ({ theme, icon, title, selected, onSelect }) => {
+export const PaymentModeOption = ({ theme, icon, iconFamily, title, selected, onSelect }) => {
+    const IconComponent =
+        iconFamily === 'material-community' ? MaterialCommunityIcons : FontAwesome
+
     return (<Pressable onPress={onSelect} style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', marginVertical: scale(8) }}>
         <View style={{ flex: 1 }}>
-            <FontAwesome
+            <IconComponent
                 name={icon}
                 size={scale(16)}
                 color={theme?.fontFourthColor} />

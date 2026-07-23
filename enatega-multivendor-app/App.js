@@ -6,7 +6,8 @@ import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, AppState, BackHandler, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import { ActivityIndicator, AppState, BackHandler, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import * as NavigationBar from 'expo-navigation-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
@@ -27,7 +28,6 @@ import { NOTIFICATION_TYPES } from './src/utils/enums'
 import { theme as Theme } from './src/utils/themeColors'
 import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 import './i18next'
-import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
 import SentryInit from './src/components/Sentry/SentryInit'
@@ -104,6 +104,18 @@ export default function App() {
     }
   }, [systemTheme])
 
+  // Match the Android system navigation bar to the bottom tab bar
+  // (currentTheme.cardBackground) for both light and dark themes, so the two
+  // blend seamlessly instead of showing a mismatched bar underneath.
+  useEffect(() => {
+    if (Platform.OS !== 'android') return
+    const navBarColor = Theme[theme].cardBackground
+    NavigationBar.setBackgroundColorAsync(navBarColor).catch(() => {})
+    NavigationBar.setButtonStyleAsync(theme === 'Dark' ? 'light' : 'dark').catch(
+      () => {}
+    )
+  }, [theme])
+
   // For Fonts, etc
   useEffect(() => {
     const loadAppData = async () => {
@@ -124,16 +136,6 @@ export default function App() {
       backHandler.remove()
     }
   }, [])
-
-  useEffect(() => {
-    if (!appIsReady) return
-
-    const hideSplashScreen = async () => {
-      await SplashScreen.hideAsync()
-    }
-
-    hideSplashScreen()
-  }, [appIsReady])
 
   useEffect(() => {
     const unsubscribe = subscribeToSessionInvalidation(({ reason }) => {
@@ -263,7 +265,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <GestureHandlerRootView style={styles.flex}>
-        <AnimatedSplashScreen>
+        <AnimatedSplashScreen ready={appIsReady}>
           <ApolloProvider client={client}>
             <ThemeContext.Provider
               value={{ ThemeValue: theme, dispatch: themeSetter }}

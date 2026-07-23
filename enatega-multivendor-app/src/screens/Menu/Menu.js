@@ -219,9 +219,9 @@ function Menu({ route, props }) {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.newheaderColor)
+      StatusBar.setBackgroundColor(currentTheme.themeBackground)
     }
-    StatusBar.setBarStyle('dark-content')
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
   useEffect(() => {
     async function Track() {

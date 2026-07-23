@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useCallback, useContext, useMemo } from 'react'
-import { TouchableOpacity, View, Image, Alert, Platform } from 'react-native'
+import { TouchableOpacity, View, Alert, Platform } from 'react-native'
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../../utils/scaling'
@@ -22,6 +22,7 @@ import Ripple from 'react-native-material-ripple'
 import { useCachedMediaUri } from '../../../utils/mediaCache'
 import { resolveRestaurantImage } from '../../../utils/resolveImageUrl'
 import { RESTAURANT } from '../../../ui/hooks/useRestaurant'
+import ShimmerImage from '../../ShimmerImage/ShimmerImage'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -150,9 +151,10 @@ function NewRestaurantCard(props) {
       >
         <View style={styles(currentTheme).cardBody}>
           <View style={styles().imageContainer}>
-            <Image
+            <ShimmerImage
+              imageUrl={imageUri}
               resizeMode='cover'
-              source={{ uri: imageUri }}
+              defaultSource={require('../../../assets/images/food_placeholder.png')}
               style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]}
             />
             <View style={styles(currentTheme).badgeRow}>
@@ -186,7 +188,10 @@ function NewRestaurantCard(props) {
               textColor={currentTheme.gray600}
               numberOfLines={1}
               Normal
-              style={styles(currentTheme).offerCategoty}
+              style={[
+                styles(currentTheme).offerCategoty,
+                styles(currentTheme).categoryText
+              ]}
             >
               {categoryLabel}
             </TextDefault>

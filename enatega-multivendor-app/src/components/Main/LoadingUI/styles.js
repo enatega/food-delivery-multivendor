@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 const styles = (props = null) =>
   StyleSheet.create({
     screenBackground: {
+      flex: 1,
       backgroundColor: props != null ? props?.themeBackground : '#FFF'
     },
     placeHolderFadeColor: {

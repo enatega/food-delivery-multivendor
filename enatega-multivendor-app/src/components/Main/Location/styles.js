@@ -3,6 +3,11 @@ import { scale, verticalScale } from '../../../utils/scaling'
 
 const styles = (props = null) => {
   return StyleSheet.create({
+    // Makes the entire address row a single tap target (not just the icon).
+    touchable: {
+      width: '100%',
+      justifyContent: 'center'
+    },
     headerTitleContainer: {
       flex: 1,
       height: '100%',

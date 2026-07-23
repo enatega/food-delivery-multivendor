@@ -124,7 +124,7 @@ function TopBrands(props) {
               </TextDefault>
             </TouchableOpacity>
           </View>
-          <View style={[{ ...alignment.PRsmall }, { height: height * (Platform.OS === 'ios' ? 0.395 : 0.376) }]}>
+          <View style={[{ ...alignment.PRsmall }, { height: height * (Platform.OS === 'ios' ? 0.395 : 0.370) }]}>
             <HorizontalFlashList data={sortedRestaurantBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={{ flexGrow: 1 }} inverted={currentTheme?.isRTL ? true : false} estimatedItemSize={280} />
           </View>
         </View>

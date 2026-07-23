@@ -35,22 +35,15 @@ module.exports = () => {
     androidStatusBar: {
       backgroundColor: '#000000'
     },
-    splash: {
-      image: './assets/splash.png',
-      resizeMode: "cover",
-        "backgroundColor": "#000000"
-    },
+    // Native OS splash (before JS boots) is theme-aware via the
+    // expo-splash-screen plugin below — a solid per-theme background that
+    // matches AnimatedSplash's first frame, so there is no black/white flash.
     platforms: ['ios', 'android'],
     orientation: 'portrait',
     icon: './assets/icon.png',
     assetBundlePatterns: ['**/*'],
     userInterfaceStyle: 'automatic',
     ios: {
-      splash: {
-        image: './assets/splash.png',
-        resizeMode: "cover",
-          "backgroundColor": "#000000"
-      },
       entitlements: {
         'com.apple.developer.networking.wifi-info': true,
         // Use the production APNs gateway for production builds so push
@@ -92,11 +85,6 @@ module.exports = () => {
       // off a connected device without root (SEC-002).
       allowBackup: false,
       googleServicesFile: './google-services.json',
-      splash: {
-        image: './assets/splash.png',
-        resizeMode: 'cover',
-        backgroundColor: '#000000'
-      },
       config: {
         ...(androidGoogleMapsApiKey
           ? {
@@ -139,6 +127,19 @@ module.exports = () => {
       }
     },
     plugins: [
+      [
+        'expo-splash-screen',
+        {
+          // Solid per-theme background, no logo image. The animated pin /
+          // wordmark is drawn by the JS AnimatedSplash component, whose first
+          // frame uses these same colors so the handoff shows no flash.
+          backgroundColor: '#f4f8f5', // light ("Pink")
+          resizeMode: 'cover',
+          dark: {
+            backgroundColor: '#0b1225' // dark
+          }
+        }
+      ],
       [
         'expo-tracking-transparency',
         {

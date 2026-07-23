@@ -182,10 +182,10 @@ function Main(props) {
   useFocusEffect(
     useCallback(() => {
       if (Platform.OS === 'android') {
-        StatusBar.setBackgroundColor(currentTheme.newheaderColor)
+        StatusBar.setBackgroundColor(currentTheme.themeBackground)
       }
-      StatusBar.setBarStyle('dark-content')
-    }, [currentTheme])
+      StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
+    }, [currentTheme, themeContext.ThemeValue])
   )
   useEffect(() => {
     async function Track() {
@@ -498,7 +498,16 @@ function Main(props) {
                       <View style={{ gap: 12 }}>
                         <View>{isLoggedIn && sortedRecentOrderRestaurants?.length > 0 && <>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortedRecentOrderRestaurants} loading={orderLoading} error={orderError} title={'Order it again'} queryType='orderAgain' />}</>}</View>
 
-                        <View>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortedMostOrderedRestaurants} loading={orderLoading} error={orderError} title={t('Popular right now')} queryType='topPicks' icon='trending' />}</View>
+                        <View>
+                          <MainRestaurantCard
+                            orders={sortedMostOrderedRestaurants}
+                            loading={orderLoading || isRefreshing}
+                            error={orderError}
+                            title={t('Popular right now')}
+                            queryType='topPicks'
+                            icon='trending'
+                          />
+                        </View>
 
                         <View style={{ paddingHorizontal: 12, paddingTop: 4, gap: scale(8) }}>
                           <TextDefault bolder H4 isRTL>

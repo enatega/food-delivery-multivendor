@@ -17,7 +17,7 @@ import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
 import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
-import { AntDesign, FontAwesome } from '@expo/vector-icons'
+import { AntDesign, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { scale } from '../../utils/scaling'
 import { useTranslation } from 'react-i18next'
@@ -36,7 +36,8 @@ function Payment(props) {
       payment: 'COD',
       label: t('cod'),
       index: 2,
-      icon: 'dollar'
+      icon: 'cash',
+      iconFamily: 'material-community'
     },
     {
       payment: 'STRIPE',
@@ -119,6 +120,28 @@ function Payment(props) {
   function onSelectPayment(paymentMethod) {
     props?.navigation.navigate('Checkout', { coupon, paymentMethod })
   }
+
+  const renderPaymentIcon = (item) => {
+    if (item.iconFamily === 'material-community') {
+      return (
+        <MaterialCommunityIcons
+          style={styles().iconStyle}
+          name={item.icon}
+          size={18}
+          color={currentTheme.newIconColor}
+        />
+      )
+    }
+
+    return (
+      <FontAwesome
+        style={styles().iconStyle}
+        name={item.icon}
+        size={18}
+        color={currentTheme.newIconColor}
+      />
+    )
+  }
   return (
     <>
       <View style={[styles(currentTheme).mainContainer, styles().flex]}>
@@ -134,7 +157,7 @@ function Payment(props) {
               >
                 <View style={styles(currentTheme).paymentMethod}>
                   <View style={styles(currentTheme).iconContainer}>
-                    <FontAwesome style={styles().iconStyle} name={item.icon} size={18} color={currentTheme.newIconColor}/>
+                    {renderPaymentIcon(item)}
                   </View>
                   <TextDefault
                     textColor={currentTheme.newFontcolor}
