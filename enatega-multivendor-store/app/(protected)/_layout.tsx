@@ -38,7 +38,6 @@ export default function ProtectedLayout() {
             }}
           >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="chat" options={{ headerShown: false }} />
           </Stack>
           <StatusBar style={currentTheme as StatusBarStyle} />
           <FlashMessage position="bottom" />

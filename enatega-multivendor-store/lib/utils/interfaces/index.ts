@@ -9,6 +9,5 @@ export * from "./location.interface";
 export * from "./user.interface";
 export * from "./text.interface";
 export * from "./sound.interface";
-export * from "./chat.interface";
 export * from "./set-order-time.interface";
 export * from "./work-schedule.interface";
