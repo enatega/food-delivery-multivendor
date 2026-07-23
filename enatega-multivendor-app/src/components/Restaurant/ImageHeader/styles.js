@@ -64,6 +64,9 @@ const styles = (props = null) =>
       alignItems: 'center',
       paddingHorizontal: scale(12)
     },
+    topRowSearch: {
+      gap: scale(10)
+    },
     leadingArea: {
       width: scale(88),
       minWidth: scale(88),
@@ -71,12 +74,20 @@ const styles = (props = null) =>
       justifyContent: 'center',
       zIndex: 2
     },
+    leadingAreaSearch: {
+      width: scale(40),
+      minWidth: scale(40)
+    },
     centerArea: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       zIndex: 1,
       paddingHorizontal: scale(4)
+    },
+    centerAreaSearch: {
+      alignItems: 'stretch',
+      paddingHorizontal: 0
     },
     trailingArea: {
       width: scale(88),
@@ -86,6 +97,11 @@ const styles = (props = null) =>
       justifyContent: 'flex-end',
       gap: scale(8),
       zIndex: 2
+    },
+    trailingAreaHidden: {
+      width: 0,
+      minWidth: 0,
+      opacity: 0
     },
     fixedIcons: {
       flexDirection: 'row',

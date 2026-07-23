@@ -102,7 +102,7 @@ const styles = (props = null) =>
     priceText: {
       fontSize: scale(16),
       fontWeight: 'bold',
-      color: props?.plusIcon,
+      color: props?.fontMainColor,
       marginBottom: scale(6)
     },
     itemTitle: {

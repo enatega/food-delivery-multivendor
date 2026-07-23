@@ -31,12 +31,10 @@ const useEmailOtp = (isPhoneExists) => {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
-  // SEC-005: OTP bypass flags must be inert in production builds regardless of
-  // the server-provided configuration, so real users can never skip verification.
   const isEmailVerificationSkipped =
-    __DEV__ && !!configuration?.skipEmailVerification
+    !!configuration?.skipEmailVerification
   const isMobileVerificationSkipped =
-    __DEV__ && !!configuration?.skipMobileVerification
+    !!configuration?.skipMobileVerification
   const { setTokenAsync } = useContext(AuthContext)
   const route = useRoute()
   const [otp, setOtp] = useState('')

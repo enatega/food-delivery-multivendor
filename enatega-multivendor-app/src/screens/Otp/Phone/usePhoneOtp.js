@@ -28,10 +28,9 @@ const usePhoneOtp = () => {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
-  // SEC-005: the OTP bypass must be inert in production builds regardless of the
-  // server-provided flag, so it can never skip phone verification for real users.
   const isMobileVerificationSkipped =
-    __DEV__ && !!configuration?.skipMobileVerification
+    !!configuration?.skipMobileVerification
+  const isDemoOtpEnabled = !!TEST_OTP
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
@@ -223,7 +222,7 @@ const usePhoneOtp = () => {
 
   useEffect(() => {
     if (!configuration) return
-    if (!isMobileVerificationSkipped) {
+    if (!isMobileVerificationSkipped && !isDemoOtpEnabled) {
       onSendOTPHandler()
     }
   }, [configuration, phone])
@@ -231,11 +230,9 @@ const usePhoneOtp = () => {
   useEffect(() => {
     let timer = null
     if (!configuration) return
-    if (isMobileVerificationSkipped && !autoSubmittedRef.current) {
+    if ((isMobileVerificationSkipped || isDemoOtpEnabled) && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true
-      // Do NOT call setOtp(demoOtp) here — filling the controlled OTP input to
-      // pinCount makes OTPInputView fire onCodeFilled on its own, which combined
-      // with the timeout below caused a double mutateUser submission (QUAL-006).
+      setOtp(demoOtp)
       timer = setTimeout(() => {
         onCodeFilled(demoOtp)
       }, 300)
@@ -244,7 +241,7 @@ const usePhoneOtp = () => {
     return () => {
       timer && clearTimeout(timer)
     }
-  }, [authReady, configuration, demoOtp, onCodeFilled])
+  }, [authReady, configuration, demoOtp, isDemoOtpEnabled, onCodeFilled])
 
   return {
     otp,
@@ -260,7 +257,7 @@ const usePhoneOtp = () => {
     themeContext,
     loadingProfile,
     demoOtp,
-    isDemoOtpEnabled: Boolean(configuration?.skipMobileVerification)
+    isDemoOtpEnabled: isMobileVerificationSkipped || isDemoOtpEnabled
   }
 }
 

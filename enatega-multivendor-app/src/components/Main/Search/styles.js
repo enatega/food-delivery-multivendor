@@ -16,16 +16,18 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       zIndex: 333,
       width: '100%',
       alignItems: 'center',
-      backgroundColor: newheaderColor
+      backgroundColor: newheaderColor,
+      paddingRight: scale(6)
     },
     mainContainer: {
-      width: '90%',
-      height: scale(36),
+      width: '100%',
+      height: scale(40),
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
       borderRadius: scale(40),
       backgroundColor: props != null ? props?.color1 : 'black',
+      marginRight: scale(6),
 
       shadowColor: props != null ? props?.shadowColor : 'black',
       shadowOffset: {
@@ -36,31 +38,33 @@ const styles = (props = null, newheaderColor = theme.headerMenuBackground) =>
       shadowRadius: verticalScale(1)
     },
     subContainer: {
-      width: '90%',
-      height: '60%',
+      width: '100%',
+      height: '100%',
       alignItems: 'center',
       justifyContent: 'space-between',
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row'
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      paddingHorizontal: scale(12)
     },
     leftContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      width: '84%',
+      flex: 1,
       gap: scale(8),
       overflow: 'hidden'
     },
     searchContainer: {
-      width: '10%',
+      width: scale(18),
       alignSelf: 'center'
     },
     inputContainer: {
+      flex: 1,
       justifyContent: 'center',
       ...alignment.MLxSmall,
       ...alignment.MRxSmall,
-      width: '90%'
+      width: 'auto'
     },
     filterContainer: {
-      width: '10%',
-      height: '90%',
+      width: scale(20),
+      height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row'

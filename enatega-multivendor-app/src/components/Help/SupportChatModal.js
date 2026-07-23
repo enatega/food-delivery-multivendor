@@ -193,16 +193,18 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
           onPress={allowBackdropClose ? onClose : undefined}
         />
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={Platform.OS === 'ios' ? scale(12) : 0}
-          style={styles.sheetWrap}
+          style={[
+            styles.sheetWrap,
+            Platform.OS === 'android' && { paddingBottom: keyboardHeight }
+          ]}
         >
           <View
             style={[
               styles.sheet,
               {
-                backgroundColor: currentTheme.cardBackground,
-                paddingBottom: Platform.OS === 'android' ? keyboardHeight : 0
+                backgroundColor: currentTheme.cardBackground
               }
             ]}
           >
@@ -262,7 +264,8 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                       paddingBottom:
                         footerHeight +
                         scale(12) +
-                        insets.bottom
+                        insets.bottom +
+                        (Platform.OS === 'android' ? keyboardHeight : 0)
                     }
                   ]}
                   keyboardShouldPersistTaps='handled'

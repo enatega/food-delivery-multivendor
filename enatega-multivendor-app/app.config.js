@@ -130,13 +130,18 @@ module.exports = () => {
       [
         'expo-splash-screen',
         {
-          // Solid per-theme background, no logo image. The animated pin /
-          // wordmark is drawn by the JS AnimatedSplash component, whose first
-          // frame uses these same colors so the handoff shows no flash.
+          // Solid per-theme background, no visible logo. The plugin requires an
+          // image to generate the native splashscreen_logo drawable, so we pass
+          // a 1x1 transparent PNG — only the background color shows. The animated
+          // pin / wordmark is drawn by the JS AnimatedSplash component, whose
+          // first frame uses these same colors so the handoff shows no flash.
           backgroundColor: '#f4f8f5', // light ("Pink")
-          resizeMode: 'cover',
+          image: './assets/splashTransparent.png',
+          imageWidth: 1,
+          resizeMode: 'contain',
           dark: {
-            backgroundColor: '#0b1225' // dark
+            backgroundColor: '#0b1225', // dark
+            image: './assets/splashTransparent.png'
           }
         }
       ],
