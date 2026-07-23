@@ -95,7 +95,7 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
         silencedOrderIdsRef.current === ringedOrderIds
       ) {
         stopSound();
-      } else if (!soundRef.current) {
+      } else {
         silencedRef.current = false;
         silencedOrderIdsRef.current = "";
         playSound();
