@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { GET_ORDERS } from "../apollo/queries/orders";
-import { ACCEPT_ORDER } from "../api/graphql";
+import { ACCEPT_ORDER } from "../apollo/mutations/order.mutation";
 import { FlashMessageComponent } from "../ui/useable-components";
 import { IOrder } from "../utils/interfaces/order.interface";
 

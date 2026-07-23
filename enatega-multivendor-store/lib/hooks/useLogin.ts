@@ -5,7 +5,7 @@ import * as Notifications from "expo-notifications";
 import { useContext, useState } from "react";
 
 import { router } from "expo-router";
-import { STORE_LOGIN } from "../api/graphql/mutation/login";
+import { STORE_LOGIN } from "../apollo/mutations/login.mutation";
 import { AuthContext } from "../context/global/auth.context";
 import { setItem } from "../services";
 import { FlashMessageComponent } from "../ui/useable-components";

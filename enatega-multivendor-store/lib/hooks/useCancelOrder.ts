@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { CANCEL_ORDER } from "../api/graphql";
+import { CANCEL_ORDER } from "../apollo/mutations/order.mutation";
 import { FlashMessageComponent } from "../ui/useable-components";
 
 export default function useCancelOrder() {

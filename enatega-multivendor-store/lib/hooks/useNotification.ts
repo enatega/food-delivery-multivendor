@@ -6,7 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert, Platform } from "react-native";
 
 // API
-import { GET_RESTAURANT_BY_ID, SAVE_TOKEN } from "@/lib/api/graphql";
+import { SAVE_TOKEN } from "@/lib/apollo/mutations/notification.mutation";
+import { GET_RESTAURANT_BY_ID } from "@/lib/apollo/queries/store.query";
 import { getStoreId } from "@/lib/services";
 
 export default function useNotification() {
