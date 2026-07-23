@@ -14,7 +14,11 @@ import FlashMessage from "react-native-flash-message";
 
 export default function ProtectedLayout() {
   const { appTheme, currentTheme } = useApptheme();
-  const { token } = useContext(AuthContext);
+  const { isInitialized, token } = useContext(AuthContext);
+
+  if (!isInitialized) {
+    return null;
+  }
 
   if (!token) {
     return <Redirect href="/(un-protected)/login" />;

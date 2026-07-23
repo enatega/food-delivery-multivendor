@@ -1,6 +1,8 @@
+import "react-native-get-random-values";
+
+import { ApolloClient, gql, NormalizedCacheObject } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
 import * as Device from "expo-device";
-import { gql } from "@apollo/client";
 
 const METRICS_GENERAL = gql`
   mutation MetricsGeneral {
@@ -32,7 +34,7 @@ class PublicAccessTokenService {
   private token: string | null = null;
   private expiry: number | null = null;
   private refreshPromise: Promise<void> | null = null;
-  private refreshTimer: NodeJS.Timeout | null = null;
+  private refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
   private constructor() {}
 
@@ -43,9 +45,11 @@ class PublicAccessTokenService {
     return PublicAccessTokenService.instance;
   }
 
-  async initialize(apolloClient: any): Promise<void> {
+  async initialize(
+    apolloClient: ApolloClient<NormalizedCacheObject>,
+  ): Promise<void> {
     await this.loadFromStorage();
-    
+
     if (!this.nonce) {
       this.nonce = await this.generateNonce();
       await SecureStore.setItemAsync(KEYS.NONCE, this.nonce);
@@ -58,7 +62,9 @@ class PublicAccessTokenService {
     }
   }
 
-  private scheduleRefresh(apolloClient: any): void {
+  private scheduleRefresh(
+    apolloClient: ApolloClient<NormalizedCacheObject>,
+  ): void {
     if (this.refreshTimer) {
       clearTimeout(this.refreshTimer);
     }
@@ -76,7 +82,10 @@ class PublicAccessTokenService {
 
   private async generateNonce(): Promise<string> {
     const deviceId = Device.osBuildId || Device.osInternalBuildId || "";
-    const random = Math.random().toString(36).substring(2, 15);
+    const random = Array.from(
+      crypto.getRandomValues(new Uint8Array(16)),
+      (byte) => byte.toString(16).padStart(2, "0"),
+    ).join("");
     const timestamp = Date.now().toString(36);
     return `${deviceId}-${timestamp}-${random}`;
   }
@@ -88,6 +97,9 @@ class PublicAccessTokenService {
       const expiryStr = await SecureStore.getItemAsync(KEYS.EXPIRY);
       this.expiry = expiryStr ? parseInt(expiryStr, 10) : null;
     } catch {
+      this.nonce = null;
+      this.token = null;
+      this.expiry = null;
     }
   }
 
@@ -96,7 +108,9 @@ class PublicAccessTokenService {
     return Date.now() >= this.expiry;
   }
 
-  async refreshToken(apolloClient: any): Promise<void> {
+  async refreshToken(
+    apolloClient: ApolloClient<NormalizedCacheObject>,
+  ): Promise<void> {
     if (this.refreshPromise) {
       return this.refreshPromise;
     }
@@ -116,17 +130,17 @@ class PublicAccessTokenService {
         });
 
         if (data?.metricsGeneral) {
-          this.token = data.metricsGeneral.experience;
+          const token = data.metricsGeneral.experience;
+          if (typeof token !== "string") return;
+          this.token = token;
           const expiryTime = new Date(data.metricsGeneral.hehe).getTime();
           this.expiry = expiryTime;
 
-          await SecureStore.setItemAsync(KEYS.TOKEN, this.token);
+          await SecureStore.setItemAsync(KEYS.TOKEN, token);
           await SecureStore.setItemAsync(KEYS.EXPIRY, expiryTime.toString());
 
           this.scheduleRefresh(apolloClient);
         }
-      } catch (error) {
-        throw error;
       } finally {
         this.refreshPromise = null;
       }
@@ -135,7 +149,9 @@ class PublicAccessTokenService {
     return this.refreshPromise;
   }
 
-  async getToken(apolloClient: any): Promise<string | null> {
+  async getToken(
+    apolloClient: ApolloClient<NormalizedCacheObject>,
+  ): Promise<string | null> {
     if (!this.token || this.isExpired()) {
       await this.refreshToken(apolloClient);
     }

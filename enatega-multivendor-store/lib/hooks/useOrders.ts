@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext, useMemo, useState } from "react";
 // Context
 import RestaurantProvider from "@/lib/context/global/restaurant";
 // Interface
@@ -11,32 +11,43 @@ export default function useOrders() {
   const { loading, error, data, refetch, networkStatus } = useContext(
     RestaurantProvider.Context,
   );
-  const activeOrders: IOrder[] =
-    data &&
-    data?.restaurantOrders?.filter(
-      (order: IOrder) => order?.orderStatus === "PENDING",
-    );
+  const activeOrders = useMemo(
+    () =>
+      data?.restaurantOrders?.filter(
+        (order: IOrder) => order?.orderStatus === "PENDING",
+      ) ?? [],
+    [data?.restaurantOrders],
+  );
 
-  const processingOrders: IOrder[] =
-    data &&
-    data?.restaurantOrders?.filter((order: IOrder) =>
-      ["ACCEPTED", "ASSIGNED", "PICKED"].includes(order?.orderStatus ?? ""),
-    );
+  const processingOrders = useMemo(
+    () =>
+      data?.restaurantOrders?.filter((order: IOrder) =>
+        ["ACCEPTED", "ASSIGNED", "PICKED"].includes(order?.orderStatus ?? ""),
+      ) ?? [],
+    [data?.restaurantOrders],
+  );
 
-  const deliveredOrders: IOrder[] =
-    data &&
-    data?.restaurantOrders?.filter(
-      (order: IOrder) => order?.orderStatus === "DELIVERED",
-    );
+  const deliveredOrders = useMemo(
+    () =>
+      data?.restaurantOrders?.filter(
+        (order: IOrder) => order?.orderStatus === "DELIVERED",
+      ) ?? [],
+    [data?.restaurantOrders],
+  );
 
-  const hasNewOrders =
-    activeOrders?.some((order: IOrder) => Boolean(order?.isRinged)) ?? false;
-  const ringedOrderIds =
-    activeOrders
-      ?.filter((order: IOrder) => Boolean(order?.isRinged))
-      .map((order: IOrder) => order?._id)
-      .sort()
-      .join(",") ?? "";
+  const hasNewOrders = useMemo(
+    () => activeOrders.some((order: IOrder) => Boolean(order?.isRinged)),
+    [activeOrders],
+  );
+  const ringedOrderIds = useMemo(
+    () =>
+      activeOrders
+        .filter((order: IOrder) => Boolean(order?.isRinged))
+        .map((order: IOrder) => order?._id)
+        .sort()
+        .join(","),
+    [activeOrders],
+  );
 
   return {
     loading,

@@ -6,10 +6,8 @@
     "version": "1.0.81",
     "orientation": "portrait",
     "icon": "./lib/assets/images/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "scheme": "myapp",
+    "assetBundlePatterns": ["**/*"],
+    "scheme": "enatega-store",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -33,19 +31,13 @@
       "expo-audio",
       "expo-video"
     ],
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "multivendor.enatega.restaurant",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!",
-        "UIBackgroundModes": [
-          "audio",
-          "remote-notification"
-        ],
+        "UIBackgroundModes": ["audio", "remote-notification"],
         "ITSAppUsesNonExemptEncryption": false,
         "UIRequiresFullScreen": true,
         "NSBluetoothAlwaysUsageDescription": "We use Bluetooth to connect to your thermal printer.",
@@ -57,7 +49,6 @@
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "BLUETOOTH",
-        "BLUETOOTH_ADMIN",
         "BLUETOOTH_CONNECT",
         "BLUETOOTH_SCAN",
         "ACCESS_COARSE_LOCATION",

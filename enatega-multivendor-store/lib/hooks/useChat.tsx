@@ -1,4 +1,4 @@
-import { useRoute } from "@react-navigation/native";
+import { useLocalSearchParams } from "expo-router";
 import { Alert } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
@@ -14,9 +14,7 @@ import { SUBSCRIPTION_NEW_MESSAGE } from "@/lib/apollo/subscriptions";
 // Interface
 
 export const useChatScreen = () => {
-  const route = useRoute();
-
-  const { id: orderId } = route.params;
+  const { id: orderId } = useLocalSearchParams<{ id: string }>();
 
   const { dataProfile } = useContext(UserContext);
   // States
@@ -29,7 +27,7 @@ export const useChatScreen = () => {
     CHAT,
     {
       variables: { order: orderId },
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
       onError,
     },
   );
@@ -45,21 +43,27 @@ export const useChatScreen = () => {
   }
 
   //Handler
-  const onSend = () => {
-    send({
-      variables: {
-        orderId: orderId,
-        messageInput: {
-          message: inputMessage,
-          user: {
-            id: dataProfile.rider._id,
-            name: dataProfile.rider.name,
+  const onSend = async () => {
+    if (!orderId || !inputMessage || !dataProfile?._id) return;
+
+    try {
+      await send({
+        variables: {
+          orderId,
+          messageInput: {
+            message: inputMessage,
+            user: {
+              id: dataProfile._id,
+              name: dataProfile.name,
+            },
           },
         },
-      },
-    });
-    setInputMessage(null);
-    setImage([]);
+      });
+      setInputMessage(null);
+      setImage([]);
+    } catch {
+      Alert.alert("Error", "Failed to send message");
+    }
   };
 
   // Use Effect

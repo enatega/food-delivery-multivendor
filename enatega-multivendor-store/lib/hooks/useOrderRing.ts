@@ -4,10 +4,7 @@ import { MUTATE_ORDER_RING } from "../api/graphql";
 import { IOrder } from "../utils/interfaces/order.interface";
 
 export default function useOrderRing() {
-  const [mutate, { loading }] = useMutation(MUTATE_ORDER_RING, {
-    refetchQueries: [{ query: GET_ORDERS }],
-    awaitRefetchQueries: true,
-  });
+  const [mutate, { loading }] = useMutation(MUTATE_ORDER_RING);
   const muteRing = async (id: string) => {
     await mutate({
       variables: { orderId: id },

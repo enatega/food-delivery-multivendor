@@ -4,6 +4,7 @@ import {
   concat,
   createHttpLink,
   InMemoryCache,
+  NormalizedCacheObject,
   Observable,
   Operation,
   split,
@@ -42,11 +43,6 @@ const setupApollo = () => {
   const cache = new InMemoryCache(); // eslint-disable-next-line new-cap
   const httpLink = createHttpLink({
     uri: GRAPHQL_URL,
-  });
-
-  const client = new ApolloClient({
-    link: httpLink,
-    cache,
   });
 
   // Authenticate the subscription WebSocket the same way HTTP requests are
@@ -121,14 +117,19 @@ const setupApollo = () => {
       }),
   );
 
-  const errorLink = onError(({ graphQLErrors }) => {
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    const invalidCodes = ["TOKEN_EXPIRED", "INVALID_TOKEN", "UNAUTHENTICATED"];
     const hasInvalidSession = (graphQLErrors || []).some(
       (graphQLError) =>
-        graphQLError?.extensions?.code === "TOKEN_EXPIRED" ||
-        graphQLError?.extensions?.code === "INVALID_TOKEN",
+        typeof graphQLError?.extensions?.code === "string" &&
+        invalidCodes.includes(graphQLError.extensions.code),
     );
+    const isUnauthorizedNetworkError =
+      networkError &&
+      "statusCode" in networkError &&
+      networkError.statusCode === 401;
 
-    if (hasInvalidSession) {
+    if (hasInvalidSession || isUnauthorizedNetworkError) {
       void handleInvalidSession();
     }
   });
@@ -156,9 +157,14 @@ const setupApollo = () => {
     );
   }, wsLink);
 
-  client.setLink(
-    concat(ApolloLink.from([errorLink, terminatingLink, requestLink]), httpLink),
+  const link = concat(
+    ApolloLink.from([errorLink, terminatingLink, requestLink]),
+    httpLink,
   );
+  const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+    link,
+    cache,
+  });
 
   return client;
 };

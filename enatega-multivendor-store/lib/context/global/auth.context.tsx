@@ -3,7 +3,7 @@ import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
 
 // Core
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // Constants
 import { STORE_TOKEN } from "@/lib/utils/constants";
@@ -29,13 +29,17 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 }) => {
   // States
   const [isSelected, setIsSelected] = useState("");
+  const [isInitialized, setIsInitialized] = useState(false);
   const [token, setToken] = useState<string>("");
-  
-  const setTokenAsync = async (token: string) => {
-    await SecureStore.setItemAsync(STORE_TOKEN, token);
-    client.clearStore();
-    setToken(token);
-  };
+
+  const setTokenAsync = useCallback(
+    async (token: string) => {
+      await SecureStore.setItemAsync(STORE_TOKEN, token);
+      await client.clearStore();
+      setToken(token);
+    },
+    [client],
+  );
 
   // Handlers
   const handleSetCurrentLanguage = async () => {
@@ -66,9 +70,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     }
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
-      client.stop();
       await Promise.all([
         client.clearStore(),
         SecureStore.deleteItemAsync(STORE_TOKEN),
@@ -80,9 +83,9 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     } catch {
       return;
     }
-  };
+  }, [client]);
 
-  async function checkAuth() {
+  const checkAuth = useCallback(async () => {
     try {
       const token = await SecureStore.getItemAsync(STORE_TOKEN);
       const storeId = await AsyncStorage.getItem("store-id");
@@ -93,8 +96,10 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       setToken(token);
     } catch {
       await logout();
+    } finally {
+      setIsInitialized(true);
     }
-  }
+  }, [logout]);
 
   // UseEffects
   useEffect(() => {
@@ -103,7 +108,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [checkAuth]);
 
   useEffect(() => {
     if (__DEV__) {
@@ -112,13 +117,17 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     }
   }, []);
 
-  const values: IAuthContext = {
-    token: token ?? "",
-    logout,
-    setTokenAsync,
-    isSelected,
-    setIsSelected,
-  };
+  const values = useMemo<IAuthContext>(
+    () => ({
+      isInitialized,
+      token: token ?? "",
+      logout,
+      setTokenAsync,
+      isSelected,
+      setIsSelected,
+    }),
+    [isInitialized, isSelected, logout, setTokenAsync, token],
+  );
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

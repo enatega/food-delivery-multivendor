@@ -9,6 +9,7 @@ export interface ILoginInitialValues {
 }
 
 export interface IAuthContext {
+  isInitialized: boolean;
   token: string;
   setTokenAsync: (token: string) => Promise<void>;
   logout: () => void;

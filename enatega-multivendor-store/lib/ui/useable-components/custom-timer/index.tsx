@@ -22,14 +22,12 @@ const CountdownTimer: React.FC<TimerProps> = ({ duration }) => {
   }, [normalizedDuration]);
 
   useEffect(() => {
-    if (timeLeft <= 0) return;
-
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, []);
 
   // Convert seconds to HH:MM:SS format
   const formatTime = (time: number) => {

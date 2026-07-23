@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { requestForegroundPermissionsAsync } from "expo-location";
@@ -65,12 +66,15 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     if (id) {
       setUserId(id);
     }
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
-    const listener = asyncStorageEmitter.addListener("store-id", (data:any) => {
-      setUserId(data?.value ?? "");
-    });
+    const listener = asyncStorageEmitter.addListener(
+      "store-id",
+      (data: { value?: string }) => {
+        setUserId(data?.value ?? "");
+      },
+    );
 
     getUserId();
 
@@ -79,32 +83,39 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         listener.removeListener();
       }
     };
-  }, []);
+  }, [getUserId]);
 
   useEffect(() => {
     if (userId) {
       refetchProfile({ restaurantId: userId });
     }
-  }, [userId]);
+  }, [refetchProfile, userId]);
 
-  return (
-    <UserContext.Provider
-      value={{
-        modalVisible,
-        setModalVisible,
-        userId,
-        loadingProfile,
-        errorProfile,
-        dataProfile: dataProfile?.restaurant ?? null,
-        requestForegroundPermissionsAsync,
-        setStoreOrderEarnings,
-        storeOrdersEarnings,
-        refetchProfile
-      }}
-    >
-      {children}
-    </UserContext.Provider>
+  const value = useMemo<IUserContextProps>(
+    () => ({
+      modalVisible,
+      setModalVisible,
+      userId,
+      loadingProfile,
+      errorProfile,
+      dataProfile: dataProfile?.restaurant ?? null,
+      requestForegroundPermissionsAsync,
+      setStoreOrderEarnings,
+      storeOrdersEarnings,
+      refetchProfile,
+    }),
+    [
+      dataProfile?.restaurant,
+      errorProfile,
+      loadingProfile,
+      modalVisible,
+      refetchProfile,
+      storeOrdersEarnings,
+      userId,
+    ],
   );
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 export const UserConsumer = UserContext.Consumer;
 export const useUserContext = () => useContext(UserContext);

@@ -1,6 +1,6 @@
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import Constants from "expo-constants";
 
 // Constant
@@ -15,28 +15,28 @@ function App() {
     restaurantData,
     getPermission,
     getExpoPushToken,
-    getDevicePushToken,
-    // requestPermission,
     sendTokenToBackend,
+    storeLookupComplete,
   } = useNotification();
 
-
-
-  const init = async () => {
-
+  const init = useCallback(async () => {
     const token = await SecureStore.getItemAsync(STORE_TOKEN);
 
     if (token) {
-      router.replace(ROUTES.home as Href);
+      router.replace(ROUTES.home);
     } else {
-      router.replace(ROUTES.login as Href);
+      router.replace(ROUTES.login);
     }
-  };
+  }, [router]);
 
   useEffect(() => {
+    if (!storeLookupComplete) return;
+
     const checkToken = async () => {
       try {
-        if (!restaurantData) return;
+        if (!restaurantData) {
+          return;
+        }
 
         if (
           restaurantData?.restaurant?.enableNotification &&
@@ -44,36 +44,31 @@ function App() {
         ) {
           const permissionStatus = await getPermission();
           if (permissionStatus.granted) {
-            /*  const token = (
-              await getExpoPushToken({
-                projectId: Constants?.expoConfig?.extra?.eas.projectId,
-              })
-            ).data; */
-
-            const token = (await getDevicePushToken()).data;
-
-            try {
-              sendTokenToBackend({
+            const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+            if (projectId) {
+              const token = (await getExpoPushToken({ projectId })).data;
+              await sendTokenToBackend({
                 variables: { token, isEnabled: true },
-                onCompleted: () => {
-                  init();
-                },
-                onError: () => {
-                  init();
-                },
               });
-            } catch (err) {
-              init();
             }
           }
         }
         notificationRef.current = false;
       } catch {
-        init();
+        // Navigation must continue even when notification registration fails.
+      } finally {
+        await init();
       }
     };
-    checkToken();
-  }, [restaurantData]);
+    void checkToken();
+  }, [
+    getExpoPushToken,
+    getPermission,
+    init,
+    restaurantData,
+    sendTokenToBackend,
+    storeLookupComplete,
+  ]);
 
   return <SpinnerComponent />;
 }

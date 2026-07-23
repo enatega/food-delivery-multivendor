@@ -26,8 +26,8 @@ import { useTranslation } from "react-i18next";
 import { CustomContinueButton } from "../../useable-components";
 
 const initial: ILoginInitialValues = {
-  username: "FalafelTmeer@yopmail.com",
-  password: "Yalla0014yalla0014@",
+  username: "",
+  password: "",
 };
 
 const LoginScreen = () => {
@@ -37,15 +37,11 @@ const LoginScreen = () => {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { onLogin } = useLogin();
+  const { isLogging, onLogin } = useLogin();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
-    // TODO: Implement login logic
-    try {
-      await onLogin(creds.username, creds.password);
-    } catch {
-    }
+    await onLogin(creds.username, creds.password);
   };
 
   return (
@@ -159,16 +155,11 @@ const LoginScreen = () => {
                       {errors?.password}
                     </Text>
                   )}
-                  <Text
-                    className="text-center text-xs mb-2"
-                    style={{ color: appTheme.fontSecondColor }}
-                  >
-                    Above placeholder credentials are for testing purposes.
-                  </Text>
-
                   {/* Login Button */}
                   <CustomContinueButton
                     title={t("Login")}
+                    disabled={isLogging}
+                    isLoading={isLogging}
                     onPress={() => handleSubmit()}
                   />
                   {/* <TouchableOpacity

@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { useContext, useEffect, useRef, createContext } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
 // Interface
 import {
@@ -21,32 +28,20 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   const { hasNewOrders, ringedOrderIds } = useOrders();
 
   // Handlers
-  const playSound = async () => {
+  const playSound = useCallback(async () => {
     try {
-      await stopSound();
-      const newSound = createAudioPlayer(
-        require("@/lib/assets/sound/beep3.mp3"),
-      );
-      newSound.loop = true;
-      await setAudioModeAsync({
-        allowsRecording: false,
-        shouldPlayInBackground: true,
-        interruptionMode: "duckOthers",
-        playsInSilentMode: true,
-        shouldRouteThroughEarpiece: true,
-      });
-      newSound.play();
-
-      soundRef.current = newSound;
+      const player = soundRef.current;
+      if (!player) return;
+      await player.seekTo(0);
+      player.play();
     } catch {
       // no-op: keep the app usable if audio startup fails.
     }
-  };
+  }, []);
 
-  const stopSound = async () => {
+  const stopSound = useCallback(async () => {
     if (soundRef.current) {
       const player = soundRef.current;
-      soundRef.current = null;
       try {
         player.pause();
       } catch {
@@ -57,24 +52,32 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
       } catch {
         // no-op: player may already be disposed.
       }
-      try {
-        await player.stop();
-      } catch {
-        // no-op: player may already be disposed.
-      }
-      try {
-        player.remove();
-      } catch {
-        // no-op: player may already be disposed.
-      }
     }
-  };
+  }, []);
 
-  const silenceRing = async () => {
+  const silenceRing = useCallback(async () => {
     silencedRef.current = true;
     silencedOrderIdsRef.current = ringedOrderIds;
     await stopSound();
-  };
+  }, [ringedOrderIds, stopSound]);
+
+  useEffect(() => {
+    const player = createAudioPlayer(require("@/lib/assets/sound/beep3.mp3"));
+    player.loop = true;
+    soundRef.current = player;
+    void setAudioModeAsync({
+      allowsRecording: false,
+      shouldPlayInBackground: true,
+      interruptionMode: "duckOthers",
+      playsInSilentMode: true,
+      shouldRouteThroughEarpiece: true,
+    }).catch(() => {});
+
+    return () => {
+      soundRef.current = null;
+      player.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (!hasNewOrders) {
@@ -102,12 +105,15 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
     return () => {
       stopSound();
     };
-  }, [hasNewOrders, ringedOrderIds]);
+  }, [hasNewOrders, playSound, ringedOrderIds, stopSound]);
+
+  const value = useMemo(
+    () => ({ playSound, stopSound, silenceRing }),
+    [playSound, silenceRing, stopSound],
+  );
 
   return (
-    <SoundContext.Provider value={{ playSound, stopSound, silenceRing }}>
-      {children}
-    </SoundContext.Provider>
+    <SoundContext.Provider value={value}>{children}</SoundContext.Provider>
   );
 };
 export const SoundContextConsumer = SoundContext.Consumer;

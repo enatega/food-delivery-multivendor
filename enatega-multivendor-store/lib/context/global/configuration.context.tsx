@@ -1,5 +1,3 @@
-"use client";
-
 // Core
 import { createContext, useCallback, useEffect, useState } from "react";
 

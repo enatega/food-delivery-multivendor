@@ -1,11 +1,10 @@
 import { ApolloError, useMutation } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { useContext, useState } from "react";
 
-import { Href, router } from "expo-router";
+import { router } from "expo-router";
 import { STORE_LOGIN } from "../api/graphql/mutation/login";
 import { AuthContext } from "../context/global/auth.context";
 import { setItem } from "../services";
@@ -20,7 +19,7 @@ const useLogin = () => {
   const { setTokenAsync } = useContext(AuthContext);
 
   // API
-  const [login, { data: storeLoginData }] = useMutation(STORE_LOGIN, {
+  const [login] = useMutation(STORE_LOGIN, {
     onCompleted,
     onError,
     fetchPolicy: "no-cache",
@@ -62,15 +61,13 @@ const useLogin = () => {
   }
 
   // Handlers
-  async function onCompleted({
-    restaurantLogin,
-  }: IStoreLoginCompleteResponse) {
+  async function onCompleted({ restaurantLogin }: IStoreLoginCompleteResponse) {
     setIsLoading(false);
 
     if (restaurantLogin) {
       await setItem("store-id", restaurantLogin?.restaurantId);
       await setTokenAsync(restaurantLogin?.token);
-      router.replace(ROUTES.home as Href);
+      router.replace(ROUTES.home);
     }
   }
 
@@ -97,7 +94,9 @@ const useLogin = () => {
       // Request notification permissions if not granted or not provisional on iOS
       if (
         settings?.status !== "granted" ||
-        (settings.ios && settings.ios?.status !== Notifications.IosAuthorizationStatus.PROVISIONAL)
+        (settings.ios &&
+          settings.ios?.status !==
+            Notifications.IosAuthorizationStatus.PROVISIONAL)
       ) {
         notificationPermissions = await Notifications.requestPermissionsAsync({
           ios: {
@@ -110,30 +109,30 @@ const useLogin = () => {
       }
 
       let notificationToken = null;
-      
+
       // Get notification token if permissions are granted and it's a device
       if (
         (notificationPermissions?.status === "granted" ||
-          (notificationPermissions.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL)) &&
+          notificationPermissions.ios?.status ===
+            Notifications.IosAuthorizationStatus.PROVISIONAL) &&
         Device.isDevice
       ) {
         try {
           const projectId = Constants.expoConfig?.extra?.eas?.projectId;
 
           if (projectId) {
-            // const tokenResult = await Notifications.getExpoPushTokenAsync({
-            //   projectId: projectId,
-            // });
-            const tokenResult =  (await Notifications.getDevicePushTokenAsync());
+            const tokenResult = await Notifications.getExpoPushTokenAsync({
+              projectId,
+            });
             notificationToken = tokenResult.data;
           }
-        } catch (tokenError) {
+        } catch {
           // Continue without token - don't fail the login
         }
       }
 
       // Perform mutation with the obtained data
-      const { data } = await login({
+      await login({
         variables: {
           username: username,
           password: password,
@@ -145,14 +144,6 @@ const useLogin = () => {
           },
         },
       });
-
-      // FIX: Check data first, then storeLoginData
-      const restaurantId = data?.restaurantLogin?.restaurantId || storeLoginData?.restaurantLogin?.restaurantId;
-
-      if (restaurantId) {
-        await AsyncStorage.setItem("store-id", restaurantId);
-      }
-
     } catch (err) {
       setIsLoading(false);
 
