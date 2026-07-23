@@ -35,22 +35,15 @@ module.exports = () => {
     androidStatusBar: {
       backgroundColor: '#000000'
     },
-    splash: {
-      image: './assets/splash.png',
-      resizeMode: "cover",
-        "backgroundColor": "#000000"
-    },
+    // Native splash is a plain theme background (light/dark) that matches the
+    // first frame of the animated Journey splash — no flash in either theme.
+    // Configured via the expo-splash-screen plugin below.
     platforms: ['ios', 'android'],
     orientation: 'portrait',
     icon: './assets/icon.png',
     assetBundlePatterns: ['**/*'],
     userInterfaceStyle: 'automatic',
     ios: {
-      splash: {
-        image: './assets/splash.png',
-        resizeMode: "cover",
-          "backgroundColor": "#000000"
-      },
       entitlements: {
         'com.apple.developer.networking.wifi-info': true,
         'aps-environment': 'development'
@@ -86,11 +79,6 @@ module.exports = () => {
       package: 'com.enatega.multivendor',
       userInterfaceStyle: 'automatic',
       googleServicesFile: './google-services.json',
-      splash: {
-        image: './assets/splash.png',
-        resizeMode: 'cover',
-        backgroundColor: '#000000'
-      },
       config: {
         ...(androidGoogleMapsApiKey
           ? {
@@ -126,6 +114,17 @@ module.exports = () => {
       }
     },
     plugins: [
+      [
+        'expo-splash-screen',
+        {
+          // matches Theme.Pink.themeBackground — and frame 0 of the Lottie
+          backgroundColor: '#FFFFFF',
+          dark: {
+            // matches Theme.Dark.themeBackground
+            backgroundColor: '#000000'
+          }
+        }
+      ],
       [
         'expo-tracking-transparency',
         {
