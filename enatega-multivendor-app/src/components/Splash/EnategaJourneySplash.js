@@ -26,7 +26,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   AccessibilityInfo,
   AppState,
-  Image,
   StyleSheet,
   View,
   useColorScheme,
@@ -49,15 +48,15 @@ import { theme as Theme } from '../../utils/themeColors'
 // ready to draw the identical first frame ourselves.
 SplashScreen.preventAutoHideAsync().catch(() => {})
 
-import { WORDMARK_LIGHT, WORDMARK_DARK } from '../../assets/splash/wordmarks'
+import EnategaPin from './EnategaPin'
+import EnategaWordmark from './EnategaWordmark'
 
 const ANIMATION = require('../../assets/splash/enatega-journey-splash.json')
-const WORDMARK = {
-  light: WORDMARK_LIGHT,
-  dark: WORDMARK_DARK
-}
 
 const DURATION_MS = 2700 // 162 frames @ 60fps
+const PIN_DELAY_MS = 1750 // frame 105 — route has merged, symbol blooms
+const PIN_FADE_MS = 350 // frames 105-126
+const PIN_SCALE_MS = 550 // frames 105-138, 96% -> 100%
 const WORDMARK_DELAY_MS = 2030 // frame 122
 const WORDMARK_IN_MS = 400
 const HARD_TIMEOUT_MS = 6000 // absolute deadlock guard
@@ -76,6 +75,8 @@ export default function EnategaJourneySplash({ children }) {
 
   const overlayOpacity = useSharedValue(1)
   const overlayScale = useSharedValue(1)
+  const pinOpacity = useSharedValue(0)
+  const pinScale = useSharedValue(0.96)
   const wordmarkOpacity = useSharedValue(0)
   const wordmarkShift = useSharedValue(14)
   const { height: screenH } = useWindowDimensions()
@@ -140,13 +141,23 @@ export default function EnategaJourneySplash({ children }) {
 
     if (reduceMotion) {
       // Reduced motion: no route animation; short fade of the finished logo.
+      pinOpacity.value = withTiming(1, { duration: 350 })
+      pinScale.value = 1
       wordmarkOpacity.value = withTiming(1, { duration: 350 })
       wordmarkShift.value = 0
       const t = setTimeout(() => setAnimationDone(true), REDUCED_MOTION_HOLD_MS)
       return () => clearTimeout(t)
     }
 
-    // wordmark reveal is timed against the Lottie timeline
+    // pin + wordmark reveals are timed against the Lottie timeline
+    pinOpacity.value = withDelay(
+      PIN_DELAY_MS,
+      withTiming(1, { duration: PIN_FADE_MS, easing: Easing.out(Easing.cubic) })
+    )
+    pinScale.value = withDelay(
+      PIN_DELAY_MS,
+      withTiming(1, { duration: PIN_SCALE_MS, easing: Easing.out(Easing.cubic) })
+    )
     wordmarkOpacity.value = withDelay(
       WORDMARK_DELAY_MS,
       withTiming(1, { duration: WORDMARK_IN_MS, easing: Easing.out(Easing.cubic) })
@@ -162,7 +173,7 @@ export default function EnategaJourneySplash({ children }) {
       DURATION_MS + 600
     )
     return () => clearTimeout(finishFallback)
-  }, [resolvedTheme, reduceMotion, wordmarkOpacity, wordmarkShift])
+  }, [resolvedTheme, reduceMotion, pinOpacity, pinScale, wordmarkOpacity, wordmarkShift])
 
   // ---- absolute deadlock guard ----
   useEffect(() => {
@@ -173,11 +184,13 @@ export default function EnategaJourneySplash({ children }) {
   // ---- if Lottie failed, show static logo fallback briefly, then continue ----
   useEffect(() => {
     if (!lottieFailed) return
+    pinOpacity.value = withTiming(1, { duration: 300 })
+    pinScale.value = 1
     wordmarkOpacity.value = withTiming(1, { duration: 300 })
     wordmarkShift.value = 0
     const t = setTimeout(() => setAnimationDone(true), 900)
     return () => clearTimeout(t)
-  }, [lottieFailed, wordmarkOpacity, wordmarkShift])
+  }, [lottieFailed, pinOpacity, pinScale, wordmarkOpacity, wordmarkShift])
 
   useEffect(() => {
     if (animationDone) completeSplash()
@@ -197,6 +210,10 @@ export default function EnategaJourneySplash({ children }) {
     opacity: overlayOpacity.value,
     transform: [{ scale: overlayScale.value }]
   }))
+  const pinStyle = useAnimatedStyle(() => ({
+    opacity: pinOpacity.value,
+    transform: [{ scale: pinScale.value }]
+  }))
   const wordmarkStyle = useAnimatedStyle(() => ({
     opacity: wordmarkOpacity.value,
     transform: [{ translateY: wordmarkShift.value }]
@@ -210,7 +227,9 @@ export default function EnategaJourneySplash({ children }) {
 
   const backgroundColor = Theme[resolvedTheme].themeBackground
   const isDark = resolvedTheme === 'Dark'
-  // Lottie comp is 540x960; the wordmark sits at y 568..~600 of 960.
+  // Lottie comp is 540x960: pin center sits at y=430, wordmark at y=568.
+  const pinHeight = screenH * (172 / 960)
+  const pinTop = screenH * (430 / 960) - pinHeight / 2
   const wordmarkTop = screenH * (568 / 960)
 
   return (
@@ -221,14 +240,20 @@ export default function EnategaJourneySplash({ children }) {
           pointerEvents='none'
           style={[StyleSheet.absoluteFill, overlayStyle, { backgroundColor }]}
         >
-          {!lottieFailed ? (
+          {/* Official pin symbol: below the Lottie so the route/glint layers
+              composite over it exactly as authored */}
+          <Animated.View style={[styles.pin, { top: pinTop }, pinStyle]}>
+            <EnategaPin height={pinHeight} />
+          </Animated.View>
+          {!lottieFailed && (
             <LottieView
               ref={lottieRef}
               source={ANIMATION}
               style={StyleSheet.absoluteFill}
               resizeMode='cover'
               autoPlay={!reduceMotion}
-              // Reduce Motion: hold the completed logo (final frame), no route
+              // Reduce Motion: hold the final (quiet) frame — the pin and
+              // wordmark fade in statically instead
               progress={reduceMotion ? 1 : undefined}
               loop={false}
               speed={1}
@@ -236,21 +261,15 @@ export default function EnategaJourneySplash({ children }) {
               onAnimationFinish={() => setAnimationDone(true)}
               onAnimationFailure={() => setLottieFailed(true)}
             />
-          ) : (
-            // Hard failure fallback: the official static symbol
-            <View style={styles.fallbackWrap}>
-              <Image
-                source={require('../../../assets/icon.png')}
-                style={styles.fallbackLogo}
-                resizeMode='contain'
-              />
-            </View>
           )}
-          <Animated.Image
-            source={isDark ? WORDMARK.dark : WORDMARK.light}
+          <Animated.View
             style={[styles.wordmark, { top: wordmarkTop }, wordmarkStyle]}
-            resizeMode='contain'
-          />
+          >
+            <EnategaWordmark
+              color={isDark ? '#FFFFFF' : '#000000'}
+              width={236}
+            />
+          </Animated.View>
         </Animated.View>
       )}
     </View>
@@ -261,20 +280,14 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1
   },
-  fallbackWrap: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  fallbackLogo: {
-    width: 160,
-    height: 160,
-    borderRadius: 32
+  pin: {
+    position: 'absolute',
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   wordmark: {
     position: 'absolute',
     alignSelf: 'center',
-    width: 236,
-    height: 40
+    alignItems: 'center'
   }
 })

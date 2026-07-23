@@ -150,7 +150,6 @@ module.exports = () => {
       'expo-localization',
       'expo-web-browser',
       'expo-video',
-      'expo-video',
       'expo-apple-authentication'
     ],
     extra: {
