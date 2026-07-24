@@ -436,11 +436,16 @@ function Account(props) {
                     title={t('phone')}
                     detail={resolvedProfile?.phone}
                     status={resolvedProfile?.phoneIsVerified ? 'verified' : 'notVerified'}
-                    onPress={() =>
+                    onPress={() => {
+                      console.log('[PhoneChange][Account] Opening PhoneNumber', {
+                        prevScreen: 'Account',
+                        hasCurrentPhone: Boolean(resolvedProfile?.phone),
+                        phoneIsVerified: Boolean(resolvedProfile?.phoneIsVerified)
+                      })
                       navigation.navigate('PhoneNumber', {
                         prevScreen: 'Account'
                       })
-                    }
+                    }}
                   />
                   <View style={styles(currentTheme).line} />
                   <ButtonContainer
