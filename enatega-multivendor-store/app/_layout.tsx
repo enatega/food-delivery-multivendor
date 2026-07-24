@@ -2,8 +2,6 @@
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 
-
-
 // Service
 import setupApollo from "@/lib/apollo";
 import PublicAccessTokenService from "@/lib/services/public-access-token.service";
@@ -14,7 +12,6 @@ import { ConfigurationProvider } from "@/lib/context/global/configuration.contex
 import { ApolloProvider } from "@apollo/client";
 
 import { useEffect, useState } from "react";
-
 
 // Locale
 import "@/i18next";
@@ -35,19 +32,10 @@ import AppThemeProvidor, { useApptheme } from "@/lib/context/theme.context";
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
 
-
 import { Slot } from "expo-router";
-
-
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-
-// Clarity.initialize('nq7dea7dt4', {
-//   logLevel: Clarity.LogLevel.None, // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
-// });
-
 
 function RootLayout() {
   // Hooks

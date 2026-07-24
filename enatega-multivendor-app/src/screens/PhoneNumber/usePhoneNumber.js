@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { updateUser } from '../../apollo/mutations'
@@ -8,7 +8,6 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import UserContext from '../../context/User'
 import countryCallingCodes from './countryCodes'
-import { useIsFocused } from '@react-navigation/native'
 import ConfigurationContext from '../../context/Configuration'
 import { useTranslation } from 'react-i18next'
 import { useCountryFromIP } from '../../utils/useCountryFromIP'
@@ -25,7 +24,6 @@ const useRegister = () => {
   const [phone, setPhone] = useState('')
   const [phoneError, setPhoneError] = useState(null)
   const configuration = useContext(ConfigurationContext)
-  const isFocused = useIsFocused()
   const { name } = route?.params
  
 
@@ -72,38 +70,8 @@ const useRegister = () => {
   }
 
   async function onCompleted(data) {
-    const concatPhone = toE164(phone, country?.cca2)
-    if (navigation && route && profile) {
-      if (configuration.twilioEnabled) {
-        FlashMessage({
-          message: 'Phone number has been added successfully!'
-        })
-        await refetchProfile()
-        navigation.navigate({
-          name: 'PhoneOtp',
-          merge: true,
-          params: {
-            name,
-            phone: concatPhone,
-            screen: route?.params?.screen,
-            prevScreen: route?.params?.prevScreen
-          }
-        })
-      } else {
-        mutate({
-          variables: {
-            name: profile.name,
-            phone: concatPhone,
-            phoneIsVerified: true
-          }
-        })
-        if (isFocused) {
-          navigation.navigate({
-            name: 'Profile'
-          })
-        }
-      }
-    }
+    await refetchProfile()
+    navigation.navigate('Main', { screen: 'Profile' })
   }
   function onError(error) {
     if (error.networkError) {
@@ -122,15 +90,25 @@ const useRegister = () => {
       variables: {
         name: profile.name,
         phone: toE164(phone, country?.cca2),
-        phoneIsVerified: false
+        phoneIsVerified: true
       }
     })
   }
 
   function registerAction() {
-    if (validateCredentials()) {
+    if (!validateCredentials()) return
+
+    if (!configuration.twilioEnabled) {
       mutateRegister()
+      return
     }
+
+    const concatPhone = toE164(phone, country?.cca2)
+    navigation.navigate({
+      name: 'PhoneOtp',
+      merge: true,
+      params: {name, phone: concatPhone, screen: route?.params?.screen, prevScreen: route?.params?.prevScreen}
+    })
   }
   return {
     phone,

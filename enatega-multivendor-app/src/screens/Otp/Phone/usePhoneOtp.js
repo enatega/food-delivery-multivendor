@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useRef } from 'react'
+import { useState, useContext, useEffect, useRef, useCallback } from 'react'
 import { sendOtpToPhoneNumber, updateUser, VERIFY_OTP } from '../../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
@@ -39,7 +39,7 @@ const usePhoneOtp = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [seconds, setSeconds] = useState(30)
-  const { name, phone, screen, token } = route?.params || {}
+  const { name, phone, screen, token, prevScreen } = route?.params || {}
   const { setTokenAsync } = useContext(AuthContext)
   const resolvedName = name ?? profile?.name ?? ''
   const resolvedPhone = phone ?? profile?.phone ?? ''
@@ -120,13 +120,15 @@ const usePhoneOtp = () => {
       navigation.navigate('Profile', { editName: true })
     } else if (screen === 'Checkout') {
       navigation.navigate('Checkout')
+    } else if (prevScreen === 'Account') {
+      navigation.navigate('Main', { screen: 'Profile' })
+    } else if (prevScreen) {
+      navigation.navigate(prevScreen)
     } else {
-      route.params?.prevScreen
-        ? navigation.navigate(route.params.prevScreen)
-        : navigation.navigate({
-            name: 'Main',
-            merge: true
-          })
+      navigation.navigate({
+        name: 'Main',
+        merge: true
+      })
     }
   }
 
@@ -144,7 +146,7 @@ const usePhoneOtp = () => {
     onError: onUpdateUserError
   })
 
-  const onCodeFilled = async (otp_code) => {
+  const onCodeFilled = useCallback(async (otp_code) => {
     if (token && !authReady) {
       await setTokenAsync(token)
       setAuthReady(true)
@@ -179,18 +181,27 @@ const usePhoneOtp = () => {
     } else {
       setOtpError(true)
     }
-  }
+  }, [
+    authReady,
+    isMobileVerificationSkipped,
+    mutateUser,
+    resolvedName,
+    resolvedPhone,
+    setTokenAsync,
+    token,
+    verifyOTP
+  ])
 
   const onSendOTPHandler = () => {
     try {
-      if (!profile?.phone && !phone) {
+      if (!phone && !profile?.phone) {
         FlashMessage({
           message: t('mobileErr1')
         })
         return
       }
 
-      sendOTPToPhone({ variables: { phone: profile?.phone ?? phone } })
+      sendOTPToPhone({ variables: { phone: phone ?? profile?.phone } })
     } catch (err) {
       FlashMessage({
         message: t('somethingWentWrong')
@@ -228,18 +239,11 @@ const usePhoneOtp = () => {
   }, [configuration, phone])
 
   useEffect(() => {
-    let timer = null
     if (!configuration) return
     if ((isMobileVerificationSkipped || isDemoOtpEnabled) && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true
       setOtp(demoOtp)
-      timer = setTimeout(() => {
-        onCodeFilled(demoOtp)
-      }, 300)
-    }
-
-    return () => {
-      timer && clearTimeout(timer)
+      void onCodeFilled(demoOtp)
     }
   }, [authReady, configuration, demoOtp, isDemoOtpEnabled, onCodeFilled])
 
