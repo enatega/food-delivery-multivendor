@@ -59,7 +59,7 @@ const Order = ({
   });
 
   // Ref
-  const timer = useRef<NodeJS.Timeout>();
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // States
   const [isAcceptButtonVisible, setIsAcceptButtonVisible] = useState(
@@ -69,7 +69,8 @@ const Order = ({
   // Timer
   const timeNow = new Date();
   const acceptanceTime = Math.floor(
-    ((order ? new Date(order.orderDate).getTime() : 0) - timeNow.getTime()) / 1000,
+    ((order ? new Date(order.orderDate).getTime() : 0) - timeNow.getTime()) /
+      1000,
   );
   let remainingTime = Math.floor(
     ((order ? new Date(order.createdAt).getTime() : 0) +
@@ -96,7 +97,7 @@ const Order = ({
   // Handlers
   const onCancelOrderHandler = async () => {
     await silenceRing();
-    cancelOrder(order._id, "not available");
+    await cancelOrder(order._id, "not available");
   };
 
   const onPickupOrder = () => {
@@ -123,7 +124,7 @@ const Order = ({
       if (timer.current) clearInterval(timer.current);
       isSubscribed = false;
     };
-  }, []);
+  }, [order.orderDate]);
 
   if (!order || !configuration) {
     return null;
@@ -280,7 +281,8 @@ const Order = ({
 
                     {/* Toggle and Collapsible Details */}
                     <View className="mt-2">
-                      {(variation.title || (item?.addons && item?.addons.length > 0)) && (
+                      {(variation.title ||
+                        (item?.addons && item?.addons.length > 0)) && (
                         <TouchableOpacity
                           onPress={() => onToggleDetails(item._id)}
                           className="flex-row items-center mb-2"
@@ -292,10 +294,14 @@ const Order = ({
                               fontWeight: "500",
                             }}
                           >
-                            {showDetails[item._id] ? "Hide Details" : "Show Details"}
+                            {showDetails[item._id]
+                              ? "Hide Details"
+                              : "Show Details"}
                           </Text>
                           <View className="ml-1">
-                            <Text style={{ color: appTheme.primary, fontSize: 10 }}>
+                            <Text
+                              style={{ color: appTheme.primary, fontSize: 10 }}
+                            >
                               {showDetails[item._id] ? "▲" : "▼"}
                             </Text>
                           </View>
@@ -333,7 +339,10 @@ const Order = ({
                           {item?.addons?.map((addon) => (
                             <View key={addon._id} className="mb-1">
                               {addon?.options?.map((option) => (
-                                <View key={option._id} className="flex-row items-center">
+                                <View
+                                  key={option._id}
+                                  className="flex-row items-center"
+                                >
                                   <Text
                                     style={{
                                       color: appTheme.fontSecondColor,
@@ -363,7 +372,9 @@ const Order = ({
 
                 {/* Right Side: Price */}
                 <View className="w-auto items-end">
-                  <Text style={{ color: appTheme.fontMainColor, fontWeight: "600" }}>
+                  <Text
+                    style={{ color: appTheme.fontMainColor, fontWeight: "600" }}
+                  >
                     {`${configuration?.currencySymbol}${itemTotal.toFixed(2)}`}
                   </Text>
                 </View>
@@ -448,52 +459,54 @@ const Order = ({
         </View>
 
         {/* Discount Amount */}
-        {order?.discountAmount > 0 && (         
-        <View className="flex-row justify-between">
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 18,
-              fontWeight: "600",
-            }}
-          >
-            {t("discountAmount")}
-          </Text>
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 18,
-              fontWeight: "600",
-            }}
-          >
-            {configuration?.currencySymbol}
-            {order?.discountAmount}
-          </Text>
-        </View>
+        {order?.discountAmount > 0 && (
+          <View className="flex-row justify-between">
+            <Text
+              style={{
+                color: appTheme.fontMainColor,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {t("discountAmount")}
+            </Text>
+            <Text
+              style={{
+                color: appTheme.fontMainColor,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {configuration?.currencySymbol}
+              {order?.discountAmount}
+            </Text>
+          </View>
         )}
 
         {/* Delivery */}
-        {!order?.isPickedUp && <View className="flex-row justify-between">
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 18,
-              fontWeight: "600",
-            }}
-          >
-            {t("Delivery Charges")}
-          </Text>
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 18,
-              fontWeight: "600",
-            }}
-          >
-            {configuration?.currencySymbol}
-            {order?.deliveryCharges}
-          </Text>
-        </View>}
+        {!order?.isPickedUp && (
+          <View className="flex-row justify-between">
+            <Text
+              style={{
+                color: appTheme.fontMainColor,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {t("Delivery Charges")}
+            </Text>
+            <Text
+              style={{
+                color: appTheme.fontMainColor,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {configuration?.currencySymbol}
+              {order?.deliveryCharges}
+            </Text>
+          </View>
+        )}
 
         {/* Total Amount */}
         <View className="flex-row justify-between">

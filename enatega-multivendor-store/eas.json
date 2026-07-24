@@ -30,11 +30,9 @@
   "submit": {
     "production": {
       "android": {
-        "serviceAccountKeyPath": "./google-service-account.json",
         "track": "production"
       },
       "ios": {
-        "appleId": "sharan.gohar@icloud.com",
         "ascAppId": "1526672537",
         "appleTeamId": "GDFK7MVY6P"
       }

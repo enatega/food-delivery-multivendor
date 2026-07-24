@@ -1,5 +1,5 @@
 // Components
-import { UPDATE_BUSINESS_DETAILS } from "@/lib/apollo/mutations/rider.mutation";
+import { UPDATE_BUSINESS_DETAILS } from "@/lib/apollo/mutations/store.mutation";
 import { STORE_PROFILE } from "@/lib/apollo/queries/store.query";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { useApptheme } from "@/lib/context/theme.context";

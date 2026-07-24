@@ -37,15 +37,11 @@ const LoginScreen = () => {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { onLogin } = useLogin();
+  const { isLogging, onLogin } = useLogin();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
-    // TODO: Implement login logic
-    try {
-      await onLogin(creds.username, creds.password);
-    } catch {
-    }
+    await onLogin(creds.username, creds.password);
   };
 
   return (
@@ -163,12 +159,13 @@ const LoginScreen = () => {
                     className="text-center text-xs mb-2"
                     style={{ color: appTheme.fontSecondColor }}
                   >
-                    Above placeholder credentials are for testing purposes.
+                    {t("Demo credentials are pre-filled for evaluation.")}
                   </Text>
-
                   {/* Login Button */}
                   <CustomContinueButton
                     title={t("Login")}
+                    disabled={isLogging}
+                    isLoading={isLogging}
                     onPress={() => handleSubmit()}
                   />
                   {/* <TouchableOpacity

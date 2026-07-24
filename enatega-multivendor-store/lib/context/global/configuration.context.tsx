@@ -1,5 +1,3 @@
-"use client";
-
 // Core
 import { createContext, useCallback, useEffect, useState } from "react";
 
@@ -11,7 +9,7 @@ import {
 } from "@/lib/utils/interfaces";
 
 // API
-import { GET_CONFIGURATION } from "@/lib/api/graphql";
+import { GET_CONFIGURATION } from "@/lib/apollo/queries";
 
 // Hooks
 import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";

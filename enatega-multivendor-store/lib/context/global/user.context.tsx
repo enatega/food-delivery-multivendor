@@ -3,11 +3,11 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { QueryResult, useQuery } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 // Interface
 import {
   IStoreProfileResponse,
@@ -23,7 +23,8 @@ import {
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Services
-import { asyncStorageEmitter } from "@/lib/services";
+import { getStoreId, storageEmitter } from "@/lib/services";
+import { STORE_ID } from "@/lib/utils/constants";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
@@ -61,16 +62,19 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   >;
 
   const getUserId = useCallback(async () => {
-    const id = await AsyncStorage.getItem("store-id");
+    const id = await getStoreId();
     if (id) {
       setUserId(id);
     }
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
-    const listener = asyncStorageEmitter.addListener("store-id", (data:any) => {
-      setUserId(data?.value ?? "");
-    });
+    const listener = storageEmitter.addListener(
+      STORE_ID,
+      (data: { value?: string }) => {
+        setUserId(data?.value ?? "");
+      },
+    );
 
     getUserId();
 
@@ -79,32 +83,39 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         listener.removeListener();
       }
     };
-  }, []);
+  }, [getUserId]);
 
   useEffect(() => {
     if (userId) {
       refetchProfile({ restaurantId: userId });
     }
-  }, [userId]);
+  }, [refetchProfile, userId]);
 
-  return (
-    <UserContext.Provider
-      value={{
-        modalVisible,
-        setModalVisible,
-        userId,
-        loadingProfile,
-        errorProfile,
-        dataProfile: dataProfile?.restaurant ?? null,
-        requestForegroundPermissionsAsync,
-        setStoreOrderEarnings,
-        storeOrdersEarnings,
-        refetchProfile
-      }}
-    >
-      {children}
-    </UserContext.Provider>
+  const value = useMemo<IUserContextProps>(
+    () => ({
+      modalVisible,
+      setModalVisible,
+      userId,
+      loadingProfile,
+      errorProfile,
+      dataProfile: dataProfile?.restaurant ?? null,
+      requestForegroundPermissionsAsync,
+      setStoreOrderEarnings,
+      storeOrdersEarnings,
+      refetchProfile,
+    }),
+    [
+      dataProfile?.restaurant,
+      errorProfile,
+      loadingProfile,
+      modalVisible,
+      refetchProfile,
+      storeOrdersEarnings,
+      userId,
+    ],
   );
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 export const UserConsumer = UserContext.Consumer;
 export const useUserContext = () => useContext(UserContext);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 // UI
 import CustomTab from "@/lib/ui/useable-components/custom-tab";
@@ -28,54 +28,50 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
   const tabBarHeight = useBottomTabBarHeight();
-  const {
-    loading,
-    error,
-    data,
-    deliveredOrders,
-    refetch,
-    currentTab,
-    setCurrentTab,
-  } = useOrders();
+  const { loading, deliveredOrders, refetch, currentTab, setCurrentTab } =
+    useOrders();
   useKeepAwake();
 
   // const { loading: mutateLoading } = useAcceptOrder();
 
   // States
   const [refreshing, setRefreshing] = useState(false);
-  const [orders, setOrders] = useState<IOrder[]>([]);
   const [showDetails, setShowDetails] = useState<Record<string, boolean>>({});
 
   // Handlers
-  const onInitOrders = () => {
-    if (loading || error) return;
-    if (!data) return;
+  const orders = useMemo(
+    () =>
+      deliveredOrders.filter((order) =>
+        currentTab === ORDER_DISPATCH_TYPE[0]
+          ? !order?.isPickedUp
+          : order?.isPickedUp,
+      ),
+    [currentTab, deliveredOrders],
+  );
 
-    const _orders = deliveredOrders?.filter((order) =>
-      currentTab === ORDER_DISPATCH_TYPE[0]
-        ? !order?.isPickedUp
-        : order?.isPickedUp
-    );
-    setOrders(_orders ?? []);
-  };
-
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    refetch();
-    setRefreshing(false);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
   };
 
-  const toggleShowDetails = (itemId: string) => {
+  const toggleShowDetails = useCallback((itemId: string) => {
     setShowDetails((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
-  };
+  }, []);
 
-  const renderOrderItem = ({ item }: { item: IOrder }) => (
-    <Order
-      tab={route.key as ORDER_TYPE}
-      order={item}
-      showDetails={showDetails}
-      onToggleDetails={toggleShowDetails}
-    />
+  const renderOrderItem = useCallback(
+    ({ item }: { item: IOrder }) => (
+      <Order
+        tab={route.key as ORDER_TYPE}
+        order={item}
+        showDetails={showDetails}
+        onToggleDetails={toggleShowDetails}
+      />
+    ),
+    [route.key, showDetails, toggleShowDetails],
   );
 
   const renderEmptyState = () => (
@@ -103,11 +99,6 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
       )}
     </View>
   );
-
-  // Use Effect
-  useEffect(() => {
-    onInitOrders();
-  }, [data?.restaurantOrders, route.key, currentTab]);
 
   return (
     <View
