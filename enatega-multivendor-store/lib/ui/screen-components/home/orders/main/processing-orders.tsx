@@ -121,7 +121,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
       />
 
       <View className="flex-1 w-full">
-        {loading ? (
+        {loading && (!orders || orders.length < 1) ? (
           <View className="flex-1">
             <Spinner />
           </View>
