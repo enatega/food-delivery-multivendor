@@ -133,7 +133,7 @@ const Order = ({
   return (
     <View className="w-full">
       <View
-        className="flex-1 gap-y-2 rounded-[8px] m-4 p-4"
+        className="gap-y-2 rounded-[8px] m-4 p-4"
         style={{
           backgroundColor: appTheme.themeBackground,
           borderWidth: 1,
@@ -141,7 +141,7 @@ const Order = ({
         }}
       >
         {/* Status */}
-        <View className="flex-1 flex-row justify-between items-center">
+        <View className="flex-row justify-between items-center">
           <Text
             style={{
               color: appTheme.fontMainColor,
@@ -178,7 +178,7 @@ const Order = ({
         </View>
 
         {/* Order ID */}
-        <View className="flex-1 flex-row justify-between items-center">
+        <View className="flex-row justify-between items-center">
           <Text
             style={{
               color: appTheme.fontMainColor,
@@ -201,7 +201,7 @@ const Order = ({
         </View>
 
         {/* Order Items */}
-        <View className="flex-1 flex-row justify-between items-center">
+        <View className="flex-row justify-between items-center">
           <Text
             style={{
               color: appTheme.fontSecondColor,
@@ -232,7 +232,7 @@ const Order = ({
             return (
               <View
                 key={item._id}
-                className="flex-1 flex-row justify-between items-start mb-6"
+                className="flex-row justify-between items-start mb-6"
               >
                 {/* Left Side: Image and Details */}
                 <View className="flex-row gap-x-2 flex-1">
