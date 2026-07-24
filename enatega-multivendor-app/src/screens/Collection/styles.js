@@ -12,7 +12,7 @@ const styles = (props = null) =>
     headingContainer: {
       paddingTop: 4,
       paddingBottom: 4,
-      gap: 4
+      paddingHorizontal: 5
     },
     headingTitle: {
       marginBottom: 0
@@ -45,7 +45,29 @@ const styles = (props = null) =>
     contentContainerStyle: {
       gap: 12,
       paddingTop: 4,
-      paddingBottom: 50
+      paddingBottom: 50,
+      flexGrow: 1
+    },
+    emptyStateContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingTop: 20
+    },
+    emptyStateCard: {
+      width: '100%',
+      borderRadius: 16,
+      paddingVertical: 24,
+      paddingHorizontal: 18,
+      backgroundColor: props?.cardBackground ?? '#fff',
+      borderWidth: 1,
+      borderColor: props?.newBorderColor ?? '#E5E7EB'
+    },
+    emptyStateTitle: {
+      marginBottom: 8
+    },
+    emptyStateDescription: {
+      lineHeight: 20
     }
   })
 export default styles

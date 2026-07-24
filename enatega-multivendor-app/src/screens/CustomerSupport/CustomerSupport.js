@@ -144,15 +144,15 @@ const CustomerSupport = (props) => {
         fontWeight: 'bold'
       },
       headerTitleContainerStyle: {
-        marginTop: '2%',
         paddingLeft: scale(25),
         paddingRight: scale(25),
-        height: '75%',
-        marginLeft: 0
+        marginLeft: 0,
+        marginRight: 0
       },
       headerStyle: {
         backgroundColor: currentTheme.newheaderBG,
-        elevation: 0
+        elevation: 0,
+        shadowOpacity: 0
       },
       headerLeft: () => (
         <HeaderBackButton

@@ -93,6 +93,14 @@ export const AppConfigValidationSchema = Yup.object().shape({
   ),
   privacyPolicy: Yup.string().required('Privacy Policy is required'),
   testOtp: Yup.number().required('Test OTP is required'),
+  enableCustomerDemoMode: Yup.boolean().required(),
+  customerDemoZone: Yup.object()
+    .nullable()
+    .when('enableCustomerDemoMode', {
+      is: true,
+      then: (schema) => schema.required('Demo zone is required'),
+      otherwise: (schema) => schema.nullable(),
+    }),
 });
 
 export const CurrencyValidationSchema = Yup.object().shape({

@@ -7,6 +7,7 @@ import { theme } from '../../utils/themeColors'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import { clearResetSession } from '../../utils/resetPasswordSession'
 
 const FORGOT_PASSWORD = gql`
   ${forgotPassword}
@@ -44,6 +45,8 @@ export const useForgotPassword = () => {
 
   function forgotPassword() {
     if (validateCredentials()) {
+      // Starting a fresh reset invalidates any previously verified OTP (SEC-015).
+      clearResetSession()
       mutate({ variables: { email: email.toLowerCase().trim() } })
     }
   }

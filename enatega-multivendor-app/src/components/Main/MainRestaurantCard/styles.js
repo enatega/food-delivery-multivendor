@@ -9,7 +9,7 @@ const buildStyles = (props = null) =>
     //   ...alignment.MLlarge
     // },
     offerScroll: {
-      height: height * 0.402,
+      height: height * 0.37,
       width: '100%'
     },
     ItemTitle: {
@@ -23,7 +23,7 @@ const buildStyles = (props = null) =>
     },
     orderAgainSec: {
       marginHorizontal: scale(12),
-      marginBottom: scale(8)
+      marginBottom: scale(4)
     },
     topPicksSec: {
       ...alignment.MLmedium,
@@ -68,7 +68,24 @@ const buildStyles = (props = null) =>
       paddingBottom: 8,
       paddingLeft: 16,
       paddingRight: 16,
-      
+    },
+    skeletonRow: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      gap: scale(10),
+      paddingRight: scale(24)
+    },
+    popularSkeletonCard: {
+      width: '47%',
+      borderRadius: scale(22),
+      backgroundColor: props != null ? props?.cardBackground : '#FFF',
+      borderWidth: 1,
+      borderColor: props != null ? props?.newBorderColor : '#E5E7EB',
+      padding: scale(12)
+    },
+    popularSkeletonImage: {
+      height: scale(165),
+      borderRadius: scale(18),
+      marginBottom: scale(10)
     }
   })
 

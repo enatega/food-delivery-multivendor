@@ -36,7 +36,7 @@ import { Instructions } from '../../components/Checkout/Instructions'
 import MapViewDirections from 'react-native-maps-directions'
 import useEnvVars from '../../../environment'
 import LottieView from 'lottie-react-native'
-import { clearLogEntriesAsync } from 'expo-updates'
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import Taxes from './Taxes'
 const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
@@ -200,6 +200,25 @@ function OrderDetail(props) {
       headerStyle: { backgroundColor: currentTheme.newheaderBG }
     })
   }, [orders])
+
+  // Keep the screen awake only while the order is in active transit so a user
+  // tracking a delivery doesn't have the screen sleep. Replaces the app-wide
+  // useKeepAwake() that kept the screen on for every screen and drained the
+  // battery (PERF-011).
+  useEffect(() => {
+    const isActiveTransit = [
+      ORDER_STATUS_ENUM.ASSIGNED,
+      ORDER_STATUS_ENUM.PICKED
+    ].includes(order?.orderStatus)
+    if (isActiveTransit) {
+      activateKeepAwakeAsync('order-tracking')
+    } else {
+      deactivateKeepAwake('order-tracking')
+    }
+    return () => {
+      deactivateKeepAwake('order-tracking')
+    }
+  }, [order?.orderStatus])
 
   const [remainingTimeState, setRemainingTimeState] = useState(0)
 

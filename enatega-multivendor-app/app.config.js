@@ -35,25 +35,21 @@ module.exports = () => {
     androidStatusBar: {
       backgroundColor: '#000000'
     },
-    splash: {
-      image: './assets/splash.png',
-      resizeMode: "cover",
-        "backgroundColor": "#000000"
-    },
+    // Native OS splash (before JS boots) is theme-aware via the
+    // expo-splash-screen plugin below — a solid per-theme background that
+    // matches AnimatedSplash's first frame, so there is no black/white flash.
     platforms: ['ios', 'android'],
     orientation: 'portrait',
     icon: './assets/icon.png',
     assetBundlePatterns: ['**/*'],
     userInterfaceStyle: 'automatic',
     ios: {
-      splash: {
-        image: './assets/splash.png',
-        resizeMode: "cover",
-          "backgroundColor": "#000000"
-      },
       entitlements: {
         'com.apple.developer.networking.wifi-info': true,
-        'aps-environment': 'development'
+        // Use the production APNs gateway for production builds so push
+        // notifications are not silently rejected on App Store devices (SEC-013).
+        'aps-environment':
+          process.env.APP_ENV === 'production' ? 'production' : 'development'
       },
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
@@ -85,12 +81,10 @@ module.exports = () => {
       versionCode: 127,
       package: 'com.enatega.multivendor',
       userInterfaceStyle: 'automatic',
+      // Disable ADB/cloud backups so the AsyncStorage DB (JWT) can't be pulled
+      // off a connected device without root (SEC-002).
+      allowBackup: false,
       googleServicesFile: './google-services.json',
-      splash: {
-        image: './assets/splash.png',
-        resizeMode: 'cover',
-        backgroundColor: '#000000'
-      },
       config: {
         ...(androidGoogleMapsApiKey
           ? {
@@ -104,6 +98,13 @@ module.exports = () => {
         'android.permission.ACCESS_FINE_LOCATION',
         'android.permission.ACCESS_COARSE_LOCATION',
         'android.permission.FOREGROUND_SERVICE'
+      ],
+      // Strip dangerous permissions that no feature uses and that library
+      // transitive manifests can pull in (tapjacking / broad storage) (SEC-006).
+      blockedPermissions: [
+        'android.permission.RECORD_AUDIO',
+        'android.permission.SYSTEM_ALERT_WINDOW',
+        'android.permission.WRITE_EXTERNAL_STORAGE'
       ],
       icon: './assets/appIcon.png',
       queries: {
@@ -127,6 +128,24 @@ module.exports = () => {
     },
     plugins: [
       [
+        'expo-splash-screen',
+        {
+          // Solid per-theme background, no visible logo. The plugin requires an
+          // image to generate the native splashscreen_logo drawable, so we pass
+          // a 1x1 transparent PNG — only the background color shows. The animated
+          // pin / wordmark is drawn by the JS AnimatedSplash component, whose
+          // first frame uses these same colors so the handoff shows no flash.
+          backgroundColor: '#f4f8f5', // light ("Pink")
+          image: './assets/splashTransparent.png',
+          imageWidth: 1,
+          resizeMode: 'contain',
+          dark: {
+            backgroundColor: '#0b1225', // dark
+            image: './assets/splashTransparent.png'
+          }
+        }
+      ],
+      [
         'expo-tracking-transparency',
         {
           userTrackingPermission:
@@ -148,10 +167,13 @@ module.exports = () => {
       ],
       'expo-notifications',
       'expo-font',
+      'expo-secure-store',
       'expo-localization',
       'expo-web-browser',
       'expo-video',
-      'expo-apple-authentication'
+      'expo-apple-authentication',
+      // Xcode 26 / clang fmt consteval build fix (see plugins/withFmtConstevalFix.js)
+      './plugins/withFmtConstevalFix'
     ],
     extra: {
       eas: {

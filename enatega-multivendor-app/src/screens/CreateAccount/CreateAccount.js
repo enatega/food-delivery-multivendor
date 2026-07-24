@@ -97,7 +97,7 @@ const CreateAccount = (props) => {
             await mutateLogin(user)
           } catch (e) {
             if (e.code !== 'ERR_CANCELED') {
-              console.error('Apple Sign In Error:', e)
+              if (__DEV__) console.error('Apple Sign In Error:', e)
               FlashMessage({
                 message: e?.message?.toLowerCase()?.includes('token')
                   ? 'Your social sign-in token is invalid or expired. Please sign in again.'

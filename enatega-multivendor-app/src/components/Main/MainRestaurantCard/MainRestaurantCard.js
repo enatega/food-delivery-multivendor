@@ -14,12 +14,67 @@ import { scale } from '../../../utils/scaling'
 import { isOpen } from '../../../utils/customFunctions'
 import Ripple from 'react-native-material-ripple'
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 
 const ICONS = {
   grocery: 'local-grocery-store',
   restaurant: 'restaurant',
   store: 'store',
   trending: 'local-fire-department'
+}
+
+function PopularSectionSkeleton({ currentTheme, title, icon, t }) {
+  return (
+    <View style={styles().orderAgainSec}>
+      <View style={{ gap: scale(8) }}>
+        <View style={styles(currentTheme).header}>
+          <View style={styles(currentTheme).row}>
+            <TextDefault
+              numberOfLines={1}
+              textColor={currentTheme.fontFourthColor}
+              bolder
+              H4
+            >
+              {t(title)}
+            </TextDefault>
+            {icon ? (
+              <MaterialIcons
+                name={ICONS[icon]}
+                size={24}
+                color={currentTheme.editProfileButton}
+              />
+            ) : null}
+          </View>
+          <View style={styles(currentTheme).seeAllBtn}>
+            <TextDefault H5 bolder textColor={currentTheme.main}>
+              {t('SeeAll')}
+            </TextDefault>
+          </View>
+        </View>
+
+        <View style={styles(currentTheme).skeletonRow}>
+          {[0, 1].map((item) => (
+            <Placeholder
+              key={`popular-skeleton-${item}`}
+              Animation={(props) => (
+                <Fade
+                  {...props}
+                  style={styles(currentTheme).placeHolderFadeColor}
+                  duration={600}
+                />
+              )}
+              style={styles(currentTheme).popularSkeletonCard}
+            >
+              <PlaceholderLine style={styles().popularSkeletonImage} />
+              <PlaceholderLine width={65} />
+              <PlaceholderLine width={85} />
+              <PlaceholderLine width={95} />
+            </Placeholder>
+          ))}
+        </View>
+      </View>
+    </View>
+  )
 }
 
 function MainRestaurantCard(props) {
@@ -41,7 +96,20 @@ function MainRestaurantCard(props) {
     return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
   }, [])
 
-  if (props?.loading) return <MainLoadingUI />
+  if (props?.loading) {
+    if (props?.queryType === 'topPicks') {
+      return (
+        <PopularSectionSkeleton
+          currentTheme={currentTheme}
+          title={props?.title}
+          icon={props?.icon}
+          t={t}
+        />
+      )
+    }
+
+    return <MainLoadingUI />
+  }
   // A failed/empty section should simply not render — never surface a raw
   // error string on the discovery page. Hide the whole section instead.
   if (props?.error || orders?.length <= 0) return <></>

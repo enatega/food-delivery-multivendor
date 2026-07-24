@@ -682,6 +682,8 @@ export const getConfiguration = `query Configuration{
     costType
     publishableKey
     secretKey
+    enableCustomerDemoMode
+    customerDemoZoneId
   }
 }`
 

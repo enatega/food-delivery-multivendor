@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState, useEffect } from 'react'
-import { View, StatusBar, Platform, Animated, Alert } from 'react-native'
+import { View, StatusBar, Platform, Animated } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { useRestaurant } from '../../ui/hooks'
@@ -34,10 +34,12 @@ function NewRestaurantDetailDesign(props) {
   const restaurantId = restaurant?._id
 
   const scrollOffsetY = useRef(new Animated.Value(0)).current
+  const collapsedRef = useRef(false)
 
   // Measure the real header height so the content padding matches it exactly.
   // Header content is device-scaled, so a fixed constant leaves a gap / clips.
   const [headerMaxHeight, setHeaderMaxHeight] = useState(HEADER_MAX_HEIGHT)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const headerScrollDistance = headerMaxHeight - HEADER_MIN_HEIGHT
 
   const currentTheme = {
@@ -77,23 +79,38 @@ function NewRestaurantDetailDesign(props) {
     restaurant?.isAvailable ?? restaurantData?.restaurant?.isAvailable
 
   // Calculate header animation values
-  const headerHeight = scrollOffsetY.interpolate({
+  const headerTranslateY = scrollOffsetY.interpolate({
     inputRange: [0, headerScrollDistance],
-    outputRange: [headerMaxHeight, HEADER_MIN_HEIGHT],
+    outputRange: [0, -headerScrollDistance],
     extrapolate: 'clamp'
   })
 
   const headerOpacity = scrollOffsetY.interpolate({
-    inputRange: [0, headerScrollDistance / 2],
+    inputRange: [0, headerScrollDistance * 0.88],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   })
 
   const collapsedHeaderOpacity = scrollOffsetY.interpolate({
-    inputRange: [headerScrollDistance / 2, headerScrollDistance],
+    inputRange: [headerScrollDistance * 0.84, headerScrollDistance],
     outputRange: [0, 1],
     extrapolate: 'clamp'
   })
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
+    {
+      useNativeDriver: true,
+      listener: (event) => {
+        const y = event.nativeEvent.contentOffset.y
+        const nextCollapsed = y >= headerScrollDistance * 0.9
+        if (collapsedRef.current !== nextCollapsed) {
+          collapsedRef.current = nextCollapsed
+          setIsCollapsed(nextCollapsed)
+        }
+      }
+    }
+  )
 
   // Handler for opening search overlay
   const handleOpenSearch = () => {
@@ -155,11 +172,12 @@ function NewRestaurantDetailDesign(props) {
 
       {/* Main Header */}
       <Animated.View
-        pointerEvents='box-none'
+        pointerEvents={isCollapsed ? 'none' : 'box-none'}
         style={[
           styles(currentTheme).headerContainer,
           {
-            height: headerHeight,
+            height: headerMaxHeight,
+            transform: [{ translateY: headerTranslateY }],
             zIndex: 1
           }
         ]}
@@ -185,7 +203,7 @@ function NewRestaurantDetailDesign(props) {
 
         {/* Collapsed Header */}
         <Animated.View
-          pointerEvents='box-none'
+          pointerEvents={isCollapsed ? 'box-none' : 'none'}
           style={[
             {
               opacity: collapsedHeaderOpacity,
@@ -211,19 +229,19 @@ function NewRestaurantDetailDesign(props) {
       {/* Scrollable Content with Restaurant Sections */}
       <Animated.ScrollView
         scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
-          { useNativeDriver: false }
-        )}
+        onScroll={handleScroll}
         style={styles(currentTheme).scrollView}
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
+        bounces
+        alwaysBounceVertical
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={[
+          styles(currentTheme).contentContainer,
+          { paddingTop: headerMaxHeight }
+        ]}
       >
-        <View
-          style={[
-            styles(currentTheme).contentContainer,
-            { paddingTop: headerMaxHeight }
-          ]}
-        >
+        <View>
           <RestaurantSections
             restaurantId={restaurantId}
             configuration={configuration}

@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useMutation, useQuery } from '@apollo/client'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
@@ -28,7 +29,9 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
   const [isSending, setIsSending] = useState(false)
   const [allowBackdropClose, setAllowBackdropClose] = useState(false)
   const [footerHeight, setFooterHeight] = useState(scale(82))
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
   const scrollRef = useRef(null)
+  const insets = useSafeAreaInsets()
 
   const ticketId = ticket?._id
 
@@ -121,8 +124,14 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
     const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
     const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
 
-    const showSubscription = Keyboard.addListener(showEvent, scrollToLatest)
-    const hideSubscription = Keyboard.addListener(hideEvent, scrollToLatest)
+    const showSubscription = Keyboard.addListener(showEvent, (event) => {
+      setKeyboardHeight(event?.endCoordinates?.height || 0)
+      scrollToLatest()
+    })
+    const hideSubscription = Keyboard.addListener(hideEvent, () => {
+      setKeyboardHeight(0)
+      scrollToLatest()
+    })
 
     return () => {
       showSubscription.remove()
@@ -184,11 +193,21 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
           onPress={allowBackdropClose ? onClose : undefined}
         />
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={0}
-          style={styles.sheetWrap}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? scale(12) : 0}
+          style={[
+            styles.sheetWrap,
+            Platform.OS === 'android' && { paddingBottom: keyboardHeight }
+          ]}
         >
-          <View style={[styles.sheet, { backgroundColor: currentTheme.cardBackground }]}>
+          <View
+            style={[
+              styles.sheet,
+              {
+                backgroundColor: currentTheme.cardBackground
+              }
+            ]}
+          >
             <View style={[styles.header, { backgroundColor: currentTheme.newheaderBG }]}>
             <View style={styles.headerCopy}>
               <TextDefault H4 bold textColor={currentTheme.newFontcolor} numberOfLines={1}>
@@ -241,7 +260,13 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={[
                     styles.messagesContent,
-                    { paddingBottom: footerHeight + scale(12) }
+                    {
+                      paddingBottom:
+                        footerHeight +
+                        scale(12) +
+                        insets.bottom +
+                        (Platform.OS === 'android' ? keyboardHeight : 0)
+                    }
                   ]}
                   keyboardShouldPersistTaps='handled'
                   keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
@@ -304,7 +329,14 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                   setFooterHeight(nextFooterHeight)
                 }
               }}
-              style={[styles.footer, { borderTopColor: currentTheme.borderLight, backgroundColor: currentTheme.cardBackground }]}
+              style={[
+                styles.footer,
+                {
+                  borderTopColor: currentTheme.borderLight,
+                  backgroundColor: currentTheme.cardBackground,
+                  paddingBottom: scale(12) + insets.bottom
+                }
+              ]}
             >
             {isClosed ? (
               <View style={styles.closedState}>
@@ -392,7 +424,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: scale(16),
-    paddingVertical: scale(14)
+    paddingVertical: scale(14),
+    minHeight: scale(68)
   },
   headerCopy: {
     flex: 1,

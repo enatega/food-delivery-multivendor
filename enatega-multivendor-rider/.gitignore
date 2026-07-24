@@ -6,6 +6,7 @@ expo-env.d.ts
 # @end expo-cli
 
 google-service-account.json
+
 .env
 .env.local
 .env.*.local

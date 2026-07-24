@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import { View, FlatList, TouchableOpacity, Alert, Animated, Easing } from 'react-native'
 import { useRestaurantQueries } from '../../../ui/hooks/useRestaurantScreenNewDesign'
 import TextDefault from '../../Text/TextDefault/TextDefault'
@@ -8,6 +8,7 @@ import styles from './styles'
 import ShimmerImage from '../../ShimmerImage/ShimmerImage'
 import { useTranslation } from 'react-i18next'
 import { isOpen } from '../../../utils/customFunctions'
+import { IMAGE_LINK } from '../../../utils/constants'
 
 const CARD_SPACING = scale(10)
 
@@ -171,30 +172,6 @@ const CategoriesSkeleton = ({ currentTheme }) => {
   )
 }
 
-// AnimatedItem component that matches browse categories exactly
-const AnimatedItem = ({ index, children }) => {
-  const scaleValue = useRef(new Animated.Value(0)).current
-
-  useEffect(() => {
-    Animated.timing(scaleValue, {
-      toValue: 1,
-      delay: index * 40,
-      duration: 500,
-      useNativeDriver: true
-    }).start()
-  }, [index])
-
-  return (
-    <Animated.View
-      style={{
-        opacity: scaleValue
-      }}
-    >
-      {children}
-    </Animated.View>
-  )
-}
-
 const RestaurantSections = ({
   restaurantId,
   configuration,
@@ -204,27 +181,8 @@ const RestaurantSections = ({
 }) => {
   const { t } = useTranslation()
   const { popularItems, categories } = useRestaurantQueries(restaurantId)
-  // let popularItems={}
-  // let categories={}
-  // Animation states
-  const [hasPopularAnimated, setHasPopularAnimated] = useState(false)
-  const [hasCategoriesAnimated, setHasCategoriesAnimated] = useState(false)
-
-  // Reset animations when new data arrives
-  useEffect(() => {
-    if (!popularItems.loading && popularItems.data) {
-      setHasPopularAnimated(false)
-    }
-  }, [popularItems.data])
-
-  useEffect(() => {
-    if (!categories.loading && categories.data) {
-      setHasCategoriesAnimated(false)
-    }
-  }, [categories.data])
 
   // Check if restaurant is closed
-  // const isRestaurantOpen = restaurant?.isOpe
   const isAvailable = restaurant?.isAvailable
   const isRestaurantClosed = !isAvailable || !isOpen(restaurant)
 
@@ -292,7 +250,7 @@ const RestaurantSections = ({
     }
   }
 
-  const renderPopularItem = ({ item, index }) => {
+  const renderPopularItem = ({ item }) => {
     const variation = item.variations?.[0]
     const price = variation?.price || 0
     const discountedPrice = variation?.discounted
@@ -300,13 +258,25 @@ const RestaurantSections = ({
     // Use discounted price only if it exists and is greater than 0, otherwise use base price
     const displayPrice = discountedPrice && discountedPrice > 0 ? discountedPrice : price
 
+    // Match the "All items" card: fall back to a default image + placeholder so
+    // a missing/empty image never leaves a blank card.
+    const imageUrl =
+      item?.image && String(item.image).trim() !== '' ? item.image : IMAGE_LINK
+
     const content = (
       <TouchableOpacity style={styles(currentTheme).popularItemCard} onPress={() => handleItemClick(item)}>
         <TouchableOpacity style={styles(currentTheme).plusButton} onPress={() => handleItemClick(item)}>
           <Ionicons name='add' size={scale(16)} color={currentTheme.fontWhite} />
         </TouchableOpacity>
 
-        <ShimmerImage imageUrl={item.image} style={styles(currentTheme).popularItemImage} resizeMode='cover' />
+        <View style={styles(currentTheme).popularItemImageWrap}>
+          <ShimmerImage
+            imageUrl={imageUrl}
+            style={styles(currentTheme).popularItemImage}
+            resizeMode='cover'
+            defaultSource={require('../../../assets/images/food_placeholder.png')}
+          />
+        </View>
         <View style={styles(currentTheme).popularItemInfo}>
           <TextDefault style={styles(currentTheme).priceText}>
             {configuration.currencySymbol} {displayPrice}
@@ -318,46 +288,27 @@ const RestaurantSections = ({
       </TouchableOpacity>
     )
 
-    if (!hasPopularAnimated) {
-      return <AnimatedItem index={index}>{content}</AnimatedItem>
-    }
-
     return content
   }
+  const renderCategoryItem = ({ item }) => {
+    const imageUrl =
+      item?.url && String(item.url).trim() !== '' ? item.url : IMAGE_LINK
 
-  // const renderCategoryItem = ({ item, index }) => {
-  //   const content = (
-  //     // update beautifull shadow to category card
-  //     <TouchableOpacity style={styles(currentTheme).categoryCard} onPress={() => handleCategoryClick(item)}> 
-  //     <ShimmerImage imageUrl={item.url} style={styles(currentTheme).categoryImage} resizeMode='cover' />
-  //       <TextDefault numberOfLines={1} style={styles(currentTheme).categoryTitle}>
-  //         {item.category_name}
-  //       </TextDefault>
-  //     </TouchableOpacity>
-  //   )
-
-  //   if (!hasCategoriesAnimated) {
-  //     return <AnimatedItem index={index}>{content}</AnimatedItem>
-  //   }
-
-  //   return content
-  // }
-
-  const renderCategoryItem = ({ item, index }) => {
     const content = (
       <View style={styles(currentTheme).categoryCardShadow}>
         <TouchableOpacity
-        style={[
-          styles(currentTheme).categoryCard
-        ]}
-        onPress={() => handleCategoryClick(item)}
-        activeOpacity={0.9}
-      >
-          <ShimmerImage
-            imageUrl={item.url}
-            style={styles(currentTheme).categoryImage}
-            resizeMode='cover'
-          />
+          style={styles(currentTheme).categoryCard}
+          onPress={() => handleCategoryClick(item)}
+          activeOpacity={0.9}
+        >
+          <View style={styles(currentTheme).categoryImageWrap}>
+            <ShimmerImage
+              imageUrl={imageUrl}
+              style={styles(currentTheme).categoryImage}
+              resizeMode='cover'
+              defaultSource={require('../../../assets/images/food_placeholder.png')}
+            />
+          </View>
           <View style={styles(currentTheme).categoryTitleContainer}>
             <TextDefault
               numberOfLines={2}
@@ -373,10 +324,6 @@ const RestaurantSections = ({
       </View>
     )
 
-    if (!hasCategoriesAnimated) {
-      return <AnimatedItem index={index}>{content}</AnimatedItem>
-    }
-  
     return content
   }
   return (
@@ -401,11 +348,6 @@ const RestaurantSections = ({
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles(currentTheme).popularList}
               ItemSeparatorComponent={() => <View style={{ width: CARD_SPACING }} />}
-              onMomentumScrollEnd={() => {
-                if (!hasPopularAnimated && popularItems.data.length > 0) {
-                  setHasPopularAnimated(true)
-                }
-              }}
             />
           </View>
         )
@@ -421,21 +363,10 @@ const RestaurantSections = ({
           </TextDefault>
 
           <View style={styles(currentTheme).categoriesGrid}>
-            {categories.data?.map((category, index) => {
-              // Set animation complete after the last category is processed
-              if (index === categories.data.length - 1 && !hasCategoriesAnimated) {
-                // Use timeout to delay setting the state to allow animation to be visible
-                setTimeout(
-                  () => {
-                    setHasCategoriesAnimated(true)
-                  },
-                  (index + 1) * 40 + 500
-                ) // Delay based on index plus animation duration
-              }
-
+            {categories.data?.map((category) => {
               return (
                 <View key={category.id} style={styles(currentTheme).categoryWrapper}>
-                  {renderCategoryItem({ item: category, index })}
+                  {renderCategoryItem({ item: category })}
                 </View>
               )
             })}

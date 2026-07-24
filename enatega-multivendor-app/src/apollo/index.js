@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getToken } from '../utils/secureToken'
 import {
   ApolloClient,
   InMemoryCache,
@@ -117,7 +117,7 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       reconnect: true,
       lazy: true,
       connectionParams: async () => {
-        const token = await AsyncStorage.getItem('token')
+        const token = await getToken()
         const hasExpiredUserToken = token && isJwtTokenExpired(token)
 
         if (hasExpiredUserToken) {
@@ -135,7 +135,7 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
     const publicToken = await getValidPublicToken(GRAPHQL_URL)
     const nonce = await getOrCreateNonce()
     const isPublicOperation = publicOperations.has(operation.operationName)
-    const token = isPublicOperation ? null : await AsyncStorage.getItem('token')
+    const token = isPublicOperation ? null : await getToken()
     const hasExpiredUserToken = token && isJwtTokenExpired(token)
 
     if (hasExpiredUserToken) {

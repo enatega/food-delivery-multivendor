@@ -8,6 +8,17 @@ import { FILTER_TYPE } from '../../utils/enums'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
 
+const cloneFiltersState = (filters = {}) =>
+  Object.keys(filters).reduce((acc, key) => {
+    const filter = filters[key] || {}
+    acc[key] = {
+      ...filter,
+      values: Array.isArray(filter.values) ? [...filter.values] : [],
+      selected: Array.isArray(filter.selected) ? [...filter.selected] : []
+    }
+    return acc
+  }, {})
+
 
 const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   const { t, i18n } = useTranslation()
@@ -15,19 +26,12 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   const safeFilters = useMemo(() => {
-    return Object.keys(filters || {}).reduce((acc, key) => {
-      const filter = filters?.[key] || {}
-      acc[key] = {
-        ...filter,
-        values: Array.isArray(filter.values) ? filter.values : [],
-        selected: Array.isArray(filter.selected) ? filter.selected : []
-      }
-      return acc
-    }, {})
+    return cloneFiltersState(filters)
   }, [filters])
 
   const handleValueSelection = (filterTitle, filterValue) => {
-    const selectedFilter = safeFilters[filterTitle]
+    const nextFilters = cloneFiltersState(safeFilters)
+    const selectedFilter = nextFilters[filterTitle]
     if (selectedFilter.type === FILTER_TYPE.RADIO) {
       selectedFilter.selected = [filterValue]
     } else {
@@ -36,9 +40,9 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
         selectedFilter.selected = selectedFilter.selected.filter(
           (a) => a !== filterValue
         )
-      } else selectedFilter.selected.push(filterValue)
+      } else selectedFilter.selected = [...selectedFilter.selected, filterValue]
     }
-    setFilters({ ...safeFilters, [filterTitle]: { ...selectedFilter } })
+    setFilters(nextFilters)
   }
 
   const clearFilters = () => {
@@ -120,7 +124,7 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
     <TouchableOpacity
       style={styles(currentTheme).applyBtn}
       activeOpacity={0.8}
-      onPress={applyFilters}
+      onPress={() => applyFilters(safeFilters)}
     >
       <TextDefault center bold H4 textColor={currentTheme.black}>
         {t('apply')}

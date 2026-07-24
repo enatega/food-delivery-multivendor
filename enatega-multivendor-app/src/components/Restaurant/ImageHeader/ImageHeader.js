@@ -177,8 +177,19 @@ function HeaderContent({
   return (
     <Animated.View style={[styles(currentTheme).container, containerAnimatedStyle, { height: headerHeight }]}>
       <Animated.View pointerEvents='none' style={[styles(currentTheme).backgroundFill, backgroundAnimatedStyle]} />
-      <View style={[styles(currentTheme).topRow, { paddingTop: insetTop }]}>
-        <View style={styles(currentTheme).leadingArea}>
+      <View
+        style={[
+          styles(currentTheme).topRow,
+          searchOpen && styles(currentTheme).topRowSearch,
+          { paddingTop: insetTop }
+        ]}
+      >
+        <View
+          style={[
+            styles(currentTheme).leadingArea,
+            searchOpen && styles(currentTheme).leadingAreaSearch
+          ]}
+        >
           {searchOpen ? (
             <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={searchPopupHandler}>
               <Entypo name='cross' color={currentTheme.newIconColor} size={scale(22)} />
@@ -190,7 +201,12 @@ function HeaderContent({
           )}
         </View>
 
-        <View style={styles(currentTheme).centerArea}>
+        <View
+          style={[
+            styles(currentTheme).centerArea,
+            searchOpen && styles(currentTheme).centerAreaSearch
+          ]}
+        >
           {searchOpen ? (
             <Search setSearch={setSearch} search={search} newheaderColor={currentTheme.backgroundColor} cartContainer={currentTheme.gray500} placeHolder={t('searchItems')} />
           ) : (
@@ -200,25 +216,29 @@ function HeaderContent({
           )}
         </View>
 
-        {!searchOpen && (
-          <View style={styles(currentTheme).trailingArea}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles(currentTheme).touchArea}
-              onPress={() => {
-                navigation.navigate('About', {
-                  restaurantObject: { ...aboutObject },
-                  tab: false
-                })
-              }}
-            >
-              <SimpleLineIcons name='info' size={scale(17)} color={currentTheme.newIconColor} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={searchHandler}>
-              <Ionicons name='search-outline' style={{ fontSize: scale(20) }} color={currentTheme.newIconColor} />
-            </TouchableOpacity>
-          </View>
-        )}
+        <View
+          style={[
+            styles(currentTheme).trailingArea,
+            searchOpen && styles(currentTheme).trailingAreaHidden
+          ]}
+          pointerEvents={searchOpen ? 'none' : 'auto'}
+        >
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles(currentTheme).touchArea}
+            onPress={() => {
+              navigation.navigate('About', {
+                restaurantObject: { ...aboutObject },
+                tab: false
+              })
+            }}
+          >
+            <SimpleLineIcons name='info' size={scale(17)} color={currentTheme.newIconColor} />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={searchHandler}>
+            <Ionicons name='search-outline' style={{ fontSize: scale(20) }} color={currentTheme.newIconColor} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {showCategories && !searchOpen && <CategoryTabsBase categories={categories} activeCategoryIndex={activeCategoryIndex} onPressCategory={onPressCategory} currentTheme={currentTheme} t={t} />}

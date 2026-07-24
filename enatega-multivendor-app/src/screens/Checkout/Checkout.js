@@ -59,14 +59,22 @@ const APPLY_COUPON = gql`
 `
 const { height: HEIGHT } = Dimensions.get('window')
 
+function PaymentMethodIcon({ paymentMethod, color, size }) {
+  if (paymentMethod?.iconFamily === 'material-community') {
+    return (
+      <MaterialCommunityIcons
+        name={paymentMethod.icon}
+        size={size}
+        color={color}
+      />
+    )
+  }
+
+  return <FontAwesome name={paymentMethod?.icon} size={size} color={color} />
+}
+
 function Checkout(props) {
   const Analytics = analytics()
-  useFocusEffect(
-    useCallback(() => {
-      // Alert.alert( "Server is currently unavailable. Please try again later.");
-      console.log('Server is currently unavailable. Please try again later.')
-    }, [])
-  )
 
   const configuration = useContext(ConfigurationContext)
   const { reFetchOrders } = useContext(OrdersContext)
@@ -105,6 +113,17 @@ function Checkout(props) {
   }
   const [isModalVisible, setisModalVisible] = useState(false)
   const [orderConfirmedTime, setOrderConfirmedTime] = useState(null)
+  // When demo mode is enabled the order should go through with whatever
+  // location is active, without forcing the user into the address flow.
+  // The `isDemoDefaultLocation` flag only lives on the location built by
+  // LocationProvider, so it is lost the moment the user picks any other
+  // location (current location, map tap, etc.). Gate on demo mode + valid
+  // coordinates instead so place order works in all demo-mode cases.
+  const isDemoDeliveryLocation = !!(
+    configuration?.enableCustomerDemoMode &&
+    location?.latitude &&
+    location?.longitude
+  )
 
   const restaurant = data?.restaurant
 
@@ -180,7 +199,8 @@ function Checkout(props) {
     payment: 'COD',
     label: t('cod'),
     index: 2,
-    icon: 'dollar'
+    icon: 'cash',
+    iconFamily: 'material-community'
   }
 
   const paymentMethod = props?.route.params && props?.route.params.paymentMethod ? props?.route.params.paymentMethod : COD_PAYMENT
@@ -403,12 +423,10 @@ function Checkout(props) {
       })
     }
     if (error?.networkError) {
-      // console.log(`Network Error: ${networkError.message}`);
       if (error?.networkError.statusCode === 502) {
-        // FlashMessage({
-        //   message: "Server is currently unavailable. Please try again later."
-        // })
-        console.log('Server is currently unavailable. Please try again later.')
+        FlashMessage({
+          message: 'Server is currently unavailable. Please try again later.'
+        })
       }
       if (error?.networkError.statusCode === 504) {
         FlashMessage({
@@ -454,7 +472,7 @@ function Checkout(props) {
       })
       return false
     }
-    if (!isPickup && !location._id) {
+    if (!isPickup && !location?._id && !isDemoDeliveryLocation) {
       props?.navigation.navigate('CartAddress')
       return false
     }
@@ -531,13 +549,25 @@ function Checkout(props) {
             latitude: '' + location.latitude
           }
         } else {
-          // For delivery, use the selected address
+          // For delivery, use the selected address.
+          // Re-derive the demo flag from `isDemoDeliveryLocation` (demo mode +
+          // valid coords) instead of reading it off the location object. The
+          // `isDemoDefaultLocation`/`demoZoneId` fields only exist on the
+          // location built by LocationProvider and are lost the moment the user
+          // re-selects an address from the header sheet — which made a second
+          // order fail with "can't deliver to your address" until the app was
+          // killed. Falling back to the configured demo zone keeps the bypass
+          // consistent in real time.
           orderVariables.address = {
             label: location.label,
             deliveryAddress: location.deliveryAddress,
             details: location.details,
             longitude: '' + location.longitude,
-            latitude: '' + location.latitude
+            latitude: '' + location.latitude,
+            isDemoDefaultLocation:
+              isDemoDeliveryLocation || !!location.isDemoDefaultLocation,
+            demoZoneId:
+              location.demoZoneId || configuration?.customerDemoZoneId || null
           }
         }
 
@@ -558,6 +588,9 @@ function Checkout(props) {
   async function didFocus() {
     const { restaurant } = data
     setMinimumOrder(restaurant.minimumOrder)
+    if (props?.navigation.isFocused()) {
+      setLoadingData(false)
+    }
     try {
       if (cartCount && cart) {
         const transformCart = populateCart(restaurant, cart)
@@ -566,7 +599,6 @@ function Checkout(props) {
           const updatedItems = transformCart.map((item) => item.cartItem)
           if (updatedItems.length === 0) await clearCart()
           await updateCart(updatedItems)
-          setLoadingData(false)
           if (cart.length !== updatedItems.length) {
             FlashMessage({
               message: t('itemNotAvailable')
@@ -574,9 +606,7 @@ function Checkout(props) {
           }
         }
       } else {
-        if (props?.navigation.isFocused()) {
-          setLoadingData(false)
-        }
+        return
       }
     } catch (e) {
       FlashMessage({
@@ -620,7 +650,8 @@ function Checkout(props) {
   }
   let deliveryTime = Math.floor((orderDate - Date.now()) / 1000 / 60)
   if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
-  if (loading || loadingData || mutateOrderLoading || loadingOrder) return loadginScreen()
+  const shouldShowInitialLoader = !restaurant && (loading || loadingData)
+  if (shouldShowInitialLoader) return loadginScreen()
 
   return (
     <>
@@ -692,7 +723,8 @@ function Checkout(props) {
                       <View>
                         <PaymentModeOption
                           title={t('cod')}
-                          icon={'shekel'}
+                          icon={'cash'}
+                          iconFamily='material-community'
                           selected={paymentMode === 'COD'}
                           theme={currentTheme}
                           onSelect={() => {
@@ -950,7 +982,11 @@ function Checkout(props) {
           <View style={styles().modalContainer}>
             <View style={styles(currentTheme).modalHeader}>
               <View activeOpacity={0.7} style={styles(currentTheme).modalheading}>
-                <FontAwesome name={paymentMethod?.icon} size={20} color={currentTheme.newIconColor} />
+                <PaymentMethodIcon
+                  paymentMethod={paymentMethod}
+                  size={20}
+                  color={currentTheme.newIconColor}
+                />
                 <TextDefault H4 bolder textColor={currentTheme.newFontcolor} center>
                   {t('AddTip')}
                 </TextDefault>

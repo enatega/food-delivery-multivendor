@@ -52,6 +52,7 @@ const styles = (props = null) => StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
+    flexGrow: 1,
     paddingBottom: scale(10)
   },
   buttonContainer: {

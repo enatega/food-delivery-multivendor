@@ -78,8 +78,10 @@ const styles = (props = null) =>
       fontWeight: 'bold'
     },
     contentContainer: {
-      padding: scale(15),
-      gap: scale(6)
+      paddingHorizontal: scale(15),
+      paddingTop: scale(12),
+      paddingBottom: scale(10),
+      gap: scale(4)
     },
     subContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -128,7 +130,7 @@ const styles = (props = null) =>
     timingContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       width: '100%'
     },
     timingRow: {
@@ -155,7 +157,25 @@ const styles = (props = null) =>
     deliveryContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(8)
+      justifyContent: 'flex-start',
+      width: '100%',
+      gap: scale(8),
+      marginTop: scale(2),
+      paddingLeft: 0,
+      minHeight: scale(24)
+    },
+    deliveryIconContainer: {
+      width: scale(20),
+      height: scale(20),
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    deliveryText: {
+      lineHeight: scale(18),
+      paddingTop: 0,
+      marginTop: 0,
+      textAlignVertical: 'center',
+      includeFontPadding: false
     },
     searchContainer: {
       paddingHorizontal: scale(15),

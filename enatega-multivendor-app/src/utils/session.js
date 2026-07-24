@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { deleteToken } from './secureToken'
 
 const sessionListeners = new Set()
 const sessionModalDismissListeners = new Set()
@@ -51,7 +51,7 @@ export const invalidateUserSession = async (payload = {}) => {
 
   sessionInvalidationPromise = (async () => {
     try {
-      await AsyncStorage.removeItem('token')
+      await deleteToken()
 
       const listeners = Array.from(sessionListeners)
       await Promise.allSettled(

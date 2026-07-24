@@ -1,6 +1,7 @@
 // components/ErrorBoundary.js
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { captureException } from '../../utils/crashReporter';
 
 export class ErrorBoundary extends Component {
   constructor(props) {
@@ -12,13 +13,14 @@ export class ErrorBoundary extends Component {
   }
 
   static getDerivedStateFromError(error) {
-    console.log(error)
+    if (__DEV__) console.log(error)
     return { hasError: true, error };
   }
 
   componentDidCatch(error, info) {
-    console.log('ErrorBoundary caught an error', error, info);
-    // Optionally log to a service like Sentry
+    if (__DEV__) console.log('ErrorBoundary caught an error', error, info);
+    // Report the crash so production failures are visible to the team (QUAL-011).
+    captureException(error, { componentStack: info?.componentStack });
   }
 
   handleReset = () => {

@@ -28,6 +28,9 @@ const usePhoneOtp = () => {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
+  const isMobileVerificationSkipped =
+    !!configuration?.skipMobileVerification
+  const isDemoOtpEnabled = !!TEST_OTP
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
@@ -61,8 +64,11 @@ const usePhoneOtp = () => {
 
   function onError(error) {
     if (error.networkError) {
+      // networkError.result is null on raw connectivity failures — guard the
+      // chain and fall back to a friendly message instead of crashing (QUAL-004).
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message:
+          error.networkError?.result?.errors?.[0]?.message ?? t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -80,7 +86,8 @@ const usePhoneOtp = () => {
   function onUpdateUserError(error) {
     if (error.networkError) {
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message:
+          error.networkError?.result?.errors?.[0]?.message ?? t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -143,7 +150,7 @@ const usePhoneOtp = () => {
       setAuthReady(true)
     }
 
-    if (configuration?.skipMobileVerification) {
+    if (isMobileVerificationSkipped) {
       await mutateUser({
         variables: {
           name: resolvedName,
@@ -197,6 +204,9 @@ const usePhoneOtp = () => {
   }
 
   useEffect(() => {
+    // Depend on [seconds] so the interval is recreated per tick instead of on
+    // every render — otherwise the countdown resets continuously and the resend
+    // button never re-enables (PERF-003 / QUAL-005).
     const myInterval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1)
@@ -208,11 +218,11 @@ const usePhoneOtp = () => {
     return () => {
       clearInterval(myInterval)
     }
-  })
+  }, [seconds])
 
   useEffect(() => {
     if (!configuration) return
-    if (!configuration.skipMobileVerification) {
+    if (!isMobileVerificationSkipped && !isDemoOtpEnabled) {
       onSendOTPHandler()
     }
   }, [configuration, phone])
@@ -220,7 +230,7 @@ const usePhoneOtp = () => {
   useEffect(() => {
     let timer = null
     if (!configuration) return
-    if (configuration.skipMobileVerification && !autoSubmittedRef.current) {
+    if ((isMobileVerificationSkipped || isDemoOtpEnabled) && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true
       setOtp(demoOtp)
       timer = setTimeout(() => {
@@ -231,7 +241,7 @@ const usePhoneOtp = () => {
     return () => {
       timer && clearTimeout(timer)
     }
-  }, [authReady, configuration, demoOtp, onCodeFilled])
+  }, [authReady, configuration, demoOtp, isDemoOtpEnabled, onCodeFilled])
 
   return {
     otp,
@@ -247,7 +257,7 @@ const usePhoneOtp = () => {
     themeContext,
     loadingProfile,
     demoOtp,
-    isDemoOtpEnabled: Boolean(configuration?.skipMobileVerification)
+    isDemoOtpEnabled: isMobileVerificationSkipped || isDemoOtpEnabled
   }
 }
 

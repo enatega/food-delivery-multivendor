@@ -62,6 +62,14 @@ export function getPhoneExample(region) {
   }
 }
 
+// Maximum count of national digits for the selected region's example mobile
+// number. Used to stop extra digit entry before validation fails later.
+export function getPhoneMaxLength(region) {
+  const example = getPhoneExample(region)
+  const digits = getNationalDigits(example)
+  return digits.length > 0 ? digits.length : 20
+}
+
 // ponytail: self-check
 export function _demo() {
   const ok = isValidPhoneNumber('03012345678', 'PK') === true

@@ -1,10 +1,11 @@
-import React, { createContext, useState, useEffect, useMemo } from 'react'
+import React, { createContext, useState, useEffect, useMemo, useContext } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { getZones } from '../apollo/queries'
 import NetInfo from '@react-native-community/netinfo'
-import { DEMO_DEFAULT_LOCATION, ENABLE_DEMO_DEFAULT_LOCATION } from '../utils/demoDefaultLocation'
+import ConfigurationContext from './Configuration'
+import { buildDemoLocationFromZone, calculateZoneCentroid } from '../utils/demoLocation'
 // import * as Network from 'expo-network';
 
 const GET_ZONES = gql`
@@ -13,12 +14,21 @@ const GET_ZONES = gql`
 export const LocationContext = createContext()
 
 export const LocationProvider = ({ children }) => {
-  const [location, setLocation] = useState(ENABLE_DEMO_DEFAULT_LOCATION ? DEMO_DEFAULT_LOCATION : null)
-  const [isLocationLoaded, setIsLocationLoaded] = useState(ENABLE_DEMO_DEFAULT_LOCATION)
+  const configuration = useContext(ConfigurationContext)
+  const [location, setLocation] = useState(null)
+  const [isLocationLoaded, setIsLocationLoaded] = useState(false)
   const [cities, setCities] = useState([])
   const [permissionState, setPermissionState] = useState(null)
   const [isConnected, setIsConnected] = useState(false)
-  const { loading, error, data, refetch } = useQuery(GET_ZONES)
+  const {
+    loading: zonesLoading,
+    error,
+    data,
+    refetch
+  } = useQuery(GET_ZONES)
+  const enableCustomerDemoMode = !!configuration?.enableCustomerDemoMode
+  const customerDemoZoneId = configuration?.customerDemoZoneId
+  const isConfigurationLoaded = configuration?.isConfigurationLoaded
 
   const sanitizeLocationForStorage = (value) => {
     if (!value) return value
@@ -44,16 +54,42 @@ export const LocationProvider = ({ children }) => {
   }, [location])
 
   useEffect(() => {
-    const getActiveLocation = async () => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setIsConnected(state.isConnected) // Update connectivity status
+    })
+
+    return () => unsubscribe() // Clean up the listener
+  }, [])
+
+  useEffect(() => {
+    const loadInitialLocation = async () => {
+      if (!isConfigurationLoaded) return
+      if (enableCustomerDemoMode && zonesLoading) return
+
       try {
-        if (ENABLE_DEMO_DEFAULT_LOCATION) {
-          setLocation(DEMO_DEFAULT_LOCATION)
+        const locationStr = await AsyncStorage.getItem('location')
+        const storedLocation = locationStr ? JSON.parse(locationStr) : null
+
+        if (enableCustomerDemoMode) {
+          const demoZone = data?.zones?.find((zone) => zone?._id === customerDemoZoneId)
+          const demoLocation = buildDemoLocationFromZone(demoZone)
+
+          if (demoLocation) {
+            setLocation(demoLocation)
+            return
+          }
+        }
+
+        if (storedLocation?.isDemoDefaultLocation && !enableCustomerDemoMode) {
+          await AsyncStorage.removeItem('location')
+          setLocation(null)
           return
         }
 
-        const locationStr = await AsyncStorage.getItem('location')
-        if (locationStr) {
-          setLocation(JSON.parse(locationStr))
+        if (storedLocation) {
+          setLocation(storedLocation)
+        } else {
+          setLocation(null)
         }
       } catch (err) {
         console.log(err)
@@ -62,53 +98,22 @@ export const LocationProvider = ({ children }) => {
       }
     }
 
-    getActiveLocation()
-
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      setIsConnected(state.isConnected) // Update connectivity status
-    })
-
-    return () => unsubscribe() // Clean up the listener
-  }, [])
+    loadInitialLocation()
+  }, [isConfigurationLoaded, enableCustomerDemoMode, zonesLoading, data?.zones, customerDemoZoneId])
 
   // show zones as cities
   useEffect(() => {
-    if (!loading && !error && data) {
+    if (!zonesLoading && !error && data) {
       const fetchedZones = data.zones || []
-
-      // Function to calculate centroid of a polygon
-      const calculateCentroid = (coordinates) => {
-        let x = 0,
-          y = 0,
-          area = 0
-
-        const points = coordinates[0] // Assuming the first array contains the coordinates
-
-        for (let i = 0; i < points?.length - 1; i++) {
-          const x0 = points[i][0]
-          const y0 = points[i][1]
-          const x1 = points[i + 1][0]
-          const y1 = points[i + 1][1]
-          const a = x0 * y1 - x1 * y0
-          area += a
-          x += (x0 + x1) * a
-          y += (y0 + y1) * a
-        }
-
-        area /= 2
-        x = x / (6 * area)
-        y = y / (6 * area)
-
-        return { latitude: y, longitude: x }
-      }
 
       // Calculate centroids for each zone
       const centroids = fetchedZones.map((zone) => {
-        const centroid = calculateCentroid(zone.location.coordinates)
+        const centroid = calculateZoneCentroid(zone.location.coordinates)
         return {
           id: zone._id,
           name: zone.title,
-          ...centroid,
+          latitude: centroid?.latitude,
+          longitude: centroid?.longitude,
           location: zone.location
         }
       })
@@ -116,7 +121,7 @@ export const LocationProvider = ({ children }) => {
       // Set this as the cities or the midpoint
       setCities(centroids)
     }
-  }, [loading, error, data])
+  }, [zonesLoading, error, data])
   useEffect(() => {
     if (isConnected) {
       refetch() // Refetch the data when the internet is back
@@ -128,11 +133,11 @@ export const LocationProvider = ({ children }) => {
     setLocation,
     isLocationLoaded,
     cities,
-    loading,
+    loading: zonesLoading,
     isConnected,
     permissionState,
     setPermissionState
-  }), [location, isLocationLoaded, cities, loading, isConnected, permissionState])
+  }), [location, isLocationLoaded, cities, zonesLoading, isConnected, permissionState])
 
   return (
     <LocationContext.Provider value={locationContextValue}>
