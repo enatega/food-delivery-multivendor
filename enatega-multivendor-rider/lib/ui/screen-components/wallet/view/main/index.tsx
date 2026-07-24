@@ -270,7 +270,7 @@ export default function WalletMain() {
         {transactions.map((transaction, index) => (
           <RecentTransaction
             transaction={transaction}
-            key={transaction.createdAt}
+            key={transaction._id ?? `${transaction.createdAt}-${index}`}
             isLast={transactions.length - 1 === index}
           />
         ))}

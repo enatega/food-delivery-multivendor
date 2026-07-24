@@ -17,25 +17,6 @@ export const RIDER_BY_ID = gql`
   }
 `;
 
-export const RIDER_EARNINGS = gql`
-  query RiderEarnings {
-    earnings {
-      data {
-        grandTotalEarnings {
-          riderTotal
-        }
-        earnings {
-          riderEarnings {
-            deliveryFee
-            tip
-            totalEarnings
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const RIDER_TRANSACTIONS_HISTORY = gql`
   query TransactionHistory {
     transactionHistory {

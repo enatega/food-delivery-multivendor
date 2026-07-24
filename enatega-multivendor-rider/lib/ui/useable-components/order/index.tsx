@@ -158,21 +158,14 @@ const Order = ({
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
+                // Pass only the id + tab. The order-detail screen resolves the
+                // full order from UserContext's assignedOrders cache by id, so
+                // serializing the whole object here is redundant work on every
+                // parent re-render (GPS ticks).
                 router.push({
                   pathname: "/order-detail",
                   params: {
                     itemId: _id,
-                    order: JSON.stringify({
-                      _id,
-                      orderStatus,
-                      restaurant,
-                      deliveryAddress,
-                      paymentMethod,
-                      orderAmount,
-                      paymentStatus,
-                      acceptedAt,
-                      user,
-                    }),
                     tab,
                   },
                 });
@@ -209,7 +202,7 @@ const Order = ({
                               ? "blue"
                               : tab === "processing"
                                 ? "orange"
-                                : "green0",
+                                : "green",
                         }}
                       >
                         <Text

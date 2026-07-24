@@ -12,8 +12,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -62,27 +64,34 @@ export default function AppThemeProvidor({
   }
 
   // Handlers
-  const toggleTheme = (val: app_theme) => {
+  const toggleTheme = useCallback((val: app_theme) => {
     const updatedVal = val === "light" ? "dark" : "light";
     setAppTheme(Colors[updatedVal]);
     setCurrentTheme(updatedVal);
     // Appearance.setColorScheme(val === "light" ? "dark" : "light");
     AsyncStorage.setItem("app_theme", updatedVal);
-  };
+  }, []);
 
   useEffect(() => {
     getCurrentAppTheme();
   }, [colorScheme]);
 
   useEffect(() => {
-    Appearance.addChangeListener(({ colorScheme }) => {
+    // Store the subscription so it can be removed on unmount — without this,
+    // React Strict Mode's double-invoke and every remount leak listeners.
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setCurrentTheme(colorScheme as app_theme);
     });
-  }, [Appearance]);
+    return () => subscription.remove();
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({ toggleTheme, currentTheme, appTheme }),
+    [toggleTheme, currentTheme, appTheme],
+  );
+
   return (
-    <ThemeContext.Provider
-      value={{ toggleTheme, currentTheme: currentTheme, appTheme }}
-    >
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

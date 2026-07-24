@@ -77,9 +77,29 @@ class PublicAccessTokenService {
     }
   }
 
+  private getSecureRandomHex(byteCount: number): string {
+    try {
+      const cryptoObj = (
+        globalThis as {
+          crypto?: { getRandomValues?: (array: Uint8Array) => Uint8Array };
+        }
+      ).crypto;
+      if (typeof cryptoObj?.getRandomValues === "function") {
+        const bytes = new Uint8Array(byteCount);
+        cryptoObj.getRandomValues(bytes);
+        return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join(
+          "",
+        );
+      }
+    } catch {
+      // Secure RNG unavailable — fall back below.
+    }
+    return Math.random().toString(36).substring(2, 15);
+  }
+
   private async generateNonce(): Promise<string> {
     const deviceId = Device.osBuildId || Device.osInternalBuildId || "unknown";
-    const random = Math.random().toString(36).substring(2, 15);
+    const random = this.getSecureRandomHex(16);
     const timestamp = Date.now().toString(36);
     return `${deviceId}-${timestamp}-${random}`;
   }

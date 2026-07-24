@@ -22,7 +22,7 @@ const ItemDetails = ({
     return order?.items?.reduce((sum, item) => {
       return sum + item.quantity * item.variation.price;
     }, 0);
-  }, [order._id]);
+  }, [order?.items]);
 
   return (
     <View className="pb-4">

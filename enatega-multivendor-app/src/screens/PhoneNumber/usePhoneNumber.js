@@ -82,7 +82,12 @@ const useRegister = () => {
         navigation.navigate({
           name: 'PhoneOtp',
           merge: true,
-          params: {name, phone: concatPhone, screen: route?.params?.screen}
+          params: {
+            name,
+            phone: concatPhone,
+            screen: route?.params?.screen,
+            prevScreen: route?.params?.prevScreen
+          }
         })
       } else {
         mutate({

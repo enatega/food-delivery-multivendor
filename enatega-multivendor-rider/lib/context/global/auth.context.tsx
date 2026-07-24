@@ -1,5 +1,5 @@
 import * as Location from "expo-location";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // Interfaces§
 import { RIDER_ID, RIDER_TOKEN } from "@/lib/utils/constants";
@@ -51,13 +51,16 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     };
   }, []);
 
-  const setTokenAsync = async (token: string) => {
-    await setSecureItem(RIDER_TOKEN, token);
-    await client.clearStore();
-    setToken(token);
-  };
+  const setTokenAsync = useCallback(
+    async (token: string) => {
+      await setSecureItem(RIDER_TOKEN, token);
+      await client.clearStore();
+      setToken(token);
+    },
+    [client],
+  );
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     setToken("");
 
     try {
@@ -69,7 +72,9 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       try {
         await client.clearStore();
       } catch (cacheError) {
-        console.log("Error clearing Apollo cache during logout:", cacheError);
+        if (__DEV__) {
+          console.log("Error clearing Apollo cache during logout:", cacheError);
+        }
       }
 
       try {
@@ -79,21 +84,28 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
           await Location.stopLocationUpdatesAsync("RIDER_LOCATION");
         }
       } catch (locationError) {
-        console.log("Error stopping location updates:", locationError);
+        if (__DEV__) {
+          console.log("Error stopping location updates:", locationError);
+        }
       }
     } catch (e) {
-      console.log("Logout Error: ", e);
+      if (__DEV__) {
+        console.log("Logout Error: ", e);
+      }
     } finally {
       router.replace("/login");
     }
-  };
+  }, [client, router]);
 
-  const values: IAuthContext = {
-    token: token ?? "",
-    isAuthReady,
-    logout,
-    setTokenAsync,
-  };
+  const values: IAuthContext = useMemo(
+    () => ({
+      token: token ?? "",
+      isAuthReady,
+      logout,
+      setTokenAsync,
+    }),
+    [token, isAuthReady, logout, setTokenAsync],
+  );
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

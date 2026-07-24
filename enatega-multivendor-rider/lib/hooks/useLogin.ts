@@ -7,7 +7,6 @@ import { AuthContext } from "../context/global/auth.context";
 
 // GraphQL
 import {
-  DEFAULT_RIDER_CREDS,
   RIDER_LOGIN,
 } from "../api/graphql/mutation/login";
 
@@ -46,7 +45,7 @@ const useLogin = () => {
     onError,
   });
 
-  useQuery(DEFAULT_RIDER_CREDS, { onCompleted: onDefaultCredsCompleted });
+    //  useQuery(DEFAULT_RIDER_CREDS, { onCompleted: onDefaultCredsCompleted });
 
   // Handlers
   // For login mutation

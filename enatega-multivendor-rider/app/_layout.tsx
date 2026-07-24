@@ -46,7 +46,6 @@ SplashScreen?.preventAutoHideAsync();
 function RootLayout() {
   // Hooks
   const [loaded] = useFonts({
-    SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
     Inter: require("../lib/assets/fonts/Inter.ttf"),
   });
   const [isPublicTokenReady, setIsPublicTokenReady] = useState(false);
@@ -58,11 +57,9 @@ function RootLayout() {
   }
 
   // Use Effect
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+  // Note: the native splash is handed off to <AnimatedSplashScreen>, which calls
+  // SplashScreen.hideAsync() itself once the JS animated splash has painted — so
+  // we no longer hide it here (that caused a flash at the native -> JS handoff).
 
   useEffect(() => {
     PublicAccessTokenService.initialize(client)
@@ -83,7 +80,9 @@ function RootLayout() {
     const previousHandler = ErrorUtils.getGlobalHandler?.();
 
     ErrorUtils.setGlobalHandler((error, isFatal) => {
-      console.log("Global Error Caught:", { error, isFatal });
+      if (__DEV__) {
+        console.log("Global Error Caught:", { error, isFatal });
+      }
       Sentry.captureException(error);
 
       if (previousHandler) {
@@ -98,13 +97,16 @@ function RootLayout() {
     };
   }, []);
 
-  if (!loaded || !isPublicTokenReady) {
-    return null;
-  }
+  // Render the animated splash immediately and let it play the intro/idle loop
+  // while fonts + the public access token load. Once everything is ready the
+  // splash plays its outro; the provider tree is only mounted once ready so
+  // Apollo requests never fire before the public access token exists.
+  const appReady = loaded && isPublicTokenReady;
 
   return (
-    <AnimatedSplashScreen>
-      <AppThemeProvidor>
+    <AnimatedSplashScreen ready={appReady}>
+      {appReady ? (
+        <AppThemeProvidor>
         <ApolloProvider client={client}>
           <AuthProvider client={client}>
             <UserProvider>
@@ -126,6 +128,7 @@ function RootLayout() {
           </AuthProvider>
         </ApolloProvider>
       </AppThemeProvidor>
+      ) : null}
     </AnimatedSplashScreen>
   );
 }

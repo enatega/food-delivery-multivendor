@@ -1,5 +1,11 @@
 import { QueryResult, useQuery } from "@apollo/client";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 // Interface
 import {
   IRiderProfileResponse,
@@ -21,6 +27,10 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
+
+// Stable reference for the "no orders" case so consumers don't see a new []
+// (and re-render) on every provider render.
+const EMPTY_ORDERS: IOrder[] = [];
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
   // States
@@ -150,66 +160,99 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       try {
         unsubZoneOrder?.();
       } catch (err) {
-        console.log("err in unsubZoneOrder", err);
+        if (__DEV__) {
+          console.log("err in unsubZoneOrder", err);
+        }
       }
       try {
         unsubAssignOrder();
       } catch (err) {
-        console.log("err in unsubAssignOrder", err);
+        if (__DEV__) {
+          console.log("err in unsubAssignOrder", err);
+        }
       }
     };
   }, [dataProfile, isRiderAvailable, subscribeToMore, userId, zoneId]);
 
-  const filteredAssignedOrders = (dataAssigned?.riderOrders ?? []).filter(
-    (order: IOrder) =>
-      isRiderAvailable ||
-      order?.orderStatus !== "ACCEPTED" ||
-      Boolean(order?.rider) ||
-      Boolean(order?.isPickedUp)
-  );
+  // Only blank the list on a hard error — NOT while `loadingAssigned` is true.
+  // With cache-and-network + a 30s poll + notifyOnNetworkStatusChange,
+  // `loadingAssigned` flips true on every background poll while Apollo still holds
+  // the previous data; clearing here made every order disappear and reappear each
+  // poll (the "blink"). Memoized + falls back to the shared EMPTY_ORDERS so the
+  // reference stays stable when there are no matching orders.
+  const assignedOrders = useMemo<IOrder[]>(() => {
+    if (errorAssigned) return EMPTY_ORDERS;
+    const filtered = (dataAssigned?.riderOrders ?? EMPTY_ORDERS).filter(
+      (order: IOrder) =>
+        isRiderAvailable ||
+        order?.orderStatus !== "ACCEPTED" ||
+        Boolean(order?.rider) ||
+        Boolean(order?.isPickedUp),
+    );
+    return filtered.length ? filtered : EMPTY_ORDERS;
+  }, [dataAssigned?.riderOrders, errorAssigned, isRiderAvailable]);
+
+  // Apollo automatically re-runs RIDER_PROFILE and RIDER_ORDERS when `skip`
+  // flips to false (userId becomes available) using the new variables, so an
+  // explicit refetch here would only duplicate those network requests.
 
   useEffect(() => {
-    if (!userId) return;
-
-    refetchProfile({ id: userId });
-    refetchAssigned({ userId });
-  }, [refetchProfile, refetchAssigned, userId]);
-
-  useEffect(() => {
-    const listener = asyncStorageEmitter.addListener("rider-id", (data) => {
+    // Keep a single stable handler reference so the cleanup removes the exact
+    // listener that was added. Previously a fresh anonymous function was passed
+    // to removeListener, so it never matched and listeners leaked on every
+    // remount (each firing setUserId on every rider-id storage event).
+    const handleRiderId = (data?: { value?: string }) => {
       setUserId(data?.value ?? "");
-    });
+    };
+    asyncStorageEmitter.addListener("rider-id", handleRiderId);
 
     getUserId();
     return () => {
-      if (listener) {
-        listener.removeListener("rider-id", () => {
-          console.log("Rider Id listerener removed");
-        });
-      }
+      asyncStorageEmitter.removeListener("rider-id", handleRiderId);
     };
   }, []);
 
+  // Memoize the context value so a new object isn't created on every render.
+  // UserProvider re-renders frequently (cache-and-network + 30s poll + two live
+  // subscriptions); without this, every consumer re-rendered each time. The
+  // setModalVisible / setRiderOrderEarnings state setters are referentially
+  // stable per React, so they're intentionally omitted from the dependency list.
+  const contextValue = useMemo<IUserContextProps>(
+    () => ({
+      modalVisible,
+      riderOrderEarnings,
+      setModalVisible,
+      setRiderOrderEarnings,
+      userId,
+      loadingProfile,
+      errorProfile,
+      dataProfile: dataProfile?.rider ?? null,
+      loadingAssigned,
+      errorAssigned,
+      assignedOrders,
+      refetchAssigned,
+      refetchProfile,
+      networkStatusAssigned,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      modalVisible,
+      riderOrderEarnings,
+      userId,
+      loadingProfile,
+      errorProfile,
+      dataProfile,
+      loadingAssigned,
+      errorAssigned,
+      assignedOrders,
+      refetchAssigned,
+      refetchProfile,
+      networkStatusAssigned,
+    ],
+  );
+
   return (
-    <UserContext.Provider
-      value={{
-        modalVisible,
-        riderOrderEarnings,
-        setModalVisible,
-        setRiderOrderEarnings,
-        userId,
-        loadingProfile,
-        errorProfile,
-        dataProfile: dataProfile?.rider ?? null,
-        loadingAssigned,
-        errorAssigned,
-        assignedOrders:
-          loadingAssigned || errorAssigned ? [] : filteredAssignedOrders,
-        refetchAssigned,
-        refetchProfile,
-        networkStatusAssigned,
-      }}
-    >
+    <UserContext.Provider value={contextValue}>
       {children}
     </UserContext.Provider>
   );

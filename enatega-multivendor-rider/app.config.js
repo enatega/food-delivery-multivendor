@@ -15,18 +15,31 @@ module.exports = {
     version: '1.1.86',
     slug: 'food-delivery-rider-multivendor',
     orientation: 'portrait',
-    splash: {
-      image: './lib/assets/images/black.png',
-      resizeMode: 'cover',
-      backgroundColor: '#000000'
-    },
     icon: './lib/assets/images/icon.png',
     assetBundlePatterns: ['lib/assets/**/*'],
-    scheme: 'myapp',
+    scheme: 'com.enatega.multirider',
     userInterfaceStyle: 'automatic',
     newArchEnabled: true,
     plugins: [
       'expo-router',
+      [
+        'expo-splash-screen',
+        {
+          // Solid per-theme background, no visible logo. The plugin requires an
+          // image to generate the native splashscreen_logo drawable, so we pass
+          // a 1x1 transparent PNG — only the background color shows. The animated
+          // pin / wordmark is drawn by the JS AnimatedSplash component, whose
+          // first frame uses these same colors so the handoff shows no flash.
+          backgroundColor: '#f4f8f5', // light
+          image: './lib/assets/images/splashTransparent.png',
+          imageWidth: 1,
+          resizeMode: 'contain',
+          dark: {
+            backgroundColor: '#0b1225', // dark
+            image: './lib/assets/images/splashTransparent.png'
+          }
+        }
+      ],
       [
         '@sentry/react-native/expo',
         {
@@ -43,13 +56,6 @@ module.exports = {
         }
       ],
       'expo-font',
-      [
-        'expo-video',
-        {
-          supportsBackgroundPlayback: true,
-          supportsPictureInPicture: true
-        }
-      ],
       'expo-secure-store'
     ],
     platforms: ['ios', 'android'],

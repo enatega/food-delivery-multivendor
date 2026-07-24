@@ -27,7 +27,7 @@ export default function EarningsDetailStacks({
     <FlatList
       data={riderEarningsData?.riderEarningsGraph?.earnings}
       contentContainerClassName="scroll-smooth pb-12"
-      keyExtractor={(_, index) => index?.toString()}
+      keyExtractor={(item, index) => item?._id ?? String(item?.date ?? index)}
       style={{ height: "55%" }}
       ListEmptyComponent={
         <Text
@@ -46,7 +46,7 @@ export default function EarningsDetailStacks({
             _id={info?.item?._id}
             tip={info?.item?.totalTipsSum}
             earningsArray={info?.item?.earningsArray}
-            key={info.index}
+            key={info?.item?._id ?? info.index}
             setModalVisible={setModalVisible}
           />
         );

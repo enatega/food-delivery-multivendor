@@ -65,9 +65,16 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
   const getLocationPermission = async () => {
     try {
       const { status } = await Location.getForegroundPermissionsAsync();
-      if (status === "granted") {
-        setLocationPermission(true);
+      // Bail out before getCurrentPositionAsync when permission isn't granted —
+      // calling it without permission throws on iOS (the error was swallowed and
+      // the location was never set). The LocationPermissionComp modal handles the
+      // actual request; this only reads the current status.
+      if (status !== "granted") {
+        setLocationPermission(false);
+        return;
       }
+      setLocationPermission(true);
+
       const currentLocation = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Balanced,
       });
@@ -78,7 +85,9 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
         });
       }
     } catch (error) {
-      console.log("Error getting location: ", error);
+      if (__DEV__) {
+        console.log("Error getting location: ", error);
+      }
     }
   };
 
@@ -159,11 +168,19 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
     };
   }, [locationPermission, token, isActivelyDelivering]);
 
-  const values = {
-    locationPermission,
-    setLocationPermission,
-    location,
-  };
+  // Memoize the provider value so a new object isn't created on every render.
+  // GPS updates fire every ~10s/10m; without this, every LocationContext
+  // consumer (each Order card) re-rendered and recalculated distance on each
+  // tick even when locationPermission hadn't changed. setLocationPermission is a
+  // stable state setter, so only locationPermission + location drive the memo.
+  const values = useMemo(
+    () => ({
+      locationPermission,
+      setLocationPermission,
+      location,
+    }),
+    [locationPermission, location],
+  );
 
   return (
     <LocationContext.Provider value={values}>
