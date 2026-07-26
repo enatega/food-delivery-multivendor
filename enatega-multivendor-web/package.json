@@ -49,7 +49,7 @@
     "subscriptions-transport-ws": "^0.11.0",
     "tailwind-merge": "^2.5.2",
     "tailwind-scrollbar": "^2.0.0",
-    "uuid": "^11.1.0",
+    "uuid": "^14.0.1",
     "yup": "^1.6.1"
   },
   "devDependencies": {
@@ -69,7 +69,7 @@
     "@typescript-eslint/parser": "^8.62.1",
     "autoprefixer": "^10.4.19",
     "cross-env": "^7.0.3",
-    "cypress": "^13.13.1",
+    "cypress": "^15.18.0",
     "eslint": "^9.7.0",
     "eslint-config-next": "^16.2.10",
     "eslint-config-prettier": "^9.1.0",
