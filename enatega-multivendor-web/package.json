@@ -47,7 +47,7 @@
     "react-tooltip": "^5.28.1",
     "sharp": "^0.34.1",
     "subscriptions-transport-ws": "^0.11.0",
-    "tailwind-merge": "^2.5.2",
+    "tailwind-merge": "^3.6.0",
     "tailwind-scrollbar": "^2.0.0",
     "uuid": "^11.1.0",
     "yup": "^1.6.1"
