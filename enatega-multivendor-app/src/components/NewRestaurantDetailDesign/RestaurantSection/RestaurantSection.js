@@ -194,13 +194,7 @@ const RestaurantSections = ({
         t('restaurantClosed'),
         [
           {
-            text: t('close'),
-            onPress: () => {},
-            style: 'cancel'
-          },
-          {
-            text: t('seeMenu'),
-            onPress: () => {}
+            text: t('okText')
           }
         ],
         { cancelable: true }

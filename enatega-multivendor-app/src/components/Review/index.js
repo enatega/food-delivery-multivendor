@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { Dimensions, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, Platform, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import CrossCirleIcon from '../../assets/SVG/cross-circle-icon'
@@ -29,6 +29,7 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
   const { t } = useTranslation()
 
   const ratingRef = useRef()
+  const contentRef = useRef(null)
   const [description, setDescription] = useState('')
   const [mutate] = useMutation(REVIEWORDER, { variables: { order: orderId, description, rating: ratingRef.current }, onCompleted, onError })
  
@@ -78,21 +79,24 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
       modalHeight={isFeedbackVisible ? EXPANDED_MODAL_HEIGHT : BASE_MODAL_HEIGHT}
       handlePosition='inside'
       ref={ref}
+      contentRef={contentRef}
       withHandle={false}
       adjustToContentHeight={false}
       avoidKeyboardLikeIOS
       keyboardAvoidingBehavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardAvoidingOffset={Platform.OS === 'ios' ? 24 : 0}
-      modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}
+      scrollViewProps={{
+        keyboardShouldPersistTaps: 'handled',
+        showsVerticalScrollIndicator: false,
+        contentContainerStyle: styles.content(theme)
+      }}
+      modalStyle={{
+        borderWidth: StyleSheet.hairlineWidth,
+        backgroundColor: theme.cardBackground
+      }}
       onOverlayPress={onOverlayPress}
     >
       <View style={styles.container(theme)}>
-        <ScrollView
-          keyboardShouldPersistTaps='handled'
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.content(theme)}
-        >
-          <View style={styles.headingContainer(theme)}>
+        <View style={styles.headingContainer(theme)}>
             <TextDefault bolder H3 textColor={theme.gray900}>
               {t('howWasOrder')}
             </TextDefault>
@@ -150,6 +154,12 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
                 multiline
                 textAlignVertical='top'
                 scrollEnabled
+                onFocus={() => {
+                  ref?.current?.open('top')
+                  requestAnimationFrame(() => {
+                    contentRef.current?.scrollToEnd({ animated: true })
+                  })
+                }}
                 style={styles.modalInput(theme)}
               />
               <Button
@@ -166,7 +176,6 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
               />
             </View>
           )}
-        </ScrollView>
       </View>
     </Modalize>
   )

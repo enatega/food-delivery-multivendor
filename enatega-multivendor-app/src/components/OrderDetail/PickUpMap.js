@@ -5,6 +5,7 @@ import { scale } from '../../utils/scaling'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { linkToMapsApp } from '../../utils/links'
 import { mapStyle } from '../../utils/mapStyle'
+import darkMapStyle from '../../utils/DarkMapStyles'
 import {useTranslation} from 'react-i18next'
 
 
@@ -50,7 +51,12 @@ const PickUpMap = ({ deliveryAddress, pickupAddress }) => {
         ref={ref => {
           map = ref
         }}
-        customMapStyle={themeContext.ThemeValue === 'Dark' ? mapStyle : null}
+        customMapStyle={
+          themeContext.ThemeValue === 'Dark' ? darkMapStyle : mapStyle
+        }
+        userInterfaceStyle={
+          themeContext.ThemeValue === 'Dark' ? 'dark' : 'light'
+        }
         style={{ flex: 1 }}
         initialRegion={{
           latitude: parseFloat(pickupAddress.location.coordinates[1]),

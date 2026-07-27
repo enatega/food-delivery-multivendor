@@ -258,27 +258,6 @@ function Restaurant(props) {
     [propsData, restaurant]
   )
 
-  useEffect(() => {
-    if (restaurant && (!restaurant?.isAvailable || !isOpen(restaurant))) {
-      Alert.alert(
-        '',
-        t('Restaurant Closed at the moment'),
-        [
-          {
-            text: t('Go back to restaurants'),
-            onPress: () => navigation.goBack(),
-            style: 'cancel'
-          },
-          {
-            text: t('See Menu'),
-            onPress: () => {}
-          }
-        ],
-        { cancelable: false }
-      )
-    }
-  }, [navigation, restaurant, t])
-
   const searchResults = useMemo(() => {
     const sourceRows = []
     deals.forEach((category) => {
@@ -371,13 +350,7 @@ function Restaurant(props) {
           t('restaurantClosed'),
           [
             {
-              text: t('backToRestaurants'),
-              onPress: () => navigation.goBack(),
-              style: 'cancel'
-            },
-            {
-              text: t('seeMenu'),
-              onPress: () => {}
+              text: t('okText')
             }
           ],
           { cancelable: false }
