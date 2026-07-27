@@ -271,7 +271,9 @@ function Menu({ route, props }) {
 
   useEffect(() => {
     const unsubscribeBlur = navigation.addListener('blur', () => {
-      if (routeData?.name !== 'Store') return
+      if (routeData?.name !== 'Store' && routeData?.name !== 'Restaurants') return
+
+      const isStore = routeData?.name === 'Store'
 
       setActiveCollection(null)
       setfilterApplied(false)
@@ -282,8 +284,8 @@ function Menu({ route, props }) {
       navigation.setParams({
         collection: null,
         isShopType: false,
-        selectedType: 'grocery',
-        queryType: 'grocery',
+        selectedType: isStore ? 'grocery' : 'restaurant',
+        queryType: isStore ? 'grocery' : 'restaurant',
         menuTitle: null
       })
     })

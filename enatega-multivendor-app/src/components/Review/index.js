@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { Dimensions, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import CrossCirleIcon from '../../assets/SVG/cross-circle-icon'
@@ -80,15 +80,13 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
       ref={ref}
       withHandle={false}
       adjustToContentHeight={false}
+      avoidKeyboardLikeIOS
       keyboardAvoidingBehavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardAvoidingOffset={Platform.OS === 'ios' ? 24 : 0}
       modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}
       onOverlayPress={onOverlayPress}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container(theme)}
-      >
+      <View style={styles.container(theme)}>
         <ScrollView
           keyboardShouldPersistTaps='handled'
           showsVerticalScrollIndicator={false}
@@ -169,7 +167,7 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
             </View>
           )}
         </ScrollView>
-      </KeyboardAvoidingView>
+      </View>
     </Modalize>
   )
 }

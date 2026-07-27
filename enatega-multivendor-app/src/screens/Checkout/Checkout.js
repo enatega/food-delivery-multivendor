@@ -23,7 +23,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { useRestaurant } from '../../ui/hooks'
 import { LocationContext } from '../../context/Location'
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, StackActions } from '@react-navigation/native'
 import { textStyles } from '../../utils/textStyles'
 import { calculateAmount, calculateDistance } from '../../utils/customFunctions'
 import analytics from '../../utils/analytics'
@@ -384,17 +384,15 @@ function Checkout(props) {
       orderDate: data?.placeOrder.orderDate
     })
     if (paymentMode === 'COD') {
-      props.navigation.reset({
-        routes: [
-          { name: 'Main' },
-          {
-            name: 'OrderDetail',
-            params: {
-              _id: data?.placeOrder?._id,
-              order: data?.placeOrder
-            }
-          }
-        ]
+      // Pop the Cart/CartAddress/Checkout screens off the stack (Main is
+      // already mounted underneath, so this doesn't remount it) and push
+      // OrderDetail with its normal animated transition instead of using
+      // navigation.reset, which swaps the whole stack instantly with no
+      // animation and produced a blank/black flash before this screen painted.
+      props.navigation.dispatch(StackActions.popToTop())
+      props.navigation.navigate('OrderDetail', {
+        _id: data?.placeOrder?._id,
+        order: data?.placeOrder
       })
       clearCart()
     } else if (paymentMode === 'PAYPAL') {

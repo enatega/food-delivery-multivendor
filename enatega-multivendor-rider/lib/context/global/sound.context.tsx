@@ -78,9 +78,15 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   // Use Effect
   useEffect(() => {
     if (assignedOrders) {
-      // Check if any order should play sound
+      // Only beep for orders that are actually available for THIS rider to
+      // grab (accepted by the restaurant, unassigned, not yet picked up) —
+      // matching the "New Orders" tab filter (new-orders.tsx). Without the
+      // `!o.rider` check, any order already assigned to a rider (this one or
+      // another) and simply not yet picked up kept the beep looping even
+      // though there was nothing left to accept.
       const new_order = assignedOrders?.find(
-        (o: IOrder) => o.orderStatus === "ACCEPTED" && !o?.isPickedUp,
+        (o: IOrder) =>
+          o.orderStatus === "ACCEPTED" && !o?.rider && !o?.isPickedUp,
       );
 
       const shouldPlaySound = !!new_order;
