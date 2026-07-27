@@ -54,7 +54,7 @@ const CreateAccount = (props) => {
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
         buttonStyle={themeContext.ThemeValue === 'Dark' ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-        cornerRadius={scale(20)}
+        cornerRadius={scale(28)}
         style={styles().appleBtn}
         onPress={async () => {
           try {

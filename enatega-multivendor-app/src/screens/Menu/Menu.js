@@ -2,7 +2,7 @@
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
+import { SimpleLineIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
@@ -91,7 +91,7 @@ function Menu({ route, props }) {
   const { t, i18n } = useTranslation()
   const { getAddress } = useGeocoding()
   const [busy, setBusy] = useState(false)
-  const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
+  const { loadingOrders, isLoggedIn, profile, cartCount } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
   const [filters, setFilters] = useState(() => cloneFilterState(FILTER_VALUES))
   const [filterSectionApplied, setfilterSectionApplied] = useState(false)
@@ -868,6 +868,25 @@ function Menu({ route, props }) {
         windowSize={7}
         removeClippedSubviews
       />
+      {cartCount > 0 && (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          accessibilityRole='button'
+          accessibilityLabel={t('viewCart')}
+          style={[
+            styles(currentTheme).floatingCart,
+            { [currentTheme.isRTL ? 'left' : 'right']: scale(20) }
+          ]}
+          onPress={() => navigation.navigate('Cart')}
+        >
+          <MaterialCommunityIcons name='cart-outline' size={scale(26)} color={currentTheme.fontWhite} />
+          <View style={styles(currentTheme).cartBadge}>
+            <TextDefault small bolder center textColor={currentTheme.fontWhite}>
+              {cartCount}
+            </TextDefault>
+          </View>
+        </TouchableOpacity>
+      )}
       <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
       <Modalize
         ref={filtersModalRef}

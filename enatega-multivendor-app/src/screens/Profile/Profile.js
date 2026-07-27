@@ -167,7 +167,7 @@ function Profile(props) {
               ]}
               isRTL
             >
-              {t('Hi') + ' ' + profile?.name + '!'}
+              {`${t('Hi')}${profile?.name ? ` ${profile.name}` : ''}!`}
             </TextDefault>
             <View style={styles(currentTheme).mainContainer}>
               <TouchableOpacity
