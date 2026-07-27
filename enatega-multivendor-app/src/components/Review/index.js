@@ -83,7 +83,10 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
       avoidKeyboardLikeIOS
       keyboardAvoidingBehavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardAvoidingOffset={Platform.OS === 'ios' ? 24 : 0}
-      modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}
+      modalStyle={{
+        borderWidth: StyleSheet.hairlineWidth,
+        backgroundColor: theme.cardBackground
+      }}
       onOverlayPress={onOverlayPress}
     >
       <View style={styles.container(theme)}>

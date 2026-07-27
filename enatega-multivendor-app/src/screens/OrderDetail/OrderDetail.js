@@ -16,6 +16,7 @@ import CustomerMarker from '../../assets/SVG/customer-marker'
 import TrackingRider from '../../components/OrderDetail/TrackingRider/TrackingRider'
 import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
+import darkMapStyle from '../../utils/DarkMapStyles'
 import { useTranslation } from 'react-i18next'
 import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
 
@@ -298,7 +299,12 @@ function OrderDetail(props) {
             zoomEnabled={true}
             zoomControlEnabled={true}
             rotateEnabled={false}
-            customMapStyle={mapStyle}
+            customMapStyle={
+              themeContext.ThemeValue === 'Dark' ? darkMapStyle : mapStyle
+            }
+            userInterfaceStyle={
+              themeContext.ThemeValue === 'Dark' ? 'dark' : 'light'
+            }
             provider={PROVIDER_DEFAULT}
           >
             <Marker
