@@ -32,7 +32,7 @@ export class ErrorBoundary extends Component {
       return (
         <View style={styles.container}>
           <Text style={styles.title}>Oops! Something went wrong.</Text>
-          <Text style={styles.message}>{this.state.error?.message}</Text>
+          <Text style={styles.message}>We could not load this screen. Please try again.</Text>
 
           <TouchableOpacity onPress={this.handleReset} style={styles.button}>
             <Text style={styles.buttonText}>Try Again</Text>

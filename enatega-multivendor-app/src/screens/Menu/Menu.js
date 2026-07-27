@@ -42,6 +42,7 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 import Ripple from 'react-native-material-ripple'
 import useGeocoding from '../../ui/hooks/useGeocoding'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -240,11 +241,16 @@ function Menu({ route, props }) {
         icon: 'back',
         haveBackBtn: routeData?.name === 'Menu',
         onPressFilter: () => filtersModalRef?.current?.open(),
-        onPressMap: () =>
+        onPressMap: () => {
+          if (!isLoggedIn) {
+            FlashMessage({ message: t('mapLoginRequired') })
+            return
+          }
           navigation.navigate('MapSection', {
             location,
             restaurants: restaurantData
-          }),
+          })
+        },
         onPressBack: () => navigation.goBack()
       })
     )

@@ -18,6 +18,7 @@ import { escapeRegExp } from '../../utils/regex'
 import ShimmerImage from '../ShimmerImage/ShimmerImage'
 import { useTranslation } from 'react-i18next'
 import { isOpen } from '../../utils/customFunctions'
+import OutOfStockModal from '../OutOfStockModal/OutOfStockModal'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight
 
@@ -33,6 +34,7 @@ const SearchOverlay = ({
   const [search, setSearch] = useState('')
   const [filterData, setFilterData] = useState([])
   const [showSearchResults, setShowSearchResults] = useState(false)
+  const [outOfStockVisible, setOutOfStockVisible] = useState(false)
   const isRTL = i18n.dir() === 'rtl' || currentTheme.isRTL
 
   useEffect(() => {
@@ -72,8 +74,7 @@ const SearchOverlay = ({
 
   const onPressItem = (food) => {
     if (food.isOutOfStock) {
-      // Display an alert if the item is out of stock
-      Alert.alert('Currently Unavailable', 'Item Out of Stock')
+      setOutOfStockVisible(true)
       return
     }
     
@@ -300,6 +301,10 @@ const SearchOverlay = ({
             </TextDefault>
           </View>
         )}
+      />
+      <OutOfStockModal
+        visible={outOfStockVisible}
+        onClose={() => setOutOfStockVisible(false)}
       />
     </Animated.View>
   )

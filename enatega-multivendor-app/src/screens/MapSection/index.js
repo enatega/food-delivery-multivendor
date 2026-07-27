@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState
 } from 'react'
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
+import MapView, { Marker } from 'react-native-maps'
 import styles from './styles'
 import { View, FlatList, TouchableOpacity, Platform, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -19,6 +19,7 @@ import ConfigurationContext from '../../context/Configuration'
 import { useTranslation } from 'react-i18next'
 import CachedImage from '../../components/CachedImage'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import darkMapStyle from '../../utils/DarkMapStyles'
 
 // Track view changes only until the image loads, then freeze the marker.
 // (Prevents Android from constantly re-snapshotting markers, while still showing the image.)
@@ -84,16 +85,20 @@ export default function MapSection() {
 }, [visibleMarkerIndex])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}>
       <MapView
         ref={mapRef}
         style={styles().map}
+        customMapStyle={
+          themeContext.ThemeValue === 'Dark' ? darkMapStyle : []
+        }
+        userInterfaceStyle={
+          themeContext.ThemeValue === 'Dark' ? 'dark' : 'light'
+        }
         showsUserLocation
         zoomEnabled={true}
         zoomControlEnabled={true}
         rotateEnabled={false}
-        // provider={PROVIDER_DEFAULT}
-        // customMapStyle={mapStyle}
         initialRegion={{
           latitude: restaurants?.length
             ? parseFloat(restaurants[0].location?.coordinates[1])
@@ -158,7 +163,7 @@ export default function MapSection() {
                   <TextDefault
                     H5
                     bolder
-                    textColor={currentTheme.buttonText}
+                    textColor={currentTheme.fontFourthColor}
                     numberOfLines={2}
                     style={styles().titleText}
                   >
@@ -168,7 +173,7 @@ export default function MapSection() {
                     numberOfLines={2}
                     bold
                     Normal
-                    textColor={currentTheme.subText}
+                    textColor={currentTheme.secondaryText}
                     style={styles().subtitleText}
                   >
                     {item?.tags?.slice(0, 2)?.join(', ')}
@@ -179,10 +184,10 @@ export default function MapSection() {
                     <View
                       style={styles().deliveryTime}
                     >
-                      <Bicycle color={currentTheme.color2} />
+                      <Bicycle color={currentTheme.fontFourthColor} />
 
                       <TextDefault
-                        textColor={currentTheme.color2}
+                        textColor={currentTheme.fontFourthColor}
                         numberOfLines={1}
                         bold
                         Small
@@ -242,7 +247,7 @@ export default function MapSection() {
           position: 'absolute',
           top: Platform.OS === 'ios' ? 60 : 15,
           left: 15,
-          backgroundColor: currentTheme.white,
+          backgroundColor: currentTheme.cardBackground,
           borderRadius: 50,
           height: 40,
           width: 40,
@@ -250,7 +255,11 @@ export default function MapSection() {
           justifyContent: 'center'
         }}
       >
-        <Ionicons name='arrow-back' size={24} color='black' />
+        <Ionicons
+          name='arrow-back'
+          size={24}
+          color={currentTheme.fontFourthColor}
+        />
       </TouchableOpacity>
     </View>
   )

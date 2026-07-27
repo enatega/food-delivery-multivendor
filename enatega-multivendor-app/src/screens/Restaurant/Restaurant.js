@@ -29,6 +29,7 @@ import { calculateDistance, isOpen } from '../../utils/customFunctions'
 import { LocationContext } from '../../context/Location'
 import ShimmerImage from '../../components/ShimmerImage/ShimmerImage'
 import { resolveRestaurantImage as resolveResolvedRestaurantImage } from '../../utils/resolveImageUrl'
+import OutOfStockModal from '../../components/OutOfStockModal/OutOfStockModal'
 
 const { height } = Dimensions.get('screen')
 
@@ -96,6 +97,7 @@ function Restaurant(props) {
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
   const [searchOpen, setSearchOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const [outOfStockVisible, setOutOfStockVisible] = useState(false)
   const deferredSearch = useDeferredValue(search)
   const { restaurant: restaurantCart, setCartRestaurant, cartCount, addCartItem, addQuantity, clearCart, checkItemCart } = useContext(UserContext)
   const { data, refetch, networkStatus, loading, error } = useRestaurant(propsData._id)
@@ -499,7 +501,7 @@ function Restaurant(props) {
   const renderFoodPress = useCallback(
     (item) => {
       if (item?.isOutOfStock) {
-        Alert.alert('Currently Unavailable', 'Item Out of Stock')
+        setOutOfStockVisible(true)
         return
       }
 
@@ -690,6 +692,10 @@ function Restaurant(props) {
             </TouchableOpacity>
           </View>
         )}
+        <OutOfStockModal
+          visible={outOfStockVisible}
+          onClose={() => setOutOfStockVisible(false)}
+        />
       </View>
     </SafeAreaView>
   )

@@ -6,7 +6,7 @@ import styles from './styles'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
-import CountryPicker from 'react-native-country-picker-modal'
+import CountryPicker, { DARK_THEME } from 'react-native-country-picker-modal'
 import usePhoneNumber from './usePhoneNumber'
 import PhoneInput from 'react-native-phone-number-input'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,7 @@ import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
 import PhoneNumberInput from '../../components/PhoneNumberInput'
 
 function PhoneNumber(props) {
-  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, currentTheme, loading, setPhoneError, isCountryLoading } = usePhoneNumber()
+  const { phone, setPhone, phoneError, country, countryCode, registerAction, onCountrySelect, themeContext, currentTheme, loading, setPhoneError, isCountryLoading } = usePhoneNumber()
 
   const { t } = useTranslation()
 
@@ -79,6 +79,7 @@ function PhoneNumber(props) {
                         <CountryPicker
                           countryCode={countryCode}
                           onSelect={(country) => onCountrySelect(country)}
+                          theme={themeContext.ThemeValue === 'Dark' ? DARK_THEME : undefined}
                           withAlphaFilter
                           withFilter
                           flatListProps={{
