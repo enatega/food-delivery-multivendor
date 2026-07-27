@@ -4,7 +4,14 @@ import { ILocationPermissionComponentProps } from "@/lib/utils/interfaces";
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Linking, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  AppState,
+  Linking,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Modal from "react-native-modal";
 import SpinnerComponent from "../spinner";
 
@@ -79,6 +86,24 @@ export default function LocationPermissionComponent({
   useEffect(() => {
     getLocationPermission();
   }, []);
+
+  // Re-check permission when the app returns to the foreground (e.g. after the
+  // user grants access in Settings). Checking synchronously right after opening
+  // Settings always reads "denied" because the user hasn't acted yet.
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      "change",
+      async (nextState) => {
+        if (nextState !== "active") return;
+        const { status } = await Location.getForegroundPermissionsAsync();
+        if (status === "granted") {
+          setLocationPermission(true);
+          setIsModalVisible(false);
+        }
+      },
+    );
+    return () => subscription.remove();
+  }, [setLocationPermission]);
 
   return (
     <View className="flex-1">

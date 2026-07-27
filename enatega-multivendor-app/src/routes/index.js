@@ -289,6 +289,17 @@ function BottomTabNavigator() {
         options={{
           tabBarLabel: t('Restaurants')
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('Restaurants', {
+              selectedType: 'restaurant',
+              queryType: 'restaurant',
+              collection: null,
+              isShopType: false,
+              menuTitle: null
+            })
+          }
+        })}
         initialParams={{
           selectedType: 'restaurant',
           queryType: 'restaurant'

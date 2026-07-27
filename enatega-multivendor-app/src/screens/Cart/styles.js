@@ -319,6 +319,35 @@ const styles = (props = null) =>
       fontSize: 20,
       fontWeight: '500',
       color: props != null ? props.newFontcolor : '#E5E7EB'
+    },
+    buttonDisabled: {
+      backgroundColor: '#374151',
+      opacity: 0.55
+    },
+    minOrderMessageContainer: {
+      width: '100%',
+      alignItems: 'center',
+      backgroundColor: props !== null ? props.themeBackground : '#FFF',
+      paddingBottom: verticalScale(10),
+      paddingTop: verticalScale(10)
+    },
+    minOrderMessagePill: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      alignSelf: 'center',
+      maxWidth: '96%',
+      backgroundColor: props !== null ? props.newBorderColor : '#F3F4F6',
+      borderWidth: 1,
+      borderColor: props !== null ? props.red600 : '#DC2626',
+      borderRadius: scale(20),
+      paddingVertical: verticalScale(6),
+      paddingHorizontal: scale(14)
+    },
+    minOrderMessageText: {
+      flexShrink: 1,
+      textAlign: 'center',
+      marginLeft: scale(6)
     }
   })
 export default styles

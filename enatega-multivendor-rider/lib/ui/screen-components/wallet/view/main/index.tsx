@@ -36,7 +36,8 @@ import { GraphQLError } from "graphql";
 import { router } from "expo-router";
 
 // Core
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Keyboard, ScrollView, Text, View } from "react-native";
+import ReactNativeModal from "react-native-modal";
 
 // Skeletons
 import { useApptheme } from "@/lib/context/global/theme.context";
@@ -50,6 +51,7 @@ export default function WalletMain() {
   // States
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
   const [amountErrMsg, setAmountErrMsg] = useState("");
+  const [warningMessage, setWarningMessage] = useState("");
   const { userId } = useUserContext();
 
   // Queries
@@ -107,12 +109,13 @@ export default function WalletMain() {
         });
       },
       onError: (error) => {
-        Alert.alert(t("Warning"), error.message, [
-          {
-            onPress: () => setIsBottomModalOpen(false),
-            text: t("Okay"),
-          },
-        ]);
+        Keyboard.dismiss();
+        setIsBottomModalOpen(false);
+        setWarningMessage(
+          error.message ||
+            error.graphQLErrors[0]?.message ||
+            t("Something went wrong"),
+        );
         FlashMessageComponent({
           message:
             error.message ||
@@ -169,8 +172,13 @@ export default function WalletMain() {
     }
   }
   // Loading state
+  // Note: createWithDrawRequestLoading is intentionally excluded here — this
+  // flag gates the full-page skeleton, and including it made the whole
+  // screen (and the open Withdraw/warning modals on top of it) unmount and
+  // flash back in while a withdraw request was in flight. The submit button
+  // already reflects createWithDrawRequestLoading on its own via
+  // withdrawRequestLoading.
   const isLoading =
-    createWithDrawRequestLoading ||
     isRiderProfileLoading ||
     isRiderTransactionLoading ||
     isRiderCurrentWithdrawRequestLoading;
@@ -270,7 +278,7 @@ export default function WalletMain() {
         {transactions.map((transaction, index) => (
           <RecentTransaction
             transaction={transaction}
-            key={transaction.createdAt}
+            key={transaction._id ?? `${transaction.createdAt}-${index}`}
             isLast={transactions.length - 1 === index}
           />
         ))}
@@ -286,6 +294,44 @@ export default function WalletMain() {
         handleFormSubmission={handleFormSubmission}
         withdrawRequestLoading={createWithDrawRequestLoading}
       />
+
+      <ReactNativeModal
+        isVisible={!!warningMessage}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        onBackdropPress={() => setWarningMessage("")}
+        style={{ alignItems: "center", justifyContent: "center" }}
+      >
+        <View
+          style={{
+            backgroundColor: appTheme.themeBackground,
+            borderWidth: 1,
+            borderColor: appTheme.borderLineColor,
+            borderRadius: 10,
+            padding: 16,
+            width: "90%",
+            alignItems: "center",
+            gap: 12,
+          }}
+        >
+          <Text
+            className="font-bold text-lg"
+            style={{ color: appTheme.fontMainColor }}
+          >
+            {t("Warning")}
+          </Text>
+          <Text
+            className="text-center"
+            style={{ color: appTheme.secondaryTextColor }}
+          >
+            {warningMessage}
+          </Text>
+          <CustomContinueButton
+            title={t("Okay")}
+            onPress={() => setWarningMessage("")}
+          />
+        </View>
+      </ReactNativeModal>
     </View>
   );
 }

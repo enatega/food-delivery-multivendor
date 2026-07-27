@@ -17,12 +17,13 @@ export default function WalletScreen() {
     RIDER_TRANSACTIONS_HISTORY,
   )     
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    refetch();
-    setTimeout(() => {
+    try {
+      await refetch();
+    } finally {
       setRefreshing(false);
-    }, 2000);
+    }
   }, [refetch]);
 
   return (

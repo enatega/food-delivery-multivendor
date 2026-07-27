@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useRoute } from "@react-navigation/native";
+import { useLocalSearchParams } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -16,9 +16,7 @@ import { SUBSCRIPTION_NEW_MESSAGE } from "@/lib/apollo/subscriptions";
 // Interface
 
 export const useChatScreen = () => {
-  const route = useRoute();
-
-  const { id: orderId } = route.params as { id: string };
+  const { id: orderId } = useLocalSearchParams<{ id: string }>();
 
   const { dataProfile } = useContext(UserContext);
 

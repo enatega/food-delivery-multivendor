@@ -47,44 +47,40 @@ const LoginScreen = () => {
   const { appTheme } = useApptheme();
   const client = useApolloClient();
   const { t } = useTranslation();
-  const { onLogin, creds } = useLogin();
-  const [loading, setLoading] = useState(false);
+  const { onLogin, creds, isLogging } = useLogin();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
-    // TODO: Implement login logic
     try {
-      setLoading(true);
       await onLogin(creds.username.toLowerCase(), creds.password);
     } catch (err: unknown) {
-      console.log(err);
-    } finally {
-      setLoading(false);
+      if (__DEV__) {
+        console.log(err);
+      }
     }
   };
 
-  const onInit = () => {
-    try {
-      client
-        ?.clearStore()
-        .catch((err) => console.log("Apollo clearStore error:", err));
-
-      if (!creds?.username) return;
-      setInitialValues({
-        username: creds.username,
-        password: creds.password || initial.password,
-      });
-    } catch (err) {
-      console.log("error login", err);
-    }
-  };
-
-  // Use Effect
+  // Clear any stale Apollo cache once when the login screen mounts (e.g. after
+  // logout) — not on every `creds` change, which would abort in-flight queries.
   useEffect(() => {
-    onInit();
+    client
+      ?.clearStore()
+      .catch(
+        (err) => __DEV__ && console.log("Apollo clearStore error:", err),
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Prefill the form when the last-used credentials arrive.
+  useEffect(() => {
+    if (!creds?.username) return;
+    setInitialValues({
+      username: creds.username,
+      password: creds.password || initial.password,
+    });
   }, [creds]);
 
-  if (loading) {
+  if (isLogging) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>{t("Loading...")}</Text>

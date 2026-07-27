@@ -2,10 +2,10 @@ import { useContext, useEffect, useLayoutEffect, useState } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import getEnvVars from "@/environment";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useLocationContext } from "../context/global/location.context";
 import { useApptheme } from "../context/global/theme.context";
 import UserContext from "../context/global/user.context";
@@ -14,12 +14,17 @@ const useOrderDetail = () => {
   // Hooks
   const { appTheme } = useApptheme();
   const navigation = useNavigation();
-  const route = useRoute();
   const router = useRouter();
-  const [tab] = useState(route.params?.tab);
-  const [orderID] = useState(route.params?.itemId);
+  const params = useLocalSearchParams<{ itemId?: string; tab?: string }>();
+  const [tab] = useState(params?.tab);
+  const [orderID] = useState(params?.itemId);
   const { assignedOrders, loadingAssigned } = useContext(UserContext);
-  const [order, setOrder] = useState(route.params?.order);
+  // Resolve the order from the cached assignedOrders by id (only itemId + tab
+  // are passed as route params). Seed the initial value synchronously so the
+  // screen renders with data on first paint when the cache is already warm.
+  const [order, setOrder] = useState(() =>
+    assignedOrders?.find((o) => o._id === params?.itemId),
+  );
   const { GOOGLE_MAPS_KEY } = getEnvVars();
   const { location } = useLocationContext();
 
@@ -39,7 +44,7 @@ const useOrderDetail = () => {
         />
       ),
     });
-  }, [navigation]);
+  }, [navigation, router, appTheme]);
 
   useEffect(() => {
     if (!loadingAssigned) {
@@ -78,7 +83,6 @@ const useOrderDetail = () => {
     duration,
     setDuration,
     loadingAssigned,
-    route,
     navigation,
     orderID,
     order,

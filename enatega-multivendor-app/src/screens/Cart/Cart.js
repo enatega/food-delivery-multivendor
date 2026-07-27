@@ -198,6 +198,8 @@ function Cart(props) {
     return cartTotal.toFixed(2)
   }
 
+  const isBelowMinimumOrder = !!minimumOrder && Number(calculateTotal()) < Number(minimumOrder)
+
   function didFocus() {
     const { restaurant } = data
     setMinimumOrder(restaurant.minimumOrder)
@@ -341,6 +343,18 @@ function Cart(props) {
               )}
             </ScrollView>
 
+            {isLoggedIn && profile && isBelowMinimumOrder && (
+              <View style={styles(currentTheme).minOrderMessageContainer}>
+                <View style={styles(currentTheme).minOrderMessagePill}>
+                  <AntDesign name='exclamationcircleo' size={scale(12)} color={currentTheme.red600} />
+                  <TextDefault textColor={currentTheme.red600} style={styles().minOrderMessageText} bold Small isRTL numberOfLines={2}>
+                    {t('minOrderNotReached', {
+                      minOrder: `${configuration.currencySymbol}${minimumOrder}`
+                    })}
+                  </TextDefault>
+                </View>
+              </View>
+            )}
             <View style={styles().totalBillContainer}>
               <View style={styles(currentTheme).buttonContainer}>
                 <View style={styles().cartAmount}>
@@ -358,8 +372,9 @@ function Cart(props) {
                 {isLoggedIn && profile ? (
                   <TouchableOpacity
                     activeOpacity={0.7}
+                    disabled={isBelowMinimumOrder}
                     onPress={() => {
-                      if (calculateTotal() < minimumOrder) {
+                      if (isBelowMinimumOrder) {
                         FlashMessage({
                           message: t('OrderPriceValidation')
                         })
@@ -367,7 +382,7 @@ function Cart(props) {
                       }
                       navigation.navigate('Checkout')
                     }}
-                    style={styles(currentTheme).button}
+                    style={[styles(currentTheme).button, isBelowMinimumOrder && styles(currentTheme).buttonDisabled]}
                   >
                     <TextDefault textColor={currentTheme.white} style={styles().checkoutBtn} bold H5 isRTL>
                       {t('checkoutBtn')}

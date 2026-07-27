@@ -18,11 +18,3 @@ export const RIDER_LOGIN = gql`
     }
   }
 `;
-
-export const DEFAULT_RIDER_CREDS = gql`
-  query LastOrderCreds {
-    lastOrderCreds {
-      riderUsername
-    }
-  }
-`;

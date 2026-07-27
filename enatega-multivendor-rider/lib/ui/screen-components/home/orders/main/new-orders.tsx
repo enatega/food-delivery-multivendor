@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { NetworkStatus } from "@apollo/client";
 import { ListRenderItem } from "@shopify/flash-list";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
 
 // Context
@@ -34,7 +34,6 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const {
-    loadingAssigned,
     errorAssigned,
     assignedOrders,
     dataProfile,
@@ -42,29 +41,19 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     networkStatusAssigned,
   } = useContext(UserContext);
 
-  // States
-  const [orders, setOrders] = useState<IOrder[]>([]);
-
-  // Handlers
-  const onInitOrders = () => {
-    if (loadingAssigned || errorAssigned) return;
-    if (!assignedOrders) return;
-    if (!dataProfile?.available) {
-      setOrders([]);
-      return;
-    }
-
-    const _orders = assignedOrders?.filter(
-      (o: IOrder) => o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
+  // Orders are purely derived from assignedOrders — memoize instead of the old
+  // useState + useEffect pattern (which double-rendered on every subscription
+  // event and went stale when loadingAssigned flipped without a ref change).
+  const orders = useMemo<IOrder[]>(() => {
+    if (errorAssigned || !assignedOrders) return [];
+    if (!dataProfile?.available) return [];
+    return (
+      assignedOrders.filter(
+        (o: IOrder) =>
+          o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
+      ) ?? []
     );
-
-    setOrders(_orders ?? []);
-  };
-
-  // Use Effect
-  useEffect(() => {
-    onInitOrders();
-  }, [assignedOrders, dataProfile?.available, route.key]);
+  }, [assignedOrders, dataProfile?.available, errorAssigned]);
 
   const keyExtractor = useCallback((item: IOrder) => item._id, []);
 

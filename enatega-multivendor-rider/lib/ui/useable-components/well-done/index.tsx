@@ -17,10 +17,12 @@ export default function WelldoneComponent({
 }: IWellDoneComponentProps) {
   // Use Effect
   useEffect(() => {
-    setTimeout(() => {
+    if (!orderId) return;
+    const timeoutId = setTimeout(() => {
       setOrderId("");
     }, 3000);
-  }, [orderId]);
+    return () => clearTimeout(timeoutId);
+  }, [orderId, setOrderId]);
 
   // Hooks
   const { t } = useTranslation();

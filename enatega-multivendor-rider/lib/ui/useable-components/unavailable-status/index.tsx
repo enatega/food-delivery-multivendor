@@ -16,6 +16,10 @@ export default function UnavailableStatus() {
 
   return (
     <View
+      // Informational banner only — let touches pass through to the header
+      // beneath it (otherwise it covers the availability toggle and the rider
+      // can't tap it to go back online).
+      pointerEvents="none"
       style={{
         backgroundColor: "rgba(0, 0, 0, 0.7)",
         paddingTop: insets.top - 9, // Ensures it stays below the notch

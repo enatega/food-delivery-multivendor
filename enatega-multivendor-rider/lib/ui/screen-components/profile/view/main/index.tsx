@@ -11,7 +11,7 @@ export default function ProfileMain({
   const { appTheme } = useApptheme();
   return (
     <View
-      className="flex flex-col h-full items-center"
+      className="flex flex-col items-center w-full"
       style={{ backgroundColor: appTheme.screenBackground }}
     >
       <DocumentsSection setIsFormOpened={setIsFormOpened} />

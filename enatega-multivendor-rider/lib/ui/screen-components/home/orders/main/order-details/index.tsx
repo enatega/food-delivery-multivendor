@@ -3,7 +3,14 @@ import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -53,7 +60,6 @@ import { HomeIcon } from "@/lib/ui/useable-components/svg";
 import WelldoneComponent from "@/lib/ui/useable-components/well-done";
 import { CustomMapStyles } from "@/lib/utils/constants/map";
 import { map_styles } from "@/lib/utils/constants/order-details";
-import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { height } = Dimensions.get("window");
@@ -97,12 +103,17 @@ export default function OrderDetailScreen() {
     locationPin,
   } = useOrderDetail();
   const { userId } = useUserContext();
-  const [localOrder, setLocalOrder] = useState<IOrder>({} as IOrder);
   const { mutateAssignOrder, mutateOrderStatus, loadingOrderStatus } =
     useDetails(order);
 
   // States
-  const [customMapStyles, setCustomMapStyles] = useState<MapStyleElement[]>();
+  // customMapStyles is a pure derivation of the active theme — memoize it
+  // instead of mirroring it into state via an effect (avoids an extra render).
+  const customMapStyles = useMemo<MapStyleElement[]>(
+    () => CustomMapStyles(appTheme),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentTheme],
+  );
   const [orderId, setOrderId] = useState("");
   const [retryCount, setRetryCount] = useState(0);
   const retryCountRef = useRef(0);
@@ -151,20 +162,20 @@ export default function OrderDetailScreen() {
     };
   }, []);
 
-  const clearRouteRetry = () => {
+  const clearRouteRetry = useCallback(() => {
     if (retryTimeoutRef.current) {
       clearTimeout(retryTimeoutRef.current);
       retryTimeoutRef.current = null;
     }
-  };
+  }, []);
 
-  const resetRouteRetry = () => {
+  const resetRouteRetry = useCallback(() => {
     clearRouteRetry();
     retryCountRef.current = 0;
     setRetryCount(0);
-  };
+  }, [clearRouteRetry]);
 
-  const scheduleRouteRetry = () => {
+  const scheduleRouteRetry = useCallback(() => {
     if (retryCountRef.current >= MAX_ROUTE_RETRIES) {
       return;
     }
@@ -179,27 +190,50 @@ export default function OrderDetailScreen() {
       retryCountRef.current = nextAttempt;
       setRetryCount(nextAttempt);
     }, RETRY_BASE_DELAY_MS * nextAttempt);
-  };
+  }, []);
 
-  const handleRouteReady = (result: { distance?: number; duration?: number }) => {
-    if (result?.distance) {
-      setDistance(result.distance);
-      setDuration(result.duration ?? null);
-    }
+  const handleRouteReady = useCallback(
+    (result: { distance?: number; duration?: number }) => {
+      if (result?.distance) {
+        setDistance(result.distance);
+        setDuration(result.duration ?? null);
+      }
 
-    resetRouteRetry();
-  };
+      resetRouteRetry();
+    },
+    [resetRouteRetry, setDistance, setDuration],
+  );
 
-  const handleRouteError = (label: string) => (error: unknown) => {
-    console.log(`${label} route error:`, error);
+  const handleRouteError = useCallback(
+    (label: string) => (error: unknown) => {
+      if (__DEV__) {
+        console.log(`${label} route error:`, error);
+      }
 
-    if (String(error).includes("NOT_FOUND")) {
-      scheduleRouteRetry();
-      return;
-    }
+      if (String(error).includes("NOT_FOUND")) {
+        scheduleRouteRetry();
+        return;
+      }
 
-    clearRouteRetry();
-  };
+      clearRouteRetry();
+    },
+    [scheduleRouteRetry, clearRouteRetry],
+  );
+
+  // Stable per-leg error handlers so MapViewDirections doesn't see a new
+  // onError prop on every render.
+  const handleStoreRouteError = useMemo(
+    () => handleRouteError("Detailed"),
+    [handleRouteError],
+  );
+  const handleDeliveryRouteError = useMemo(
+    () => handleRouteError("Delivery"),
+    [handleRouteError],
+  );
+  const handleDefaultRouteError = useMemo(
+    () => handleRouteError("Default"),
+    [handleRouteError],
+  );
 
   const openMaps = () => {
     try {
@@ -235,7 +269,7 @@ export default function OrderDetailScreen() {
 
       if (Platform.OS === "ios") {
         // Apple Maps (Only Rider -> Store -> Customer)
-        const appleMapsUrl = `maps://app?saddr=${rider}&daddr=${localOrder?.orderStatus === "PICKED" ? customer : store}`;
+        const appleMapsUrl = `maps://app?saddr=${rider}&daddr=${order?.orderStatus === "PICKED" ? customer : store}`;
         // Added error handling for Linking
         Linking.openURL(appleMapsUrl).catch(() => {
           Alert.alert(
@@ -266,16 +300,11 @@ export default function OrderDetailScreen() {
 
   // Use Effect
   useEffect(() => {
-    const styles_for_map = CustomMapStyles(appTheme);
-    if (currentTheme && appTheme) {
-      setCustomMapStyles(styles_for_map);
-    }
-
     // Added validation for Google Maps API key to catch common configuration issues
-    if (!GOOGLE_MAPS_KEY || GOOGLE_MAPS_KEY === "") {
+    if (__DEV__ && (!GOOGLE_MAPS_KEY || GOOGLE_MAPS_KEY === "")) {
       console.log("Google Maps API key is missing or invalid");
     }
-  }, [appTheme, currentTheme, GOOGLE_MAPS_KEY]);
+  }, [GOOGLE_MAPS_KEY]);
 
   // Move the marker only when the rider's coordinates actually change,
   // instead of re-animating on a timer to often-identical positions
@@ -312,13 +341,7 @@ export default function OrderDetailScreen() {
     };
   }, [latitude, longitude]);
 
-  useEffect(() => {
-    if (order) {
-      setLocalOrder(order);
-    }
-  }, [order]);
-
-  if (!localOrder) return;
+  if (!order) return;
 
   const hasValidRiderLocation = isValidCoordinate(locationPin?.location);
   const hasValidRestaurantLocation = isValidCoordinate(
@@ -461,8 +484,8 @@ export default function OrderDetailScreen() {
                 )}
 
               {/* Added validation for rider to restaurant directions */}
-              {localOrder?.orderStatus === "ACCEPTED" ||
-                localOrder?.orderStatus === "ASSIGNED"
+              {order?.orderStatus === "ACCEPTED" ||
+                order?.orderStatus === "ASSIGNED"
                 ? isValidCoordinate(locationPin?.location) &&
                 isValidCoordinate(restaurantAddressPin?.location) &&
                 GOOGLE_MAPS_KEY && (
@@ -477,13 +500,13 @@ export default function OrderDetailScreen() {
                     resetOnChange={false} // Prevents unnecessary recalculations
                     onReady={handleRouteReady}
                     optimizeWaypoints={true}
-                    onError={handleRouteError("Detailed")}
+                    onError={handleStoreRouteError}
                   />
                 )
                 : null}
 
               {/* Added validation for rider to customer directions */}
-              {localOrder?.orderStatus === "PICKED" &&
+              {order?.orderStatus === "PICKED" &&
                 isValidCoordinate(locationPin?.location) &&
                 isValidCoordinate(deliveryAddressPin?.location) &&
                 GOOGLE_MAPS_KEY && (
@@ -498,14 +521,14 @@ export default function OrderDetailScreen() {
                     resetOnChange={false}
                     optimizeWaypoints={true}
                     onReady={handleRouteReady}
-                    onError={handleRouteError("Delivery")}
+                    onError={handleDeliveryRouteError}
                   />
                 )}
 
               {/* Added validation for restaurant to customer directions */}
-              {localOrder?.orderStatus !== "ACCEPTED" &&
-                localOrder?.orderStatus !== "PICKED" &&
-                localOrder?.orderStatus !== "ASSIGNED" &&
+              {order?.orderStatus !== "ACCEPTED" &&
+                order?.orderStatus !== "PICKED" &&
+                order?.orderStatus !== "ASSIGNED" &&
                 isValidCoordinate(restaurantAddressPin?.location) &&
                 isValidCoordinate(deliveryAddressPin?.location) && (
                   <MapViewDirections
@@ -519,7 +542,7 @@ export default function OrderDetailScreen() {
                     resetOnChange={false}
                     optimizeWaypoints={true}
                     onReady={handleRouteReady}
-                    onError={handleRouteError("Default")}
+                    onError={handleDefaultRouteError}
                   />
                 )}
               {/* <Button title="Open in Maps" onPress={openMaps} /> */}
@@ -571,26 +594,26 @@ export default function OrderDetailScreen() {
                   {t("Order ID")}
                 </Text>
                 <Text style={{ color: appTheme.fontMainColor }}>
-                  #{localOrder?.orderId ?? "-"}
+                  #{order?.orderId ?? "-"}
                 </Text>
               </View>
 
               <View className="flex-1 flex-row justify-start items-center gap-x-4 mb-4">
                 <Image
                   source={
-                      localOrder?.restaurant?.image
-                        ? { uri: localOrder?.restaurant?.image }
+                      order?.restaurant?.image
+                        ? { uri: order?.restaurant?.image }
                         : require("../../../../../../assets/images/placeholder.jpg")
                     }
                   style={{ width: 32, height: 30, borderRadius: 8 }}
                 />
 
-                {localOrder?.restaurant?.name && (
+                {order?.restaurant?.name && (
                   <Text
                     className="font-[Inter] text-lg font-bold leading-7 text-left underline-offset-auto decoration-skip-ink "
                     style={{ color: appTheme.fontMainColor }}
                   >
-                    {localOrder?.restaurant?.name}
+                    {order?.restaurant?.name}
                   </Text>
                 )}
               </View>
@@ -615,7 +638,7 @@ export default function OrderDetailScreen() {
                     className="font-[Inter] text-base font-bold leading-6 text-left underline-offset-auto decoration-skip-ink "
                     style={{ color: appTheme.fontMainColor }}
                   >
-                    {localOrder?.restaurant?.address ?? "-"}
+                    {order?.restaurant?.address ?? "-"}
                   </Text>
                 </View>
               </View>
@@ -632,7 +655,7 @@ export default function OrderDetailScreen() {
                   className="font-[Inter] text-base font-semibold  text-left underline-offset-auto decoration-skip-ink   mr-2"
                   style={{ color: appTheme.fontMainColor }}
                 >
-                  {localOrder?.paymentMethod}
+                  {order?.paymentMethod}
                 </Text>
               </View>
 
@@ -650,8 +673,8 @@ export default function OrderDetailScreen() {
                   style={{ color: appTheme.fontMainColor }}
                 >
                   {configuration?.currencySymbol}
-                  {localOrder?.orderAmount}
-                  {localOrder.paymentStatus === "PAID"
+                  {order?.orderAmount}
+                  {order?.paymentStatus === "PAID"
                     ? t("Paid")
                     : t("(Not paid yet)")}
                 </Text>
@@ -661,19 +684,19 @@ export default function OrderDetailScreen() {
               <View className="flex-1 h-[1px] mb-4" />
 
               <AccordionItem title={t("Order Details")}>
-                <ItemDetails orderData={localOrder} tab={tab} />
+                <ItemDetails orderData={order} tab={tab} />
               </AccordionItem>
 
               {/* Pick up Button */}
               {tab === "processing" &&
-                localOrder.orderStatus === "ASSIGNED" && (
+                order.orderStatus === "ASSIGNED" && (
                   <TouchableOpacity
                     className="h-14 rounded-3xl py-3 w-full mt-4 mb-10"
                     style={{ backgroundColor: appTheme.primary }}
                     disabled={loadingOrderStatus}
                     onPress={() =>
                       mutateOrderStatus({
-                        variables: { id: localOrder?._id, status: "PICKED" },
+                        variables: { id: order?._id, status: "PICKED" },
                       })
                     }
                   >
@@ -690,15 +713,15 @@ export default function OrderDetailScreen() {
                   </TouchableOpacity>
                 )}
 
-              {tab == "processing" && localOrder.orderStatus === "PICKED" && (
+              {tab == "processing" && order.orderStatus === "PICKED" && (
                 <TouchableOpacity
                   className="h-14 rounded-3xl py-3 w-full mt-4 mb-10"
                   style={{ backgroundColor: appTheme.primary }}
                   disabled={loadingOrderStatus}
                   onPress={() => {
-                    const isUnpaid = localOrder?.paymentStatus !== "PAID";
+                    const isUnpaid = order?.paymentStatus !== "PAID";
                     const amountNote = isUnpaid
-                      ? `\n\n${t("Confirm you have collected")} ${configuration?.currencySymbol ?? ""}${localOrder?.orderAmount}.`
+                      ? `\n\n${t("Confirm you have collected")} ${configuration?.currencySymbol ?? ""}${order?.orderAmount}.`
                       : "";
                     Alert.alert(
                       t("Mark as Delivered?"),
@@ -710,14 +733,13 @@ export default function OrderDetailScreen() {
                           onPress: async () => {
                             await mutateOrderStatus({
                               variables: {
-                                id: localOrder?._id,
+                                id: order?._id,
                                 status: "DELIVERED",
                               },
                               onCompleted: () => {
-                                setOrderId(localOrder?.orderId);
+                                setOrderId(order?.orderId);
                               },
                             });
-                            setOrderId(localOrder?.orderId);
                           },
                         },
                       ],
@@ -738,14 +760,14 @@ export default function OrderDetailScreen() {
               )}
 
               {tab === "new_orders" &&
-                localOrder.orderStatus === "ACCEPTED" && (
+                order.orderStatus === "ACCEPTED" && (
                   <View style={{ paddingBottom: Platform.OS === 'ios' ? insets.bottom : insets.bottom + 10 }}>
                     <CustomContinueButton
                       title={t("Assign me")}
                       className="w-[55%] mx-auto"
                       onPress={() =>
                         mutateAssignOrder({
-                          variables: { id: localOrder?._id },
+                          variables: { id: order?._id },
                           refetchQueries: [
                             {
                               query: RIDER_ORDERS,
@@ -765,7 +787,7 @@ export default function OrderDetailScreen() {
         <WelldoneComponent
           orderId={orderId}
           setOrderId={setOrderId}
-          status={localOrder?.orderStatus === "DELIVERED" ? "Delivered" : ""}
+          status={order?.orderStatus === "DELIVERED" ? "Delivered" : ""}
         />
       }
     </>

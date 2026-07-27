@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 // Core
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo } from "react";
 import { ListRenderItem } from "@shopify/flash-list";
 import { useCallback } from "react";
 
@@ -35,34 +35,22 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const {
-    loadingAssigned,
     errorAssigned,
     assignedOrders,
     refetchAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
 
-  // States
-  const [orders, setOrders] = useState<IOrder[]>([]);
-
-  // Handlers
-  const onInitOrders = () => {
-    if (loadingAssigned || errorAssigned) return;
-    if (!assignedOrders) return;
-
-
-    const _orders = assignedOrders?.filter(
-      (o: IOrder) =>
-        ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp,
+  // Derived from assignedOrders — memoized instead of mirrored into state.
+  const orders = useMemo<IOrder[]>(() => {
+    if (errorAssigned || !assignedOrders) return [];
+    return (
+      assignedOrders.filter(
+        (o: IOrder) =>
+          ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp,
+      ) ?? []
     );
-
-    setOrders(_orders ?? []);
-  };
-
-  // Use Effect
-  useEffect(() => {
-    onInitOrders();
-  }, [assignedOrders, route.key]);
+  }, [assignedOrders, errorAssigned]);
 
   const keyExtractor = useCallback((item: IOrder) => item._id, []);
 

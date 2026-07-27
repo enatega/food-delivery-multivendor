@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { useContext, useEffect, useState, createContext } from "react";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  createContext,
+} from "react";
 import { AudioPlayer, useAudioPlayer, AudioSource } from "expo-audio";
 // Interface
 import {
@@ -16,7 +22,14 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   // State
   const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  
+  // Mirror isPlaying into a ref so the assignedOrders effect can read the
+  // current value without depending on it (depending on isPlaying caused a
+  // stop→setState→re-run→start oscillation on busy zones).
+  const isPlayingRef = useRef(false);
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+
   // Context/Hooks
   const { assignedOrders } = useUserContext();
 
@@ -65,16 +78,22 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   // Use Effect
   useEffect(() => {
     if (assignedOrders) {
-      // Check if any order should play sound
+      // Only beep for orders that are actually available for THIS rider to
+      // grab (accepted by the restaurant, unassigned, not yet picked up) —
+      // matching the "New Orders" tab filter (new-orders.tsx). Without the
+      // `!o.rider` check, any order already assigned to a rider (this one or
+      // another) and simply not yet picked up kept the beep looping even
+      // though there was nothing left to accept.
       const new_order = assignedOrders?.find(
-        (o: IOrder) => o.orderStatus === "ACCEPTED" && !o?.isPickedUp,
+        (o: IOrder) =>
+          o.orderStatus === "ACCEPTED" && !o?.rider && !o?.isPickedUp,
       );
 
       const shouldPlaySound = !!new_order;
 
-      if (shouldPlaySound && !isPlaying) {
+      if (shouldPlaySound && !isPlayingRef.current) {
         playSound();
-      } else if (!shouldPlaySound && isPlaying) {
+      } else if (!shouldPlaySound && isPlayingRef.current) {
         stopSound();
       }
     } else {
@@ -82,11 +101,12 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
     }
 
     return () => {
-      if (isPlaying) {
+      if (isPlayingRef.current) {
         stopSound();
       }
     };
-  }, [assignedOrders, isPlaying]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assignedOrders]);
 
   // Cleanup on unmount
   useEffect(() => {

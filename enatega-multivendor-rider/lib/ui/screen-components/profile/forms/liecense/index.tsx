@@ -126,22 +126,15 @@ export default function DrivingLicenseForm({
       });
 
       if (!result.canceled) {
-        console.log("Reading image as base64...");
         const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        
-        console.log("Base64 length:", base64.length);
-        console.log("Uploading to S3...");
-        
+
         const { data, errors } = await uploadImageToS3({
           variables: {
             image: `data:image/jpeg;base64,${base64}`,
           },
         });
-
-        console.log("S3 response:", data);
-        console.log("S3 errors:", errors);
 
         if (errors && errors.length > 0) {
           throw new Error(errors[0].message || t("Failed to upload image"));
@@ -232,7 +225,6 @@ export default function DrivingLicenseForm({
           type: "danger",
         });
       } else {
-        console.log({ ...formData });
         await mutateLicense({
           variables: {
             updateRiderLicenseDetailsId: userId,

@@ -16,7 +16,7 @@ export default function OtherDetailsSection() {
   const { currentTheme, toggleTheme, appTheme } = useApptheme();
 
   return (
-    <View className="flex flex-col justify-between items-start h-[40%] w-full px-4 py-2 pb-20 my-5">
+    <View className="flex flex-col items-start w-full px-4 py-2 pb-20 my-5 gap-4">
       <View className="flex flex-row items-center justify-between w-full">
         <Text
           className="text-xl font-bold"
@@ -26,7 +26,7 @@ export default function OtherDetailsSection() {
         </Text>
       </View>
       <View
-        className="flex flex-col gap-3 item-start justify-between w-full   h-20 p-4 rounded-md my-4"
+        className="flex flex-col gap-3 item-start justify-between w-full h-20 p-4 rounded-md"
         style={{
           backgroundColor: appTheme.themeBackground,
           borderWidth: 1,
@@ -42,7 +42,7 @@ export default function OtherDetailsSection() {
       </View>
       {/* Todo: can show the password after decryption or after the backend will send normal password */}
       {/* <View
-        className="flex flex-col gap-3 item-start justify-between w-full   h-20 p-4 rounded-md my-4"
+        className="flex flex-col gap-3 item-start justify-between w-full h-20 p-4 rounded-md"
         style={{
           backgroundColor: appTheme.themeBackground,
           borderWidth: 1,
@@ -57,7 +57,7 @@ export default function OtherDetailsSection() {
         </View>
       </View> */}
       <View
-        className="flex flex-col gap-3 item-start justify-between w-full   h-20 p-4 rounded-md my-4"
+        className="flex flex-col gap-3 item-start justify-between w-full h-20 p-4 rounded-md"
         style={{
           backgroundColor: appTheme.themeBackground,
           borderWidth: 1,

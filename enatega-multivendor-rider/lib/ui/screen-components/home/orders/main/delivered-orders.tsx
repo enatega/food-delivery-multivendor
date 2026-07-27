@@ -11,7 +11,7 @@ import { ORDER_TYPE } from "@/lib/utils/types";
 import { NetworkStatus } from "@apollo/client";
 import { FlashList } from "@shopify/flash-list";
 import { ListRenderItem } from "@shopify/flash-list";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
 
@@ -28,34 +28,23 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   const { t } = useTranslation();
   const {
     dataProfile,
-    loadingAssigned,
     errorAssigned,
     assignedOrders,
     refetchAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
 
-  // States
-  const [orders, setOrders] = useState<IOrder[]>([]);
-
-  // Handlers
-  const onInitOrders = () => {
-    if (loadingAssigned || errorAssigned) return;
-    if (!assignedOrders) return;
-
-    const _orders = assignedOrders?.filter((o: IOrder) => {
-      const isDelivered = ["DELIVERED", "CANCELLED"].includes(o.orderStatus);
-      const isCurrentRider = o.rider?._id === dataProfile?._id;
-      return isDelivered && isCurrentRider;
-    });
-
-    setOrders(_orders ?? []);
-  };
-
-  // Use Effect
-  useEffect(() => {
-    onInitOrders();
-  }, [assignedOrders, route.key]);
+  // Derived from assignedOrders — memoized instead of mirrored into state.
+  const orders = useMemo<IOrder[]>(() => {
+    if (errorAssigned || !assignedOrders) return [];
+    return (
+      assignedOrders.filter((o: IOrder) => {
+        const isDelivered = ["DELIVERED", "CANCELLED"].includes(o.orderStatus);
+        const isCurrentRider = o.rider?._id === dataProfile?._id;
+        return isDelivered && isCurrentRider;
+      }) ?? []
+    );
+  }, [assignedOrders, dataProfile?._id, errorAssigned]);
 
   const keyExtractor = useCallback((item: IOrder) => item._id, []);
 

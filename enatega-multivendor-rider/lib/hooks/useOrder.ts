@@ -1,10 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 
-import { ApolloError, useMutation, useSubscription } from "@apollo/client";
+import { ApolloError, useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 
 import { ASSIGN_ORDER } from "../apollo/mutations/order.mutation";
-import { SUBSCRIPTION_ORDERS } from "../apollo/subscriptions";
 import UserContext from "../context/global/user.context";
 import { FlashMessageComponent } from "../ui/useable-components";
 import { IOrder } from "../utils/interfaces/order.interface";
@@ -58,13 +57,11 @@ const useOrder = (order: IOrder) => {
     return () => timerRef.current && clearInterval(timerRef.current);
   }, [order.acceptedAt, refetchAssigned]);
 
-  useSubscription(SUBSCRIPTION_ORDERS, {
-    variables: { id: order?._id },
-    skip: !order?._id,
-    onError: (error) => {
-      console.log("Order subscription error:", error);
-    },
-  });
+  // Removed the per-card SUBSCRIPTION_ORDERS subscription: it opened one WebSocket
+  // per rendered Order card (N sockets for N cards), its result was never consumed,
+  // and the same order data already flows through UserContext's assigned/zone
+  // subscriptions into assignedOrders.
+
   const [mutateAssignOrder, { loading: loadingAssignOrder }] = useMutation(
     ASSIGN_ORDER,
     {
