@@ -28,8 +28,6 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
   const [message, setMessage] = useState('')
   const [isSending, setIsSending] = useState(false)
   const [allowBackdropClose, setAllowBackdropClose] = useState(false)
-  const [footerHeight, setFooterHeight] = useState(scale(82))
-  const [keyboardHeight, setKeyboardHeight] = useState(0)
   const scrollRef = useRef(null)
   const insets = useSafeAreaInsets()
 
@@ -112,33 +110,6 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
     })
   }, [visible, data?.getTicketMessages?.messages?.length, message])
 
-  useEffect(() => {
-    if (!visible) return
-
-    const scrollToLatest = () => {
-      requestAnimationFrame(() => {
-        scrollRef.current?.scrollToEnd?.({ animated: true })
-      })
-    }
-
-    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
-    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
-
-    const showSubscription = Keyboard.addListener(showEvent, (event) => {
-      setKeyboardHeight(event?.endCoordinates?.height || 0)
-      scrollToLatest()
-    })
-    const hideSubscription = Keyboard.addListener(hideEvent, () => {
-      setKeyboardHeight(0)
-      scrollToLatest()
-    })
-
-    return () => {
-      showSubscription.remove()
-      hideSubscription.remove()
-    }
-  }, [visible])
-
   const ticketData = ticketDetailsData?.getSingleSupportTicket || ticket
   const ticketDescription = ticketData?.description?.trim()
   const supportBubbleColor =
@@ -176,6 +147,11 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
     })
   }
 
+  const handleClose = () => {
+    Keyboard.dismiss()
+    onClose()
+  }
+
   if (!visible) return null
 
   return (
@@ -185,20 +161,17 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
       visible={visible}
       statusBarTranslucent
       presentationStyle='overFullScreen'
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <View style={styles.modalRoot}>
         <Pressable
           style={styles.backdrop}
-          onPress={allowBackdropClose ? onClose : undefined}
+          onPress={allowBackdropClose ? handleClose : undefined}
         />
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={Platform.OS === 'ios' ? scale(12) : 0}
-          style={[
-            styles.sheetWrap,
-            Platform.OS === 'android' && { paddingBottom: keyboardHeight }
-          ]}
+          style={styles.sheetWrap}
         >
           <View
             style={[
@@ -221,7 +194,7 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                   : 'Open'}
               </TextDefault>
             </View>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
               <MaterialIcons name='close' size={22} color={currentTheme.newIconColor} />
             </TouchableOpacity>
           </View>
@@ -258,16 +231,7 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                   ref={scrollRef}
                   style={styles.messagesScroll}
                   showsVerticalScrollIndicator={false}
-                  contentContainerStyle={[
-                    styles.messagesContent,
-                    {
-                      paddingBottom:
-                        footerHeight +
-                        scale(12) +
-                        insets.bottom +
-                        (Platform.OS === 'android' ? keyboardHeight : 0)
-                    }
-                  ]}
+                  contentContainerStyle={styles.messagesContent}
                   keyboardShouldPersistTaps='handled'
                   keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
                   nestedScrollEnabled
@@ -323,12 +287,6 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
             </View>
 
             <View
-              onLayout={(event) => {
-                const nextFooterHeight = event?.nativeEvent?.layout?.height
-                if (nextFooterHeight) {
-                  setFooterHeight(nextFooterHeight)
-                }
-              }}
               style={[
                 styles.footer,
                 {
@@ -444,8 +402,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth
   },
   messagesWrap: {
-    flex: 1,
-    minHeight: scale(220)
+    flex: 1
   },
   messagesScroll: {
     flex: 1
@@ -453,8 +410,7 @@ const styles = StyleSheet.create({
   loadingWrap: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: scale(220)
+    justifyContent: 'center'
   },
   messagesContent: {
     padding: scale(16),
@@ -476,7 +432,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: scale(220),
     paddingHorizontal: scale(18)
   },
   footer: {
