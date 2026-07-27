@@ -575,6 +575,7 @@ export const en = {
   OrderHistory: 'Order history',
   Account: 'Account',
   map: 'Map',
+  mapPreviewUnavailable: 'Map preview is unavailable. You can still continue checkout.',
   openingHours: 'Opening hours',
   deliveryInformation: 'Delivery information',
   contact: 'Contact',

@@ -103,14 +103,26 @@ function Checkout(props) {
   const { loading, data } = useRestaurant(cartRestaurant)
   console.log('data?.restaurant?._id', data?.restaurant?._id)
   const [loadingOrder, setLoadingOrder] = useState(false)
-  const latOrigin = data?.restaurant?.location?.coordinates[1]
-  const lonOrigin = data?.restaurant?.location?.coordinates[0]
-  const initialRegion = {
-    latitude: +latOrigin,
-    longitude: +lonOrigin,
-    latitudeDelta: 0.4,
-    longitudeDelta: 0.5
-  }
+  const restaurantCoordinates = data?.restaurant?.location?.coordinates
+  const latOrigin = Number(restaurantCoordinates?.[1])
+  const lonOrigin = Number(restaurantCoordinates?.[0])
+  const hasRestaurantCoordinates =
+    restaurantCoordinates?.[0] != null &&
+    restaurantCoordinates?.[1] != null &&
+    restaurantCoordinates[0] !== '' &&
+    restaurantCoordinates[1] !== '' &&
+    Number.isFinite(latOrigin) &&
+    Number.isFinite(lonOrigin) &&
+    Math.abs(latOrigin) <= 90 &&
+    Math.abs(lonOrigin) <= 180
+  const initialRegion = hasRestaurantCoordinates
+    ? {
+        latitude: latOrigin,
+        longitude: lonOrigin,
+        latitudeDelta: 0.4,
+        longitudeDelta: 0.5
+      }
+    : null
   const [isModalVisible, setisModalVisible] = useState(false)
   const [orderConfirmedTime, setOrderConfirmedTime] = useState(null)
   // When demo mode is enabled the order should go through with whatever
@@ -659,12 +671,33 @@ function Checkout(props) {
             <ScrollView showsVerticalScrollIndicator={false} style={[styles().flex]}>
               <View>
                 <View style={[styles(currentTheme).headerContainer]}>
-                  <View style={styles().mapView}>
-                    <MapView style={styles().flex} scrollEnabled={false} zoomEnabled={false} zoomControlEnabled={false} rotateEnabled={false} cacheEnabled initialRegion={initialRegion} customMapStyle={customMapStyle} provider={PROVIDER_DEFAULT}></MapView>
-                    <View style={styles().marker}>
-                      <RestaurantMarker />
+                  {initialRegion ? (
+                    <View style={styles().mapView}>
+                      <MapView
+                        style={styles().flex}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                        zoomControlEnabled={false}
+                        rotateEnabled={false}
+                        loadingEnabled
+                        loadingBackgroundColor={currentTheme.themeBackground}
+                        loadingIndicatorColor={currentTheme.main}
+                        initialRegion={initialRegion}
+                        customMapStyle={customMapStyle}
+                        provider={PROVIDER_DEFAULT}
+                      />
+                      <View style={styles().marker}>
+                        <RestaurantMarker />
+                      </View>
                     </View>
-                  </View>
+                  ) : (
+                    <View style={[styles().mapView, styles(currentTheme).mapUnavailable]}>
+                      <MaterialCommunityIcons name='map-marker-off-outline' size={scale(28)} color={currentTheme.secondaryText} />
+                      <TextDefault H5 bold center textColor={currentTheme.secondaryText}>
+                        {t('mapPreviewUnavailable')}
+                      </TextDefault>
+                    </View>
+                  )}
                   <View style={[styles(currentTheme).horizontalLine, styles().width100]} />
                 </View>
                 <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} t={t} />

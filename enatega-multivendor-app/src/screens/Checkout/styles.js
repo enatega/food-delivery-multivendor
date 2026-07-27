@@ -308,6 +308,13 @@ const styles = (props = null) =>
     mapView: {
       height: scale(119)
     },
+    mapUnavailable: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: scale(8),
+      paddingHorizontal: scale(20),
+      backgroundColor: props !== null ? props?.cardBackground : '#F3F4F6'
+    },
     marker: {
       width: 50,
       height: 50,
