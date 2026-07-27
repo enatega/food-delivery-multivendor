@@ -209,10 +209,7 @@ export const useCreateAccount = () => {
   }
 
   const navigateToMain = () => {
-    navigation.navigate({
-      name: 'Main',
-      merge: true
-    })
+    navigation.navigate('Main', { screen: 'Discovery' })
   }
 
   async function mutateLogin(user) {
@@ -297,15 +294,17 @@ export const useCreateAccount = () => {
     }
 
     try {
+      const needsPhone = data?.login?.phone === ''
+      if (!needsPhone) navigateToMain()
+
       await setTokenAsync(data.login.token)
       FlashMessage({ message: 'Successfully logged in' })
 
-      if (data?.login?.phone === '') {
+      if (needsPhone) {
         logStep('onCompleted: no phone on account → navigate to PhoneNumber')
         navigateToPhone()
       } else {
         logStep('onCompleted: navigate to Main')
-        navigateToMain()
       }
     } finally {
       setLoading(false)

@@ -48,7 +48,7 @@ function TopBrands(props) {
           justifyContent: 'flex-start'
         }}
       >
-        <TextDefault style={styles().brandName} textColor={currentTheme.fontThirdColor} numberOfLines={2} ellipsizeMode='tail' bolder>
+        <TextDefault style={styles().brandName} textColor={currentTheme.fontFourthColor} numberOfLines={2} ellipsizeMode='tail' bolder>
           {item?.name}
         </TextDefault>
         <TextDefault textColor={currentTheme.fontFifthColor} normal>

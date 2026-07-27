@@ -128,13 +128,10 @@ export const useLogin = () => {
           name: data.login.name,
           email: data.login.email
         })
-        // Await token persistence before navigating so the next screen's first
-        // authenticated query does not fire with a missing token (SEC-007).
+        // Leave the guest Profile tab before authentication swaps it to the
+        // real Profile screen, otherwise Profile flashes before Discovery.
+        navigation.navigate('Main', { screen: 'Discovery' })
         await setTokenAsync(data.login.token)
-        navigation.navigate({
-          name: 'Main',
-          merge: true
-        })
       } catch (e) {
         if (__DEV__) console.log(e)
       }

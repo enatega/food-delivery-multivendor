@@ -9,6 +9,33 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
+    floatingCart: {
+      position: 'absolute',
+      bottom: scale(16),
+      width: scale(54),
+      height: scale(54),
+      borderRadius: scale(27),
+      backgroundColor: props?.main,
+      alignItems: 'center',
+      justifyContent: 'center',
+      elevation: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.25,
+      shadowRadius: 4
+    },
+    cartBadge: {
+      position: 'absolute',
+      top: -scale(4),
+      right: -scale(4),
+      minWidth: scale(20),
+      height: scale(20),
+      paddingHorizontal: scale(4),
+      borderRadius: scale(10),
+      backgroundColor: props?.black,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
     container: { flex: 1, gap: 8, backgroundColor: props != null ? props?.themeBackground : '#FFF' },
     screenBackground: {
       backgroundColor: props != null ? props?.themeBackground : '#FFF',
