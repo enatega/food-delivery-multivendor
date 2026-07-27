@@ -128,10 +128,16 @@ export const useLogin = () => {
           name: data.login.name,
           email: data.login.email
         })
-        // Leave the guest Profile tab before authentication swaps it to the
-        // real Profile screen, otherwise Profile flashes before Discovery.
-        navigation.navigate('Main', { screen: 'Discovery' })
         await setTokenAsync(data.login.token)
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'Main',
+              params: { screen: 'Discovery' }
+            }
+          ]
+        })
       } catch (e) {
         if (__DEV__) console.log(e)
       }

@@ -29,6 +29,7 @@ import CartAddress from '../screens/CartAddress/CartAddress'
 import Settings from '../screens/Settings/Settings'
 import HelpBrowser from '../screens/HelpBrowser/HelpBrowser'
 import Main from '../screens/Main/Main'
+import mainNavigationOptions from '../screens/Main/navigationOptions'
 import Restaurant from '../screens/Restaurant/Restaurant'
 import About from '../screens/About'
 import SelectLocation from '../screens/SelectLocation'
@@ -279,9 +280,15 @@ function BottomTabNavigator() {
       <Tab.Screen
         name='Discovery'
         component={Main}
-        options={{
-          tabBarLabel: t('Discovery')
-        }}
+        options={({ navigation }) => ({
+          tabBarLabel: t('Discovery'),
+          ...mainNavigationOptions({
+            headerMenuBackground: currentTheme.themeBackground,
+            fontMainColor: currentTheme.darkBgFont,
+            navigation,
+            open: () => {}
+          })
+        })}
       />
       <Tab.Screen
         name='Restaurants'
