@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState, useCallback } from 'react'
-import { View, ImageBackground, TouchableOpacity, Dimensions, Platform } from 'react-native'
+import { View, ImageBackground, TouchableOpacity, Dimensions, AppState } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -37,7 +37,7 @@ const BannerContent = ({ item, currentTheme }) => (
 // slides whose `isActiveSlide` flips — not every mounted ImageBackground/video.
 const BannerSlide = React.memo(function BannerSlide({ item, width, cached, isActiveSlide, currentTheme, onPress }) {
   const mediaType = getMediaTypeFromUrl(item.file)
-  const shouldRenderVideo = mediaType === 'video' && (!Platform.OS || Platform.OS !== 'android' || isActiveSlide)
+  const shouldRenderVideo = mediaType === 'video' && isActiveSlide
   const fallbackImage = cached.image || item?.image || item?.thumbnail || item?.previewImage
   const imageUri = useCachedMediaUri(fallbackImage, 'image')
   const videoUri = cached.video || item?.file
@@ -72,6 +72,7 @@ const Banner = ({ banners }) => {
   const { width } = Dimensions.get('window')
   const [activeIndex, setActiveIndex] = useState(0)
   const [isFocused, setIsFocused] = useState(true)
+  const [isAppActive, setIsAppActive] = useState(AppState.currentState === 'active')
   const [cachedMediaMap, setCachedMediaMap] = useState({})
 
   const onPressBanner = useCallback((banner) => {
@@ -120,6 +121,14 @@ const Banner = ({ banners }) => {
   )
 
   React.useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      setIsAppActive(nextState === 'active')
+    })
+
+    return () => subscription.remove()
+  }, [])
+
+  React.useEffect(() => {
     let isMounted = true
     ;(async () => {
       const list = bannersData || []
@@ -161,13 +170,13 @@ const Banner = ({ banners }) => {
           item={item}
           width={width}
           cached={cachedMediaMap[cacheKey] || EMPTY_CACHE}
-          isActiveSlide={index === activeIndex && isFocused}
+          isActiveSlide={index === activeIndex && isFocused && isAppActive}
           currentTheme={currentTheme}
           onPress={onPressBanner}
         />
       )
     },
-    [width, cachedMediaMap, activeIndex, isFocused, currentTheme, onPressBanner]
+    [width, cachedMediaMap, activeIndex, isFocused, isAppActive, currentTheme, onPressBanner]
   )
 
   const onChangeIndex = useCallback(({ index }) => setActiveIndex(index), [])

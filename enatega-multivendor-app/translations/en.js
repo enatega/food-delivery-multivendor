@@ -637,6 +637,7 @@ export const en = {
   Discovery: 'Discovery',
   Store: 'Store',
   loginRequired: 'Login Required',
+  mapLoginRequired: 'Please log in to view restaurant locations on the map.',
   'Restaurant Closed at the moment': 'Restaurant Closed at the moment',
   'See Menu': 'See Menu',
   'Go back to restaurants': 'Go back to restaurants',
@@ -679,4 +680,5 @@ export const en = {
   "ShopTypes":"Shop Types",
   "notificationPermissionDenied": "Please enable notifications in Settings to receive order updates and offers",
   "notificationTokenError": "Error setting up notifications. Please try again later",
+  videoPlaybackUnavailable: 'Unable to play video. Please try again.',
 }

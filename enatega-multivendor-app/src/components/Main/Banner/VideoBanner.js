@@ -1,14 +1,38 @@
-import React, { useRef, useEffect } from 'react';
-import { View, StyleSheet, AppState } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, AppState } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
+import { useTranslation } from 'react-i18next';
+import { captureException } from '../../../utils/crashReporter';
 
-export default function VideoBanner(props) {
+class VideoPlaybackBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    captureException(error, {
+      feature: 'discovery-video-banner',
+      componentStack: info?.componentStack
+    });
+  }
+
+  render() {
+    return this.state.hasError ? this.props.fallback : this.props.children;
+  }
+}
+
+function VideoFallback({ message, style }) {
+  return (
+    <View style={[styles.container, style, styles.fallback]}>
+      <Text style={styles.fallbackText}>{message}</Text>
+    </View>
+  );
+}
+
+function ActiveVideoBanner({ sourceUri, onPlaybackError, ...props }) {
   const appState = useRef(AppState.currentState);
-
-  // Extract URI from source - handle both string and object formats
-  const sourceUri = typeof props?.source === 'string' 
-    ? props.source 
-    : props?.source?.uri || '';
 
   const player = useVideoPlayer(sourceUri, (player) => {
     player.loop = true;
@@ -33,20 +57,21 @@ export default function VideoBanner(props) {
 
   useEffect(() => {
     const subscription = player.addListener('statusChange', (status) => {
-      if (status.isLoaded) {
-        console.log('Video loaded successfully from:', sourceUri);
-      }
-      
       if (status.error) {
-        console.error('expo-video error:', status.error);
-        console.error('Video source:', sourceUri);
+        const error = status.error instanceof Error
+          ? status.error
+          : new Error(status.error?.message || 'Video playback failed');
+        captureException(error, {
+          feature: 'discovery-video-banner'
+        });
+        onPlaybackError(true);
       }
     });
 
     return () => {
       subscription?.remove();
     };
-  }, [player, sourceUri]);
+  }, [onPlaybackError, player]);
 
   return (
     <View style={[styles.container, props?.style]}>
@@ -64,6 +89,27 @@ export default function VideoBanner(props) {
   );
 }
 
+export default function VideoBanner(props) {
+  const { t } = useTranslation();
+  const [playbackFailed, setPlaybackFailed] = useState(false);
+  const sourceUri = typeof props?.source === 'string'
+    ? props.source
+    : props?.source?.uri || '';
+  const fallback = <VideoFallback message={t('videoPlaybackUnavailable')} style={props?.style} />;
+
+  if (playbackFailed) return fallback;
+
+  return (
+    <VideoPlaybackBoundary key={sourceUri} fallback={fallback}>
+      <ActiveVideoBanner
+        {...props}
+        sourceUri={sourceUri}
+        onPlaybackError={setPlaybackFailed}
+      />
+    </VideoPlaybackBoundary>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -76,5 +122,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+  },
+  fallback: {
+    backgroundColor: '#1F2937',
+  },
+  fallbackText: {
+    color: '#FFF',
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
