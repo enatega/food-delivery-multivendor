@@ -59,7 +59,7 @@ import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
 import UserContext from '../context/User'
 import ConfigurationContext from '../context/Configuration'
-import { Easing, Platform } from 'react-native'
+import { Easing } from 'react-native'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
 
 const NavigationStack = createStackNavigator()
@@ -260,20 +260,19 @@ function BottomTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color, size }) => {
           // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
-          return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
+          return <BottomTabIcon name={route.name.toLowerCase()} size={size} color={color} />
         },
         tabBarStyle: {
-          paddingHorizontal: 15,
-          paddingVertical: 10,
-          paddingBottom: Platform.OS === 'ios' ? 25 : 15,
-          height: Platform.OS === 'ios' ? 90 : 70,
           backgroundColor: currentTheme.cardBackground
         },
+        tabBarItemStyle: {
+          flex: 1
+        },
+        tabBarLabelPosition: 'below-icon',
         tabBarActiveTintColor: '#0EA5E9',
         tabBarInactiveTintColor: currentTheme.fontNewColor,
-        tabBarLabelStyle: { fontSize: 12 },
         headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
       })}
     >
