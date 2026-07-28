@@ -16,7 +16,7 @@ export default function NotFoundScreen() {
   const { t } = useTranslation()
   return (
     <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
+      <Stack.Screen options={{ title: t('Oops!') }} />
       <ThemedView style={styles.container}>
         <ThemedText type="title">{t('This screen does not exist')}</ThemedText>
         <Link

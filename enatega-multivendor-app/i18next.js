@@ -34,6 +34,7 @@ import { ku } from './translations/ku'
 import { uz } from './translations/uz'
 import { az } from './translations/az'
 import { nl } from './translations/nl'
+import { kk } from './translations/kk'
 
 
 export const languageResources = {
@@ -67,7 +68,8 @@ export const languageResources = {
   ku: { translation: ku },
   uz: { translation: uz },
   az: { translation: az },
-  nl: { translation: nl }
+  nl: { translation: nl },
+  kk: { translation: kk }
 
 }
 
@@ -112,4 +114,3 @@ const detectAndSetLanguage = async () => {
 detectAndSetLanguage();
 
 export default i18next;
-

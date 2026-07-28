@@ -275,5 +275,7 @@ export const de = {
   Orders: "Bestellungen",
   "Order Status": "Bestellstatus",
   "Set Preparation Time": "Vorbereitungszeit festlegen",
+  "Show Details": "Details anzeigen",
+  "Hide Details": "Details ausblenden",
   "Tax": "Steuer"
 };
