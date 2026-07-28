@@ -43,6 +43,7 @@ import { isOpen } from '../../utils/customFunctions'
 import { WrongAddressModal } from '../../components/Checkout/WrongAddressModal'
 import { calculateOrderPricing } from '../../utils/orderPricing'
 import { populateCart } from '../../utils/populateCart'
+import LiveActivityService from '../../utils/liveActivityService'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -378,6 +379,7 @@ function Checkout(props) {
   }
 
   function onCompleted(data) {
+    const placedOrder = data?.placeOrder
     setOrderConfirmedTime(new Date())
     reFetchOrders()
     Analytics.track(Analytics.events.ORDER_PLACED, {
@@ -396,6 +398,14 @@ function Checkout(props) {
       orderDate: data?.placeOrder.orderDate
     })
     if (paymentMode === 'COD') {
+      if (placedOrder?._id && !placedOrder?.isPickedUp) {
+        LiveActivityService.initiateForOrder({
+          orderId: placedOrder._id.toString(),
+          displayOrderId: placedOrder.orderId.toString()
+        }).catch((error) => {
+          console.warn('Live Activity could not be started', error?.message)
+        })
+      }
       // Pop the Cart/CartAddress/Checkout screens off the stack (Main is
       // already mounted underneath, so this doesn't remount it) and push
       // OrderDetail with its normal animated transition instead of using

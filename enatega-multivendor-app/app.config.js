@@ -13,13 +13,17 @@ module.exports = () => {
     }
   ]
 
-  const urlTypes = reversedGoogleIosClientId
+  const googleUrlTypes = reversedGoogleIosClientId
     ? [
         {
           CFBundleURLSchemes: [reversedGoogleIosClientId]
         }
       ]
     : fallbackUrlTypes
+  const urlTypes = [
+    ...googleUrlTypes,
+    { CFBundleURLSchemes: ['enategamultivendor'] }
+  ]
 
   return {
     name: 'Enatega Multi',
@@ -46,6 +50,10 @@ module.exports = () => {
     ios: {
       entitlements: {
         'com.apple.developer.networking.wifi-info': true,
+        'com.apple.developer.usernotifications.time-sensitive': true,
+        'com.apple.security.application-groups': [
+          'group.com.enatega.multivendor.shared'
+        ],
         // Use the production APNs gateway for production builds so push
         // notifications are not silently rejected on App Store devices (SEC-013).
         'aps-environment':
@@ -57,9 +65,10 @@ module.exports = () => {
       icon: './assets/icon.png',
       googleServicesFile: './GoogleService-Info.plist',
       infoPlist: {
+        NSSupportsLiveActivities: true,
         NSLocationWhenInUseUsageDescription:
           'Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.',
-        UIBackgroundModes: ['remote-notification', 'remote-notification'],
+        UIBackgroundModes: ['remote-notification'],
         NSUserTrackingUsageDescription:
           'Allow this app to collect app-related data that can be used for tracking you or your device.',
         CFBundleURLTypes: urlTypes,
@@ -68,7 +77,8 @@ module.exports = () => {
       config: {
         ...(iosGoogleMapsApiKey ? { googleMapsApiKey: iosGoogleMapsApiKey } : {})
       },
-      usesAppleSignIn: true
+      usesAppleSignIn: true,
+      appleTeamId: 'GDFK7MVY6P'
     },
     notification: {
       iosDisplayInForeground: true,
@@ -97,7 +107,9 @@ module.exports = () => {
       permissions: [
         'android.permission.ACCESS_FINE_LOCATION',
         'android.permission.ACCESS_COARSE_LOCATION',
-        'android.permission.FOREGROUND_SERVICE'
+        'android.permission.FOREGROUND_SERVICE',
+        'android.permission.FOREGROUND_SERVICE_DATA_SYNC',
+        'android.permission.POST_NOTIFICATIONS'
       ],
       // Strip dangerous permissions that no feature uses and that library
       // transitive manifests can pull in (tapjacking / broad storage) (SEC-006).
@@ -165,6 +177,7 @@ module.exports = () => {
             'Allow $Enatega Multivendor to use your location.'
         }
       ],
+      './plugins/with-firebase-notification-color',
       'expo-notifications',
       'expo-font',
       'expo-secure-store',
@@ -172,10 +185,21 @@ module.exports = () => {
       'expo-web-browser',
       'expo-video',
       'expo-apple-authentication',
+      './plugins/with-rider-call-handler',
+      '@bacons/apple-targets',
       // Xcode 26 / clang fmt consteval build fix (see plugins/withFmtConstevalFix.js)
       './plugins/withFmtConstevalFix'
     ],
     extra: {
+      liveActivity: {
+        appGroupId: 'group.com.enatega.multivendor.shared',
+        appScheme: 'enategamultivendor',
+        brandName: 'Enatega',
+        primaryColor: '#90E36D',
+        accentColor: '#FFA921',
+        logoResourceName: 'enatega_logo',
+        riderResourceName: 'enatega_rider'
+      },
       eas: {
         projectId: '331d4e5b-b12a-434a-92ec-d6d283dc0e46'
       }

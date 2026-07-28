@@ -42,6 +42,8 @@ import {
   initializePublicAccessToken,
   stopPublicAccessTokenRefresh
 } from './src/services/publicAcccessService'
+import LiveActivityService from './src/utils/liveActivityService'
+import { registerLiveActivityForegroundHandler } from './src/utils/liveActivityMessaging'
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -66,6 +68,13 @@ export default function App() {
     () => setupApolloClient({ GRAPHQL_URL, WS_GRAPHQL_URL }),
     [GRAPHQL_URL, WS_GRAPHQL_URL]
   )
+
+  useEffect(() => {
+    LiveActivityService.configure(client)
+    const unsubscribe = registerLiveActivityForegroundHandler()
+    LiveActivityService.cleanAppGroupImages(24).catch(() => {})
+    return unsubscribe
+  }, [client])
 
   // Fetch/refresh the public (MetricsGeneral) token up front and keep it fresh
   // via a background timer, instead of refreshing only when a request finds it
