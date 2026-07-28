@@ -40,4 +40,9 @@ export const LANGUAGES = [
     value: "Қазақша",
     code: "kk",
   },
+  {
+    icon: require("@/lib/assets/images/eng-flag.png"),
+    value: "Русский",
+    code: "ru",
+  },
 ];
