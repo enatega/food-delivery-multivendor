@@ -70,7 +70,7 @@
     "expo-application": "~6.1.4",
     "expo-auth-session": "~6.2.1",
     "expo-build-properties": "~0.14.8",
-    "expo-crypto": "~14.1.5",
+    "expo-crypto": "~57.0.1",
     "expo-dev-client": "~5.2.4",
     "expo-device": "~7.1.4",
     "expo-font": "~13.3.1",
