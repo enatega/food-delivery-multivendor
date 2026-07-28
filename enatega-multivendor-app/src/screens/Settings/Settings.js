@@ -51,7 +51,8 @@ const languageTypes = [
   { value: 'Deutsche', code: 'de', index: 4 },
   { value: 'العربية', code: 'ar', index: 5 },
   { value: 'עִברִית', code: 'he', index: 6 },
-  { value: 'Қазақша', code: 'kk', index: 7 }
+  { value: 'Қазақша', code: 'kk', index: 7 },
+  { value: 'русский', code: 'ru', index: 8 }
 ]
 
 const PUSH_TOKEN = gql`
