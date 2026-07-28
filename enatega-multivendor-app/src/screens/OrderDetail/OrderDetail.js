@@ -91,7 +91,9 @@ function OrderDetail(props) {
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
   //const Analytics = analytics()
   const { t, i18n } = useTranslation()
-  const id = props?.route.params ? props?.route.params?._id : null
+  const id = props?.route.params
+    ? props?.route.params?._id || props?.route.params?.id
+    : null
   const orderData = props?.route.params ? props?.route.params?.order : null
   // console.log('orderData',orderData)
   const { loadingOrders, errorOrders, orders, reFetchOrders } = useContext(OrdersContext)
@@ -192,6 +194,34 @@ function OrderDetail(props) {
   )
 
   order = mergeOrderState(order, screenOrder)
+  const openedCourierChatRef = useRef(false)
+
+  useEffect(() => {
+    const shouldOpenCourierChat =
+      props?.route.params?.openCourierChat === true ||
+      props?.route.params?.chat === 'courier'
+    if (
+      shouldOpenCourierChat &&
+      !openedCourierChatRef.current &&
+      order?.rider
+    ) {
+      openedCourierChatRef.current = true
+      navigation.navigate('ChatWithRider', {
+        id,
+        orderNo: order.orderId,
+        total: order.orderAmount,
+        riderPhone: order.rider.phone
+      })
+    }
+  }, [
+    id,
+    navigation,
+    order?.orderAmount,
+    order?.orderId,
+    order?.rider,
+    props?.route.params?.chat,
+    props?.route.params?.openCourierChat
+  ])
 
   useEffect(() => {
     props?.navigation.setOptions({

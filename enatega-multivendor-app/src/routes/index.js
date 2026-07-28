@@ -76,6 +76,9 @@ const linking = {
     screens: {
       SetYourPassword: {
         path: 'auth/reset'
+      },
+      OrderDetail: {
+        path: 'order-tracking'
       }
     }
   }

@@ -7,6 +7,7 @@ import useEnvVars from '../../../environment'
 import { useApolloClient } from '@apollo/client'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
+import LiveActivityService from '../../utils/liveActivityService'
 
 import { useTranslation } from 'react-i18next'
 
@@ -94,6 +95,14 @@ function StripeCheckout(props) {
           (String(order.paymentStatus).toUpperCase() === 'PAID' || Number(order.paidAmount || 0) > 0)
 
         if (isPaidOrder) {
+          if (order?._id && !order?.isPickedUp) {
+            LiveActivityService.initiateForOrder({
+              orderId: order._id.toString(),
+              displayOrderId: order.orderId.toString()
+            }).catch((error) => {
+              console.warn('Live Activity could not be started', error?.message)
+            })
+          }
           await clearCart()
           props?.navigation.reset({
             routes: [
