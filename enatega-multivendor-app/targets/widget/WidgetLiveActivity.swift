@@ -102,8 +102,9 @@ private struct EnategaLogo: View {
   var body: some View {
     Image("EnategaLogo")
       .resizable()
-      .scaledToFit()
-      .frame(width: compact ? 62 : 82, height: compact ? 24 : 32, alignment: .leading)
+      .scaledToFill()
+      .frame(width: compact ? 76 : 112, height: compact ? 24 : 32, alignment: .leading)
+      .clipped()
       .accessibilityLabel("Enatega")
   }
 }

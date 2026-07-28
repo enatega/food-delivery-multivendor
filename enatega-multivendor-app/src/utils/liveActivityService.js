@@ -59,6 +59,17 @@ const defaultConfiguration = {
 let apolloClient = null
 let tokenSubscription = null
 
+const tokenFingerprint = (token) => {
+  const value = String(token || '')
+  if (!value) return 'empty'
+  if (value.length <= 12) return `length=${value.length}`
+  return `${value.slice(0, 6)}…${value.slice(-6)} length=${value.length}`
+}
+
+const liveActivityLog = (message, details) => {
+  console.log(`[LiveActivity] ${message}`, details)
+}
+
 const language = () =>
   ['ar', 'he'].includes(i18next.resolvedLanguage || i18next.language)
     ? i18next.resolvedLanguage || i18next.language
@@ -74,6 +85,13 @@ const registerSession = async(
   pushToken
 ) => {
   if (!apolloClient) throw new Error('Live Activity Apollo client is unavailable.')
+  liveActivityLog('registering session', {
+    orderId,
+    activityId,
+    platform,
+    pushToken: tokenFingerprint(pushToken),
+    language: language()
+  })
   await apolloClient.mutate({
     mutation: REGISTER_SESSION,
     variables: {
@@ -85,12 +103,23 @@ const registerSession = async(
       language: language()
     }
   })
+  liveActivityLog('session registered', {
+    orderId,
+    activityId,
+    platform
+  })
 }
 
 const registerSessionWithRetry = async(...args) => {
   let lastError
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt += 1) {
     try {
+      liveActivityLog('registration attempt', {
+        orderId: args[0],
+        activityId: args[1],
+        platform: args[2],
+        attempt: attempt + 1
+      })
       await registerSession(...args)
       return
     } catch (error) {
@@ -103,6 +132,13 @@ const registerSessionWithRetry = async(...args) => {
       if (statusCode !== undefined && statusCode < 500) break
       const delay = RETRY_DELAYS_MS[attempt]
       if (delay === undefined) break
+      liveActivityLog('registration retry scheduled', {
+        orderId: args[0],
+        activityId: args[1],
+        platform: args[2],
+        attempt: attempt + 2,
+        delay
+      })
       await new Promise((resolve) => setTimeout(resolve, delay))
     }
   }
@@ -111,9 +147,15 @@ const registerSessionWithRetry = async(...args) => {
 
 const initializeTokenObserver = () => {
   if (Platform.OS !== 'ios' || tokenSubscription || !ActivityController) return
+  liveActivityLog('initializing iOS token observer')
   tokenSubscription = new NativeEventEmitter(ActivityController).addListener(
     'LiveActivityTokenUpdated',
     ({ orderId, activityId, pushToken }) => {
+      liveActivityLog('received iOS push-token event', {
+        orderId,
+        activityId,
+        pushToken: tokenFingerprint(pushToken)
+      })
       if (orderId && activityId && pushToken) {
         registerSessionWithRetry(
           orderId,
@@ -128,6 +170,10 @@ const initializeTokenObserver = () => {
 
 const configure = (client) => {
   apolloClient = client
+  liveActivityLog('service configured', {
+    platform: Platform.OS,
+    apolloClientAvailable: Boolean(client)
+  })
   initializeTokenObserver()
 }
 
@@ -143,14 +189,20 @@ const makeInitialState = () => ({
 
 const requestAndroidPermission = async() => {
   if (Platform.OS !== 'android' || Platform.Version < 33) return true
-  return (
+  const granted =
     (await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
     )) === PermissionsAndroid.RESULTS.GRANTED
-  )
+  liveActivityLog('Android notification permission resolved', { granted })
+  return granted
 }
 
 const initiateForOrder = async({ orderId, displayOrderId }) => {
+  liveActivityLog('starting activity', {
+    orderId,
+    displayOrderId,
+    platform: Platform.OS
+  })
   if (!ActivityController?.startLiveActivity) {
     throw new Error('Live Activity native module is unavailable.')
   }
@@ -169,11 +221,23 @@ const initiateForOrder = async({ orderId, displayOrderId }) => {
       })
     )
   )
+  liveActivityLog('native activity start completed', {
+    orderId,
+    activityId: result.activityId,
+    alreadyRunning: Boolean(result.alreadyRunning),
+    pushToken: tokenFingerprint(result.pushToken)
+  })
   if (result.alreadyRunning) return result
 
   const platform = Platform.OS === 'ios' ? 'IOS' : 'ANDROID'
   const pushToken =
     platform === 'IOS' ? result.pushToken : await messaging().getToken()
+  liveActivityLog('resolved activity push token', {
+    orderId,
+    activityId: result.activityId,
+    platform,
+    pushToken: tokenFingerprint(pushToken)
+  })
   if (pushToken) {
     if (platform === 'ANDROID') {
       await AsyncStorage.setItem(
@@ -194,9 +258,17 @@ const initiateForOrder = async({ orderId, displayOrderId }) => {
 const reregisterAndroidSession = async(pushToken) => {
   if (Platform.OS !== 'android' || !pushToken) return
   const stored = await AsyncStorage.getItem(ANDROID_SESSION_KEY)
-  if (!stored) return
+  if (!stored) {
+    liveActivityLog('Android re-registration skipped: no stored session')
+    return
+  }
   const { orderId, activityId } = JSON.parse(stored)
   if (orderId && activityId) {
+    liveActivityLog('re-registering Android session', {
+      orderId,
+      activityId,
+      pushToken: tokenFingerprint(pushToken)
+    })
     await registerSessionWithRetry(
       orderId,
       activityId,
@@ -209,10 +281,12 @@ const reregisterAndroidSession = async(pushToken) => {
 const clearAndroidSession = async() => {
   if (Platform.OS === 'android') {
     await AsyncStorage.removeItem(ANDROID_SESSION_KEY)
+    liveActivityLog('cleared Android session')
   }
 }
 
 const stop = async(orderId, activityId) => {
+  liveActivityLog('stopping activity', { orderId, activityId })
   if (ActivityController?.stopLiveActivity) {
     await ActivityController.stopLiveActivity().catch(() => {})
   }
@@ -227,6 +301,7 @@ const stop = async(orderId, activityId) => {
 
 const cleanAppGroupImages = async(maxAgeHours = 24) => {
   if (Platform.OS === 'ios' && ActivityController?.cleanAppGroupImages) {
+    liveActivityLog('cleaning stale app-group images', { maxAgeHours })
     await ActivityController.cleanAppGroupImages(
       maxAgeHours,
       defaultConfiguration.appGroupId
