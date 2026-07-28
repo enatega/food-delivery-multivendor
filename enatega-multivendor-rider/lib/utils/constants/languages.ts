@@ -155,4 +155,9 @@ export const LANGUAGES = [
     value: "Nederlands",
     code: "nl",
   },
+  {
+    icon: require("@/lib/assets/images/eng-flag.png"),
+    value: "Қазақша",
+    code: "kk",
+  },
 ];

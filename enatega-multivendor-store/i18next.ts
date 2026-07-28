@@ -11,6 +11,7 @@ const LANGUAGE_LOADERS = {
   km: () => import("./languages/km").then((module) => module.km),
   ar: () => import("./languages/ar").then((module) => module.ar),
   he: () => import("./languages/he").then((module) => module.he),
+  kk: () => import("./languages/kk").then((module) => module.kk),
 };
 type SupportedLanguage = keyof typeof LANGUAGE_LOADERS;
 

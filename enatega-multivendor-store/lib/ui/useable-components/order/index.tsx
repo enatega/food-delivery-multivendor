@@ -295,8 +295,8 @@ const Order = ({
                             }}
                           >
                             {showDetails[item._id]
-                              ? "Hide Details"
-                              : "Show Details"}
+                              ? t("Hide Details")
+                              : t("Show Details")}
                           </Text>
                           <View className="ml-1">
                             <Text

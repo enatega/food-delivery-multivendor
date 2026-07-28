@@ -11,9 +11,15 @@ export default function StackLayout() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-const {top} = useSafeAreaInsets()
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={{paddingTop: top+10, flex: 1, backgroundColor: appTheme.themeBackground}}>
+    <View
+      style={{
+        paddingTop: top + 10,
+        flex: 1,
+        backgroundColor: appTheme.themeBackground,
+      }}
+    >
       <Stack>
         <Stack.Screen
           name="index"
@@ -27,7 +33,7 @@ const {top} = useSafeAreaInsets()
             contentStyle: {
               backgroundColor: appTheme.fontMainColor,
             },
-            headerBackTitle: "Wallet",
+            headerBackTitle: t("Wallet"),
           }}
         />
         <Stack.Screen

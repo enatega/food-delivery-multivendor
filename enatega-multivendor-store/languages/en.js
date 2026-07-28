@@ -277,6 +277,8 @@ export const en = {
   "Your wallet is currently empty": "Your wallet is currently empty",
   Orders: "Orders",
   "Set Preparation Time": "Set Preparation Time",
+  "Show Details": "Show Details",
+  "Hide Details": "Hide Details",
   "Tax": "Tax",
   discountAmount: "Discount Amount"
 };

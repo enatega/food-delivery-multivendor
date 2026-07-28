@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 export const LANGUAGES = [
   {
     icon: require("@/lib/assets/images/eng-flag.png"),
@@ -33,5 +34,10 @@ export const LANGUAGES = [
     icon: require("@/lib/assets/images/cambodian-flag.png"),
     value: "Combodian",
     code: "km",
+  },
+  {
+    icon: require("@/lib/assets/images/eng-flag.png"),
+    value: "Қазақша",
+    code: "kk",
   },
 ];
