@@ -45,6 +45,8 @@ const normalizeOwnerSession = (
   ...cachedUser,
   ...sessionUser,
   permissions: sessionUser.permissions ?? [],
+  refreshToken: cachedUser?.refreshToken,
+  refreshTokenExpiration: cachedUser?.refreshTokenExpiration,
   restaurants: mergeRestaurants(
     sessionUser.restaurants ?? [],
     cachedUser?.restaurants ?? []

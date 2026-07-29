@@ -19,6 +19,7 @@ import {
   SUBSCRIPTION_ZONE_ORDERS,
 } from "@/lib/apollo/subscriptions";
 import { asyncStorageEmitter } from "@/lib/services/async-storage";
+import { RIDER_ID } from "@/lib/utils/constants";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import {
   IRiderEarnings,
@@ -87,7 +88,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   const isRiderAvailable = Boolean(dataProfile?.rider?.available);
 
   async function getUserId() {
-    const id = await AsyncStorage.getItem("rider-id");
+    const id = await AsyncStorage.getItem(RIDER_ID);
 
     if (id) {
       setUserId(id);
@@ -224,6 +225,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       setModalVisible,
       setRiderOrderEarnings,
       userId,
+      setUserId,
       loadingProfile,
       errorProfile,
       dataProfile: dataProfile?.rider ?? null,

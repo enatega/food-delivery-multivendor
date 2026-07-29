@@ -20,9 +20,9 @@ export interface ILoginResponse {
   shopType?: string;
   userId: string;
   token: string;
-  tokenExpiration?: string;
+  tokenExpiration?: string | number;
   refreshToken?: string;
-  refreshTokenExpiration?: string;
+  refreshTokenExpiration?: string | number;
   email: string;
   name?: string;
   image?: string;

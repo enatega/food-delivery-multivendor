@@ -54,6 +54,18 @@ export interface IExtendedOrder extends IOrder {
   OrderdeliveryAddress?: string;
   DateCreated?: string;
   restaurant?: IRestaurant;
+  user?: {
+    _id: string;
+    name: string;
+    phone?: string | null;
+    email?: string | null;
+  } | null;
+  rider?: {
+    _id: string;
+    name: string;
+    username?: string | null;
+    available?: boolean;
+  } | null;
 }
 
 export interface IOrdersData extends IGlobalComponentProps {

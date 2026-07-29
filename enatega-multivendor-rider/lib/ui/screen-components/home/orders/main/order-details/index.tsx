@@ -24,6 +24,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useRouter } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MapView, {
   LatLng,
@@ -53,10 +54,9 @@ import { ConfigurationContext } from "@/lib/context/global/configuration.context
 import { RIDER_ORDERS } from "@/lib/apollo/queries";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
-import { CustomContinueButton } from "@/lib/ui/useable-components";
 import AccordionItem from "@/lib/ui/useable-components/accordian";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
-import { HomeIcon } from "@/lib/ui/useable-components/svg";
+import { ChatIcon, HomeIcon } from "@/lib/ui/useable-components/svg";
 import WelldoneComponent from "@/lib/ui/useable-components/well-done";
 import { CustomMapStyles } from "@/lib/utils/constants/map";
 import { map_styles } from "@/lib/utils/constants/order-details";
@@ -68,7 +68,9 @@ const RETRY_BASE_DELAY_MS = 500;
 
 // Helper function to check if coordinates are valid
 // Added to prevent array bounds crashes when using invalid coordinates
-const isValidCoordinate = (coord?: LatLng): boolean => {
+const isValidCoordinate = (
+  coord?: Partial<LatLng>,
+): coord is LatLng => {
   if (!coord) return false;
   return (
     coord.latitude !== undefined &&
@@ -83,6 +85,7 @@ const isValidCoordinate = (coord?: LatLng): boolean => {
 export default function OrderDetailScreen() {
   // Ref
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const router = useRouter();
 
   // Context
   const configuration = useContext(ConfigurationContext);
@@ -103,7 +106,7 @@ export default function OrderDetailScreen() {
     locationPin,
   } = useOrderDetail();
   const { userId } = useUserContext();
-  const { mutateAssignOrder, mutateOrderStatus, loadingOrderStatus } =
+  const { mutateAssignOrder, mutateOrderStatus, loadingAssignOrder, loadingOrderStatus } =
     useDetails(order);
 
   // States
@@ -687,6 +690,37 @@ export default function OrderDetailScreen() {
                 <ItemDetails orderData={order} tab={tab} />
               </AccordionItem>
 
+              {tab === "processing" && (
+                <TouchableOpacity
+                  className="h-14 rounded-3xl py-3 w-full mt-4"
+                  style={{ backgroundColor: appTheme.themeBackground, borderWidth: 1, borderColor: appTheme.borderLineColor }}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/chat",
+                      params: {
+                        phoneNumber: order?.user?.phone,
+                        orderId: order?.orderId,
+                        id: order?._id,
+                      },
+                    })
+                  }
+                >
+                  <View className="flex-row items-center justify-center gap-x-3">
+                    <ChatIcon
+                      width={24}
+                      height={24}
+                      color={appTheme.fontMainColor}
+                    />
+                    <Text
+                      className="text-center text-lg font-medium"
+                      style={{ color: appTheme.fontMainColor }}
+                    >
+                      {t("Chat")}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+
               {/* Pick up Button */}
               {tab === "processing" &&
                 order.orderStatus === "ASSIGNED" && (
@@ -701,7 +735,7 @@ export default function OrderDetailScreen() {
                     }
                   >
                     {loadingOrderStatus ? (
-                      <SpinnerComponent />
+                      <SpinnerComponent color="white" />
                     ) : (
                       <Text
                         className="text-center  text-lg font-medium"
@@ -762,9 +796,10 @@ export default function OrderDetailScreen() {
               {tab === "new_orders" &&
                 order.orderStatus === "ACCEPTED" && (
                   <View style={{ paddingBottom: Platform.OS === 'ios' ? insets.bottom : insets.bottom + 10 }}>
-                    <CustomContinueButton
-                      title={t("Assign me")}
-                      className="w-[55%] mx-auto"
+                    <TouchableOpacity
+                      className="w-[55%] mx-auto h-14 rounded-3xl py-3 items-center justify-center"
+                      style={{ backgroundColor: appTheme.primary }}
+                      disabled={loadingAssignOrder}
                       onPress={() =>
                         mutateAssignOrder({
                           variables: { id: order?._id },
@@ -776,7 +811,18 @@ export default function OrderDetailScreen() {
                           ],
                         })
                       }
-                    />
+                    >
+                      {loadingAssignOrder ? (
+                        <SpinnerComponent color="white" />
+                      ) : (
+                        <Text
+                          className="text-center text-lg font-medium"
+                          style={{ color: appTheme.black }}
+                        >
+                          {t("Assign me")}
+                        </Text>
+                      )}
+                    </TouchableOpacity>
                   </View>
                 )}
             </BottomSheetScrollView>

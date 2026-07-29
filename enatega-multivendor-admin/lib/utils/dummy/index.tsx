@@ -491,6 +491,7 @@ export const generateDummyDispatchOrders = (count: number = 10) => {
           },
         },
       },
+      items: [],
       isActive: true,
       orderId: `active_order_${i + 1}`,
       orderStatus: 'DELIVERED',

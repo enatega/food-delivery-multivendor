@@ -8,6 +8,7 @@ import {
   IQueryResult,
   IRidersDataResponse,
 } from '@/lib/utils/interfaces';
+import { IColumnConfig } from '@/lib/utils/interfaces/table.interface';
 
 // Prime React
 import { Tag } from 'primereact/tag';
@@ -17,13 +18,13 @@ import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import {
   ASSIGN_RIDER,
   GET_ACTIVE_ORDERS,
-  UPDATE_STATUS,
-  SUBSCRIPTION_ORDER,
   GET_RIDERS,
+  SUBSCRIPTION_ORDER,
+  UPDATE_STATUS,
 } from '@/lib/api/graphql';
 
 // Hooks
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useMutation, useSubscription } from '@apollo/client';
 
 // Contexts
@@ -34,32 +35,24 @@ import classes from '@/lib/ui/screen-components/protected/super-admin/dispatch/v
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import { useTranslations } from 'next-intl';
 
-// Status templates
 const valueTemplate = (option: IDropdownSelectItem) => (
   <div className="flex items-center justify-start gap-2 dark:text-white">
-    <Tag
-      severity={severityChecker(option?.code)}
-      value={option?.label}
-      rounded
-    />
+    <Tag severity={severityChecker(option?.code)} value={option?.label} rounded />
   </div>
 );
 
-// Item templates
-// Item templates
 const itemTemplate = (option: IDropdownSelectItem) => {
   return (
     <div
       className={`flex flex-row-reverse items-center justify-start gap-2 ${
         classes.dropDownItem
-      } ${option.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      } ${option.disabled ? 'cursor-not-allowed opacity-50' : ''}`}
     >
       <span>{option.label}</span>
     </div>
   );
 };
 
-// Severity checker
 function severityChecker(status: string | undefined) {
   switch (status) {
     case 'PENDING':
@@ -72,49 +65,47 @@ function severityChecker(status: string | undefined) {
       return 'danger';
     case 'PICKED':
       return 'contrast';
+    case 'DELIVERED':
+      return 'success';
+    default:
+      return undefined;
   }
 }
 
-export const DISPATCH_TABLE_COLUMNS = () => {
-  // Hooks
+export const useDispatchOrderUI = () => {
   const t = useTranslations();
   const { showToast } = useContext(ToastContext);
 
-  // Status options
-  const actionStatusOptions = [
-    {
-      label: t('PENDING'),
-      code: 'PENDING',
-      body: () => <Tag value={t('PENDING')} severity="secondary" rounded />,
-    },
-    {
-      label: t('ACCEPTED'),
-      code: 'ACCEPTED',
-      body: () => <Tag value={t('ACCEPTED')} severity="info" rounded />,
-    },
-    {
-      label: t('ASSIGNED'),
-      code: 'ASSIGNED',
-      body: () => <Tag value={t('ASSIGNED')} severity="warning" rounded />,
-    },
-    {
-      label: t('PICKED'),
-      code: 'PICKED',
-      body: () => <Tag value={t('PICKED')} severity="contrast" rounded />,
-    },
-    {
-      label: t('DELIVERED'),
-      code: 'DELIVERED',
-      body: () => <Tag value={t('DELIVERED')} severity="success" rounded />,
-    },
-    {
-      label: t('CANCELLED'),
-      code: 'CANCELLED',
-      body: () => <Tag value={t('CANCELLED')} severity="danger" rounded />,
-    },
-  ];
+  const actionStatusOptions = useMemo(
+    () => [
+      {
+        label: t('PENDING'),
+        code: 'PENDING',
+      },
+      {
+        label: t('ACCEPTED'),
+        code: 'ACCEPTED',
+      },
+      {
+        label: t('ASSIGNED'),
+        code: 'ASSIGNED',
+      },
+      {
+        label: t('PICKED'),
+        code: 'PICKED',
+      },
+      {
+        label: t('DELIVERED'),
+        code: 'DELIVERED',
+      },
+      {
+        label: t('CANCELLED'),
+        code: 'CANCELLED',
+      },
+    ],
+    [t]
+  );
 
-  // States
   const [riderOptions, setRiderOptions] = useState<IDropdownSelectItem[]>([]);
   const [isRiderLoading, setIsRiderLoading] = useState({
     _id: '',
@@ -126,47 +117,23 @@ export const DISPATCH_TABLE_COLUMNS = () => {
     bool: false,
   });
 
-  // Query
   const { data: ridersData } = useQueryGQL(GET_RIDERS, {}) as IQueryResult<
     IRidersDataResponse | undefined,
     undefined
   >;
 
-  // Side-Effects
   useEffect(() => {
     if (ridersData) {
-      const newRiderOptions = ridersData.riders.map((rider) => ({
-        label: rider.name,
-        code: rider.name.toUpperCase(),
-        _id: rider._id,
-      }));
-      setRiderOptions(newRiderOptions); // Set the rider options
+      setRiderOptions(
+        ridersData.riders.map((rider) => ({
+          label: rider.name,
+          code: rider.name.toUpperCase(),
+          _id: rider._id,
+        }))
+      );
     }
   }, [ridersData]);
 
-  // Order Subscription
-  const useOrderSubscription = (rowData: IActiveOrders) => {
-    useSubscription(SUBSCRIPTION_ORDER, {
-      variables: {
-        id: rowData._id,
-      },
-      fetchPolicy: 'network-only',
-      onSubscriptionData: () => {
-        // fetchActiveOrders({
-        //   page: 1,
-        //   rowsPerPage: 10,
-        //   search: '',
-        //   actions: [],
-        // });
-      },
-    });
-  };
-  const OrderSubscription = ({ rowData }: { rowData: IActiveOrders }) => {
-    useOrderSubscription(rowData);
-    return <p>{rowData.isPickedUp === false ? 'Delivery' : 'Pick Up'}</p>;
-  };
-
-  // Mutations
   const [assignRider] = useMutation<
     IAssignRider,
     { id: string; riderId: string }
@@ -209,37 +176,39 @@ export const DISPATCH_TABLE_COLUMNS = () => {
     refetchQueries: [{ query: GET_ACTIVE_ORDERS }],
   });
 
-  //Handlers
   const handleAssignRider = async (
     item: IDropdownSelectItem,
     rowData: IActiveOrders
   ) => {
-    if (item._id) {
-      setIsRiderLoading({
-        _id: item._id,
-        bool: true,
-        orderId: rowData._id,
-      });
+    if (!item._id) return;
 
-      const { data } = await assignRider({
+    setIsRiderLoading({
+      _id: item._id,
+      bool: true,
+      orderId: rowData._id,
+    });
+
+    const { data } = await assignRider({
+      variables: {
+        id: rowData._id,
+        riderId: item._id,
+      },
+    });
+
+    if (data) {
+      await updateStatus({
         variables: {
           id: rowData._id,
-          riderId: item._id,
+          orderStatus: 'ASSIGNED',
         },
       });
-      if (data) {
-        await updateStatus({
-          variables: {
-            id: rowData._id,
-            orderStatus: 'ASSIGNED',
-          },
-        });
-        showToast({
-          type: 'success',
-          title: t('Assign Rider'),
-          message: `${t('The order')} ${rowData.orderId} ${t('has been successfully assigned to rider')} ${item.label}`,
-        });
-      }
+      showToast({
+        type: 'success',
+        title: t('Assign Rider'),
+        message: `${t('The order')} ${rowData.orderId} ${t(
+          'has been successfully assigned to rider'
+        )} ${item.label}`,
+      });
     }
   };
 
@@ -247,14 +216,12 @@ export const DISPATCH_TABLE_COLUMNS = () => {
     e: DropdownChangeEvent,
     rowData: IActiveOrders
   ) => {
-    // // Set the loader to true for the specific row
     setIsStatusUpdating({
       _id: rowData._id,
       bool: true,
     });
 
     try {
-      // Perform the update mutation
       await updateStatus({
         variables: {
           id: rowData._id,
@@ -262,14 +229,12 @@ export const DISPATCH_TABLE_COLUMNS = () => {
         },
       });
     } catch {
-      // Handle error
       showToast({
         type: 'error',
         title: t('Order Status'),
         message: t('Something went wrong'),
       });
     } finally {
-      // Set the loader to false after the mutation
       setIsStatusUpdating({
         _id: rowData._id,
         bool: false,
@@ -277,7 +242,128 @@ export const DISPATCH_TABLE_COLUMNS = () => {
     }
   };
 
-  return [
+  const OrderFlowLabel = ({ rowData }: { rowData: IActiveOrders }) => {
+    useSubscription(SUBSCRIPTION_ORDER, {
+      variables: {
+        id: rowData._id,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    return <p>{rowData.isPickedUp === false ? t('Delivery') : t('Pick Up')}</p>;
+  };
+
+  const renderRiderField = (rowData: IActiveOrders) => {
+    const selectedRider: IDropdownSelectItem = {
+      label: rowData?.rider?.name?.toString() ?? '',
+      code: rowData?.rider?.name?.toString().toUpperCase() ?? '',
+      _id: rowData?.rider?._id?.toString() ?? '',
+    };
+
+    if (rowData._id && !rowData.isPickedUp) {
+      return (
+        <Dropdown
+          options={riderOptions}
+          loading={
+            isRiderLoading._id === selectedRider._id &&
+            isRiderLoading.bool === true &&
+            isRiderLoading.orderId === rowData._id
+          }
+          value={selectedRider}
+          optionLabel="label"
+          placeholder={t('Select Rider')}
+          onChange={(e: DropdownChangeEvent) =>
+            handleAssignRider(e.value, rowData)
+          }
+          className="min-w-[120px] outline outline-1 outline-gray-600"
+        />
+      );
+    }
+
+    return (
+      <Dropdown
+        options={[
+          {
+            code: 'Pickup',
+            label: t('Pickup'),
+          },
+        ]}
+        loading={isRiderLoading.bool && isRiderLoading._id === rowData._id}
+        value={{
+          code: 'Pickup',
+          label: t('Pickup'),
+        }}
+        optionLabel="label"
+        dropdownIcon={() => <></>}
+        disabled
+        className="min-w-[140px] outline outline-1 outline-gray-600"
+      />
+    );
+  };
+
+  const renderStatusField = (rowData: IActiveOrders) => {
+    const filteredOptions = rowData.isPickedUp
+      ? actionStatusOptions.filter((status) =>
+          ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
+            status.code ?? ''
+          )
+        )
+      : actionStatusOptions;
+
+    const flowCodes = filteredOptions
+      .filter((s) => s.code !== 'CANCELLED')
+      .map((s) => s.code);
+    const currentIndex = flowCodes.indexOf(rowData.orderStatus);
+
+    const availableStatuses = filteredOptions.map((status) => {
+      let disabled = false;
+
+      if (status.code === 'CANCELLED') {
+        if (
+          rowData.orderStatus === 'DELIVERED' ||
+          rowData.orderStatus === 'CANCELLED'
+        ) {
+          disabled = true;
+        }
+      } else {
+        const statusIndex = flowCodes.indexOf(status.code);
+
+        if (currentIndex !== -1 && statusIndex !== -1) {
+          if (statusIndex < currentIndex) disabled = true;
+          if (statusIndex > currentIndex + 1) disabled = true;
+        } else {
+          disabled = true;
+        }
+
+        if (status.code === 'ASSIGNED' && !rowData.rider) {
+          disabled = true;
+        }
+      }
+
+      return { ...status, disabled };
+    });
+
+    const currentStatus = availableStatuses.find(
+      (status: IDropdownSelectItem) => status.code === rowData?.orderStatus
+    );
+
+    return (
+      <Dropdown
+        value={currentStatus}
+        onChange={(e) => handleStatusDropDownChange(e, rowData)}
+        options={availableStatuses}
+        optionLabel="label"
+        itemTemplate={itemTemplate}
+        valueTemplate={valueTemplate}
+        loading={isStatusUpdating.bool && isStatusUpdating._id === rowData._id}
+        className="outline outline-1 outline-gray-300"
+        optionDisabled="disabled"
+        disabled={rowData.orderStatus === 'DELIVERED'}
+      />
+    );
+  };
+
+  const columns: IColumnConfig<IActiveOrders>[] = [
     {
       propertyName: 'orderId',
       headerName: t('Order Id'),
@@ -285,7 +371,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
     {
       propertyName: 'deliveryAddress.deliveryAddress',
       headerName: t('Order Information'),
-      body: (rowData: IActiveOrders) => <OrderSubscription rowData={rowData} />,
+      body: (rowData: IActiveOrders) => <OrderFlowLabel rowData={rowData} />,
     },
     {
       propertyName: 'restaurant.name',
@@ -306,61 +392,7 @@ export const DISPATCH_TABLE_COLUMNS = () => {
     {
       propertyName: 'rider.name',
       headerName: t('Rider'),
-      body: (rowData: IActiveOrders) => {
-        const selectedRider: IDropdownSelectItem = {
-          label: rowData?.rider?.name.toString() ?? '',
-          code: rowData?.rider?.name.toString().toUpperCase() ?? '',
-          _id: rowData?.rider?._id.toString() ?? '',
-        };
-        if (rowData._id && !rowData.isPickedUp) {
-          return (
-            <div>
-              <Dropdown
-                options={riderOptions}
-                loading={
-                  isRiderLoading._id === selectedRider._id &&
-                  isRiderLoading.bool === true &&
-                  isRiderLoading.orderId === rowData._id
-                }
-                value={selectedRider}
-                placeholder={t('Select Rider')}
-                onChange={(e: DropdownChangeEvent) =>
-                  handleAssignRider(e.value, rowData)
-                }
-                // filter={true}
-                className="min-w-[120px] outline outline-1 outline-gray-600 "
-              />
-            </div>
-          );
-        } else {
-          return (
-            <div>
-              <Dropdown
-                options={[
-                  {
-                    code: 'Pickup',
-                    label: t('Pickup'),
-                  },
-                ]}
-                loading={
-                  isRiderLoading.bool && isRiderLoading._id === rowData._id
-                }
-                value={{
-                  code: 'Pickup',
-                  label: t('Pickup'),
-                }}
-                dropdownIcon={() => <></>}
-                disabled={true}
-                // onChange={(e: DropdownChangeEvent) =>
-                //   handleAssignRider(e.value, rowData)
-                // }
-                // filter={true}
-                className="min-w-[150px] outline outline-1 outline-gray-600"
-              />
-            </div>
-          );
-        }
-      },
+      body: (rowData: IActiveOrders) => renderRiderField(rowData),
     },
     {
       propertyName: 'createdAt',
@@ -373,110 +405,19 @@ export const DISPATCH_TABLE_COLUMNS = () => {
         </span>
       ),
     },
-    // {
-    //   propertyName: 'orderStatus',
-    //   headerName: t('Status'),
-
-    //   body: (rowData: IActiveOrders) => {
-    //     const currentStatus = actionStatusOptions.find(
-    //       (status: IDropdownSelectItem) => status.code === rowData?.orderStatus
-    //     );
-
-    //     return (
-    //       <>
-    //         <Dropdown
-    //           value={currentStatus}
-    //           onChange={(e) => handleStatusDropDownChange(e, rowData)}
-    //           options={actionStatusOptions}
-    //           itemTemplate={itemTemplate}
-    //           valueTemplate={valueTemplate}
-    //           loading={
-    //             isStatusUpdating.bool && isStatusUpdating._id === rowData._id
-    //           }
-    //           className="outline outline-1 outline-gray-300"
-    //         />
-    //       </>
-    //     );
-    //   },
-    // },
     {
       propertyName: 'orderStatus',
       headerName: t('Status'),
-      body: (rowData: IActiveOrders) => {
-        // CHANGE 2: Filter status options based on whether it's a pickup order
-        const filteredOptions = rowData.isPickedUp
-          ? actionStatusOptions.filter((status) =>
-              ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
-                status.code
-              )
-            )
-          : actionStatusOptions;
-
-        // Get the list of statuses that are part of the main flow (excluding CANCELLED)
-        const flowCodes = filteredOptions
-          .filter((s) => s.code !== 'CANCELLED')
-          .map((s) => s.code);
-        const currentIndex = flowCodes.indexOf(rowData.orderStatus);
-
-        const availableStatuses = filteredOptions.map((status) => {
-          let disabled = false;
-
-          if (status.code === 'CANCELLED') {
-            // Disable cancel if already delivered or cancelled
-            if (
-              rowData.orderStatus === 'DELIVERED' ||
-              rowData.orderStatus === 'CANCELLED'
-            ) {
-              disabled = true;
-            }
-          } else {
-            const statusIndex = flowCodes.indexOf(status.code);
-
-            // If current status is not in the flow (e.g. CANCELLED), disable all main flow steps
-            // OR if it's a valid flow status:
-            if (currentIndex !== -1 && statusIndex !== -1) {
-              if (statusIndex < currentIndex) disabled = true; // Previous steps
-              if (statusIndex > currentIndex + 1) disabled = true; // Future steps beyond next one
-            } else {
-              // Fallback: if we are in a weird state, maybe disable everything except current?
-              // Or if we are in CANCELLED, everything is disabled.
-              disabled = true;
-            }
-
-            // Specific rule: Cannot assign without rider
-            if (status.code === 'ASSIGNED' && !rowData.rider) {
-              disabled = true;
-            }
-          }
-
-          return { ...status, disabled };
-        });
-
-        const currentStatus = availableStatuses.find(
-          (status: IDropdownSelectItem) => status.code === rowData?.orderStatus
-        );
-
-        // CHANGE 3: Disable status changes for delivered orders
-        const isDelivered = rowData.orderStatus === 'DELIVERED';
-
-        return (
-          <>
-            <Dropdown
-              value={currentStatus}
-              onChange={(e) => handleStatusDropDownChange(e, rowData)}
-              options={availableStatuses} // CHANGE 4: Use filtered status options
-              itemTemplate={itemTemplate}
-              valueTemplate={valueTemplate}
-              loading={
-                isStatusUpdating.bool && isStatusUpdating._id === rowData._id
-              }
-              className="outline outline-1 outline-gray-300"
-              optionDisabled="disabled"
-              disabled={isDelivered} // CHANGE 5: Disable dropdown if delivered
-            />
-          </>
-        );
-      },
+      body: (rowData: IActiveOrders) => renderStatusField(rowData),
     },
   ];
+
+  return {
+    columns,
+    renderOrderFlowLabel: (rowData: IActiveOrders) => (
+      <OrderFlowLabel rowData={rowData} />
+    ),
+    renderRiderField,
+    renderStatusField,
+  };
 };

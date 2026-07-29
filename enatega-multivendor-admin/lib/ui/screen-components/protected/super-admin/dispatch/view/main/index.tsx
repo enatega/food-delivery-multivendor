@@ -4,19 +4,22 @@ import { GET_ACTIVE_ORDERS, SUBSCRIPTION_DISPATCH_ORDER } from '@/lib/api/graphq
 //Components
 import Table from '@/lib/ui/useable-components/table';
 import DispatchTableHeader from '../header/table-header';
+import OrderDetailModal from '@/lib/ui/useable-components/popup-menu/order-details-modal';
 
 //Inrfaces
 import {
   IActiveOrders,
   IGetActiveOrders,
 } from '@/lib/utils/interfaces/dispatch.interface';
+import { IExtendedOrder } from '@/lib/utils/interfaces';
 
 //Hooks
 import { useEffect, useRef, useState } from 'react';
 
 // Constants
-import { DISPATCH_TABLE_COLUMNS } from '@/lib/ui/useable-components/table/columns/dispatch-columns';
+import { useDispatchOrderUI } from '@/lib/ui/useable-components/table/columns/dispatch-columns';
 import { useLazyQuery, useSubscription } from '@apollo/client';
+import { DataTableRowClickEvent } from 'primereact/datatable';
 
 export default function DispatchMain() {
   // States
@@ -28,6 +31,11 @@ export default function DispatchMain() {
   const [search, setSearch] = useState('');
   const hasDataRef = useRef(false);
   const [lastValidOrders, setLastValidOrders] = useState<IActiveOrders[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<IExtendedOrder | null>(
+    null
+  );
+  const { columns } = useDispatchOrderUI();
 
   // Ref for debouncing and polling
   const refetchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -135,36 +143,57 @@ export default function DispatchMain() {
     };
   }, []);
 
+  const handleRowClick = (event: DataTableRowClickEvent) => {
+    const target = event.originalEvent.target as HTMLElement | null;
+    if (
+      target?.closest(
+        '.p-dropdown, .p-dropdown-panel, .p-inputtext, .p-checkbox, button, input, a'
+      )
+    ) {
+      return;
+    }
+
+    setSelectedOrder(event.data as IExtendedOrder);
+    setIsModalOpen(true);
+  };
+
+  const activeOrders =
+    showLoading
+      ? []
+      : active_orders_data?.getActiveOrders.orders ?? lastValidOrders;
+
   return (
     <div className="p-3">
+      <DispatchTableHeader
+        globalFilterValue={globalFilterValue}
+        onGlobalFilterChange={(e) => setGlobalFilterValue(e.target.value)}
+        selectedActions={selectedActions}
+        setSelectedActions={setSelectedActions}
+        search={search}
+        setSearch={setSearch}
+      />
       <Table
-        columns={DISPATCH_TABLE_COLUMNS()}
-        data={
-          showLoading
-            ? []
-            : active_orders_data?.getActiveOrders.orders ??
-            lastValidOrders
-        }
+        className="dispatch-responsive-table"
+        columns={columns}
+        data={activeOrders}
         loading={showLoading}
         selectedData={selectedData}
         setSelectedData={(e) => setSelectedData(e as IActiveOrders[])}
-        header={
-          <DispatchTableHeader
-            globalFilterValue={globalFilterValue}
-            onGlobalFilterChange={(e) => setGlobalFilterValue(e.target.value)}
-            selectedActions={selectedActions}
-            setSelectedActions={setSelectedActions}
-            search={search}
-            setSearch={setSearch}
-          />
-        }
         rowsPerPage={rowsPerPage}
         totalRecords={active_orders_data?.getActiveOrders.totalCount}
-        onPageChange={(page, rowNumber) => {
-          setPage(page);
+        handleRowClick={handleRowClick}
+        moduleName="SuperAdmin-Dispatch"
+        onPageChange={(nextPage, rowNumber) => {
+          setPage(nextPage);
           setRowsPerPage(rowNumber);
         }}
         currentPage={page}
+      />
+
+      <OrderDetailModal
+        visible={isModalOpen}
+        onHide={() => setIsModalOpen(false)}
+        restaurantData={selectedOrder}
       />
     </div>
   );

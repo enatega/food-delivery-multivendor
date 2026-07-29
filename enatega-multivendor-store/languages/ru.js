@@ -228,6 +228,7 @@ export const ru = {
   FRI: "ПТ",
   SAT: "СБ",
   SUN: "ВС",
+  "Work Schedule": "График работы",
   "Work Schedule has been updated successfully":
     "График работы успешно обновлен",
   "Start time must be earlier than end time":

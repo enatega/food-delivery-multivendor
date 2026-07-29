@@ -13,6 +13,7 @@ export interface IUserContextProps {
   errorProfile: ApolloError | undefined;
   dataProfile: IRiderProfile | null;
   userId: string | null;
+  setUserId: Dispatch<SetStateAction<string>>;
   loadingAssigned: boolean;
   errorAssigned: ApolloError | undefined;
   assignedOrders: IOrder[] | null;

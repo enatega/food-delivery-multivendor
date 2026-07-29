@@ -75,8 +75,8 @@ export default function DispatchTableHeader({
 
   return (
     <div className="mb-4 flex flex-col gap-6 dark:bg-dark-950 dark:text-white">
-      <div className="flex-colm:flex-row flex w-fit items-center gap-2">
-        <div className="w-60">
+      <div className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="w-full sm:w-60">
           <CustomTextField
             type="text"
             name="vendorFilter"
@@ -89,7 +89,7 @@ export default function DispatchTableHeader({
             placeholder={t('Keyword Search')}
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center justify-end">
           <OverlayPanel ref={overlayPanelRef} dismissable>
             <div className="w-60">
               <div className="mb-3">
@@ -141,7 +141,7 @@ export default function DispatchTableHeader({
           </OverlayPanel>
 
           <TextIconClickable
-            className="w-20 rounded border border-dotted dark:border-dark-600 dark:text-white border-[#E4E4E7] text-black "
+            className="w-full rounded border border-dotted border-[#E4E4E7] text-black dark:border-dark-600 dark:text-white sm:w-24"
             icon={faAdd}
             iconStyles={theme === 'dark' ? { color: 'white' } : { color: 'black' }}
             title={selectedActions.length > 0 ? t('Filter') : t('Actions')}

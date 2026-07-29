@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 // Core
-import { Image, Text, View } from "react-native";
+import { Image, InteractionManager, Text, View } from "react-native";
 import Modal from "react-native-modal";
 
 // Interface
@@ -8,29 +8,35 @@ import { IWellDoneComponentProps } from "@/lib/utils/interfaces";
 
 // Hooks
 import { useEffect } from "react";
+import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+
+const DELIVERED_REDIRECT_DELAY_MS = 4500;
 
 export default function WelldoneComponent({
   orderId = "",
   status = "Delivered",
   setOrderId,
 }: IWellDoneComponentProps) {
+  const router = useRouter();
+
   // Use Effect
   useEffect(() => {
     if (!orderId) return;
     const timeoutId = setTimeout(() => {
       setOrderId("");
-    }, 3000);
+      InteractionManager.runAfterInteractions(() => {
+        router.replace("/(tabs)/home/orders");
+      });
+    }, DELIVERED_REDIRECT_DELAY_MS);
     return () => clearTimeout(timeoutId);
-  }, [orderId, setOrderId]);
+  }, [orderId, router, setOrderId]);
 
   // Hooks
   const { t } = useTranslation();
   return (
     <Modal
       isVisible={!!orderId}
-      onBackdropPress={() => setOrderId("")}
-      onBackButtonPress={() => setOrderId("")}
       collapsable={true}
       coverScreen={false}
     >

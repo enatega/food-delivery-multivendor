@@ -3,6 +3,7 @@ const STORAGE_KEYS = {
   METRICS_TOKEN: '_zt7m2',
   EXPIRY: '_qw4v8',
   LAST_REFRESH: '_rf8n1',
+  TOKEN_NONCE: '_mn6q4',
 } as const;
 
 const MIN_REFRESH_INTERVAL = 5000; // 5 seconds between refresh attempts
@@ -26,6 +27,10 @@ export function initializeNonce(): void {
   if (!existingNonce) {
     const nonce = generateRandomKey();
     storage.setItem(STORAGE_KEYS.NONCE, nonce);
+    storage.removeItem(STORAGE_KEYS.METRICS_TOKEN);
+    storage.removeItem(STORAGE_KEYS.EXPIRY);
+    storage.removeItem(STORAGE_KEYS.LAST_REFRESH);
+    storage.removeItem(STORAGE_KEYS.TOKEN_NONCE);
   }
 }
 
@@ -48,6 +53,7 @@ export function storeMetricsToken(token: string, expiry: string): void {
   storage.setItem(STORAGE_KEYS.METRICS_TOKEN, token);
   storage.setItem(STORAGE_KEYS.EXPIRY, expiry);
   storage.setItem(STORAGE_KEYS.LAST_REFRESH, Date.now().toString());
+  storage.setItem(STORAGE_KEYS.TOKEN_NONCE, getNonce() ?? '');
 }
 
 export function getMetricsToken(): string | null {
@@ -61,9 +67,14 @@ export function shouldRefreshToken(): boolean {
   const token = storage.getItem(STORAGE_KEYS.METRICS_TOKEN);
   const expiryStr = storage.getItem(STORAGE_KEYS.EXPIRY);
   const lastRefreshStr = storage.getItem(STORAGE_KEYS.LAST_REFRESH);
+  const tokenNonce = storage.getItem(STORAGE_KEYS.TOKEN_NONCE);
+  const currentNonce = storage.getItem(STORAGE_KEYS.NONCE);
 
   // No token or expiry - must refresh
   if (!token || !expiryStr) return true;
+
+  // Token was generated for a different nonce - must refresh before use
+  if (!currentNonce || !tokenNonce || tokenNonce !== currentNonce) return true;
 
   const expiryTime = new Date(expiryStr).getTime();
   const now = Date.now();
@@ -89,4 +100,5 @@ export function clearMetricsData(): void {
   storage.removeItem(STORAGE_KEYS.METRICS_TOKEN);
   storage.removeItem(STORAGE_KEYS.EXPIRY);
   storage.removeItem(STORAGE_KEYS.LAST_REFRESH);
+  storage.removeItem(STORAGE_KEYS.TOKEN_NONCE);
 }

@@ -92,6 +92,8 @@ export default function LoginEmailPasswordMain() {
         userId: ownerLogin.userId,
         token: ownerLogin.token,
         tokenExpiration: ownerLogin.tokenExpiration,
+        refreshToken: ownerLogin.refreshToken,
+        refreshTokenExpiration: ownerLogin.refreshTokenExpiration,
         userType: ownerLogin.userType,
       });
 
