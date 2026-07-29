@@ -15,6 +15,7 @@ import DataTableColumnSkeleton from '../custom-skeletons/datatable.column.skelet
 import { useTranslations } from 'next-intl';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useEffect } from 'react';
+import './table.css';
 
 const Table = <T extends ITableExtends>({
   header,
@@ -93,7 +94,7 @@ const Table = <T extends ITableExtends>({
   }, [loading, data, currentPage, onPageChange, rowsPerPage]);
 
   return (
-    <>
+    <div className="responsive-admin-table">
       <DataTable
         header={header}
         paginator
@@ -157,7 +158,7 @@ const Table = <T extends ITableExtends>({
           />
         ))}
       </DataTable>
-    </>
+    </div>
   );
 };
 

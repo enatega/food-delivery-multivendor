@@ -227,6 +227,7 @@ export const kk = {
   FRI: "ЖМ",
   SAT: "SAT",
   SUN: "КҮН",
+  "Work Schedule": "Жұмыс кестесі",
   "Work Schedule has been updated successfully":
     "Жұмыс кестесі сәтті жаңартылды.",
   "Start time must be earlier than end time":

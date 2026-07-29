@@ -12,6 +12,8 @@ const AUTH_KEYS = {
   USER_TYPE: 'userType',
   USER_ID: 'userId',
   TOKEN_EXPIRATION: 'tokenExpiration',
+  REFRESH_TOKEN: 'refreshToken',
+  REFRESH_TOKEN_EXPIRATION: 'refreshTokenExpiration',
 } as const;
 
 export const SESSION_USER_KEY = `user-${APP_NAME}`;
@@ -21,6 +23,8 @@ export function setAuthTokens(payload: {
   userType?: string;
   userId?: string;
   tokenExpiration?: string | number;
+  refreshToken?: string;
+  refreshTokenExpiration?: string | number;
 }): void {
   if (typeof window === 'undefined') return;
   if (payload.token) localStorage.setItem(AUTH_KEYS.TOKEN, payload.token);
@@ -28,6 +32,13 @@ export function setAuthTokens(payload: {
   if (payload.userId) localStorage.setItem(AUTH_KEYS.USER_ID, payload.userId);
   if (payload.tokenExpiration)
     localStorage.setItem(AUTH_KEYS.TOKEN_EXPIRATION, String(payload.tokenExpiration));
+  if (payload.refreshToken)
+    localStorage.setItem(AUTH_KEYS.REFRESH_TOKEN, payload.refreshToken);
+  if (payload.refreshTokenExpiration)
+    localStorage.setItem(
+      AUTH_KEYS.REFRESH_TOKEN_EXPIRATION,
+      String(payload.refreshTokenExpiration)
+    );
 }
 
 export function getAccessToken(): string {
@@ -38,6 +49,11 @@ export function getAccessToken(): string {
 export function getUserType(): string {
   if (typeof window === 'undefined') return '';
   return localStorage.getItem(AUTH_KEYS.USER_TYPE) ?? '';
+}
+
+export function getRefreshToken(): string {
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem(AUTH_KEYS.REFRESH_TOKEN) ?? '';
 }
 
 export function clearAuthTokens(): void {
@@ -72,6 +88,8 @@ export function persistUserSession(user: ILoginResponse): void {
     userId: user.userId,
     token: user.token,
     tokenExpiration: user.tokenExpiration,
+    refreshToken: user.refreshToken,
+    refreshTokenExpiration: user.refreshTokenExpiration,
     userType: user.userType,
   });
 

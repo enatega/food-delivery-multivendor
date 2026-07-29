@@ -30,28 +30,29 @@ const CustomerSupport = (props) => {
   const [isChatModalVisible, setIsChatModalVisible] = useState(false)
   const [selectedTicket, setSelectedTicket] = useState(null)
 
-  const { data: ticketsData, loading: ticketsLoading, refetch: refetchTickets } = useQuery(
-    GET_USER_SUPPORT_TICKETS,
-    {
-      variables: {
-        input: {
-          userId: profile?._id,
-          filters: {
-            page: 1,
-            limit: 10
-          }
+  const {
+    data: ticketsData,
+    loading: ticketsLoading,
+    refetch: refetchTickets
+  } = useQuery(GET_USER_SUPPORT_TICKETS, {
+    variables: {
+      input: {
+        userId: profile?._id,
+        filters: {
+          page: 1,
+          limit: 10
         }
-      },
-      skip: !isLoggedIn || !profile?._id,
-      fetchPolicy: 'network-only',
-      onError: (error) => {
-        FlashMessage({
-          message: error?.message || 'Failed to load support tickets',
-          duration: 3000
-        })
       }
+    },
+    skip: !isLoggedIn || !profile?._id,
+    fetchPolicy: 'network-only',
+    onError: () => {
+      FlashMessage({
+        message: t('tickets_fetch_error_message'),
+        duration: 3000
+      })
     }
-  )
+  })
 
   const tickets = ticketsData?.getSingleUserSupportTickets?.tickets || []
   const sortedTickets = useMemo(
@@ -63,15 +64,13 @@ const CustomerSupport = (props) => {
       }),
     [tickets]
   )
-  const activeSupportTicket = useMemo(
-    () => sortedTickets.find((ticket) => ['open', 'inProgress'].includes(ticket?.status)),
-    [sortedTickets]
-  )
+  const activeSupportTicket = useMemo(() => sortedTickets.find((ticket) => ['open', 'inProgress'].includes(ticket?.status)), [sortedTickets])
 
   const formatDate = (dateString) => {
     try {
       const date = new Date(Number(dateString))
-      return date.toLocaleDateString([], {
+      const locale = i18n.language === 'jp' ? 'ja' : i18n.language
+      return date.toLocaleDateString(locale, {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
@@ -92,10 +91,7 @@ const CustomerSupport = (props) => {
       setSelectedTicket(activeSupportTicket)
       setIsChatModalVisible(true)
       FlashMessage({
-        message: t(
-          'open_support_ticket_hint',
-          'You already have an open support chat. Continuing that conversation now.'
-        ),
+        message: `${t('support_chat_title')}: ${t('in_progress_status_label')}`,
         duration: 2500
       })
       return
@@ -115,6 +111,10 @@ const CustomerSupport = (props) => {
     setSelectedTicket(ticket)
     setIsChatModalVisible(true)
   }
+
+  const localizeTicketTitle = (title = '') => title.replace(/^Order Issue(?=\s*-)/, t('order_issue_title'))
+
+  const localizeTicketDescription = (description = '') => description.replace(/^Order ID(?=:)/, t('order_id_label'))
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -176,25 +176,15 @@ const CustomerSupport = (props) => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles(currentTheme).flex}>
       <StatusBar barStyle='light-content' backgroundColor={currentTheme.themeBackground} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles(currentTheme).mainContainer}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles(currentTheme).mainContainer}>
         <View style={styles(currentTheme).supportCard}>
           <TextDefault textColor={currentTheme.fontMainColor} bold H4>
             {t('still_need_help_label', 'Still need help?')}
           </TextDefault>
           <TextDefault textColor={currentTheme.secondaryText} style={styles(currentTheme).supportSubText}>
-            {t(
-              'support_team_available_message',
-              'Send a message to our support team and continue the conversation in-app.'
-            )}
+            {t('support_team_available_message', 'Send a message to our support team and continue the conversation in-app.')}
           </TextDefault>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={styles(currentTheme).supportButton}
-            onPress={openSupportComposer}
-          >
+          <TouchableOpacity activeOpacity={0.85} style={styles(currentTheme).supportButton} onPress={openSupportComposer}>
             <MaterialIcons name='chat' size={20} color={currentTheme.color4} />
             <TextDefault textColor={currentTheme.color4} bold style={styles(currentTheme).supportButtonText}>
               {t('chat_with_person_button', 'Chat with support')}
@@ -210,54 +200,46 @@ const CustomerSupport = (props) => {
             {isLoggedIn && ticketsLoading ? <ActivityIndicator size='small' color={currentTheme.primary} /> : null}
           </View>
 
-          {!isLoggedIn ? (
+          {!isLoggedIn
+            ? (
             <View style={styles(currentTheme).emptyTicketState}>
               <TextDefault textColor={currentTheme.secondaryText} center>
                 {t('loginRequired', 'Please login to view your support chats.')}
               </TextDefault>
             </View>
-          ) : ticketsLoading ? (
+              )
+            : ticketsLoading
+              ? (
             <View style={styles(currentTheme).emptyTicketState}>
               <ActivityIndicator size='small' color={currentTheme.primary} />
             </View>
-          ) : sortedTickets.length > 0 ? (
-            sortedTickets.map((ticket) => {
-              const isClosed = ticket?.status === 'closed'
-              const isInProgress = ticket?.status === 'inProgress'
-              return (
-                <TouchableOpacity
-                  key={ticket._id}
-                  activeOpacity={0.85}
-                  onPress={() => openChatForTicket(ticket)}
-                  style={styles(currentTheme).ticketCard}
-                >
+                )
+              : sortedTickets.length > 0
+                ? (
+                    sortedTickets.map((ticket) => {
+                      const isClosed = ticket?.status === 'closed'
+                      const isInProgress = ticket?.status === 'inProgress'
+                      return (
+                <TouchableOpacity key={ticket._id} activeOpacity={0.85} onPress={() => openChatForTicket(ticket)} style={styles(currentTheme).ticketCard}>
                   <View style={styles(currentTheme).ticketTopRow}>
                     <TextDefault textColor={currentTheme.fontFourthColor} bold H5 numberOfLines={1} style={styles(currentTheme).ticketTitle}>
-                      {ticket.title}
+                      {localizeTicketTitle(ticket.title)}
                     </TextDefault>
                     <View
                       style={[
                         styles(currentTheme).statusBadge,
                         {
-                          backgroundColor: isClosed
-                            ? currentTheme.gray200
-                            : isInProgress
-                              ? currentTheme.lightBlue
-                              : currentTheme.primary
+                          backgroundColor: isClosed ? currentTheme.gray200 : isInProgress ? currentTheme.lightBlue : currentTheme.primary
                         }
                       ]}
                     >
-                      <TextDefault
-                        small
-                        bold
-                        textColor={isClosed ? currentTheme.gray700 : currentTheme.color4}
-                      >
-                        {isInProgress ? t('in_progress_status_label', 'In Progress') : ticket.status}
+                      <TextDefault small bold textColor={isClosed ? currentTheme.gray700 : currentTheme.color4}>
+                        {isInProgress ? t('in_progress_status_label') : isClosed ? t('Closed') : t('Open')}
                       </TextDefault>
                     </View>
                   </View>
                   <TextDefault textColor={currentTheme.secondaryText} small numberOfLines={2} style={styles(currentTheme).ticketDescription}>
-                    {ticket.description}
+                    {localizeTicketDescription(ticket.description)}
                   </TextDefault>
                   <View style={styles(currentTheme).ticketMetaRow}>
                     <TextDefault textColor={currentTheme.gray500} smaller>
@@ -266,22 +248,20 @@ const CustomerSupport = (props) => {
                     <MaterialIcons name='chevron-right' size={22} color={currentTheme.gray500} />
                   </View>
                 </TouchableOpacity>
-              )
-            })
-          ) : (
+                      )
+                    })
+                  )
+                : (
             <View style={styles(currentTheme).emptyTicketState}>
               <MaterialIcons name='support-agent' size={38} color={currentTheme.primary} />
               <TextDefault textColor={currentTheme.fontMainColor} bold H5 style={styles(currentTheme).emptyTicketTitle}>
                 {t('no_tickets_found_label', 'No support tickets yet')}
               </TextDefault>
               <TextDefault textColor={currentTheme.secondaryText} center small style={styles(currentTheme).emptyTicketDescription}>
-                {t(
-                  'no_support_tickets_yet_message',
-                  'Start a chat with support and your conversation will appear here.'
-                )}
+                {t('no_support_tickets_yet_message', 'Start a chat with support and your conversation will appear here.')}
               </TextDefault>
             </View>
-          )}
+                  )}
         </View>
       </ScrollView>
 

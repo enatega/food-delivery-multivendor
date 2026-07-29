@@ -1,4 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { Items } from './orders/order-vendor.interface';
 
 export interface IActiveOrders {
   _id: string;
@@ -15,11 +16,34 @@ export interface IActiveOrders {
     details: string;
     label: string;
   };
+  items: Items[];
   paymentMethod: string;
+  paidAmount?: number;
+  orderAmount?: number;
   orderStatus: string;
   status: string;
+  paymentStatus?: string;
+  reason?: string | null;
   isActive: boolean;
   createdAt: string;
+  deliveryCharges?: number;
+  tipping?: number;
+  taxationAmount?: number;
+  restaurant?: {
+    _id: string;
+    name: string;
+    image?: string;
+    address?: string;
+    location?: {
+      coordinates: number[];
+    };
+  };
+  user?: {
+    _id?: string;
+    name: string;
+    phone?: string;
+    email?: string;
+  };
   rider?: {
     _id: string;
     name: string;
@@ -79,4 +103,3 @@ export interface IDispatchTableHeaderProps {
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
 }
-

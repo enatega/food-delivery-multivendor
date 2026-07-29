@@ -1,30 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  ActivityIndicator,
-  Keyboard,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useMutation, useQuery } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { scale } from '../../utils/scaling'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import {
-  GET_SINGLE_SUPPORT_TICKET,
-  GET_TICKET_MESSAGES
-} from '../../apollo/queries'
+import { GET_SINGLE_SUPPORT_TICKET, GET_TICKET_MESSAGES } from '../../apollo/queries'
 import { createTicketMessage } from '../../apollo/mutations'
 
 const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
+  const { t, i18n } = useTranslation()
   const [message, setMessage] = useState('')
   const [isSending, setIsSending] = useState(false)
   const [allowBackdropClose, setAllowBackdropClose] = useState(false)
@@ -58,9 +45,9 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
     skip: !visible || !ticketId,
     fetchPolicy: 'network-only',
     pollInterval: visible ? 3000 : 0,
-    onError: (error) => {
+    onError: () => {
       FlashMessage({
-        message: error?.message || 'Failed to load messages',
+        message: t('failed_to_load_messages'),
         duration: 3000
       })
     }
@@ -72,10 +59,10 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
       setIsSending(false)
       refetchMessages()
     },
-    onError: (error) => {
+    onError: () => {
       setIsSending(false)
       FlashMessage({
-        message: error?.message || 'Failed to send message',
+        message: t('failed_to_send_message'),
         duration: 3000
       })
     }
@@ -112,12 +99,8 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
 
   const ticketData = ticketDetailsData?.getSingleSupportTicket || ticket
   const ticketDescription = ticketData?.description?.trim()
-  const supportBubbleColor =
-    currentTheme.themeBackground === '#000' ? '#1F2937' : currentTheme.gray100
-  const supportTextColor =
-    currentTheme.themeBackground === '#000'
-      ? currentTheme.fontFourthColor
-      : currentTheme.gray700
+  const supportBubbleColor = currentTheme.themeBackground === '#000' ? '#1F2937' : currentTheme.gray100
+  const supportTextColor = currentTheme.themeBackground === '#000' ? currentTheme.fontFourthColor : currentTheme.gray700
 
   const orderedMessages = (data?.getTicketMessages?.messages || [])
     .filter((msg) => msg?.content?.trim() !== ticketDescription)
@@ -128,7 +111,8 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
   const formatTimestamp = (timestamp) => {
     try {
       const date = new Date(Number(timestamp))
-      return `${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ${date.toLocaleDateString()}`
+      const locale = i18n.language === 'jp' ? 'ja' : i18n.language
+      return `${date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })} ${date.toLocaleDateString(locale)}`
     } catch (error) {
       return ''
     }
@@ -152,27 +136,17 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
     onClose()
   }
 
+  const localizeTicketTitle = (title = '') => title.replace(/^Order Issue(?=\s*-)/, t('order_issue_title'))
+
+  const localizeTicketDescription = (description = '') => description.replace(/^Order ID(?=:)/, t('order_id_label'))
+
   if (!visible) return null
 
   return (
-    <Modal
-      animationType='slide'
-      transparent
-      visible={visible}
-      statusBarTranslucent
-      presentationStyle='overFullScreen'
-      onRequestClose={handleClose}
-    >
+    <Modal animationType='slide' transparent visible={visible} statusBarTranslucent presentationStyle='overFullScreen' onRequestClose={handleClose}>
       <View style={styles.modalRoot}>
-        <Pressable
-          style={styles.backdrop}
-          onPress={allowBackdropClose ? handleClose : undefined}
-        />
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? scale(12) : 0}
-          style={styles.sheetWrap}
-        >
+        <Pressable style={styles.backdrop} onPress={allowBackdropClose ? handleClose : undefined} />
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={Platform.OS === 'ios' ? scale(12) : 0} style={styles.sheetWrap}>
           <View
             style={[
               styles.sheet,
@@ -182,24 +156,21 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
             ]}
           >
             <View style={[styles.header, { backgroundColor: currentTheme.newheaderBG }]}>
-            <View style={styles.headerCopy}>
-              <TextDefault H4 bold textColor={currentTheme.newFontcolor} numberOfLines={1}>
-                {ticketData?.title || 'Support Chat'}
-              </TextDefault>
-              <TextDefault small textColor={currentTheme.gray500} style={{ marginTop: scale(2) }}>
-                {ticketData?.status === 'inProgress'
-                  ? 'In Progress'
-                  : ticketData?.status
-                  ? ticketData.status.charAt(0).toUpperCase() + ticketData.status.slice(1)
-                  : 'Open'}
-              </TextDefault>
+              <View style={styles.headerCopy}>
+                <TextDefault H4 bold textColor={currentTheme.newFontcolor} numberOfLines={1}>
+                  {ticketData?.title ? localizeTicketTitle(ticketData.title) : t('support_chat_title')}
+                </TextDefault>
+                <TextDefault small textColor={currentTheme.gray500} style={{ marginTop: scale(2) }}>
+                  {ticketData?.status === 'inProgress' ? t('in_progress_status_label') : ticketData?.status === 'closed' ? t('Closed') : t('Open')}
+                </TextDefault>
+              </View>
+              <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+                <MaterialIcons name='close' size={22} color={currentTheme.newIconColor} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-              <MaterialIcons name='close' size={22} color={currentTheme.newIconColor} />
-            </TouchableOpacity>
-          </View>
 
-            {ticketData?.description ? (
+            {ticketData?.description
+              ? (
               <View
                 style={[
                   styles.ticketMeta,
@@ -210,23 +181,27 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                 ]}
               >
                 <TextDefault small bold textColor={currentTheme.gray700}>
-                  Ticket Description
+                  {t('ticket_description_label')}
                 </TextDefault>
                 <TextDefault small textColor={currentTheme.gray600} style={{ marginTop: scale(4) }}>
-                  {ticketData.description}
+                  {localizeTicketDescription(ticketData.description)}
                 </TextDefault>
                 <TextDefault small textColor={currentTheme.gray500} style={{ marginTop: scale(6) }}>
                   {formatTimestamp(ticketData.createdAt)}
                 </TextDefault>
               </View>
-            ) : null}
+                )
+              : null}
 
             <View style={styles.messagesWrap}>
-              {ticketLoading || messagesLoading ? (
+              {ticketLoading || messagesLoading
+                ? (
                 <View style={styles.loadingWrap}>
                   <ActivityIndicator size='large' color={currentTheme.primary} />
                 </View>
-              ) : orderedMessages.length > 0 ? (
+                  )
+                : orderedMessages.length > 0
+                  ? (
                 <ScrollView
                   ref={scrollRef}
                   style={styles.messagesScroll}
@@ -250,40 +225,32 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                         }
                       : {
                           alignSelf: 'flex-start',
-                          backgroundColor: isSupportMessage
-                            ? supportBubbleColor
-                            : currentTheme.gray100
+                          backgroundColor: isSupportMessage ? supportBubbleColor : currentTheme.gray100
                         }
                     return (
                       <View key={msg._id} style={[styles.messageBubble, bubbleStyle]}>
-                        <TextDefault
-                          small
-                          textColor={isUserMessage ? currentTheme.color4 : supportTextColor}
-                        >
+                        <TextDefault small textColor={isUserMessage ? currentTheme.color4 : supportTextColor}>
                           {msg.content}
                         </TextDefault>
-                        <TextDefault
-                          smaller
-                          textColor={isUserMessage ? currentTheme.color4 : currentTheme.gray500}
-                          style={styles.messageTime}
-                        >
+                        <TextDefault smaller textColor={isUserMessage ? currentTheme.color4 : currentTheme.gray500} style={styles.messageTime}>
                           {formatTimestamp(msg.createdAt)}
                         </TextDefault>
                       </View>
                     )
                   })}
                 </ScrollView>
-              ) : (
+                    )
+                  : (
                 <View style={styles.emptyWrap}>
                   <MaterialIcons name='chat-bubble-outline' size={42} color={currentTheme.primary} />
                   <TextDefault H5 bold textColor={currentTheme.newFontcolor} style={{ marginTop: scale(10) }}>
-                    No messages yet
+                    {t('no_messages_yet')}
                   </TextDefault>
                   <TextDefault small textColor={currentTheme.gray500} style={{ marginTop: scale(4), textAlign: 'center' }}>
-                    Send the first message and our support team will reply here.
+                    {t('support_team_available_message')}
                   </TextDefault>
                 </View>
-              )}
+                    )}
             </View>
 
             <View
@@ -296,56 +263,54 @@ const SupportChatModal = ({ visible, currentTheme, ticket, onClose }) => {
                 }
               ]}
             >
-            {isClosed ? (
-              <View style={styles.closedState}>
-                <TextDefault small textColor={currentTheme.gray500} center>
-                  This ticket is closed. You cannot send new messages.
-                </TextDefault>
-              </View>
-            ) : (
-              <View style={styles.inputRow}>
-                <TextInput
-                  value={message}
-                  onChangeText={setMessage}
-                  placeholder='Type your message here...'
-                  placeholderTextColor={currentTheme.gray500}
-                  multiline
-                  scrollEnabled
-                  textAlignVertical='top'
-                  onFocus={() => {
-                    requestAnimationFrame(() => {
-                      scrollRef.current?.scrollToEnd?.({ animated: true })
-                    })
-                  }}
-                  style={[
-                    styles.input,
-                    {
-                      backgroundColor: currentTheme.gray100,
-                      color: currentTheme.newFontcolor,
-                      borderColor: currentTheme.borderLight
-                    }
-                  ]}
-                />
-                <TouchableOpacity
-                  activeOpacity={0.85}
-                  onPress={handleSend}
-                  disabled={!message.trim() || isSending}
-                  style={[
-                    styles.sendButton,
-                    {
-                      backgroundColor: currentTheme.primary,
-                      opacity: !message.trim() || isSending ? 0.6 : 1
-                    }
-                  ]}
-                >
-                  {isSending ? (
-                    <ActivityIndicator size='small' color={currentTheme.color4} />
-                  ) : (
-                    <MaterialIcons name='send' size={20} color={currentTheme.color4} />
+              {isClosed
+                ? (
+                <View style={styles.closedState}>
+                  <TextDefault small textColor={currentTheme.gray500} center>
+                    {t('ticket_closed_cannot_send')}
+                  </TextDefault>
+                </View>
+                  )
+                : (
+                <View style={styles.inputRow}>
+                  <TextInput
+                    value={message}
+                    onChangeText={setMessage}
+                    placeholder={t('type_your_message_here_placeholder')}
+                    placeholderTextColor={currentTheme.gray500}
+                    multiline
+                    scrollEnabled
+                    textAlignVertical='top'
+                    onFocus={() => {
+                      requestAnimationFrame(() => {
+                        scrollRef.current?.scrollToEnd?.({ animated: true })
+                      })
+                    }}
+                    style={[
+                      styles.input,
+                      {
+                        backgroundColor: currentTheme.gray100,
+                        color: currentTheme.newFontcolor,
+                        borderColor: currentTheme.borderLight
+                      }
+                    ]}
+                  />
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    onPress={handleSend}
+                    disabled={!message.trim() || isSending}
+                    style={[
+                      styles.sendButton,
+                      {
+                        backgroundColor: currentTheme.primary,
+                        opacity: !message.trim() || isSending ? 0.6 : 1
+                      }
+                    ]}
+                  >
+                    {isSending ? <ActivityIndicator size='small' color={currentTheme.color4} /> : <MaterialIcons name='send' size={20} color={currentTheme.color4} />}
+                  </TouchableOpacity>
+                </View>
                   )}
-                </TouchableOpacity>
-              </View>
-            )}
             </View>
           </View>
         </KeyboardAvoidingView>

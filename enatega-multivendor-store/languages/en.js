@@ -236,6 +236,7 @@ export const en = {
   FRI: "FRI",
   SAT: "SAT",
   SUN: "SUN",
+  "Work Schedule": "Work Schedule",
   "Work Schedule has been updated successfully":
     "Work Schedule has been updated successfully.",
   "Start time must be earlier than end time":

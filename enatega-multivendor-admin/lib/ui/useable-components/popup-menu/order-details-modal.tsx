@@ -38,9 +38,35 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
       visible={visible}
       onHide={onHide}
       header={`Order # ${restaurantData.orderId}`}
-      className="custom-modal border border-dark-600" // Added custom class for CSS override
+      className="custom-modal border border-dark-600"
+      breakpoints={{ '960px': '78vw', '640px': 'calc(100vw - 16px)' }}
     >
       <div className="order-details-container dark:bg-dark-900 dark:text-white ">
+        {/* Customer Information Section */}
+        <div className="order-section dark:bg-dark-600">
+          <h3 className="section-header dark:text-primary-dark">
+            Customer Information
+          </h3>
+          {restaurantData.user ? (
+            <div className="information-grid">
+              <div className="information-item">
+                <span className="information-label">Name</span>
+                <span>{restaurantData.user.name || 'Not available'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Phone</span>
+                <span>{restaurantData.user.phone || 'Not available'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Email</span>
+                <span>{restaurantData.user.email || 'Not available'}</span>
+              </div>
+            </div>
+          ) : (
+            <p>Customer information is not available</p>
+          )}
+        </div>
+
         {/* Items Section */}
         <div className="order-section dark:bg-dark-600">
           <h3 className="section-header dark:text-primary-dark">Items</h3>
@@ -138,6 +164,35 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
             </span>
           </div>
         </div>
+
+        {/* Rider Information Section */}
+        {restaurantData.rider && (
+          <div className="order-section dark:bg-dark-600">
+            <h3 className="section-header dark:text-primary-dark">
+              Rider Information
+            </h3>
+            <div className="information-grid">
+              <div className="information-item">
+                <span className="information-label">Name</span>
+                <span>{restaurantData.rider.name || 'Not available'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Username</span>
+                <span>{restaurantData.rider.username || 'Not available'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Availability</span>
+                <span>
+                  {restaurantData.rider.available === undefined
+                    ? 'Not available'
+                    : restaurantData.rider.available
+                      ? 'Available'
+                      : 'Unavailable'}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Delivery Address Section */}
         <div className="order-section dark:bg-dark-600">

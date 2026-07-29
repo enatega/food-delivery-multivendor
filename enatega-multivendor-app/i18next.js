@@ -1,7 +1,7 @@
-import i18next from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import * as Localization from 'expo-localization';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18next from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import * as Localization from 'expo-localization'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { en } from './translations/en'
 import { de } from './translations/de'
@@ -13,19 +13,19 @@ import { he } from './translations/he'
 import { hi } from './translations/hi'
 import { es } from './translations/es'
 import { bn } from './translations/bn'
-import {pt} from './translations/pt'
-import {ru} from './translations/ru'
-import {ur} from './translations/ur'
-import {id} from './translations/id'
-import {jp} from './translations/jp'
-import {tr} from './translations/tr'
+import { pt } from './translations/pt'
+import { ru } from './translations/ru'
+import { ur } from './translations/ur'
+import { id } from './translations/id'
+import { jp } from './translations/jp'
+import { tr } from './translations/tr'
 import { mr } from './translations/mr'
 import { te } from './translations/te'
 import { vi } from './translations/vi'
 import { ko } from './translations/ko'
-import {it} from './translations/it'
-import {th} from './translations/th'
-import {gu} from './translations/gu'
+import { it } from './translations/it'
+import { th } from './translations/th'
+import { gu } from './translations/gu'
 import { fa } from './translations/fa'
 import { pl } from './translations/pl'
 import { ps } from './translations/ps'
@@ -35,82 +35,84 @@ import { uz } from './translations/uz'
 import { az } from './translations/az'
 import { nl } from './translations/nl'
 import { kk } from './translations/kk'
+import { supportTranslations } from './translations/support'
 
+const withSupportTranslations = (language, translations) => ({
+  ...translations,
+  ...supportTranslations[language]
+})
 
 export const languageResources = {
-  en: { translation: en },
-  zh: { translation: zh },
-  de: { translation: de },
-  fr: { translation: fr },
-  km: { translation: km },
-  ar: { translation: ar },
-  he: { translation: he },
-  hi: { translation: hi },
-  es: { translation: es },
-  bn: { translation: bn },
-  pt: { translation: pt },
-  ru: { translation: ru },
-  ur: { translation: ur },
-  id: { translation: id },
-  jp: { translation: jp },
-  tr: { translation: tr },
-  mr: { translation: mr },
-  te: { translation: te },
-  vi: { translation: vi },
-  ko: { translation: ko },
-  it: { translation: it },
-  th: { translation: th },
-  gu: { translation: gu },
-  fa: { translation: fa },
-  pl: { translation: pl },
-  ps: { translation: ps },
-  ro: { translation: ro },
-  ku: { translation: ku },
-  uz: { translation: uz },
-  az: { translation: az },
-  nl: { translation: nl },
-  kk: { translation: kk }
-
+  en: { translation: withSupportTranslations('en', en) },
+  zh: { translation: withSupportTranslations('zh', zh) },
+  de: { translation: withSupportTranslations('de', de) },
+  fr: { translation: withSupportTranslations('fr', fr) },
+  km: { translation: withSupportTranslations('km', km) },
+  ar: { translation: withSupportTranslations('ar', ar) },
+  he: { translation: withSupportTranslations('he', he) },
+  hi: { translation: withSupportTranslations('hi', hi) },
+  es: { translation: withSupportTranslations('es', es) },
+  bn: { translation: withSupportTranslations('bn', bn) },
+  pt: { translation: withSupportTranslations('pt', pt) },
+  ru: { translation: withSupportTranslations('ru', ru) },
+  ur: { translation: withSupportTranslations('ur', ur) },
+  id: { translation: withSupportTranslations('id', id) },
+  jp: { translation: withSupportTranslations('jp', jp) },
+  tr: { translation: withSupportTranslations('tr', tr) },
+  mr: { translation: withSupportTranslations('mr', mr) },
+  te: { translation: withSupportTranslations('te', te) },
+  vi: { translation: withSupportTranslations('vi', vi) },
+  ko: { translation: withSupportTranslations('ko', ko) },
+  it: { translation: withSupportTranslations('it', it) },
+  th: { translation: withSupportTranslations('th', th) },
+  gu: { translation: withSupportTranslations('gu', gu) },
+  fa: { translation: withSupportTranslations('fa', fa) },
+  pl: { translation: withSupportTranslations('pl', pl) },
+  ps: { translation: withSupportTranslations('ps', ps) },
+  ro: { translation: withSupportTranslations('ro', ro) },
+  ku: { translation: withSupportTranslations('ku', ku) },
+  uz: { translation: withSupportTranslations('uz', uz) },
+  az: { translation: withSupportTranslations('az', az) },
+  nl: { translation: withSupportTranslations('nl', nl) },
+  kk: { translation: withSupportTranslations('kk', kk) }
 }
 
 // Initialize i18next synchronously with fallback language
-i18next
-  .use(initReactI18next)
-  .init({
-    compatibilityJSON: 'v3',
-    lng: 'en', // default language
-    fallbackLng: 'en',
-    resources: languageResources,
-    interpolation: {
-      escapeValue: false, // React already escapes by default
-    },
-  });
+i18next.use(initReactI18next).init({
+  compatibilityJSON: 'v3',
+  lng: 'en', // default language
+  fallbackLng: 'en',
+  resources: languageResources,
+  interpolation: {
+    escapeValue: false // React already escapes by default
+  }
+})
 
 // Async function to detect and set language
-const detectAndSetLanguage = async () => {
+const detectAndSetLanguage = async() => {
   try {
-    const storedLanguage = await AsyncStorage.getItem('enatega-language');
-    const systemLanguage = Localization?.locale?.split('-')[0];
-    const availableLanguages = Object.keys(languageResources);
+    const storedLanguage = await AsyncStorage.getItem('enatega-language')
+    const systemLanguage = Localization?.locale?.split('-')[0]
+    const availableLanguages = Object.keys(languageResources)
 
     // Prefer stored language if available, else system language if supported, else fallback to 'en'
-    let languageToUse = 'en';
+    let languageToUse = 'en'
     if (storedLanguage && availableLanguages.includes(storedLanguage)) {
-      languageToUse = storedLanguage;
+      languageToUse = storedLanguage
     } else if (availableLanguages.includes(systemLanguage)) {
-      languageToUse = systemLanguage;
+      languageToUse = systemLanguage
     }
 
-    await i18next.changeLanguage(languageToUse);
+    await i18next.changeLanguage(languageToUse)
 
     // Optionally clear stored language keys if you want fresh detection next time
-    await AsyncStorage.removeItem('enatega-language');
-    await AsyncStorage.removeItem('enatega-language-name');
+    await AsyncStorage.removeItem('enatega-language')
+    await AsyncStorage.removeItem('enatega-language-name')
   } catch (error) {
-    console.error('Error detecting or setting language:', error);
+    console.error('Error detecting or setting language:', error)
   }
-};
+}
 
-detectAndSetLanguage();
+detectAndSetLanguage()
 
-export default i18next;
+export default i18next

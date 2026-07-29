@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 
 // Core
 import { AuthContext } from "@/lib/context/global/auth.context";
-import { Image, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
 export default function LanguageMain() {
   const [isChangingLang, setIsChangingLang] = useState(false);
@@ -68,11 +68,7 @@ export default function LanguageMain() {
           >
             <View className="flex flex-row gap-3 items-center justify-center px-3">
               <View className="overflow-hidden items-center justify-start w-8 h-6">
-                <Image
-                  source={lng.icon}
-                  className="w-8 h-6"
-                  resizeMode="contain"
-                />
+                <Text className="text-xl leading-6">{lng.flag}</Text>
               </View>
               <Text style={{ color: appTheme.fontMainColor }}>
                 {lng.value}

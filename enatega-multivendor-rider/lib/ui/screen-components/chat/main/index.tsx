@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Core
 import {
   ActivityIndicator,
@@ -7,6 +8,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useEffect, useRef } from "react";
@@ -82,20 +84,22 @@ export default function ChatMain() {
 
   const renderSend = () => {
     return (
-      <View style={styles.sendButtonWrap}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        style={[styles.sendButtonWrap, { backgroundColor: appTheme.primary }]}
+        onPress={() => {
+          if (inputMessage?.trim()) {
+            onSend();
+          }
+        }}
+      >
         <Ionicons
-          width={28}
-          height={28}
+          size={24}
           name="send"
-          color={appTheme.primary}
+          color={appTheme.white}
           style={styles.sendIcon}
-          onPress={() => {
-            if (inputMessage?.trim()) {
-              onSend();
-            }
-          }}
         />
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -103,9 +107,20 @@ export default function ChatMain() {
     return (
       <Actions
         {...props}
-        containerStyle={styles.actionButton}
+        containerStyle={[
+          styles.actionButton,
+          {
+            backgroundColor:
+              currentTheme === "dark" ? "#1F2937" : "#F3F4F6",
+            borderColor: appTheme.borderLineColor,
+          },
+        ]}
         icon={() => (
-          <Ionicons name="image-outline" size={24} color={appTheme.primary} />
+          <Ionicons
+            name="image-outline"
+            size={24}
+            color={appTheme.primary}
+          />
         )}
         onPressActionButton={pickImage}
       />
@@ -149,13 +164,13 @@ export default function ChatMain() {
           backgroundColor: currentTheme === "dark" ? "#111111" : appTheme.white,
           borderTopColor: appTheme.borderLineColor,
           borderTopWidth: StyleSheet.hairlineWidth,
-          paddingHorizontal: 12,
+          paddingHorizontal: 10,
           paddingTop: 8,
           paddingBottom: isAndroid ? 4 : Math.max(insets.bottom, 6),
         }}
         primaryStyle={{
           alignItems: "center",
-          minHeight: 56,
+          minHeight: 60,
         }}
         renderComposer={(composerProps) => (
           <Composer
@@ -169,14 +184,14 @@ export default function ChatMain() {
                 currentTheme === "dark" ? "#111111" : appTheme.white,
               borderColor: appTheme.borderLineColor,
               borderWidth: StyleSheet.hairlineWidth,
-              borderRadius: 18,
-              paddingHorizontal: 14,
-              paddingTop: 10,
-              paddingBottom: 10,
+              borderRadius: 24,
+              paddingHorizontal: 16,
+              paddingTop: 11,
+              paddingBottom: 11,
               marginLeft: 0,
               marginTop: 0,
               marginBottom: 0,
-              minHeight: 44,
+              minHeight: 48,
               lineHeight: 20,
             }}
             textInputProps={{
@@ -296,25 +311,31 @@ export default function ChatMain() {
 
 const styles = StyleSheet.create({
   actionButton: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: StyleSheet.hairlineWidth,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 8,
+    marginRight: 10,
+    marginBottom: 2,
   },
   chatContainer: {
     marginBottom: 0,
   },
   sendIcon: {
     margin: 0,
+    transform: [{ translateX: 1 }],
   },
   sendButtonWrap: {
-    width: 40,
-    height: 44,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 8,
+    marginLeft: 10,
     marginRight: 2,
+    marginBottom: 1,
   },
   uploadingFooter: {
     flexDirection: "row",
