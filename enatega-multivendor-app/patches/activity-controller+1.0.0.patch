@@ -1,0 +1,37 @@
+diff --git a/node_modules/activity-controller/android/src/main/AndroidManifest.xml b/node_modules/activity-controller/android/src/main/AndroidManifest.xml
+index 2395f46..b47ce74 100644
+--- a/node_modules/activity-controller/android/src/main/AndroidManifest.xml
++++ b/node_modules/activity-controller/android/src/main/AndroidManifest.xml
+@@ -13,6 +13,15 @@
+             android:name=".ActivityRefreshReceiver"
+             android:enabled="true"
+             android:exported="false" />
++        <receiver
++            android:name=".ActivityUpdateReceiver"
++            android:enabled="true"
++            android:exported="true"
++            android:permission="com.google.android.c2dm.permission.SEND">
++            <intent-filter>
++                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
++            </intent-filter>
++        </receiver>
+         <service
+             android:name=".DeliveryActivityService"
+             android:exported="false"
+diff --git a/node_modules/activity-controller/android/src/main/java/com/enatega/activitycontroller/ActivityUpdateReceiver.kt b/node_modules/activity-controller/android/src/main/java/com/enatega/activitycontroller/ActivityUpdateReceiver.kt
+index e54846d..e55d0f7 100644
+--- a/node_modules/activity-controller/android/src/main/java/com/enatega/activitycontroller/ActivityUpdateReceiver.kt
++++ b/node_modules/activity-controller/android/src/main/java/com/enatega/activitycontroller/ActivityUpdateReceiver.kt
+@@ -21,6 +21,12 @@ class ActivityUpdateReceiver : BroadcastReceiver() {
+                 return
+             }
+ 
++            val messageType = extras.getString("type")
++            if (messageType != "live_activity_update") {
++                Log.d(TAG, "Ignoring unrelated FCM message type: $messageType")
++                return
++            }
++
+             val orderDataString = extras.getString("orderData")
+             Log.d(TAG, "Received orderData: $orderDataString")
+ 
