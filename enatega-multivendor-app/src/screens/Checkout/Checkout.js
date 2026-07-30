@@ -44,6 +44,9 @@ import { WrongAddressModal } from '../../components/Checkout/WrongAddressModal'
 import { calculateOrderPricing } from '../../utils/orderPricing'
 import { populateCart } from '../../utils/populateCart'
 import LiveActivityService from '../../utils/liveActivityService'
+import { APP_MODES } from '../../mode/constants'
+import { recordOrderOrigin } from '../../mode/orderOrigin'
+import { useModeSensitiveOperation } from '../../mode/AppModeContext'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -104,6 +107,7 @@ function Checkout(props) {
   const { loading, data } = useRestaurant(cartRestaurant)
   console.log('data?.restaurant?._id', data?.restaurant?._id)
   const [loadingOrder, setLoadingOrder] = useState(false)
+  useModeSensitiveOperation(loadingOrder)
   const restaurantCoordinates = data?.restaurant?.location?.coordinates
   const latOrigin = Number(restaurantCoordinates?.[1])
   const lonOrigin = Number(restaurantCoordinates?.[0])
@@ -380,6 +384,7 @@ function Checkout(props) {
 
   function onCompleted(data) {
     const placedOrder = data?.placeOrder
+    void recordOrderOrigin(placedOrder, APP_MODES.MULTI)
     setOrderConfirmedTime(new Date())
     reFetchOrders()
     Analytics.track(Analytics.events.ORDER_PLACED, {

@@ -6,12 +6,14 @@
 import { useContext } from 'react'
 import { Platform } from 'react-native'
 import ConfigurationContext from './src/context/Configuration'
+import { useAppMode } from './src/mode/AppModeContext'
 import * as Updates from 'expo-updates'
 const { getEnvironmentConfig } = require('./environment.config')
 
 const useEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
-  const sharedConfig = getEnvironmentConfig(env)
+  const { mode } = useAppMode()
+  const sharedConfig = getEnvironmentConfig(env, mode)
   const googleMapsKey =
     Platform.OS === 'ios'
       ? process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS

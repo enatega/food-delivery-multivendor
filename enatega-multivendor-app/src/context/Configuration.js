@@ -1,11 +1,35 @@
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 
 import { getConfiguration } from '../apollo/queries'
+import { useAppMode } from '../mode/AppModeContext'
+import { APP_MODES } from '../mode/constants'
+import AuthContext from './Auth'
 
 const GETCONFIGURATION = gql`
   ${getConfiguration}
+`
+
+const GET_SINGLE_VENDOR_CONFIGURATION = gql`
+  query SingleVendorConfiguration {
+    configuration {
+      _id
+      currency
+      currencySymbol
+      deliveryRate
+      twilioEnabled
+      appAmplitudeApiKey
+      customerAppSentryUrl
+      termsAndConditions
+      privacyPolicy
+      testOtp
+      skipMobileVerification
+      skipEmailVerification
+      costType
+      publishableKey
+    }
+  }
 `
 
 // Module-level constant so the fallback keeps a stable reference across renders
@@ -23,7 +47,15 @@ const FALLBACK_CONFIGURATION = {
 const ConfigurationContext = React.createContext({})
 
 export const ConfigurationProvider = props => {
-  const { loading, data, error } = useQuery(GETCONFIGURATION)
+  const { mode } = useAppMode()
+  const { token } = useContext(AuthContext)
+  const isSingleVendor = mode === APP_MODES.SINGLE
+  const query = mode === APP_MODES.SINGLE
+    ? GET_SINGLE_VENDOR_CONFIGURATION
+    : GETCONFIGURATION
+  const { loading, data, error } = useQuery(query, {
+    skip: isSingleVendor && !token
+  })
 
   const configuration = useMemo(
     () =>
@@ -33,12 +65,13 @@ export const ConfigurationProvider = props => {
             isConfigurationLoaded: false
           }
         : error || !data?.configuration
-          ? FALLBACK_CONFIGURATION
+          ? { ...FALLBACK_CONFIGURATION, appMode: mode }
         : {
             ...data.configuration,
-            isConfigurationLoaded: true
+            isConfigurationLoaded: true,
+            appMode: mode
           },
-    [loading, error, data?.configuration]
+    [loading, error, data?.configuration, mode]
   )
 
   return (

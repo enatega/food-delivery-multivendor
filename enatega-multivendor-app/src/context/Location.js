@@ -6,6 +6,13 @@ import { getZones } from '../apollo/queries'
 import NetInfo from '@react-native-community/netinfo'
 import ConfigurationContext from './Configuration'
 import { buildDemoLocationFromZone, calculateZoneCentroid } from '../utils/demoLocation'
+import { useAppMode } from '../mode/AppModeContext'
+import { APP_MODES } from '../mode/constants'
+import {
+  getModeItem,
+  removeModeItem,
+  setModeItem
+} from '../mode/storage'
 // import * as Network from 'expo-network';
 
 const GET_ZONES = gql`
@@ -15,6 +22,7 @@ export const LocationContext = createContext()
 
 export const LocationProvider = ({ children }) => {
   const configuration = useContext(ConfigurationContext)
+  const { mode } = useAppMode()
   const [location, setLocation] = useState(null)
   const [isLocationLoaded, setIsLocationLoaded] = useState(false)
   const [cities, setCities] = useState([])
@@ -46,12 +54,16 @@ export const LocationProvider = ({ children }) => {
   useEffect(() => {
     if (location) {
       const saveLocation = async () => {
-        await AsyncStorage.setItem('location', JSON.stringify(sanitizeLocationForStorage(location)))
+        await setModeItem(
+          'location',
+          JSON.stringify(sanitizeLocationForStorage(location)),
+          mode
+        )
       }
 
       saveLocation()
     }
-  }, [location])
+  }, [location, mode])
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -67,7 +79,20 @@ export const LocationProvider = ({ children }) => {
       if (enableCustomerDemoMode && zonesLoading) return
 
       try {
-        const locationStr = await AsyncStorage.getItem('location')
+        let locationStr = await getModeItem('location', mode)
+
+        // `location` was shared by older builds. It originated in the
+        // multivendor app, so migrate it once and keep future selections
+        // isolated per backend.
+        if (!locationStr && mode === APP_MODES.MULTI) {
+          const legacyLocation = await AsyncStorage.getItem('location')
+          if (legacyLocation) {
+            locationStr = legacyLocation
+            await setModeItem('location', legacyLocation, APP_MODES.MULTI)
+            await AsyncStorage.removeItem('location')
+          }
+        }
+
         const storedLocation = locationStr ? JSON.parse(locationStr) : null
 
         if (enableCustomerDemoMode) {
@@ -81,7 +106,7 @@ export const LocationProvider = ({ children }) => {
         }
 
         if (storedLocation?.isDemoDefaultLocation && !enableCustomerDemoMode) {
-          await AsyncStorage.removeItem('location')
+          await removeModeItem('location', mode)
           setLocation(null)
           return
         }
@@ -99,7 +124,7 @@ export const LocationProvider = ({ children }) => {
     }
 
     loadInitialLocation()
-  }, [isConfigurationLoaded, enableCustomerDemoMode, zonesLoading, data?.zones, customerDemoZoneId])
+  }, [isConfigurationLoaded, enableCustomerDemoMode, zonesLoading, data?.zones, customerDemoZoneId, mode])
 
   // show zones as cities
   useEffect(() => {

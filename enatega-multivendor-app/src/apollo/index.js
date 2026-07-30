@@ -22,6 +22,7 @@ import { isJwtTokenExpired } from '../utils/decode-jwt'
 import { invalidateUserSession } from '../utils/session'
 import { FlashMessage } from '../ui/FlashMessage/FlashMessage'
 import i18n from '../../i18next'
+import { APP_MODES } from '../mode/constants'
 
 const getNextFetchPolicy = (currentFetchPolicy, context) => {
   if (context?.reason === 'variables-changed') {
@@ -35,7 +36,12 @@ const getNextFetchPolicy = (currentFetchPolicy, context) => {
   return currentFetchPolicy
 }
 
-const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
+const setupApollo = ({
+  GRAPHQL_URL,
+  WS_GRAPHQL_URL,
+  mode = APP_MODES.MULTI,
+  publicAccessRequired = true
+}) => {
   const publicOperations = new Set(['ForgotPassword', 'VerifyOtp', 'ResetPassword'])
 
   const cache = new InMemoryCache({
@@ -117,11 +123,11 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       reconnect: true,
       lazy: true,
       connectionParams: async () => {
-        const token = await getToken()
+        const token = await getToken(mode)
         const hasExpiredUserToken = token && isJwtTokenExpired(token)
 
         if (hasExpiredUserToken) {
-          await invalidateUserSession({ reason: 'token_expired' })
+          await invalidateUserSession({ reason: 'token_expired', mode })
         }
 
         return {
@@ -132,21 +138,25 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
   })
 
   const request = async operation => {
-    const publicToken = await getValidPublicToken(GRAPHQL_URL)
-    const nonce = await getOrCreateNonce()
+    const publicToken = publicAccessRequired
+      ? await getValidPublicToken(GRAPHQL_URL)
+      : null
+    const nonce = publicAccessRequired ? await getOrCreateNonce() : null
     const isPublicOperation = publicOperations.has(operation.operationName)
-    const token = isPublicOperation ? null : await getToken()
+    const token = isPublicOperation ? null : await getToken(mode)
     const hasExpiredUserToken = token && isJwtTokenExpired(token)
 
     if (hasExpiredUserToken) {
-      await invalidateUserSession({ reason: 'token_expired' })
+      await invalidateUserSession({ reason: 'token_expired', mode })
     }
 
     operation.setContext({
       headers: {
         authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : '',
-        "bop-auth": publicToken ? `Bearer ${publicToken}` : '',
-        nonce: nonce,
+        ...(publicAccessRequired
+          ? { 'bop-auth': publicToken ? `Bearer ${publicToken}` : '' }
+          : {}),
+        ...(publicAccessRequired ? { nonce } : {}),
         'user-agent': `EnategaApp/${Platform.OS}`,
         'accept-language': 'en-US',
         'x-platform': Platform.OS
@@ -201,7 +211,8 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
 
     if (hasInvalidSession || hasUnauthorizedNetworkError) {
       void invalidateUserSession({
-        reason: hasUnauthorizedNetworkError ? 'network_unauthorized' : 'graphql_unauthenticated'
+        reason: hasUnauthorizedNetworkError ? 'network_unauthorized' : 'graphql_unauthenticated',
+        mode
       })
       return
     }
@@ -214,7 +225,7 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       isPublicTokenAuthMessage(graphQLError?.message)
     )
 
-    if (!isPublicTokenError) return
+    if (!publicAccessRequired || !isPublicTokenError) return
 
     const alreadyRetried = operation.getContext()?.publicTokenRetried
 
@@ -274,6 +285,15 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       }
     }
   })
+
+  client.dispose = () => {
+    try {
+      wsLink.subscriptionClient?.close(true, true)
+    } catch (error) {
+      if (__DEV__) console.warn('Failed to close Apollo WebSocket', error)
+    }
+    return client.clearStore()
+  }
 
   return client
 }

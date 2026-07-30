@@ -13,6 +13,12 @@ import useEnvVars from '../../../../environment'
 
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../../context/Configuration'
+import { useAppMode } from '../../../mode/AppModeContext'
+import {
+  getModeHomeRoute,
+  getModeProfileRoute,
+  getModeProfileTabRoute
+} from '../../../mode/navigation'
 
 const SEND_OTP_TO_PHONE = gql`
   ${sendOtpToPhoneNumber}
@@ -27,6 +33,7 @@ const usePhoneOtp = () => {
   const demoOtp = TEST_OTP || '111111'
   const { t } = useTranslation()
   const navigation = useNavigation()
+  const { mode } = useAppMode()
   const configuration = useContext(ConfigurationContext)
   const isMobileVerificationSkipped =
     !!configuration?.skipMobileVerification
@@ -108,25 +115,22 @@ const usePhoneOtp = () => {
       navigation.reset({
         index: 0,
         routes: [
-          {
-            name: 'Main',
-            params: {
-              screen: 'Discovery'
-            }
-          }
+          getModeHomeRoute(mode)
         ]
       })
     } else if (!profile?.name) {
-      navigation.navigate('Profile', { editName: true })
+      const profileRoute = getModeProfileRoute(mode, { editName: true })
+      navigation.navigate(profileRoute.name, profileRoute.params)
     } else if (screen === 'Checkout') {
       navigation.navigate('Checkout')
     } else if (prevScreen === 'Account') {
-      navigation.navigate('Main', { screen: 'Profile' })
+      const profileTabRoute = getModeProfileTabRoute(mode)
+      navigation.navigate(profileTabRoute.name, profileTabRoute.params)
     } else if (prevScreen) {
       navigation.navigate(prevScreen)
     } else {
       navigation.navigate({
-        name: 'Main',
+        ...getModeHomeRoute(mode),
         merge: true
       })
     }

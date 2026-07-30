@@ -1,9 +1,17 @@
-import React, { useContext, useState, useCallback, useMemo } from 'react'
+import React, { useContext, useState, useCallback, useEffect, useMemo } from 'react'
 import { useQuery, useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
 import { getUsersActiveOrders, getUsersPastOrders } from '../apollo/queries'
 import { orderStatusChanged } from '../apollo/subscriptions'
 import UserContext from './User'
+import {
+  GET_USERS_ACTIVE_ORDERS,
+  GET_USERS_PAST_ORDERS
+} from '../singlevendor/apollo/queries'
+import { orderStatusChanged as singleOrderStatusChanged } from '../singlevendor/apollo/subscriptions'
+import { useAppMode } from '../mode/AppModeContext'
+import { APP_MODES } from '../mode/constants'
+import { recordOrderOrigin } from '../mode/orderOrigin'
 
 const ACTIVE_ORDERS = gql`
   ${getUsersActiveOrders}
@@ -13,6 +21,9 @@ const PAST_ORDERS = gql`
 `
 const SUBSCRIPTION_ORDERS = gql`
   ${orderStatusChanged}
+`
+const SINGLE_SUBSCRIPTION_ORDERS = gql`
+  ${singleOrderStatusChanged}
 `
 
 // Page-based pagination, matching the customer web app (offset stays 0, page
@@ -33,6 +44,8 @@ const dedupeById = (list = []) => {
 
 export const OrdersProvider = ({ children, onOrderDelivered }) => {
   const { profile } = useContext(UserContext)
+  const { mode } = useAppMode()
+  const isSingleVendor = mode === APP_MODES.SINGLE
   const [activePage, setActivePage] = useState(1)
   const [pastPage, setPastPage] = useState(1)
 
@@ -47,7 +60,7 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
     networkStatus: networkStatusActive,
     fetchMore: fetchMoreActive,
     refetch: refetchActive
-  } = useQuery(ACTIVE_ORDERS, {
+  } = useQuery(isSingleVendor ? GET_USERS_ACTIVE_ORDERS : ACTIVE_ORDERS, {
     variables: { page: 1, limit: PAGE_LIMIT, offset: 0 },
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
@@ -62,7 +75,7 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
     networkStatus: networkStatusPast,
     fetchMore: fetchMorePast,
     refetch: refetchPast
-  } = useQuery(PAST_ORDERS, {
+  } = useQuery(isSingleVendor ? GET_USERS_PAST_ORDERS : PAST_ORDERS, {
     variables: { page: 1, limit: PAGE_LIMIT, offset: 0 },
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
@@ -85,22 +98,33 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
     [activeOrders, pastOrders]
   )
 
+  useEffect(() => {
+    orders.forEach(order => {
+      recordOrderOrigin(order, mode).catch(() => {})
+    })
+  }, [mode, orders])
+
   // Keep real-time updates: whenever an order changes status, refetch both
   // lists so orders move between the active and past tabs live. Using refetch
   // (instead of manual cache surgery) keeps the two server-split lists correct.
-  useSubscription(SUBSCRIPTION_ORDERS, {
-    variables: { userId: profile?._id },
-    skip: !profile,
-    onSubscriptionData: ({ subscriptionData }) => {
-      refetchActive?.()
-      refetchPast?.()
+  useSubscription(
+    isSingleVendor ? SINGLE_SUBSCRIPTION_ORDERS : SUBSCRIPTION_ORDERS,
+    {
+      variables: { userId: profile?._id },
+      skip: !profile,
+      onSubscriptionData: ({ subscriptionData }) => {
+        refetchActive?.()
+        refetchPast?.()
 
-      const order = subscriptionData?.data?.orderStatusChanged?.order
-      if (order?.orderStatus === 'DELIVERED' && !order?.review) {
-        onOrderDelivered?.(order)
+        const payload = subscriptionData?.data?.orderStatusChanged
+        const order = isSingleVendor ? payload?.rawOrder : payload?.order
+        if (order) recordOrderOrigin(order, mode).catch(() => {})
+        if (order?.orderStatus === 'DELIVERED' && !order?.review) {
+          onOrderDelivered?.(order)
+        }
       }
     }
-  })
+  )
 
   const reFetchOrders = useCallback(() => {
     setActivePage(1)
