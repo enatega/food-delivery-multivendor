@@ -18,10 +18,6 @@ import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
-import { useAppMode } from '../../mode/AppModeContext'
-import { getModeHomeRoute } from '../../mode/navigation'
-import { APP_MODES } from '../../mode/constants'
-import { LOGIN_SINGLE_VENDOR } from '../../singlevendor/apollo/mutations'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
 import {
@@ -40,11 +36,8 @@ const LOGIN = gql`
 export const useCreateAccount = () => {
   const Analytics = analytics()
   const navigation = useNavigation()
-  const { mode } = useAppMode()
-  const loginDocument =
-    mode === APP_MODES.SINGLE ? LOGIN_SINGLE_VENDOR : LOGIN
   const { t, i18n } = useTranslation()
-  const [mutate] = useMutation(loginDocument, { onCompleted, onError })
+  const [mutate] = useMutation(LOGIN, { onCompleted, onError })
   const [enableApple, setEnableApple] = useState(false)
   const [loginButton, loginButtonSetter] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -216,8 +209,7 @@ export const useCreateAccount = () => {
   }
 
   const navigateToMain = () => {
-    const route = getModeHomeRoute(mode)
-    navigation.navigate(route.name, route.params)
+    navigation.navigate('Main', { screen: 'Discovery' })
   }
 
   async function mutateLogin(user) {

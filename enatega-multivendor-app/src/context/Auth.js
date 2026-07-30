@@ -8,24 +8,21 @@ import {
   invalidateUserSession,
   subscribeToSessionInvalidation
 } from '../utils/session'
-import { useAppMode } from '../mode/AppModeContext'
 
 const AuthContext = React.createContext()
 
 export const AuthProvider = ({ children }) => {
-  const { mode } = useAppMode()
   const [token, setToken] = useState(null)
 
   const setTokenAsync = async token => {
-    await persistToken(token, mode)
+    await persistToken(token)
     setToken(token)
   }
 
   useEffect(() => {
     let isSubscribed = true
     ;(async() => {
-      setToken(null)
-      const storedToken = await getToken(mode)
+      const storedToken = await getToken()
 
       if (!storedToken) {
         isSubscribed && setToken(null)
@@ -33,7 +30,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (isJwtTokenExpired(storedToken)) {
-        await invalidateUserSession({ reason: 'token_expired', mode })
+        await invalidateUserSession({ reason: 'token_expired' })
         isSubscribed && setToken(null)
         return
       }
@@ -43,33 +40,32 @@ export const AuthProvider = ({ children }) => {
     return () => {
       isSubscribed = false
     }
-  }, [mode])
+  }, [])
 
   useEffect(() => {
-    const unsubscribe = subscribeToSessionInvalidation(payload => {
-      if (payload?.mode && payload.mode !== mode) return
+    const unsubscribe = subscribeToSessionInvalidation(() => {
       setToken(null)
     })
 
     return unsubscribe
-  }, [mode])
+  }, [])
 
   useEffect(() => {
     if (!token) return undefined
 
     const expiryTime = getJwtExpiryTime(token)
     if (!expiryTime) {
-      void invalidateUserSession({ reason: 'invalid_token', mode })
+      void invalidateUserSession({ reason: 'invalid_token' })
       return undefined
     }
 
     const timeoutMs = Math.max(expiryTime - Date.now(), 0)
     const timeoutId = setTimeout(() => {
-      void invalidateUserSession({ reason: 'token_expired', mode })
+      void invalidateUserSession({ reason: 'token_expired' })
     }, timeoutMs)
 
     return () => clearTimeout(timeoutId)
-  }, [mode, token])
+  }, [token])
 
   return (
     <AuthContext.Provider value={{ token, setToken, setTokenAsync}}>

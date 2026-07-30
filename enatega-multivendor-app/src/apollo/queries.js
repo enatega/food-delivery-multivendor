@@ -681,6 +681,7 @@ export const getConfiguration = `query Configuration{
     skipEmailVerification
     costType
     publishableKey
+    secretKey
     enableCustomerDemoMode
     customerDemoZoneId
   }

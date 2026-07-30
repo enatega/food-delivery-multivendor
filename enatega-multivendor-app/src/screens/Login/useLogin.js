@@ -14,10 +14,6 @@ import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
-import { useAppMode } from '../../mode/AppModeContext'
-import { getModeHomeRoute } from '../../mode/navigation'
-import { APP_MODES } from '../../mode/constants'
-import { LOGIN_SINGLE_VENDOR } from '../../singlevendor/apollo/mutations'
 
 const LOGIN = gql`
   ${login}
@@ -31,9 +27,6 @@ export const useLogin = () => {
   const Analytics = analytics()
 
   const navigation = useNavigation()
-  const { mode } = useAppMode()
-  const loginDocument =
-    mode === APP_MODES.SINGLE ? LOGIN_SINGLE_VENDOR : LOGIN
   const [email, setEmail] = useState('')
   const emailRef = useRef('')
   const [password, setPassword] = useState('')
@@ -50,7 +43,7 @@ export const useLogin = () => {
     onError
   })
 
-  const [LoginMutation, { loading: loginLoading }] = useMutation(loginDocument, {
+  const [LoginMutation, { loading: loginLoading }] = useMutation(LOGIN, {
     onCompleted: onLoginCompleted,
     onError: onLoginError
   })
@@ -139,7 +132,10 @@ export const useLogin = () => {
         navigation.reset({
           index: 0,
           routes: [
-            getModeHomeRoute(mode)
+            {
+              name: 'Main',
+              params: { screen: 'Discovery' }
+            }
           ]
         })
       } catch (e) {
@@ -203,7 +199,7 @@ export const useLogin = () => {
 
   function onBackButtonPressAndroid() {
     navigation.navigate({
-      ...getModeHomeRoute(mode),
+      name: 'Main',
       merge: true
     })
     return true
