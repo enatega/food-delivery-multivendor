@@ -69,6 +69,7 @@ Notifications.setNotificationHandler({
 function ModeAwareApp() {
   const reviewModalRef = useRef()
   const [appIsReady, setAppIsReady] = useState(false)
+  const [isThemeReady, setIsThemeReady] = useState(false)
   const [orderId, setOrderId] = useState()
   const [isUpdating, setIsUpdating] = useState(false)
   const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false)
@@ -153,11 +154,6 @@ function ModeAwareApp() {
   // For Fonts, etc
   useEffect(() => {
     const loadAppData = async () => {
-      await Font.loadAsync({
-        MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
-        MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
-        MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
-      })
       try {
         const storedTheme = await AsyncStorage.getItem('theme')
         if (storedTheme === 'Dark' || storedTheme === 'Pink') {
@@ -165,7 +161,15 @@ function ModeAwareApp() {
         }
       } catch (error) {
         console.warn('Unable to restore the saved theme:', error?.message)
+      } finally {
+        setIsThemeReady(true)
       }
+
+      await Font.loadAsync({
+        MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
+        MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
+        MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
+      })
       setAppIsReady(true)
     }
 
@@ -325,7 +329,11 @@ function ModeAwareApp() {
   return (
     <ErrorBoundary>
       <GestureHandlerRootView style={styles.flex}>
-        <AnimatedSplashScreen ready={appIsReady && isModeReady}>
+        <AnimatedSplashScreen
+          ready={appIsReady && isModeReady}
+          themeReady={isThemeReady}
+          themeMode={theme}
+        >
           <ApolloProvider client={client} key={mode}>
             <ThemeContext.Provider
               value={{ ThemeValue: theme, dispatch: themeSetter }}

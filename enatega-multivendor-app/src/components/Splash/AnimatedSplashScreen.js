@@ -7,20 +7,31 @@ import AnimatedSplash from './AnimatedSplash'
 // there is no black/white flash at the native -> JS handoff.
 SplashScreen.preventAutoHideAsync().catch(() => {})
 
-export default function AnimatedSplashScreen({ ready = false, children }) {
+export default function AnimatedSplashScreen({
+  ready = false,
+  themeReady = false,
+  themeMode = 'Pink',
+  children
+}) {
   const [splashDone, setSplashDone] = useState(false)
 
-  // Hand off from the native static splash to AnimatedSplash. Safe to hide on
-  // mount because both layers share the same themed background color.
+  // Keep the native layer visible until the saved app theme has been restored.
+  // Effects run after the correctly themed animated splash has been committed,
+  // avoiding a light splash flash for users who selected dark mode.
   useEffect(() => {
+    if (!themeReady) return
     SplashScreen.hideAsync().catch(() => {})
-  }, [])
+  }, [themeReady])
 
   return (
     <View style={{ flex: 1 }}>
       {children}
-      {!splashDone && (
-        <AnimatedSplash ready={ready} onFinish={() => setSplashDone(true)} />
+      {!splashDone && themeReady && (
+        <AnimatedSplash
+          ready={ready}
+          themeMode={themeMode}
+          onFinish={() => setSplashDone(true)}
+        />
       )}
     </View>
   )
