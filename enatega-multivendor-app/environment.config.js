@@ -8,7 +8,7 @@ const MULTI_ENV_CONFIG = {
     GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',
     WS_GRAPHQL_URL: 'wss://aws-server-v2.enatega.com/graphql',
     SERVER_URL: 'https://aws-server-v2.enatega.com/graphql',
-     SERVER_REST_URL: 'https://aws-server-v2.enatega.com/',
+    SERVER_REST_URL: 'https://aws-server-v2.enatega.com/',
     // GRAPHQL_URL: 'http://192.168.1.175:8001/graphql',
     // WS_GRAPHQL_URL: 'wss://192.168.1.175:8001/graphql',
     // SERVER_URL: 'http://192.168.1.175:8001/graphql',
@@ -25,10 +25,6 @@ const MULTI_ENV_CONFIG = {
     // SERVER_URL: 'http://192.168.1.175:8001/graphql',
     // SERVER_REST_URL: 'http://192.168.1.175:8001/',
     CLARITY_ENABLED: true
-    // GRAPHQL_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/graphql',
-    // WS_GRAPHQL_URL: 'wss://3086ptqf-8001.inc1.devtunnels.ms/graphql',
-    // SERVER_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/graphql',
-    // SERVER_REST_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/',
   },
   production: {
     GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',
@@ -43,11 +39,10 @@ const MULTI_ENV_CONFIG = {
   }
 }
 
-// Temporary development tunnel for validating the merged customer app against
-// the isolated single-vendor API branch. Environment variables still take
-// precedence, so this can be replaced without another code change.
+// Production single-vendor API. Environment variables can still override it
+// for explicit local or staging validation.
 const SINGLE_VENDOR_DEFAULT_HOST =
-  '3086ptqf-8001.inc1.devtunnels.ms'
+  'enatega-multivendor-api-production-9b09.up.railway.app'
 
 const getSingleVendorConfig = () => {
   const graphqlUrl = process.env.EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL

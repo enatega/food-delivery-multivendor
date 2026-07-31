@@ -16,7 +16,7 @@ const graphQlFiles = [
 ]
 const endpoint =
   process.env.SINGLE_VENDOR_SCHEMA_URL ||
-  'https://3086ptqf-8001.inc1.devtunnels.ms/graphql'
+  'https://enatega-multivendor-api-production-9b09.up.railway.app/graphql'
 
 const visit = (node, callback) => {
   if (!node || typeof node !== 'object') return
@@ -62,7 +62,7 @@ graphQlFiles.forEach(relativeFile => {
   })
 })
 
-const main = async () => {
+const main = async() => {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
