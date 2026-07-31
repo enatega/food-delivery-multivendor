@@ -1,0 +1,12 @@
+/* YourStyles.module.css */
+.numberInput::-webkit-outer-spin-button,
+.numberInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.inputNumber :global(.p-inputnumber-input) {
+  padding: 0;
+  text-align: center;
+}

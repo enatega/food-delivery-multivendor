@@ -1,0 +1,350 @@
+
+// import { createBanner, editBanner } from '@/lib/api/graphql/mutation/banners';
+import { CREATE_BANNER, EDIT_BANNER,  GET_RESTAURANTS_DROPDOWN } from '@/lib/api/graphql';
+import { GET_BANNERS } from '@/lib/api/graphql/queries/banners';
+import { useQueryGQL } from '@/lib/hooks/useQueryQL';
+import useToast from '@/lib/hooks/useToast';
+// import useToast from '@/lib/hooks/useToast';
+import CustomButton from '@/lib/ui/useable-components/button';
+import CustomDropdownComponent from '@/lib/ui/useable-components/custom-dropdown';
+import CustomTextField from '@/lib/ui/useable-components/input-field';
+import CustomUploadImageComponent from '@/lib/ui/useable-components/upload/upload-image';
+import {
+  ACTION_TYPES,
+  BannersErrors,
+  SCREEN_NAMES,
+  SINGLE_VENDOR_SCREEN_NAMES,
+} from '@/lib/utils/constants';
+import {
+  IQueryResult,
+  IRestaurantsResponseGraphQL,
+} from '@/lib/utils/interfaces';
+import { IBannersAddFormComponentProps } from '@/lib/utils/interfaces/banner.interface';
+import { IBannersForm } from '@/lib/utils/interfaces/forms/banners.form.interface';
+import { onErrorMessageMatcher } from '@/lib/utils/methods';
+import { getLabelByCode } from '@/lib/utils/methods/label-by-code';
+import { BannerSchema } from '@/lib/utils/schema/banner';
+import { useMutation } from '@apollo/client';
+import { Form, Formik, FormikHelpers } from 'formik';
+import { useTranslations } from 'next-intl';
+import { Sidebar } from 'primereact/sidebar';
+import { useMemo } from 'react';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
+
+const BannersAddForm = ({
+  isAddBannerVisible,
+  onHide,
+  banner,
+  position = 'right',
+}: IBannersAddFormComponentProps) => {
+  // Queries
+  const { data } = useQueryGQL(GET_RESTAURANTS_DROPDOWN, {
+    fetchPolicy: 'cache-and-network',
+  }) as IQueryResult<IRestaurantsResponseGraphQL | undefined, undefined>;
+
+  // Hooks
+  const t = useTranslations();
+  const { IS_MULTIVENDOR } = useConfiguration();
+
+  const RESTAURANT_NAMES = useMemo(() => {
+    // @ts-ignore
+    return data?.restaurants?.map((v) => ({
+      label: v.name,
+      code: v._id,
+    })) ?? []; // Using nullish coalescing operator
+  }, [data]);
+
+  // Filter ACTION_TYPES based on multivendor mode
+  const filteredActionTypes = useMemo(() => {
+    if (IS_MULTIVENDOR) {
+      return ACTION_TYPES;
+    }
+    // In single vendor mode, remove "Navigate Specific Restaurant" option
+    return ACTION_TYPES.filter(
+      (action) => action.code !== 'Navigate Specific Restaurant'
+    );
+  }, [IS_MULTIVENDOR]);
+
+  // Get the appropriate screen names based on mode
+  const screenNames = IS_MULTIVENDOR ? SCREEN_NAMES : SINGLE_VENDOR_SCREEN_NAMES;
+
+  //State
+  const initialValues: IBannersForm = {
+    title: banner?.title || '',
+    description: banner?.description || '',
+    action: banner
+      ? {
+        label: getLabelByCode(ACTION_TYPES, banner.action),
+        code: banner.action,
+      }
+      : IS_MULTIVENDOR
+        ? null
+        : {
+            label: 'Navigate To Specific Page',
+            code: 'Navigate Specific Page',
+          },
+    screen: banner
+      ? banner.action === 'Navigate Specific Page'
+        ? {
+          label: getLabelByCode(SCREEN_NAMES, banner.screen),
+          code: banner.screen,
+        }
+        : banner.action === 'Navigate Specific Restaurant'
+          ? {
+            label: banner.screen,
+            code: banner.screen,
+          }
+          : null
+      : null,
+    file: banner?.file || '',
+    buttonText: banner?.buttonText || '',
+  };
+
+  // Hooks
+  const { showToast } = useToast();
+
+  const mutation = banner ? EDIT_BANNER : CREATE_BANNER;
+  const [mutate, { loading: mutationLoading }] = useMutation(mutation, {
+    refetchQueries: [{ query: GET_BANNERS }],
+  });
+
+  // Form Submission
+  const handleSubmit = (
+    values: IBannersForm,
+    { resetForm }: FormikHelpers<IBannersForm>
+  ) => {
+
+    if (values) {
+      mutate({
+        variables: {
+          bannerInput: {
+            _id: banner ? banner._id : '',
+            title: values.title,
+            description: values.description,
+            file: values.file,
+            action: values.action?.code,
+            screen: values.screen?.code,
+            buttonText: values.buttonText,
+          },
+        },
+        onCompleted: () => {
+          showToast({
+            type: 'success',
+            title: t('Success'),
+            message: banner ? t('Banner updated') : t('Banner added'),
+            duration: 3000,
+          });
+          resetForm();
+          onHide();
+        },
+        onError: (error) => {
+          let message = '';
+          try {
+            message = error.graphQLErrors[0]?.message;
+          } catch (err) {
+            message = t('ActionFailedTryAgain');
+          }
+          showToast({
+            type: 'error',
+            title: t('Error'),
+            message,
+            duration: 3000,
+          });
+        },
+      });
+    }
+  };
+  return (
+    <Sidebar
+      visible={isAddBannerVisible}
+      position={position}
+      onHide={onHide}
+      className="w-full sm:w-[450px] py-4 dark:text-white dark:bg-dark-950 border dark:border-dark-600"
+    >
+      <div className="flex h-full w-full items-center justify-start">
+        <div className="h-full w-full">
+          <div className="flex flex-col gap-2">
+            <div className="mb-2 flex flex-col">
+              <span className="text-lg">
+                {banner ? t('Edit') : t('Add')} {t('Banner')}
+              </span>
+            </div>
+
+            <div>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={BannerSchema}
+                onSubmit={handleSubmit}
+                enableReinitialize
+                validateOnChange={false} // Disable validation on change
+                validateOnBlur={false} // Disable validation on blur
+              >
+                {({
+                  values,
+                  errors,
+                  handleChange,
+                  handleSubmit,
+                  setFieldValue,
+                }) => {
+                  return (
+                    <Form onSubmit={handleSubmit}>
+                      <div className="space-y-4">
+                        <div>
+                          <CustomTextField
+                            type="text"
+                            name="title"
+                            placeholder={t('Title')}
+                            maxLength={35}
+                            value={values.title}
+                            onChange={handleChange}
+                            showLabel={true}
+                            style={{
+                              borderColor: onErrorMessageMatcher(
+                                'title',
+                                errors?.title,
+                                BannersErrors
+                              )
+                                ? 'red'
+                                : '',
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <CustomTextField
+                            type="text"
+                            name="description"
+                            placeholder={t('Description')}
+                            maxLength={500}
+                            value={values.description}
+                            onChange={handleChange}
+                            showLabel={true}
+                            style={{
+                              borderColor: onErrorMessageMatcher(
+                                'description',
+                                errors?.description,
+                                BannersErrors
+                              )
+                                ? 'red'
+                                : '',
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <CustomTextField
+                            type="text"
+                            name="buttonText"
+                            placeholder={t('Button Text')}
+                            maxLength={35}
+                            value={values.buttonText}
+                            onChange={handleChange}
+                            showLabel={true}
+                            style={{
+                              borderColor: onErrorMessageMatcher(
+                                'buttonText',
+                                errors?.buttonText,
+                                BannersErrors
+                              )
+                                ? 'red'
+                                : '',
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <CustomDropdownComponent
+                            placeholder={t('Actions')}
+                            options={filteredActionTypes}
+                            showLabel={true}
+                            name="action"
+                            filter={false}
+                            selectedItem={values.action}
+                            setSelectedItem={setFieldValue}
+                            style={{
+                              borderColor: onErrorMessageMatcher(
+                                'action',
+                                errors?.action,
+                                BannersErrors
+                              )
+                                ? 'red'
+                                : '',
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <CustomDropdownComponent
+                            placeholder={t('Screen')}
+                            options={
+                              values.action?.code ===
+                                'Navigate Specific Restaurant'
+                                ? RESTAURANT_NAMES
+                                : values.action?.code ===
+                                  'Navigate Specific Page'
+                                  ? screenNames
+                                  : []
+                            }
+                            showLabel={true}
+                            name="screen"
+                            // loading={loading}
+                            selectedItem={values.screen}
+                            setSelectedItem={setFieldValue}
+                            style={{
+                              borderColor: onErrorMessageMatcher(
+                                'screen',
+                                errors?.screen,
+                                BannersErrors
+                              )
+                                ? 'red'
+                                : '',
+                            }}
+                          />
+                        </div>
+
+                        <div
+                          className={`${errors.file && !values.file
+                            ? 'border-red-500'
+                            : 'border-gray-200 dark:border-dark-600'
+                            } rounded-lg border p-4`}
+                        >
+                          <CustomUploadImageComponent
+                            key={'file'}
+                            name="file"
+                            title={t('Upload file')}
+                            fileTypes={[
+                              'image/jpg',
+                              'image/jpeg',
+                              'image/png',
+                              'image/webp',
+                              'image/gif',
+                              'video/mp4',
+                              'video/webm',
+                            ]}
+                            onSetImageUrl={setFieldValue}
+                            showExistingImage={banner ? true : false}
+                            existingImageUrl={banner && values.file}
+                          />
+                        </div>
+
+                        <div className="m-4 flex justify-end">
+                          <CustomButton
+                            className="h-10 w-fit border dark:border-dark-600 border-gray-300 bg-black px-8 text-white"
+                            label={banner ? t('Update') : t('Add')}
+                            type="submit"
+                            loading={mutationLoading}
+                          />
+                        </div>
+                      </div>
+                    </Form>
+                  );
+                }}
+              </Formik>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Sidebar>
+  );
+};
+
+export default BannersAddForm;
