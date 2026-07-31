@@ -188,3 +188,88 @@ export const RIDER_ORDERS = gql`
     }
   }
 `;
+
+// Keep the production multivendor document above unchanged. The single-vendor
+// backend uses orderState as the authoritative lifecycle field, while retaining
+// orderStatus only as a legacy compatibility field.
+export const SINGLE_VENDOR_RIDER_ORDERS = gql`
+  query SingleVendorRiderOrders {
+    riderOrders {
+      _id
+      orderId
+      createdAt
+      acceptedAt
+      pickedAt
+      assignedAt
+      isPickedUp
+      deliveredAt
+      expectedTime
+      deliveryCharges
+      restaurant {
+        _id
+        name
+        image
+        address
+        location {
+          coordinates
+        }
+      }
+      deliveryAddress {
+        location {
+          coordinates
+        }
+        deliveryAddress
+        label
+        details
+      }
+      items {
+        _id
+        title
+        food
+        description
+        image
+        quantity
+        variation {
+          _id
+          title
+          price
+        }
+        addons {
+          _id
+          options {
+            _id
+            title
+            price
+          }
+          title
+          description
+          quantityMinimum
+          quantityMaximum
+        }
+        isActive
+        createdAt
+      }
+      user {
+        _id
+        name
+        phone
+      }
+      paymentMethod
+      paidAmount
+      orderAmount
+      paymentStatus
+      orderStatus
+      orderState
+      tipping
+      taxationAmount
+      reason
+      isRiderRinged
+      preparationTime
+      rider {
+        _id
+        name
+        username
+      }
+    }
+  }
+`;

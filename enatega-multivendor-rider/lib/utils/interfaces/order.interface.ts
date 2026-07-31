@@ -5,7 +5,6 @@ import { IRestaurantProfile } from "./resturant.interface";
 import { IRiderProfile } from "./user.interface";
 
 export interface IOrderComponentProps extends IGlobalComponentProps {
-
   tab: ORDER_TYPE;
 }
 
@@ -47,6 +46,7 @@ export interface IOrder {
   };
   orderAmount: number;
   orderStatus: string;
+  orderState?: string;
   preparationTime: string;
   completionTime: string;
   isPickedUp: boolean;

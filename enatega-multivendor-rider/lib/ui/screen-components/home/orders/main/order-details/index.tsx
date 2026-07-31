@@ -51,7 +51,11 @@ import useOrderDetail from "@/lib/hooks/useOrderDetails";
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // UI Components
-import { RIDER_ORDERS } from "@/lib/apollo/queries";
+import {
+  RIDER_ORDERS,
+  SINGLE_VENDOR_RIDER_ORDERS,
+} from "@/lib/apollo/queries";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
 import AccordionItem from "@/lib/ui/useable-components/accordian";
@@ -61,6 +65,8 @@ import WelldoneComponent from "@/lib/ui/useable-components/well-done";
 import { CustomMapStyles } from "@/lib/utils/constants/map";
 import { map_styles } from "@/lib/utils/constants/order-details";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
+import { isNewOrderForMode } from "@/lib/utils/order-state";
 
 const { height } = Dimensions.get("window");
 const MAX_ROUTE_RETRIES = 3;
@@ -95,6 +101,11 @@ export default function OrderDetailScreen() {
   // Hooks
   const { appTheme, currentTheme } = useApptheme();
   const { t } = useTranslation();
+  const { mode } = useRiderMode();
+  const riderOrdersQuery =
+    mode === RIDER_SERVER_MODES.SINGLE
+      ? SINGLE_VENDOR_RIDER_ORDERS
+      : RIDER_ORDERS;
   const {
     restaurantAddressPin,
     deliveryAddressPin,
@@ -793,8 +804,7 @@ export default function OrderDetailScreen() {
                 </TouchableOpacity>
               )}
 
-              {tab === "new_orders" &&
-                order.orderStatus === "ACCEPTED" && (
+              {tab === "new_orders" && isNewOrderForMode(order, mode) && (
                   <View style={{ paddingBottom: Platform.OS === 'ios' ? insets.bottom : insets.bottom + 10 }}>
                     <TouchableOpacity
                       className="w-[55%] mx-auto h-14 rounded-3xl py-3 items-center justify-center"
@@ -805,7 +815,7 @@ export default function OrderDetailScreen() {
                           variables: { id: order?._id },
                           refetchQueries: [
                             {
-                              query: RIDER_ORDERS,
+                              query: riderOrdersQuery,
                               variables: { userId: userId },
                             },
                           ],

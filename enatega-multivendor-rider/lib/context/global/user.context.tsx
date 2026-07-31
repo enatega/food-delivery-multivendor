@@ -14,8 +14,14 @@ import {
   IUserProviderProps,
 } from "@/lib/utils/interfaces";
 // API
-import { RIDER_ORDERS, RIDER_PROFILE } from "@/lib/apollo/queries";
 import {
+  RIDER_ORDERS,
+  RIDER_PROFILE,
+  SINGLE_VENDOR_RIDER_ORDERS,
+} from "@/lib/apollo/queries";
+import {
+  SINGLE_VENDOR_SUBSCRIPTION_ASSIGNED_RIDER,
+  SINGLE_VENDOR_SUBSCRIPTION_ZONE_ORDERS,
   SUBSCRIPTION_ASSIGNED_RIDER,
   SUBSCRIPTION_ZONE_ORDERS,
 } from "@/lib/apollo/subscriptions";
@@ -27,6 +33,8 @@ import {
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
+import { isNewOrderForMode } from "@/lib/utils/order-state";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
@@ -35,7 +43,17 @@ const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 const EMPTY_ORDERS: IOrder[] = [];
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
-  const { riderIdKey } = useRiderMode();
+  const { mode, riderIdKey } = useRiderMode();
+  const isSingleVendor = mode === RIDER_SERVER_MODES.SINGLE;
+  const riderOrdersQuery = isSingleVendor
+    ? SINGLE_VENDOR_RIDER_ORDERS
+    : RIDER_ORDERS;
+  const assignedRiderSubscription = isSingleVendor
+    ? SINGLE_VENDOR_SUBSCRIPTION_ASSIGNED_RIDER
+    : SUBSCRIPTION_ASSIGNED_RIDER;
+  const zoneOrdersSubscription = isSingleVendor
+    ? SINGLE_VENDOR_SUBSCRIPTION_ZONE_ORDERS
+    : SUBSCRIPTION_ZONE_ORDERS;
   // States
   const [modalVisible, setModalVisible] = useState<
     IRiderEarnings & { bool: boolean }
@@ -75,7 +93,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     networkStatus: networkStatusAssigned,
     subscribeToMore,
     refetch: refetchAssigned,
-  } = useQuery(RIDER_ORDERS, {
+  } = useQuery(riderOrdersQuery, {
     // Orders change constantly (status updates, new assignments), so every
     // fetch/refetch/poll must hit the network rather than falling back to
     // cache-first, which could serve stale order lists.
@@ -126,7 +144,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     };
 
     const unsubAssignOrder = subscribeToMore({
-      document: SUBSCRIPTION_ASSIGNED_RIDER,
+      document: assignedRiderSubscription,
       variables: { riderId },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
@@ -146,7 +164,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
     const unsubZoneOrder = isRiderAvailable
       ? subscribeToMore({
-          document: SUBSCRIPTION_ZONE_ORDERS,
+          document: zoneOrdersSubscription,
           variables: { zoneId: zoneIdValue },
           updateQuery: (prev, { subscriptionData }) => {
             if (!subscriptionData.data) return prev;
@@ -176,7 +194,15 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         }
       }
     };
-  }, [dataProfile, isRiderAvailable, subscribeToMore, userId, zoneId]);
+  }, [
+    assignedRiderSubscription,
+    dataProfile,
+    isRiderAvailable,
+    subscribeToMore,
+    userId,
+    zoneId,
+    zoneOrdersSubscription,
+  ]);
 
   // Only blank the list on a hard error — NOT while `loadingAssigned` is true.
   // With cache-and-network + a 30s poll + notifyOnNetworkStatusChange,
@@ -189,12 +215,12 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     const filtered = (dataAssigned?.riderOrders ?? EMPTY_ORDERS).filter(
       (order: IOrder) =>
         isRiderAvailable ||
-        order?.orderStatus !== "ACCEPTED" ||
+        !isNewOrderForMode(order, mode) ||
         Boolean(order?.rider) ||
         Boolean(order?.isPickedUp),
     );
     return filtered.length ? filtered : EMPTY_ORDERS;
-  }, [dataAssigned?.riderOrders, errorAssigned, isRiderAvailable]);
+  }, [dataAssigned?.riderOrders, errorAssigned, isRiderAvailable, mode]);
 
   // Apollo automatically re-runs RIDER_PROFILE and RIDER_ORDERS when `skip`
   // flips to false (userId becomes available) using the new variables, so an

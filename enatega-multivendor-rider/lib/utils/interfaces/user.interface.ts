@@ -155,6 +155,7 @@ export interface Order {
   orderAmount: number;
   paymentStatus: string;
   orderStatus: string;
+  orderState?: string;
   tipping: number;
   taxationAmount: number;
   reason?: string;
