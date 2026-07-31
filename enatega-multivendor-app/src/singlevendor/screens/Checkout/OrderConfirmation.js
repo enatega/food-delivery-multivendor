@@ -11,7 +11,7 @@ import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import { textStyles } from '../../../utils/textStyles'
 
-import { OrderStatusTimeline, ORDER_STATUSES, DeliveryTimeBanner, DeliveryDetailsCard, ContactCourierCard, OrderItemsSection, DeliveryMap, DeliveredStatus } from '../../components/Checkout/OrderConfirmation'
+import { OrderStatusTimeline, DeliveryTimeBanner, DeliveryDetailsCard, ContactCourierCard, OrderItemsSection, DeliveryMap, DeliveredStatus } from '../../components/Checkout/OrderConfirmation'
 
 import OrderSummary from '../../components/Checkout/OrderSummary'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
@@ -27,6 +27,7 @@ import { LocationContext } from '../../../context/Location'
 import { useTimer } from '../../../ui/hooks/useTimer'
 import HomeCart from './HomeCart'
 import { usePullToRefresh } from '../../hooks/usePullToRefresh'
+import { isSingleVendorPickupOrder } from '../../utils/orderTrackingStatus'
 // import { ORDER_STATUS_ENUM } from '../../utils/enums'
 
 const OrderConfirmationScreen = (props) => {
@@ -48,7 +49,7 @@ const OrderConfirmationScreen = (props) => {
   const currencySymbol = configuration?.currencySymbol || '€'
 
   // Add to cart hook – navigate to cart once when reorder succeeds (callback avoids navigation during render)
-  const { addItemToCart, loadingItemIds, updateUserCartLoading } = useAddToCart({
+  const { addItemToCart, updateUserCartLoading } = useAddToCart({
     foodId: null,
     onCartUpdateSuccess: () => navigation.navigate('Cart')
   })
@@ -65,7 +66,6 @@ const OrderConfirmationScreen = (props) => {
     deliveryFee,
     serviceFee,
     minimumOrderFee,
-    taxAmount,
     total,
 
     deliveryDiscount,
@@ -77,9 +77,8 @@ const OrderConfirmationScreen = (props) => {
     isPriority,
     tipAmount,
 
-    orderStatus: initialStatus,
     addressLabel: userAddressLabel,
-    address : userAddress,
+    address: userAddress,
     customerLocation,
     orderItems,
     initialOrder,
@@ -89,17 +88,19 @@ const OrderConfirmationScreen = (props) => {
   } = useOrderConfirmation({ orderId })
   console.log('🚀 ~ OrderConfirmation ~ couponDiscountAmount:', couponDiscountAmount)
   console.log('initialOrder', JSON.stringify(initialOrder, null, 2))
-  const estimatedtime=useTimer(initialOrder?.completionTime)
+  const estimatedtime = useTimer(initialOrder?.completionTime)
 
   // ----------------------------------
   // 2️⃣ Real-time tracking (SUBSCRIPTION)
   // ----------------------------------
-  const { order: liveOrder, remainingTime } = useOrderTracking({
+  const { order: liveOrder } = useOrderTracking({
     orderId,
     initialOrder
   })
 
   const orderStatus = liveOrder?.orderStatus
+  const fulfillmentOrder = liveOrder || initialOrder || orderData
+  const isPickUpOrder = isSingleVendorPickupOrder(fulfillmentOrder)
   // const riderLocation =
   //   {
   //     longitude: parseFloat(liveOrder?.rider?.location?.coordinates[0]) ?? undefined,
@@ -107,11 +108,11 @@ const OrderConfirmationScreen = (props) => {
   //   }
   const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetch])
 
-  console.log("liveOrder?.restaurant",liveOrder?.restaurant)
-  const addressLabel = userAddressLabel || liveOrder?.restaurant?.name 
+  console.log('liveOrder?.restaurant', liveOrder?.restaurant)
+  const addressLabel = userAddressLabel || liveOrder?.restaurant?.name
   const address = userAddress || liveOrder?.restaurant?.address || ''
 
-  const riderLocation = !liveOrder?.isPickedUp
+  const riderLocation = !isPickUpOrder
     ? {
         longitude: parseFloat(liveOrder?.rider?.location?.coordinates[0]) ?? undefined,
         latitude: parseFloat(liveOrder?.rider?.location?.coordinates[1]) ?? undefined
@@ -121,12 +122,17 @@ const OrderConfirmationScreen = (props) => {
         latitude: parseFloat(liveOrder?.restaurant?.location?.coordinates[1]) ?? undefined
       }
 
-  const { location, setLocation } = useContext(LocationContext)
+  const { location } = useContext(LocationContext)
   console.log('location___DAta', JSON.stringify(location, null, 2))
 
   const getValidCoordinate = (value, fallback) => {
     console.log('getValidCoordinate called with:', { value, fallback })
-    if (value === null || value === undefined || isNaN(value))  { if(fallback === undefined || fallback === null || isNaN(fallback)) {return 0} else {return fallback}}
+    if (value === null || value === undefined || isNaN(value)) {
+      if (fallback === undefined || fallback === null || isNaN(fallback)) {
+        return 0
+      }
+      return fallback
+    }
     const parsed = parseFloat(value)
     return isNaN(parsed) ? fallback : parsed
   }
@@ -137,7 +143,7 @@ const OrderConfirmationScreen = (props) => {
   }
   console.log('customerLocation___atye', JSON.stringify(customerLocation, null, 2))
 
-  console.log('🚀 ~ OrderConfirmation ~ finalCustomerLocation:', finalCustomerLocation,riderLocation)
+  console.log('🚀 ~ OrderConfirmation ~ finalCustomerLocation:', finalCustomerLocation, riderLocation)
   const rider = liveOrder?.rider || null
   // ----------------------------------
   // 3️⃣ Derived UI states
@@ -229,7 +235,7 @@ const OrderConfirmationScreen = (props) => {
   }, [currentTheme, isDelivered])
 
   const handleContactCourier = () => {
-    navigation.navigate('ChatWithRider', { id: initialOrder?._id, orderNo, total, riderPhone: rider?.phone  })
+    navigation.navigate('ChatWithRider', { id: initialOrder?._id, orderNo, total, riderPhone: rider?.phone })
   }
 
   const handleOrderAgain = () => {
@@ -291,39 +297,35 @@ const OrderConfirmationScreen = (props) => {
   // ----------------------------------
   // 7️⃣ UI
   // ----------------------------------
-  return (
-//is
+  const orderStatusContent = loading
+    ? <OrderStatusSkeleton />
+    : isDelivered || isCancelled
+      ? (
+        <DeliveredStatus
+          currentTheme={currentTheme}
+          t={t}
+          appName={configuration?.appName || 'Enatega'}
+          isCancelled={isCancelled}
+          error={error}
+          isPickUpOrder={isPickUpOrder}
+        />
+        )
+      : (
+        <>
+          <DeliveryTimeBanner minTime={estimatedtime?.timeLeft} maxTime={estimatedtime?.timeLeft + 5} isPickUpOrder={isPickUpOrder} />
+          <OrderStatusTimeline currentStatus={orderStatus} isPickUpOrder={isPickUpOrder} />
+        </>
+        )
 
+  return (
     <View style={styles(currentTheme).mainContainer}>
       <ScrollView style={styles().scrollView} contentContainerStyle={styles().contentContainer} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={spinnerColor} colors={[spinnerColor]} />}>
-        {loading ? (
-          <OrderStatusSkeleton />
-        ) : 
-        
-          isDelivered || isCancelled ? (
-          <DeliveredStatus
-            currentTheme={currentTheme}
-            t={t}
-            appName={configuration?.appName || 'Enatega'}
-            isCancelled={isCancelled}
-            error={error}
-            isPickUpOrder={orderData?.isPickedUp ?? liveOrder?.isPickedUp}
-          />
-        ) : 
-
-        (
-          <>
-            <DeliveryTimeBanner minTime={estimatedtime?.timeLeft} maxTime={estimatedtime?.timeLeft + 5} />
-            <OrderStatusTimeline currentStatus={orderStatus} isPickUpOrder={orderData?.isPickedUp ?? liveOrder?.isPickedUp} />
-          </>
-        )}
+        {orderStatusContent}
 
         {/* DELIVERY DETAILS */}
-        {/* {!liveOrder?.isPickedUp && ( */}
-        <DeliveryDetailsCard addressLabel={addressLabel} address={address} showMap={showMap} onToggleMap={setShowMap} isPickedUp={orderData?.isPickedUp ?? liveOrder?.isPickedUp} mapComponent={<DeliveryMap isPickUpOrder={orderData?.isPickedUp ?? liveOrder?.isPickedUp} customerLocation={finalCustomerLocation} riderLocation={riderLocation} showRoute={!isDelivered} />} />
-        {/* )} */}
+        <DeliveryDetailsCard addressLabel={addressLabel} address={address} showMap={showMap} onToggleMap={setShowMap} isPickedUp={isPickUpOrder} mapComponent={<DeliveryMap isPickUpOrder={isPickUpOrder} customerLocation={finalCustomerLocation} riderLocation={riderLocation} showRoute={!isDelivered} />} />
         {/* CONTACT COURIER */}
-        {rider && !isDelivered && !isCancelled && <ContactCourierCard onPress={() => handleContactCourier()} contactlessDelivery />}
+        {rider && !isPickUpOrder && !isDelivered && !isCancelled && <ContactCourierCard onPress={() => handleContactCourier()} contactlessDelivery />}
 
         {/* ORDER ITEMS */}
         <OrderItemsSection items={orderItems} currencySymbol={currencySymbol} initialExpanded={false} />
@@ -339,13 +341,15 @@ const OrderConfirmationScreen = (props) => {
 
         {(isDelivered || isCancelled) && (
           <TouchableOpacity style={styles(currentTheme).orderAgainButton} onPress={handleOrderAgain}>
-            {updateUserCartLoading ? (
+            {updateUserCartLoading
+              ? (
               <ActivityIndicator size='small' color={currentTheme.white} />
-            ) : (
+                )
+              : (
               <TextDefault H4 textColor={currentTheme.white} center bold>
                 {t('Order again')}
               </TextDefault>
-            )}
+                )}
           </TouchableOpacity>
         )}
       </View>

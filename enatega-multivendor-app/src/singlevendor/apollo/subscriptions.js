@@ -72,6 +72,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       orderDate
       expectedTime
       isPickedUp
+      deliveryType
       deliveryCharges
       acceptedAt
       pickedAt

@@ -558,6 +558,7 @@ export const ORDER_DETAILS_PAGE = gql`
         orderDate
         expectedTime
         isPickedUp
+        deliveryType
         deliveryCharges
         acceptedAt
         pickedAt
@@ -730,6 +731,7 @@ export const Recent_ActiveOrder = gql`
         orderDate
         expectedTime
         isPickedUp
+        deliveryType
         deliveryCharges
         acceptedAt
         pickedAt

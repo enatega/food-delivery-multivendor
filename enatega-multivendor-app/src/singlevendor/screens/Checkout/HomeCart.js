@@ -11,9 +11,12 @@ import LoadingSkeleton from '../../components/LoadingSkeleton'
 import useOrderConfirmation from './useOrderConfirmation'
 import useOrderTracking from './useOrderTracking'
 import { ORDER_STATUS_ENUM } from '../../../utils/enums'
-import { SINGLE_VENDOR_TRACKING_STATUS } from '../../utils/orderTrackingStatus'
+import {
+  SINGLE_VENDOR_TRACKING_STATUS,
+  isSingleVendorPickupOrder
+} from '../../utils/orderTrackingStatus'
 
-const DELIVERY_TIMELINE_SEGMENTS = 5
+const DELIVERY_TIMELINE_SEGMENTS = 6
 const PICKUP_TIMELINE_SEGMENTS = 2
 
 const DELIVERY_STATUS_PROGRESS_MAP = {
@@ -21,9 +24,9 @@ const DELIVERY_STATUS_PROGRESS_MAP = {
   [ORDER_STATUS_ENUM.ACCEPTED]: 2,
   [ORDER_STATUS_ENUM.ASSIGNED]: 3,
   [ORDER_STATUS_ENUM.PICKED]: 4,
-  [SINGLE_VENDOR_TRACKING_STATUS.ON_ROUTE]: 4,
-  [ORDER_STATUS_ENUM.DELIVERED]: 5,
-  [ORDER_STATUS_ENUM.COMPLETED]: 5,
+  [SINGLE_VENDOR_TRACKING_STATUS.ON_ROUTE]: 5,
+  [ORDER_STATUS_ENUM.DELIVERED]: 6,
+  [ORDER_STATUS_ENUM.COMPLETED]: 6,
   [ORDER_STATUS_ENUM.CANCELLED]: 1,
   [ORDER_STATUS_ENUM.CANCELLEDBYREST]: 1
 }
@@ -50,13 +53,13 @@ const formatTime = (value) => {
   })
 }
 
-const getSubtitle = ({ status, remainingTime, completionTime, expectedTime }) => {
+const getSubtitle = ({ status, remainingTime, completionTime, expectedTime, isPickUpOrder }) => {
   if (status === ORDER_STATUS_ENUM.CANCELLED || status === ORDER_STATUS_ENUM.CANCELLEDBYREST) {
     return 'This order was cancelled'
   }
 
   if (status === ORDER_STATUS_ENUM.DELIVERED || status === ORDER_STATUS_ENUM.COMPLETED) {
-    return 'Delivered successfully'
+    return isPickUpOrder ? 'Collected successfully' : 'Delivered successfully'
   }
 
   if (typeof remainingTime === 'number' && remainingTime > 0) {
@@ -74,12 +77,15 @@ const getSubtitle = ({ status, remainingTime, completionTime, expectedTime }) =>
     return `Estimated arrival ${formattedCompletion}`
   }
 
-  return 'Tracking your order'
+  return isPickUpOrder ? 'Preparing your collection' : 'Tracking your order'
 }
 
-const getTitle = (status) => {
-  if (status === ORDER_STATUS_ENUM.DELIVERED || status === ORDER_STATUS_ENUM.COMPLETED) return 'Your order has arrived'
+const getTitle = (status, isPickUpOrder) => {
+  if (status === ORDER_STATUS_ENUM.DELIVERED || status === ORDER_STATUS_ENUM.COMPLETED) {
+    return isPickUpOrder ? 'Your order was collected' : 'Your order has arrived'
+  }
   if (status === ORDER_STATUS_ENUM.CANCELLED || status === ORDER_STATUS_ENUM.CANCELLEDBYREST) return 'Order cancelled'
+  if (isPickUpOrder && status === ORDER_STATUS_ENUM.ACCEPTED) return 'Your order is being prepared for collection'
   if (status === ORDER_STATUS_ENUM.PICKED) return 'Your order is on the way'
   if (status === SINGLE_VENDOR_TRACKING_STATUS.ON_ROUTE) return 'Your order is on the way'
   if (status === ORDER_STATUS_ENUM.ASSIGNED) return 'Rider assigned to your order'
@@ -143,11 +149,14 @@ const HomeCart = () => {
   })
 
   const orderStatus = liveOrder?.orderStatus ?? confirmationStatus ?? initialOrder?.orderStatus
-  const isPickUpOrder = liveOrder?.isPickedUp ?? initialOrder?.isPickedUp
+  const fulfillmentOrder = liveOrder || initialOrder
+  const isPickUpOrder = isSingleVendorPickupOrder(fulfillmentOrder)
   const timelineSegments = isPickUpOrder ? PICKUP_TIMELINE_SEGMENTS : DELIVERY_TIMELINE_SEGMENTS
   const statusProgressMap = isPickUpOrder ? PICKUP_STATUS_PROGRESS_MAP : DELIVERY_STATUS_PROGRESS_MAP
   const restaurantName = liveOrder?.restaurant?.name ?? initialOrder?.restaurant?.name ?? 'Current order'
-  const deliveryAddress = address ?? liveOrder?.deliveryAddress?.deliveryAddress ?? initialOrder?.deliveryAddress?.deliveryAddress
+  const deliveryAddress = isPickUpOrder
+    ? liveOrder?.restaurant?.address ?? initialOrder?.restaurant?.address
+    : address ?? liveOrder?.deliveryAddress?.deliveryAddress ?? initialOrder?.deliveryAddress?.deliveryAddress
   const activeOrderNumber =
     liveOrder?.orderId ??
     initialOrder?.orderId ??
@@ -167,12 +176,13 @@ const HomeCart = () => {
   }
 
   const progressCount = statusProgressMap[orderStatus] ?? 1
-  const title = getTitle(orderStatus)
+  const title = getTitle(orderStatus, isPickUpOrder)
   const subtitle = getSubtitle({
     status: orderStatus,
     remainingTime,
     completionTime: liveOrder?.completionTime ?? initialOrder?.completionTime,
-    expectedTime: liveOrder?.expectedTime ?? initialOrder?.expectedTime
+    expectedTime: liveOrder?.expectedTime ?? initialOrder?.expectedTime,
+    isPickUpOrder
   })
   const openOrderDetails = () => {
     if (!activeOrderNumber) return
@@ -182,45 +192,50 @@ const HomeCart = () => {
   }
 
   return (
-    <Pressable
-      accessibilityRole='button'
-      accessibilityLabel={`Open order ${activeOrderNumber || ''} details`}
-      disabled={!activeOrderNumber}
-      onPress={openOrderDetails}
-      style={({ pressed }) => [
-        themedStyles.wrapper,
-        pressed && themedStyles.wrapperPressed
-      ]}
-    >
-      <View style={themedStyles.headerRow}>
-        <View style={themedStyles.titleWrap}>
-          <TextDefault bold style={themedStyles.title}>
-            {title}
-          </TextDefault>
-          <TextDefault style={themedStyles.subtitle}>
-            {subtitle}
-          </TextDefault>
+    <View style={themedStyles.wrapper}>
+      <Pressable
+        accessibilityRole='button'
+        accessibilityLabel={`Open order ${activeOrderNumber || ''} details`}
+        disabled={!activeOrderNumber}
+        onPress={openOrderDetails}
+        style={({ pressed }) => pressed && themedStyles.wrapperPressed}
+      >
+        <View style={themedStyles.headerRow}>
+          <View style={themedStyles.titleWrap}>
+            <TextDefault bold style={themedStyles.title}>
+              {title}
+            </TextDefault>
+            <TextDefault style={themedStyles.subtitle}>
+              {subtitle}
+            </TextDefault>
+          </View>
+
+          <View style={themedStyles.foodBadge}>
+            <Ionicons name='fast-food-sharp' size={scale(22)} color={currentTheme.primaryBlue} />
+          </View>
         </View>
 
-        <View style={themedStyles.foodBadge}>
-          <Ionicons name='fast-food-sharp' size={scale(22)} color={currentTheme.primaryBlue} />
+        <View style={themedStyles.progressRow}>
+          {Array.from({ length: timelineSegments }).map((_, item) => (
+            <View
+              key={item}
+              style={[
+                themedStyles.progressSegment,
+                item !== timelineSegments - 1 && themedStyles.progressSegmentSpacing,
+                item < progressCount && themedStyles.progressSegmentActive
+              ]}
+            />
+          ))}
         </View>
-      </View>
+      </Pressable>
 
-      <View style={themedStyles.progressRow}>
-        {Array.from({ length: timelineSegments }).map((_, item) => (
-          <View
-            key={item}
-            style={[
-              themedStyles.progressSegment,
-              item !== timelineSegments - 1 && themedStyles.progressSegmentSpacing,
-              item < progressCount && themedStyles.progressSegmentActive
-            ]}
-          />
-        ))}
-      </View>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={themedStyles.actionsRow}>
+      <ScrollView
+        horizontal
+        nestedScrollEnabled
+        directionalLockEnabled
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={themedStyles.actionsRow}
+      >
         <View style={[themedStyles.actionPill, themedStyles.actionPillSpacing]}>
           <Feather name='hash' size={scale(18)} color={currentTheme.fontMainColor} />
           <TextDefault style={themedStyles.actionText} numberOfLines={1}>
@@ -244,14 +259,23 @@ const HomeCart = () => {
       </ScrollView>
 
       {!!deliveryAddress && (
-        <View style={themedStyles.addressRow}>
+        <Pressable
+          accessibilityRole='button'
+          accessibilityLabel={`Open order ${activeOrderNumber || ''} details`}
+          disabled={!activeOrderNumber}
+          onPress={openOrderDetails}
+          style={({ pressed }) => [
+            themedStyles.addressRow,
+            pressed && themedStyles.wrapperPressed
+          ]}
+        >
           <Ionicons name='location-outline' size={scale(16)} color={currentTheme.colorTextMuted || currentTheme.fontSecondColor} />
           <TextDefault numberOfLines={2} style={themedStyles.addressText}>
             {deliveryAddress}
           </TextDefault>
-        </View>
+        </Pressable>
       )}
-    </Pressable>
+    </View>
   )
 }
 
