@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/client'
-import { ORDER_DETAILS_PAGE, Recent_ActiveOrder } from '../../apollo/queries'
+import {
+  ORDER_DETAILS_PAGE,
+  Recent_ActiveOrder as RECENT_ACTIVE_ORDER
+} from '../../apollo/queries'
 import useNetworkStatus from '../../../utils/useNetworkStatus'
 
 const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
@@ -13,13 +16,14 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
 
   console.log('Confirmation Variables:', variables)
 
-  const queryDocument = isHome ? Recent_ActiveOrder : ORDER_DETAILS_PAGE
+  const queryDocument = isHome ? RECENT_ACTIVE_ORDER : ORDER_DETAILS_PAGE
   const shouldSkip = !isConnected || (!isHome && !orderId)
 
   const { data, loading, error, refetch } = useQuery(queryDocument, {
     variables: isHome ? undefined : variables,
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
+    pollInterval: 15000,
     skip: shouldSkip
   })
 
@@ -47,7 +51,7 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
   console.log('Checkout Data:', data, confirmation?.items, error)
   console.log('🚀 ~ useOrderConfirmation ~ confirmation?.couponDiscount:', confirmation)
   return {
-    loading,
+    loading: loading && !data,
     error,
     refetch,
 
@@ -80,7 +84,7 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
     tipAmount: confirmation?.tipping,
     orderStatus: confirmation?.orderStatus ?? initialOrder?.orderStatus,
     addressLabel: confirmation?.deliveryAddress?.label,
-    address:confirmation?.deliveryAddress?.deliveryAddress ?? initialOrder?.deliveryAddress?.deliveryAddress,
+    address: confirmation?.deliveryAddress?.deliveryAddress ?? initialOrder?.deliveryAddress?.deliveryAddress,
     customerLocation: {
       longitude: toNumber(confirmation?.deliveryAddress?.location?.coordinates?.[0] ?? initialOrder?.deliveryAddress?.location?.coordinates?.[0]),
       latitude: toNumber(confirmation?.deliveryAddress?.location?.coordinates?.[1] ?? initialOrder?.deliveryAddress?.location?.coordinates?.[1])
@@ -88,7 +92,7 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
     orderItems: confirmation?.items ?? [],
     initialOrder,
     orderNo: confirmation?.orderId ?? initialOrder?.orderId,
-    creditsUsed: confirmation?.creditsApplied ?? 0,
+    creditsUsed: confirmation?.creditsApplied ?? 0
     // riderPhone: confirmation?.rider?.phone
     // deliveryDiscount: confirmation?.deliveryDiscount ?? 0,
   }

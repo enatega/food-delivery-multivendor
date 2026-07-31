@@ -63,6 +63,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       paidAmount
       orderAmount
       orderStatus
+      orderState
       tipping
       taxationAmount
       createdAt
@@ -82,7 +83,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
     }
   }`
 
- export const paymentSuccess = `subscription PaymentSuccess($userId: String!) {
+export const paymentSuccess = `subscription PaymentSuccess($userId: String!) {
 subscriptionPaymentSuccess(userId: $userId) {
 userId
 orderId

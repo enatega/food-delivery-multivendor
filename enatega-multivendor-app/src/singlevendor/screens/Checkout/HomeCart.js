@@ -11,6 +11,7 @@ import LoadingSkeleton from '../../components/LoadingSkeleton'
 import useOrderConfirmation from './useOrderConfirmation'
 import useOrderTracking from './useOrderTracking'
 import { ORDER_STATUS_ENUM } from '../../../utils/enums'
+import { SINGLE_VENDOR_TRACKING_STATUS } from '../../utils/orderTrackingStatus'
 
 const DELIVERY_TIMELINE_SEGMENTS = 5
 const PICKUP_TIMELINE_SEGMENTS = 2
@@ -20,6 +21,7 @@ const DELIVERY_STATUS_PROGRESS_MAP = {
   [ORDER_STATUS_ENUM.ACCEPTED]: 2,
   [ORDER_STATUS_ENUM.ASSIGNED]: 3,
   [ORDER_STATUS_ENUM.PICKED]: 4,
+  [SINGLE_VENDOR_TRACKING_STATUS.ON_ROUTE]: 4,
   [ORDER_STATUS_ENUM.DELIVERED]: 5,
   [ORDER_STATUS_ENUM.COMPLETED]: 5,
   [ORDER_STATUS_ENUM.CANCELLED]: 1,
@@ -79,6 +81,7 @@ const getTitle = (status) => {
   if (status === ORDER_STATUS_ENUM.DELIVERED || status === ORDER_STATUS_ENUM.COMPLETED) return 'Your order has arrived'
   if (status === ORDER_STATUS_ENUM.CANCELLED || status === ORDER_STATUS_ENUM.CANCELLEDBYREST) return 'Order cancelled'
   if (status === ORDER_STATUS_ENUM.PICKED) return 'Your order is on the way'
+  if (status === SINGLE_VENDOR_TRACKING_STATUS.ON_ROUTE) return 'Your order is on the way'
   if (status === ORDER_STATUS_ENUM.ASSIGNED) return 'Rider assigned to your order'
   return 'Your order is being prepared'
 }

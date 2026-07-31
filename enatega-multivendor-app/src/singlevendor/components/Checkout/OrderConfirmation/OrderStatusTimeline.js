@@ -168,8 +168,6 @@
 // export { ORDER_STATUSES }
 // export default OrderStatusTimeline
 
-
-
 import React, { useContext } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -188,6 +186,7 @@ export const ORDER_STATUSES = {
   ACCEPTED: 'ACCEPTED',
   ASSIGNED: 'ASSIGNED',
   PICKED: 'PICKED',
+  ON_ROUTE: 'ON_ROUTE',
   DELIVERED: 'DELIVERED',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',
@@ -198,6 +197,11 @@ export const ORDER_STATUSES = {
  * UI timeline mapping (ORDER MATTERS)
  */
 const TIMELINE_STATUSES = [
+  {
+    key: ORDER_STATUSES.PENDING,
+    labelKey: 'Order placed',
+    icon: 'shopping-bag'
+  },
   {
     key: ORDER_STATUSES.ACCEPTED,
     labelKey: 'Order accepted',
@@ -214,13 +218,23 @@ const TIMELINE_STATUSES = [
     icon: 'package'
   },
   {
-    key: ORDER_STATUSES.DELIVERED,
+    key: ORDER_STATUSES.ON_ROUTE,
     labelKey: 'On the way',
     icon: 'bike'
+  },
+  {
+    key: ORDER_STATUSES.DELIVERED,
+    labelKey: 'Delivered',
+    icon: 'home'
   }
 ]
 
 const PICKED_UP_TIMELINE_STATUSES = [
+  {
+    key: ORDER_STATUSES.PENDING,
+    labelKey: 'Order placed',
+    icon: 'shopping-bag'
+  },
   {
     key: ORDER_STATUSES.ACCEPTED,
     labelKey: 'Order accepted',

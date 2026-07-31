@@ -549,6 +549,7 @@ export const ORDER_DETAILS_PAGE = gql`
         paidAmount
         orderAmount
         orderStatus
+        orderState
         tipping
         taxationAmount
         createdAt
@@ -649,6 +650,7 @@ export const ORDER_DETAILS_PAGE = gql`
     }
   }
 `
+// eslint-disable-next-line camelcase
 export const Recent_ActiveOrder = gql`
   query RecentActiveOrder {
     recentActiveOrder {
@@ -719,6 +721,7 @@ export const Recent_ActiveOrder = gql`
         paidAmount
         orderAmount
         orderStatus
+        orderState
         tipping
         taxationAmount
         createdAt

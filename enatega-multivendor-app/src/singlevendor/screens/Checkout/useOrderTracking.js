@@ -1,19 +1,19 @@
 import { useContext, useEffect, useState } from 'react'
-import { useApolloClient, useSubscription } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
 
 import { ORDER_STATUS_ENUM } from '../../../utils/enums'
 import { calulateRemainingTime } from '../../../utils/customFunctions'
 import UserContext from '../../../context/User'
 import { orderStatusChanged } from '../../apollo/subscriptions'
+import { getSingleVendorTrackingStatus } from '../../utils/orderTrackingStatus'
 
 const ORDER_SUBSCRIPTION = gql`
   ${orderStatusChanged}
 `
 
 const useOrderTracking = ({ orderId, initialOrder }) => {
-  console.log("initial order use order tracking",initialOrder)
-  const client = useApolloClient()
+  console.log('initial order use order tracking', initialOrder)
 
   const [order, setOrder] = useState(initialOrder)
   const [remainingTime, setRemainingTime] = useState(0)
@@ -57,14 +57,19 @@ const useOrderTracking = ({ orderId, initialOrder }) => {
 
   useEffect(() => {
     if (initialOrder) {
-      console.log("initial order changed",initialOrder)
+      console.log('initial order changed', initialOrder)
       setOrder(initialOrder)
     }
     return () => {}
   }, [initialOrder])
 
   return {
-    order,
+    order: order
+      ? {
+          ...order,
+          orderStatus: getSingleVendorTrackingStatus(order)
+        }
+      : order,
     remainingTime
   }
 }
