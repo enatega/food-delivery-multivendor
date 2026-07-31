@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import * as Location from "expo-location";
 import React, {
+  useCallback,
   useState,
   useEffect,
   useContext,
@@ -10,10 +11,10 @@ import React, {
 
 import { UPDATE_LOCATION } from "@/lib/apollo/mutations/rider.mutation";
 import { getSecureItem } from "@/lib/services/secure-storage";
-import { RIDER_TOKEN } from "@/lib/utils/constants";
 import { AuthContext } from "@/lib/context/global/auth.context";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 
 import {
   ICoodinates,
@@ -49,6 +50,7 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
   const [location, setLocation] = useState<ICoodinates>({} as ICoodinates);
   const client = useApolloClient();
   const { token } = useContext(AuthContext);
+  const { tokenKey } = useRiderMode();
   const { assignedOrders, dataProfile } = useUserContext();
 
   // Rider is "actively delivering" when they own an order that's on the way.
@@ -91,59 +93,61 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
     }
   };
 
-  const trackRiderLocation = async (
-    options: Location.LocationOptions,
-    isCancelled: () => boolean,
-  ) => {
-    try {
-      if (!locationPermission) return;
+  const trackRiderLocation = useCallback(
+    async (options: Location.LocationOptions, isCancelled: () => boolean) => {
+      try {
+        if (!locationPermission) return;
 
-      const listener = await Location.watchPositionAsync(
-        options,
-        async (nextLocation) => {
-          const nextCoordinates = {
-            latitude: nextLocation.coords.latitude.toString(),
-            longitude: nextLocation.coords.longitude.toString(),
-          };
+        const listener = await Location.watchPositionAsync(
+          options,
+          async (nextLocation) => {
+            const nextCoordinates = {
+              latitude: nextLocation.coords.latitude.toString(),
+              longitude: nextLocation.coords.longitude.toString(),
+            };
 
-          setLocation(nextCoordinates);
+            setLocation(nextCoordinates);
 
-          if (
-            previousLocationRef.current?.latitude === nextCoordinates.latitude &&
-            previousLocationRef.current?.longitude === nextCoordinates.longitude
-          ) {
-            return;
-          }
+            if (
+              previousLocationRef.current?.latitude ===
+                nextCoordinates.latitude &&
+              previousLocationRef.current?.longitude ===
+                nextCoordinates.longitude
+            ) {
+              return;
+            }
 
-          previousLocationRef.current = nextCoordinates;
+            previousLocationRef.current = nextCoordinates;
 
-          try {
-            const token = await getSecureItem(RIDER_TOKEN);
-            if (!token) return;
+            try {
+              const token = await getSecureItem(tokenKey);
+              if (!token) return;
 
-            await client.mutate({
-              mutation: UPDATE_LOCATION,
-              variables: nextCoordinates,
-            });
-          } catch (mutationError) {
-            console.log("Error updating location: ", mutationError);
-          }
-        },
-      );
+              await client.mutate({
+                mutation: UPDATE_LOCATION,
+                variables: nextCoordinates,
+              });
+            } catch (mutationError) {
+              console.log("Error updating location: ", mutationError);
+            }
+          },
+        );
 
-      // The effect may have been torn down while watchPositionAsync was
-      // awaiting; if so, remove the listener now to avoid leaking a watcher.
-      if (isCancelled()) {
-        listener.remove();
-        return;
+        // The effect may have been torn down while watchPositionAsync was
+        // awaiting; if so, remove the listener now to avoid leaking a watcher.
+        if (isCancelled()) {
+          listener.remove();
+          return;
+        }
+
+        locationListener.current = listener;
+      } catch (error) {
+        console.log("Error getting location: ", error);
+        setLocationPermission(false);
       }
-
-      locationListener.current = listener;
-    } catch (error) {
-      console.log("Error getting location: ", error);
-      setLocationPermission(false);
-    }
-  };
+    },
+    [client, locationPermission, tokenKey],
+  );
   // Use Effect
   useEffect(() => {
     getLocationPermission();
@@ -166,7 +170,7 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
         locationListener.current = undefined;
       }
     };
-  }, [locationPermission, token, isActivelyDelivering]);
+  }, [isActivelyDelivering, locationPermission, token, trackRiderLocation]);
 
   // Memoize the provider value so a new object isn't created on every render.
   // GPS updates fire every ~10s/10m; without this, every LocationContext

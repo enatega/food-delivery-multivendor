@@ -17,8 +17,7 @@ import {
 // Components
 
 // Icon
-import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
-
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 
 // Schemas
 import { SignInSchema } from "@/lib/utils/schema";
@@ -32,22 +31,24 @@ import { useApolloClient } from "@apollo/client";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { CustomContinueButton } from "../../useable-components";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { RIDER_SERVER_MODES, RiderServerMode } from "@/lib/mode/rider-mode";
 
 const initial: ILoginInitialValues = {
-  username: "ryanabotreef",
-  password: "Rider@123",
+  username: "",
+  password: "",
 };
 
 const LoginScreen = () => {
   // States
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [initialValues, setInitialValues] = useState(initial);
 
   // Hooks
   const { appTheme } = useApptheme();
   const client = useApolloClient();
   const { t } = useTranslation();
-  const { onLogin, creds, isLogging } = useLogin();
+  const { onLogin, isLogging } = useLogin();
+  const { mode, selectMode } = useRiderMode();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
@@ -65,20 +66,14 @@ const LoginScreen = () => {
   useEffect(() => {
     client
       ?.clearStore()
-      .catch(
-        (err) => __DEV__ && console.log("Apollo clearStore error:", err),
-      );
+      .catch((err) => __DEV__ && console.log("Apollo clearStore error:", err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Prefill the form when the last-used credentials arrive.
-  useEffect(() => {
-    if (!creds?.username) return;
-    setInitialValues({
-      username: creds.username,
-      password: creds.password || initial.password,
-    });
-  }, [creds]);
+  const onModeSelected = async (nextMode: RiderServerMode) => {
+    if (isLogging) return;
+    await selectMode(nextMode);
+  };
 
   if (isLogging) {
     return (
@@ -97,17 +92,55 @@ const LoginScreen = () => {
       <SafeAreaView>
         <ScrollView
           showsVerticalScrollIndicator={false}
-        // contentContainerStyle={{ height: height * 1 }}
+          // contentContainerStyle={{ height: height * 1 }}
         >
           <Formik
-            initialValues={initialValues}
-            enableReinitialize={true}
+            initialValues={initial}
             validationSchema={SignInSchema}
             onSubmit={onLoginHandler}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
               return (
                 <View className="mt-24 p-5 items-center justify-between gap-y-2">
+                  <View
+                    className="mb-6 w-full flex-row rounded-xl border p-1"
+                    style={{
+                      borderColor: appTheme.borderLineColor,
+                      backgroundColor: appTheme.themeBackground,
+                    }}
+                  >
+                    {(
+                      [
+                        [RIDER_SERVER_MODES.MULTI, t("Multi Vendor")],
+                        [RIDER_SERVER_MODES.SINGLE, t("Single Vendor")],
+                      ] as const
+                    ).map(([serverMode, label]) => {
+                      const selected = mode === serverMode;
+                      return (
+                        <TouchableOpacity
+                          key={serverMode}
+                          accessibilityRole="button"
+                          accessibilityState={{ selected }}
+                          disabled={isLogging}
+                          onPress={() => void onModeSelected(serverMode)}
+                          className="flex-1 items-center rounded-lg px-3 py-3"
+                          style={{
+                            backgroundColor: selected
+                              ? appTheme.primary
+                              : "transparent",
+                          }}
+                        >
+                          <Text
+                            className="text-sm font-semibold"
+                            style={{ color: appTheme.fontMainColor }}
+                          >
+                            {label}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+
                   {/* Icon */}
                   <FontAwesome
                     name="envelope"
@@ -170,7 +203,6 @@ const LoginScreen = () => {
                       placeholder={t("Password")}
                       secureTextEntry={!passwordVisible}
                       placeholderTextColor={appTheme.fontSecondColor}
-
                       value={values.password}
                       onChangeText={handleChange("password")}
                       onBlur={handleBlur("password")}
@@ -191,16 +223,10 @@ const LoginScreen = () => {
                       {errors?.password}
                     </Text>
                   )}
-                  <Text
-                    className="text-center text-xs mb-2"
-                    style={{ color: appTheme.fontSecondColor }}
-                  >
-                    Above placeholder credentials are for testing purposes.
-                  </Text>
-
                   <CustomContinueButton
                     title={t("Login")}
                     onPress={() => handleSubmit()}
+                    disabled={isLogging}
                     className="self-center"
                   />
                 </View>

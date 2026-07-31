@@ -1,11 +1,27 @@
 import { gql } from "@apollo/client";
 
-export const SUBSCRIPTION_NEW_MESSAGE = gql`
-  subscription SubscriptionNewMessage($order: ID!) {
+export const SUBSCRIPTION_NEW_MESSAGE =
+  // @multi-vendor-only
+  gql`
+    subscription SubscriptionNewMessage($order: ID!) {
+      subscriptionNewMessage(order: $order) {
+        id
+        message
+        image
+        user {
+          id
+          name
+        }
+        createdAt
+      }
+    }
+  `;
+
+export const SINGLE_VENDOR_SUBSCRIPTION_NEW_MESSAGE = gql`
+  subscription SingleVendorSubscriptionNewMessage($order: ID!) {
     subscriptionNewMessage(order: $order) {
       id
       message
-      image
       user {
         id
         name

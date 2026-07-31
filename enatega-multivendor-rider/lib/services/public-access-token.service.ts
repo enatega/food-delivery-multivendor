@@ -161,12 +161,13 @@ class PublicAccessTokenService {
           throw new Error("No data returned from metricsGeneral");
         }
 
-        this.token = data.metricsGeneral.experience;
+        const token = data.metricsGeneral.experience as string;
+        this.token = token;
         this.expiry = new Date(data.metricsGeneral.hehe).getTime();
 
         await Promise.all([
           setSecureItem(PUBLIC_ACCESS_NONCE, nonce),
-          setSecureItem(PUBLIC_ACCESS_TOKEN, this.token),
+          setSecureItem(PUBLIC_ACCESS_TOKEN, token),
           setSecureItem(PUBLIC_ACCESS_EXPIRY, this.expiry.toString()),
         ]);
 
@@ -193,11 +194,15 @@ class PublicAccessTokenService {
     return this.nonce;
   }
 
-  async clearTokens(): Promise<void> {
+  pause(): void {
     if (this.refreshTimer) {
       clearTimeout(this.refreshTimer);
       this.refreshTimer = null;
     }
+  }
+
+  async clearTokens(): Promise<void> {
+    this.pause();
 
     this.nonce = null;
     this.token = null;

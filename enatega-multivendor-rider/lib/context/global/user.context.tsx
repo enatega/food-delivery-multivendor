@@ -1,6 +1,7 @@
 import { QueryResult, useQuery } from "@apollo/client";
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -19,13 +20,13 @@ import {
   SUBSCRIPTION_ZONE_ORDERS,
 } from "@/lib/apollo/subscriptions";
 import { asyncStorageEmitter } from "@/lib/services/async-storage";
-import { RIDER_ID } from "@/lib/utils/constants";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import {
   IRiderEarnings,
   IRiderEarningsArray,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
@@ -34,6 +35,7 @@ const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 const EMPTY_ORDERS: IOrder[] = [];
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
+  const { riderIdKey } = useRiderMode();
   // States
   const [modalVisible, setModalVisible] = useState<
     IRiderEarnings & { bool: boolean }
@@ -87,13 +89,13 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   });
   const isRiderAvailable = Boolean(dataProfile?.rider?.available);
 
-  async function getUserId() {
-    const id = await AsyncStorage.getItem(RIDER_ID);
+  const getUserId = useCallback(async () => {
+    const id = await AsyncStorage.getItem(riderIdKey);
 
     if (id) {
       setUserId(id);
     }
-  }
+  }, [riderIdKey]);
 
   // UseEffects
 
@@ -134,7 +136,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         } else if (origin === "remove") {
           return {
             riderOrders: (prev.riderOrders ?? []).filter(
-              (o: IOrder) => o._id !== order._id
+              (o: IOrder) => o._id !== order._id,
             ),
           };
         }
@@ -148,7 +150,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
           variables: { zoneId: zoneIdValue },
           updateQuery: (prev, { subscriptionData }) => {
             if (!subscriptionData.data) return prev;
-            const { origin, order } = subscriptionData.data.subscriptionZoneOrders;
+            const { origin, order } =
+              subscriptionData.data.subscriptionZoneOrders;
             if (origin === "new" || origin === "update") {
               return { riderOrders: upsertOrder(prev.riderOrders, order) };
             }
@@ -205,13 +208,13 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     const handleRiderId = (data?: { value?: string }) => {
       setUserId(data?.value ?? "");
     };
-    asyncStorageEmitter.addListener("rider-id", handleRiderId);
+    asyncStorageEmitter.addListener(riderIdKey, handleRiderId);
 
     getUserId();
     return () => {
-      asyncStorageEmitter.removeListener("rider-id", handleRiderId);
+      asyncStorageEmitter.removeListener(riderIdKey, handleRiderId);
     };
-  }, []);
+  }, [getUserId, riderIdKey]);
 
   // Memoize the context value so a new object isn't created on every render.
   // UserProvider re-renders frequently (cache-and-network + 30s poll + two live
@@ -254,9 +257,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   );
 
   return (
-    <UserContext.Provider value={contextValue}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 };
 export const UserConsumer = UserContext.Consumer;

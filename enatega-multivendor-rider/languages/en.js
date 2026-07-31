@@ -356,4 +356,6 @@ export const en = {
   "has overlapping slots": "has overlapping slots",
   "Loading...": "Loading...",
   "Oops!": "Oops!",
+  "Multi Vendor": "Multi Vendor",
+  "Single Vendor": "Single Vendor",
 };
