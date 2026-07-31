@@ -38,11 +38,12 @@ export const GET_ACTIVE_ORDERS = gql`
           deliveryAddress
         }
         user {
-          name         
+          name
           phone
         }
         paymentMethod
         orderStatus
+        deliveryType
         isPickedUp
         status
         isActive
@@ -353,7 +354,7 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
         createdAt
         updatedAt
       }
-      
+
       paymentMethod
       paidAmount
       orderAmount

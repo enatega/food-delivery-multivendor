@@ -111,6 +111,7 @@ export const SUBSCRIPTION_DISPATCH_ORDER = gql`
       }
       paymentMethod
       orderStatus
+      deliveryType
       preparationTime
       expectedTime
       acceptedAt

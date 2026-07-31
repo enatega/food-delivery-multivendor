@@ -18,13 +18,12 @@ import {
   ASSIGN_RIDER,
   GET_ACTIVE_ORDERS,
   UPDATE_STATUS,
-  SUBSCRIPTION_ORDER,
   GET_RIDERS,
 } from '@/lib/api/graphql';
 
 // Hooks
 import { useContext, useState, useEffect } from 'react';
-import { useMutation, useSubscription } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -71,6 +70,15 @@ function severityChecker(status: string | undefined) {
       return 'contrast';
   }
 }
+
+const isPickupOrder = (order: IActiveOrders) => {
+  if (order.deliveryType) {
+    return order.deliveryType.toUpperCase() === 'PICKUP';
+  }
+
+  // Compatibility for orders created before deliveryType was persisted.
+  return order.isPickedUp === true;
+};
 
 export const DISPATCH_TABLE_COLUMNS = () => {
   // Hooks
@@ -140,28 +148,6 @@ export const DISPATCH_TABLE_COLUMNS = () => {
       setRiderOptions(newRiderOptions); // Set the rider options
     }
   }, [ridersData]);
-
-  // Order Subscription
-  const useOrderSubscription = (rowData: IActiveOrders) => {
-    useSubscription(SUBSCRIPTION_ORDER, {
-      variables: {
-        _id: rowData._id,
-      },
-      fetchPolicy: 'network-only',
-      onSubscriptionData: () => {
-        // fetchActiveOrders({
-        //   page: 1,
-        //   rowsPerPage: 10,
-        //   search: '',
-        //   actions: [],
-        // });
-      },
-    });
-  };
-  const OrderSubscription = ({ rowData }: { rowData: IActiveOrders }) => {
-    useOrderSubscription(rowData);
-    return <p>{rowData.isPickedUp === false ? "Not Picked" : "Picked"}</p>;
-  };
 
   // Mutations
   const [assignRider] = useMutation<
@@ -279,7 +265,9 @@ export const DISPATCH_TABLE_COLUMNS = () => {
     {
       propertyName: 'deliveryAddress.deliveryAddress',
       headerName: t('Order Information'),
-      body: (rowData: IActiveOrders) => <OrderSubscription rowData={rowData} />,
+      body: (rowData: IActiveOrders) => (
+        <p>{isPickupOrder(rowData) ? t('Pickup') : t('Delivery')}</p>
+      ),
     },
     {
       propertyName: 'restaurant.name',
@@ -301,18 +289,27 @@ export const DISPATCH_TABLE_COLUMNS = () => {
       propertyName: 'rider.name',
       headerName: t('Rider'),
       body: (rowData: IActiveOrders) => {
-        const selectedRider: IDropdownSelectItem = {
-          label: rowData?.rider?.name.toString() ?? '',
-          code: rowData?.rider?.name.toString().toUpperCase() ?? '',
-          _id: rowData?.rider?._id.toString() ?? '',
-        };
-        if (rowData._id && !rowData.isPickedUp) {
+        const pickupOrder = isPickupOrder(rowData);
+        const selectedRider: IDropdownSelectItem | null = rowData.rider
+          ? {
+              label: rowData.rider.name.toString(),
+              code: rowData.rider.name.toString().toUpperCase(),
+              _id: rowData.rider._id.toString(),
+            }
+          : null;
+        const rowRiderOptions =
+          selectedRider &&
+          !riderOptions.some((rider) => rider._id === selectedRider._id)
+            ? [selectedRider, ...riderOptions]
+            : riderOptions;
+
+        if (rowData._id && !pickupOrder) {
           return (
             <div>
               <Dropdown
-                options={riderOptions}
+                options={rowRiderOptions}
                 loading={
-                  isRiderLoading._id === selectedRider._id &&
+                  isRiderLoading._id === selectedRider?._id &&
                   isRiderLoading.bool === true &&
                   isRiderLoading.orderId === rowData._id
                 }
@@ -397,17 +394,22 @@ export const DISPATCH_TABLE_COLUMNS = () => {
       propertyName: 'orderStatus',
       headerName: t('Status'),
       body: (rowData: IActiveOrders) => {
-        // CHANGE 2: Filter status options based on whether it's a pickup order
-        const availableStatuses = rowData.isPickedUp
+        const pickupOrder = isPickupOrder(rowData);
+        const availableStatuses = pickupOrder
           ? actionStatusOptions.filter((status) =>
-            ['PENDING', 'ACCEPTED', 'DELIVERED', 'CANCELLED'].includes(
-              status.code
+              [
+                'PENDING',
+                'ACCEPTED',
+                'PICKED',
+                'DELIVERED',
+                'CANCELLED',
+              ].includes(status.code)
             )
-          )
           : actionStatusOptions;
 
         const currentStatus = availableStatuses.find(
-          (status: IDropdownSelectItem) => status.code === rowData?.orderStatus
+          (status: IDropdownSelectItem) =>
+            status.code === rowData.orderStatus?.toUpperCase()
         );
 
         // CHANGE 3: Disable status changes for delivered orders
@@ -418,14 +420,14 @@ export const DISPATCH_TABLE_COLUMNS = () => {
             <Dropdown
               value={currentStatus}
               onChange={(e) => handleStatusDropDownChange(e, rowData)}
-              options={availableStatuses} // CHANGE 4: Use filtered status options
+              options={availableStatuses}
               itemTemplate={itemTemplate}
               valueTemplate={valueTemplate}
               loading={
                 isStatusUpdating.bool && isStatusUpdating._id === rowData._id
               }
               className="outline outline-1 outline-gray-300"
-              disabled={isDelivered} // CHANGE 5: Disable dropdown if delivered
+              disabled={isDelivered}
             />
           </>
         );

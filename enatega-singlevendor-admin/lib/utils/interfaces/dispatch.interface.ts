@@ -3,6 +3,7 @@ import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 export interface IActiveOrders {
   _id: string;
   isPickedUp: boolean;
+  deliveryType?: 'DELIVERY' | 'PICKUP' | string | null;
   zone: {
     _id: string;
   };
@@ -79,4 +80,3 @@ export interface IDispatchTableHeaderProps {
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
 }
-
