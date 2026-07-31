@@ -66,7 +66,11 @@ import { CustomMapStyles } from "@/lib/utils/constants/map";
 import { map_styles } from "@/lib/utils/constants/order-details";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
-import { isNewOrderForMode } from "@/lib/utils/order-state";
+import {
+  canDeliverOrderForMode,
+  canPickupOrderForMode,
+  isNewOrderForMode,
+} from "@/lib/utils/order-state";
 
 const { height } = Dimensions.get("window");
 const MAX_ROUTE_RETRIES = 3;
@@ -733,8 +737,7 @@ export default function OrderDetailScreen() {
               )}
 
               {/* Pick up Button */}
-              {tab === "processing" &&
-                order.orderStatus === "ASSIGNED" && (
+              {tab === "processing" && canPickupOrderForMode(order, mode) && (
                   <TouchableOpacity
                     className="h-14 rounded-3xl py-3 w-full mt-4 mb-10"
                     style={{ backgroundColor: appTheme.primary }}
@@ -758,7 +761,7 @@ export default function OrderDetailScreen() {
                   </TouchableOpacity>
                 )}
 
-              {tab == "processing" && order.orderStatus === "PICKED" && (
+              {tab == "processing" && canDeliverOrderForMode(order, mode) && (
                 <TouchableOpacity
                   className="h-14 rounded-3xl py-3 w-full mt-4 mb-10"
                   style={{ backgroundColor: appTheme.primary }}

@@ -22,6 +22,8 @@ import { useApptheme } from "@/lib/context/global/theme.context";
 import { ORDER_TYPE } from "@/lib/utils/types";
 import { FlashList } from "@shopify/flash-list";
 import { useTranslation } from "react-i18next";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { isProcessingOrderForMode } from "@/lib/utils/order-state";
 
 const { height } = Dimensions.get("window");
 // Approximate rendered height (px) of an Order card, used by FlashList for layout estimation
@@ -34,6 +36,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const { mode } = useRiderMode();
   const {
     errorAssigned,
     assignedOrders,
@@ -45,12 +48,10 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   const orders = useMemo<IOrder[]>(() => {
     if (errorAssigned || !assignedOrders) return [];
     return (
-      assignedOrders.filter(
-        (o: IOrder) =>
-          ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp,
-      ) ?? []
+      assignedOrders.filter((o: IOrder) => isProcessingOrderForMode(o, mode)) ??
+      []
     );
-  }, [assignedOrders, errorAssigned]);
+  }, [assignedOrders, errorAssigned, mode]);
 
   const keyExtractor = useCallback((item: IOrder) => item._id, []);
 
@@ -83,11 +84,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
           alignItems: "center",
         }}
       >
-        <WalletIcon
-          height={100}
-          width={100}
-          color={appTheme.fontMainColor}
-        />
+        <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
 
         {orders?.length === 0 ? (
           <Text
@@ -103,14 +100,19 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
         )}
       </View>
     ),
-    [appTheme.fontMainColor, appTheme.fontSecondColor, orders?.length, route.key, t],
+    [
+      appTheme.fontMainColor,
+      appTheme.fontSecondColor,
+      orders?.length,
+      route.key,
+      t,
+    ],
   );
   // Calculate the marginBottom dynamically
   // const marginBottom = Platform.OS === "ios" ? height * 0.5 : height * 0.01;
   // Render
 
-    // console.log({assignedOrders: JSON.stringify(orders, null, 2)});
-
+  // console.log({assignedOrders: JSON.stringify(orders, null, 2)});
 
   return (
     <View
