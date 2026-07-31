@@ -91,7 +91,6 @@
 
 // export default DeliveredStatus;
 
-
 import React, { useContext } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Feather } from '@expo/vector-icons'
@@ -101,7 +100,6 @@ import ThemeContext from '../../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../../utils/themeColors'
 import { scale } from '../../../../utils/scaling'
 import TextDefault from '../../../../components/Text/TextDefault/TextDefault'
-import { isCancel } from 'axios'
 
 const DeliveredStatus = ({
   appName = 'Enatega',
@@ -122,7 +120,7 @@ const DeliveredStatus = ({
   const iconName = isCancelled ? 'x' : 'check'
   const mainColor = isCancelled
     ? currentTheme.red || '#E53935'
-    : currentTheme.headerMainFontColor || '#006189'
+    : currentTheme.success || '#16A34A'
 
   const resolvedTitle =
     title || (isCancelled ? t('Order cancelled') : isPickUpOrder ? t('Collected') : t('Delivered'))
