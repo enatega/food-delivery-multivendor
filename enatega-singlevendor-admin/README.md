@@ -4,7 +4,7 @@ This project is a Restaurant Delivery Management System built with modern web te
 
 ## Local Setup
 
-1. Copy `.env.example` to `.env` and update the single-vendor HTTP and WebSocket URLs if the development tunnel changes.
+1. Copy `.env.example` to `.env` and configure `NEXT_PUBLIC_SERVER_URL`, `NEXT_PUBLIC_WS_SERVER_URL`, and `NEXT_PUBLIC_GOOGLE_MAPS_KEY` for the local environment.
 2. Run `npm install`.
 3. Run `npm run dev`.
 
