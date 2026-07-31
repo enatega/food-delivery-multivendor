@@ -9,7 +9,10 @@ import {
 } from '../../utils/interfaces';
 
 export const GoogleMapsContext = createContext<IGoogleMapsContext>(
-  {} as IGoogleMapsContext
+  {
+    isLoaded: false,
+    isConfigured: false,
+  }
 );
 
 export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
@@ -85,6 +88,7 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
 
   const value: IGoogleMapsContext = {
     isLoaded,
+    isConfigured: true,
   };
 
   return (

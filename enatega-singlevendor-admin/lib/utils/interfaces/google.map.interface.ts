@@ -17,6 +17,7 @@ export interface ICustomGoogleMapsLocationBoundsComponentProps {
 
 export interface IGoogleMapsContext {
   isLoaded: boolean;
+  isConfigured: boolean;
 }
 
 export interface IGoogleMapsProviderProps {

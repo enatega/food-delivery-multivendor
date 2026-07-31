@@ -245,7 +245,7 @@ export default function MakeSidebar() {
     },
     {
       text: 'Referral Wallet',
-      label: t('Referral Wallet'),
+      label: t.has('Referral Wallet') ? t('Referral Wallet') : 'Referral Wallet',
       route: '/referral-wallet',
       isParent: true,
       icon: faGift,
