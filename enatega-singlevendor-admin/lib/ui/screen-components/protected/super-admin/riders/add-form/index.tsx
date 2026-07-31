@@ -1,5 +1,5 @@
 // Core
-import { Form, Formik, FormikHelpers } from 'formik';
+import { ErrorMessage, Form, Formik, FormikHelpers } from 'formik';
 
 // Prime React
 import { Sidebar } from 'primereact/sidebar';
@@ -19,11 +19,7 @@ import CustomTextField from '@/lib/ui/useable-components/input-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 
 // Utilities and Constants
-import {
-  RiderErrors /* , VEHICLE_TYPE  */,
-  VEHICLE_TYPE,
-} from '@/lib/utils/constants';
-import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
+import { VEHICLE_TYPE } from '@/lib/utils/constants';
 import { RiderSchema } from '@/lib/utils/schema/rider';
 
 //Toast
@@ -77,50 +73,47 @@ export default function RiderAddForm({
   });
 
   // Form Submission
-  const handleSubmit = (
+  const handleSubmit = async (
     values: IRiderForm,
     { resetForm }: FormikHelpers<IRiderForm>
   ) => {
-    if (data) {
-      mutate({
-        variables: {
-          riderInput: {
-            _id: rider ? rider._id : '',
-            name: values.name,
-            username: values.username,
-            password: values.password,
-            phone: values.phone?.toString(),
-            zone: values.zone?.code,
-            vehicleType: values.vehicleType?.code,
-            available: rider ? rider.available : true,
-          },
+    await mutate({
+      variables: {
+        riderInput: {
+          _id: rider ? rider._id : '',
+          name: values.name,
+          username: values.username,
+          password: values.password,
+          phone: values.phone?.toString(),
+          zone: values.zone?.code,
+          vehicleType: values.vehicleType?.code,
+          available: rider ? rider.available : true,
         },
-        onCompleted: () => {
-          showToast({
-            type: 'success',
-            title: t('Success'),
-            message: rider ? t('Rider updated') : t('Rider added'),
-            duration: 3000,
-          });
-          resetForm();
-          onHide();
-        },
-        onError: (error) => {
-          let message = '';
-          try {
-            message = error.graphQLErrors[0]?.message;
-          } catch (err) {
-            message = t('ActionFailedTryAgain');
-          }
-          showToast({
-            type: 'error',
-            title: t('Error'),
-            message,
-            duration: 3000,
-          });
-        },
-      });
-    }
+      },
+      onCompleted: () => {
+        showToast({
+          type: 'success',
+          title: t('Success'),
+          message: rider ? t('Rider updated') : t('Rider added'),
+          duration: 3000,
+        });
+        resetForm();
+        onHide();
+      },
+      onError: (error) => {
+        const message =
+          error.graphQLErrors[0]?.message ||
+          error.message ||
+          t('ActionFailedTryAgain');
+
+        showToast({
+          type: 'error',
+          title: t('Error'),
+          message,
+          duration: 3000,
+        });
+      },
+    });
   };
 
   return (
@@ -154,8 +147,8 @@ export default function RiderAddForm({
                   handleChange,
                   handleSubmit,
                   setFieldValue,
-                  setFieldTouched ,
-                  touched
+                  setFieldTouched,
+                  touched,
                 }) => {
                   return (
                     <Form onSubmit={handleSubmit}>
@@ -168,15 +161,7 @@ export default function RiderAddForm({
                           value={values.name}
                           onChange={handleChange}
                           showLabel={true}
-                          style={{
-                            borderColor: onErrorMessageMatcher(
-                              'name',
-                              errors?.name,
-                              RiderErrors
-                            )
-                              ? 'red'
-                              : '',
-                          }}
+                          error={touched.name ? errors.name : undefined}
                         />
 
                         <CustomTextField
@@ -187,15 +172,7 @@ export default function RiderAddForm({
                           value={values.username}
                           onChange={handleChange}
                           showLabel={true}
-                          style={{
-                            borderColor: onErrorMessageMatcher(
-                              'username',
-                              errors?.username,
-                              RiderErrors
-                            )
-                              ? 'red'
-                              : '',
-                          }}
+                          error={touched.username ? errors.username : undefined}
                         />
 
                         <CustomPasswordTextField
@@ -206,14 +183,14 @@ export default function RiderAddForm({
                           showLabel={true}
                           onChange={handleChange}
                           style={{
-                            borderColor: onErrorMessageMatcher(
-                              'password',
-                              errors?.password,
-                              RiderErrors
-                            )
-                              ? 'red'
-                              : '',
+                            borderColor:
+                              touched.password && errors.password ? 'red' : '',
                           }}
+                        />
+                        <ErrorMessage
+                          name="password"
+                          component="p"
+                          className="text-sm text-red-500"
                         />
 
                         <CustomPasswordTextField
@@ -225,14 +202,16 @@ export default function RiderAddForm({
                           onChange={handleChange}
                           feedback={false}
                           style={{
-                            borderColor: onErrorMessageMatcher(
-                              'confirmPassword',
-                              errors?.confirmPassword,
-                              RiderErrors
-                            )
-                              ? 'red'
-                              : '',
+                            borderColor:
+                              touched.confirmPassword && errors.confirmPassword
+                                ? 'red'
+                                : '',
                           }}
+                        />
+                        <ErrorMessage
+                          name="confirmPassword"
+                          component="p"
+                          className="text-sm text-red-500"
                         />
 
                         <CustomDropdownComponent
@@ -243,14 +222,16 @@ export default function RiderAddForm({
                           selectedItem={values.vehicleType}
                           setSelectedItem={setFieldValue}
                           style={{
-                            borderColor: onErrorMessageMatcher(
-                              'vehicleType',
-                              errors?.vehicleType,
-                              RiderErrors
-                            )
-                              ? 'red'
-                              : '',
+                            borderColor:
+                              touched.vehicleType && errors.vehicleType
+                                ? 'red'
+                                : '',
                           }}
+                        />
+                        <ErrorMessage
+                          name="vehicleType"
+                          component="p"
+                          className="text-sm text-red-500"
                         />
 
                         <CustomDropdownComponent
@@ -265,14 +246,14 @@ export default function RiderAddForm({
                           selectedItem={values.zone}
                           setSelectedItem={setFieldValue}
                           style={{
-                            borderColor: onErrorMessageMatcher(
-                              'zone',
-                              errors?.zone,
-                              RiderErrors
-                            )
-                              ? 'red'
-                              : '',
+                            borderColor:
+                              touched.zone && errors.zone ? 'red' : '',
                           }}
+                        />
+                        <ErrorMessage
+                          name="zone"
+                          component="p"
+                          className="text-sm text-red-500"
                         />
 
                         <CustomPhoneTextField
@@ -290,12 +271,14 @@ export default function RiderAddForm({
                             setFieldTouched('phone', true, false); // Mark as touched immediately
                           }}
                           style={{
-                            borderColor: onErrorMessageMatcher(
-                              'phone',
-                              errors?.phone,
-                              RiderErrors
-                            ) && touched?.phone ? 'red' : '',
+                            borderColor:
+                              touched.phone && errors.phone ? 'red' : '',
                           }}
+                        />
+                        <ErrorMessage
+                          name="phone"
+                          component="p"
+                          className="text-sm text-red-500"
                         />
 
                         <div className="mt-4 flex justify-end">
