@@ -162,11 +162,15 @@ class PublicAccessTokenService {
     return this.nonce;
   }
 
-  async clearTokens(): Promise<void> {
+  pause(): void {
     if (this.refreshTimer) {
       clearTimeout(this.refreshTimer);
       this.refreshTimer = null;
     }
+  }
+
+  async clearTokens(): Promise<void> {
+    this.pause();
     this.token = null;
     this.expiry = null;
     await SecureStore.deleteItemAsync(KEYS.TOKEN);

@@ -19,11 +19,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
 // API
-import { GET_ORDERS } from "@/lib/apollo/queries/orders";
+import {
+  GET_ORDERS,
+  GET_ORDERS_SINGLE_VENDOR,
+} from "@/lib/apollo/queries/orders";
 import { SUBSCRIBE_PLACE_ORDER } from "@/lib/apollo/subscriptions";
 import { getStoreId } from "@/lib/services";
 import { IRestaurantProviderProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 interface Printer {
   name?: string;
@@ -60,6 +64,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   const unsubscribeRef = useRef<null | (() => void)>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const subscribedRestaurantRef = useRef<string | null>(null);
+  const { isSingleVendor, storeIdKey } = useStoreMode();
 
   useEffect(() => {
     (async () => {
@@ -77,9 +82,12 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   // initial fetch loads the list; realtime keeps it current. Pull-to-refresh
   // still calls refetch() manually.
   const { loading, error, data, subscribeToMore, refetch, networkStatus } =
-    useQuery<RestaurantOrdersData>(GET_ORDERS, {
-      fetchPolicy: "cache-and-network",
-    });
+    useQuery<RestaurantOrdersData>(
+      isSingleVendor ? GET_ORDERS_SINGLE_VENDOR : GET_ORDERS,
+      {
+        fetchPolicy: "cache-and-network",
+      },
+    );
 
   useEffect(() => {
     async function GetToken() {
@@ -115,7 +123,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   const subscribeToMoreOrders = useCallback(
     async (force = false) => {
       try {
-        const restaurant = await getStoreId();
+        const restaurant = await getStoreId(storeIdKey);
         if (!restaurant) {
           return;
         }
@@ -183,7 +191,13 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
         cleanupSubscription();
       }
     },
-    [cleanupSubscription, clearRetryTimer, refetch, subscribeToMore],
+    [
+      cleanupSubscription,
+      clearRetryTimer,
+      refetch,
+      storeIdKey,
+      subscribeToMore,
+    ],
   );
 
   useEffect(() => {

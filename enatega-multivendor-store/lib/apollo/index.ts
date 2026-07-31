@@ -1,7 +1,6 @@
 import {
   ApolloClient,
   ApolloLink,
-  concat,
   createHttpLink,
   InMemoryCache,
   NormalizedCacheObject,
@@ -12,23 +11,34 @@ import {
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
-import getEnvVars from "@/environment";
+import { StoreEnvironment } from "@/environment";
 import * as SecureStore from "expo-secure-store";
 import { onError } from "@apollo/client/link/error";
 import { router } from "expo-router";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
-import { STORE_TOKEN } from "../utils/constants";
 import PublicAccessTokenService from "../services/public-access-token.service";
 
 let isAuthRedirecting = false;
 
-async function handleInvalidSession(): Promise<void> {
+interface ApolloSetupOptions {
+  environment: StoreEnvironment;
+  tokenKey: string;
+  storeIdKey: string;
+}
+
+async function handleInvalidSession(
+  tokenKey: string,
+  storeIdKey: string,
+): Promise<void> {
   if (isAuthRedirecting) return;
   isAuthRedirecting = true;
 
   try {
-    await SecureStore.deleteItemAsync(STORE_TOKEN);
+    await Promise.all([
+      SecureStore.deleteItemAsync(tokenKey),
+      SecureStore.deleteItemAsync(storeIdKey),
+    ]);
     router.replace("/(un-protected)/login");
   } finally {
     setTimeout(() => {
@@ -37,8 +47,12 @@ async function handleInvalidSession(): Promise<void> {
   }
 }
 
-const setupApollo = () => {
-  const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars();
+const setupApollo = ({
+  environment,
+  tokenKey,
+  storeIdKey,
+}: ApolloSetupOptions) => {
+  const { GRAPHQL_URL, WS_GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED } = environment;
 
   const cache = new InMemoryCache(); // eslint-disable-next-line new-cap
   const httpLink = createHttpLink({
@@ -57,20 +71,25 @@ const setupApollo = () => {
       lazy: true,
       timeout: 30000,
       connectionParams: async () => {
-        const token = await SecureStore.getItemAsync(STORE_TOKEN);
-        const nonce = PublicAccessTokenService.getNonce();
-        let publicToken: string | null = null;
-        try {
-          publicToken = await PublicAccessTokenService.getToken(client);
-        } catch {
-          publicToken = null;
-        }
-        return {
+        const token = await SecureStore.getItemAsync(tokenKey);
+        const params: Record<string, string> = {
           authorization: token ? `Bearer ${token}` : "",
-          nonce: nonce || "",
-          "bop-auth": publicToken ? `Bearer ${publicToken}` : "",
           "x-platform": "mobile",
         };
+
+        if (PUBLIC_ACCESS_REQUIRED) {
+          const nonce = PublicAccessTokenService.getNonce();
+          let publicToken: string | null = null;
+          try {
+            publicToken = await PublicAccessTokenService.getToken(client);
+          } catch {
+            publicToken = null;
+          }
+          params.nonce = nonce || "";
+          params["bop-auth"] = publicToken ? `Bearer ${publicToken}` : "";
+        }
+
+        return params;
       },
     },
   });
@@ -78,18 +97,18 @@ const setupApollo = () => {
   const request = async (operation: Operation) => {
     const skipPublicAuth =
       operation.getContext().headers?.["x-skip-public-auth"];
-    const token = await SecureStore.getItemAsync(STORE_TOKEN);
-    const nonce = PublicAccessTokenService.getNonce();
+    const token = await SecureStore.getItemAsync(tokenKey);
 
     const headers: Record<string, string> = {
       authorization: token ? `Bearer ${token}` : "",
-      nonce: nonce || "",
       "x-platform": "mobile",
       ...operation.getContext().headers,
     };
 
-    if (!skipPublicAuth) {
+    if (PUBLIC_ACCESS_REQUIRED && !skipPublicAuth) {
+      const nonce = PublicAccessTokenService.getNonce();
       const publicToken = await PublicAccessTokenService.getToken(client);
+      headers.nonce = nonce || "";
       headers["bop-auth"] = publicToken ? `Bearer ${publicToken}` : "";
     }
 
@@ -130,7 +149,7 @@ const setupApollo = () => {
       networkError.statusCode === 401;
 
     if (hasInvalidSession || isUnauthorizedNetworkError) {
-      void handleInvalidSession();
+      void handleInvalidSession(tokenKey, storeIdKey);
     }
   });
 
@@ -144,29 +163,53 @@ const setupApollo = () => {
   // }, wsLink);
   // Terminating Link
 
-  const terminatingLink = split(({ query }) => {
-    const definition = getMainDefinition(query) as
-      | DefinitionNode
-      | (FragmentDefinitionNode & {
-          kind: string;
-          operation?: string;
-        });
-    return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
-    );
-  }, wsLink);
-
-  const link = concat(
-    ApolloLink.from([errorLink, terminatingLink, requestLink]),
+  const terminatingLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query) as
+        | DefinitionNode
+        | (FragmentDefinitionNode & {
+            kind: string;
+            operation?: string;
+          });
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    },
+    wsLink,
     httpLink,
   );
+
+  const link = ApolloLink.from([errorLink, requestLink, terminatingLink]);
   const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
     link,
     cache,
   });
 
+  Object.assign(client, {
+    disposeModeClient: () => {
+      const subscriptionClient = (
+        wsLink as unknown as {
+          subscriptionClient: {
+            close: (isForced?: boolean, closedByUser?: boolean) => void;
+          };
+        }
+      ).subscriptionClient;
+      subscriptionClient.close(true, true);
+      client.stop();
+    },
+  });
+
   return client;
+};
+
+export const disposeApollo = (
+  client: ApolloClient<NormalizedCacheObject> & {
+    disposeModeClient?: () => void;
+  },
+) => {
+  client.disposeModeClient?.();
+  void client.clearStore();
 };
 
 export default setupApollo;

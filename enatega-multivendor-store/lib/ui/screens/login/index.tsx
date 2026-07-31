@@ -24,10 +24,12 @@ import { useApptheme } from "@/lib/context/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { useTranslation } from "react-i18next";
 import { CustomContinueButton } from "../../useable-components";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
+import { STORE_SERVER_MODES, StoreServerMode } from "@/lib/mode/store-mode";
 
 const initial: ILoginInitialValues = {
-  username: "FalafelTmeer@yopmail.com",
-  password: "Yalla0014yalla0014@",
+  username: "",
+  password: "",
 };
 
 const LoginScreen = () => {
@@ -38,10 +40,16 @@ const LoginScreen = () => {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { isLogging, onLogin } = useLogin();
+  const { isSwitchingMode, mode, selectMode } = useStoreMode();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
     await onLogin(creds.username, creds.password);
+  };
+
+  const onSelectMode = async (nextMode: StoreServerMode) => {
+    if (isLogging || isSwitchingMode) return;
+    await selectMode(nextMode);
   };
 
   return (
@@ -68,6 +76,54 @@ const LoginScreen = () => {
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
               return (
                 <View className="mt-24 p-5 items-center gap-y-2">
+                  <View
+                    className="flex-row w-full rounded-xl border p-1 mb-5"
+                    style={{
+                      backgroundColor: appTheme.screenBackground,
+                      borderColor: appTheme.borderLineColor,
+                    }}
+                  >
+                    {[
+                      {
+                        label: t("Multi Vendor"),
+                        value: STORE_SERVER_MODES.MULTI,
+                      },
+                      {
+                        label: t("Single Vendor"),
+                        value: STORE_SERVER_MODES.SINGLE,
+                      },
+                    ].map((option) => {
+                      const selected = mode === option.value;
+                      return (
+                        <TouchableOpacity
+                          key={option.value}
+                          accessibilityRole="button"
+                          accessibilityState={{ selected }}
+                          disabled={isLogging || isSwitchingMode}
+                          onPress={() => onSelectMode(option.value)}
+                          className="flex-1 rounded-lg py-3 px-2"
+                          style={{
+                            backgroundColor: selected
+                              ? appTheme.primary
+                              : "transparent",
+                            opacity: isLogging || isSwitchingMode ? 0.65 : 1,
+                          }}
+                        >
+                          <Text
+                            className="text-center text-sm font-semibold"
+                            style={{
+                              color: selected
+                                ? appTheme.black
+                                : appTheme.fontMainColor,
+                            }}
+                          >
+                            {option.label}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+
                   {/* Icon */}
                   <Icon name="envelope" size={30} color={appTheme.primary} />
 
@@ -155,16 +211,10 @@ const LoginScreen = () => {
                       {errors?.password}
                     </Text>
                   )}
-                  <Text
-                    className="text-center text-xs mb-2"
-                    style={{ color: appTheme.fontSecondColor }}
-                  >
-                    {t("Demo credentials are pre-filled for evaluation.")}
-                  </Text>
                   {/* Login Button */}
                   <CustomContinueButton
                     title={t("Login")}
-                    disabled={isLogging}
+                    disabled={isLogging || isSwitchingMode}
                     isLoading={isLogging}
                     onPress={() => handleSubmit()}
                   />

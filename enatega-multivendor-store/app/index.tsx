@@ -5,13 +5,15 @@ import Constants from "expo-constants";
 
 // Constant
 import useNotification from "@/lib/hooks/useNotification";
-import { ROUTES, STORE_TOKEN } from "@/lib/utils/constants";
+import { ROUTES } from "@/lib/utils/constants";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import { getStoreId } from "@/lib/services";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 function App() {
   const notificationRef = useRef(true);
   const router = useRouter();
+  const { storeIdKey, tokenKey } = useStoreMode();
   const {
     restaurantData,
     getPermission,
@@ -21,15 +23,15 @@ function App() {
   } = useNotification();
 
   const init = useCallback(async () => {
-    const token = await SecureStore.getItemAsync(STORE_TOKEN);
-    const storeId = await getStoreId();
+    const token = await SecureStore.getItemAsync(tokenKey);
+    const storeId = await getStoreId(storeIdKey);
 
     if (token && storeId) {
       router.replace(ROUTES.home);
     } else {
       router.replace(ROUTES.login);
     }
-  }, [router]);
+  }, [router, storeIdKey, tokenKey]);
 
   useEffect(() => {
     if (!storeLookupComplete) return;

@@ -6,8 +6,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // Constants
-import { STORE_ID, STORE_TOKEN } from "@/lib/utils/constants";
 import { getStoreId, removeItem } from "@/lib/services";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 // Interfaces
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
@@ -32,14 +32,15 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
   const [isSelected, setIsSelected] = useState("");
   const [isInitialized, setIsInitialized] = useState(false);
   const [token, setToken] = useState<string>("");
+  const { storeIdKey, tokenKey } = useStoreMode();
 
   const setTokenAsync = useCallback(
     async (token: string) => {
-      await SecureStore.setItemAsync(STORE_TOKEN, token);
+      await SecureStore.setItemAsync(tokenKey, token);
       await client.clearStore();
       setToken(token);
     },
-    [client],
+    [client, tokenKey],
   );
 
   // Handlers
@@ -75,9 +76,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     try {
       await Promise.all([
         client.clearStore(),
-        SecureStore.deleteItemAsync(STORE_TOKEN),
-        removeItem(STORE_ID),
-        AsyncStorage.removeItem(STORE_ID),
+        SecureStore.deleteItemAsync(tokenKey),
+        removeItem(storeIdKey),
       ]);
 
       setToken("");
@@ -85,12 +85,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     } catch {
       return;
     }
-  }, [client]);
+  }, [client, storeIdKey, tokenKey]);
 
   const checkAuth = useCallback(async () => {
     try {
-      const token = await SecureStore.getItemAsync(STORE_TOKEN);
-      const storeId = await getStoreId();
+      const token = await SecureStore.getItemAsync(tokenKey);
+      const storeId = await getStoreId(storeIdKey);
 
       if (!storeId || !token) {
         return await logout();
@@ -101,7 +101,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     } finally {
       setIsInitialized(true);
     }
-  }, [logout]);
+  }, [logout, storeIdKey, tokenKey]);
 
   // UseEffects
   useEffect(() => {

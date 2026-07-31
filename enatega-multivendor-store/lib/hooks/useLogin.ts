@@ -9,14 +9,16 @@ import { STORE_LOGIN } from "../apollo/mutations/login.mutation";
 import { AuthContext } from "../context/global/auth.context";
 import { setItem } from "../services";
 import { FlashMessageComponent } from "../ui/useable-components";
-import { ROUTES, STORE_ID } from "../utils/constants";
+import { ROUTES } from "../utils/constants";
 import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 const useLogin = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Context
   const { setTokenAsync } = useContext(AuthContext);
+  const { storeIdKey } = useStoreMode();
 
   // API
   const [login] = useMutation(STORE_LOGIN, {
@@ -65,7 +67,7 @@ const useLogin = () => {
     setIsLoading(false);
 
     if (restaurantLogin) {
-      await setItem(STORE_ID, restaurantLogin.restaurantId);
+      await setItem(storeIdKey, restaurantLogin.restaurantId);
       await setTokenAsync(restaurantLogin?.token);
       router.replace(ROUTES.home);
     }
