@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "eslint . && prettier --check .",
-    "check:single-vendor-schema": "node scripts/check-single-vendor-schema.js"
+    "check:single-vendor-schema": "node scripts/check-single-vendor-schema.js",
+    "check:single-vendor-auth": "node scripts/check-single-vendor-store-auth.js"
   },
   "jest": {
     "preset": "jest-expo"
