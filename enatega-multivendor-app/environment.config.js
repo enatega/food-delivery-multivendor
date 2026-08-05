@@ -39,10 +39,10 @@ const MULTI_ENV_CONFIG = {
   }
 }
 
-// Production single-vendor API. Environment variables can still override it
-// for explicit local or staging validation.
+// Temporary single-vendor development tunnel. Environment variables can still
+// override it for other local, staging, or production environments.
 const SINGLE_VENDOR_DEFAULT_HOST =
-  'enatega-multivendor-api-production-9b09.up.railway.app'
+  '3086ptqf-8001.inc1.devtunnels.ms'
 
 const getSingleVendorConfig = () => {
   const graphqlUrl = process.env.EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL

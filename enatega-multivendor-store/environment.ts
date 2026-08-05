@@ -12,8 +12,7 @@ const MULTI_VENDOR_ENVIRONMENT: StoreEnvironment = {
   PUBLIC_ACCESS_REQUIRED: true,
 };
 
-const SINGLE_VENDOR_DEFAULT_HOST =
-  "enatega-multivendor-api-production-9b09.up.railway.app";
+const SINGLE_VENDOR_DEFAULT_HOST = "3086ptqf-8001.inc1.devtunnels.ms";
 
 const getSingleVendorEnvironment = (): StoreEnvironment => ({
   GRAPHQL_URL:

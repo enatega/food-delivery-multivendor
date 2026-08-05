@@ -15,10 +15,10 @@ const MULTI_WS_GRAPHQL_URL =
   "wss://aws-server-v2.enatega.com/graphql";
 const SINGLE_GRAPHQL_URL =
   process.env.EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL ??
-  "https://enatega-multivendor-api-production-9b09.up.railway.app/graphql";
+  "https://3086ptqf-8001.inc1.devtunnels.ms/graphql";
 const SINGLE_WS_GRAPHQL_URL =
   process.env.EXPO_PUBLIC_SINGLE_VENDOR_WS_GRAPHQL_URL ??
-  "wss://enatega-multivendor-api-production-9b09.up.railway.app/graphql";
+  "wss://3086ptqf-8001.inc1.devtunnels.ms/graphql";
 
 let devMessagesLoaded = false;
 

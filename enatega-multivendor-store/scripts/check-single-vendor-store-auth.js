@@ -2,10 +2,8 @@
 const fs = require("node:fs");
 const WebSocket = require("ws");
 
-const DEFAULT_GRAPHQL_URL =
-  "https://enatega-multivendor-api-production-9b09.up.railway.app/graphql";
-const DEFAULT_WS_URL =
-  "wss://enatega-multivendor-api-production-9b09.up.railway.app/graphql";
+const DEFAULT_GRAPHQL_URL = "https://3086ptqf-8001.inc1.devtunnels.ms/graphql";
+const DEFAULT_WS_URL = "wss://3086ptqf-8001.inc1.devtunnels.ms/graphql";
 
 const readCredentials = () => {
   const envUsername = process.env.SINGLE_VENDOR_STORE_USERNAME;

@@ -16,7 +16,7 @@ const graphQlFiles = [
 ]
 const endpoint =
   process.env.SINGLE_VENDOR_SCHEMA_URL ||
-  'https://enatega-multivendor-api-production-9b09.up.railway.app/graphql'
+  'https://3086ptqf-8001.inc1.devtunnels.ms/graphql'
 
 const visit = (node, callback) => {
   if (!node || typeof node !== 'object') return
