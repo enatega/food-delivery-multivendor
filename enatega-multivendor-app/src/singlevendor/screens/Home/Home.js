@@ -1,4 +1,5 @@
-import { View, SafeAreaView, Platform, StatusBar, FlatList, RefreshControl } from 'react-native'
+import { View, Platform, StatusBar, FlatList, RefreshControl } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import React, { useLayoutEffect, useContext, useMemo } from 'react'
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -19,6 +20,8 @@ import AddressModalFooter from '../../components/Home/AddressModalFooter'
 import OrderConfirmation from '../Checkout/OrderConfirmation'
 import { usePullToRefresh } from '../../hooks/usePullToRefresh'
 import SectionErrorCard from '../../components/SectionErrorCard'
+import SelectedLocation from '../../../components/Main/Location/Location'
+import RestaurantScheduleTime from '../../components/RestaurantScheduleTime/RestaurantScheduleTime'
 
 const Home = () => {
   const {
@@ -54,6 +57,8 @@ const Home = () => {
   })
 
   useLayoutEffect(() => {
+    if (Platform.OS === 'android') return
+
     navigation.setOptions(
       navigationOptions({
         headerMenuBackground: currentTheme.themeBackground,
@@ -69,6 +74,33 @@ const Home = () => {
       })
     )
   }, [navigation, currentTheme])
+
+  const androidHeader = Platform.OS === 'android'
+    ? (
+      <View
+        style={[
+          styles(currentTheme).androidHeader,
+          {
+            borderBottomColor:
+              currentTheme.newBorderColor2 ||
+              currentTheme.colorBorder ||
+              currentTheme.horizontalLine ||
+              'rgba(148, 163, 184, 0.28)'
+          }
+        ]}
+      >
+        <View style={styles(currentTheme).androidAddress}>
+          <SelectedLocation
+            modalOn={onOpen}
+            navigation={navigation}
+          />
+        </View>
+        <View style={styles(currentTheme).androidScheduleOverlay}>
+          <RestaurantScheduleTime />
+        </View>
+      </View>
+      )
+    : null
 
   const modalHeader = () => <AddressModalHeader onClose={() => modalRef.current.close()}></AddressModalHeader>
 
@@ -109,7 +141,11 @@ const Home = () => {
     [isConnected, bannersData, bannersError, orderConfirmation, currentTheme, t, categoriesData, error, refetch, refetchBanners]
   )
   return (
-    <SafeAreaView style={styles(currentTheme).container}>
+    <SafeAreaView
+      edges={Platform.OS === 'android' ? ['top', 'left', 'right'] : ['left', 'right']}
+      style={styles(currentTheme).container}
+    >
+      {androidHeader}
       <FlatList
         data={error ? [] : categoriesData}
         renderItem={({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />}

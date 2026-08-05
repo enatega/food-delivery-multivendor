@@ -11,6 +11,27 @@ const styles = (currentTheme) =>
     listHeader: {
       paddingTop: scale(30)
     },
+    androidHeader: {
+      position: 'relative',
+      zIndex: 20,
+      elevation: 20,
+      height: scale(58),
+      overflow: 'visible',
+      backgroundColor: currentTheme?.themeBackground || '#F5F5F5',
+      borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    androidAddress: {
+      height: '100%',
+      paddingRight: scale(116),
+      justifyContent: 'center'
+    },
+    androidScheduleOverlay: {
+      position: 'absolute',
+      right: 0,
+      bottom: -scale(13),
+      zIndex: 30,
+      elevation: 30
+    },
     image: {
       width: '100%',
       height: 200,

@@ -46,7 +46,7 @@ const SingleVendorBottomTab = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerShown: route.name === 'SVDiscovery',
+        headerShown: route.name === 'SVDiscovery' && Platform.OS === 'ios',
         tabBarIcon: ({ focused, color, size }) => {
           // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
           return <BottomTabIcon name={tabIconNames[route.name]} size={focused ? '28' : size} color={color} />
@@ -75,11 +75,13 @@ const SingleVendorBottomTab = () => {
         component={Home}
         options={{
           tabBarLabel: t('Discovery'),
-          headerRight: () => (
-            <View>
-              <RestaurantScheduleTime />
-            </View>
-          ),
+          headerRight: Platform.OS === 'ios'
+            ? () => (
+              <View>
+                <RestaurantScheduleTime />
+              </View>
+              )
+            : undefined,
           headerRightContainerStyle: {
             right: 0,
             width: scale(108),

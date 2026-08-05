@@ -53,6 +53,10 @@ export const useCreateAccount = () => {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const statusBarBackgroundColor =
+    mode === APP_MODES.SINGLE
+      ? currentTheme.themeBackground
+      : currentTheme.main
   const socialLoginMessages = {
     missingToken:
       'Your social sign-in did not return a valid token. Please try again.',
@@ -322,7 +326,7 @@ export const useCreateAccount = () => {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.main)
+      StatusBar.setBackgroundColor(statusBarBackgroundColor)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
@@ -346,6 +350,7 @@ export const useCreateAccount = () => {
     themeContext,
     mutateLogin,
     currentTheme,
+    statusBarBackgroundColor,
     navigateToLogin,
     navigateToRegister,
     openTerms,

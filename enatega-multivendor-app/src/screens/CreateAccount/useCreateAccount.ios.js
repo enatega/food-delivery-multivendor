@@ -385,6 +385,7 @@ export const useCreateAccount = () => {
     themeContext,
     mutateLogin,
     currentTheme,
+    statusBarBackgroundColor: currentTheme.themeBackground,
     navigateToLogin,
     navigateToRegister,
     openTerms,

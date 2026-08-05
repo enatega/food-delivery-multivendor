@@ -20,7 +20,7 @@ import { dismissSessionExpiredModal } from '../../utils/session'
 const { height } = Dimensions.get('window')
 
 const CreateAccount = (props) => {
-  const { enableApple, loginButton, loginButtonSetter, loading, setLoading, themeContext, currentTheme, mutateLogin, navigateToLogin, navigation, signIn } = useCreateAccount()
+  const { enableApple, loginButton, loginButtonSetter, loading, setLoading, themeContext, currentTheme, statusBarBackgroundColor, mutateLogin, navigateToLogin, navigation, signIn } = useCreateAccount()
 
   const { t } = useTranslation()
 
@@ -127,11 +127,11 @@ const CreateAccount = (props) => {
   const renderGuestButton = () => (
     <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).guestButton} onPress={() => navigation.navigate('Discovery')} disabled={props.loadingIcon}>
       {props.loadingIcon ? (
-        <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
+          <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
       ) : (
-        <TextDefault H4 textColor={currentTheme.primary} center bold>
-          {t('continueAsGuest')}
-        </TextDefault>
+          <TextDefault H4 textColor={currentTheme.primary} center bold>
+            {t('continueAsGuest')}
+          </TextDefault>
       )}
     </TouchableOpacity>
   )
@@ -141,7 +141,7 @@ const CreateAccount = (props) => {
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
-      <StatusBar backgroundColor='transparent' translucent barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
+      <StatusBar backgroundColor={statusBarBackgroundColor} translucent={false} barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
 
       <View style={styles().mainContainer}>
         {/* GIF Section */}
