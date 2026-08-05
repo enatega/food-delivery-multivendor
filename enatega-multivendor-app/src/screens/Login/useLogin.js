@@ -17,7 +17,10 @@ import { useTranslation } from 'react-i18next'
 import { useAppMode } from '../../mode/AppModeContext'
 import { getModeHomeRoute } from '../../mode/navigation'
 import { APP_MODES } from '../../mode/constants'
-import { LOGIN_SINGLE_VENDOR } from '../../singlevendor/apollo/mutations'
+import {
+  EMAIL_EXIST_SINGLE_VENDOR,
+  LOGIN_SINGLE_VENDOR
+} from '../../singlevendor/apollo/mutations'
 
 const LOGIN = gql`
   ${login}
@@ -34,6 +37,8 @@ export const useLogin = () => {
   const { mode } = useAppMode()
   const loginDocument =
     mode === APP_MODES.SINGLE ? LOGIN_SINGLE_VENDOR : LOGIN
+  const emailExistDocument =
+    mode === APP_MODES.SINGLE ? EMAIL_EXIST_SINGLE_VENDOR : EMAIL
   const [email, setEmail] = useState('')
   const emailRef = useRef('')
   const [password, setPassword] = useState('')
@@ -45,7 +50,7 @@ export const useLogin = () => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const { setTokenAsync } = useContext(AuthContext)
 
-  const [EmailEixst, { loading }] = useMutation(EMAIL, {
+  const [EmailEixst, { loading }] = useMutation(emailExistDocument, {
     onCompleted,
     onError
   })

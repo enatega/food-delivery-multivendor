@@ -31,6 +31,22 @@ export const LOGIN_SINGLE_VENDOR = gql`
   }
 `
 
+export const EMAIL_EXIST_SINGLE_VENDOR = gql`
+  mutation EmailExistSingleVendor($email: String!) {
+    emailExist(email: $email) {
+      _id
+    }
+  }
+`
+
+export const PHONE_EXIST_SINGLE_VENDOR = gql`
+  mutation PhoneExistSingleVendor($phone: String!) {
+    phoneExist(phone: $phone) {
+      _id
+    }
+  }
+`
+
 export const CHANGE_PASSWORD = gql`
   mutation ChangePassword($oldPassword: String!, $newPassword: String!) {
     changePassword(oldPassword: $oldPassword, newPassword: $newPassword)
