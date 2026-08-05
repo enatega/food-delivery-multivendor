@@ -301,7 +301,14 @@ export const UserProvider = (props) => {
           id: `${dataProfile.profile.__typename}:${dataProfile.profile._id}`
         })
       }
-      await client.resetStore()
+      // resetStore refetches every active query. On the single-vendor guest
+      // flow that can turn one unavailable/401 response into an endless loop.
+      // Its cache is mode-isolated, so clearing it is the correct logout action.
+      if (mode === APP_MODES.SINGLE) {
+        await client.clearStore()
+      } else {
+        await client.resetStore()
+      }
       await dismissSessionExpiredModal()
 
       // Do NOT navigate here. The root navigator is auth-gated with

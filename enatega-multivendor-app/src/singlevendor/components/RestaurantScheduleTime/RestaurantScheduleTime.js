@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import { GET_SCHEDULE_UNTIL_NEXT_DAY_OFF } from '../../apollo/queries'
@@ -14,7 +14,7 @@ const RestaurantScheduleTime = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = useMemo(() => ({ isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }), [themeContext.ThemeValue, i18n])
 
-  const { data, loading, error } = useQuery(
+  const { data, loading, error, refetch } = useQuery(
     GET_SCHEDULE_UNTIL_NEXT_DAY_OFF,
     { fetchPolicy: 'cache-and-network' }
   )
@@ -64,7 +64,7 @@ const RestaurantScheduleTime = () => {
   })
 
   return (
-    <View
+    <Pressable
       accessible
       accessibilityLabel={
         hasSchedule
@@ -72,6 +72,8 @@ const RestaurantScheduleTime = () => {
           : unavailableText
       }
       style={styles(currentTheme).container}
+      disabled={!error || loading}
+      onPress={() => refetch().catch(() => {})}
     >
       <View style={styles(currentTheme).iconContainer}>
         {loading && !data
@@ -83,7 +85,7 @@ const RestaurantScheduleTime = () => {
             )
           : (
             <Feather
-              name='clock'
+              name={error ? 'refresh-cw' : 'clock'}
               size={scale(16)}
               color={currentTheme.main}
             />
@@ -113,7 +115,7 @@ const RestaurantScheduleTime = () => {
           {hasSchedule ? scheduleSummary.hours : error ? '—' : ''}
         </TextDefault>
       </View>
-    </View>
+    </Pressable>
   )
 }
 

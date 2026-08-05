@@ -76,8 +76,14 @@ const useCart = () => {
     }
   }, [error])
 
+  const retry = async() => {
+    setError(null)
+    const result = await refetch()
+    return result
+  }
+
   return {
-    refetch
+    refetch: retry
   }
 }
 

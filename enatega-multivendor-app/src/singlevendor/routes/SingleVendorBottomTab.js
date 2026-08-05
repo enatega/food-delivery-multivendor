@@ -82,10 +82,12 @@ const SingleVendorBottomTab = () => {
           ),
           headerRightContainerStyle: {
             right: 0,
-            width: scale(104),
+            width: scale(108),
+            height: '100%',
+            justifyContent: 'center',
             paddingRight: 0,
             overflow: 'visible',
-            transform: [{ translateY: scale(13) }],
+            transform: [{ translateY: scale(Platform.OS === 'android' ? 8 : 13) }],
             zIndex: 10
           }
         }}

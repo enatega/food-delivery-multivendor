@@ -10,22 +10,34 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
   const { isConnected } = useNetworkStatus()
   const wasOfflineRef = useRef(false)
 
-  const variables = {
-    orderId
-  }
-
-  console.log('Confirmation Variables:', variables)
+  const variables = { orderId }
 
   const queryDocument = isHome ? RECENT_ACTIVE_ORDER : ORDER_DETAILS_PAGE
   const shouldSkip = !isConnected || (!isHome && !orderId)
 
-  const { data, loading, error, refetch } = useQuery(queryDocument, {
+  const {
+    data,
+    loading,
+    error,
+    refetch,
+    startPolling,
+    stopPolling
+  } = useQuery(queryDocument, {
     variables: isHome ? undefined : variables,
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
-    pollInterval: 15000,
     skip: shouldSkip
   })
+
+  useEffect(() => {
+    if (shouldSkip || error || !data) {
+      stopPolling()
+      return
+    }
+
+    startPolling(15000)
+    return stopPolling
+  }, [data, error, shouldSkip, startPolling, stopPolling])
 
   useEffect(() => {
     if (!isConnected) {
@@ -35,9 +47,16 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
 
     if (wasOfflineRef.current) {
       wasOfflineRef.current = false
-      refetch?.()
+      refetch?.().catch(() => {})
     }
   }, [isConnected, refetch])
+
+  const retry = async() => {
+    stopPolling()
+    const result = await refetch()
+    if (result?.data) startPolling(15000)
+    return result
+  }
 
   const orderQueryResponse = isHome ? data?.recentActiveOrder : data?.orderDetailsPage
   const confirmation = orderQueryResponse?.data
@@ -48,12 +67,10 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
     return Number.isNaN(parsed) ? undefined : parsed
   }
 
-  console.log('Checkout Data:', data, confirmation?.items, error)
-  console.log('🚀 ~ useOrderConfirmation ~ confirmation?.couponDiscount:', confirmation)
   return {
     loading: loading && !data,
     error,
-    refetch,
+    refetch: retry,
 
     hasActiveOrder: Boolean(orderQueryResponse?.success && (confirmation || initialOrder)),
     recentActiveOrderMessage: orderQueryResponse?.message,

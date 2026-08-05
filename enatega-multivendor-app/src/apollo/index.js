@@ -102,7 +102,7 @@ const setupApollo = ({
       RestaurantPreview: {
         fields: {
           distanceWithCurrentLocation: {
-            read(_existing, {variables, field, readField}) {
+            read(_existing, { variables, field, readField }) {
               const restaurantLocation = readField('location')
               const distance = calculateDistance(restaurantLocation?.coordinates[0], restaurantLocation?.coordinates[1], variables.latitude, variables.longitude)
               return distance
@@ -120,9 +120,12 @@ const setupApollo = ({
   const wsLink = new WebSocketLink({
     uri: WS_GRAPHQL_URL,
     options: {
-      reconnect: true,
+      // A stopped single-vendor server must settle into an error state instead
+      // of keeping the app in an invisible reconnect loop. Multivendor keeps
+      // its existing reconnect behaviour.
+      reconnect: mode !== APP_MODES.SINGLE,
       lazy: true,
-      connectionParams: async () => {
+      connectionParams: async() => {
         const token = await getToken(mode)
         const hasExpiredUserToken = token && isJwtTokenExpired(token)
 
@@ -151,6 +154,7 @@ const setupApollo = ({
     }
 
     operation.setContext({
+      hasUserToken: Boolean(token && !hasExpiredUserToken),
       headers: {
         authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : '',
         ...(publicAccessRequired
@@ -209,11 +213,15 @@ const setupApollo = ({
       networkError?.statusCode === 401 ||
       networkError?.response?.status === 401
 
-    if (hasInvalidSession || hasUnauthorizedNetworkError) {
-      void invalidateUserSession({
+    const hasUserToken = operation.getContext()?.hasUserToken === true
+
+    // Single-vendor has protected operations that can return 401 for guests.
+    // Only invalidate a session when this request actually carried a user JWT.
+    if (hasUserToken && (hasInvalidSession || hasUnauthorizedNetworkError)) {
+      invalidateUserSession({
         reason: hasUnauthorizedNetworkError ? 'network_unauthorized' : 'graphql_unauthenticated',
         mode
-      })
+      }).catch(() => {})
       return
     }
 
@@ -290,7 +298,7 @@ const setupApollo = ({
     try {
       wsLink.subscriptionClient?.close(true, true)
     } catch (error) {
-      if (__DEV__) console.warn('Failed to close Apollo WebSocket', error)
+      if (global.__DEV__) console.warn('Failed to close Apollo WebSocket', error)
     }
     return client.clearStore()
   }

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect, useRef, useMemo } from 'react'
+import React, { useContext, useLayoutEffect, useRef, useMemo } from 'react'
 import { View, TouchableOpacity, StatusBar, Platform, SafeAreaView, FlatList, ActivityIndicator, RefreshControl } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -24,10 +24,11 @@ import { useMutation } from '@apollo/client'
 import { CLEAR_CART } from '../../apollo/mutations'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { usePullToRefresh } from '../../hooks/usePullToRefresh'
+import SectionErrorCard from '../../components/SectionErrorCard'
 
 const Cart = (props) => {
   const { items, grandTotal, loading, error, isBelowMinimumOrder, clearCart } = useCartStore()
-  console.log("items in cart:", JSON.stringify(items, null, 2))
+  console.log('items in cart:', JSON.stringify(items, null, 2))
   const { refetch } = useCart()
   const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetch])
   // const items = [] // For testing empty cart
@@ -126,9 +127,21 @@ const Cart = (props) => {
     return number.toFixed(2)
   }
 
-  //Cart Skeleton loading
-  if (loading) {
+  // Cart Skeleton loading
+  if (loading && items.length === 0) {
     return <CartSkeleton />
+  }
+
+  if (error && items.length === 0) {
+    return (
+      <SafeAreaView style={styles(currentTheme).mainContainer}>
+        <SectionErrorCard
+          title={t('Cart')}
+          message={t('cartLoadFailed', { defaultValue: 'Your cart could not be loaded.' })}
+          onRetry={refetch}
+        />
+      </SafeAreaView>
+    )
   }
 
   return (
@@ -147,9 +160,11 @@ const Cart = (props) => {
                 {t('yourItems') || 'Your items'}
               </TextDefault>
 
-              {emptyingCart ? (
+              {emptyingCart
+                ? (
                 <ActivityIndicator size={'small'} color={currentTheme.black}></ActivityIndicator>
-              ) : (
+                  )
+                : (
                 <TouchableOpacity
                   onPress={() => {
                     mutateClearCart()
@@ -159,7 +174,7 @@ const Cart = (props) => {
                     {t('Clear cart') || 'Clear'}
                   </TextDefault>
                 </TouchableOpacity>
-              )}
+                  )}
             </View>
           )
         }

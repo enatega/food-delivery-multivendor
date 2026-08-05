@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
-import { SafeAreaView, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
 import OrdersContext from '../../context/Orders'
@@ -7,6 +8,7 @@ import UserContext from '../../context/User'
 import VendorModeToggle from './VendorModeToggle'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
+import { scale } from '../../utils/scaling'
 
 const ModeProfileTab = ({
   AuthenticatedComponent,
@@ -29,19 +31,31 @@ const ModeProfileTab = ({
   const Screen = isLoggedIn ? AuthenticatedComponent : GuestComponent
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: currentTheme.themeBackground }}>
-      <VendorModeToggle
-        hasActiveOrder={hasActiveOrder}
-        hasCartItems={
-          hasCartItemsOverride ??
-          (Array.isArray(cart) && cart.length > 0)
-        }
-      />
+    <SafeAreaView edges={['top']} style={[styles.safeArea, { backgroundColor: currentTheme.themeBackground }]}>
+      <View style={[styles.toggleRegion, { borderBottomColor: currentTheme.newBorderColor2 || currentTheme.colorBorder }] }>
+        <VendorModeToggle
+          hasActiveOrder={hasActiveOrder}
+          hasCartItems={
+            hasCartItemsOverride ??
+            (Array.isArray(cart) && cart.length > 0)
+          }
+        />
+      </View>
       <View style={{ flex: 1 }}>
         <Screen {...screenProps} />
       </View>
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  toggleRegion: {
+    paddingTop: Platform.OS === 'android' ? scale(8) : scale(3),
+    paddingBottom: scale(8),
+    paddingHorizontal: scale(14),
+    borderBottomWidth: StyleSheet.hairlineWidth
+  }
+})
 
 export default ModeProfileTab

@@ -1,16 +1,26 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useCallback } from 'react'
-import useHome from '../../screens/Home/useHome'
-import HorizontalCategoriesList from '../HorizontalCategoriesList'
+import { View } from 'react-native'
+import React from 'react'
+import { useQuery } from '@apollo/client'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { FlashList } from '@shopify/flash-list'
 import RenderCategoryCard from '../RenderCategoryCard'
 import HorizontalProductsEmptyView from '../HorizontalProductsEmptyView'
+import SectionErrorCard from '../SectionErrorCard'
+import { GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR } from '../../apollo/queries'
 
 const AllCategories = ({ currentTheme, t, handleSeeAll }) => {
-
-  const { data } = useHome()
+  const { data, error, refetch } = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR)
   const categoriesData = data?.getRestaurantCategoriesSingleVendor
+
+  if (error) {
+    return (
+      <SectionErrorCard
+        title={t('All Categories')}
+        onRetry={refetch}
+        style={{ marginHorizontal: 0 }}
+      />
+    )
+  }
 
   return (
     <>

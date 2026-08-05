@@ -5,8 +5,9 @@ import { Ionicons } from '@expo/vector-icons'
 import SearchesList from './SearchesList'
 import ProductCard from '../ProductCard'
 import EmptySearch from './EmptySearch'
+import SectionErrorCard from '../SectionErrorCard'
 
-const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm, setSearchTerm, currentTheme, t, insets, data, loading, debouncedSearch, onProductPress, handleAddToCart, isSearched }) => {
+const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm, setSearchTerm, currentTheme, t, insets, data, loading, error, onRetry, debouncedSearch, onProductPress, handleAddToCart, isSearched }) => {
   const searchData = data?.searchFood && data?.searchFood?.length > 0 ? data?.searchFood : []
 
   const onBackPress = () => {
@@ -26,8 +27,17 @@ const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm
           </View>
         </View>
 
-        {isSearched
+        {error && searchTerm.trim()
           ? (
+            <SectionErrorCard
+              title={t('Search')}
+              message={t('searchLoadFailed', { defaultValue: 'Search results could not be loaded.' })}
+              onRetry={onRetry}
+              style={{ marginHorizontal: 0 }}
+            />
+            )
+          : isSearched
+            ? (
           <>
             <FlatList
             estimatedItemSize={190}
@@ -42,10 +52,10 @@ const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm
               ListEmptyComponent={<EmptySearch currentTheme={currentTheme} t={t} />}
             />
           </>
-            )
-          : (
-          <SearchesList currentThem={currentTheme} t={t} setSearchTerm={setSearchTerm} />
-            )}
+              )
+            : (
+          <SearchesList currentTheme={currentTheme} t={t} setSearchTerm={setSearchTerm} />
+              )}
       </View>
     </Modal>
   )

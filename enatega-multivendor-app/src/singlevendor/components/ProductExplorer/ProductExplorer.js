@@ -155,19 +155,18 @@ import { View, StyleSheet } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import PagerView from 'react-native-pager-view'
 import { useQuery } from '@apollo/client'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation, useRoute } from '@react-navigation/native'
 
 import CategoryItem from './CategoryItem'
 import ProductPage from './ProductPage'
 import SearchHeader from './SearchHeader'
-import SearchModal from './SearchModal'
 import ProductExplorerSkeleton from './ProductExplorerSkeleton'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { GET_ALL_CATEGORIES_WITH_SUBCATEGORIES_ONLY_SEE_ALL_SINGLE_VENDOR } from '../../apollo/queries'
 import BrowseModal from '../Browse/BrowseModal'
 import useBrowse from '../../screens/Browse/useBrowse'
+import SectionErrorCard from '../SectionErrorCard'
 
 const ProductExplorer = () => {
   const navigation = useNavigation()
@@ -178,11 +177,28 @@ const ProductExplorer = () => {
   const hasInitializedRef = useRef(false)
 
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
-  
 
-  const { data, loading } = useQuery(GET_ALL_CATEGORIES_WITH_SUBCATEGORIES_ONLY_SEE_ALL_SINGLE_VENDOR)
-  const { dismissKeyboard, modalVisible, setModalVisible, handleClearSearch, handleModalClose, t, currentTheme, insets, inputRef, searchTerm, setSearchTerm, data: searchedData, loading: searchedLoading, debouncedSearch, onProductPress, handleAddToCart, handleSeeAll, isCategoryModalVisible, setisCategoryModalVisible, categoryId, isSearched } = useBrowse()
-
+  const { data, loading, error, refetch } = useQuery(GET_ALL_CATEGORIES_WITH_SUBCATEGORIES_ONLY_SEE_ALL_SINGLE_VENDOR)
+  const {
+    modalVisible,
+    setModalVisible,
+    handleClearSearch,
+    handleModalClose,
+    t,
+    currentTheme,
+    insets,
+    inputRef,
+    searchTerm,
+    setSearchTerm,
+    data: searchedData,
+    loading: searchedLoading,
+    error: searchError,
+    retrySearch,
+    debouncedSearch,
+    onProductPress,
+    handleAddToCart,
+    isSearched
+  } = useBrowse()
 
   const categories = data?.getAllCategoriesWithSubCategoriesOnlySeeAllSingleVendor ?? []
   console.log('🚀 ~ ProductExplorer ~ categories:', categories)
@@ -212,6 +228,15 @@ const ProductExplorer = () => {
   }, [categories, route?.params?.categoryId])
 
   if (loading) return <ProductExplorerSkeleton />
+
+  if (error) {
+    return (
+      <View style={[styles.container, styles.errorScreen, { backgroundColor: theme[themeContext.ThemeValue].themeBackground, paddingTop: insets.top }] }>
+        <SearchHeader onBackPress={() => navigation.canGoBack() && navigation.goBack()} onPressSearch={() => setModalVisible(true)} />
+        <SectionErrorCard title={t('Browse')} onRetry={refetch} />
+      </View>
+    )
+  }
 
   return (
     <>
@@ -262,7 +287,7 @@ const ProductExplorer = () => {
             })
           }}
         >
-        
+
           {categories.map((category, index) => (
             <ProductPage key={category.categoryId} category={category} pageIndex={index} />
           ))}
@@ -273,8 +298,7 @@ const ProductExplorer = () => {
 
       {/* <SearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} /> */}
 
-        <BrowseModal visible={modalVisible} onClose={handleModalClose} inputRef={inputRef} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleClearSearch={handleClearSearch} currentTheme={currentTheme} t={t} insets={insets} data={searchedData} loading={searchedLoading} debouncedSearch={debouncedSearch} onProductPress={onProductPress} handleAddToCart={handleAddToCart} isSearched={isSearched} />
-
+        <BrowseModal visible={modalVisible} onClose={handleModalClose} inputRef={inputRef} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleClearSearch={handleClearSearch} currentTheme={currentTheme} t={t} insets={insets} data={searchedData} loading={searchedLoading} error={searchError} onRetry={retrySearch} debouncedSearch={debouncedSearch} onProductPress={onProductPress} handleAddToCart={handleAddToCart} isSearched={isSearched} />
 
     </>
   )
@@ -283,5 +307,6 @@ const ProductExplorer = () => {
 export default ProductExplorer
 
 const styles = StyleSheet.create({
-  container: { flex: 1 }
+  container: { flex: 1 },
+  errorScreen: { paddingHorizontal: 10 }
 })

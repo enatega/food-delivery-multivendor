@@ -18,9 +18,27 @@ import AddressModalHeader from '../../components/Home/AddressModalHeader'
 import AddressModalFooter from '../../components/Home/AddressModalFooter'
 import OrderConfirmation from '../Checkout/OrderConfirmation'
 import { usePullToRefresh } from '../../hooks/usePullToRefresh'
+import SectionErrorCard from '../../components/SectionErrorCard'
 
 const Home = () => {
-  const { data, currentTheme, t, isLoggedIn, profile, addressIcons, location, setAddressLocation, onOpen, modalRef, bannersData, isConnected, refetch, refetchBanners } = useHome()
+  const {
+    data,
+    error,
+    currentTheme,
+    t,
+    isLoggedIn,
+    profile,
+    addressIcons,
+    location,
+    setAddressLocation,
+    onOpen,
+    modalRef,
+    bannersData,
+    bannersError,
+    isConnected,
+    refetch,
+    refetchBanners
+  } = useHome()
   const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetch, refetchBanners])
   useCart()
   const categoriesData = data?.getRestaurantCategoriesSingleVendor ?? []
@@ -63,22 +81,37 @@ const Home = () => {
         {isConnected
           ? (
           <>
-            <HomeBanner banners={bannersData?.banners || []} />
+            {bannersError
+              ? (
+                <SectionErrorCard
+                  compact
+                  title={t('offers', { defaultValue: 'Offers' })}
+                  onRetry={refetchBanners}
+                />
+                )
+              : <HomeBanner banners={bannersData?.banners || []} />}
             {orderConfirmation}
           </>
             )
           : (
           <OfflineBanner currentTheme={currentTheme} t={t} />
             )}
-        <HorizontalCategoriesList categoriesData={categoriesData} />
+        {error
+          ? (
+            <SectionErrorCard
+              title={t('categories', { defaultValue: 'Categories' })}
+              onRetry={refetch}
+            />
+            )
+          : <HorizontalCategoriesList categoriesData={categoriesData} />}
       </View>
     ),
-    [isConnected, bannersData, orderConfirmation, currentTheme, t, categoriesData]
+    [isConnected, bannersData, bannersError, orderConfirmation, currentTheme, t, categoriesData, error, refetch, refetchBanners]
   )
   return (
     <SafeAreaView style={styles(currentTheme).container}>
       <FlatList
-        data={categoriesData}
+        data={error ? [] : categoriesData}
         renderItem={({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={listHeader}

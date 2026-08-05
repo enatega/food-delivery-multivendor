@@ -1,5 +1,5 @@
 import { Keyboard } from 'react-native'
-import React, { useState, useRef, useContext, useMemo } from 'react'
+import { useState, useRef, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
@@ -20,8 +20,6 @@ const useBrowse = () => {
   // use states
   const [searchTerm, setSearchTerm] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
-  const [isCategoryModalVisible, setisCategoryModalVisible] = useState(false)
-  const [categoryId, setCategoryId] = useState(null)
   const [isSearched, setisSearched] = useState(false)
   const inputRef = useRef(null)
 
@@ -55,6 +53,8 @@ const useBrowse = () => {
     }
   }, 600)
 
+  const retrySearch = () => getSearchResults(searchTerm)
+
   const dismissKeyboard = () => {
     Keyboard.dismiss()
     inputRef.current?.blur()
@@ -78,7 +78,7 @@ const useBrowse = () => {
   const onProductPress = (id, categoryId) => {
     navigation.navigate('ProductDetails', {
       productId: id,
-      categoryId: categoryId
+      categoryId
     })
     setTimeout(() => {
       setModalVisible(false)
@@ -119,16 +119,14 @@ const useBrowse = () => {
     t,
     insets,
     getSearchResults,
-    loading: loading,
+    loading,
     data,
     error,
+    retrySearch,
     debouncedSearch,
     onProductPress,
     handleAddToCart,
     handleSeeAll,
-    isCategoryModalVisible,
-    setisCategoryModalVisible,
-    categoryId,
     isSearched
   }
 }

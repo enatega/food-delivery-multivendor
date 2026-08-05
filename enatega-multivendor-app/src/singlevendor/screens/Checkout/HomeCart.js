@@ -15,6 +15,7 @@ import {
   SINGLE_VENDOR_TRACKING_STATUS,
   isSingleVendorPickupOrder
 } from '../../utils/orderTrackingStatus'
+import SectionErrorCard from '../../components/SectionErrorCard'
 
 const DELIVERY_TIMELINE_SEGMENTS = 6
 const PICKUP_TIMELINE_SEGMENTS = 2
@@ -135,6 +136,8 @@ const HomeCart = () => {
 
   const {
     loading,
+    error,
+    refetch,
     hasActiveOrder,
     orderItems,
     orderNo,
@@ -169,6 +172,17 @@ const HomeCart = () => {
 
   if (loading) {
     return <HomeCartSkeleton currentTheme={currentTheme} themedStyles={themedStyles} timelineSegments={timelineSegments} />
+  }
+
+  if (error) {
+    return (
+      <SectionErrorCard
+        compact
+        title='Active order'
+        message='Your active order could not be loaded.'
+        onRetry={refetch}
+      />
+    )
   }
 
   if (!hasActiveOrder && !initialOrder) {

@@ -1,12 +1,13 @@
 /* eslint-disable react/display-name */
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import SelectedLocation from '../../../components/Main/Location/Location'
 import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 
 const navigationOptions = (props) => ({
   headerStyle: {
+    height: Platform.OS === 'android' ? scale(68) : undefined,
     backgroundColor: props?.headerMenuBackground,
     shadowColor: 'transparent',
     shadowRadius: 0,
