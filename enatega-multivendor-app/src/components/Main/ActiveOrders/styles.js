@@ -5,7 +5,7 @@ const styles = (tokens) =>
   StyleSheet.create({
     card: {
       marginTop: 0,
-      marginHorizontal: tokens.spacing.lg,
+      marginHorizontal: tokens.spacing.md,
       marginBottom: scale(10),
       padding: tokens.spacing.lg,
       borderRadius: tokens.radii.xl,

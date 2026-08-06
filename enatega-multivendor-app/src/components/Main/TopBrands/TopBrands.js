@@ -15,6 +15,7 @@ import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 import { useCachedMediaUri } from '../../../utils/mediaCache'
 import { resolveLogoImage } from '../../../utils/resolveImageUrl'
 import { SectionAction, SectionHeader, useMultivendorTheme } from '../../../ui/designSystem'
+import { MaterialIcons } from '@expo/vector-icons'
 
 function TopBrands() {
   const { t, i18n } = useTranslation()
@@ -36,14 +37,17 @@ function TopBrands() {
     <TouchableOpacity style={styles(tokens).topbrandsContainer} onPress={() => navigation.navigate('Restaurant', { ...item })}>
       <View style={styles(tokens).brandImgContainer}>
         <Image source={{ uri: useCachedMediaUri(resolveLogoImage(item), 'image') }} style={styles(tokens).brandImg} resizeMode='contain' />
+        <View style={styles(tokens).deliveryBadge}>
+          <MaterialIcons name='schedule' size={12} color={tokens.colors.accent} />
+          <TextDefault style={styles(tokens).deliveryBadgeText} textColor={tokens.colors.textPrimary} numberOfLines={1}>
+            {item?.deliveryTime} {t('mins')}
+          </TextDefault>
+        </View>
       </View>
 
       <View style={styles(tokens).brandTextContainer}>
         <TextDefault style={styles(tokens).brandName} textColor={tokens.colors.textPrimary} numberOfLines={2} ellipsizeMode='tail' bolder>
           {item?.name}
-        </TextDefault>
-        <TextDefault style={styles(tokens).brandMeta} textColor={tokens.colors.textSecondary} normal>
-          {item?.deliveryTime} mins
         </TextDefault>
       </View>
     </TouchableOpacity>

@@ -14,7 +14,7 @@ const styles = (props = null) =>
       borderRadius: 14,
       overflow: 'hidden',
       backgroundColor: props?.themeBackground ?? '#fff',
-      paddingHorizontal: scale(16)
+      paddingHorizontal: scale(12)
     },
     image: {
       width: '100%',

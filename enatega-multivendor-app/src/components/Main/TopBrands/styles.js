@@ -25,11 +25,31 @@ const buildStyles = (props = null) =>
       alignItems: 'center'
     },
     brandImgContainer: {
+      position: 'relative',
       backgroundColor: props?.colors?.surfaceSubtle ?? '#F3F4F6',
       borderRadius: props?.radii?.tile ?? 12,
       width: props?.sizes?.compactTile ?? scale(80),
       height: props?.sizes?.compactTile ?? scale(80),
       overflow: 'hidden'
+    },
+    deliveryBadge: {
+      position: 'absolute',
+      right: scale(5),
+      bottom: scale(5),
+      minHeight: scale(22),
+      paddingHorizontal: scale(6),
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(3),
+      borderRadius: props?.radii?.round ?? scale(999),
+      backgroundColor: props?.isDark ? 'rgba(24, 24, 27, 0.88)' : 'rgba(255, 255, 255, 0.90)',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)'
+    },
+    deliveryBadgeText: {
+      fontSize: scale(9),
+      lineHeight: scale(12),
+      fontWeight: '600'
     },
     brandTextContainer: {
       width: '100%',
@@ -44,10 +64,6 @@ const buildStyles = (props = null) =>
       textAlign: 'center',
       // Reserve two lines so every card's delivery-time row aligns.
       minHeight: scale(32)
-    },
-    brandMeta: {
-      width: '100%',
-      textAlign: 'center'
     },
     screenBackground: {
       backgroundColor: props != null ? props?.themeBackground : '#FFF',
