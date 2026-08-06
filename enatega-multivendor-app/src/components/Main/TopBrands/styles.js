@@ -11,7 +11,7 @@ const buildStyles = (props = null) =>
       marginBottom: scale(10)
     },
     sectionHeader: {
-      paddingHorizontal: props?.spacing?.xl ?? scale(20),
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
       marginBottom: scale(15)
     },
     brandImg: {

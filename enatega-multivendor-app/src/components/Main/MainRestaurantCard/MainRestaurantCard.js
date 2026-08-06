@@ -97,7 +97,7 @@ function MainRestaurantCard(props) {
           estimatedItemSize={224}
           contentContainerStyle={{
             flexGrow: 1,
-            paddingStart: tokens.spacing.xl,
+            paddingStart: tokens.spacing.lg,
             paddingEnd: tokens.spacing.sm,
             alignItems: 'flex-start'
           }}

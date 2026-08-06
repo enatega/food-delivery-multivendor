@@ -56,7 +56,7 @@ const buildStyles = (props = null) =>
       gap: 10
     },
     sectionHeader: {
-      paddingHorizontal: props?.spacing?.xl ?? scale(20),
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
       marginBottom: scale(15)
     },
     skeletonRow: {
