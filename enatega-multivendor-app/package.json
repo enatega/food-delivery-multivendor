@@ -12,6 +12,8 @@
     "check:single-vendor-imports": "node scripts/check-single-vendor-imports.js",
     "check:single-vendor-schema": "node scripts/check-single-vendor-schema.js",
     "check:order-pricing": "node scripts/check-order-pricing.js",
+    "check:multivendor-design": "node scripts/check-multivendor-design.js",
+    "update:multivendor-design-baseline": "node scripts/check-multivendor-design.js --update-baseline",
     "postinstall": "patch-package",
     "build:staging": "eas build --profile staging -p all",
     "build:staging:android": "eas build --profile staging -p android",
