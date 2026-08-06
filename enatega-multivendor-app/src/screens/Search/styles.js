@@ -19,7 +19,6 @@ const styles = (tokens = null) =>
     },
     searchList: {
       flex: 1,
-      marginBottom: scale(70),
       marginTop: tokens?.spacing?.sm ?? scale(8),
       paddingHorizontal: tokens?.spacing?.sm ?? scale(8)
     },

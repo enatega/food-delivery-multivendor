@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react'
-import { View, RefreshControl, Animated, Platform, TouchableOpacity, ScrollView } from 'react-native'
+import { View, RefreshControl, Animated, TouchableOpacity, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useQuery, gql } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
@@ -12,7 +12,6 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { restaurantListPreview, topRatedVendorsInfo, recentOrderRestaurantsQuery, mostOrderedRestaurantsQuery } from '../../apollo/queries'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
-import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import Spinner from '../../components/Spinner/Spinner'
 import { alignment } from '../../utils/alignment'
 import { Ionicons } from '@expo/vector-icons'
@@ -144,8 +143,6 @@ const SearchScreen = () => {
     return () => clearTimeout(timeoutId)
   }, [search])
 
-  const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */ } = useCollapsibleSubHeader()
-
   const nearbyRestaurants = data?.nearByRestaurantsPreview?.restaurants || []
   const topRatedRestaurants = topRatedData?.topRatedVendorsPreview || []
   const recentOrderRestaurants = recentOrderData?.recentOrderRestaurantsPreview || []
@@ -253,27 +250,15 @@ const SearchScreen = () => {
       return (
         <View style={styles(searchTheme).searchList}>
           <Animated.FlatList
-            contentInset={{
-              top: containerPaddingTop
-            }}
             contentContainerStyle={{
-              paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
               gap: 16,
               ...alignment.PBlarge
-            }}
-            contentOffset={{
-              y: -containerPaddingTop
-            }}
-            onScroll={onScroll}
-            scrollIndicatorInsets={{
-              top: scrollIndicatorInsetTop
             }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={emptyView()}
             keyExtractor={(item, index) => index.toString()}
             refreshControl={
               <RefreshControl
-                progressViewOffset={containerPaddingTop}
                 colors={[currentTheme.iconColorPink]}
                 refreshing={networkStatus === 4}
                 onRefresh={() => {
