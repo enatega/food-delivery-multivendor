@@ -84,7 +84,6 @@ function Main(props) {
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
 
   const locationData = location
-  const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const [citiesModalVisible, setCitiesModalVisible] = useState(false)
   const restaurantVariables = useMemo(() => ({
     longitude: location?.longitude || null,
@@ -172,9 +171,6 @@ function Main(props) {
   const { restaurantData: nearByGroceryStores, loading: nearByGroceryStoresLoading, error: nearByGroceryStoresError } = useRestaurantQueries('grocery', location, 'grocery')
   const { restaurantData: restaurantorders, loading: restaurantordersLoading, error: restaurantordersError } = useRestaurantQueries('restaurant', location, 'restaurant')
 
-  const handleActiveOrdersChange = (activeOrdersExist) => {
-    setHasActiveOrders(activeOrdersExist)
-  }
   const handleRefresh = async () => {
     setIsRefreshing(true)
     const { data: newBanners } = await refetchBanners()
@@ -497,6 +493,7 @@ function Main(props) {
                   {loading || isAutoRetrying || restaurantordersLoading || orderLoading || hasDiscoveryContent ? (
                     <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}>
                       <Banner banners={banners?.banners} />
+                      <ActiveOrders />
                       <View style={styles(tokens).discoverySections}>
                         <View>{isLoggedIn && sortedRecentOrderRestaurants?.length > 0 && <>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortedRecentOrderRestaurants} loading={orderLoading} error={orderError} title={'Order it again'} queryType='orderAgain' />}</>}</View>
 
@@ -562,7 +559,7 @@ function Main(props) {
 
                         <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortedMostOrderedGrocery} loading={mostOrderedGroceryLoading} error={mostOrderedGroceryError} title={t('Top grocery picks')} queryType='topPicks' icon='store' selectedType='grocery' />}</View>
                       </View>
-                      <View style={styles(currentTheme, hasActiveOrders).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
+                      <View style={styles(currentTheme).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
                     </ScrollView>
                   ) : !location ? (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
@@ -583,8 +580,6 @@ function Main(props) {
                 <ForceUpdate />
               </View>
             </View>
-            <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
-
             <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
             <ModalDropdown theme={currentTheme} visible={citiesModalVisible} onItemPress={handleMarkerPress} onClose={() => setCitiesModalVisible(false)} />
           </View>

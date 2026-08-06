@@ -1,141 +1,103 @@
 import { StyleSheet } from 'react-native'
-import { verticalScale, scale } from '../../../utils/scaling'
-import { fontStyles } from '../../../utils/fontStyles'
-import { theme } from '../../../utils/themeColors'
+import { scale } from '../../../utils/scaling'
 
-const styles = (props = null) =>
+const styles = (tokens) =>
   StyleSheet.create({
-    flex: {
-      flex: 1
-    },
-    safeAreaViewStyles: {
-      flex: 1,
-      backgroundColor: props !== null ? props?.headerBackground : 'transparent'
-    },
-    mainContentContainer: {
-      width: '100%',
-      height: '100%',
-      alignSelf: 'center',
-      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
-    },
-    randomShapeContainer: {
-      right: 0,
-      position: 'absolute',
-      zIndex: -1,
-      transform: [{ rotate: '90deg' }]
-    },
-    statusContainer: {
-      overflow: 'hidden',
-      width: '95%',
-      alignSelf: 'center',
-      backgroundColor: theme.Pink.main,
-      borderRadius: scale(12),
-      marginTop: verticalScale(10),
-      elevation: 7,
-      shadowColor: props != null ? props?.shadowColor : 'grey',
-      shadowOffset: {
-        width: 0,
-        height: verticalScale(0)
-      },
-      shadowOpacity: 0.3,
-      shadowRadius: verticalScale(3),
-      borderWidth: 1,
-      borderColor: theme.Pink.white
-    },
-
-    imgCard: {
-      position: 'relative',
-      flex: 1,
-      width: undefined,
-      height: undefined
-    },
-    textContainer: {
-      width: scale(300),
-      paddingTop: scale(15),
-      paddingLeft: scale(15),
-      paddingRight: scale(15)
-    },
-    title: {
-      color: props !== null ? props?.statusSecondColor : 'grey',
-      fontSize: verticalScale(15),
-      fontFamily: fontStyles.MuseoSans500
-    },
-    description: {
-      color: props !== null ? props?.fontMainColor : '#000',
-      fontSize: verticalScale(15),
-      fontFamily: fontStyles.MuseoSans500,
-      paddingLeft: scale(5),
-      paddingTop: scale(3),
-      fontWeight: '700'
-    },
-
-    statusText: {
-      color: props !== null ? props?.statusSecondColor : 'grey',
-      fontSize: verticalScale(13),
-      fontFamily: fontStyles.MuseoSans500,
+    card: {
+      marginTop: 0,
+      marginHorizontal: tokens.spacing.xl,
       marginBottom: scale(10),
-      // paddingLeft: 40,
-      fontWeight: '500'
-    },
-    timeText: {
-      color: props !== null ? props?.iconColorPink : 'red',
-      fontSize: verticalScale(24),
-      fontFamily: fontStyles.MuseoSans300,
-      marginLeft: -10
-    },
-    statusCircle: {
-      marginRight: scale(5),
-      marginBottom: scale(5),
-      marginTop: scale(5)
-    },
-    viewAllButton: {
-      paddingTop: scale(0),
-      paddingBottom: scale(10)
-    },
-    btncontainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    button: {
-      padding: scale(10),
-      borderRadius: scale(5)
-    },
-    buttonText: {
-      color: 'black',
-      fontSize: 16,
-      fontWeight: 'bold'
-    },
-    textInnerContainer: {
-      flexDirection: 'row'
-    },
-    activeOrdersContainer: {
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      marginTop: scale(2),
-      marginBottom: scale(2),
-      paddingLeft: scale(40)
-    },
-    minimizedTab: {
-      backgroundColor: props?.colors?.surfaceElevated ?? '#27272A',
-      borderRadius: props?.radii?.round ?? scale(30),
+      padding: tokens.spacing.lg,
+      borderRadius: tokens.radii.xl,
+      backgroundColor: tokens.colors.surface,
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: props?.colors?.borderStandard ?? 'rgba(161, 161, 170, 0.34)',
-      paddingHorizontal: props?.spacing?.lg ?? scale(16),
-      paddingVertical: props?.spacing?.sm ?? scale(8),
-      minHeight: props?.sizes?.touchTarget ?? scale(44)
+      borderColor: tokens.colors.borderSubtle
     },
-    minimizedContent: {
-      flexDirection: 'row',
-      alignItems: 'center',
+    headerRow: {
+      flexDirection: tokens.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'flex-start',
       justifyContent: 'space-between'
     },
-    minimizedBadge: {
-      backgroundColor: props?.colors?.accentSubtle ?? 'rgba(144, 227, 109, 0.14)',
-      borderRadius: scale(12),
-      paddingHorizontal: scale(8),
-      paddingVertical: scale(4),
-      marginLeft: scale(8)
+    titleWrap: {
+      flex: 1,
+      paddingEnd: tokens.spacing.md
+    },
+    title: {
+      color: tokens.colors.textPrimary,
+      fontSize: scale(17),
+      lineHeight: scale(22),
+      textAlign: tokens.isRTL ? 'right' : 'left'
+    },
+    subtitle: {
+      marginTop: tokens.spacing.xs,
+      color: tokens.colors.textMuted,
+      fontSize: scale(12),
+      lineHeight: scale(17),
+      textAlign: tokens.isRTL ? 'right' : 'left'
+    },
+    statusIcon: {
+      width: scale(44),
+      height: scale(44),
+      borderRadius: scale(22),
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: tokens.colors.accentSubtle
+    },
+    progressRow: {
+      flexDirection: tokens.isRTL ? 'row-reverse' : 'row',
+      marginTop: tokens.spacing.lg
+    },
+    progressSegment: {
+      flex: 1,
+      height: scale(4),
+      borderRadius: tokens.radii.round,
+      backgroundColor: tokens.colors.borderStandard
+    },
+    progressSpacing: {
+      marginEnd: tokens.spacing.sm
+    },
+    progressActive: {
+      backgroundColor: tokens.colors.accent
+    },
+    metaRow: {
+      flexDirection: tokens.isRTL ? 'row-reverse' : 'row',
+      paddingTop: tokens.spacing.lg,
+      paddingEnd: tokens.spacing.xs
+    },
+    metaPill: {
+      maxWidth: scale(180),
+      minHeight: scale(36),
+      paddingHorizontal: tokens.spacing.md,
+      flexDirection: tokens.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: tokens.spacing.sm,
+      borderRadius: tokens.radii.round,
+      backgroundColor: tokens.colors.surfaceElevated
+    },
+    metaSpacing: {
+      marginEnd: tokens.spacing.sm
+    },
+    metaText: {
+      color: tokens.colors.textSecondary,
+      fontSize: scale(12)
+    },
+    addressRow: {
+      marginTop: tokens.spacing.lg,
+      flexDirection: tokens.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'flex-start',
+      gap: tokens.spacing.sm
+    },
+    addressText: {
+      flex: 1,
+      color: tokens.colors.textMuted,
+      fontSize: scale(12),
+      lineHeight: scale(17),
+      textAlign: tokens.isRTL ? 'right' : 'left'
+    },
+    moreText: {
+      color: tokens.colors.accent,
+      fontSize: scale(12),
+      fontWeight: '600'
     }
   })
 

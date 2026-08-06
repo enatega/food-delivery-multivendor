@@ -15,7 +15,6 @@ import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 import { useCachedMediaUri } from '../../../utils/mediaCache'
 import { resolveLogoImage } from '../../../utils/resolveImageUrl'
 import { SectionAction, SectionHeader, useMultivendorTheme } from '../../../ui/designSystem'
-import { RESTAURANT_CARD_HEIGHT } from '../RestaurantCard/styles'
 
 function TopBrands() {
   const { t, i18n } = useTranslation()
@@ -101,9 +100,7 @@ function TopBrands() {
               })
             }} />}
           />
-          <View style={{ height: RESTAURANT_CARD_HEIGHT }}>
-            <HorizontalFlashList data={sortedRestaurantBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={280} />
-          </View>
+          <HorizontalFlashList data={sortedRestaurantBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={224} />
         </View>
       )}
 
@@ -120,7 +117,7 @@ function TopBrands() {
               })
             }} />}
           />
-          <HorizontalFlashList data={sortedGroceryBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={280} />
+          <HorizontalFlashList data={sortedGroceryBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={224} />
         </View>
       )}
     </View>

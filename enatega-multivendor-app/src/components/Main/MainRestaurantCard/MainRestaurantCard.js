@@ -94,11 +94,12 @@ function MainRestaurantCard(props) {
           />}
         />
         <HorizontalFlashList
-          style={styles().offerScroll}
-          estimatedItemSize={280}
+          estimatedItemSize={224}
           contentContainerStyle={{
             flexGrow: 1,
-            paddingStart: tokens.spacing.xl
+            paddingStart: tokens.spacing.xl,
+            paddingEnd: tokens.spacing.sm,
+            alignItems: 'flex-start'
           }}
           data={orders}
           keyExtractor={(item) => item._id}

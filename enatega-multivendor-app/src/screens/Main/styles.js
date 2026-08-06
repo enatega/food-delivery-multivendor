@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 const windowWidth = Dimensions.get('window').width
 
-const styles = (props = null, hasActiveOrders = false) =>
+const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       // flex: 1
@@ -199,7 +199,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       paddingLeft: scale(38)
     },
     topBrandsMargin: {
-      marginBottom: hasActiveOrders ? scale(84) : scale(8)
+      marginBottom: scale(8)
     },
     buttonContainer: {
       ...alignment.PLmedium,

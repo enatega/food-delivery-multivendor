@@ -1,16 +1,11 @@
 import { scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { RESTAURANT_CARD_HEIGHT } from '../RestaurantCard/styles'
 const buildStyles = (props = null) =>
   StyleSheet.create({
     // ML20: {
     //   ...alignment.MLlarge
     // },
-    offerScroll: {
-      height: RESTAURANT_CARD_HEIGHT,
-      width: '100%'
-    },
     ItemTitle: {
       ...alignment.MRmedium
     },
