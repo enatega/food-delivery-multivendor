@@ -4,14 +4,15 @@ import { StyleSheet } from 'react-native'
 const buildStyles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      gap: 16
+      gap: 0
     },
     topbrandsSec: {
-      gap: scale(8),
-      marginBottom: scale(15)
+      marginTop: scale(20),
+      marginBottom: scale(10)
     },
     sectionHeader: {
-      marginBottom: 0
+      paddingHorizontal: props?.spacing?.xl ?? scale(20),
+      marginBottom: scale(15)
     },
     brandImg: {
       width: '100%',
@@ -62,11 +63,6 @@ const buildStyles = (props = null) =>
     },
     height80: {
       height: scale(80)
-    },
-    seeAllBtn: {
-      minHeight: props?.sizes?.iconButton ?? scale(36),
-      justifyContent: 'center',
-      paddingHorizontal: props?.spacing?.xs ?? scale(4)
     }
   })
 

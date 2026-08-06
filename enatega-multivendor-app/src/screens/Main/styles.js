@@ -40,14 +40,15 @@ const styles = (props = null, hasActiveOrders = false) =>
       alignSelf: 'center'
     },
     discoverySections: {
-      gap: props?.spacing?.lg ?? scale(16),
-      paddingTop: props?.spacing?.sm ?? scale(8)
+      gap: 0
     },
     collectionSection: {
-      gap: props?.spacing?.sm ?? scale(8)
+      marginTop: scale(20),
+      marginBottom: scale(10)
     },
     collectionHeading: {
-      marginBottom: 0
+      paddingHorizontal: props?.spacing?.xl ?? scale(20),
+      marginBottom: scale(15)
     },
     searchbar: {
       backgroundColor: props != null ? props?.main : 'black',
@@ -198,8 +199,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       paddingLeft: scale(38)
     },
     topBrandsMargin: {
-      marginBottom: hasActiveOrders ? scale(84) : scale(8),
-      ...alignment.MTsmall
+      marginBottom: hasActiveOrders ? scale(84) : scale(8)
     },
     buttonContainer: {
       ...alignment.PLmedium,

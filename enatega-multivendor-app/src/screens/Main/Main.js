@@ -519,14 +519,13 @@ function Main(props) {
                             keyExtractor={keyExtractorRestaurant}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5,
-                              paddingStart: tokens.spacing.lg
+                              paddingStart: tokens.spacing.xl
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
                             estimatedItemSize={96}
                             itemSpacing={tokens.spacing.lg}
                           />
-                        </View                                         >
+                        </View>
 
                         <View style={styles(tokens).collectionSection}>
                           <SectionHeader style={styles(tokens).collectionHeading} title={t('I feel like eating...')} />
@@ -536,8 +535,7 @@ function Main(props) {
                             keyExtractor={keyExtractorRestaurant}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5,
-                              paddingStart: tokens.spacing.lg
+                              paddingStart: tokens.spacing.xl
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
                             estimatedItemSize={96}
@@ -553,8 +551,7 @@ function Main(props) {
                             keyExtractor={keyExtractorGrocery}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5,
-                              paddingStart: tokens.spacing.lg
+                              paddingStart: tokens.spacing.xl
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
                             estimatedItemSize={96}

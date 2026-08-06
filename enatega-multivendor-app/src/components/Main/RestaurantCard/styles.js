@@ -6,7 +6,7 @@ const { width } = Dimensions.get('window')
 const CARD_WIDTH = Math.max(scale(228), Math.min(scale(292), width * 0.74))
 const CARD_IMAGE_HEIGHT = Math.max(scale(150), Math.min(scale(198), CARD_WIDTH * 0.62))
 const CARD_DESCRIPTION_MIN_HEIGHT = Math.max(scale(84), Math.min(scale(106), CARD_WIDTH * 0.33))
-const CARD_HEIGHT =
+export const RESTAURANT_CARD_HEIGHT =
   CARD_IMAGE_HEIGHT +
   CARD_DESCRIPTION_MIN_HEIGHT +
   (Platform.OS === 'ios' ? scale(8) : scale(4))
@@ -20,7 +20,7 @@ const buildStyles = (props = null) => {
     offerContainer: {
       borderRadius: props?.radii?.lg ?? 14,
       width: CARD_WIDTH,
-      minHeight: CARD_HEIGHT,
+      minHeight: RESTAURANT_CARD_HEIGHT,
       ...alignment.MRsmall,
       backgroundColor: props?.colors?.surface ?? '#181818'
     },

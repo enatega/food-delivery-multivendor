@@ -1,14 +1,14 @@
 import { scale } from '../../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-const { height } = Dimensions.get('window')
+import { RESTAURANT_CARD_HEIGHT } from '../RestaurantCard/styles'
 const buildStyles = (props = null) =>
   StyleSheet.create({
     // ML20: {
     //   ...alignment.MLlarge
     // },
     offerScroll: {
-      height: height * 0.37,
+      height: RESTAURANT_CARD_HEIGHT,
       width: '100%'
     },
     ItemTitle: {
@@ -21,7 +21,8 @@ const buildStyles = (props = null) =>
       ...alignment.MRmedium
     },
     orderAgainSec: {
-      marginBottom: scale(8)
+      marginTop: scale(20),
+      marginBottom: scale(10)
     },
     topPicksSec: {
       ...alignment.MLmedium,
@@ -59,13 +60,9 @@ const buildStyles = (props = null) =>
       alignItems: 'center',
       gap: 10
     },
-    seeAllBtn: {
-      minHeight: props?.sizes?.iconButton ?? 36,
-      justifyContent: 'center',
-      paddingHorizontal: props?.spacing?.xs ?? 4
-    },
     sectionHeader: {
-      marginBottom: 0
+      paddingHorizontal: props?.spacing?.xl ?? scale(20),
+      marginBottom: scale(15)
     },
     skeletonRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

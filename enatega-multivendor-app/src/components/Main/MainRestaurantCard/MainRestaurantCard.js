@@ -1,27 +1,24 @@
 import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import styles from './styles'
-import TextDefault from '../../Text/TextDefault/TextDefault'
 import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
-import { SectionHeader } from '../../../ui/designSystem'
+import { SectionAction, SectionHeader } from '../../../ui/designSystem'
 import { useTranslation } from 'react-i18next'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import MainLoadingUI from '../LoadingUI/MainLoadingUI'
 import { useNavigation } from '@react-navigation/native'
-import { scale } from '../../../utils/scaling'
 import { isOpen } from '../../../utils/customFunctions'
-import Ripple from 'react-native-material-ripple'
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 
 function PopularSectionSkeleton({ currentTheme, title, t }) {
   return (
     <View style={styles().orderAgainSec}>
-      <View style={{ gap: scale(8) }}>
+      <View>
         <SectionHeader
-          style={styles().sectionHeader}
+          style={styles(currentTheme).sectionHeader}
           title={t(title)}
-          action={<TextDefault bolder textColor={currentTheme.colors.accent}>{t('SeeAll')}</TextDefault>}
+          action={<SectionAction label={t('SeeAll')} />}
         />
 
         <View style={styles(currentTheme).skeletonRow}>
@@ -81,13 +78,12 @@ function MainRestaurantCard(props) {
   if (props?.error || orders?.length <= 0) return <></>
   return (
     <View style={styles().orderAgainSec}>
-      <View style={{ gap: scale(8) }}>
+      <View>
         <SectionHeader
-          style={styles().sectionHeader}
+          style={styles(tokens).sectionHeader}
           title={t(props?.title)}
-          action={<Ripple
-            style={styles(tokens).seeAllBtn}
-            activeOpacity={0.8}
+          action={<SectionAction
+            label={t('SeeAll')}
             onPress={() => {
               navigation.navigate('Menu', {
                 selectedType: props?.selectedType ?? 'restaurant',
@@ -95,21 +91,14 @@ function MainRestaurantCard(props) {
                 shopType: props?.shopType ?? 'restaurant'
               })
             }}
-            rippleColor={'#F5F5F5'}
-            rippleDuration={300}
-          >
-            <TextDefault bolder textColor={tokens.colors.accent}>
-              {t('SeeAll')}
-            </TextDefault>
-          </Ripple>}
+          />}
         />
         <HorizontalFlashList
           style={styles().offerScroll}
           estimatedItemSize={280}
           contentContainerStyle={{
             flexGrow: 1,
-            paddingBottom: scale(10),
-            paddingStart: tokens.spacing.lg
+            paddingStart: tokens.spacing.xl
           }}
           data={orders}
           keyExtractor={(item) => item._id}

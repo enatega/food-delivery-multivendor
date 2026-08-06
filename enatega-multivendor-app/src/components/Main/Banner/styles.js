@@ -3,6 +3,10 @@ import { StyleSheet } from 'react-native'
 
 const styles = (props = null) =>
   StyleSheet.create({
+    wrapper: {
+      paddingTop: scale(30),
+      marginBottom: scale(16)
+    },
     banner: {
       flex: 1,
       height: scale(190),

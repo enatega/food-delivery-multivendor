@@ -28,6 +28,20 @@ single-vendor proportions:
 Product cards and restaurant cards are not compact tiles and should retain the
 dimensions appropriate to their content.
 
+## Discovery section rhythm
+
+Discovery follows the same vertical relationships as the single-vendor home:
+
+- 30 points between the navigation header and a rendered banner.
+- 16 points after the banner region.
+- 20 points before and 10 points after each content section.
+- 20-point horizontal insets for section headings and rail starts.
+- 15 points between a section heading row and its content.
+- `SectionAction` for compact, bordered section actions such as “See All”.
+
+Do not add a parent `gap` around Discovery sections; each section owns its
+vertical rhythm so hidden or empty sections do not leave phantom spacing.
+
 ## Safe-area contract
 
 `ScreenHeader` owns the top safe-area inset by default. `ScreenContainer`

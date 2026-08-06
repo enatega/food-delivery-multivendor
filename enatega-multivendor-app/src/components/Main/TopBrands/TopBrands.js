@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useCallback } from 'react'
-import { View, Image, Dimensions, Platform } from 'react-native'
+import { View, Image } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { useTranslation } from 'react-i18next'
@@ -14,9 +14,9 @@ import { isOpen, sortRestaurantsByOpenStatus } from '../../../utils/customFuncti
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 import { useCachedMediaUri } from '../../../utils/mediaCache'
 import { resolveLogoImage } from '../../../utils/resolveImageUrl'
-import { SectionHeader, useMultivendorTheme } from '../../../ui/designSystem'
+import { SectionAction, SectionHeader, useMultivendorTheme } from '../../../ui/designSystem'
+import { RESTAURANT_CARD_HEIGHT } from '../RestaurantCard/styles'
 
-const { height } = Dimensions.get('window')
 function TopBrands() {
   const { t, i18n } = useTranslation()
   const { location } = useContext(LocationContext)
@@ -65,15 +65,9 @@ function TopBrands() {
   if (loading) return <TopBrandsLoadingUI />
   if (error) return null
 
-  const seeAllAction = (onPress) => (
-    <TouchableOpacity style={styles(tokens).seeAllBtn} activeOpacity={0.7} onPress={onPress}>
-      <TextDefault bolder textColor={tokens.colors.accent}>{t('SeeAll')}</TextDefault>
-    </TouchableOpacity>
-  )
-
   const railContentStyle = {
     flexGrow: 1,
-    paddingStart: tokens.spacing.lg
+    paddingStart: tokens.spacing.xl
   }
 
   return (
@@ -83,12 +77,12 @@ function TopBrands() {
           <SectionHeader
             style={styles(tokens).sectionHeader}
             title={t('Our brands')}
-            action={seeAllAction(() => {
+            action={<SectionAction label={t('SeeAll')} onPress={() => {
               navigation.navigate('Menu', {
                 selectedType: '',
                 queryType: 'topBrands'
               })
-            })}
+            }} />}
           />
           <HorizontalFlashList data={topRatedVendors} renderItem={renderBrandItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={96} itemSpacing={tokens.spacing.lg} />
         </View>
@@ -99,15 +93,15 @@ function TopBrands() {
           <SectionHeader
             style={styles(tokens).sectionHeader}
             title={t('Top Restaurant Brands')}
-            action={seeAllAction(() => {
+            action={<SectionAction label={t('SeeAll')} onPress={() => {
               navigation.navigate('Menu', {
                 selectedType: 'restaurant',
                 queryType: 'topBrands',
                 shopType: 'restaurant'
               })
-            })}
+            }} />}
           />
-          <View style={{ height: height * (Platform.OS === 'ios' ? 0.395 : 0.370) }}>
+          <View style={{ height: RESTAURANT_CARD_HEIGHT }}>
             <HorizontalFlashList data={sortedRestaurantBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={280} />
           </View>
         </View>
@@ -118,13 +112,13 @@ function TopBrands() {
           <SectionHeader
             style={styles(tokens).sectionHeader}
             title={t('Top Grocery Brands')}
-            action={seeAllAction(() => {
+            action={<SectionAction label={t('SeeAll')} onPress={() => {
               navigation.navigate('Menu', {
                 selectedType: 'grocery',
                 queryType: 'topBrands',
                 shopType: 'grocery'
               })
-            })}
+            }} />}
           />
           <HorizontalFlashList data={sortedGroceryBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={280} />
         </View>
