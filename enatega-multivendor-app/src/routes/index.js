@@ -62,9 +62,10 @@ import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
 import UserContext from '../context/User'
 import ConfigurationContext from '../context/Configuration'
-import { ActivityIndicator, Easing, View } from 'react-native'
+import { ActivityIndicator, Easing, StyleSheet, View } from 'react-native'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
 import ModeProfileTab from '../components/VendorModeToggle/ModeProfileTab'
+import useMultivendorTheme from '../ui/designSystem/useMultivendorTheme'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -270,6 +271,7 @@ function BottomTabNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
+  const { tokens } = useMultivendorTheme()
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -278,7 +280,11 @@ function BottomTabNavigator() {
           return <BottomTabIcon name={route.name.toLowerCase()} size={size} color={color} />
         },
         tabBarStyle: {
-          backgroundColor: currentTheme.cardBackground
+          backgroundColor: currentTheme.cardBackground,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopColor: tokens.colors.borderSubtle,
+          elevation: 0,
+          shadowOpacity: 0
         },
         tabBarItemStyle: {
           flex: 1

@@ -1,9 +1,5 @@
-import { verticalScale, scale } from '../../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
-import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
-import { subtleCardShadowSoft } from '../../../utils/cardShadows'
-const { height } = Dimensions.get('window')
+import { scale } from '../../../utils/scaling'
+import { StyleSheet } from 'react-native'
 
 const buildStyles = (props = null) =>
   StyleSheet.create({
@@ -12,27 +8,24 @@ const buildStyles = (props = null) =>
     },
     topbrandsSec: {
       gap: scale(8),
-      marginHorizontal: scale(15),
       marginBottom: scale(15)
     },
-    topbrandsHeading:{
-      ...alignment.PRmedium
-
+    sectionHeader: {
+      marginBottom: 0
     },
     brandImg: {
       width: '100%',
       height: scale(70),
       objectFit: 'cover',
-      borderRadius: 8,
+      borderRadius: 8
     },
     topbrandsContainer: {
-      width: scale(96),
-      ...alignment.MRmedium
+      width: scale(104)
     },
     brandImgContainer: {
-      backgroundColor: props != null ? props?.cardBackground : '#F3F4F6',
-      borderRadius: 8,
-      ...subtleCardShadowSoft
+      backgroundColor: props?.colors?.surfaceSubtle ?? '#F3F4F6',
+      borderRadius: props?.radii?.md ?? 10,
+      overflow: 'hidden'
     },
     brandName: {
       marginTop: scale(6),
@@ -43,13 +36,9 @@ const buildStyles = (props = null) =>
       // Reserve two lines so every card's delivery-time row aligns.
       minHeight: scale(32)
     },
-    margin: {
-      ...alignment.MLmedium,
-      ...alignment.MBmedium
-    },
     screenBackground: {
       backgroundColor: props != null ? props?.themeBackground : '#FFF',
-      ...alignment.PBlarge
+      paddingBottom: scale(16)
     },
     placeHolderFadeColor: {
       backgroundColor: props != null ? props?.fontSecondColor : '#B8B8B8'
@@ -62,21 +51,10 @@ const buildStyles = (props = null) =>
     height80: {
       height: scale(80)
     },
-    header: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      // ...alignment.MRmedium,
-      // marginHorizontal: scale(10),
-    },
     seeAllBtn: {
-      backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
-      borderRadius: 4,
-      paddingTop: 8,
-      paddingBottom: 8,
-      paddingLeft: 16,
-      paddingRight: 16,
-      
+      minHeight: props?.sizes?.iconButton ?? scale(36),
+      justifyContent: 'center',
+      paddingHorizontal: props?.spacing?.xs ?? scale(4)
     }
   })
 

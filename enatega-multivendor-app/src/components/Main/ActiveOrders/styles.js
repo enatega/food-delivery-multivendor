@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { verticalScale, scale } from '../../../utils/scaling'
 import { fontStyles } from '../../../utils/fontStyles'
 import { theme } from '../../../utils/themeColors'
@@ -117,11 +117,13 @@ const styles = (props = null) =>
       paddingLeft: scale(40)
     },
     minimizedTab: {
-      backgroundColor: props !== null ? props?.main : '#FF6B6B',
-      borderRadius: scale(30),
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(12),
-      minWidth: scale(120)
+      backgroundColor: props?.colors?.surfaceElevated ?? '#27272A',
+      borderRadius: props?.radii?.round ?? scale(30),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderStandard ?? 'rgba(161, 161, 170, 0.34)',
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
+      paddingVertical: props?.spacing?.sm ?? scale(8),
+      minHeight: props?.sizes?.touchTarget ?? scale(44)
     },
     minimizedContent: {
       flexDirection: 'row',
@@ -129,7 +131,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
     minimizedBadge: {
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      backgroundColor: props?.colors?.accentSubtle ?? 'rgba(144, 227, 109, 0.14)',
       borderRadius: scale(12),
       paddingHorizontal: scale(8),
       paddingVertical: scale(4),

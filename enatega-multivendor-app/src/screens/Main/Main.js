@@ -519,7 +519,8 @@ function Main(props) {
                             keyExtractor={keyExtractorRestaurant}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5
+                              paddingBottom: 5,
+                              paddingStart: tokens.spacing.lg
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
                             estimatedItemSize={120}
@@ -535,7 +536,8 @@ function Main(props) {
                             keyExtractor={keyExtractorRestaurant}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5
+                              paddingBottom: 5,
+                              paddingStart: tokens.spacing.lg
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
                             estimatedItemSize={140}
@@ -551,7 +553,8 @@ function Main(props) {
                             keyExtractor={keyExtractorGrocery}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5
+                              paddingBottom: 5,
+                              paddingStart: tokens.spacing.lg
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
                             estimatedItemSize={140}

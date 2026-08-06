@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
-import { alignment } from '../../../utils/alignment'
 import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
 import { SectionHeader } from '../../../ui/designSystem'
 import { useTranslation } from 'react-i18next'
@@ -107,7 +106,11 @@ function MainRestaurantCard(props) {
         <HorizontalFlashList
           style={styles().offerScroll}
           estimatedItemSize={280}
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: scale(10), ...alignment.PRlarge }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: scale(10),
+            paddingStart: tokens.spacing.lg
+          }}
           data={orders}
           keyExtractor={(item) => item._id}
           renderItem={renderRestaurantItem}

@@ -16,6 +16,7 @@ import styles from './styles'
 import { ORDER_STATUS_ENUM } from '../../../utils/enums'
 import { calulateRemainingTime } from '../../../utils/customFunctions'
 import { MaterialIcons } from '@expo/vector-icons'
+import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height
 const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
@@ -33,6 +34,8 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const { tokens } = useMultivendorTheme()
+  const visualTheme = { ...currentTheme, ...tokens }
 
   const activeOrders = orders.filter(
     (o) =>
@@ -183,27 +186,27 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
         ]}
       >
         <TouchableOpacity
-          style={styles(currentTheme).minimizedTab}
+          style={styles(visualTheme).minimizedTab}
           onPress={handleExpand}
           activeOpacity={0.8}
         >
-          <View style={styles(currentTheme).minimizedContent}>
+          <View style={styles(visualTheme).minimizedContent}>
             <MaterialIcons 
               name="delivery-dining" 
               size={scale(20)} 
-              color={currentTheme.white} 
+              color={tokens.colors.accent}
             />
             <TextDefault 
-              textColor={currentTheme.white} 
+              textColor={tokens.colors.textPrimary}
               H5 
               bold 
               style={{ marginLeft: scale(8) }}
             >
               {t('orderTracking')}
             </TextDefault>
-            <View style={styles(currentTheme).minimizedBadge}>
+            <View style={styles(visualTheme).minimizedBadge}>
               <TextDefault 
-                textColor={currentTheme.white} 
+                textColor={tokens.colors.accent}
                 H6 
                 bold
               >
