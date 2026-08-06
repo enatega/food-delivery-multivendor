@@ -76,12 +76,14 @@ const styles = (tokens) =>
       alignItems: 'center',
       gap: tokens.spacing.sm,
       borderRadius: tokens.radii.round,
-      backgroundColor: tokens.colors.surfaceElevated
+      backgroundColor: tokens.colors.surfaceElevated,
+      overflow: 'hidden'
     },
     metaSpacing: {
       marginEnd: tokens.spacing.sm
     },
     metaText: {
+      flexShrink: 1,
       color: tokens.colors.textSecondary,
       fontSize: scale(12)
     },
