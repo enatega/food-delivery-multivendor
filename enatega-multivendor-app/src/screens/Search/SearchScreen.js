@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useLayoutEffect, useMemo } from 'react'
+import React, { useState, useEffect, useContext, useMemo } from 'react'
 import { View, RefreshControl, Animated, Platform, TouchableOpacity } from 'react-native'
 import { useQuery, gql } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
@@ -10,17 +10,16 @@ import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { restaurantListPreview, topRatedVendorsInfo, recentOrderRestaurantsQuery, mostOrderedRestaurantsQuery } from '../../apollo/queries'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import Item from '../../components/Main/Item/Item'
 import { LocationContext } from '../../context/Location'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
 import Spinner from '../../components/Spinner/Spinner'
 import { alignment } from '../../utils/alignment'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons } from '@expo/vector-icons'
-import { storeSearch, getRecentSearches, clearRecentSearches } from '../../utils/recentSearch'
+import { getRecentSearches, clearRecentSearches } from '../../utils/recentSearch'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
 import { ScrollView } from 'react-native-gesture-handler'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
+import { SectionAction, SectionHeader, useMultivendorTheme } from '../../ui/designSystem'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -46,14 +45,15 @@ const SearchScreen = () => {
   const { t, i18n } = useTranslation()
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
-  const { location, setLocation } = useContext(LocationContext)
+  const { location } = useContext(LocationContext)
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
-  const newheaderColor = currentTheme.backgroundColor
+  const { tokens } = useMultivendorTheme()
+  const searchTheme = { ...tokens, isRTL: currentTheme.isRTL }
   const [recentSearches, setRecentSearches] = useState([])
   const [hasAnimated, setHasAnimated] = useState(false) // Track first render
 
@@ -88,7 +88,7 @@ const SearchScreen = () => {
     )
   }
 
-  const { data, refetch, networkStatus, loading, error } = useQuery(RESTAURANTS, {
+  const { data, refetch, networkStatus, loading } = useQuery(RESTAURANTS, {
     variables: {
       longitude: location.longitude || null,
       latitude: location.latitude || null,
@@ -130,22 +130,21 @@ const SearchScreen = () => {
       title: t('searchTitle'),
       headerTitleAlign: 'center',
       headerRight: null,
+      headerShadowVisible: false,
       headerTitleStyle: {
-        color: currentTheme.newFontcolor,
-        fontWeight: 'bold'
-      },
-      headerTitleContainerStyle: {
-        paddingTop: scale(12),
-        paddingLeft: scale(25),
-        paddingRight: scale(25),
-        marginLeft: 0
+        color: tokens.colors.textPrimary,
+        fontSize: scale(18),
+        fontWeight: '700'
       },
       headerStyle: {
-        backgroundColor: currentTheme.themeBackground,
-        elevation: 0
+        height: scale(56),
+        backgroundColor: tokens.colors.canvas,
+        elevation: 0,
+        shadowOpacity: 0,
+        borderBottomWidth: 0
       }
     })
-  }, [navigation, currentTheme])
+  }, [navigation, t, tokens])
 
   useEffect(() => {
     getRecentSearches().then((searches) => setRecentSearches(searches))
@@ -235,14 +234,14 @@ const SearchScreen = () => {
 
   const uniqueTags = getUniqueTags(restaurants)
 
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+  const { isConnected: connect } = useNetworkStatus()
   if (!connect) return <ErrorView />
 
   const emptyView = () => {
     return (
-      <View style={styles(currentTheme).emptyViewContainer}>
-        <View style={styles(currentTheme).emptyViewBox}>
-          <TextDefault textColor={currentTheme.fontGrayNew} center>
+      <View style={styles(searchTheme).emptyViewContainer}>
+        <View style={styles(searchTheme).emptyViewBox}>
+          <TextDefault textColor={tokens.colors.textMuted} center>
             {t('noResults')}
           </TextDefault>
         </View>
@@ -255,7 +254,7 @@ const SearchScreen = () => {
     setSearch(tag)
   }
 
-  const handleClearRecentSearches = async () => {
+  const handleClearRecentSearches = async() => {
     try {
       await clearRecentSearches()
       setRecentSearches([]) // Update state with empty array
@@ -267,7 +266,7 @@ const SearchScreen = () => {
   const renderTagsOrSearches = () => {
     if (search) {
       return (
-        <View style={styles().searchList}>
+        <View style={styles(searchTheme).searchList}>
           <Animated.FlatList
             contentInset={{
               top: containerPaddingTop
@@ -309,75 +308,69 @@ const SearchScreen = () => {
       )
     } else if (recentSearches.length > 0) {
       return (
-        <View style={styles(currentTheme).recentSearchContainer}>
-          <View style={styles(currentTheme).flexRow}>
-            <View>
-              <TextDefault style={styles().drawerContainer} textColor={currentTheme.fontMainColor} small H4 bolder>
-                {t('recentSearches')}
-              </TextDefault>
-            </View>
-            <View>
-              <TouchableOpacity onPress={() => handleClearRecentSearches()}>
-                <TextDefault style={styles().drawerContainer} textColor={currentTheme.fontMainColor} normal bolder>
-                  {t('clear')}
-                </TextDefault>
-              </TouchableOpacity>
-            </View>
+        <View style={styles(searchTheme).recentSearchContainer}>
+          <SectionHeader
+            style={styles(searchTheme).recentSectionHeader}
+            title={t('recentSearches')}
+            action={<SectionAction label={t('clear')} onPress={handleClearRecentSearches} />}
+          />
+
+          <View style={styles(searchTheme).recentList}>
+            {recentSearches.map((recentSearch, index) => (
+              <React.Fragment key={`${recentSearch}-${index}`}>
+                <TouchableOpacity
+                  activeOpacity={0.72}
+                  onPress={() => handleTagPress(recentSearch)}
+                  style={styles(searchTheme).recentListBtn}
+                >
+                  <View style={styles(searchTheme).recentIcon}>
+                    <Ionicons name='time-outline' color={tokens.colors.accent} size={scale(17)} />
+                  </View>
+                  <TextDefault numberOfLines={1} style={styles(searchTheme).recentText} textColor={tokens.colors.textPrimary}>
+                    {recentSearch}
+                  </TextDefault>
+                  <Ionicons
+                    name={currentTheme.isRTL ? 'chevron-back' : 'chevron-forward'}
+                    color={tokens.colors.textMuted}
+                    size={scale(16)}
+                  />
+                </TouchableOpacity>
+                {index !== recentSearches.length - 1 && <View style={styles(searchTheme).line} />}
+              </React.Fragment>
+            ))}
           </View>
-
-          <View style={styles().line} />
-
-          {/* recent seareches list */}
-
-          {recentSearches.map((recentSearch, index) => (
-            <React.Fragment key={index}>
-              <TouchableOpacity onPress={() => handleTagPress(recentSearch)} style={styles(currentTheme).recentListBtn}>
-                <View>
-                  <Ionicons name='search' color={currentTheme.gray500} size={scale(20)} />
-                </View>
-                <View>
-                  <TextDefault>{recentSearch}</TextDefault>
-                </View>
-              </TouchableOpacity>
-
-              <View style={styles().line} />
-            </React.Fragment>
-          ))}
         </View>
       )
     } else {
       return (
-        <View style={styles(currentTheme).tagView}>
-          {loading ? (
+        <View style={styles(searchTheme).tagView}>
+          {loading && (
             <View style={{ ...alignment.MTmedium }}>
               <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.main} />
             </View>
-          ) : (
-            uniqueTags.map((tag, index) =>
-              hasAnimated ? (
-                <TouchableOpacity key={index} onPress={() => handleTagPress(tag)}>
-                  <View style={styles(currentTheme).tagItem}>
-                    <TextDefault numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
-                  </View>
-                </TouchableOpacity>
-              ) : (
-                <CustomItem index={index}>
-                  <TouchableOpacity key={tag} onPress={() => handleTagPress(tag)}>
-                    <View style={styles(currentTheme).tagItem}>
-                      <TextDefault numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
-                    </View>
-                  </TouchableOpacity>
-                </CustomItem>
-              )
-            )
           )}
+          {!loading && uniqueTags.map((tag, index) => {
+            const tagButton = (
+              <TouchableOpacity onPress={() => handleTagPress(tag)}>
+                <View style={styles(searchTheme).tagItem}>
+                  <TextDefault textColor={tokens.colors.accent} numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
+                </View>
+              </TouchableOpacity>
+            )
+
+            if (hasAnimated) {
+              return <React.Fragment key={tag}>{tagButton}</React.Fragment>
+            }
+
+            return <CustomItem key={tag} index={index}>{tagButton}</CustomItem>
+          })}
         </View>
       )
     }
   }
 
   return (
-    <ScrollView style={styles(currentTheme).flex}>
+    <ScrollView style={styles(searchTheme).flex}>
       <View
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -392,8 +385,8 @@ const SearchScreen = () => {
           />
         }
       >
-        <View style={styles().searchbar}>
-          <Search setSearch={setSearch} search={search} newheaderColor={newheaderColor} placeHolder={t('searchRestaurant')} />
+        <View style={styles(searchTheme).searchbar}>
+          <Search setSearch={setSearch} search={search} placeHolder={t('searchRestaurant')} />
         </View>
         {renderTagsOrSearches()}
       </View>
