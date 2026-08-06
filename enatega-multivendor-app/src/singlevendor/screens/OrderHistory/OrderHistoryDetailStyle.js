@@ -16,8 +16,8 @@ const styles = (props = null) =>
       section: {
         paddingHorizontal: scale(16),
         paddingVertical: verticalScale(16),
-        borderBottomWidth: 1,
-        borderBottomColor: props?.gray200 || '#E5E7EB'
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: props?.colorBorder || '#E5E7EB'
       },
       sectionTitle: {
         fontSize: scale(16),
@@ -66,8 +66,8 @@ const styles = (props = null) =>
         paddingTop: scale(12),
         paddingHorizontal: scale(16),
         paddingBottom: scale(12),
-        borderTopWidth: 1,
-        borderTopColor: props?.gray200 || '#E5E7EB',
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: props?.colorBorder || '#E5E7EB',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.1,
@@ -79,7 +79,7 @@ const styles = (props = null) =>
         paddingVertical: verticalScale(12),
         backgroundColor: props?.themeBackground,
         // borderTopWidth: 1,
-        borderTopColor: props?.gray200 || '#E5E7EB'
+        borderTopColor: props?.colorBorder || '#E5E7EB'
       },
       increaseTipButton: {
         backgroundColor: props?.colorBgSecondary || '#CCE9F5',

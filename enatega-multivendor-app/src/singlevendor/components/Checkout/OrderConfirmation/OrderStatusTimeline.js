@@ -256,6 +256,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const componentStyles = styles(currentTheme)
 
   const getCurrentIndex = () =>
     decidedStatuses.findIndex((s) => s.key === currentStatus)
@@ -279,7 +280,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
 
     if (status.icon === 'bike') {
       return (
-        <View style={[styles(currentTheme).iconContainer, isCompleted && styles(currentTheme).completed]}>
+        <View style={[componentStyles.iconContainer, isCompleted && componentStyles.completed]}>
           <MaterialCommunityIcons
             name="bike-fast"
             size={18}
@@ -292,9 +293,9 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
     return (
       <View
         style={[
-          styles(currentTheme).iconContainer,
-          isCompleted && styles(currentTheme).completed,
-          isActive && styles(currentTheme).active
+          componentStyles.iconContainer,
+          isCompleted && componentStyles.completed,
+          isActive && componentStyles.active
         ]}
       >
         <Feather
@@ -307,19 +308,19 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
   }
 
   return (
-    <View style={styles(currentTheme).container}>
+    <View style={componentStyles.container}>
       {decidedStatuses.map((status, index) => {
         const state = getState(index)
         const isLast = index === decidedStatuses.length - 1
 
         return (
-          <View key={status.key} style={styles(currentTheme).row}>
-            <View style={styles(currentTheme).left}>
+          <View key={status.key} style={componentStyles.row}>
+            <View style={componentStyles.left}>
               {renderIcon(status, state)}
               {!isLast && (
                 <View
                   style={[
-                    styles(currentTheme).line,
+                    componentStyles.line,
                     state === 'completed' && {
                       backgroundColor: currentTheme.primaryBlue
                     }
@@ -328,7 +329,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
               )}
             </View>
 
-            <View style={styles(currentTheme).center}>
+            <View style={componentStyles.center}>
               <TextDefault
                 bold={state !== 'pending'}
                 textColor={
@@ -342,7 +343,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
               </TextDefault>
             </View>
 
-            <View style={styles(currentTheme).right}>
+            <View style={componentStyles.right}>
               <TextDefault small textColor={currentTheme.gray500} isRTL>
                 {state === 'completed' ? statusTimes?.[status.key] || '' : ''}
               </TextDefault>
@@ -357,43 +358,48 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
 const styles = (theme) =>
   StyleSheet.create({
     container: {
-      padding: scale(16)
+      paddingHorizontal: scale(16),
+      paddingTop: scale(18),
+      paddingBottom: scale(4)
     },
     row: {
       flexDirection: 'row',
-      minHeight: scale(50)
+      minHeight: scale(48)
     },
     left: {
-      width: scale(32),
+      width: scale(28),
       alignItems: 'center'
     },
     iconContainer: {
-      width: scale(28),
-      height: scale(28),
-      borderRadius: scale(14),
+      width: scale(26),
+      height: scale(26),
+      borderRadius: scale(13),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: theme.gray100
+      backgroundColor: 'transparent'
     },
     completed: {
-      backgroundColor: theme.primaryBlue
+      backgroundColor: theme.primaryBlue,
+      borderColor: theme.primaryBlue
     },
     active: {
-      backgroundColor: theme.blue50
+      backgroundColor: 'transparent'
     },
     line: {
-      width: 2,
+      width: StyleSheet.hairlineWidth,
       flex: 1,
-      backgroundColor: theme.gray200,
-      marginVertical: scale(4)
+      backgroundColor: theme.colorBorder,
+      marginVertical: scale(3)
     },
     center: {
       flex: 1,
       paddingLeft: scale(12),
-      paddingTop: scale(4)
+      height: scale(26),
+      justifyContent: 'center'
     },
     right: {
-      paddingTop: scale(4)
+      height: scale(26),
+      justifyContent: 'center'
     }
   })
 

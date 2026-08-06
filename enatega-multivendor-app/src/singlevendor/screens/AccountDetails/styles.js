@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { verticalScale } from '../../../utils/scaling'
+import { scale, verticalScale } from '../../../utils/scaling'
 
 const styles = (currentTheme) =>
   StyleSheet.create({
@@ -12,11 +12,14 @@ const styles = (currentTheme) =>
     },
     scrollContent: {
       flexGrow: 1,
-      paddingTop: verticalScale(16)
+      paddingTop: verticalScale(12)
     },
     listContainer: {
       backgroundColor: currentTheme?.cardBackground || '#FFFFFF',
-      borderRadius: 12,
+      marginHorizontal: scale(16),
+      borderRadius: scale(12),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: currentTheme?.colorBorder || '#E5E7EB',
       overflow: 'hidden'
     }
   })

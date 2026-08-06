@@ -21,6 +21,16 @@ import PublicAccessTokenService from "../services/public-access-token.service";
 
 let isAuthRedirecting = false;
 
+const isExpiredJwt = (token: string | null): boolean => {
+  if (!token) return false;
+  try {
+    const payload = JSON.parse(globalThis.atob(token.split(".")[1]));
+    return typeof payload.exp === "number" && payload.exp * 1000 <= Date.now() + 15000;
+  } catch {
+    return true;
+  }
+};
+
 interface ApolloSetupOptions {
   environment: StoreEnvironment;
   tokenKey: string;
@@ -72,6 +82,10 @@ const setupApollo = ({
       timeout: 30000,
       connectionParams: async () => {
         const token = await SecureStore.getItemAsync(tokenKey);
+        if (isExpiredJwt(token)) {
+          await handleInvalidSession(tokenKey, storeIdKey);
+          return {authorization: "", "x-platform": "mobile"};
+        }
         const params: Record<string, string> = {
           authorization: token ? `Bearer ${token}` : "",
           "x-platform": "mobile",
@@ -98,6 +112,10 @@ const setupApollo = ({
     const skipPublicAuth =
       operation.getContext().headers?.["x-skip-public-auth"];
     const token = await SecureStore.getItemAsync(tokenKey);
+    if (isExpiredJwt(token)) {
+      await handleInvalidSession(tokenKey, storeIdKey);
+      throw new Error("Session expired");
+    }
 
     const headers: Record<string, string> = {
       authorization: token ? `Bearer ${token}` : "",

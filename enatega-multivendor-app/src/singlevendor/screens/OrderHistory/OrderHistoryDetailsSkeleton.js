@@ -27,6 +27,7 @@ const OrderHistoryDetailsSkeleton = () => {
         currentTheme={currentTheme}
         onBack={() => navigation.goBack()}
         headerText={t('Order details') || 'Order details'}
+        includeSafeArea={false}
       />
 
       <ScrollView

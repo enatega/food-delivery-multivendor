@@ -31,7 +31,7 @@ import {
   IRiderEarnings,
   IRiderEarningsArray,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getSecureItem } from "@/lib/services/secure-storage";
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
 import { isNewOrderForMode } from "@/lib/utils/order-state";
@@ -108,7 +108,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   const isRiderAvailable = Boolean(dataProfile?.rider?.available);
 
   const getUserId = useCallback(async () => {
-    const id = await AsyncStorage.getItem(riderIdKey);
+    const id = await getSecureItem(riderIdKey);
 
     if (id) {
       setUserId(id);

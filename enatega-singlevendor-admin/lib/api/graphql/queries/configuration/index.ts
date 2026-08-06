@@ -2,32 +2,26 @@ import { gql } from '@apollo/client';
 
 export const GET_CONFIGURATION = gql`
   query getConfiguration {
-    configuration {
+    configuration: adminConfiguration {
       _id
       email
       emailName
-      password
       enableEmail
       clientId
-      clientSecret
       sandbox
       publishableKey
-      secretKey
       currency
       currencySymbol
       deliveryRate
       twilioAccountSid
-      twilioAuthToken
       twilioPhoneNumber
       twilioEnabled
       skipWhatsAppOTP
       twilioWhatsAppNumber
       formEmail
-      sendGridApiKey
       sendGridEnabled
       sendGridEmail
       sendGridEmailName
-      sendGridPassword
       dashboardSentryUrl
       webSentryUrl
       apiSentryUrl
@@ -36,7 +30,6 @@ export const GET_CONFIGURATION = gql`
       riderAppSentryUrl
       googleApiKey
       cloudinaryUploadUrl
-      cloudinaryApiKey
       webAmplitudeApiKey
       appAmplitudeApiKey
       webClientID
@@ -47,7 +40,11 @@ export const GET_CONFIGURATION = gql`
       googleColor
       termsAndConditions
       privacyPolicy
-      testOtp
+      hasEmailPasswordConfigured
+      hasPaypalSecretConfigured
+      hasStripeSecretConfigured
+      hasTwilioSecretConfigured
+      hasSendGridSecretConfigured
       firebaseKey
       authDomain
       projectId

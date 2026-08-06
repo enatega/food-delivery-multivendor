@@ -40,18 +40,19 @@ const styles = (currentTheme) =>
   StyleSheet.create({
     container: {
       paddingHorizontal: scale(16),
-      paddingTop: verticalScale(20),
-      paddingBottom: verticalScale(24),
-      backgroundColor: currentTheme.colorBgSecondary
+      paddingTop: verticalScale(18),
+      paddingBottom: verticalScale(22),
+      backgroundColor: currentTheme.lowOpacityBlue
     },
     welcomeText: {
-      fontSize: scale(14),
+      color: currentTheme.colorTextMuted,
+      fontSize: scale(13),
       marginBottom: verticalScale(4)
     },
     nameText: {
       color: currentTheme.fontMainColor,
-      fontSize: scale(24),
-      fontWeight: 'bold'
+      fontSize: scale(23),
+      fontWeight: '700'
     }
   })
 

@@ -48,20 +48,20 @@ export async function migrateLegacyRiderStorage(): Promise<void> {
     await Promise.all([
       getSecureItem(RIDER_TOKEN),
       getSecureItem(multiTokenKey),
-      AsyncStorage.getItem(RIDER_ID),
-      AsyncStorage.getItem(multiRiderIdKey),
+      getSecureItem(RIDER_ID),
+      getSecureItem(multiRiderIdKey),
     ]);
 
   if (legacyToken && !existingMultiToken) {
     await setSecureItem(multiTokenKey, legacyToken);
   }
   if (legacyRiderId && !existingMultiRiderId) {
-    await AsyncStorage.setItem(multiRiderIdKey, legacyRiderId);
+    await setSecureItem(multiRiderIdKey, legacyRiderId);
   }
 
   await Promise.all([
     removeSecureItem(RIDER_TOKEN),
-    AsyncStorage.removeItem(RIDER_ID),
+    removeSecureItem(RIDER_ID),
     AsyncStorage.setItem(RIDER_STORAGE_MIGRATION_KEY, "1"),
   ]);
 }

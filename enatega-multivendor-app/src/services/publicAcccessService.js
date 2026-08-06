@@ -34,14 +34,14 @@ const scheduleNextRefresh = (graphqlUrl, expiryValue) => {
   }, delay)
 }
 
-export const fetchPublicAccessToken = async (graphqlUrl) => {
+export const fetchPublicAccessToken = async(graphqlUrl) => {
   if (tokenRefreshPromise) {
     return tokenRefreshPromise
   }
 
-  tokenRefreshPromise = (async () => {
+  tokenRefreshPromise = (async() => {
     try {
-      const nonce = await getOrCreateNonce()
+      const nonce = await getOrCreateNonce(graphqlUrl)
 
       const client = new ApolloClient({
         link: createHttpLink({
@@ -50,7 +50,7 @@ export const fetchPublicAccessToken = async (graphqlUrl) => {
             'user-agent': `EnategaApp/${Platform.OS}`,
             'accept-language': 'en-US',
             'x-platform': Platform.OS,
-            nonce: nonce
+            nonce
           }
         }),
         cache: new InMemoryCache()
@@ -63,7 +63,7 @@ export const fetchPublicAccessToken = async (graphqlUrl) => {
       const token = data.metricsGeneral.experience
       const expiry = data.metricsGeneral.hehe
 
-      await savePublicToken(token, expiry)
+      await savePublicToken(token, expiry, graphqlUrl)
 
       // Keep the token fresh proactively instead of waiting for the next
       // request to discover it has expired.
@@ -81,26 +81,26 @@ export const fetchPublicAccessToken = async (graphqlUrl) => {
   return tokenRefreshPromise
 }
 
-export const getValidPublicToken = async (graphqlUrl) => {
-  const expired = await isTokenExpired()
+export const getValidPublicToken = async(graphqlUrl) => {
+  const expired = await isTokenExpired(graphqlUrl)
 
   if (expired) {
     return await fetchPublicAccessToken(graphqlUrl)
   }
 
-  return await getPublicToken()
+  return await getPublicToken(graphqlUrl)
 }
 
 // Call once on app start so the public token is fetched/refreshed up front and
 // the background refresh timer starts, rather than refreshing only on demand.
-export const initializePublicAccessToken = async (graphqlUrl) => {
+export const initializePublicAccessToken = async(graphqlUrl) => {
   try {
-    const expired = await isTokenExpired()
+    const expired = await isTokenExpired(graphqlUrl)
 
     if (expired) {
       await fetchPublicAccessToken(graphqlUrl)
     } else {
-      const expiry = await getTokenExpiry()
+      const expiry = await getTokenExpiry(graphqlUrl)
       scheduleNextRefresh(graphqlUrl, expiry)
     }
   } catch (error) {

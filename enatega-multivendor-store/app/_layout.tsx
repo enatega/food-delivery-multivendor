@@ -60,7 +60,10 @@ function ModeAwareRootLayout() {
     const initializePublicAccess = async () => {
       if (environment.PUBLIC_ACCESS_REQUIRED) {
         try {
-          await PublicAccessTokenService.initialize(client);
+          await PublicAccessTokenService.initialize(
+            client,
+            `${mode}:${environment.GRAPHQL_URL}`,
+          );
         } catch {
           // Operations that require public access surface their own errors.
         }
@@ -76,7 +79,7 @@ function ModeAwareRootLayout() {
       }
       disposeApollo(client);
     };
-  }, [client, environment.PUBLIC_ACCESS_REQUIRED]);
+  }, [client, environment.GRAPHQL_URL, environment.PUBLIC_ACCESS_REQUIRED, mode]);
 
   if (!isModeReady || !isTokenReady) {
     return null;

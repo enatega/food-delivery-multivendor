@@ -92,8 +92,8 @@ const styles = (props = null) =>
     container: {
       paddingHorizontal: scale(16),
       paddingVertical: scale(16),
-      borderBottomWidth: 1,
-      borderBottomColor: props?.gray200 || '#E5E7EB'
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: props?.colorBorder || '#E5E7EB'
     },
     sectionTitle: {
       marginBottom: scale(16)
@@ -111,8 +111,7 @@ const styles = (props = null) =>
     addressContent: {
       marginLeft: scale(12),
       flex: 1,
-      gap: scale(6)
-
+      gap: scale(4)
     },
     mapContainer: {
       marginTop: scale(16),

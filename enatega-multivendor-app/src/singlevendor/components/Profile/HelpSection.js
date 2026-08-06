@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { verticalScale } from '../../../utils/scaling'
+import { scale, verticalScale } from '../../../utils/scaling'
 import SectionHeader from './SectionHeader'
 import MenuListItem from './MenuListItem'
 
@@ -66,8 +66,10 @@ const styles = (currentTheme) =>
     },
     menuContainer: {
       backgroundColor: currentTheme?.cardBackground || '#FFFFFF',
-      borderRadius: 12,
-      marginHorizontal: 16,
+      borderColor: currentTheme?.colorBorder || '#E5E7EB',
+      borderRadius: scale(16),
+      borderWidth: StyleSheet.hairlineWidth,
+      marginHorizontal: scale(16),
       overflow: 'hidden'
       // shadowColor: '#000',
       // shadowOffset: { width: 0, height: 2 },
@@ -76,9 +78,11 @@ const styles = (currentTheme) =>
       // elevation: 2
     },
     separator: {
-      height: 1,
-      backgroundColor: currentTheme?.horizontalLine || '#E5E5E5',
-      opacity: 0.5
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: currentTheme?.colorBorder || '#E5E7EB',
+      marginLeft: scale(54),
+      marginRight: scale(14),
+      opacity: 0.72
     }
   })
 

@@ -73,7 +73,6 @@ export interface IRiderProfile {
     coordinates: string[];
   };
   isAvailable: boolean;
-  password: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

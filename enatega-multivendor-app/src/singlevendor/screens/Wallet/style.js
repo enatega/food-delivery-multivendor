@@ -15,38 +15,36 @@ const styles = (props = null) =>
     },
     titleContainer: {
       paddingHorizontal: scale(16),
-      paddingTop: verticalScale(16),
-      paddingBottom: verticalScale(24)
+      paddingTop: verticalScale(8),
+      paddingBottom: verticalScale(16)
     },
     walletTitle: {
-      fontSize: scale(28),
-      fontWeight: '800',
-      lineHeight: scale(34),
-      marginBottom: verticalScale(12)
+      fontSize: scale(24),
+      fontWeight: '700',
+      lineHeight: scale(30),
+      marginBottom: verticalScale(8)
     },
     walletDescription: {
       fontWeight: '500',
       fontSize: scale(14),
       lineHeight: scale(20),
-      marginTop: verticalScale(4)
+      marginTop: 0
+    },
+    walletFreeDeliveriesCard: {
+      marginBottom: verticalScale(12),
+      paddingHorizontal: scale(16),
+      paddingVertical: verticalScale(12),
+      borderRadius: scale(12)
     },
     balanceCard: {
-      backgroundColor: props?.colorBgTertiary ,
-      borderWidth: 1,
-      borderColor: props?.newBorderColor2 ,
+      backgroundColor: props?.colorBgTertiary,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colorBorder,
       marginHorizontal: scale(16),
-      marginBottom: verticalScale(24),
-      paddingHorizontal: scale(20),
-      paddingVertical: verticalScale(24),
-      borderRadius: scale(12),
-      // shadowColor: props?.shadowColor || '#000',
-      // shadowOffset: {
-      //   width: 0,
-      //   height: 2
-      // },
-      // shadowOpacity: 0.1,
-      // shadowRadius: 8,
-      // elevation: 0.1
+      marginBottom: verticalScale(20),
+      paddingHorizontal: scale(16),
+      paddingVertical: verticalScale(18),
+      borderRadius: scale(14)
     },
     balanceLabel: {
       fontSize: scale(14),
@@ -57,7 +55,7 @@ const styles = (props = null) =>
       fontSize: scale(32),
       fontWeight: '700',
       lineHeight: scale(40),
-      marginBottom: verticalScale(20)
+      marginBottom: verticalScale(16)
     },
     freeDeliveriesCard: {
       paddingVertical: verticalScale(14),
@@ -96,16 +94,16 @@ const styles = (props = null) =>
       opacity: 0.3
     },
     browseButton: {
-      backgroundColor: props?.singlevendorcolor ,
+      backgroundColor: props?.singlevendorcolor,
       paddingVertical: verticalScale(10),
       borderRadius: scale(8),
-      alignSelf: 'flex-start',  
+      alignSelf: 'flex-start'
     },
     browseButtonText: {
       fontSize: scale(16),
       fontWeight: '500',
       lineHeight: scale(22),
-      paddingHorizontal: scale(12),
+      paddingHorizontal: scale(12)
     },
     refundHistoryContainer: {
       paddingHorizontal: scale(16)
@@ -142,7 +140,7 @@ const styles = (props = null) =>
     },
     historyContainer: {
       paddingHorizontal: scale(16),
-      marginBottom: verticalScale(24)
+      marginBottom: verticalScale(20)
     },
     historyTitle: {
       fontSize: scale(18),

@@ -83,9 +83,9 @@ const styles = (currentTheme) =>
     },
     background: {
       position: 'absolute',
-      height: 80,
+      height: verticalScale(62),
       width: '200%',
-      backgroundColor: currentTheme.colorBgSecondary,
+      backgroundColor: currentTheme.lowOpacityBlue,
       top: 0,
       left: -scale(16),
       right: -scale(16)
@@ -93,17 +93,19 @@ const styles = (currentTheme) =>
     actionCard: {
       flex: 1,
       backgroundColor: currentTheme?.cardBackground || '#FFFFFF',
-      borderRadius: scale(12),
-      paddingVertical: verticalScale(20),
+      borderColor: currentTheme.colorBorder,
+      borderRadius: scale(16),
+      borderWidth: StyleSheet.hairlineWidth,
+      paddingVertical: verticalScale(18),
       paddingHorizontal: scale(8),
       marginHorizontal: scale(4),
       alignItems: 'center',
       justifyContent: 'center',
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.05,
-      shadowRadius: 4,
-      elevation: 2
+      shadowOpacity: 0.04,
+      shadowRadius: 6,
+      elevation: 1
     },
     actionLabel: {
       marginTop: verticalScale(8),

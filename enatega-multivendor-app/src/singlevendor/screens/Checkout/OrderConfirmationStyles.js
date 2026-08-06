@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
-import { scale } from '../../../utils/scaling';
-import { alignment } from '../../../utils/alignment';
+import { StyleSheet } from 'react-native'
+import { scale } from '../../../utils/scaling'
+import { alignment } from '../../../utils/alignment'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -12,7 +12,7 @@ const styles = (props = null) =>
       flex: 1
     },
     contentContainer: {
-      paddingBottom: scale(20)
+      paddingBottom: scale(220)
     },
     stickyBottomContainer: {
       position: 'absolute',
@@ -20,16 +20,16 @@ const styles = (props = null) =>
       left: 0,
       right: 0,
       backgroundColor: props !== null ? props.themeBackground : '#fff',
-      paddingTop: scale(12),
+      paddingTop: scale(10),
       paddingHorizontal: scale(16),
       paddingBottom: scale(30),
-      borderTopWidth: 1,
-      borderTopColor: props !== null ? props.gray200 : '#E5E7EB',
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props !== null ? props.colorBorder : '#E5E7EB',
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: -2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 5
+      shadowOffset: { width: 0, height: -1 },
+      shadowOpacity: 0.06,
+      shadowRadius: 8,
+      elevation: 3
     },
     backButton: {
       width: scale(36),
@@ -38,11 +38,8 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.colorBgTertiary : '#fff',
       alignItems: 'center',
       justifyContent: 'center',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props !== null ? props.colorBorder : '#E5E7EB'
     },
     helpButton: {
       ...alignment.PRsmall,
@@ -60,6 +57,6 @@ const styles = (props = null) =>
     orderAgainButtonDisabled: {
       opacity: 0.6
     }
-  });
+  })
 
-export default styles;
+export default styles

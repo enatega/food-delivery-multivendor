@@ -8,7 +8,6 @@ export const SAVE_EMAIL_CONFIGURATION = gql`
       _id
       email
       emailName
-      password
       enableEmail
     }
   }
@@ -31,7 +30,6 @@ export const SAVE_SENDGRID_API_KEY = gql`
   ) {
     saveSendGridConfiguration(configurationInput: $configurationInput) {
       _id
-      sendGridApiKey
       sendGridEnabled
       sendGridEmail
       sendGridEmailName
@@ -165,7 +163,6 @@ export const SAVE_PAYPAL_CONFIGURATION = gql`
     savePaypalConfiguration(configurationInput: $configurationInput) {
       _id
       clientId
-      clientSecret
       sandbox
     }
   }
@@ -178,7 +175,6 @@ export const SAVE_STRIPE_CONFIGURATION = gql`
     saveStripeConfiguration(configurationInput: $configurationInput) {
       _id
       publishableKey
-      secretKey
     }
   }
 `;
@@ -190,7 +186,6 @@ export const SAVE_TWILIO_CONFIGURATION = gql`
     saveTwilioConfiguration(configurationInput: $configurationInput) {
       _id
       twilioAccountSid
-      twilioAuthToken
       twilioPhoneNumber
       twilioEnabled
       twilioWhatsAppNumber

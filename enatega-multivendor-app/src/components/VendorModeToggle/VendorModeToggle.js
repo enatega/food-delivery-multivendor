@@ -80,15 +80,20 @@ const VendorModeToggle = ({ hasActiveOrder = false, hasCartItems = false }) => {
             <TouchableOpacity
               accessibilityRole='radio'
               accessibilityState={{ checked: selected, disabled: isSwitchingMode || isModeSwitchBlocked }}
+              activeOpacity={0.72}
               disabled={isSwitchingMode || isModeSwitchBlocked}
               key={itemMode}
               onPress={() => requestSwitch(itemMode)}
-              style={[styles(currentTheme).button, selected && styles(currentTheme).selectedButton]}
+              style={[
+                styles(currentTheme).button,
+                itemMode === APP_MODES.MULTI && singleVendorAvailable && styles(currentTheme).segmentDivider,
+                selected && styles(currentTheme).selectedButton
+              ]}
             >
               <Feather
                 name={icons[itemMode]}
                 size={scale(15)}
-                color={selected ? '#FFFFFF' : currentTheme.colorTextMuted}
+                color={selected ? currentTheme.primaryBlue : currentTheme.colorTextMuted}
                 style={styles(currentTheme).buttonIcon}
               />
               <Text style={[styles(currentTheme).label, selected && styles(currentTheme).selectedLabel]}>
@@ -112,30 +117,27 @@ const styles = (currentTheme) => StyleSheet.create({
   container: {
     alignItems: 'center',
     alignSelf: 'stretch',
-    backgroundColor: currentTheme.colorBgTertiary || currentTheme.cardBackground,
-    borderColor: currentTheme.newBorderColor2 || currentTheme.colorBorder,
-    borderWidth: 1,
-    borderRadius: scale(15),
+    backgroundColor: currentTheme.themeBackground,
     flexDirection: 'row',
-    minHeight: scale(50),
-    padding: scale(4),
-    shadowColor: currentTheme.shadowColor || '#000000',
-    shadowOpacity: 0.07,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2
+    minHeight: scale(48)
   },
   button: {
     flex: 1,
-    minHeight: scale(40),
-    borderRadius: scale(11),
-    paddingHorizontal: scale(8),
+    alignSelf: 'stretch',
+    borderBottomColor: 'transparent',
+    borderBottomWidth: scale(2),
+    paddingHorizontal: scale(12),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
   },
+  segmentDivider: {
+    borderRightColor: currentTheme.newBorderColor2 || currentTheme.colorBorder,
+    borderRightWidth: StyleSheet.hairlineWidth
+  },
   selectedButton: {
-    backgroundColor: currentTheme.primaryBlue
+    backgroundColor: `${currentTheme.primaryBlue}12`,
+    borderBottomColor: currentTheme.primaryBlue
   },
   label: {
     color: currentTheme.colorTextMuted,
@@ -143,14 +145,13 @@ const styles = (currentTheme) => StyleSheet.create({
     fontWeight: '600'
   },
   selectedLabel: {
-    color: '#FFFFFF'
+    color: currentTheme.primaryBlue
   },
   buttonIcon: { marginRight: scale(7) },
   loader: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: scale(15),
     backgroundColor: `${currentTheme.themeBackground || '#FFFFFF'}CC`
   }
 })

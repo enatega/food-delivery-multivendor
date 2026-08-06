@@ -35,6 +35,7 @@ class PublicAccessTokenService {
   private expiry: number | null = null;
   private refreshPromise: Promise<void> | null = null;
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
+  private scope = "legacy";
 
   private constructor() {}
 
@@ -47,12 +48,20 @@ class PublicAccessTokenService {
 
   async initialize(
     apolloClient: ApolloClient<NormalizedCacheObject>,
+    scope: string,
   ): Promise<void> {
+    if (this.scope !== scope) {
+      this.pause();
+      this.nonce = null;
+      this.token = null;
+      this.expiry = null;
+      this.scope = scope;
+    }
     await this.loadFromStorage();
 
     if (!this.nonce) {
       this.nonce = await this.generateNonce();
-      await SecureStore.setItemAsync(KEYS.NONCE, this.nonce);
+      await SecureStore.setItemAsync(this.key(KEYS.NONCE), this.nonce);
     }
 
     if (!this.token || this.isExpired()) {
@@ -60,6 +69,10 @@ class PublicAccessTokenService {
     } else {
       this.scheduleRefresh(apolloClient);
     }
+  }
+
+  private key(base: string): string {
+    return `${base}:${encodeURIComponent(this.scope)}`;
   }
 
   private scheduleRefresh(
@@ -92,9 +105,9 @@ class PublicAccessTokenService {
 
   private async loadFromStorage(): Promise<void> {
     try {
-      this.nonce = await SecureStore.getItemAsync(KEYS.NONCE);
-      this.token = await SecureStore.getItemAsync(KEYS.TOKEN);
-      const expiryStr = await SecureStore.getItemAsync(KEYS.EXPIRY);
+      this.nonce = await SecureStore.getItemAsync(this.key(KEYS.NONCE));
+      this.token = await SecureStore.getItemAsync(this.key(KEYS.TOKEN));
+      const expiryStr = await SecureStore.getItemAsync(this.key(KEYS.EXPIRY));
       this.expiry = expiryStr ? parseInt(expiryStr, 10) : null;
     } catch {
       this.nonce = null;
@@ -136,8 +149,8 @@ class PublicAccessTokenService {
           const expiryTime = new Date(data.metricsGeneral.hehe).getTime();
           this.expiry = expiryTime;
 
-          await SecureStore.setItemAsync(KEYS.TOKEN, token);
-          await SecureStore.setItemAsync(KEYS.EXPIRY, expiryTime.toString());
+          await SecureStore.setItemAsync(this.key(KEYS.TOKEN), token);
+          await SecureStore.setItemAsync(this.key(KEYS.EXPIRY), expiryTime.toString());
 
           this.scheduleRefresh(apolloClient);
         }
@@ -173,8 +186,8 @@ class PublicAccessTokenService {
     this.pause();
     this.token = null;
     this.expiry = null;
-    await SecureStore.deleteItemAsync(KEYS.TOKEN);
-    await SecureStore.deleteItemAsync(KEYS.EXPIRY);
+    await SecureStore.deleteItemAsync(this.key(KEYS.TOKEN));
+    await SecureStore.deleteItemAsync(this.key(KEYS.EXPIRY));
   }
 }
 

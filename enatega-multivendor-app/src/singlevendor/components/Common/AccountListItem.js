@@ -9,13 +9,13 @@ const AccountListItem = ({
   label, 
   value, 
   verified = false, 
-  onPress = null 
+  onPress = null,
+  isLast = false
 }) => {
   const ItemContent = () => (
     <View style={styles(currentTheme).listItemContent}>
       <View style={styles(currentTheme).listItemLeft}>
         <TextDefault
-          H5
           textColor={currentTheme.fontMainColor}
           style={styles(currentTheme).label}
           bolder
@@ -44,7 +44,7 @@ const AccountListItem = ({
         <Ionicons
           name="chevron-forward"
           size={20}
-          color={currentTheme.fontMainColor}
+          color={currentTheme.colorTextMuted || currentTheme.fontSecondColor}
         />
       )}
     </View>
@@ -53,7 +53,7 @@ const AccountListItem = ({
   if (onPress) {
     return (
       <TouchableOpacity
-        style={styles(currentTheme).listItem}
+        style={[styles(currentTheme).listItem, isLast && styles(currentTheme).listItemLast]}
         onPress={onPress}
         activeOpacity={0.7}
       >
@@ -63,7 +63,7 @@ const AccountListItem = ({
   }
 
   return (
-    <View style={styles(currentTheme).listItem}>
+    <View style={[styles(currentTheme).listItem, isLast && styles(currentTheme).listItemLast]}>
       <ItemContent />
     </View>
   )
@@ -73,7 +73,12 @@ const styles = (currentTheme) =>
   StyleSheet.create({
     listItem: {
       paddingHorizontal: scale(16),
-      paddingVertical: verticalScale(16)
+      paddingVertical: verticalScale(12),
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: currentTheme.colorBorder || '#E5E7EB'
+    },
+    listItemLast: {
+      borderBottomWidth: 0
     },
     listItemContent: {
       flexDirection: 'row',

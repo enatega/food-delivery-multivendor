@@ -146,14 +146,15 @@ const AccountDetails = () => {
         }
       >
         <View style={styles(currentTheme).listContainer}>
-          {accountItems.map((item) => (
+          {accountItems.map((item, index) => (
             <AccountListItem
               key={item.id}
               currentTheme={currentTheme}
               label={item.label}
-              value={item.value}
+              value={item.value || t('Not provided')}
               verified={item.verified}
               onPress={item.onPress}
+              isLast={index === accountItems.length - 1}
             />
           ))}
         </View>

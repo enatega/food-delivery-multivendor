@@ -69,7 +69,7 @@ function ModeAwareApp({ fontsLoaded }: { fontsLoaded: boolean }) {
       return;
     }
 
-    PublicAccessTokenService.initialize(client)
+    PublicAccessTokenService.initialize(client, `${mode}:${environment.GRAPHQL_URL}`)
       .then(() => setIsPublicTokenReady(true))
       .catch((error) => {
         if (__DEV__) {
@@ -79,7 +79,7 @@ function ModeAwareApp({ fontsLoaded }: { fontsLoaded: boolean }) {
       });
 
     return () => PublicAccessTokenService.pause();
-  }, [client, environment.PUBLIC_ACCESS_REQUIRED, modeReady]);
+  }, [client, environment.GRAPHQL_URL, environment.PUBLIC_ACCESS_REQUIRED, mode, modeReady]);
 
   useEffect(() => {
     return () => runtime.dispose();

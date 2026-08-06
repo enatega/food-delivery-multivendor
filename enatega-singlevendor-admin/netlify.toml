@@ -4,8 +4,5 @@ command = "npm run build"
 [build.environment]
 NODE_VERSION = "20"
 NPM_VERSION = "10"
-NEXT_PUBLIC_SERVER_URL = "https://3086ptqf-8001.inc1.devtunnels.ms/"
-NEXT_PUBLIC_WS_SERVER_URL = "wss://3086ptqf-8001.inc1.devtunnels.ms/"
-
 [[plugins]]
 package = "@netlify/plugin-nextjs"

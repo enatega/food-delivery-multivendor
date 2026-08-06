@@ -9,6 +9,7 @@ import UserContext from '../../../context/User'
 import { useModeSensitiveOperation } from '../../../mode/AppModeContext'
 import { APP_MODES } from '../../../mode/constants'
 import { removeModeItem } from '../../../mode/storage'
+import { getToken } from '../../../utils/secureToken'
 import { paymentSuccess } from '../../apollo/subscriptions'
 import useCartStore from '../../stores/useCartStore'
 
@@ -48,6 +49,7 @@ const SingleVendorPaymentCheckout = ({ route }) => {
   const { profile } = useContext(UserContext)
   const clearCart = useCartStore(state => state.clearCart)
   const [loading, setLoading] = useState(true)
+  const [accessToken, setAccessToken] = useState(null)
   const completed = useRef(false)
   const {
     _id: displayOrderId,
@@ -69,6 +71,14 @@ const SingleVendorPaymentCheckout = ({ route }) => {
     url.searchParams.set('payment_method', paymentMethod)
     return url.toString()
   }, [SERVER_REST_URL, displayOrderId, paymentMethod])
+
+  useEffect(() => {
+    let mounted = true
+    getToken(APP_MODES.SINGLE).then(token => {
+      if (mounted) setAccessToken(token || '')
+    })
+    return () => { mounted = false }
+  }, [])
 
   const completePayment = async() => {
     if (completed.current) return
@@ -122,12 +132,16 @@ const SingleVendorPaymentCheckout = ({ route }) => {
     }
   }
 
-  if (!displayOrderId || !SERVER_REST_URL) {
+  if (!displayOrderId || !SERVER_REST_URL || accessToken === '') {
     return (
       <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', padding: 24 }}>
         <Text>Payment could not be started. Please return to your order.</Text>
       </View>
     )
+  }
+
+  if (accessToken === null) {
+    return <ActivityIndicator style={{ flex: 1 }} />
   }
 
   return (
@@ -141,7 +155,10 @@ const SingleVendorPaymentCheckout = ({ route }) => {
           isAllowedHost(url, backendHost)
         }
         originWhitelist={['https://*']}
-        source={{ uri: paymentUrl }}
+        source={{
+          uri: paymentUrl,
+          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {}
+        }}
       />
       {loading
         ? (

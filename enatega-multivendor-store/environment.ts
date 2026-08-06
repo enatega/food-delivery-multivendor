@@ -12,16 +12,27 @@ const MULTI_VENDOR_ENVIRONMENT: StoreEnvironment = {
   PUBLIC_ACCESS_REQUIRED: true,
 };
 
-const SINGLE_VENDOR_DEFAULT_HOST = "3086ptqf-8001.inc1.devtunnels.ms";
+const requireReleaseEndpoint = (name: string, value: string | undefined, scheme: string) => {
+  if (!__DEV__ && (!value || !value.startsWith(scheme))) {
+    throw new Error(`${name} must be configured with ${scheme} for release builds.`);
+  }
+  return value;
+};
 
 const getSingleVendorEnvironment = (): StoreEnvironment => ({
   GRAPHQL_URL:
-    process.env.EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL ??
-    `https://${SINGLE_VENDOR_DEFAULT_HOST}/graphql`,
+    requireReleaseEndpoint(
+      "EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL",
+      process.env.EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL,
+      "https://",
+    ) ?? "http://localhost:8001/graphql",
   WS_GRAPHQL_URL:
-    process.env.EXPO_PUBLIC_SINGLE_VENDOR_WS_GRAPHQL_URL ??
-    `wss://${SINGLE_VENDOR_DEFAULT_HOST}/graphql`,
-  PUBLIC_ACCESS_REQUIRED: false,
+    requireReleaseEndpoint(
+      "EXPO_PUBLIC_SINGLE_VENDOR_WS_GRAPHQL_URL",
+      process.env.EXPO_PUBLIC_SINGLE_VENDOR_WS_GRAPHQL_URL,
+      "wss://",
+    ) ?? "ws://localhost:8001/graphql",
+  PUBLIC_ACCESS_REQUIRED: true,
 });
 
 const getEnvVars = (

@@ -22,7 +22,6 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import { Subscription } from "zen-observable-ts";
 
 import { RiderEnvironment } from "@/environment";
-import { removeItem } from "@/lib/services/async-storage";
 import PublicAccessTokenService from "@/lib/services/public-access-token.service";
 import { getSecureItem, removeSecureItem } from "@/lib/services/secure-storage";
 import { IRestaurantLocation } from "@/lib/utils/interfaces";
@@ -118,7 +117,7 @@ export default function setupApollo({
     if (isAuthRedirecting) return;
     isAuthRedirecting = true;
     try {
-      await Promise.all([removeSecureItem(tokenKey), removeItem(riderIdKey)]);
+      await Promise.all([removeSecureItem(tokenKey), removeSecureItem(riderIdKey)]);
       router.replace("/login");
     } finally {
       setTimeout(() => {

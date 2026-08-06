@@ -1,10 +1,14 @@
 import { gql } from '@apollo/client';
+export { REFRESH_TOKEN } from './refresh';
 
 export const OWNER_LOGIN = gql`
   mutation ownerLogin($email: String!, $password: String!) {
     ownerLogin(email: $email, password: $password) {
       userId
       token
+      tokenExpiration
+      refreshToken
+      refreshTokenExpiration
       email
       userType
       restaurants {
@@ -19,5 +23,11 @@ export const OWNER_LOGIN = gql`
       image
       name
     }
+  }
+`;
+
+export const OWNER_LOGOUT = gql`
+  mutation OwnerLogout {
+    ownerLogout
   }
 `;

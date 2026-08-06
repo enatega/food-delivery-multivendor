@@ -144,7 +144,7 @@ const setupApollo = ({
     const publicToken = publicAccessRequired
       ? await getValidPublicToken(GRAPHQL_URL)
       : null
-    const nonce = publicAccessRequired ? await getOrCreateNonce() : null
+    const nonce = publicAccessRequired ? await getOrCreateNonce(GRAPHQL_URL) : null
     const isPublicOperation = publicOperations.has(operation.operationName)
     const token = isPublicOperation ? null : await getToken(mode)
     const hasExpiredUserToken = token && isJwtTokenExpired(token)

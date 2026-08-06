@@ -58,7 +58,7 @@ const getSingleVendorConfig = () => {
       SERVER_URL: graphqlUrl,
       SERVER_REST_URL: serverRestUrl,
       CLARITY_ENABLED: false,
-      PUBLIC_ACCESS_REQUIRED: false,
+      PUBLIC_ACCESS_REQUIRED: true,
       SINGLE_VENDOR_ENABLED: explicitlyEnabled
     }
   }
@@ -69,7 +69,7 @@ const getSingleVendorConfig = () => {
     SERVER_URL: `https://${SINGLE_VENDOR_DEFAULT_HOST}/graphql`,
     SERVER_REST_URL: `https://${SINGLE_VENDOR_DEFAULT_HOST}/`,
     CLARITY_ENABLED: false,
-    PUBLIC_ACCESS_REQUIRED: false,
+    PUBLIC_ACCESS_REQUIRED: true,
     SINGLE_VENDOR_ENABLED:
       process.env.EXPO_PUBLIC_SINGLE_VENDOR_ENABLED !== 'false'
   }

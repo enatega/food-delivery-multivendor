@@ -52,15 +52,10 @@ import { IWebNotification } from '@/lib/utils/interfaces/notification.interface'
 
 // Constants
 import {
-  APP_NAME,
   languageTypes,
-  SELECTED_RESTAURANT,
-  SELECTED_VENDOR,
-  SELECTED_VENDOR_EMAIL,
 } from '@/lib/utils/constants';
 
 // Methods
-import { onUseLocalStorage } from '@/lib/utils/methods';
 import { timeAgo } from '@/lib/utils/methods/timeAgo';
 
 // Styles
@@ -71,13 +66,16 @@ import { TLocale } from '@/lib/utils/types/locale';
 import { setUserLocale } from '@/lib/utils/methods/locale';
 
 // GraphQL
-import { useMutation, useQuery, useSubscription } from '@apollo/client';
+import { useApolloClient, useMutation, useQuery, useSubscription } from '@apollo/client';
 import { RIDER_UPDATED_SUBSCRIPTION } from '@/lib/api/graphql/subscription/rider-subscription';
 import {
   GET_WEB_NOTIFICATIONS,
   MARK_WEB_NOTIFICATIONS_AS_READ,
 } from '@/lib/api/graphql';
 import ThemeToggle from '@/lib/ui/useable-components/theme-button';
+import { clearStoredSessionState } from '@/lib/utils/methods/auth';
+import { clearMetricsData } from '@/lib/utils/methods/security';
+import { OWNER_LOGOUT } from '@/lib/api/graphql/mutations/authentication';
 
 const AppTopbar = () => {
   // States
@@ -94,6 +92,7 @@ const AppTopbar = () => {
   const currentLocale = useLocale();
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === 'dark';
+  const apolloClient = useApolloClient();
 
   // Ref
   const containerRef = useRef<HTMLDivElement>(null);
@@ -161,13 +160,13 @@ const AppTopbar = () => {
     router.push(_route);
   };
 
-  const onConfirmLogout = () => {
+  const onConfirmLogout = async () => {
+    await apolloClient.mutate({ mutation: OWNER_LOGOUT }).catch(() => undefined);
     setUser(null);
-    onUseLocalStorage('delete', SELECTED_VENDOR);
-    onUseLocalStorage('delete', SELECTED_VENDOR_EMAIL);
-    onUseLocalStorage('delete', SELECTED_RESTAURANT);
-    onUseLocalStorage('delete', `user-${APP_NAME}`);
-    router.push('/authentication/login');
+    clearStoredSessionState();
+    clearMetricsData();
+    await apolloClient.clearStore();
+    router.replace('/authentication/login');
   };
 
   function onLocaleChange(value: string) {

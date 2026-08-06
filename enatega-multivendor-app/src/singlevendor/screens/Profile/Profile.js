@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
-import { View, ScrollView, SafeAreaView, Platform, StatusBar, RefreshControl } from 'react-native'
-import { useNavigation, useFocusEffect } from '@react-navigation/native'
+import { ScrollView, SafeAreaView, Platform, StatusBar, RefreshControl } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 
 import UserContext from '../../../context/User'
@@ -10,21 +10,17 @@ import analytics from '../../../utils/analytics'
 
 import ProfileHeader from '../../components/Profile/ProfileHeader'
 import QuickActionsGrid from '../../components/Profile/QuickActionsGrid'
-import PromoBanner from '../../components/Profile/PromoBanner'
 import AccountSection from '../../components/Profile/AccountSection'
 import HelpSection from '../../components/Profile/HelpSection'
 import AccountManagement from '../../components/Profile/AccountManagement'
 import FreeDeliveriesCountCard from '../../components/FreeDeliveries/FreeDeliveriesCountCard'
 
 import styles from './styles'
-import AuthContext from '../../../context/Auth'
-import VendorModeToggle from '../../../components/VendorModeToggle/VendorModeToggle'
 import { usePullToRefresh } from '../../hooks/usePullToRefresh'
 
 const Profile = () => {
   const Analytics = analytics()
-  const navigation = useNavigation()
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const { profile, refetchProfile } = useContext(UserContext)
   const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetchProfile])
   const themeContext = useContext(ThemeContext)
@@ -32,8 +28,6 @@ const Profile = () => {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
-  const { token, setToken } = useContext(AuthContext)
-  console.log('Profile Data::', token)
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -57,8 +51,6 @@ const Profile = () => {
         {/* <VendorModeToggle></VendorModeToggle> */}
         {/* Quick Actions Grid */}
         <QuickActionsGrid />
-
-
         {/* Promo Banner */}
         {/* <PromoBanner /> */}
         <FreeDeliveriesCountCard currentTheme={currentTheme} />

@@ -17,6 +17,7 @@ import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
 // Interfaces
 import { IPaymentMethod } from '@/lib/utils/interfaces/payment.card.interface';
 import { ProfileContext } from '@/lib/context/restaurant/profile.context';
+import { getAccessToken } from '@/lib/utils/methods/auth';
 
 export default function PaymentMain() {
 
@@ -34,6 +35,16 @@ export default function PaymentMain() {
   const [submittingMethod, setSubmittingMethod] = useState<string | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<IPaymentMethod[]>([]);
 
+  const isAllowedStripeRedirect = (value: unknown): value is string => {
+    if (typeof value !== 'string') return false;
+    try {
+      const hostname = new URL(value).hostname.toLowerCase();
+      return hostname === 'stripe.com' || hostname.endsWith('.stripe.com');
+    } catch {
+      return false;
+    }
+  };
+
   const handleStripeSubmit = async () => {
     setSubmittingMethod('stripe');
     try {
@@ -42,9 +53,13 @@ export default function PaymentMain() {
         body: JSON.stringify({ restaurantId }),
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
       const data = await response.json();
+      if (!response.ok || !isAllowedStripeRedirect(data.url)) {
+        throw new Error('Invalid Stripe onboarding response');
+      }
       window.location.href = data.url;
     } catch (error) {
       console.log(error)

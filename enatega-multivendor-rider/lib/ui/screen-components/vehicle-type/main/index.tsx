@@ -101,7 +101,6 @@ export default function VehicleTypeMainScreen() {
           _id: dataProfile?._id,
           name: dataProfile?.name, //
           username: dataProfile?.username,
-          password: dataProfile?.password,
           phone: dataProfile?.phone?.toString(),
           zone: dataProfile?.zone._id,
           vehicleType: selectedCode,

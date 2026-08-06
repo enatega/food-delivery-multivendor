@@ -42,7 +42,7 @@ const ModeProfileTab = ({
         />
       </View>
       <View style={{ flex: 1 }}>
-        <Screen {...screenProps} />
+        <Screen {...screenProps} embeddedInModeProfileTab />
       </View>
     </SafeAreaView>
   )
@@ -51,9 +51,7 @@ const ModeProfileTab = ({
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   toggleRegion: {
-    paddingTop: Platform.OS === 'android' ? scale(8) : scale(3),
-    paddingBottom: scale(8),
-    paddingHorizontal: scale(14),
+    paddingTop: Platform.OS === 'android' ? scale(2) : 0,
     borderBottomWidth: StyleSheet.hairlineWidth
   }
 })

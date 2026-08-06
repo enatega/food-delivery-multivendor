@@ -6,7 +6,6 @@ export const CREATE_STAFF = gql`
       _id
       name
       email
-      password
       phone
       isActive
       permissions
@@ -21,7 +20,6 @@ export const EDIT_STAFF = gql`
       _id
       name
       email
-      password
       phone
       isActive
       permissions

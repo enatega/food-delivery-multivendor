@@ -64,8 +64,8 @@ const styles = (props = null) =>
       justifyContent: 'space-between',
       paddingHorizontal: scale(16),
       paddingVertical: scale(16),
-      borderBottomWidth: 1,
-      borderBottomColor: props?.gray200 || '#E5E7EB'
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: props?.colorBorder || '#E5E7EB'
     },
     leftSection: {
       flexDirection: 'row',

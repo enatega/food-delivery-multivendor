@@ -50,7 +50,6 @@ const OrderItemsSection = ({ items = [], currencySymbol = '€', initialExpanded
   const [expanded, setExpanded] = useState(initialExpanded)
   const totalItems = items.length
   const displayImages = items.slice(0, 3)
-  console.log('displayImages:', displayImages)
   const remainingCount = totalItems - displayImages.length
 
   const getItemsSummary = () => {
@@ -105,8 +104,6 @@ const styles = (props = null) =>
     container: {
       paddingHorizontal: scale(16),
       paddingVertical: scale(16)
-      // borderBottomWidth: 1,
-      // borderBottomColor: props?.gray200 || '#E5E7EB'
     },
     sectionTitle: {
       marginBottom: scale(12)
@@ -123,8 +120,8 @@ const styles = (props = null) =>
       width: scale(36),
       height: scale(36),
       borderRadius: scale(18),
-      borderWidth: 2,
-      borderColor: '#fff'
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colorBorder || '#E5E7EB'
     },
     remainingBadge: {
       width: scale(36),
@@ -133,8 +130,8 @@ const styles = (props = null) =>
       backgroundColor: props?.gray100 || '#F3F4F6',
       alignItems: 'center',
       justifyContent: 'center',
-      borderWidth: 2,
-      borderColor: '#fff'
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colorBorder || '#E5E7EB'
     },
     summaryContent: {
       // backgroundColor:'red',
@@ -152,8 +149,8 @@ const styles = (props = null) =>
     itemRow: {
       flexDirection: 'row',
       paddingVertical: scale(12),
-      borderTopWidth: 1,
-      borderTopColor: props?.gray100 || '#F3F4F6'
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colorBorder || '#E5E7EB'
     },
     itemImage: {
       width: scale(48),

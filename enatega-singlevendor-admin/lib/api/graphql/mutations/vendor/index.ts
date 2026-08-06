@@ -5,7 +5,6 @@ export const CREATE_VENDOR = gql`
     createVendor(vendorInput: $vendorInput) {
       _id
       email
-      password
       name
       image
       firstName
@@ -20,7 +19,6 @@ export const EDIT_VENDOR = gql`
     editVendor(vendorInput: $vendorInput) {
       _id
       email
-      password
       name
       image
       firstName

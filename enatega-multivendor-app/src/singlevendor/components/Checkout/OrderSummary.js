@@ -30,7 +30,6 @@ const OrderSummary = ({
   isCheckout,
   creditsUsed
 }) => {
-  console.log("🚀 ~ OrderSummary ~ couponDiscountAmount:", couponDiscountAmount)
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
@@ -212,7 +211,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: scale(8)
+      marginBottom: scale(4)
     },
     summaryHeaderLeft: {
       flexDirection: 'row',
@@ -231,8 +230,8 @@ const styles = (props = null) =>
       marginBottom: scale(12)
     },
     divider: {
-      height: 1,
-      backgroundColor: props !== null ? props.gray200 : '#E5E7EB',
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: props !== null ? props.colorBorder : '#E5E7EB',
       marginVertical: scale(8)
     },
     taxNote: {

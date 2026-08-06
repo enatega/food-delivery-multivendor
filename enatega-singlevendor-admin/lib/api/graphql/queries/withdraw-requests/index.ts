@@ -57,7 +57,6 @@ export const GET_ALL_WITHDRAW_REQUESTS = gql`
           logo
           address
           username
-          password
           slug
           stripeDetailsSubmitted
           commissionRate

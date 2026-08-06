@@ -5,10 +5,10 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale, verticalScale } from '../../utils/scaling'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-const AccountSectionHeader = ({ currentTheme, onBack, headerText }) => {
+const AccountSectionHeader = ({ currentTheme, onBack, headerText, includeSafeArea = true }) => {
   const insets = useSafeAreaInsets()
   return (
-    <View style={[styles(currentTheme).header, { paddingTop: Platform.OS == 'ios' ? insets.top : 0 }]}>
+    <View style={[styles(currentTheme).header, { paddingTop: Platform.OS === 'ios' && includeSafeArea ? insets.top : 0 }]}> 
       <TouchableOpacity onPress={onBack} style={styles(currentTheme).backButton} activeOpacity={0.7}>
         <View style={styles(currentTheme).backButtonCircle}>
           <AntDesign name='arrowleft' size={20} color={currentTheme.fontMainColor} />

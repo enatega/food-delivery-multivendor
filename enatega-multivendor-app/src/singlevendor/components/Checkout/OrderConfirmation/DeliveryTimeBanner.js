@@ -16,23 +16,12 @@ const DeliveryTimeBanner = ({ minTime = 15, maxTime = 25, isPickUpOrder = false 
 
   return (
     <View style={styles(currentTheme).container}>
-      <TextDefault
-        textColor="#fff"
-        h5
-        isRTL
-        bold
-      >
+      <TextDefault textColor='#fff' h5 isRTL bold>
         {isPickUpOrder
           ? (t('Estimated collection time') || 'Estimated collection time')
           : (t('Estimated delivery time') || 'Estimated delivery time')}
       </TextDefault>
-      <TextDefault
-        textColor="#fff"
-        H3
-        bolder
-        isRTL
-        style={styles().timeText}
-      >
+      <TextDefault textColor='#fff' H3 bolder isRTL style={styles().timeText}>
         {minTime}-{maxTime} {t('mins') || 'mins'}
       </TextDefault>
     </View>
@@ -43,7 +32,7 @@ const styles = (props = null) =>
   StyleSheet.create({
     container: {
       backgroundColor: props?.singlevendorcolor || '#0090CD',
-      paddingVertical: scale(16),
+      paddingVertical: scale(14),
       paddingHorizontal: scale(16),
       alignItems: 'center',
       borderRadius: scale(12),
@@ -51,7 +40,7 @@ const styles = (props = null) =>
       marginTop: scale(8)
     },
     timeText: {
-      marginTop: scale(4)
+      marginTop: scale(2)
     }
   })
 

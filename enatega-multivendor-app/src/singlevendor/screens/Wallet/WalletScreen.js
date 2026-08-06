@@ -41,6 +41,7 @@ const WalletScreen = () => {
       <AccountSectionHeader
         currentTheme={currentTheme}
         onBack={() => navigation.goBack()}
+        includeSafeArea={false}
       />
       
       <ScrollView
@@ -66,7 +67,7 @@ const WalletScreen = () => {
           </TextDefault>
         </View>
 
-        <FreeDeliveriesCountCard currentTheme={currentTheme} />
+        <FreeDeliveriesCountCard currentTheme={currentTheme} style={styles(currentTheme).walletFreeDeliveriesCard} />
 
         {creditsLoading ? (
           <FreeDeliveriesSkeleton currentTheme={currentTheme} styles={styles} />

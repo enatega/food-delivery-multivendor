@@ -121,6 +121,7 @@ const MyFavorites = () => {
           currentTheme={currentTheme}
           onBack={() => navigation.goBack()}
           headerText={t('My Favorites') || 'My Favorites'}
+          includeSafeArea={false}
         />
         <View style={styles(currentTheme).listContent}>
           {Array.from({ length: 5 }).map((_, index) => (
@@ -160,6 +161,7 @@ const MyFavorites = () => {
         currentTheme={currentTheme}
         onBack={() => navigation.goBack()}
         headerText={t('My Favorites') || 'My Favorites'}
+        includeSafeArea={false}
       />
       <FlatList
         data={favoriteItems}

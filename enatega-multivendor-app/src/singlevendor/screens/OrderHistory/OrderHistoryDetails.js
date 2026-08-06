@@ -134,6 +134,7 @@ const OrderHistoryDetails = () => {
           currentTheme={currentTheme}
           onBack={() => navigation.goBack()}
           headerText={t('Order details') || 'Order details'}
+          includeSafeArea={false}
         />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: scale(20) }}>
           <TextDefault textColor={currentTheme.fontMainColor} bolder>
@@ -150,6 +151,7 @@ const OrderHistoryDetails = () => {
         currentTheme={currentTheme}
         onBack={() => navigation.goBack()}
         headerText={t('Order details') || 'Order details'}
+        includeSafeArea={false}
       />
 
       <ScrollView

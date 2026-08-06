@@ -140,7 +140,10 @@ const CreateAccount = (props) => {
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
+    <SafeAreaView
+      edges={props.embeddedInModeProfileTab ? ['left', 'right'] : ['top', 'left', 'right']}
+      style={styles(currentTheme).safeAreaViewStyles}
+    >
       <StatusBar backgroundColor={statusBarBackgroundColor} translucent={false} barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
 
       <View style={styles().mainContainer}>

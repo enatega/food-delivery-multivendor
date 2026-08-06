@@ -24,13 +24,12 @@ const MenuListItem = ({ icon, title, onPress, rightElement }) => {
       <View style={styles(currentTheme).leftContent}>
         <Ionicons
           name={icon}
-          size={scale(24)}
-          color={currentTheme.iconColor}
+          size={scale(22)}
+          color={currentTheme.colorTextMuted || currentTheme.iconColor}
         />
         <TextDefault
           textColor={currentTheme.fontMainColor}
           style={styles(currentTheme).title}
-          bold
         >
           {title}
         </TextDefault>
@@ -39,7 +38,7 @@ const MenuListItem = ({ icon, title, onPress, rightElement }) => {
         <Ionicons
           name={currentTheme.isRTL ? 'chevron-back' : 'chevron-forward'}
           size={scale(20)}
-          color={currentTheme.iconColor}
+          color={currentTheme.colorTextMuted || currentTheme.iconColor}
         />
       )}
     </TouchableOpacity>
@@ -52,8 +51,9 @@ const styles = (currentTheme) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      minHeight: verticalScale(54),
       paddingVertical: verticalScale(12),
-      paddingHorizontal: scale(6),
+      paddingHorizontal: scale(16),
       backgroundColor: currentTheme?.cardBackground || '#FFFFFF'
     },
     leftContent: {
@@ -62,8 +62,8 @@ const styles = (currentTheme) =>
       flex: 1
     },
     title: {
-      marginLeft: scale(16),
-      fontSize: scale(15)
+      marginLeft: scale(14),
+      fontSize: scale(14)
     }
   })
 

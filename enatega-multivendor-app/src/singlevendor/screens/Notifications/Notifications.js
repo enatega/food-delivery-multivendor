@@ -359,6 +359,7 @@ const Notifications = () => {
         currentTheme={currentTheme}
         onBack={() => navigation.goBack()}
         headerText={t('titleNotifications')}
+        includeSafeArea={false}
       />
 
       {(todayLoading && todaySkip === 0) || (pastLoading && pastSkip === 0) ? (

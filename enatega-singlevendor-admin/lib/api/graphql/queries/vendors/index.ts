@@ -33,7 +33,6 @@ export const GET_VENDOR_BY_ID = gql`
       email
       userType
       name
-      plainPassword
       image
       firstName
       lastName
@@ -49,7 +48,6 @@ export const GET_VENDOR_BY_ID_WITH_RESTAURANTS = gql`
       email
       userType
       name
-      plainPassword
       image
       restaurants {
         _id

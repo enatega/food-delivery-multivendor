@@ -1,5 +1,6 @@
-import { View, FlatList, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet, Text } from 'react-native'
 import React, { useContext, useCallback } from 'react'
+import { Ionicons } from '@expo/vector-icons'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
@@ -12,9 +13,7 @@ import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 
 const SectionList = ({ title = 'Limited time deals', data = [], loading = false, error = null, onRetry = null }) => {
-  console.log('data of the section list',JSON.stringify(data,null,2));
-  
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
@@ -24,16 +23,14 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false,
     console.log('Add to cart:', product?.title)
   }, [])
 
-  const onProductPress = useCallback((id,categoryId) => {
-    console.log('Product pressed, navigating to details for product ID:', data)
+  const onProductPress = useCallback((id, categoryId) => {
     navigation.navigate('ProductDetails', {
       productId: id,
       categoryId: data?.[0]?.categoryId || categoryId // Pass categoryId from the first product if available, otherwise use the one from the pressed product
     })
-  }, [navigation])
+  }, [data, navigation])
 
   const renderProduct = useCallback(({ item, index }) => {
-    console.log('item of the product card',item);
     return (
       <ProductCard
         product={item}
@@ -57,7 +54,7 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false,
 
   if (error) {
     return (
-      <SectionListError 
+      <SectionListError
         title={title}
         errorMessage="Oops! We couldn't load the data. Tap 'Retry' to try again."
         onRetry={onRetry}
@@ -68,20 +65,46 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false,
   return (
     <View style={styles(currentTheme).container}>
       <SectionHeader title={title} showSeeAll={false} />
-      <FlatList
-        data={data || []}
-        numColumns={2}
-        keyExtractor={keyExtractor}
-        renderItem={renderProduct}
-        contentContainerStyle={styles(currentTheme).listContent}
-        columnWrapperStyle={styles(currentTheme).row}
-        showsVerticalScrollIndicator={false}
-        removeClippedSubviews={true}
-        maxToRenderPerBatch={10}
-        updateCellsBatchingPeriod={50}
-        initialNumToRender={10}
-        windowSize={10}
-      />
+      {data?.length > 0
+        ? (
+          <FlatList
+            data={data}
+            numColumns={2}
+            keyExtractor={keyExtractor}
+            renderItem={renderProduct}
+            contentContainerStyle={styles(currentTheme).listContent}
+            columnWrapperStyle={styles(currentTheme).row}
+            showsVerticalScrollIndicator={false}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={50}
+            initialNumToRender={10}
+            windowSize={10}
+          />
+          )
+        : (
+          <View
+            accessible
+            accessibilityRole='summary'
+            style={styles(currentTheme).emptyState}
+          >
+            <View style={styles(currentTheme).emptyIconContainer}>
+              <Ionicons
+                name='pricetags-outline'
+                size={scale(26)}
+                color={currentTheme.primaryBlue}
+              />
+            </View>
+            <Text style={styles(currentTheme).emptyTitle}>
+              {t('moreOffersOnTheWay', { defaultValue: 'More offers are on the way' })}
+            </Text>
+            <Text style={styles(currentTheme).emptyDescription}>
+              {t('noDealsInSection', {
+                defaultValue: `No ${String(title).toLowerCase()} are available right now. Check back soon for something worth discovering.`
+              })}
+            </Text>
+          </View>
+          )}
     </View>
   )
 }
@@ -111,8 +134,41 @@ const styles = (currentTheme) =>
     },
     rightCard: {
       marginLeft: 0
+    },
+    emptyState: {
+      alignItems: 'center',
+      backgroundColor: currentTheme.cardBackground,
+      borderColor: currentTheme.colorBorder,
+      borderRadius: scale(16),
+      borderWidth: StyleSheet.hairlineWidth,
+      marginBottom: scale(18),
+      marginHorizontal: scale(20),
+      paddingHorizontal: scale(24),
+      paddingVertical: scale(24)
+    },
+    emptyIconContainer: {
+      alignItems: 'center',
+      backgroundColor: currentTheme.lowOpacityBlue,
+      borderRadius: scale(24),
+      height: scale(48),
+      justifyContent: 'center',
+      marginBottom: scale(14),
+      width: scale(48)
+    },
+    emptyTitle: {
+      color: currentTheme.fontMainColor,
+      fontSize: scale(16),
+      fontWeight: '700',
+      marginBottom: scale(7),
+      textAlign: 'center'
+    },
+    emptyDescription: {
+      color: currentTheme.colorTextMuted,
+      fontSize: scale(13),
+      lineHeight: scale(19),
+      maxWidth: scale(290),
+      textAlign: 'center'
     }
   })
 
 export default SectionList
-

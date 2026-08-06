@@ -21,7 +21,7 @@ import { ROUTES } from "../utils/constants";
 import { ApolloError, useMutation } from "@apollo/client";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { setItem } from "../services/async-storage";
+import { setSecureItem } from "../services/secure-storage";
 import { useUserContext } from "../context/global/user.context";
 import { getNotificationToken } from "../utils/methods/permission";
 import { useRiderMode } from "../context/global/rider-mode.context";
@@ -60,7 +60,7 @@ const useLogin = () => {
       // left assignedOrders stuck at [] until the app was restarted.
       await setTokenAsync(riderLogin.token);
       setUserId(riderLogin.userId);
-      await setItem(riderIdKey, riderLogin.userId);
+      await setSecureItem(riderIdKey, riderLogin.userId);
       router.replace(ROUTES.home as Href);
     }
   }

@@ -4,14 +4,14 @@ import { scale, verticalScale } from '../../../utils/scaling'
 const styles = (props = null) =>
   StyleSheet.create({
     card: {
-      backgroundColor: props?.colorBgTertiary,
-      borderWidth: 1,
-      borderColor: props?.newBorderColor2,
+      backgroundColor: props?.cardBackground,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colorBorder,
       marginHorizontal: scale(16),
       marginBottom: verticalScale(16),
       paddingHorizontal: scale(20),
       paddingVertical: verticalScale(14),
-      borderRadius: scale(12)
+      borderRadius: scale(16)
     },
     freeDeliveriesCard: {
       paddingVertical: verticalScale(14)

@@ -1,13 +1,13 @@
-import { StyleSheet } from 'react-native';
-import { scale } from '../../../utils/scaling';
+import { StyleSheet } from 'react-native'
+import { scale } from '../../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
     itemContainer: {
       flexDirection: 'row',
       paddingVertical: scale(16),
-      borderBottomWidth: 1,
-      borderBottomColor: props !== null ? props.gray200 : '#E5E7EB'
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: props !== null ? props.colorBorder : '#E5E7EB'
     },
     itemContainerLast: {
       borderBottomWidth: 0
@@ -86,6 +86,6 @@ const styles = (props = null) =>
       fontSize: scale(12),
       fontWeight: '400'
     }
-  });
+  })
 
-export default styles;
+export default styles

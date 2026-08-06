@@ -22,21 +22,32 @@
 
 // export default useCart
 
-import { useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/client'
 import { GET_USER_CART } from '../../apollo/queries'
 import useCartStore from '../../stores/useCartStore'
 import useNetworkStatus from '../../../utils/useNetworkStatus'
+import AuthContext from '../../../context/Auth'
 
 const useCart = () => {
-  const { setCartFromServer, setLoading, setError, setHasFetchedCart, hasFetchedCart } = useCartStore()
+  const { clearCart, setCartFromServer, setLoading, setError, setHasFetchedCart, hasFetchedCart } = useCartStore()
   const { isConnected } = useNetworkStatus()
+  const { token } = useContext(AuthContext)
   const wasOfflineRef = useRef(false)
   const { data, loading, error, refetch } = useQuery(GET_USER_CART, {
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
-    skip: !isConnected || hasFetchedCart
+    skip: !token || !isConnected || hasFetchedCart
   })
+
+  useEffect(() => {
+    if (!token) {
+      clearCart()
+      setHasFetchedCart(false)
+      setLoading(false)
+      setError(null)
+    }
+  }, [clearCart, setError, setHasFetchedCart, setLoading, token])
 
   useEffect(() => {
     if (!isConnected) {
@@ -71,12 +82,13 @@ const useCart = () => {
   }, [data])
 
   useEffect(() => {
-    if (error) {
+    if (token && error) {
       setError(error.message)
     }
-  }, [error])
+  }, [error, setError, token])
 
   const retry = async() => {
+    if (!token) return null
     setError(null)
     const result = await refetch()
     return result

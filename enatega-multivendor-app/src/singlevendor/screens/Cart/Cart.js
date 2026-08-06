@@ -25,10 +25,12 @@ import { CLEAR_CART } from '../../apollo/mutations'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { usePullToRefresh } from '../../hooks/usePullToRefresh'
 import SectionErrorCard from '../../components/SectionErrorCard'
+import AuthContext from '../../../context/Auth'
 
 const Cart = (props) => {
   const { items, grandTotal, loading, error, isBelowMinimumOrder, clearCart } = useCartStore()
-  console.log('items in cart:', JSON.stringify(items, null, 2))
+  const { token } = useContext(AuthContext)
+  const visibleItems = token ? items : []
   const { refetch } = useCart()
   const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetch])
   // const items = [] // For testing empty cart
@@ -39,7 +41,6 @@ const Cart = (props) => {
     onError: () => {}
   })
 
-  console.log('Cart Data::', items, grandTotal, isBelowMinimumOrder, loading, error)
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
@@ -54,7 +55,7 @@ const Cart = (props) => {
   const currencySymbol = configuration?.currencySymbol || '€'
 
   const initialRecommendedItemIdRef = useRef(
-    items?.length > 0 ? items[0]?.foodId : null
+    visibleItems?.length > 0 ? visibleItems[0]?.foodId : null
   )
   const recommendedFooter = useMemo(
     () => (
@@ -66,11 +67,9 @@ const Cart = (props) => {
   )
 
   // Calculate cart count
-  const cartCount = items.reduce((sum, item) => sum + item.variations.reduce((vSum, v) => vSum + v.quantity, 0), 0)
+  const cartCount = visibleItems.reduce((sum, item) => sum + item.variations.reduce((vSum, v) => vSum + v.quantity, 0), 0)
 
   useFocusEffect(() => {
-    console.log('Cart Screen Focused')
-
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
     }
@@ -128,11 +127,11 @@ const Cart = (props) => {
   }
 
   // Cart Skeleton loading
-  if (loading && items.length === 0) {
+  if (token && loading && visibleItems.length === 0) {
     return <CartSkeleton />
   }
 
-  if (error && items.length === 0) {
+  if (token && error && visibleItems.length === 0) {
     return (
       <SafeAreaView style={styles(currentTheme).mainContainer}>
         <SectionErrorCard
@@ -147,14 +146,14 @@ const Cart = (props) => {
   return (
     <SafeAreaView style={styles(currentTheme).mainContainer}>
       <FlatList
-        data={items}
+        data={visibleItems}
         keyExtractor={(item, index) => item.key?.toString() || index.toString()}
         showsVerticalScrollIndicator={false}
         style={[styles().scrollView, { marginTop: Platform.OS === 'android' ? insets.top : 0 }]}
         contentContainerStyle={styles().contentContainer}
-        renderItem={({ item, index }) => <CartItem key={item?.foodId} item={item} currencySymbol={currencySymbol} isLastItem={index === items.length - 1} />}
+        renderItem={({ item, index }) => <CartItem key={item?.foodId} item={item} currencySymbol={currencySymbol} isLastItem={index === visibleItems.length - 1} />}
         ListHeaderComponent={() =>
-          items.length > 0 && (
+          visibleItems.length > 0 && (
             <View style={styles().headerRow}>
               <TextDefault textColor={currentTheme.fontMainColor} bolder H4>
                 {t('yourItems') || 'Your items'}
@@ -184,7 +183,7 @@ const Cart = (props) => {
       />
 
       {/* Sticky Checkout Button */}
-      <View style={styles(currentTheme).stickyCheckoutContainer}>
+      {visibleItems.length > 0 && <View style={styles(currentTheme).stickyCheckoutContainer}>
         <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).checkoutButton, isBelowMinimumOrder && styles(currentTheme).checkoutButtonDisabled]} onPress={isBelowMinimumOrder ? null : handleCheckout} disabled={isBelowMinimumOrder}>
           <View style={styles().checkoutButtonContent}>
             <View style={[styles().cartBadge, !isBelowMinimumOrder && styles().cartBadgeActive]}>
@@ -198,7 +197,7 @@ const Cart = (props) => {
             </TextDefault>
           </View>
         </TouchableOpacity>
-      </View>
+      </View>}
     </SafeAreaView>
   )
 }

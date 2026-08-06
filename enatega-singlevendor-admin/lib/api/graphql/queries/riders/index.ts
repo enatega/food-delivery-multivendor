@@ -6,7 +6,6 @@ export const GET_RIDERS = gql`
       _id
       name
       username
-      password
       phone
       available
       vehicleType
@@ -25,7 +24,6 @@ export const GET_RIDER = gql`
       _id
       name
       username
-      password
       phone
       available
       assigned

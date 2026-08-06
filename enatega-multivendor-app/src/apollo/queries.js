@@ -676,7 +676,6 @@ export const getConfiguration = `query Configuration{
     customerAppSentryUrl 
     termsAndConditions 
     privacyPolicy
-    testOtp 
     skipMobileVerification
     skipEmailVerification
     costType
@@ -1309,7 +1308,7 @@ export const FetchAllShopTypes = gql`
 // export const RestaurantCuisines = `query NearByRestaurantsCuisines {
 //     nearByRestaurantsCuisines(
 //        latitude: $latitude
-//     longitude:$longitude 
+//     longitude:$longitude
 //     shopType: $shopType
 //     ) {
 //         _id
@@ -1319,7 +1318,6 @@ export const FetchAllShopTypes = gql`
 //         shopType
 //     }
 // }`
-
 
 export const RestaurantCuisines = `
 query NearByRestaurantsCuisines(
@@ -1339,4 +1337,4 @@ query NearByRestaurantsCuisines(
     shopType
   }
 }
-`;
+`

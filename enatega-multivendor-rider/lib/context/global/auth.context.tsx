@@ -2,9 +2,7 @@ import * as Location from "expo-location";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // Interfaces§
-import { getSecureItem } from "@/lib/services/secure-storage";
-import { removeSecureItem, setSecureItem } from "@/lib/services/secure-storage";
-import { removeItem } from "@/lib/services/async-storage";
+import { getSecureItem, removeSecureItem, setSecureItem } from "@/lib/services/secure-storage";
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
 import { useRouter } from "expo-router";
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
@@ -62,7 +60,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     setToken("");
 
     try {
-      await Promise.all([removeSecureItem(tokenKey), removeItem(riderIdKey)]);
+      await Promise.all([removeSecureItem(tokenKey), removeSecureItem(riderIdKey)]);
 
       try {
         await client.clearStore();

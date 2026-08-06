@@ -2,13 +2,14 @@
 // Core
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import CustomLoader from '@/lib/ui/useable-components/custom-progress-indicator';
 
 // Hooks
 import { useUserContext } from '@/lib/hooks/useUser';
 
 // Constants and Utils
-import { APP_NAME, ROUTES } from '@/lib/utils/constants';
-import { onUseLocalStorage } from '@/lib/utils/methods';
+import { ROUTES } from '@/lib/utils/constants';
+import { getAccessToken } from '@/lib/utils/methods/auth';
 
 const SUPER_ADMIN_GUARD = <T extends object>(
   Component: React.ComponentType<T>
@@ -16,37 +17,43 @@ const SUPER_ADMIN_GUARD = <T extends object>(
   const WrappedComponent = (props: T) => {
     const pathname = usePathname();
     const router = useRouter();
-    const { user } = useUserContext();
+    const { user, loading, isSessionVerified } = useUserContext();
+
+    const hasSessionToken = !!getAccessToken();
+    const findRouteName = ROUTES.find((v) => v.route === pathname);
+    const staffAllowed =
+      user?.userType !== 'STAFF' ||
+      !findRouteName ||
+      !Array.isArray(user.permissions) ||
+      user.permissions.includes(findRouteName.text);
+    const isAllowed =
+      isSessionVerified &&
+      !!user &&
+      user.userType !== 'RESTAURANT' &&
+      user.userType !== 'VENDOR' &&
+      staffAllowed;
 
     useEffect(() => {
-      // Check if logged in
-      const isLoggedIn = !!onUseLocalStorage('get', `user-${APP_NAME}`);
-      if (!isLoggedIn) {
+      if (!loading && !hasSessionToken) {
         router.replace('/authentication/login');
+        return;
       }
-
-      // To find the name of path as per saved in db i.e /management/commission-rates => Commision Rates
-      const findRouteName = ROUTES.find((v) => v.route === pathname);
-
-      // For STAFF permissions
-      if (
-        user &&
-        user.userType === 'STAFF' &&
-        findRouteName &&
-        Array.isArray(user.permissions)
-      ) {
-        const allowed = user?.permissions?.includes(findRouteName?.text);
-
-        if (!allowed) {
-          router.replace('/forbidden');
-        }
+      if (!loading && hasSessionToken && !isSessionVerified) {
+        router.replace('/authentication/login');
+        return;
       }
-
-      // For Others
-      if (user?.userType === 'RESTAURANT' || user?.userType === 'VENDOR') {
+      if (!loading && isSessionVerified && !isAllowed) {
         router.replace('/forbidden');
       }
-    }, []);
+    }, [hasSessionToken, isAllowed, isSessionVerified, loading, router]);
+
+    if (loading) {
+      return <CustomLoader />;
+    }
+
+    if (!isAllowed) {
+      return null;
+    }
 
     return <Component {...props} />;
   };

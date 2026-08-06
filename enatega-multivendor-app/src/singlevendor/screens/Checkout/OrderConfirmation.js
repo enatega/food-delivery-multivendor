@@ -35,7 +35,6 @@ const OrderConfirmationScreen = (props) => {
   const { t, i18n } = useTranslation()
 
   const orderId = props?.route?.params?.orderId
-  console.log('orderData_data', orderId)
   const orderData = props?.route?.params?.orderData || {}
 
   const configuration = useContext(ConfigurationContext)
@@ -86,8 +85,6 @@ const OrderConfirmationScreen = (props) => {
     creditsUsed
     // riderPhone
   } = useOrderConfirmation({ orderId })
-  console.log('🚀 ~ OrderConfirmation ~ couponDiscountAmount:', couponDiscountAmount)
-  console.log('initialOrder', JSON.stringify(initialOrder, null, 2))
   const estimatedtime = useTimer(initialOrder?.completionTime)
 
   // ----------------------------------
@@ -108,7 +105,6 @@ const OrderConfirmationScreen = (props) => {
   //   }
   const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetch])
 
-  console.log('liveOrder?.restaurant', liveOrder?.restaurant)
   const addressLabel = userAddressLabel || liveOrder?.restaurant?.name
   const address = userAddress || liveOrder?.restaurant?.address || ''
 
@@ -123,10 +119,7 @@ const OrderConfirmationScreen = (props) => {
       }
 
   const { location } = useContext(LocationContext)
-  console.log('location___DAta', JSON.stringify(location, null, 2))
-
   const getValidCoordinate = (value, fallback) => {
-    console.log('getValidCoordinate called with:', { value, fallback })
     if (value === null || value === undefined || isNaN(value)) {
       if (fallback === undefined || fallback === null || isNaN(fallback)) {
         return 0
@@ -141,9 +134,6 @@ const OrderConfirmationScreen = (props) => {
     longitude: getValidCoordinate(customerLocation?.longitude, location?.longitude),
     latitude: getValidCoordinate(customerLocation?.latitude, location?.latitude)
   }
-  console.log('customerLocation___atye', JSON.stringify(customerLocation, null, 2))
-
-  console.log('🚀 ~ OrderConfirmation ~ finalCustomerLocation:', finalCustomerLocation, riderLocation)
   const rider = liveOrder?.rider || null
   // ----------------------------------
   // 3️⃣ Derived UI states
@@ -155,9 +145,6 @@ const OrderConfirmationScreen = (props) => {
   const [summaryExpanded, setSummaryExpanded] = useState(false)
   const [showMap, setShowMap] = useState(false)
   const hasNavigatedRef = useRef(false)
-
-  console.log('orderData?.isPickedUp', orderData?.isPickedUp)
-  console.log('liveOrder?.isPickedUp', liveOrder?.isPickedUp)
 
   // ----------------------------------
   // 4️⃣ Navigate to FeedBack when delivered
@@ -221,7 +208,7 @@ const OrderConfirmationScreen = (props) => {
         <HeaderBackButton
           truncatedLabel=''
           backImage={() => (
-            <View style={{ marginLeft: scale(10) }}>
+            <View style={{ marginLeft: scale(8) }}>
               <View style={styles(currentTheme).backButton}>{isDelivered ? <Feather name='x' size={20} color={currentTheme.fontMainColor} /> : <AntDesign name='arrowleft' size={20} color={currentTheme.fontMainColor} />}</View>
             </View>
           )}
@@ -239,7 +226,6 @@ const OrderConfirmationScreen = (props) => {
   }
 
   const handleOrderAgain = () => {
-    console.log('orderItems____Json', JSON.stringify(orderItems, null, 2))
     if (!orderItems || orderItems.length === 0) {
       return
     }
@@ -252,20 +238,6 @@ const OrderConfirmationScreen = (props) => {
         const variationId = item.variation?._id
         const quantity = item.quantity || item.foodQuantity || 1
         const addons = item.addons || []
-
-        console.log(
-          'item_Json_Data',
-          JSON.stringify(
-            {
-              foodId,
-              variationId,
-              quantity,
-              addons
-            },
-            null,
-            2
-          )
-        )
 
         return {
           _id: foodId,
@@ -330,7 +302,7 @@ const OrderConfirmationScreen = (props) => {
         {/* ORDER ITEMS */}
         <OrderItemsSection items={orderItems} currencySymbol={currencySymbol} initialExpanded={false} />
 
-        <View style={{ height: scale(180) }} />
+        <View style={{ height: scale(16) }} />
 {/* </>
         )} */}
       </ScrollView>

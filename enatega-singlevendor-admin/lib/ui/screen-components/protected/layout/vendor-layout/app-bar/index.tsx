@@ -48,11 +48,7 @@ import {
 
 // Constants
 import {
-  APP_NAME,
   languageTypes,
-  SELECTED_RESTAURANT,
-  SELECTED_VENDOR,
-  SELECTED_VENDOR_EMAIL,
 } from '@/lib/utils/constants';
 
 // Methods
@@ -61,17 +57,21 @@ import { onUseLocalStorage } from '@/lib/utils/methods';
 // Styles
 import classes from './app-bar.module.css';
 import { AppLogo } from '@/lib/utils/assets/svgs/logo';
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import { GET_VENDOR_BY_ID } from '@/lib/api/graphql';
 import { useLocale, useTranslations } from 'next-intl';
 import { setUserLocale } from '@/lib/utils/methods/locale';
 import { TLocale } from '@/lib/utils/types/locale';
 import ThemeToggle from '@/lib/ui/useable-components/theme-button';
+import { clearStoredSessionState } from '@/lib/utils/methods/auth';
+import { clearMetricsData } from '@/lib/utils/methods/security';
+import { OWNER_LOGOUT } from '@/lib/api/graphql/mutations/authentication';
 
 const VendorAppTopbar = () => {
   // Hooks
   const t = useTranslations();
   const currentLocale = useLocale();
+  const apolloClient = useApolloClient();
 
   // Local Storage
   const vendorId = onUseLocalStorage('get', 'vendorId');
@@ -119,13 +119,13 @@ const VendorAppTopbar = () => {
     }
   };
 
-  const onConfirmLogout = () => {
+  const onConfirmLogout = async () => {
+    await apolloClient.mutate({ mutation: OWNER_LOGOUT }).catch(() => undefined);
     setUser(null);
-    onUseLocalStorage('delete', SELECTED_VENDOR);
-    onUseLocalStorage('delete', SELECTED_VENDOR_EMAIL);
-    onUseLocalStorage('delete', SELECTED_RESTAURANT);
-    onUseLocalStorage('delete', `user-${APP_NAME}`);
-    router.push('/authentication/login');
+    clearStoredSessionState();
+    clearMetricsData();
+    await apolloClient.clearStore();
+    router.replace('/authentication/login');
   };
 
   function onLocaleChange(value: string) {

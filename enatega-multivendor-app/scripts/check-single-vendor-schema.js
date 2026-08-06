@@ -63,21 +63,47 @@ graphQlFiles.forEach(relativeFile => {
 })
 
 const main = async() => {
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ query: getIntrospectionQuery() })
-  })
-  if (!response.ok) {
-    throw new Error(`Schema request failed with HTTP ${response.status}`)
-  }
+  let schema
+  if (process.env.SINGLE_VENDOR_SCHEMA_MODULE) {
+    const schemaModule = path.resolve(process.env.SINGLE_VENDOR_SCHEMA_MODULE)
+    const resolvedSchemaModule = require.resolve(schemaModule)
+    const serverTypeDefs = require(resolvedSchemaModule)
+    // Workspaces may install separate GraphQL module instances. Build and
+    // introspect with the server's own instance, then consume the plain result.
+    const serverGraphql = require(path.resolve(
+      path.dirname(resolvedSchemaModule),
+      '..',
+      '..',
+      'node_modules',
+      'graphql'
+    ))
+    const serverSchema = serverTypeDefs.kind === 'Document'
+      ? serverGraphql.buildASTSchema(serverTypeDefs)
+      : serverTypeDefs
+    const result = serverGraphql.graphqlSync({
+      schema: serverSchema,
+      source: serverGraphql.getIntrospectionQuery()
+    })
+    if (result.errors?.length) {
+      throw new Error(result.errors.map(error => error.message).join('\n'))
+    }
+    schema = buildClientSchema(result.data)
+  } else {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: getIntrospectionQuery() })
+    })
+    if (!response.ok) {
+      throw new Error(`Schema request failed with HTTP ${response.status}`)
+    }
 
-  const result = await response.json()
-  if (result.errors?.length) {
-    throw new Error(result.errors.map(error => error.message).join('\n'))
+    const result = await response.json()
+    if (result.errors?.length) {
+      throw new Error(result.errors.map(error => error.message).join('\n'))
+    }
+    schema = buildClientSchema(result.data)
   }
-
-  const schema = buildClientSchema(result.data)
   const failures = []
 
   documents.forEach(document => {
@@ -100,7 +126,7 @@ const main = async() => {
   }
 
   console.log(
-    `Single-vendor schema check passed (${documents.length} documents checked against ${endpoint}).`
+    `Single-vendor schema check passed (${documents.length} documents checked).`
   )
 }
 
