@@ -50,6 +50,7 @@ import { useModeSensitiveOperation } from '../../mode/AppModeContext'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import useMultivendorTheme from '../../ui/designSystem/useMultivendorTheme'
 
 // Constants
 const PLACEORDER = gql`
@@ -87,9 +88,11 @@ function Checkout(props) {
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const { t, i18n } = useTranslation()
+  const { tokens } = useMultivendorTheme()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
   const voucherModalRef = useRef(null)
   const tipModalRef = useRef(null)

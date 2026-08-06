@@ -1,16 +1,14 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { View } from 'react-native'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import ThemeContext from '../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../utils/themeColors'
+import useMultivendorTheme from '../../ui/designSystem/useMultivendorTheme'
 import styles from './styles'
 import Ripple from 'react-native-material-ripple'
 import { IMAGE_LINK } from '../../utils/constants'
 import ShimmerImage from '../ShimmerImage/ShimmerImage'
 
 const CollectionCard = ({ onPress, image, name }) => {
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const { tokens } = useMultivendorTheme()
   const normalizedImage = useMemo(() => {
     const raw = image || IMAGE_LINK
     return raw?.split('#')[0] || IMAGE_LINK
@@ -20,15 +18,15 @@ const CollectionCard = ({ onPress, image, name }) => {
     <Ripple
       activeOpacity={0.8}
       onPress={onPress}
-      style={styles(currentTheme).collectionCard}
+      style={styles(tokens).collectionCard}
       rippleColor={'#F5F5F5'}
-      rippleContainerBorderRadius={8}
+      rippleContainerBorderRadius={tokens.radii.md}
       rippleDuration={300}
     >
-      <View style={styles().brandImgContainer}>
+      <View style={styles(tokens).brandImgContainer}>
         <ShimmerImage
           imageUrl={normalizedImage}
-          style={styles().collectionImage}
+          style={styles(tokens).collectionImage}
           resizeMode='cover'
           defaultSource={{ uri: IMAGE_LINK }}
         />
@@ -36,8 +34,8 @@ const CollectionCard = ({ onPress, image, name }) => {
       <TextDefault
         Normal
         bolder
-        style={{ padding: 8 }}
-        textColor={currentTheme.gray700}
+        style={styles(tokens).label}
+        textColor={tokens.colors.textPrimary}
         isRTL
         numberOfLines={2}
         ellipsizeMode='tail'

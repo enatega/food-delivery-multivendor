@@ -1,7 +1,6 @@
 import { scale } from '../../../utils/scaling'
 import { Dimensions, Platform, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { subtleCardShadow } from '../../../utils/cardShadows'
 const { width } = Dimensions.get('window')
 
 const CARD_WIDTH = Math.max(scale(228), Math.min(scale(292), width * 0.74))
@@ -13,30 +12,27 @@ const CARD_HEIGHT =
   (Platform.OS === 'ios' ? scale(8) : scale(4))
 
 const buildStyles = (props = null) => {
-  const isDarkMode = props?.cardBackground === '#181818' || props?.themeBackground === '#000'
+  const isDarkMode = props?.isDark
   const chipBackground = isDarkMode ? 'rgba(17, 24, 39, 0.82)' : 'rgba(255, 255, 255, 0.92)'
-  const chipBorder = isDarkMode ? 'rgba(255, 255, 255, 0.14)' : '#E5E7EB'
+  const chipBorder = props?.colors?.borderSubtle ?? (isDarkMode ? 'rgba(161, 161, 170, 0.22)' : 'rgba(24, 24, 27, 0.10)')
 
   return StyleSheet.create({
     offerContainer: {
-      borderRadius: 22,
+      borderRadius: props?.radii?.lg ?? 14,
       width: CARD_WIDTH,
       minHeight: CARD_HEIGHT,
       ...alignment.MRsmall,
-      backgroundColor: props != null ? props?.cardBackground : '#181818',
-      ...subtleCardShadow
+      backgroundColor: props?.colors?.surface ?? '#181818'
     },
     cardSurface: {
       flex: 1,
-      borderRadius: 22,
+      borderRadius: props?.radii?.lg ?? 14,
       overflow: 'hidden',
-      backgroundColor: props != null ? props?.cardBackground : '#181818',
-      borderWidth: 1,
-      borderColor: props != null ? (isDarkMode ? props?.lightHorizontalLine : props?.newBorderColor) : '#232323'
+      backgroundColor: props?.colors?.surface ?? '#181818'
     },
     cardBody: {
       flex: 1,
-      backgroundColor: props != null ? props?.cardBackground : '#181818'
+      backgroundColor: props?.colors?.surface ?? '#181818'
     },
     overlayContainer: {
       position: 'absolute',
@@ -57,7 +53,7 @@ const buildStyles = (props = null) => {
       zIndex: 1,
       borderRadius: scale(14),
       backgroundColor: chipBackground,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderColor: chipBorder
     },
     descriptionContainer: {
@@ -131,18 +127,12 @@ const buildStyles = (props = null) => {
       gap: scale(4),
       paddingVertical: scale(6),
       paddingHorizontal: scale(9),
-      borderRadius: scale(999),
-      backgroundColor: chipBackground,
-      borderWidth: 1,
-      borderColor: chipBorder
-    }, 
+      borderRadius: scale(999)
+    },
     border: {
       width: '100%',
-      height: 1,
-      borderWidth: 1,
-      borderColor: props != null ? (isDarkMode ? props?.lightHorizontalLine : props?.iconBackground) : '#E5E7EB',
-      borderStyle: 'solid',
-      opacity: 0.8
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: props?.colors?.borderSubtle ?? chipBorder
     },
     closedOverlay: {
       position: 'absolute',
@@ -152,7 +142,7 @@ const buildStyles = (props = null) => {
       bottom: 0,
       backgroundColor: 'rgba(150, 150, 150, 0.7)',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     badgeRow: {
       position: 'absolute',
@@ -166,7 +156,7 @@ const buildStyles = (props = null) => {
       paddingHorizontal: scale(10),
       borderRadius: scale(999),
       backgroundColor: chipBackground,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderColor: chipBorder
     },
     ratingBadge: {
@@ -177,7 +167,7 @@ const buildStyles = (props = null) => {
       paddingHorizontal: scale(9),
       borderRadius: scale(999),
       backgroundColor: chipBackground,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderColor: chipBorder
     }
   })

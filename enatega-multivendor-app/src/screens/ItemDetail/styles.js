@@ -8,7 +8,7 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainer: {
-      backgroundColor: props != null ? props?.themeBackground : '#fff'
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff'
     },
     scrollViewContainer: {
       width: '100%',
@@ -16,12 +16,12 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props?.themeBackground : '#fff'
     },
     subContainer: {
-      width: '90%',
-      backgroundColor: props != null ? props?.themeBackground : '#fff',
-      alignSelf: 'center'
+      width: '100%',
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff',
+      paddingHorizontal: props?.spacing?.lg ?? scale(16)
     },
     scrollViewStyle: {
-      backgroundColor: props != null ? props?.themeBackground : '#fff'
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff'
     },
     headerContainer: {
       position: 'absolute',
@@ -42,20 +42,19 @@ const styles = (props = null) =>
       minHeight: scale(32)
     },
     line: {
-      marginLeft: scale(10),
-      width: '95%',
+      width: '100%',
       height: StyleSheet.hairlineWidth,
-      ...alignment.MBsmall,
-      backgroundColor: props !== null ? props?.black : 'black'
+      marginVertical: props?.spacing?.lg ?? scale(16),
+      backgroundColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)'
     },
     input: {
       backgroundColor: props !== null ? props?.themeBackground : 'black',
-      borderRadius: scale(10),
+      borderRadius: props?.radii?.md ?? scale(10),
       height: scale(50),
       paddingLeft: scale(10),
       textAlignVertical: 'center',
-      borderWidth: 1,
-      borderColor: props != null ? props?.verticalLine : '#B8B8B8',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? '#B8B8B8',
       textAlign: props?.isRTL ? 'right' : 'left'
     },
     inputContainer: {
@@ -68,9 +67,10 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     descriptionText: {
-      color: props != null ? props?.darkBgFont : 'white',
-      fontSize: 13,
-      paddingTop: scale(10),
+      color: props?.colors?.textSecondary ?? props?.darkBgFont ?? '#52525B',
+      ...props?.typeScale?.body,
+      paddingTop: props?.spacing?.md ?? scale(12),
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
       maxWidth: '100%',
       ...alignment.MRxSmall
     }

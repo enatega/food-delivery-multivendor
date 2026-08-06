@@ -1,9 +1,7 @@
 import { scale } from '../../utils/scaling'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { theme } from '../../utils/themeColors'
-import { Dimensions } from 'react-native'
-const {height} = Dimensions.get('screen')
+const { height } = Dimensions.get('screen')
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -20,8 +18,32 @@ const styles = (props = null) =>
       ...alignment.MTmedium
     },
     mainContainer: {
-      flex: 1,
+      flex: 1
       // ...alignment.Pmedium,
+    },
+    greeting: {
+      ...props?.typeScale?.title,
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
+      paddingTop: props?.spacing?.xl ?? scale(20),
+      paddingBottom: props?.spacing?.md ?? scale(12)
+    },
+    activeOrderRow: {
+      marginHorizontal: props?.spacing?.lg ?? scale(16),
+      minHeight: scale(48),
+      justifyContent: 'center',
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      borderLeftWidth: scale(3),
+      borderLeftColor: props?.colors?.accent ?? '#90E36D',
+      backgroundColor: props?.colors?.accentSubtle ?? 'rgba(144, 227, 109, 0.14)'
+    },
+    flushSectionHeader: {
+      paddingHorizontal: 0,
+      marginBottom: 0
+    },
+    quietAction: {
+      minHeight: props?.sizes?.iconButton ?? scale(36),
+      justifyContent: 'center',
+      paddingHorizontal: props?.spacing?.xs ?? scale(4)
     },
     formSubContainer: {
       borderRadius: scale(8),
@@ -101,12 +123,6 @@ const styles = (props = null) =>
     modalContent: {
       width: '90%'
     },
-    titleContainer: {
-      width: '100%',
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start',
-      backgroundColor: props !== null ? props?.radioOuterColor : 'white'
-    },
     modalHeader: {
       display: 'flex',
       flexDirection: 'row',
@@ -134,7 +150,7 @@ const styles = (props = null) =>
       display: 'flex',
       flexDirection: 'row'
     },
-    //Modal
+    // Modal
     centeredView: {
       flex: 1,
       justifyContent: 'center',
@@ -144,7 +160,6 @@ const styles = (props = null) =>
     },
     modalView: {
       width: '90%',
-      alignItems: 'flex-start',
       gap: 24,
       margin: 20,
       backgroundColor: props !== null ? props?.themeBackground : 'white',
@@ -196,7 +211,7 @@ const styles = (props = null) =>
       paddingLeft: 16,
       paddingRight: 16
     },
-    nameView:{
+    nameView: {
       ...alignment.MTlarge,
       ...alignment.MBlarge,
       alignItems: 'center'
@@ -209,10 +224,10 @@ const styles = (props = null) =>
       ...alignment.MTsmall
     },
     favView: {
-      ...alignment.MTlarge,
+      ...alignment.MTlarge
     },
     orderAgainView: {
-      ...alignment.MTlarge,
+      ...alignment.MTlarge
     },
     offerScroll: {
       height: height * 0.4,
@@ -238,28 +253,23 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props?.gray100 : 'transparent',
       borderRadius: 25
     },
-    line: {
-      height: 0.5,
-      backgroundColor: props !== null ? props?.borderBottomColor : '#DAD6D6',
-    },
-
     drawerContainer: {
       ...alignment.PLlarge
     },
     settingView: {
-      ...alignment.MTlarge,
+      ...alignment.MTlarge
     },
     quickLinkView: {
-      ...alignment.MTlarge,
+      ...alignment.MTlarge
     },
     seeAll: {
       backgroundColor: props !== null ? props?.newButtonBackground : '#F3FFEE',
       ...alignment.Psmall,
-      borderRadius: scale(5),
+      borderRadius: scale(5)
     },
     padding: {
       ...alignment.PLmedium,
-      ...alignment.PRmedium,
+      ...alignment.PRmedium
     }
   })
 export default styles

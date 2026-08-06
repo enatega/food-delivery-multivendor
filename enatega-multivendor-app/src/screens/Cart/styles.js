@@ -33,7 +33,7 @@ const styles = (props = null) =>
     mainContainer: {
       flex: 1,
       backgroundColor: props !== null ? props.themeBackground : 'transparent'
-      //...alignment.PTsmall
+      // ...alignment.PTsmall
     },
     dealContainer: {
       width: '100%',
@@ -138,10 +138,11 @@ const styles = (props = null) =>
     },
     totalBillContainer: {
       width: '100%',
-      height: '20%',
-      backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
-      ...alignment.PLlarge,
-      ...alignment.PRlarge
+      backgroundColor: props?.colors?.surface ?? '#FFFFFF',
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)',
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
+      paddingBottom: props?.spacing?.lg ?? scale(16)
     },
     cartAmount: {
       width: '50%'
@@ -150,7 +151,8 @@ const styles = (props = null) =>
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingTop: scale(28)
+      paddingTop: props?.spacing?.md ?? scale(12),
+      gap: props?.spacing?.md ?? scale(12)
     },
     button: {
       backgroundColor: '#111827',
@@ -159,6 +161,10 @@ const styles = (props = null) =>
       width: scale(140),
       height: scale(40),
       borderRadius: 40
+    },
+    checkoutAction: {
+      flex: 1,
+      maxWidth: scale(180)
     },
     subContainerImage: {
       flex: 1,
@@ -240,7 +246,7 @@ const styles = (props = null) =>
       borderRadius: scale(10),
       backgroundColor: props !== null ? props.main : 'transparent',
       width: '22%',
-      //borderWidth: 2,
+      // borderWidth: 2,
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.tagColor : 'transparent',

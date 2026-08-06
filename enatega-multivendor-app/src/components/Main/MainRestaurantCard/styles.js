@@ -1,7 +1,6 @@
-import { verticalScale, scale } from '../../../utils/scaling'
+import { scale } from '../../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
 const { height } = Dimensions.get('window')
 const buildStyles = (props = null) =>
   StyleSheet.create({
@@ -13,7 +12,7 @@ const buildStyles = (props = null) =>
       width: '100%'
     },
     ItemTitle: {
-      ...alignment.MRmedium,
+      ...alignment.MRmedium
     },
     ItemDescription: {
       fontWeight: '400',
@@ -22,8 +21,7 @@ const buildStyles = (props = null) =>
       ...alignment.MRmedium
     },
     orderAgainSec: {
-      marginHorizontal: scale(12),
-      marginBottom: scale(4)
+      marginBottom: scale(8)
     },
     topPicksSec: {
       ...alignment.MLmedium,
@@ -37,7 +35,7 @@ const buildStyles = (props = null) =>
       backgroundColor: props != null ? props?.themeBackground : '#FFF'
     },
     placeHolderFadeColor: {
-      backgroundColor: props != null ? props?.fontSecondColor : '#B8B8B8'
+      backgroundColor: props?.colors?.skeletonHighlight ?? '#B8B8B8'
     },
     placeHolderContainer: {
       backgroundColor: props != null ? props?.cartContainer : '#B8B8B8',
@@ -52,7 +50,7 @@ const buildStyles = (props = null) =>
     header: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      justifyContent: 'space-between'
       // ...alignment.MRmedium,
       // marginBottom: scale(8),
     },
@@ -62,12 +60,12 @@ const buildStyles = (props = null) =>
       gap: 10
     },
     seeAllBtn: {
-      backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
-      borderRadius: 4,
-      paddingTop: 8,
-      paddingBottom: 8,
-      paddingLeft: 16,
-      paddingRight: 16,
+      minHeight: props?.sizes?.iconButton ?? 36,
+      justifyContent: 'center',
+      paddingHorizontal: props?.spacing?.xs ?? 4
+    },
+    sectionHeader: {
+      marginBottom: 0
     },
     skeletonRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -76,11 +74,9 @@ const buildStyles = (props = null) =>
     },
     popularSkeletonCard: {
       width: '47%',
-      borderRadius: scale(22),
-      backgroundColor: props != null ? props?.cardBackground : '#FFF',
-      borderWidth: 1,
-      borderColor: props != null ? props?.newBorderColor : '#E5E7EB',
-      padding: scale(12)
+      borderRadius: props?.radii?.lg ?? scale(14),
+      backgroundColor: props?.colors?.surfaceSubtle ?? '#F7F7F8',
+      padding: scale(10)
     },
     popularSkeletonImage: {
       height: scale(165),

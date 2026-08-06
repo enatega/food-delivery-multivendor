@@ -1,10 +1,7 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
-const windowWidth = Dimensions.get('window').width
 import { alignment } from '../../utils/alignment'
-
-const SCREEN_HEIGHT = Dimensions.get('screen').height
-const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
+const windowWidth = Dimensions.get('window').width
 
 const styles = (props = null, hasActiveOrders = false) =>
   StyleSheet.create({
@@ -41,6 +38,16 @@ const styles = (props = null, hasActiveOrders = false) =>
       width: '100%',
       height: '100%',
       alignSelf: 'center'
+    },
+    discoverySections: {
+      gap: props?.spacing?.lg ?? scale(16),
+      paddingTop: props?.spacing?.sm ?? scale(8)
+    },
+    collectionSection: {
+      gap: props?.spacing?.sm ?? scale(8)
+    },
+    collectionHeading: {
+      marginBottom: 0
     },
     searchbar: {
       backgroundColor: props != null ? props?.main : 'black',
@@ -157,8 +164,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       padding: scale(15),
       marginTop: scale(30),
       borderColor: props !== null ? props?.gray200 : '#E5E7EB',
-      borderWidth: scale(1),
-      borderRadius: scale(10)
+      borderWidth: scale(1)
     },
     searchList: {
       marginBottom: 70

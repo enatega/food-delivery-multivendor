@@ -27,6 +27,7 @@ import { IconButton } from 'react-native-paper'
 import { Text } from 'react-native'
 import { scale } from '../../utils/scaling'
 import { TextField } from 'react-native-material-textfield'
+import useMultivendorTheme from '../../ui/designSystem/useMultivendorTheme'
 
 // Utils
 import { truncateText } from '../../utils/customFunctions'
@@ -104,9 +105,11 @@ function ItemDetail(props) {
     }
   })
 
+  const { tokens } = useMultivendorTheme()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
 
   useFocusEffect(
@@ -381,9 +384,8 @@ function ItemDetail(props) {
               style={[
                 styles(currentTheme).descriptionText,
                 {
-                  width: '90%',
+                  width: '100%',
                   height: 'auto',
-                  fontSize: 14,
                   alignSelf: 'center'
                 }
               ]}
@@ -416,10 +418,10 @@ function ItemDetail(props) {
               })}
             </View>
 
-            <View style={styles(currentTheme).line}></View>
+            <View style={styles(currentTheme).line} />
             <View style={styles(currentTheme).inputContainer}>
               <TitleComponent title={t('specialInstructions')} subTitle={t('anySpecificPreferences')} status={t('optional')} />
-              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={144} textColor={currentTheme.fontMainColor} baseColor={currentTheme.lightHorizontalLine} errorColor={currentTheme.textErrorColor} tintColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} placeholderTextColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} />
+              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={144} textColor={tokens.colors.textPrimary} baseColor={tokens.colors.borderSubtle} errorColor={tokens.colors.danger} tintColor={tokens.colors.accent} placeholderTextColor={tokens.colors.textMuted} />
             </View>
             {/** frequently bought together */}
             <FrequentlyBoughtTogether itemId={food?._id} restaurantId={restaurant} />

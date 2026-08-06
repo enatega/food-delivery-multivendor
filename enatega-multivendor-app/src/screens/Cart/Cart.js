@@ -32,6 +32,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { populateCart } from '../../utils/populateCart'
+import { PrimaryButton, StateView, useMultivendorTheme } from '../../ui/designSystem'
 
 // Constants
 const TIPPING = gql`
@@ -49,6 +50,7 @@ function Cart(props) {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const { tokens } = useMultivendorTheme()
   const [loadingData, setLoadingData] = useState(true)
   const [minimumOrder, setMinimumOrder] = useState('')
 
@@ -211,33 +213,20 @@ function Cart(props) {
 
   function emptyCart() {
     return (
-      <View style={styles().subContainerImage}>
-        <View style={styles().imageContainer}>
-          <EmptyCart width={scale(200)} height={scale(200)} />
-        </View>
-        <View style={styles().descriptionEmpty}>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-            {t('hungry')}?
-          </TextDefault>
-          <TextDefault textColor={currentTheme.fontSecondColor} bold center>
-            {t('emptyCart')}
-          </TextDefault>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
+      <StateView
+        visual={<EmptyCart width={scale(156)} height={scale(156)} />}
+        title={`${t('hungry')}?`}
+        description={t('emptyCart')}
+        action={<PrimaryButton
+          label={t('emptyCartBtn')}
           onPress={() =>
             props?.navigation.navigate({
               name: 'Main',
               merge: true
             })
           }
-        >
-          <TextDefault textColor={currentTheme.buttonText} bolder B700 center uppercase>
-            {t('emptyCartBtn')}
-          </TextDefault>
-        </TouchableOpacity>
-      </View>
+        />}
+      />
     )
   }
   function loadginScreen() {
@@ -355,23 +344,23 @@ function Cart(props) {
                 </View>
               </View>
             )}
-            <View style={styles().totalBillContainer}>
-              <View style={styles(currentTheme).buttonContainer}>
+            <View style={styles(tokens).totalBillContainer}>
+              <View style={styles({ ...currentTheme, ...tokens }).buttonContainer}>
                 <View style={styles().cartAmount}>
                   <Animated.View style={[animatedStyle]}>
-                    <TextDefault textColor={currentTheme.black} style={styles().totalBill} bolder H2 isRTL>
+                    <TextDefault textColor={tokens.colors.textPrimary} style={styles().totalBill} bolder H2 isRTL>
                       {configuration.currencySymbol}
                       {calculateTotal()}
                     </TextDefault>
                   </Animated.View>
 
-                  <TextDefault textColor={currentTheme.black} style={styles().totalBill} bolder Smaller isRTL>
+                  <TextDefault textColor={tokens.colors.textMuted} style={styles().totalBill} bolder Smaller isRTL>
                     {t('exclusiveVAt')}
                   </TextDefault>
                 </View>
                 {isLoggedIn && profile ? (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
+                  <PrimaryButton
+                    label={t('checkoutBtn')}
                     disabled={isBelowMinimumOrder}
                     onPress={() => {
                       if (isBelowMinimumOrder) {
@@ -382,24 +371,16 @@ function Cart(props) {
                       }
                       navigation.navigate('Checkout')
                     }}
-                    style={[styles(currentTheme).button, isBelowMinimumOrder && styles(currentTheme).buttonDisabled]}
-                  >
-                    <TextDefault textColor={currentTheme.white} style={styles().checkoutBtn} bold H5 isRTL>
-                      {t('checkoutBtn')}
-                    </TextDefault>
-                  </TouchableOpacity>
+                    style={styles(tokens).checkoutAction}
+                  />
                 ) : (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
+                  <PrimaryButton
+                    label={t('loginOrSignUp')}
                     onPress={() => {
                       props?.navigation.navigate({ name: 'CreateAccount' })
                     }}
-                    style={styles(currentTheme).button}
-                  >
-                    <TextDefault textColor={currentTheme.white} style={{ width: '100%', textAlign: 'center' }} H5 bolder center isRTL>
-                      {t('loginOrSignUp')}
-                    </TextDefault>
-                  </TouchableOpacity>
+                    style={styles(tokens).checkoutAction}
+                  />
                 )}
               </View>
             </View>
