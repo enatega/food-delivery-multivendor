@@ -3,37 +3,30 @@ import { View, TouchableOpacity, KeyboardAvoidingView, Platform, StatusBar, Moda
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { scale } from '../../utils/scaling'
-import { Deactivate } from '../../apollo/mutations'
-import { FavouriteRestaurant, profile } from '../../apollo/queries'
+import { Deactivate, pushToken, updateNotificationStatus } from '../../apollo/mutations'
 import { theme } from '../../utils/themeColors'
 import UserContext from '../../context/User'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import styles from './styles'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
-import { alignment } from '../../utils/alignment'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import analytics from '../../utils/analytics'
-import { Feather, MaterialIcons, EvilIcons } from '@expo/vector-icons'
-import { HeaderBackButton } from '@react-navigation/elements'
-import navigationService from '../../routes/navigationService'
+import { Feather } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import Spinner from '../../components/Spinner/Spinner'
-import { LocationContext } from '../../context/Location'
 import ButtonContainer from '../../components/Account/ButtonContainer/ButtonContainer'
-import { pushToken, updateNotificationStatus } from '../../apollo/mutations'
-import CheckboxBtn from '../../ui/FdCheckbox/CheckboxBtn'
 import LogoutModal from '../../components/Sidebar/LogoutModal/LogoutModal'
 import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
-import LanguageModal from '../../components/LanguageModalize/LanguageModal'
+import LanguageModal, { languageTypes } from '../../components/LanguageModalize/LanguageModal'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Localization from 'expo-localization'
-import { languageTypes } from '../../components/LanguageModalize/LanguageModal'
 import Constants from 'expo-constants'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import { Divider, ScreenHeader, useMultivendorTheme } from '../../ui/designSystem'
 
 const PUSH_TOKEN = gql`
   ${pushToken}
@@ -46,15 +39,9 @@ const DEACTIVATE = gql`
   ${Deactivate}
 `
 
-const PROFILE = gql`
-  ${profile}
-`
-
 function Account(props) {
   const Analytics = analytics()
   const navigation = useNavigation()
-  const route = useRoute()
-  const { params } = route
   const { t, i18n } = useTranslation()
   const [toggleView, setToggleView] = useState(true)
   const [showPass, setShowPass] = useState(false)
@@ -71,12 +58,10 @@ function Account(props) {
   const [orderNotification, orderNotificationSetter] = useState()
   const [offerNotification, offerNotificationSetter] = useState()
   const [btnText, setBtnText] = useState(null)
-  const [appState, setAppState] = useState(AppState.currentState)
-
   const [uploadToken] = useMutation(PUSH_TOKEN)
   const { logout } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+  const { isConnected: connect } = useNetworkStatus()
   const { profile, loadingProfile, errorProfile } = useContext(UserContext)
   const [mutate, { loading }] = useMutation(UPDATE_NOTIFICATION_TOKEN, {
     onCompleted,
@@ -87,6 +72,11 @@ function Account(props) {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const { tokens } = useMultivendorTheme()
+  const accountTheme = useMemo(
+    () => ({ ...tokens, isRTL: currentTheme.isRTL }),
+    [currentTheme.isRTL, tokens]
+  )
   const resolvedProfile = useMemo(() => {
     if (!profile) return stableProfileRef.current
     return {
@@ -97,10 +87,6 @@ function Account(props) {
   const safeOrderNotification = orderNotification ?? resolvedProfile?.isOrderNotification ?? false
   const safeOfferNotification = offerNotification ?? resolvedProfile?.isOfferNotification ?? false
 
-  const [deactivated, { loading: deactivateLoading }] = useMutation(DEACTIVATE, {
-    onCompleted: onCompletedDeactivate,
-    onError: onErrorDeactivate
-  })
   useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(currentTheme.menuBar)
@@ -116,42 +102,12 @@ function Account(props) {
   }, [])
   useEffect(() => {
     props.navigation.setOptions({
-      title: t('Account'),
-      headerRight: null,
-      headerTitleAlign: 'center',
-      headerTitleStyle: {
-        color: currentTheme.newFontcolor,
-        fontWeight: 'bold'
-      },
-      headerTitleContainerStyle: {
-        marginTop: '2%',
-        paddingLeft: scale(25),
-        paddingRight: scale(25),
-        height: '75%',
-        marginLeft: 0
-      },
-      headerStyle: {
-        backgroundColor: currentTheme.newheaderBG,
-        elevation: 0
-      },
+      headerShown: false,
       passChecker: showPass,
       closeIcon: toggleView,
       closeModal: setToggleView,
       modalSetter: setModalVisible,
-      passwordButton: setShowPass,
-      headerLeft: () => (
-        <HeaderBackButton
-          truncatedLabel=''
-          backImage={() => (
-            <View>
-              <MaterialIcons name='arrow-back' size={25} color={currentTheme.newIconColor} />
-            </View>
-          )}
-          onPress={() => {
-            navigationService.goBack()
-          }}
-        />
-      )
+      passwordButton: setShowPass
     })
     checkPermission()
   }, [props.navigation, showPass, toggleView, themeContext.ThemeValue, selectedLanguage])
@@ -187,7 +143,7 @@ function Account(props) {
     }
   }, [])
 
-  const _handleAppStateChange = async (nextAppState) => {
+  const _handleAppStateChange = async(nextAppState) => {
     if (nextAppState === 'active') {
       let token = null
       const permission = await getPermission()
@@ -205,10 +161,9 @@ function Account(props) {
         orderNotificationSetter(false)
       }
     }
-    setAppState(nextAppState)
   }
 
-  const fetchSelectedLanguage = async () => {
+  const fetchSelectedLanguage = async() => {
     const lang = await AsyncStorage.getItem('enatega-language-name')
     const systemLangCode = Localization?.locale?.split('-')[0]
 
@@ -286,10 +241,15 @@ function Account(props) {
     }
   }
 
+  const [deactivated, { loading: deactivateLoading }] = useMutation(DEACTIVATE, {
+    onCompleted: onCompletedDeactivate,
+    onError: onErrorDeactivate
+  })
+
   const handleCancel = () => {
     setModalVisible(false)
   }
-  const handleLogout = async () => {
+  const handleLogout = async() => {
     try {
       setSpinnerLoading(true)
       setModalVisible(false)
@@ -419,19 +379,19 @@ function Account(props) {
   return (
     <>
       <View style={styles(currentTheme).formContainer}>
+        <ScreenHeader title={t('Account')} border />
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles(currentTheme).flex}>
-          <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
+          <ScrollView
+            style={styles().flex}
+            contentContainerStyle={styles(accountTheme).screenContent}
+            showsVerticalScrollIndicator={false}
+            alwaysBounceVertical={false}
+          >
             <View style={styles(currentTheme).mainContainer}>
-              <View style={styles(currentTheme).padding}>
-                <TextDefault H2 bolder textColor={currentTheme.fontThirdColor} isRTL>
-                  {t('Account')}
-                </TextDefault>
-              </View>
-
               <View style={styles(currentTheme).subContainer}>
                 <View>
                   <ButtonContainer title={t('email')} detail={resolvedProfile?.email} status={resolvedProfile?.emailIsVerified ? 'verified' : 'notVerified'} onPress='null' />
-                  <View style={styles(currentTheme).line} />
+                  <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
                   <ButtonContainer
                     title={t('phone')}
                     detail={resolvedProfile?.phone}
@@ -442,7 +402,7 @@ function Account(props) {
                       })
                     }
                   />
-                  <View style={styles(currentTheme).line} />
+                  <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
                   <ButtonContainer
                     title={t('name')}
                     detail={resolvedProfile?.name}
@@ -454,118 +414,95 @@ function Account(props) {
                       })
                     }
                   />
-                  <View style={styles(currentTheme).line} />
-
-                  <View style={[styles().padding]}>
-                    <TextDefault H5 bolder textColor={currentTheme.fontThirdColor} isRTL>
-                      {t('language')}
-                    </TextDefault>
-                    <TouchableOpacity
-                      style={[styles(currentTheme).linkContainer, styles(currentTheme).flexRow]}
-                      onPress={() => {
-                        setLngModalVisible(true)
-                      }}
-                    >
-                      <TextDefault style={styles().drawerContainer} textColor={currentTheme.fontMainColor} small H5 bolder isRTL>
-                        {selectedLanguage}
-                      </TextDefault>
-
-                      <View style={[styles(currentTheme).leftContainer, styles(currentTheme).flexRow]}>
-                        <TextDefault style={styles().drawerContainer} textColor={currentTheme.linkColor} small H5 bolder isRTL>
-                          {t('edit')}
-                        </TextDefault>
-                        <EvilIcons name={currentTheme.isRTL ? 'chevron-left' : 'chevron-right'} size={scale(30)} color={currentTheme.darkBgFont} />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles(currentTheme).line} />
-
+                  <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
+                  <ButtonContainer
+                    title={t('language')}
+                    detail={selectedLanguage}
+                    status='null'
+                    onPress={() => setLngModalVisible(true)}
+                  />
+                  <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
                   <ButtonContainer title={t('DeleteAccount')} detail={''} status='null' onPress={() => setDeleteModalVisible(true)} />
-                  <View style={styles(currentTheme).line} />
                 </View>
 
                 <View style={styles(currentTheme).mainContainerArea}>
-                  <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
-                    <View>
-                      {loading && btnText === 'order'
-                        ? <ActivityIndicator size='small' color={currentTheme.main} />
-                        : (
-                          <CheckboxBtn
-                            checked={safeOrderNotification}
-                            onPress={() => {
-                              updateNotificationStatus('order')
-                              setBtnText('order')
-                            }}
-                          />
-                          )}
+                  <TextDefault
+                    bolder
+                    textColor={tokens.colors.textPrimary}
+                    style={styles(accountTheme).sectionTitle}
+                    isRTL
+                  >
+                    {t('titleSettings')}
+                  </TextDefault>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles(accountTheme).preferenceRow}
+                    onPress={() => {
+                      updateNotificationStatus('order')
+                      setBtnText('order')
+                    }}
+                  >
+                    <TextDefault textColor={tokens.colors.textSecondary} style={styles(accountTheme).preferenceText} isRTL>
+                      {t('receivePushNotification')}
+                    </TextDefault>
+                    {loading && btnText === 'order'
+                      ? <ActivityIndicator size='small' color={tokens.colors.accent} />
+                      : (
+                        <Switch
+                          trackColor={{ false: tokens.colors.surfaceElevated, true: tokens.colors.accent }}
+                          thumbColor={tokens.isDark ? tokens.colors.textPrimary : '#ffffff'}
+                          ios_backgroundColor={tokens.colors.surfaceElevated}
+                          onValueChange={() => {
+                            updateNotificationStatus('order')
+                            setBtnText('order')
+                          }}
+                          value={safeOrderNotification}
+                        />
+                        )}
+                  </TouchableOpacity>
+                  <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles(accountTheme).preferenceRow}
+                    onPress={() => {
+                      updateNotificationStatus('offer')
+                      setBtnText('offer')
+                    }}
+                  >
+                    <TextDefault textColor={tokens.colors.textSecondary} style={styles(accountTheme).preferenceText} isRTL>
+                      {t('receiveOfferByEmail')}
+                    </TextDefault>
+                    <View style={styles(accountTheme).controlRow}>
+                      {loading && btnText === 'offer' && <ActivityIndicator size='small' color={tokens.colors.accent} />}
+                      <Switch
+                        trackColor={{ false: tokens.colors.surfaceElevated, true: tokens.colors.accent }}
+                        thumbColor={tokens.isDark ? tokens.colors.textPrimary : '#ffffff'}
+                        ios_backgroundColor={tokens.colors.surfaceElevated}
+                        onValueChange={() => {
+                          updateNotificationStatus('offer')
+                          setBtnText('offer')
+                        }}
+                        value={safeOfferNotification}
+                      />
                     </View>
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={() => {
-                        updateNotificationStatus('order')
-                        setBtnText('order')
-                      }}
-                    >
-                      <View style={styles(currentTheme).notificationChekboxContainer}>
-                        <TextDefault
-                          // numberOfLines={1}
-                          textColor={currentTheme.darkBgFont}
-                          style={alignment.MLsmall}
-                          isRTL
-                        >
-                          {' '}
-                          {t('receivePushNotification')}{' '}
-                        </TextDefault>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
+                  </TouchableOpacity>
+                  <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
+                  <TouchableOpacity activeOpacity={0.7} style={styles(accountTheme).preferenceRow} onPress={toggleTheme}>
+                    <TextDefault textColor={tokens.colors.textSecondary} style={styles(accountTheme).preferenceText} isRTL>
+                      {t('turnOnDarkTheme')}
+                    </TextDefault>
                     <Switch
-                      trackColor={{ false: currentTheme.gray200 || '#d1d5db', true: currentTheme.main }}
-                      thumbColor={safeOfferNotification ? currentTheme.white || '#ffffff' : '#f4f3f4'}
-                      ios_backgroundColor={currentTheme.gray200 || '#d1d5db'}
-                      onValueChange={() => {
-                        updateNotificationStatus('offer')
-                        setBtnText('offer')
-                      }}
-                      value={safeOfferNotification}
+                      trackColor={{ false: tokens.colors.surfaceElevated, true: tokens.colors.accent }}
+                      thumbColor={tokens.isDark ? tokens.colors.textPrimary : '#ffffff'}
+                      ios_backgroundColor={tokens.colors.surfaceElevated}
+                      onValueChange={toggleTheme}
+                      value={themeContext.ThemeValue === 'Dark'}
                     />
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      style={{ flex: 1 }}
-                      onPress={() => {
-                        updateNotificationStatus('offer')
-                        setBtnText('offer')
-                      }}
-                    >
-                      <View style={styles(currentTheme).notificationChekboxContainer}>
-                        <TextDefault textColor={currentTheme.darkBgFont} style={alignment.MLsmall} isRTL>
-                          {' '}
-                          {t('receiveOfferByEmail')}{' '}
-                        </TextDefault>
-                      </View>
-                    </TouchableOpacity>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>{loading && btnText === 'offer' && <ActivityIndicator size='small' color={currentTheme.main} />}</View>
-                  </View>
-
-                  <View style={[styles(currentTheme).languageContainer, styles().checkboxSettings, styles().padding]}>
-                    <View>
-                      <CheckboxBtn checked={themeContext.ThemeValue === 'Dark'} onPress={() => toggleTheme()} />
-                    </View>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => toggleTheme()}>
-                      <View style={styles(currentTheme).notificationChekboxContainer}>
-                        <TextDefault numberOfLines={1} textColor={currentTheme.darkBgFont} style={alignment.MLsmall} isRTL>
-                          {' '}
-                          {t('turnOnDarkTheme')}{' '}
-                        </TextDefault>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
+                  </TouchableOpacity>
                 </View>
 
-                <View>
-                  <TextDefault H2 bolder textColor={currentTheme.fontThirdColor} style={styles().padding} isRTL>
+                <View style={styles(accountTheme).sectionBlock}>
+                  <TextDefault bolder textColor={tokens.colors.textPrimary} style={styles(accountTheme).sectionTitle} isRTL>
                     {t('legal')}
                   </TextDefault>
                   <ButtonContainer
@@ -576,7 +513,7 @@ function Account(props) {
                       Linking.openURL('https://multivendor.enatega.com/terms')
                     }}
                   />
-                  <View style={styles(currentTheme).line} />
+                  <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
 
                   <ButtonContainer
                     title={t('privacyPolicy')}
@@ -598,10 +535,10 @@ function Account(props) {
                   </TextDefault>
                 </View> */}
 
-                <View style={styles(currentTheme).containerButton}>
-                  <TouchableOpacity activeOpacity={0.5} style={styles(currentTheme).addButton} onPress={logoutClick}>
+                <View style={styles(accountTheme).containerButton}>
+                  <TouchableOpacity activeOpacity={0.5} style={styles(accountTheme).addButton} onPress={logoutClick}>
                     <View style={styles(currentTheme).contentContainer}>
-                      <TextDefault bold H5 textColor={currentTheme.red600}>
+                      <TextDefault bold H5 textColor={tokens.colors.danger}>
                         {t('Logout')}
                       </TextDefault>
                     </View>
@@ -639,13 +576,15 @@ function Account(props) {
                   {t('permanentDeleteMessage')}
                 </TextDefault>
                 <TouchableOpacity style={[styles(currentTheme).btn, styles().btnDelete, { opacity: deactivateLoading ? 0.5 : 1 }]} onPress={deactivatewithemail} disabled={deactivateLoading}>
-                  {deactivateLoading ? (
+                  {deactivateLoading
+                    ? (
                     <Spinner backColor='transparent' size='small' />
-                  ) : (
+                      )
+                    : (
                     <TextDefault bolder H4 textColor={currentTheme.white}>
                       {t('yesSure')}
                     </TextDefault>
-                  )}
+                      )}
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles(currentTheme).btn, styles().btnCancel]} onPress={() => setDeleteModalVisible(false)} disabled={deactivateLoading}>
                   <TextDefault bolder H4 textColor={currentTheme.black}>

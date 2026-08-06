@@ -18,7 +18,6 @@ import {
 } from 'react-native'
 
 import gql from 'graphql-tag'
-import { scale, verticalScale } from '../../utils/scaling'
 import { FavouriteRestaurant } from '../../apollo/queries'
 import ChangePassword from './ChangePassword'
 import { theme } from '../../utils/themeColors'
@@ -29,7 +28,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import analytics from '../../utils/analytics'
-import { Entypo } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 
 import { useTranslation } from 'react-i18next'
 import Spinner from '../../components/Spinner/Spinner'
@@ -40,13 +39,11 @@ import ButtonContainer from '../../components/Profile/ButtonContainer/ButtonCont
 import OrderAgainCard from '../../components/Profile/OrderAgainCard/OrderAgainCard'
 import OrdersContext from '../../context/Orders'
 import useHomeRestaurants from '../../ui/hooks/useRestaurantOrderInfo'
-import { I18nManager } from 'react-native'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { Divider, SectionHeader, useMultivendorTheme } from '../../ui/designSystem'
-
 
 const RESTAURANTS = gql`
   ${FavouriteRestaurant}
@@ -61,11 +58,9 @@ function Profile(props) {
   const [showPass, setShowPass] = useState(false)
   const { location } = useContext(LocationContext)
 
- 
-
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = { isRTL: i18n.dir() === "rtl", ...theme[themeContext.ThemeValue] }
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const { tokens } = useMultivendorTheme()
   const { orders } = useContext(OrdersContext)
 
@@ -74,7 +69,7 @@ function Profile(props) {
     return orders.filter((o) => orderStatusActive.includes(o.orderStatus))
   }, [orders])
 
-  const { data, loading, error, refetch } = useQuery(RESTAURANTS, {
+  const { data, loading, refetch } = useQuery(RESTAURANTS, {
     variables: {
       longitude: location?.longitude || null,
       latitude: location?.latitude || null
@@ -91,12 +86,12 @@ function Profile(props) {
     useCallback(() => {
       // Only refetch if we're coming back from a screen that might have updated data
       const timeoutId = setTimeout(() => {
-        refetch();
-      }, 100); // Small delay to prevent immediate refetch
-      
-      return () => clearTimeout(timeoutId);
+        refetch()
+      }, 100) // Small delay to prevent immediate refetch
+
+      return () => clearTimeout(timeoutId)
     }, [refetch])
-  );
+  )
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -136,7 +131,7 @@ function Profile(props) {
     })
   }, [props?.navigation, showPass, toggleView, themeContext.ThemeValue])
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[refetch]} />
   return (
     <SafeAreaView
@@ -173,39 +168,33 @@ function Profile(props) {
                 style={styles(tokens).activeOrderRow}
                 onPress={() => navigation.navigate('MyOrders')}
               >
-                <View
-                  style={{
-                    alignItems: 'center'
-                  }}
+                <View style={styles(tokens).activeOrderDot} />
+                <TextDefault
+                  bold
+                  textColor={tokens.colors.textSecondary}
+                  style={styles(tokens).activeOrderText}
+                  isRTL
                 >
-                  <View
-                    style={{
-                      flex: 1
-                    }}
-                  >
-                    <TextDefault
-                      H5
-                      bold
-                      textColor={tokens.colors.textPrimary}
-                      isRTL
-                    >
-                      {activeOrders?.length} {t('ActiveOrder')}
-                    </TextDefault>
-                  </View>
-                </View>
+                  {activeOrders?.length} {t('ActiveOrder')}
+                </TextDefault>
+                <Ionicons
+                  name={currentTheme.isRTL ? 'chevron-back' : 'chevron-forward'}
+                  size={18}
+                  color={tokens.colors.textMuted}
+                />
               </TouchableOpacity>
 
-              <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
-
               {/* favourite section */}
-              {loading ? (
+              {loading
+                ? (
                 <Spinner
                   size={'small'}
                   backColor={currentTheme.themeBackground}
                   spinnerColor={currentTheme.main}
                 />
-              ) : (
-                data?.userFavourite?.length >= 1 && (
+                  )
+                : (
+                    data?.userFavourite?.length >= 1 && (
                   <View style={styles().padding}>
                     <SectionHeader
                       style={styles(tokens).flushSectionHeader}
@@ -218,7 +207,7 @@ function Profile(props) {
                     <FlatList
                       style={styles().offerScroll}
                       contentContainerStyle={{
-                        flexGrow: 1,
+                        alignItems: 'flex-start',
                         ...alignment.MTsmall
                       }}
                       showsVerticalScrollIndicator={false}
@@ -227,12 +216,7 @@ function Profile(props) {
                       data={sortRestaurantsByOpenStatus(data?.userFavourite || [])}
                       keyExtractor={(item) => item._id}
                       renderItem={({ item }) => {
-
-                        
-                        const averageRating = item?.reviewData?.ratings
-                        const numberOfReviews = item?.reviewData?.total
-
-                        const restaurantOpen = isOpen(item);
+                        const restaurantOpen = isOpen(item)
                         return (
                           <NewRestaurantCard
                             {...item}
@@ -240,17 +224,17 @@ function Profile(props) {
                             reviewCount={item.reviewCount}
                             isCategories
                             isOpen={restaurantOpen}
-                            isAvailable={item.isAvailable || true}
-                            
+                            isAvailable={item.isAvailable ?? true}
+                            compact
                           />
                         )
                       }}
-                      inverted={currentTheme?.isRTL ? true : false}
+                      inverted={!!currentTheme?.isRTL}
 
                     />
                   </View>
-                )
-              )}
+                    )
+                  )}
 
               <View style={styles().quickLinkView}>
                 <SectionHeader title={t('QuickLinks')} />
@@ -282,14 +266,16 @@ function Profile(props) {
               </View>
 
               {/* order again */}
-              {orderLoading ? (
+              {orderLoading
+                ? (
                 <Spinner
                   size={'small'}
                   backColor={currentTheme.themeBackground}
                   spinnerColor={currentTheme.main}
                 />
-              ) : (
-                recentOrderRestaurantsData?.length >= 1 && (
+                  )
+                : (
+                    recentOrderRestaurantsData?.length >= 1 && (
                   <View style={styles().padding}>
                     <SectionHeader style={styles(tokens).flushSectionHeader} title={t('OrderAgain')} />
 
@@ -307,11 +293,11 @@ function Profile(props) {
                       renderItem={({ item }) => {
                         return <OrderAgainCard {...item} />
                       }}
-                      inverted={currentTheme?.isRTL ? true : false}
+                      inverted={!!currentTheme?.isRTL}
                     />
                   </View>
-                )
-              )}
+                    )
+                  )}
 
               <View style={styles().settingView}>
                 <SectionHeader title={t('titleSettings')} />

@@ -133,6 +133,7 @@ function NewRestaurantCard(props) {
   return (
     <View style={[
       styles(cardTheme).offerContainer,
+      props?.compact && styles(cardTheme).compactOfferContainer,
       props?.fullWidth && { width: '100%', marginLeft: 0, marginRight: 0 },
       { position: 'relative' }
     ]}>
@@ -153,7 +154,10 @@ function NewRestaurantCard(props) {
         disabled={false}
       >
         <View style={styles(cardTheme).cardBody}>
-          <View style={styles().imageContainer}>
+          <View style={[
+            styles().imageContainer,
+            props?.compact && styles().compactImageContainer
+          ]}>
             <ShimmerImage
               imageUrl={imageUri}
               resizeMode='cover'
@@ -175,7 +179,10 @@ function NewRestaurantCard(props) {
               </View>
             )}
           </View>
-          <View style={styles().descriptionContainer}>
+          <View style={[
+            styles().descriptionContainer,
+            props?.compact && styles().compactDescriptionContainer
+          ]}>
             <View style={styles(cardTheme).titleRow}>
               <TextDefault H4 numberOfLines={1} textColor={tokens.colors.textPrimary} bolder style={styles(cardTheme).titleText}>
                 {props?.name}

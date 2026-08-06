@@ -20,6 +20,9 @@ const buildStyles = (props = null) => {
       ...alignment.MRsmall,
       backgroundColor: props?.colors?.surface ?? '#181818'
     },
+    compactOfferContainer: {
+      width: Math.max(scale(180), Math.min(scale(204), width * 0.51))
+    },
     cardSurface: {
       borderRadius: props?.radii?.lg ?? 14,
       overflow: 'hidden',
@@ -58,6 +61,11 @@ const buildStyles = (props = null) => {
       alignItems: 'stretch',
       gap: scale(6)
     },
+    compactDescriptionContainer: {
+      paddingHorizontal: scale(10),
+      paddingVertical: scale(8),
+      gap: scale(4)
+    },
     titleRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'flex-start',
@@ -94,6 +102,9 @@ const buildStyles = (props = null) => {
       alignItems: 'center',
       width: '100%',
       aspectRatio: 1.48
+    },
+    compactImageContainer: {
+      aspectRatio: 1.62
     },
     restaurantTotalRating: {
       paddingLeft: scale(5)

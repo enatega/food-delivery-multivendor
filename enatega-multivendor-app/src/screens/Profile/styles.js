@@ -1,7 +1,6 @@
 import { scale } from '../../utils/scaling'
-import { StyleSheet, Dimensions } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-const { height } = Dimensions.get('screen')
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -29,12 +28,21 @@ const styles = (props = null) =>
     },
     activeOrderRow: {
       marginHorizontal: props?.spacing?.lg ?? scale(16),
-      minHeight: scale(48),
-      justifyContent: 'center',
-      paddingHorizontal: props?.spacing?.md ?? scale(12),
-      borderLeftWidth: scale(3),
-      borderLeftColor: props?.colors?.accent ?? '#90E36D',
-      backgroundColor: props?.colors?.accentSubtle ?? 'rgba(144, 227, 109, 0.14)'
+      minHeight: scale(40),
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: props?.spacing?.sm ?? scale(8),
+      paddingVertical: props?.spacing?.sm ?? scale(8)
+    },
+    activeOrderDot: {
+      width: scale(7),
+      height: scale(7),
+      borderRadius: scale(999),
+      backgroundColor: props?.colors?.accent ?? '#90E36D'
+    },
+    activeOrderText: {
+      flex: 1,
+      ...props?.typeScale?.bodyStrong
     },
     flushSectionHeader: {
       paddingHorizontal: 0,
@@ -230,7 +238,6 @@ const styles = (props = null) =>
       ...alignment.MTlarge
     },
     offerScroll: {
-      height: height * 0.4,
       width: '100%'
     },
     linkContainer: {
