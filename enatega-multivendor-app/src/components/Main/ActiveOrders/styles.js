@@ -5,7 +5,7 @@ const styles = (tokens) =>
   StyleSheet.create({
     card: {
       marginTop: 0,
-      marginHorizontal: tokens.spacing.xl,
+      marginHorizontal: tokens.spacing.lg,
       marginBottom: scale(10),
       padding: tokens.spacing.lg,
       borderRadius: tokens.radii.xl,
@@ -59,10 +59,14 @@ const styles = (tokens) =>
     progressActive: {
       backgroundColor: tokens.colors.accent
     },
+    metaScroller: {
+      marginHorizontal: -tokens.spacing.lg
+    },
     metaRow: {
       flexDirection: tokens.isRTL ? 'row-reverse' : 'row',
       paddingTop: tokens.spacing.lg,
-      paddingEnd: tokens.spacing.xs
+      paddingStart: tokens.spacing.lg,
+      paddingEnd: tokens.spacing.xl
     },
     metaPill: {
       maxWidth: scale(180),

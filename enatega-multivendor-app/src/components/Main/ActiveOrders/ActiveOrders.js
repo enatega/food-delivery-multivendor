@@ -85,47 +85,50 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   }
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.86}
-      accessibilityRole='button'
-      accessibilityLabel={`${statusText}. ${t('orderTracking')}`}
-      onPress={openOrder}
-      style={themedStyles.card}
-    >
-      <View style={themedStyles.headerRow}>
-        <View style={themedStyles.titleWrap}>
-          <TextDefault bolder numberOfLines={2} style={themedStyles.title}>
-            {statusText}
-          </TextDefault>
-          <TextDefault numberOfLines={1} style={themedStyles.subtitle}>
-            {remainingTime > 0
-              ? `${remainingTime}-${remainingTime + 5} ${t('mins')}`
-              : t('orderTracking')}
-          </TextDefault>
+    <View style={themedStyles.card}>
+      <TouchableOpacity
+        activeOpacity={0.86}
+        accessibilityRole='button'
+        accessibilityLabel={`${statusText}. ${t('orderTracking')}`}
+        onPress={openOrder}
+      >
+        <View style={themedStyles.headerRow}>
+          <View style={themedStyles.titleWrap}>
+            <TextDefault bolder numberOfLines={2} style={themedStyles.title}>
+              {statusText}
+            </TextDefault>
+            <TextDefault numberOfLines={1} style={themedStyles.subtitle}>
+              {remainingTime > 0
+                ? `${remainingTime}-${remainingTime + 5} ${t('mins')}`
+                : t('orderTracking')}
+            </TextDefault>
+          </View>
+
+          <View style={themedStyles.statusIcon}>
+            <MaterialIcons name='delivery-dining' size={scale(22)} color={tokens.colors.accent} />
+          </View>
         </View>
 
-        <View style={themedStyles.statusIcon}>
-          <MaterialIcons name='delivery-dining' size={scale(22)} color={tokens.colors.accent} />
+        <View style={themedStyles.progressRow}>
+          {Array.from({ length: TIMELINE_SEGMENTS }).map((_, index) => (
+            <View
+              key={`active-order-progress-${index}`}
+              style={[
+                themedStyles.progressSegment,
+                index !== TIMELINE_SEGMENTS - 1 && themedStyles.progressSpacing,
+                index < progressCount && themedStyles.progressActive
+              ]}
+            />
+          ))}
         </View>
-      </View>
-
-      <View style={themedStyles.progressRow}>
-        {Array.from({ length: TIMELINE_SEGMENTS }).map((_, index) => (
-          <View
-            key={`active-order-progress-${index}`}
-            style={[
-              themedStyles.progressSegment,
-              index !== TIMELINE_SEGMENTS - 1 && themedStyles.progressSpacing,
-              index < progressCount && themedStyles.progressActive
-            ]}
-          />
-        ))}
-      </View>
+      </TouchableOpacity>
 
       <ScrollView
+        style={themedStyles.metaScroller}
         horizontal
         nestedScrollEnabled
         directionalLockEnabled
+        keyboardShouldPersistTaps='handled'
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={themedStyles.metaRow}
       >
@@ -146,15 +149,21 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
       </ScrollView>
 
       {!!address && (
-        <View style={themedStyles.addressRow}>
+        <TouchableOpacity
+          activeOpacity={0.72}
+          accessibilityRole='button'
+          accessibilityLabel={address}
+          onPress={openOrder}
+          style={themedStyles.addressRow}
+        >
           <MaterialIcons name='location-on' size={scale(17)} color={tokens.colors.textMuted} />
           <TextDefault numberOfLines={2} style={themedStyles.addressText}>{address}</TextDefault>
           {activeOrders.length > 1 && (
             <TextDefault style={themedStyles.moreText}>+{activeOrders.length - 1}</TextDefault>
           )}
-        </View>
+        </TouchableOpacity>
       )}
-    </TouchableOpacity>
+    </View>
   )
 }
 
