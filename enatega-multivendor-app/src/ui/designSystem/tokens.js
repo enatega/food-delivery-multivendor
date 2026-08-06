@@ -15,6 +15,7 @@ export const radii = Object.freeze({
   none: 0,
   sm: scale(6),
   md: scale(10),
+  tile: scale(12),
   lg: scale(14),
   xl: scale(18),
   round: scale(999)
@@ -25,7 +26,8 @@ export const sizes = Object.freeze({
   headerContent: verticalScale(56),
   iconButton: scale(36),
   input: verticalScale(48),
-  primaryButton: verticalScale(48)
+  primaryButton: verticalScale(48),
+  compactTile: scale(80)
 })
 
 export const typeScale = Object.freeze({

@@ -523,8 +523,8 @@ function Main(props) {
                               paddingStart: tokens.spacing.lg
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={120}
-                            itemSpacing={8}
+                            estimatedItemSize={96}
+                            itemSpacing={tokens.spacing.lg}
                           />
                         </View                                         >
 
@@ -540,8 +540,8 @@ function Main(props) {
                               paddingStart: tokens.spacing.lg
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={140}
-                            itemSpacing={8}
+                            estimatedItemSize={96}
+                            itemSpacing={tokens.spacing.lg}
                           />
                         </View>
                         <View>{loading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard shopType='restaurant' orders={sortedRestaurantOrders} loading={orderLoading} error={orderError} title={t('Restaurants near you')} queryType='restaurant' icon='restaurant' />}</View>
@@ -557,8 +557,8 @@ function Main(props) {
                               paddingStart: tokens.spacing.lg
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={140}
-                            itemSpacing={8}
+                            estimatedItemSize={96}
+                            itemSpacing={tokens.spacing.lg}
                           />
                         </View>
                         {/* <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(nearByGroceryStores || [])} loading={nearByGroceryStoresLoading} error={nearByGroceryStoresError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View> */}

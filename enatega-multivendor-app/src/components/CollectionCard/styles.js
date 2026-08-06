@@ -3,25 +3,30 @@ import { StyleSheet } from 'react-native'
 const buildStyles = (props = null) =>
   StyleSheet.create({
     collectionCard: {
-      width: 104,
-      borderRadius: props?.radii?.md ?? 10,
-      overflow: 'hidden'
+      width: props?.sizes?.compactTile ?? 80,
+      alignItems: 'center'
     },
     brandImgContainer: {
-      borderRadius: props?.radii?.md ?? 10,
+      width: props?.sizes?.compactTile ?? 80,
+      height: props?.sizes?.compactTile ?? 80,
+      borderRadius: props?.radii?.tile ?? 12,
       overflow: 'hidden',
       backgroundColor: props?.colors?.surfaceSubtle ?? '#F7F7F8'
     },
     collectionImage: {
-      height: 88,
+      height: '100%',
       width: '100%',
-      borderRadius: props?.radii?.md ?? 10
+      borderRadius: props?.radii?.tile ?? 12
     },
     label: {
       paddingTop: props?.spacing?.sm ?? 8,
-      paddingHorizontal: props?.spacing?.xs ?? 4,
       paddingBottom: props?.spacing?.xs ?? 4,
-      lineHeight: 18
+      width: '100%',
+      minHeight: 40,
+      fontSize: 14,
+      lineHeight: 18,
+      fontWeight: '500',
+      textAlign: 'center'
     }
   })
 

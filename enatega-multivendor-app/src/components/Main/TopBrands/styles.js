@@ -15,17 +15,24 @@ const buildStyles = (props = null) =>
     },
     brandImg: {
       width: '100%',
-      height: scale(70),
+      height: '100%',
       objectFit: 'cover',
       borderRadius: 8
     },
     topbrandsContainer: {
-      width: scale(104)
+      width: props?.sizes?.compactTile ?? scale(80),
+      alignItems: 'center'
     },
     brandImgContainer: {
       backgroundColor: props?.colors?.surfaceSubtle ?? '#F3F4F6',
-      borderRadius: props?.radii?.md ?? 10,
+      borderRadius: props?.radii?.tile ?? 12,
+      width: props?.sizes?.compactTile ?? scale(80),
+      height: props?.sizes?.compactTile ?? scale(80),
       overflow: 'hidden'
+    },
+    brandTextContainer: {
+      width: '100%',
+      alignItems: 'center'
     },
     brandName: {
       marginTop: scale(6),
@@ -33,8 +40,13 @@ const buildStyles = (props = null) =>
       // Responsive but clamped so it's neither oversized nor overflowing.
       fontSize: Math.min(Math.max(scale(12), 11), 14),
       lineHeight: scale(16),
+      textAlign: 'center',
       // Reserve two lines so every card's delivery-time row aligns.
       minHeight: scale(32)
+    },
+    brandMeta: {
+      width: '100%',
+      textAlign: 'center'
     },
     screenBackground: {
       backgroundColor: props != null ? props?.themeBackground : '#FFF',

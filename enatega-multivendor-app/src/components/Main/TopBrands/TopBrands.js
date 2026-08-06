@@ -39,16 +39,11 @@ function TopBrands() {
         <Image source={{ uri: useCachedMediaUri(resolveLogoImage(item), 'image') }} style={styles(tokens).brandImg} resizeMode='contain' />
       </View>
 
-      <View
-        style={{
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start'
-        }}
-      >
+      <View style={styles(tokens).brandTextContainer}>
         <TextDefault style={styles(tokens).brandName} textColor={tokens.colors.textPrimary} numberOfLines={2} ellipsizeMode='tail' bolder>
           {item?.name}
         </TextDefault>
-        <TextDefault textColor={tokens.colors.textSecondary} normal>
+        <TextDefault style={styles(tokens).brandMeta} textColor={tokens.colors.textSecondary} normal>
           {item?.deliveryTime} mins
         </TextDefault>
       </View>
@@ -95,7 +90,7 @@ function TopBrands() {
               })
             })}
           />
-          <HorizontalFlashList data={topRatedVendors} renderItem={renderBrandItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={140} itemSpacing={tokens.spacing.md} />
+          <HorizontalFlashList data={topRatedVendors} renderItem={renderBrandItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={96} itemSpacing={tokens.spacing.lg} />
         </View>
       )}
 

@@ -13,6 +13,21 @@ remain unchanged until they explicitly adopt a shared primitive.
   gray or horizontal-line tokens.
 - Keep the mode accent for actions, focus, and selection—not large backgrounds.
 
+## Compact horizontal rails
+
+Category, cuisine, shop-type, and other small image tiles follow the shared
+single-vendor proportions:
+
+- `tokens.sizes.compactTile` for an 80 × 80 image tile.
+- `tokens.radii.tile` for the 12-point image radius.
+- `tokens.spacing.lg` for the 16-point gap between tiles.
+- Medium-weight, centered labels below the image, limited to two lines.
+- One leading screen inset on the list content; do not wrap the horizontal
+  list in a padded container, so it can scroll edge to edge.
+
+Product cards and restaurant cards are not compact tiles and should retain the
+dimensions appropriate to their content.
+
 ## Safe-area contract
 
 `ScreenHeader` owns the top safe-area inset by default. `ScreenContainer`
@@ -40,4 +55,3 @@ Never wrap this combination in another top-safe-area view.
 New multivendor UI must pass `npm run check:multivendor-design`. Existing
 legacy violations are baseline-tracked and will be removed as each screen is
 migrated; new violations fail the check immediately.
-

@@ -20,7 +20,7 @@ const CollectionCard = ({ onPress, image, name }) => {
       onPress={onPress}
       style={styles(tokens).collectionCard}
       rippleColor={'#F5F5F5'}
-      rippleContainerBorderRadius={tokens.radii.md}
+      rippleContainerBorderRadius={tokens.radii.tile}
       rippleDuration={300}
     >
       <View style={styles(tokens).brandImgContainer}>
@@ -32,15 +32,13 @@ const CollectionCard = ({ onPress, image, name }) => {
         />
       </View>
       <TextDefault
-        Normal
-        bolder
         style={styles(tokens).label}
         textColor={tokens.colors.textPrimary}
         isRTL
         numberOfLines={2}
         ellipsizeMode='tail'
         adjustsFontSizeToFit
-        minimumFontScale={0.8}
+        minimumFontScale={0.85}
       >
         {name}
       </TextDefault>
