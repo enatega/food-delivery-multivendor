@@ -47,7 +47,7 @@ const styles = (props = null) =>
       marginBottom: scale(10)
     },
     collectionHeading: {
-      paddingHorizontal: props?.spacing?.lg ?? scale(16),
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
       marginBottom: scale(15)
     },
     searchbar: {

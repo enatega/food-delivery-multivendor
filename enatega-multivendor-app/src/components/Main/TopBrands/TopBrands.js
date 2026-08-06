@@ -66,7 +66,7 @@ function TopBrands() {
 
   const railContentStyle = {
     flexGrow: 1,
-    paddingStart: tokens.spacing.lg
+    paddingStart: tokens.spacing.md
   }
 
   return (

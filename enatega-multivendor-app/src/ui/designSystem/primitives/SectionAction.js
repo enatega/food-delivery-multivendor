@@ -28,7 +28,7 @@ const SectionAction = ({ label, onPress, style }) => {
 
 const styles = (tokens) => StyleSheet.create({
   button: {
-    paddingHorizontal: tokens.spacing.lg,
+    paddingHorizontal: tokens.spacing.md,
     paddingVertical: tokens.spacing.sm - tokens.spacing.xxs,
     borderRadius: tokens.spacing.sm,
     borderWidth: StyleSheet.hairlineWidth,
