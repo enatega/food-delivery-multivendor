@@ -7,7 +7,7 @@ import Ripple from 'react-native-material-ripple'
 import { IMAGE_LINK } from '../../utils/constants'
 import ShimmerImage from '../ShimmerImage/ShimmerImage'
 
-const CollectionCard = ({ onPress, image, name }) => {
+const CollectionCard = ({ onPress, image, name, selected = false }) => {
   const { tokens } = useMultivendorTheme()
   const normalizedImage = useMemo(() => {
     const raw = image || IMAGE_LINK
@@ -23,7 +23,10 @@ const CollectionCard = ({ onPress, image, name }) => {
       rippleContainerBorderRadius={tokens.radii.tile}
       rippleDuration={300}
     >
-      <View style={styles(tokens).brandImgContainer}>
+      <View style={[
+        styles(tokens).brandImgContainer,
+        selected && styles(tokens).selectedImageContainer
+      ]}>
         <ShimmerImage
           imageUrl={normalizedImage}
           style={styles(tokens).collectionImage}
@@ -33,7 +36,7 @@ const CollectionCard = ({ onPress, image, name }) => {
       </View>
       <TextDefault
         style={styles(tokens).label}
-        textColor={tokens.colors.textPrimary}
+        textColor={selected ? tokens.colors.accent : tokens.colors.textPrimary}
         isRTL
         numberOfLines={2}
         ellipsizeMode='tail'

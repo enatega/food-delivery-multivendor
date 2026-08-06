@@ -13,6 +13,10 @@ const buildStyles = (props = null) =>
       overflow: 'hidden',
       backgroundColor: props?.colors?.surfaceSubtle ?? '#F7F7F8'
     },
+    selectedImageContainer: {
+      borderWidth: 2,
+      borderColor: props?.colors?.accent ?? '#90E36D'
+    },
     collectionImage: {
       height: '100%',
       width: '100%',

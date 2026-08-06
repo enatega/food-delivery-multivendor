@@ -133,7 +133,7 @@ function NewRestaurantCard(props) {
   return (
     <View style={[
       styles(cardTheme).offerContainer,
-      props?.fullWidth && { width: '100%' },
+      props?.fullWidth && { width: '100%', marginLeft: 0, marginRight: 0 },
       { position: 'relative' }
     ]}>
       <Ripple

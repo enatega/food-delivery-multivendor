@@ -39,8 +39,7 @@ const styles = (props = null) =>
     container: { flex: 1, gap: 8, backgroundColor: props != null ? props?.themeBackground : '#FFF' },
     screenBackground: {
       backgroundColor: props != null ? props?.themeBackground : '#FFF',
-      ...alignment.PBlarge,
-      
+      ...alignment.PBlarge
     },
     searchbar: {
       ...alignment.PBmedium,
@@ -50,8 +49,7 @@ const styles = (props = null) =>
     mainContentContainer: {
       width: '100%',
       height: '80%',
-      alignSelf: 'center',
-      // backgroundColor: 'red'
+      alignSelf: 'center'
     },
 
     ML20: {
@@ -206,34 +204,26 @@ const styles = (props = null) =>
       textAlign: 'justify',
       paddingLeft: scale(38)
     },
-    collectionCard: {
-      backgroundColor: props !== null ? props?.cardBackground : '#181818',
-      height: 135,
-      width: 100,
-      borderRadius: 8,
-      ...subtleCardShadow
+    menuHeader: {
+      paddingTop: scale(12)
     },
-    collectionImage: {
-      height: 80,
-      width: '100%',
-      borderTopLeftRadius: 8,
-      borderTopRightRadius: 8
+    menuSectionHeader: {
+      paddingHorizontal: 0,
+      marginBottom: scale(15)
     },
-    header: {
-      
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      ...alignment.MTsmall,
-      
+    collectionRail: {
+      marginHorizontal: -(props?.spacing?.md ?? scale(12))
     },
-    seeAllBtn: {
-      backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
-      borderRadius: 4,
-      paddingTop: 8,
-      paddingBottom: 8,
-      paddingLeft: 16,
-      paddingRight: 16,
+    collectionSeparator: {
+      width: props?.spacing?.lg ?? scale(16)
+    },
+    restaurantSectionHeader: {
+      paddingHorizontal: 0,
+      marginTop: scale(20),
+      marginBottom: scale(15)
+    },
+    restaurantSeparator: {
+      height: props?.spacing?.lg ?? scale(16)
     },
     modalContainer: {
       display: 'flex',
@@ -247,18 +237,8 @@ const styles = (props = null) =>
     },
     collectionContainer: {
       flexGrow: 1,
-      gap: 8,
-      // ...alignment.PTsmall,
-      ...alignment.PBsmall
-    },
-    all:
-    {
-      padding:3,
-      backgroundColor:"red"
-    },
-    brandImgContainer:
-    {
-      overflow: 'hidden'
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      paddingBottom: props?.spacing?.sm ?? scale(8)
     }
   })
 export default styles

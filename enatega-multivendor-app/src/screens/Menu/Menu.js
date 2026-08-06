@@ -19,7 +19,6 @@ import { theme } from '../../utils/themeColors'
 import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
-import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import { FILTER_TYPE } from '../../utils/enums'
@@ -33,16 +32,16 @@ import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 import { useMemo } from 'react'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
-import CachedImage from '../../components/CachedImage'
 import { Modalize } from 'react-native-modalize'
 import Filters from '../../components/Filter/FilterSlider'
 import AppliedFilters from '../../components/Filter/AppliedFilters'
 import NetInfo from '@react-native-community/netinfo'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
-import Ripple from 'react-native-material-ripple'
 import useGeocoding from '../../ui/hooks/useGeocoding'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+import CollectionCard from '../../components/CollectionCard/CollectionCard'
+import { SectionAction, SectionHeader, useMultivendorTheme } from '../../ui/designSystem'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -103,7 +102,6 @@ function Menu({ route, props }) {
   const filtersModalRef = useRef()
   const flatListRef = useRef(null)
   const onEndReachedDuringMomentum = useRef(false)
-  const [itemWidth, setItemWidth] = useState(0)
   const navigation = useNavigation()
   const routeData = useRoute()
   const themeContext = useContext(ThemeContext)
@@ -125,6 +123,7 @@ function Menu({ route, props }) {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const { tokens } = useMultivendorTheme()
   const { getCurrentLocation } = useLocation()
 
   const locationData = location
@@ -207,6 +206,15 @@ function Menu({ route, props }) {
               : 'Restaurants'
         )
   const cuisinesHeaderTitle = activeCollection || routeData?.params?.collection || t('BrowseCuisines')
+  const restaurantSectionTitle = t(
+    heading || (
+      routeData?.name === 'Restaurants'
+        ? 'Restaurants'
+        : routeData?.name === 'Store'
+          ? 'All Stores'
+          : 'Restaurants'
+    )
+  )
   const emptyCuisineTitle = activeCollection
     ? `No ${activeCollection} ${selectedType === 'grocery' ? 'stores' : 'restaurants'} yet`
     : !filterApplied
@@ -634,14 +642,9 @@ function Menu({ route, props }) {
     }
   }
 
-  const onItemLayout = (event) => {
-    const { width } = event.nativeEvent.layout
-    setItemWidth(width)
-  }
-
   const getItemLayout = (data, index) => ({
-    length: 108,
-    offset: 108 * index,
+    length: scale(96),
+    offset: scale(96) * index,
     index
   })
 
@@ -739,75 +742,57 @@ function Menu({ route, props }) {
   if (isInitialLoading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
 
   const menuHeader = (
-    <View>
-        <View style={[styles(currentTheme).header, { paddingHorizontal: 10, paddingVertical: 6 }]}>
-          <View>
-            <TextDefault bolder H2 isRTL numberOfLines={1}>
-              {menuPageTitle}
-            </TextDefault>
-            <TextDefault bold H5 isRTL numberOfLines={1} textColor={currentTheme.fontNewColor}>
-              {cuisinesHeaderTitle}
-            </TextDefault>
-          </View>
-          <Ripple
-            style={styles(currentTheme).seeAllBtn}
-            activeOpacity={0.8}
-            onPress={() => {
-              const collectionType = selectedType === 'grocery' ? 'Store' : 'Restaurants'
-              navigation.navigate('Collection', {
-                collectionType,
-                title: t('BrowseCuisines'),
-                data: collectionData,
-                showHeader: true
-              })
-            }}
-          >
-            <TextDefault H5 bolder textColor={currentTheme.main}>
-              {t('SeeAll')}
-            </TextDefault>
-          </Ripple>
-        </View>
-        <View style={{ paddingLeft: 10, paddingRight: 10, paddingHorizontal: '5' }}>
-          <FlatList
-            ref={flatListRef}
-            data={collectionData ?? []}
-            renderItem={({ item, index }) => {
-              return (
-                <Ripple
-                  activeOpacity={0.8}
-                  onPress={() => onPressCollection(item, index)}
-                  style={[
-                    styles(currentTheme).collectionCard,
-                    activeCollection === item.name && {
-                      backgroundColor: currentTheme.newButtonBackground
-                    }
-                  ]}
-                >
-                  <View style={[styles().brandImgContainer]}>
-                    <View>
-                      <CachedImage source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
-                    </View>
-                    <TextDefault Normal bolder style={{ padding: 4 }} textColor={activeCollection === item.name ? currentTheme.main : currentTheme.gray700} isRTL>
-                      {item.name}
-                    </TextDefault>
-                  </View>
-                </Ripple>
-              )
-            }}
-            initialScrollIndex={0}
-            keyExtractor={(item) => item?._id}
-            contentContainerStyle={styles().collectionContainer}
-            // showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            inverted={currentTheme?.isRTL ? true : false}
-            getItemLayout={getItemLayout}
+    <View style={styles(tokens).menuHeader}>
+      <SectionHeader
+        style={styles(tokens).menuSectionHeader}
+        title={menuPageTitle}
+        description={cuisinesHeaderTitle}
+        action={<SectionAction
+          label={t('SeeAll')}
+          onPress={() => {
+            const collectionType = selectedType === 'grocery' ? 'Store' : 'Restaurants'
+            navigation.navigate('Collection', {
+              collectionType,
+              title: t('BrowseCuisines'),
+              data: collectionData,
+              showHeader: true
+            })
+          }}
+        />}
+      />
+      <View style={styles(tokens).collectionRail}>
+        <FlatList
+          ref={flatListRef}
+          data={collectionData ?? []}
+          renderItem={({ item, index }) => (
+            <CollectionCard
+              onPress={() => onPressCollection(item, index)}
+              image={item?.image}
+              name={item?.name}
+              selected={activeCollection === item.name}
+            />
+          )}
+          initialScrollIndex={0}
+          keyExtractor={(item) => item?._id}
+          contentContainerStyle={styles(tokens).collectionContainer}
+          ItemSeparatorComponent={() => <View style={styles(tokens).collectionSeparator} />}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          inverted={currentTheme?.isRTL}
+          getItemLayout={getItemLayout}
+        />
+      </View>
+
+      {restaurantData?.length === 0
+        ? null
+        : <SectionHeader
+            style={styles(tokens).restaurantSectionHeader}
+            title={restaurantSectionTitle}
+            description={t(subHeading || '')}
           />
-        </View>
+      }
 
-        <View style={{ backgroundColor: currentTheme?.toggler }}>{restaurantData?.length === 0 ? null : <ActiveOrdersAndSections menuPageHeading={heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants'} subHeading={subHeading ? subHeading : ''} />}</View>
-
-        {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
+      {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
     </View>
   )
 
@@ -820,8 +805,7 @@ function Menu({ route, props }) {
         contentContainerStyle={{
           paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
           paddingBottom: HEIGHT * 0.34,
-          paddingHorizontal: 15,
-          gap: 16
+          paddingHorizontal: tokens.spacing.md
         }}
         contentOffset={{ y: -containerPaddingTop }}
         onScroll={onScroll}
@@ -844,6 +828,7 @@ function Menu({ route, props }) {
         }
         data={renderedRestaurants}
         renderItem={renderRestaurantItem}
+        ItemSeparatorComponent={() => <View style={styles(tokens).restaurantSeparator} />}
         onEndReached={() => {
           if (
             onEndReachedDuringMomentum.current ||
