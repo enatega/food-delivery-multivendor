@@ -7,19 +7,25 @@ const styles = (tokens = null) =>
       flex: 1,
       backgroundColor: tokens?.colors?.canvas ?? '#FFFFFF'
     },
-    searchbar: {
-      paddingTop: scale(20),
-      paddingBottom: scale(10),
-      paddingHorizontal: tokens?.spacing?.md ?? scale(12)
+    stickySearchBar: {
+      zIndex: 2,
+      paddingTop: tokens?.spacing?.sm ?? scale(8),
+      paddingBottom: tokens?.spacing?.sm ?? scale(8),
+      paddingHorizontal: tokens?.spacing?.sm ?? scale(8),
+      backgroundColor: tokens?.colors?.canvas ?? '#FFFFFF'
+    },
+    contentScroll: {
+      flex: 1
     },
     searchList: {
+      flex: 1,
       marginBottom: scale(70),
-      marginTop: scale(10),
-      paddingHorizontal: tokens?.spacing?.md ?? scale(12)
+      marginTop: tokens?.spacing?.sm ?? scale(8),
+      paddingHorizontal: tokens?.spacing?.sm ?? scale(8)
     },
     recentSearchContainer: {
-      marginTop: scale(20),
-      paddingHorizontal: tokens?.spacing?.md ?? scale(12)
+      marginTop: tokens?.spacing?.lg ?? scale(16),
+      paddingHorizontal: tokens?.spacing?.sm ?? scale(8)
     },
     recentSectionHeader: {
       paddingHorizontal: 0,
@@ -64,8 +70,8 @@ const styles = (tokens = null) =>
       flexWrap: 'wrap',
       rowGap: scale(10),
       columnGap: scale(10),
-      marginTop: scale(20),
-      paddingHorizontal: tokens?.spacing?.md ?? scale(12)
+      marginTop: tokens?.spacing?.lg ?? scale(16),
+      paddingHorizontal: tokens?.spacing?.sm ?? scale(8)
     },
     tagItem: {
       minHeight: scale(40),
@@ -82,7 +88,7 @@ const styles = (tokens = null) =>
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: tokens?.spacing?.md ?? scale(12)
+      paddingHorizontal: tokens?.spacing?.sm ?? scale(8)
     },
     emptyViewBox: {
       width: '100%',

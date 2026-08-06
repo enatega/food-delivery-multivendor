@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react'
-import { View, RefreshControl, Animated, Platform, TouchableOpacity } from 'react-native'
+import { View, RefreshControl, Animated, Platform, TouchableOpacity, ScrollView } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { useQuery, gql } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import Search from '../../components/Main/Search/Search'
@@ -17,7 +18,6 @@ import { alignment } from '../../utils/alignment'
 import { Ionicons } from '@expo/vector-icons'
 import { getRecentSearches, clearRecentSearches } from '../../utils/recentSearch'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
-import { ScrollView } from 'react-native-gesture-handler'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 import { SectionAction, SectionHeader, useMultivendorTheme } from '../../ui/designSystem'
 
@@ -127,24 +127,9 @@ const SearchScreen = () => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: t('searchTitle'),
-      headerTitleAlign: 'center',
-      headerRight: null,
-      headerShadowVisible: false,
-      headerTitleStyle: {
-        color: tokens.colors.textPrimary,
-        fontSize: scale(18),
-        fontWeight: '700'
-      },
-      headerStyle: {
-        height: scale(56),
-        backgroundColor: tokens.colors.canvas,
-        elevation: 0,
-        shadowOpacity: 0,
-        borderBottomWidth: 0
-      }
+      headerShown: false
     })
-  }, [navigation, t, tokens])
+  }, [navigation])
 
   useEffect(() => {
     getRecentSearches().then((searches) => setRecentSearches(searches))
@@ -370,27 +355,22 @@ const SearchScreen = () => {
   }
 
   return (
-    <ScrollView style={styles(searchTheme).flex}>
-      <View
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            colors={[currentTheme.iconColorPink]}
-            refreshing={networkStatus === 4}
-            onRefresh={() => {
-              if (networkStatus === 7) {
-                refetch()
-              }
-            }}
-          />
-        }
-      >
-        <View style={styles(searchTheme).searchbar}>
-          <Search setSearch={setSearch} search={search} placeHolder={t('searchRestaurant')} />
-        </View>
-        {renderTagsOrSearches()}
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles(searchTheme).flex}>
+      <View style={styles(searchTheme).stickySearchBar}>
+        <Search setSearch={setSearch} search={search} placeHolder={t('searchRestaurant')} />
       </View>
-    </ScrollView>
+
+      {search
+        ? renderTagsOrSearches()
+        : <ScrollView
+            style={styles(searchTheme).contentScroll}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps='handled'
+          >
+            {renderTagsOrSearches()}
+          </ScrollView>
+      }
+    </SafeAreaView>
   )
 }
 
