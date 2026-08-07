@@ -18,6 +18,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'assets.enatega.com' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'enatega-backend.s3.eu-north-1.amazonaws.com' },
       { protocol: 'https', hostname: '*.s3.*.amazonaws.com' },
     ],
