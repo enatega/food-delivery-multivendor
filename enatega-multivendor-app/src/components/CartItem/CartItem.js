@@ -183,13 +183,13 @@ const CartItem = (props) => {
             <EvilIcons
               name='trash'
               size={scale(25)}
-              color={currentTheme.colors.icon}
+              color={currentTheme.colors.textPrimary}
             />
           ) : (
             <AntDesign
               name='minus'
               size={scale(18)}
-              color={currentTheme.colors.icon}
+              color={currentTheme.colors.textPrimary}
             />
           )}
         </TouchableOpacity>
@@ -210,7 +210,7 @@ const CartItem = (props) => {
           ]}
           onPress={props?.addQuantity}
         >
-          <AntDesign name='plus' size={scale(18)} color={currentTheme.colors.onAccent} />
+          <AntDesign name='plus' size={scale(18)} color={currentTheme.colors.textOnAccent} />
         </TouchableOpacity>
       </View>
     </View>
