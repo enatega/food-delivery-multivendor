@@ -66,13 +66,15 @@ const OrderStatusTimeline = ({ currentStatus, isPickup, theme }) => {
               )}
             </View>
             <View style={styles(theme).labelWrap}>
-              <TextDefault
-                H5
-                bold={highlighted}
-                textColor={highlighted ? theme.colors.textPrimary : theme.colors.textTertiary}
-              >
-                {step.label}
-              </TextDefault>
+              <View style={styles(theme).labelTitleRow}>
+                <TextDefault
+                  H5
+                  bold={active}
+                  textColor={highlighted ? theme.colors.textPrimary : theme.colors.textTertiary}
+                >
+                  {step.label}
+                </TextDefault>
+              </View>
               {active && (
                 <TextDefault small textColor={theme.colors.accent} style={styles(theme).currentLabel}>
                   Current status
@@ -88,10 +90,10 @@ const OrderStatusTimeline = ({ currentStatus, isPickup, theme }) => {
 
 const styles = (theme) => StyleSheet.create({
   container: {
-    paddingTop: scale(4)
+    paddingTop: 0
   },
   step: {
-    minHeight: scale(54),
+    minHeight: scale(58),
     flexDirection: theme.isRTL ? 'row-reverse' : 'row'
   },
   rail: {
@@ -128,11 +130,14 @@ const styles = (theme) => StyleSheet.create({
   },
   labelWrap: {
     flex: 1,
-    paddingTop: scale(4),
     paddingHorizontal: scale(12)
   },
+  labelTitleRow: {
+    minHeight: scale(30),
+    justifyContent: 'center'
+  },
   currentLabel: {
-    marginTop: scale(2)
+    marginTop: scale(1)
   }
 })
 

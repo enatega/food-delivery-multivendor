@@ -1,4 +1,4 @@
-import { View, ScrollView, Dimensions } from 'react-native'
+import { View, ScrollView, Dimensions, StyleSheet } from 'react-native'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
@@ -229,9 +229,19 @@ function OrderDetail(props) {
   useEffect(() => {
     props?.navigation.setOptions({
       headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
-      headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ''}...`,
-      headerTitleStyle: { color: currentTheme.colors.textPrimary },
-      headerStyle: { backgroundColor: currentTheme.colors.canvas }
+      headerTitle: order?.deliveryAddress?.deliveryAddress ?? '',
+      headerTitleAlign: 'center',
+      headerTitleStyle: {
+        color: currentTheme.colors.textPrimary,
+        fontSize: scale(17),
+        fontWeight: '600'
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.colors.canvas,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: currentTheme.colors.borderSubtle
+      },
+      headerShadowVisible: false
     })
   }, [currentTheme, navigation, order, props?.navigation, t])
 
@@ -388,7 +398,12 @@ function OrderDetail(props) {
           </View>
         )}
         <View style={styles(currentTheme).statusSection}>
-          <TextDefault H4 bolder textColor={currentTheme.colors.textPrimary}>
+          <TextDefault
+            H4
+            bold
+            textColor={currentTheme.colors.textPrimary}
+            style={styles(currentTheme).statusHeading}
+          >
             {t(checkStatus(order?.orderStatus)?.statusText)}
           </TextDefault>
           {![ORDER_STATUS_ENUM.PENDING, ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.COMPLETED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order?.orderStatus) && (

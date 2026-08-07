@@ -28,9 +28,13 @@ const styles = (props = null) =>
       flex: 1
     },
     statusSection: {
-      paddingHorizontal: scale(18),
+      paddingHorizontal: scale(12),
       paddingTop: scale(20),
       paddingBottom: scale(10)
+    },
+    statusHeading: {
+      marginBottom: scale(18),
+      lineHeight: scale(25)
     },
     estimateRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

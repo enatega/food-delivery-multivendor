@@ -30,11 +30,11 @@ const Taxes = ({ tax, deliveryCharges, currency, tip, discountAmount }) => {
           alignItems: 'center'
         }}
       >
-        <TextDefault H5 style={{ ...alignment.Mmedium, textAlign: 'center' }} textColor={currentTheme.gray900} bolder isRTL>
+        <TextDefault H5 style={{ ...alignment.Mmedium, textAlign: 'center' }} textColor={currentTheme.gray900} isRTL>
           {' '}
           {t(item?.title)}
         </TextDefault>
-        <TextDefault H5 bolder style={{ ...alignment.Mmedium }}>
+        <TextDefault H5 style={{ ...alignment.Mmedium }}>
           {' '}
           {item?.title === 'voucherDiscount' && '-'}
           {currency}
