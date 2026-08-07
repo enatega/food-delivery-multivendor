@@ -23,6 +23,10 @@ const useOrderTracking = ({ orderId, initialOrder }) => {
   console.log()
   useSubscription(ORDER_SUBSCRIPTION, {
     variables: { userId: profile?._id },
+    // The WebSocket is authenticated with the customer JWT. Avoid opening a
+    // guest socket during session hydration; once the profile is available,
+    // Apollo starts the subscription with the mode-scoped token.
+    skip: !profile?._id,
     onData: ({ data }) => {
       console.log('order subscription data:', data)
       const updatedOrder = data?.data?.orderStatusChanged?.rawOrder
