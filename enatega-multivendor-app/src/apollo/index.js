@@ -120,10 +120,10 @@ const setupApollo = ({
   const wsLink = new WebSocketLink({
     uri: WS_GRAPHQL_URL,
     options: {
-      // A stopped single-vendor server must settle into an error state instead
-      // of keeping the app in an invisible reconnect loop. Multivendor keeps
-      // its existing reconnect behaviour.
-      reconnect: mode !== APP_MODES.SINGLE,
+      // Mobile network transitions and backend restarts must not permanently
+      // disable order updates. The client is disposed on mode changes, so a
+      // reconnect can never leak a socket into the other backend.
+      reconnect: true,
       lazy: true,
       connectionParams: async() => {
         const token = await getToken(mode)
