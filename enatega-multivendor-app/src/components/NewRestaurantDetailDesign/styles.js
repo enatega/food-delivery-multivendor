@@ -57,17 +57,19 @@ const styles = (props = null) => StyleSheet.create({
   buttonContainer: {
     width: '100%',
     height: '10%',
-    backgroundColor: props !== null ? props.themeBackground : 'black',
+    backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 12,
-    shadowColor: props !== null ? props.shadowColor : 'black',
+    elevation: props?.isDark ? 0 : 3,
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: -verticalScale(3)
+      height: -verticalScale(2)
     },
-    shadowOpacity: 0.5,
-    shadowRadius: verticalScale(2)
+    shadowOpacity: props?.isDark ? 0 : 0.12,
+    shadowRadius: scale(8),
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.18)'
   },
   button: {
     justifyContent: 'space-between',
