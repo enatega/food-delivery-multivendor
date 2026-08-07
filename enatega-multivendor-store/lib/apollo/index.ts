@@ -17,7 +17,11 @@ import { onError } from "@apollo/client/link/error";
 import { router } from "expo-router";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
-import PublicAccessTokenService from "../services/public-access-token.service";
+import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import PublicAccessTokenService, {
+  STORE_PUBLIC_ACCESS_USER_AGENT,
+} from "../services/public-access-token.service";
 
 let isAuthRedirecting = false;
 
@@ -85,13 +89,21 @@ const setupApollo = ({
       timeout: 30000,
       connectionParams: async () => {
         const token = await SecureStore.getItemAsync(tokenKey);
+        const locale = (await AsyncStorage.getItem("lang")) || "en";
         if (isExpiredJwt(token)) {
           await handleInvalidSession(tokenKey, storeIdKey);
-          return { authorization: "", "x-platform": "mobile" };
+          return {
+            authorization: "",
+            "x-platform": Platform.OS,
+            "accept-language": locale,
+            "user-agent": STORE_PUBLIC_ACCESS_USER_AGENT,
+          };
         }
         const params: Record<string, string> = {
           authorization: token ? `Bearer ${token}` : "",
-          "x-platform": "mobile",
+          "x-platform": Platform.OS,
+          "accept-language": locale,
+          "user-agent": STORE_PUBLIC_ACCESS_USER_AGENT,
         };
 
         if (PUBLIC_ACCESS_REQUIRED) {
@@ -115,6 +127,7 @@ const setupApollo = ({
     const skipPublicAuth =
       operation.getContext().headers?.["x-skip-public-auth"];
     const token = await SecureStore.getItemAsync(tokenKey);
+    const locale = (await AsyncStorage.getItem("lang")) || "en";
     if (isExpiredJwt(token)) {
       await handleInvalidSession(tokenKey, storeIdKey);
       throw new Error("Session expired");
@@ -122,7 +135,9 @@ const setupApollo = ({
 
     const headers: Record<string, string> = {
       authorization: token ? `Bearer ${token}` : "",
-      "x-platform": "mobile",
+      "x-platform": Platform.OS,
+      "accept-language": locale,
+      "user-agent": STORE_PUBLIC_ACCESS_USER_AGENT,
       ...operation.getContext().headers,
     };
 
@@ -157,29 +172,75 @@ const setupApollo = ({
       }),
   );
 
-  const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
-    const invalidCodes = ["TOKEN_EXPIRED", "INVALID_TOKEN", "UNAUTHENTICATED"];
-    const hasInvalidSession = (graphQLErrors || []).some(
-      (graphQLError) =>
-        typeof graphQLError?.extensions?.code === "string" &&
-        invalidCodes.includes(graphQLError.extensions.code),
-    );
-    const isUnauthorizedNetworkError =
-      networkError &&
-      "statusCode" in networkError &&
-      networkError.statusCode === 401;
+  const errorLink = onError(
+    ({ graphQLErrors, networkError, operation, forward }) => {
+      const invalidCodes = [
+        "TOKEN_EXPIRED",
+        "INVALID_TOKEN",
+        "UNAUTHENTICATED",
+      ];
+      const hasInvalidSession = (graphQLErrors || []).some(
+        (graphQLError) =>
+          typeof graphQLError?.extensions?.code === "string" &&
+          invalidCodes.includes(graphQLError.extensions.code),
+      );
+      const isUnauthorizedNetworkError =
+        networkError &&
+        "statusCode" in networkError &&
+        networkError.statusCode === 401;
 
-    const hadUserAuthorization = Boolean(
-      operation.getContext().headers?.authorization,
-    );
+      const hadUserAuthorization = Boolean(
+        operation.getContext().headers?.authorization,
+      );
+      const skippedPublicAuth = Boolean(
+        operation.getContext().headers?.["x-skip-public-auth"],
+      );
+      const hasPublicProofFailure =
+        PUBLIC_ACCESS_REQUIRED &&
+        !hadUserAuthorization &&
+        !skippedPublicAuth &&
+        (hasInvalidSession ||
+          (graphQLErrors || []).some((error) => {
+            const message = error.message.toLowerCase();
+            return (
+              message.includes("public proof") ||
+              message.includes("fingerprint") ||
+              message.includes("invalid token") ||
+              message.includes("unauthorized")
+            );
+          }));
 
-    if (
-      hadUserAuthorization &&
-      (hasInvalidSession || isUnauthorizedNetworkError)
-    ) {
-      void handleInvalidSession(tokenKey, storeIdKey);
-    }
-  });
+      if (
+        hasPublicProofFailure &&
+        !operation.getContext().hasRetriedPublicProof
+      ) {
+        operation.setContext({ hasRetriedPublicProof: true });
+
+        return new Observable((observer) => {
+          let retrySubscription: Subscription | undefined;
+
+          void PublicAccessTokenService.reset(client)
+            .then(() => {
+              retrySubscription = forward(operation).subscribe({
+                next: observer.next.bind(observer),
+                error: observer.error.bind(observer),
+                complete: observer.complete.bind(observer),
+              });
+            })
+            .catch(observer.error.bind(observer));
+
+          return () => retrySubscription?.unsubscribe();
+        });
+      }
+
+      if (
+        hadUserAuthorization &&
+        (hasInvalidSession || isUnauthorizedNetworkError)
+      ) {
+        void handleInvalidSession(tokenKey, storeIdKey);
+      }
+    },
+  );
 
   // const terminatingLink = split(({ query }) => {
   //   const {

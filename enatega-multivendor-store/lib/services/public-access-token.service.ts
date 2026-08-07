@@ -3,6 +3,8 @@ import "react-native-get-random-values";
 import { ApolloClient, gql, NormalizedCacheObject } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
 import * as Device from "expo-device";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 
 const METRICS_GENERAL = gql`
   mutation MetricsGeneral {
@@ -27,6 +29,8 @@ const KEYS = {
   NONCE: "dev_meta_id",
   EXPIRY: "sess_ttl_ts",
 };
+
+export const STORE_PUBLIC_ACCESS_USER_AGENT = `Enatega-Store-App/${Platform.OS}`;
 
 class PublicAccessTokenService {
   private static instance: PublicAccessTokenService;
@@ -154,13 +158,20 @@ class PublicAccessTokenService {
     const generation = this.scopeGeneration;
     const scope = this.scope;
     const refreshPromise = (async () => {
+      const nonce = this.nonce ?? (await this.generateNonce());
+      if (generation !== this.scopeGeneration || scope !== this.scope) return;
+      this.nonce = nonce;
+
       try {
+        const locale = (await AsyncStorage.getItem("lang")) || "en";
         const { data } = await apolloClient.mutate({
           mutation: METRICS_GENERAL,
           context: {
             headers: {
-              nonce: this.nonce,
-              "x-platform": "mobile",
+              nonce,
+              "x-platform": Platform.OS,
+              "accept-language": locale,
+              "user-agent": STORE_PUBLIC_ACCESS_USER_AGENT,
               "x-skip-public-auth": "true",
             },
           },
@@ -178,14 +189,14 @@ class PublicAccessTokenService {
           const expiryTime = new Date(data.metricsGeneral.hehe).getTime();
           this.expiry = expiryTime;
 
-          await SecureStore.setItemAsync(
-            this.scopedKey(KEYS.TOKEN, scope),
-            token,
-          );
-          await SecureStore.setItemAsync(
-            this.scopedKey(KEYS.EXPIRY, scope),
-            expiryTime.toString(),
-          );
+          await Promise.all([
+            SecureStore.setItemAsync(this.scopedKey(KEYS.NONCE, scope), nonce),
+            SecureStore.setItemAsync(this.scopedKey(KEYS.TOKEN, scope), token),
+            SecureStore.setItemAsync(
+              this.scopedKey(KEYS.EXPIRY, scope),
+              expiryTime.toString(),
+            ),
+          ]);
 
           if (generation === this.scopeGeneration && scope === this.scope) {
             this.scheduleRefresh(apolloClient);
@@ -224,10 +235,24 @@ class PublicAccessTokenService {
 
   async clearTokens(): Promise<void> {
     this.pause();
+    this.scopeGeneration += 1;
+    this.refreshPromise = null;
+    this.nonce = null;
     this.token = null;
     this.expiry = null;
-    await SecureStore.deleteItemAsync(this.key(KEYS.TOKEN));
-    await SecureStore.deleteItemAsync(this.key(KEYS.EXPIRY));
+    await Promise.all([
+      SecureStore.deleteItemAsync(this.key(KEYS.NONCE)),
+      SecureStore.deleteItemAsync(this.key(KEYS.TOKEN)),
+      SecureStore.deleteItemAsync(this.key(KEYS.EXPIRY)),
+    ]);
+  }
+
+  async reset(
+    apolloClient: ApolloClient<NormalizedCacheObject>,
+  ): Promise<void> {
+    const scope = this.scope;
+    await this.clearTokens();
+    await this.initialize(apolloClient, scope);
   }
 }
 
