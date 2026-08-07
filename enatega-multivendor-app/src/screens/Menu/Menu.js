@@ -1,11 +1,10 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback } from 'react'
-import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Dimensions } from 'react-native'
+import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Dimensions, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SimpleLineIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
@@ -41,7 +40,7 @@ import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions
 import useGeocoding from '../../ui/hooks/useGeocoding'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import CollectionCard from '../../components/CollectionCard/CollectionCard'
-import { SectionAction, SectionHeader, useMultivendorTheme } from '../../ui/designSystem'
+import { SectionAction, SectionHeader, SkeletonBlock, useMultivendorTheme } from '../../ui/designSystem'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -545,19 +544,26 @@ function Menu({ route, props }) {
 
   function loadingScreen() {
     return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
+      <View style={[styles(currentTheme).screenBackground, { paddingHorizontal: scale(12), paddingTop: scale(12), gap: scale(14) }]}>
+        <SkeletonBlock width='42%' height={scale(24)} borderRadius={scale(7)} />
+        <View style={{ flexDirection: 'row', gap: scale(10), overflow: 'hidden' }}>
+          {[0, 1, 2, 3].map((item) => (
+            <View key={item} style={{ width: scale(92), gap: scale(7) }}>
+              <SkeletonBlock width={scale(92)} height={scale(92)} borderRadius={scale(12)} />
+              <SkeletonBlock width='78%' height={scale(12)} borderRadius={scale(6)} />
+            </View>
+          ))}
+        </View>
+        {[0, 1, 2].map((item) => (
+          <View key={item} style={{ borderRadius: scale(16), overflow: 'hidden', backgroundColor: tokens.colors.surface, borderWidth: StyleSheet.hairlineWidth, borderColor: tokens.colors.borderSubtle }}>
+            <SkeletonBlock height={scale(172)} borderRadius={0} />
+            <View style={{ padding: scale(12), gap: scale(10) }}>
+              <SkeletonBlock width='54%' height={scale(20)} borderRadius={scale(6)} />
+              <SkeletonBlock width='82%' height={scale(12)} borderRadius={scale(6)} />
+              <SkeletonBlock width='48%' height={scale(12)} borderRadius={scale(6)} />
+            </View>
+          </View>
+        ))}
       </View>
     )
   }

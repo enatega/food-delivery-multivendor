@@ -34,6 +34,27 @@ const styles = (props = null) =>
       backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'transparent'
       // ...alignment.PTsmall
     },
+    checkoutContent: {
+      paddingHorizontal: scale(12),
+      paddingTop: scale(8),
+      paddingBottom: scale(118)
+    },
+    mapCard: {
+      borderRadius: scale(16),
+      overflow: 'hidden',
+      backgroundColor: props?.colors?.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle
+    },
+    detailsSection: {
+      marginTop: scale(8),
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle
+    },
+    sectionInset: {
+      paddingHorizontal: scale(4)
+    },
     paymentSecInner: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
@@ -47,13 +68,11 @@ const styles = (props = null) =>
       marginBottom: scale(12)
     },
     termsContainer: {
-      ...alignment.PLmedium,
-      ...alignment.PRmedium
+      paddingHorizontal: scale(4)
     },
     tipSec: {
-      ...alignment.MLmedium,
-      ...alignment.MRmedium,
-      marginVertical: scale(22)
+      marginVertical: scale(20),
+      paddingHorizontal: scale(4)
     },
     tipRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -67,13 +86,10 @@ const styles = (props = null) =>
     },
     priceContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
-      borderRadius: scale(20),
-      borderBottomColor:
-        props !== null ? props?.lightHorizontalLine : 'transparent',
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
-      marginVertical: scale(13)
+      backgroundColor: 'transparent',
+      paddingHorizontal: scale(4),
+      marginTop: scale(24),
+      marginBottom: scale(12)
     },
     modal: {
       backgroundColor: props != null ? props?.cardBackground : '#FFF',
@@ -169,17 +185,20 @@ const styles = (props = null) =>
     },
 
     buttonContainer: {
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
-      ...alignment.PBlarge
+      paddingHorizontal: scale(12),
+      paddingTop: scale(10),
+      paddingBottom: scale(12),
+      backgroundColor: props?.colors?.surface,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colors?.borderSubtle
     },
     changeBtn: {
-      backgroundColor: props !== null ? props?.main : 'gray',
+      backgroundColor: props?.colors?.accent ?? props?.main ?? 'gray',
       justifyContent: 'center',
       alignItems: 'center',
       width: scale(80),
       height: scale(30),
-      borderRadius: 40
+      borderRadius: scale(13)
     },
     changeBtnInner: {
       display: 'flex',
@@ -282,7 +301,7 @@ const styles = (props = null) =>
       // gap:scale(8),
     },
     labelButton: {
-      borderRadius: scale(40),
+      borderRadius: scale(19),
       width: '23%',
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: props?.colors?.borderSubtle ?? 'transparent',
@@ -291,18 +310,19 @@ const styles = (props = null) =>
       height: scale(37)
     },
     activeLabel: {
-      borderRadius: scale(40),
-      backgroundColor: props !== null ? props?.main : 'transparent',
+      borderRadius: scale(19),
+      backgroundColor: props?.colors?.accentSubtle ?? props?.main ?? 'transparent',
       width: '23%',
       justifyContent: 'center',
-      borderColor: props !== null ? props?.main : 'transparent',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.accent ?? props?.main ?? 'transparent',
       height: scale(37)
     },
     headerContainer: {
       backgroundColor: props !== null ? props?.themeBackground : '#6FCF97'
     },
     mapView: {
-      height: scale(119)
+      height: scale(132)
     },
     mapUnavailable: {
       alignItems: 'center',
@@ -325,8 +345,7 @@ const styles = (props = null) =>
       transform: [{ translateX: -25 }, { translateY: -25 }]
     },
     voucherSec: {
-      ...alignment.PLmedium,
-      ...alignment.PRmedium
+      paddingHorizontal: scale(4)
     },
     voucherSecInner: {
       display: 'flex',
@@ -337,9 +356,27 @@ const styles = (props = null) =>
       marginBottom: scale(10)
     },
     paymentSec: {
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
-      marginTop: scale(13)
+      paddingHorizontal: scale(4),
+      marginTop: scale(20)
+    },
+    checkoutSkeleton: {
+      paddingHorizontal: scale(12),
+      paddingTop: scale(10),
+      gap: scale(14)
+    },
+    skeletonSection: {
+      gap: scale(10),
+      paddingVertical: scale(8)
+    },
+    skeletonPills: {
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    skeletonBillRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minHeight: scale(28)
     },
 
     imageContainer: {

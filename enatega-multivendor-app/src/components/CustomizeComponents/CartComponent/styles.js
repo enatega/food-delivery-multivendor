@@ -51,15 +51,17 @@ const styles = (props = null) =>
     },
     // New styles for quantity
     actionContainer: {
-      minWidth: scale(106),
+      width: scale(112),
       height: scale(44),
+      paddingHorizontal: scale(5),
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       backgroundColor: props?.colors?.surfaceSubtle ?? '#F3F4F6',
       borderRadius: props?.radii?.round ?? scale(999),
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: props?.colors?.borderSubtle ?? '#E5E7EB'
+      borderColor: props?.colors?.borderSubtle ?? '#E5E7EB',
+      overflow: 'hidden'
     },
     actionContainerBtns: {
       width: scale(30),

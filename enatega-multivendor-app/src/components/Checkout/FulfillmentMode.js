@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { useStyles } from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 
@@ -23,10 +23,10 @@ const OvalButton = ({
     icon,
     onSelect,
     styles }) => (<Pressable onPress={onSelect} style={[styles, {
-        backgroundColor: selected ? theme.main : null,
-    }]}>
+        backgroundColor: selected ? (theme.colors?.accent || theme.main) : 'transparent'
+    }]}> 
         <View style={alignment.MxSmall}>
             {icon}
         </View>
-        <TextDefault bold={!selected} textColor={theme.color4}>{title}</TextDefault>
+        <TextDefault bold textColor={selected ? (theme.colors?.onAccent || theme.color4) : theme.colors?.textPrimary}>{title}</TextDefault>
     </Pressable>)

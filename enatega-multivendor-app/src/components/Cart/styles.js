@@ -7,6 +7,37 @@ const { height } = Dimensions.get('window')
 const BACKDROP_HEIGHT = Math.floor(scale(height / 5))
 
 export const useStyles = (theme) => StyleSheet.create({
+    instructionRow: {
+        minHeight: scale(72),
+        flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
+        alignItems: 'center',
+        gap: scale(10),
+        paddingVertical: scale(11),
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: theme.colors?.borderSubtle || 'rgba(128, 128, 128, 0.22)'
+    },
+    leadingIcon: {
+        width: scale(36),
+        height: scale(36),
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    instructionCopy: {
+        flex: 1,
+        minWidth: 0,
+        justifyContent: 'center'
+    },
+    instructionCaption: {
+        lineHeight: scale(18),
+        marginTop: scale(2)
+    },
+    trailingIcon: {
+        width: scale(30),
+        height: scale(36),
+        justifyContent: 'center',
+        alignItems: 'center',
+        ...(theme?.isRTL ? { transform: [{ scaleX: -1 }] } : {})
+    },
     iconContainer: {
         flex: 1,
         justifyContent: 'center',

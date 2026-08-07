@@ -3,7 +3,6 @@ import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert } from '
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { AntDesign } from '@expo/vector-icons'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import CartItem from '../../components/CartItem/CartItem'
 import { getTipping } from '../../apollo/queries'
 import { scale } from '../../utils/scaling'
@@ -32,7 +31,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { populateCart } from '../../utils/populateCart'
-import { PrimaryButton, StateView, useMultivendorTheme } from '../../ui/designSystem'
+import { PrimaryButton, SkeletonBlock, StateView, useMultivendorTheme } from '../../ui/designSystem'
 
 // Constants
 const TIPPING = gql`
@@ -46,11 +45,12 @@ function Cart(props) {
   const { isLoggedIn, profile, restaurant: cartRestaurant, cart, addQuantity, removeQuantity, instructions, setInstructions } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { t, i18n } = useTranslation()
+  const { tokens } = useMultivendorTheme()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
-  const { tokens } = useMultivendorTheme()
   const [loadingData, setLoadingData] = useState(true)
   const [minimumOrder, setMinimumOrder] = useState('')
 
@@ -117,7 +117,7 @@ function Cart(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.newFontcolor,
+        color: tokens.colors.textPrimary,
         ...textStyles.H4,
         ...textStyles.Bolder
       },
@@ -126,7 +126,7 @@ function Cart(props) {
         paddingRight: scale(25)
       },
       headerStyle: {
-        backgroundColor: currentTheme.newheaderBG
+        backgroundColor: tokens.colors.canvas
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -138,7 +138,7 @@ function Cart(props) {
                 alignItems: 'center'
               }}
             >
-              <AntDesign name='arrowleft' size={22} color={currentTheme.newIconColor} />
+              <AntDesign name='arrowleft' size={22} color={tokens.colors.textPrimary} />
             </View>
           )}
           onPress={() => {
@@ -231,34 +231,21 @@ function Cart(props) {
   }
   function loadginScreen() {
     return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
-
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height60} />
-          <PlaceholderLine />
-        </Placeholder>
-
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height100} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height100} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
+      <View style={styles(currentTheme).cartSkeleton}>
+        <SkeletonBlock width='64%' height={18} />
+        <SkeletonBlock width='100%' height={64} borderRadius={tokens.radii.lg} />
+        <SkeletonBlock width='28%' height={20} style={{ marginTop: tokens.spacing.sm }} />
+        {[0, 1].map((item) => (
+          <View key={item} style={styles(currentTheme).cartSkeletonRow}>
+            <SkeletonBlock width={64} height={64} borderRadius={tokens.radii.md} />
+            <View style={styles(currentTheme).cartSkeletonLines}>
+              <SkeletonBlock width='72%' height={14} />
+              <SkeletonBlock width='48%' height={11} />
+              <SkeletonBlock width='36%' height={14} />
+            </View>
+            <SkeletonBlock width={104} height={40} borderRadius={tokens.radii.round} />
+          </View>
+        ))}
       </View>
     )
   }
@@ -279,25 +266,13 @@ function Cart(props) {
           emptyCart()
         ) : (
           <>
-            <ScrollView showsVerticalScrollIndicator={false} style={[styles().flex, styles().cartItems]}>
-              <View
-                style={{
-                  ...alignment.PLsmall,
-                  ...alignment.PRsmall,
-                  marginTop: 10
-                }}
-              >
+            <ScrollView showsVerticalScrollIndicator={false} style={styles().flex} contentContainerStyle={styles(currentTheme).cartContent}>
+              <View>
                 <SpecialInstructions instructions={instructions} onSubmitInstructions={setInstructions} theme={currentTheme} t={t} />
               </View>
-              <View
-                style={{
-                  ...alignment.PLsmall,
-                  ...alignment.PRsmall,
-                  marginTop: 10
-                }}
-              >
+              <View>
                 <View style={[styles(currentTheme).dealContainer, styles().mB10]}>
-                  <TextDefault textColor={currentTheme.gray500} style={styles().totalOrder} H5 bolder isRTL>
+                  <TextDefault textColor={tokens.colors.textPrimary} style={styles().totalOrder} H5 bolder isRTL>
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
                   {populatedCart.map((food, index) => {
@@ -326,7 +301,7 @@ function Cart(props) {
                 </View>
               </View>
               {foods[0] && (
-                <View style={styles().suggestedItems}>
+              <View style={styles(currentTheme).suggestedItems}>
                   <WouldYouLikeToAddThese itemId={foods[0]._id} restaurantId={restaurant?._id} />
                 </View>
               )}

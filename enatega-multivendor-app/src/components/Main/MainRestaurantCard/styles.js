@@ -62,13 +62,16 @@ const buildStyles = (props = null) =>
     skeletonRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       gap: scale(10),
-      paddingRight: scale(24)
+      paddingLeft: scale(12),
+      overflow: 'hidden'
     },
     popularSkeletonCard: {
-      width: '47%',
+      width: scale(276),
       borderRadius: props?.radii?.lg ?? scale(14),
       backgroundColor: props?.colors?.surfaceSubtle ?? '#F7F7F8',
-      padding: scale(10)
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle,
+      overflow: 'hidden'
     },
     popularSkeletonImage: {
       height: scale(165),

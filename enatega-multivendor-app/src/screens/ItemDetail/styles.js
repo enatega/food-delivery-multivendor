@@ -77,10 +77,13 @@ const styles = (props = null) =>
     },
     input: {
       backgroundColor: props?.colors?.surfaceSubtle ?? props?.themeBackground ?? '#202024',
-      borderRadius: props?.radii?.md ?? scale(10),
-      height: scale(50),
-      paddingLeft: scale(10),
-      textAlignVertical: 'center',
+      borderRadius: props?.radii?.lg ?? scale(14),
+      minHeight: scale(88),
+      paddingHorizontal: scale(12),
+      paddingVertical: scale(11),
+      color: props?.colors?.textPrimary ?? '#FAFAFA',
+      ...props?.typeScale?.body,
+      textAlignVertical: 'top',
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: props?.colors?.borderSubtle ?? '#B8B8B8',
       textAlign: props?.isRTL ? 'right' : 'left'

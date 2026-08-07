@@ -4,7 +4,6 @@ import InstructionMessageIcon from '../../assets/SVG/instructions-message-icon'
 import ArrowForwardIcon from '../../assets/SVG/arrow-forward-icon'
 import { useStyles } from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
-import { scale } from '../../utils/scaling'
 import { InstructionsModal } from './InstructionsModal'
 
 export const SpecialInstructions = ({ theme, instructions, onSubmitInstructions, t }) => {
@@ -24,17 +23,32 @@ export const SpecialInstructions = ({ theme, instructions, onSubmitInstructions,
 
     const styles = useStyles(theme)
 
-    return (<View style={{ height: 100, flex: 1, flexDirection: theme?.isRTL ? 'row-reverse' : 'row' }}>
-        <View left style={styles.iconContainer}>
-            <InstructionMessageIcon stroke={theme.iconStroke}/>
+    return (
+      <TouchableOpacity
+        activeOpacity={0.75}
+        style={styles.instructionRow}
+        onPress={showModal}
+      >
+        <View style={styles.leadingIcon}>
+          <InstructionMessageIcon stroke={theme.colors?.iconMuted || theme.iconStroke}/>
         </View>
-        <TouchableOpacity middle style={{ flex: 6, justifyContent: 'center' }} onPress={showModal}>
-            <TextDefault H5 bolder isRTL>{t('AddMessageforRestaurant')}</TextDefault>
-            <TextDefault numberOfLines={3} textColor={theme.fontNewColor} isRTL style={{ lineHeight: scale(18) }}>{instructions || t('specialRequest')}</TextDefault>
-        </TouchableOpacity>
-        <TouchableOpacity right style={styles.iconContainer} onPress={showModal}>
-            <ArrowForwardIcon stroke={theme.iconStroke}/>
-        </TouchableOpacity>
+        <View style={styles.instructionCopy}>
+          <TextDefault H5 bolder isRTL textColor={theme.colors?.textPrimary}>
+            {t('AddMessageforRestaurant')}
+          </TextDefault>
+          <TextDefault
+            numberOfLines={2}
+            textColor={theme.colors?.textSecondary || theme.fontNewColor}
+            isRTL
+            style={styles.instructionCaption}
+          >
+            {instructions || t('specialRequest')}
+          </TextDefault>
+        </View>
+        <View style={styles.trailingIcon}>
+          <ArrowForwardIcon stroke={theme.colors?.iconMuted || theme.iconStroke}/>
+        </View>
         <InstructionsModal theme={theme} isVisible={isVisible} hideModal={hideModal} onSubmit={onSubmit} value={value} setValue={setValue} t={t} />
-    </View>)
+      </TouchableOpacity>
+    )
 }

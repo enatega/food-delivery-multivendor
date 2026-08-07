@@ -1,9 +1,8 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useContext, useEffect, useRef, useMemo, useCallback, useDeferredValue } from 'react'
-import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, FlatList, Pressable } from 'react-native'
+import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, FlatList, Pressable, StyleSheet } from 'react-native'
 import Animated, { useSharedValue, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
@@ -28,7 +27,7 @@ import { isOpen } from '../../utils/customFunctions'
 import ShimmerImage from '../../components/ShimmerImage/ShimmerImage'
 import { resolveRestaurantImage as resolveResolvedRestaurantImage } from '../../utils/resolveImageUrl'
 import OutOfStockModal from '../../components/OutOfStockModal/OutOfStockModal'
-import { useMultivendorTheme } from '../../ui/designSystem'
+import { SkeletonBlock, useMultivendorTheme } from '../../ui/designSystem'
 
 const { height } = Dimensions.get('screen')
 
@@ -539,12 +538,21 @@ function Restaurant(props) {
             showCategories={false}
           />
 
-          <View style={[styles(currentTheme).flex, { paddingTop: scale(12) }]}>
-            {Array.from(Array(10), (_, itemIndex) => (
-              <Placeholder key={itemIndex} Animation={(placeholderProps) => <Fade {...placeholderProps} style={{ backgroundColor: currentTheme.gray }} duration={600} />} Left={PlaceholderMedia} style={{ padding: 12 }}>
-                <PlaceholderLine width={80} />
-                <PlaceholderLine width={80} />
-              </Placeholder>
+          <View style={[styles(currentTheme).flex, { paddingHorizontal: scale(12), paddingTop: scale(12), gap: scale(12) }]}>
+            <View style={{ flexDirection: 'row', gap: scale(8), overflow: 'hidden' }}>
+              {[0, 1, 2, 3].map((item) => (
+                <SkeletonBlock key={item} width={scale(82)} height={scale(34)} borderRadius={scale(17)} />
+              ))}
+            </View>
+            {[0, 1, 2, 3].map((item) => (
+              <View key={item} style={{ minHeight: scale(106), flexDirection: currentTheme.isRTL ? 'row-reverse' : 'row', gap: scale(12), paddingVertical: scale(10), borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: currentTheme.colors.borderSubtle }}>
+                <View style={{ flex: 1, gap: scale(9), paddingTop: scale(4) }}>
+                  <SkeletonBlock width='65%' height={scale(17)} borderRadius={scale(6)} />
+                  <SkeletonBlock width='92%' height={scale(12)} borderRadius={scale(6)} />
+                  <SkeletonBlock width='32%' height={scale(14)} borderRadius={scale(6)} />
+                </View>
+                <SkeletonBlock width={scale(96)} height={scale(86)} borderRadius={scale(12)} />
+              </View>
             ))}
           </View>
         </View>

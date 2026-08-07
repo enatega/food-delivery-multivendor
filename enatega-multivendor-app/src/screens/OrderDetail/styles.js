@@ -7,6 +7,41 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
+    screen: {
+      flex: 1,
+      backgroundColor: props?.colors?.canvas
+    },
+    scrollContent: {
+      flexGrow: 1,
+      paddingBottom: scale(104)
+    },
+    mapCard: {
+      height: scale(238),
+      marginHorizontal: scale(12),
+      marginTop: scale(10),
+      borderRadius: scale(16),
+      overflow: 'hidden',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle
+    },
+    map: {
+      flex: 1
+    },
+    statusSection: {
+      paddingHorizontal: scale(18),
+      paddingTop: scale(20),
+      paddingBottom: scale(10)
+    },
+    estimateRow: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: scale(8),
+      marginBottom: scale(14)
+    },
+    contentInset: {
+      paddingHorizontal: scale(12)
+    },
     container: {
       ...alignment.PLmedium,
       ...alignment.PRmedium,
@@ -56,19 +91,24 @@ const styles = (props = null) =>
       left: 0,
       width: '100%',
       // height: scale(80),
-      backgroundColor: theme.themeBackground,
+      backgroundColor: theme.colors?.surface || theme.themeBackground,
       justifyContent: 'center',
-      ...alignment.Pmedium,
-      borderColor: theme.borderLight,
+      paddingHorizontal: scale(14),
+      paddingTop: scale(10),
+      paddingBottom: scale(12),
+      borderColor: theme.colors?.borderSubtle || theme.borderLight,
       borderTopWidth: StyleSheet.hairlineWidth
     }),
     cancelButtonContainer: theme => ({
       alignItems: 'center',
       justifyContent: 'center',
       borderColor: theme.red600,
-      borderWidth: 1,
-      borderRadius: scale(25)
+      borderWidth: StyleSheet.hairlineWidth,
+      borderRadius: scale(12)
     }),
+    cancelWrap: {
+      marginTop: scale(10)
+    },
     dismissButtonContainer: theme => ({
       alignItems: 'center',
       justifyContent: 'center',

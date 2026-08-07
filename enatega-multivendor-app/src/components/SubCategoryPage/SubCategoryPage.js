@@ -82,7 +82,7 @@ const CategoryTabSkeleton = ({ currentTheme }) => {
       style={[
         styles.categoryTabSkeleton,
         {
-          backgroundColor: currentTheme?.gray || '#ddd',
+          backgroundColor: currentTheme?.colors?.skeleton || currentTheme?.gray || '#ddd',
           opacity: animatedOpacity
         }
       ]}
@@ -148,20 +148,20 @@ const FoodItemSkeleton = ({ currentTheme }) => {
         <Animated.View
           style={[
             styles.imageContainer,
-            { backgroundColor: currentTheme?.gray || '#ddd' }
+            { backgroundColor: currentTheme?.colors?.skeleton || currentTheme?.gray || '#ddd' }
           ]}
         />
         <View style={styles.detailsContainer}>
           <Animated.View
             style={[
               styles.priceSkeleton,
-              { backgroundColor: currentTheme?.gray || '#ddd' }
+              { backgroundColor: currentTheme?.colors?.skeleton || currentTheme?.gray || '#ddd' }
             ]}
           />
           <Animated.View
             style={[
               styles.titleSkeleton,
-              { backgroundColor: currentTheme?.gray || '#ddd' }
+              { backgroundColor: currentTheme?.colors?.skeleton || currentTheme?.gray || '#ddd' }
             ]}
           />
         </View>

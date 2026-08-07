@@ -1,4 +1,4 @@
-import { View, Alert, StatusBar, Platform, KeyboardAvoidingView } from 'react-native'
+import { View, Alert, StatusBar, Platform, KeyboardAvoidingView, TextInput } from 'react-native'
 import styles from './styles'
 import RadioComponent from '../../components/CustomizeComponents/RadioComponent/RadioComponent'
 import TitleComponent from '../../components/CustomizeComponents/TitleComponent/TitleComponent'
@@ -25,7 +25,6 @@ import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Animated, { useAnimatedRef } from 'react-native-reanimated'
 import { scale } from '../../utils/scaling'
-import { TextField } from 'react-native-material-textfield'
 import useMultivendorTheme from '../../ui/designSystem/useMultivendorTheme'
 
 // Utils
@@ -381,7 +380,15 @@ function ItemDetail(props) {
 
             <View style={styles(currentTheme).inputContainer}>
               <TitleComponent title={t('specialInstructions')} subTitle={t('anySpecificPreferences')} status={t('optional')} />
-              <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={144} textColor={tokens.colors.textPrimary} baseColor={tokens.colors.borderSubtle} errorColor={tokens.colors.danger} tintColor={tokens.colors.accent} placeholderTextColor={tokens.colors.textMuted} />
+              <TextInput
+                style={styles(currentTheme).input}
+                placeholder={t('noMayo')}
+                placeholderTextColor={tokens.colors.textMuted}
+                multiline
+                value={specialInstructions}
+                onChangeText={setSpecialInstructions}
+                maxLength={144}
+              />
             </View>
             {/** frequently bought together */}
             <FrequentlyBoughtTogether itemId={food?._id} restaurantId={restaurant} />

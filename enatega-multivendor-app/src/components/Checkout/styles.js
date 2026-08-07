@@ -4,33 +4,30 @@ import { scale } from '../../utils/scaling'
 export const useStyles = (theme) =>
   StyleSheet.create({
     container: {
-      height: scale(40),
-      flex: 1
+      height: scale(50),
+      marginTop: scale(10)
     },
     ovalContainer: {
-      backgroundColor: theme?.gray200,
+      backgroundColor: theme?.colors?.surfaceSubtle || theme?.gray200,
       flex: 1,
-      borderRadius: scale(40),
-      marginHorizontal: scale(10),
-      marginVertical: scale(3),
-      flexDirection: theme?.isRTL ? 'row-reverse' : 'row'
+      borderRadius: scale(25),
+      flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
+      padding: scale(3),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: theme?.colors?.borderSubtle
     },
     ovalButton: {
       flex: 1,
-      borderRadius: scale(40),
-      marginHorizontal: scale(2),
-      marginVertical: scale(2),
+      borderRadius: scale(22),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center'
     },
     instructionContainer: {
-      padding: scale(10),
+      paddingVertical: scale(12),
       flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
-      margin: scale(10),
-      borderWidth: StyleSheet.hairlineWidth,
-      borderRadius: scale(10),
-      borderColor: theme.gray500
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderColor: theme?.colors?.borderSubtle
     },
     leftContainer: {
       flex: 1,
@@ -44,22 +41,22 @@ export const useStyles = (theme) =>
       justifyContent: 'center',
       backgroundColor: theme.main,
       borderColor: theme.main,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderRadius: scale(25),
       width: scale(200)
     },
     dismissButtonContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderRadius: scale(25),
       width: scale(200),
       borderColor: theme.newIconColor
     },
     modalContainer: {
       backgroundColor: theme?.themeBackground,
-      borderWidth: 1,
-      borderColor: theme.newIconColor,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: theme?.colors?.borderSubtle || theme.newIconColor,
       borderRadius: scale(20),
       padding: scale(20),
       width: '90%', // Adjust width as needed

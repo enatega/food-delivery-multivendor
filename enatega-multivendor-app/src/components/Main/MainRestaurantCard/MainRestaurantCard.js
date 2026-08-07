@@ -2,14 +2,14 @@ import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import styles from './styles'
 import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
-import { SectionAction, SectionHeader } from '../../../ui/designSystem'
+import { SectionAction, SectionHeader, SkeletonBlock } from '../../../ui/designSystem'
 import { useTranslation } from 'react-i18next'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import MainLoadingUI from '../LoadingUI/MainLoadingUI'
 import { useNavigation } from '@react-navigation/native'
 import { isOpen } from '../../../utils/customFunctions'
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
+import { scale } from '../../../utils/scaling'
 
 function PopularSectionSkeleton({ currentTheme, title, t }) {
   return (
@@ -23,22 +23,18 @@ function PopularSectionSkeleton({ currentTheme, title, t }) {
 
         <View style={styles(currentTheme).skeletonRow}>
           {[0, 1].map((item) => (
-            <Placeholder
-              key={`popular-skeleton-${item}`}
-              Animation={(props) => (
-                <Fade
-                  {...props}
-                  style={styles(currentTheme).placeHolderFadeColor}
-                  duration={600}
-                />
-              )}
-              style={styles(currentTheme).popularSkeletonCard}
-            >
-              <PlaceholderLine style={styles().popularSkeletonImage} />
-              <PlaceholderLine width={65} />
-              <PlaceholderLine width={85} />
-              <PlaceholderLine width={95} />
-            </Placeholder>
+            <View key={`popular-skeleton-${item}`} style={styles(currentTheme).popularSkeletonCard}>
+              <SkeletonBlock height={scale(165)} borderRadius={scale(14)} />
+              <View style={{ padding: scale(10), gap: scale(9) }}>
+                <SkeletonBlock width='62%' height={scale(18)} borderRadius={scale(6)} />
+                <SkeletonBlock width='84%' height={scale(12)} borderRadius={scale(6)} />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <SkeletonBlock width='26%' height={scale(12)} borderRadius={scale(6)} />
+                  <SkeletonBlock width='26%' height={scale(12)} borderRadius={scale(6)} />
+                  <SkeletonBlock width='18%' height={scale(12)} borderRadius={scale(6)} />
+                </View>
+              </View>
+            </View>
           ))}
         </View>
       </View>

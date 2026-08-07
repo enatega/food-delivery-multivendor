@@ -41,7 +41,7 @@ const SkeletonPlaceholder = ({ style, currentTheme }) => {
     <Animated.View
       style={[
         {
-          backgroundColor: currentTheme?.gray || '#B8B8B8',
+          backgroundColor: currentTheme?.colors?.skeleton || currentTheme?.gray || '#B8B8B8',
           borderRadius: 4,
           opacity: animatedOpacity
         },
