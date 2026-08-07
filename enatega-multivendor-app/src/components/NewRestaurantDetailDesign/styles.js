@@ -1,13 +1,12 @@
-import { StyleSheet, Platform, StatusBar } from 'react-native';
-import { scale } from '../../utils/scaling';
-import { verticalScale } from '../../utils/scaling';
-import { alignment } from '../../utils/alignment';
-import { textStyles } from '../../utils/textStyles';
+import { StyleSheet } from 'react-native'
+import { scale, verticalScale } from '../../utils/scaling'
+import { alignment } from '../../utils/alignment'
+import { textStyles } from '../../utils/textStyles'
 
 const styles = (props = null) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: props?.themeBackground
+    backgroundColor: props?.colors?.canvas ?? props?.themeBackground
   },
   headerContainer: {
     position: 'absolute',
@@ -15,7 +14,7 @@ const styles = (props = null) => StyleSheet.create({
     left: 0,
     right: 0,
     overflow: 'hidden',
-    backgroundColor: props?.cardBackground
+    backgroundColor: props?.colors?.canvas ?? props?.cardBackground
   },
   iconButton: {
     width: scale(40),
@@ -31,7 +30,7 @@ const styles = (props = null) => StyleSheet.create({
     marginHorizontal: scale(10),
     backgroundColor: props?.searchBarColor,
     borderRadius: scale(25),
-    display:'flex',
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: scale(15),
@@ -49,7 +48,7 @@ const styles = (props = null) => StyleSheet.create({
     flex: 1
   },
   scrollView: {
-    flex: 1,
+    flex: 1
   },
   contentContainer: {
     flexGrow: 1,
@@ -105,6 +104,6 @@ const styles = (props = null) => StyleSheet.create({
     backgroundColor: 'transparent',
     color: props != null ? props.white : 'white'
   }
-});
+})
 
-export default styles;
+export default styles
