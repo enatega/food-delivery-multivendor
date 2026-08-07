@@ -36,6 +36,7 @@ class PublicAccessTokenService {
   private refreshPromise: Promise<void> | null = null;
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
   private scope = "legacy";
+  private scopeGeneration = 0;
 
   private constructor() {}
 
@@ -52,12 +53,19 @@ class PublicAccessTokenService {
   ): Promise<void> {
     if (this.scope !== scope) {
       this.pause();
+      this.scopeGeneration += 1;
+      this.refreshPromise = null;
       this.nonce = null;
       this.token = null;
       this.expiry = null;
       this.scope = scope;
     }
-    await this.loadFromStorage();
+    const generation = this.scopeGeneration;
+    const stored = await this.loadFromStorage(scope);
+    if (generation !== this.scopeGeneration || scope !== this.scope) return;
+    this.nonce = stored.nonce;
+    this.token = stored.token;
+    this.expiry = stored.expiry;
 
     if (!this.nonce) {
       this.nonce = await this.generateNonce();
@@ -72,7 +80,12 @@ class PublicAccessTokenService {
   }
 
   private key(base: string): string {
-    return `${base}:${encodeURIComponent(this.scope)}`;
+    return this.scopedKey(base, this.scope);
+  }
+
+  private scopedKey(base: string, scope: string): string {
+    const safeScope = scope.replace(/[^A-Za-z0-9._-]/g, "_");
+    return `${base}.${safeScope}`;
   }
 
   private scheduleRefresh(
@@ -86,10 +99,12 @@ class PublicAccessTokenService {
 
     const timeUntilExpiry = this.expiry - Date.now();
     const refreshTime = Math.max(timeUntilExpiry - 30000, 1000);
+    const generation = this.scopeGeneration;
+    const scope = this.scope;
 
     this.refreshTimer = setTimeout(async () => {
+      if (generation !== this.scopeGeneration || scope !== this.scope) return;
       await this.refreshToken(apolloClient);
-      this.scheduleRefresh(apolloClient);
     }, refreshTime);
   }
 
@@ -103,16 +118,24 @@ class PublicAccessTokenService {
     return `${deviceId}-${timestamp}-${random}`;
   }
 
-  private async loadFromStorage(): Promise<void> {
+  private async loadFromStorage(scope: string): Promise<{
+    nonce: string | null;
+    token: string | null;
+    expiry: number | null;
+  }> {
     try {
-      this.nonce = await SecureStore.getItemAsync(this.key(KEYS.NONCE));
-      this.token = await SecureStore.getItemAsync(this.key(KEYS.TOKEN));
-      const expiryStr = await SecureStore.getItemAsync(this.key(KEYS.EXPIRY));
-      this.expiry = expiryStr ? parseInt(expiryStr, 10) : null;
+      const [nonce, token, expiryStr] = await Promise.all([
+        SecureStore.getItemAsync(this.scopedKey(KEYS.NONCE, scope)),
+        SecureStore.getItemAsync(this.scopedKey(KEYS.TOKEN, scope)),
+        SecureStore.getItemAsync(this.scopedKey(KEYS.EXPIRY, scope)),
+      ]);
+      return {
+        nonce,
+        token,
+        expiry: expiryStr ? parseInt(expiryStr, 10) : null,
+      };
     } catch {
-      this.nonce = null;
-      this.token = null;
-      this.expiry = null;
+      return { nonce: null, token: null, expiry: null };
     }
   }
 
@@ -128,7 +151,9 @@ class PublicAccessTokenService {
       return this.refreshPromise;
     }
 
-    this.refreshPromise = (async () => {
+    const generation = this.scopeGeneration;
+    const scope = this.scope;
+    const refreshPromise = (async () => {
       try {
         const { data } = await apolloClient.mutate({
           mutation: METRICS_GENERAL,
@@ -142,24 +167,39 @@ class PublicAccessTokenService {
           fetchPolicy: "no-cache",
         });
 
-        if (data?.metricsGeneral) {
+        if (
+          data?.metricsGeneral &&
+          generation === this.scopeGeneration &&
+          scope === this.scope
+        ) {
           const token = data.metricsGeneral.experience;
           if (typeof token !== "string") return;
           this.token = token;
           const expiryTime = new Date(data.metricsGeneral.hehe).getTime();
           this.expiry = expiryTime;
 
-          await SecureStore.setItemAsync(this.key(KEYS.TOKEN), token);
-          await SecureStore.setItemAsync(this.key(KEYS.EXPIRY), expiryTime.toString());
+          await SecureStore.setItemAsync(
+            this.scopedKey(KEYS.TOKEN, scope),
+            token,
+          );
+          await SecureStore.setItemAsync(
+            this.scopedKey(KEYS.EXPIRY, scope),
+            expiryTime.toString(),
+          );
 
-          this.scheduleRefresh(apolloClient);
+          if (generation === this.scopeGeneration && scope === this.scope) {
+            this.scheduleRefresh(apolloClient);
+          }
         }
       } finally {
-        this.refreshPromise = null;
+        if (this.refreshPromise === refreshPromise) {
+          this.refreshPromise = null;
+        }
       }
     })();
 
-    return this.refreshPromise;
+    this.refreshPromise = refreshPromise;
+    return refreshPromise;
   }
 
   async getToken(

@@ -81,12 +81,13 @@ const LoginScreen = () => {
     >
       <SafeAreaView
         style={{
+          flex: 1,
           backgroundColor: appTheme.themeBackground,
         }}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          // contentContainerStyle={{ height: height * 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
         >
           <Formik
             initialValues={loginInitialValues}
@@ -96,11 +97,10 @@ const LoginScreen = () => {
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
               return (
-                <View className="mt-24 p-5 items-center gap-y-2">
+                <View className="flex-1 items-center">
                   <View
-                    className="mb-6 flex-row self-stretch"
+                    className="flex-row self-stretch"
                     style={{
-                      marginHorizontal: -20,
                       minHeight: 56,
                       borderBottomColor: appTheme.borderLineColor,
                       borderBottomWidth: StyleSheet.hairlineWidth,
@@ -165,101 +165,102 @@ const LoginScreen = () => {
                     })}
                   </View>
 
-                  {/* Icon */}
-                  <Icon name="envelope" size={30} color={appTheme.primary} />
+                  <View className="flex-1 w-full p-5 items-center justify-center gap-y-2">
+                    {/* Icon */}
+                    <Icon name="envelope" size={30} color={appTheme.primary} />
 
-                  {/* Title */}
-                  <Text
-                    className="text-center text-xl font-semibold"
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    {t("Enter Your Credentials to login")}
-                  </Text>
-                  <Text
-                    className="text-center text-sm mb-5"
-                    style={{ color: appTheme.fontSecondColor }}
-                  >
-                    {t("We'll check if you have an account")}
-                  </Text>
-
-                  {/* Email Input */}
-
-                  <View
-                    className="flex-row items-center border rounded-lg px-3  mb-[-4]"
-                    style={{
-                      backgroundColor: appTheme.themeBackground,
-                      borderColor: appTheme.borderLineColor,
-                    }}
-                  >
-                    <TextInput
-                      className="flex-1 h-12 text-bas"
-                      style={{ color: appTheme.fontMainColor }}
-                      placeholder={t("Username or Email")}
-                      value={values.username}
-                      onChangeText={handleChange("username")}
-                      onBlur={handleBlur("username")}
-                    />
-                  </View>
-                  {errors.username && (
+                    {/* Title */}
                     <Text
+                      className="text-center text-xl font-semibold"
+                      style={{ color: appTheme.fontMainColor }}
+                    >
+                      {t("Enter Your Credentials to login")}
+                    </Text>
+                    <Text
+                      className="text-center text-sm mb-5"
+                      style={{ color: appTheme.fontSecondColor }}
+                    >
+                      {t("We'll check if you have an account")}
+                    </Text>
+
+                    {/* Email Input */}
+
+                    <View
+                      className="flex-row items-center border rounded-lg px-3  mb-[-4]"
                       style={{
-                        color: appTheme.textErrorColor,
-                        marginBottom: 8,
-                        fontSize: 14,
+                        backgroundColor: appTheme.themeBackground,
+                        borderColor: appTheme.borderLineColor,
                       }}
                     >
-                      {errors?.username}
-                    </Text>
-                  )}
-
-                  {/* Password Input */}
-                  <View
-                    className="flex-row items-center border rounded-lg px-3 mb-[-4]"
-                    style={{
-                      backgroundColor: appTheme.themeBackground,
-                      borderColor: appTheme.borderLineColor,
-                    }}
-                  >
-                    <TextInput
-                      className="flex-1 h-12 text-base"
-                      style={{ color: appTheme.fontMainColor }}
-                      placeholder={t("Password")}
-                      secureTextEntry={!passwordVisible}
-                      value={values.password}
-                      onChangeText={handleChange("password")}
-                      onBlur={handleBlur("password")}
-                    />
-                    <TouchableOpacity
-                      onPress={() => setPasswordVisible(!passwordVisible)}
-                      className="ml-2"
-                    >
-                      <Icon
-                        name={passwordVisible ? "eye-slash" : "eye"}
-                        size={14}
-                        color={appTheme.fontMainColor}
+                      <TextInput
+                        className="flex-1 h-12 text-bas"
+                        style={{ color: appTheme.fontMainColor }}
+                        placeholder={t("Username or Email")}
+                        value={values.username}
+                        onChangeText={handleChange("username")}
+                        onBlur={handleBlur("username")}
                       />
-                    </TouchableOpacity>
-                  </View>
+                    </View>
+                    {errors.username && (
+                      <Text
+                        style={{
+                          color: appTheme.textErrorColor,
+                          marginBottom: 8,
+                          fontSize: 14,
+                        }}
+                      >
+                        {errors?.username}
+                      </Text>
+                    )}
 
-                  {errors.password && (
-                    <Text
+                    {/* Password Input */}
+                    <View
+                      className="flex-row items-center border rounded-lg px-3 mb-[-4]"
                       style={{
-                        color: appTheme.textErrorColor,
-                        marginBottom: 8,
-                        fontSize: 14,
+                        backgroundColor: appTheme.themeBackground,
+                        borderColor: appTheme.borderLineColor,
                       }}
                     >
-                      {errors?.password}
-                    </Text>
-                  )}
-                  {/* Login Button */}
-                  <CustomContinueButton
-                    title={t("Login")}
-                    disabled={isLogging || isSwitchingMode}
-                    isLoading={isLogging}
-                    onPress={() => handleSubmit()}
-                  />
-                  {/* <TouchableOpacity
+                      <TextInput
+                        className="flex-1 h-12 text-base"
+                        style={{ color: appTheme.fontMainColor }}
+                        placeholder={t("Password")}
+                        secureTextEntry={!passwordVisible}
+                        value={values.password}
+                        onChangeText={handleChange("password")}
+                        onBlur={handleBlur("password")}
+                      />
+                      <TouchableOpacity
+                        onPress={() => setPasswordVisible(!passwordVisible)}
+                        className="ml-2"
+                      >
+                        <Icon
+                          name={passwordVisible ? "eye-slash" : "eye"}
+                          size={14}
+                          color={appTheme.fontMainColor}
+                        />
+                      </TouchableOpacity>
+                    </View>
+
+                    {errors.password && (
+                      <Text
+                        style={{
+                          color: appTheme.textErrorColor,
+                          marginBottom: 8,
+                          fontSize: 14,
+                        }}
+                      >
+                        {errors?.password}
+                      </Text>
+                    )}
+                    {/* Login Button */}
+                    <CustomContinueButton
+                      title={t("Login")}
+                      disabled={isLogging || isSwitchingMode}
+                      isLoading={isLogging}
+                      onPress={() => handleSubmit()}
+                    />
+                    {/* <TouchableOpacity
                     className="h-12 rounded-3xl py-3 mt-10 w-full"
                     style={{ backgroundColor: appTheme.primary }}
                     onPress={() => handleSubmit()}
@@ -275,6 +276,7 @@ const LoginScreen = () => {
                       </Text>
                     )}
                   </TouchableOpacity> */}
+                  </View>
                 </View>
               );
             }}

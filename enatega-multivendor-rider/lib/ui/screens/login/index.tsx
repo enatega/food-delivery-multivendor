@@ -110,10 +110,12 @@ const LoginScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={{ backgroundColor: appTheme.themeBackground }}
     >
-      <SafeAreaView>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: appTheme.themeBackground }}
+      >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          // contentContainerStyle={{ height: height * 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
         >
           <Formik
             initialValues={loginInitialValues}
@@ -123,11 +125,10 @@ const LoginScreen = () => {
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
               return (
-                <View className="mt-24 p-5 items-center justify-between gap-y-2">
+                <View className="flex-1 items-center">
                   <View
-                    className="mb-6 flex-row self-stretch"
+                    className="flex-row self-stretch"
                     style={{
-                      marginHorizontal: -20,
                       minHeight: 56,
                       borderBottomColor: appTheme.borderLineColor,
                       borderBottomWidth: StyleSheet.hairlineWidth,
@@ -187,94 +188,96 @@ const LoginScreen = () => {
                     })}
                   </View>
 
-                  {/* Icon */}
-                  <FontAwesome
-                    name="envelope"
-                    size={30}
-                    color={appTheme.fontMainColor}
-                  />
-
-                  {/* Title */}
-                  <Text
-                    className="text-center text-xl font-semibold "
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    {t("Enter Your Credentials to login")}
-                  </Text>
-                  <Text
-                    className="text-center text-sm mb-5"
-                    style={{ color: appTheme.fontSecondColor }}
-                  >
-                    {t("We'll check if you have an account")}
-                  </Text>
-
-                  {/* Email Input */}
-
-                  <View
-                    className="flex-row items-center border rounded-lg px-3  mb-[-4]"
-                    style={{
-                      borderColor: appTheme.borderLineColor,
-                      backgroundColor: appTheme.themeBackground,
-                    }}
-                  >
-                    <TextInput
-                      className="flex-1 h-12 text-base"
-                      style={{ color: appTheme.fontMainColor }}
-                      placeholder={t("Email")}
-                      placeholderTextColor={appTheme.fontSecondColor}
-                      keyboardType="email-address"
-                      inputMode="email"
-                      value={values.username}
-                      onChangeText={handleChange("username")}
-                      onBlur={handleBlur("username")}
+                  <View className="flex-1 w-full p-5 items-center justify-center gap-y-2">
+                    {/* Icon */}
+                    <FontAwesome
+                      name="envelope"
+                      size={30}
+                      color={appTheme.fontMainColor}
                     />
-                  </View>
-                  {errors.username && (
-                    <Text className="mb-2 text-sm text-red-500">
-                      {errors?.username}
-                    </Text>
-                  )}
 
-                  {/* Password Input */}
-                  <View
-                    className="flex-row items-center border  rounded-lg px-3  mb-[-4]"
-                    style={{
-                      backgroundColor: appTheme.themeBackground,
-                      borderColor: appTheme.borderLineColor,
-                    }}
-                  >
-                    <TextInput
-                      className="flex-1 h-12 text-base"
+                    {/* Title */}
+                    <Text
+                      className="text-center text-xl font-semibold "
                       style={{ color: appTheme.fontMainColor }}
-                      placeholder={t("Password")}
-                      secureTextEntry={!passwordVisible}
-                      placeholderTextColor={appTheme.fontSecondColor}
-                      value={values.password}
-                      onChangeText={handleChange("password")}
-                      onBlur={handleBlur("password")}
-                    />
-                    <TouchableOpacity
-                      onPress={() => setPasswordVisible(!passwordVisible)}
-                      className="ml-2"
                     >
-                      <FontAwesome6
-                        name={passwordVisible ? "eye-slash" : "eye"}
-                        size={14}
-                        color={appTheme.fontMainColor}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  {errors.password && (
-                    <Text className="mb-2 text-sm text-red-500">
-                      {errors?.password}
+                      {t("Enter Your Credentials to login")}
                     </Text>
-                  )}
-                  <CustomContinueButton
-                    title={t("Login")}
-                    onPress={() => handleSubmit()}
-                    disabled={isLogging}
-                    className="self-center"
-                  />
+                    <Text
+                      className="text-center text-sm mb-5"
+                      style={{ color: appTheme.fontSecondColor }}
+                    >
+                      {t("We'll check if you have an account")}
+                    </Text>
+
+                    {/* Email Input */}
+
+                    <View
+                      className="flex-row items-center border rounded-lg px-3  mb-[-4]"
+                      style={{
+                        borderColor: appTheme.borderLineColor,
+                        backgroundColor: appTheme.themeBackground,
+                      }}
+                    >
+                      <TextInput
+                        className="flex-1 h-12 text-base"
+                        style={{ color: appTheme.fontMainColor }}
+                        placeholder={t("Email")}
+                        placeholderTextColor={appTheme.fontSecondColor}
+                        keyboardType="email-address"
+                        inputMode="email"
+                        value={values.username}
+                        onChangeText={handleChange("username")}
+                        onBlur={handleBlur("username")}
+                      />
+                    </View>
+                    {errors.username && (
+                      <Text className="mb-2 text-sm text-red-500">
+                        {errors?.username}
+                      </Text>
+                    )}
+
+                    {/* Password Input */}
+                    <View
+                      className="flex-row items-center border  rounded-lg px-3  mb-[-4]"
+                      style={{
+                        backgroundColor: appTheme.themeBackground,
+                        borderColor: appTheme.borderLineColor,
+                      }}
+                    >
+                      <TextInput
+                        className="flex-1 h-12 text-base"
+                        style={{ color: appTheme.fontMainColor }}
+                        placeholder={t("Password")}
+                        secureTextEntry={!passwordVisible}
+                        placeholderTextColor={appTheme.fontSecondColor}
+                        value={values.password}
+                        onChangeText={handleChange("password")}
+                        onBlur={handleBlur("password")}
+                      />
+                      <TouchableOpacity
+                        onPress={() => setPasswordVisible(!passwordVisible)}
+                        className="ml-2"
+                      >
+                        <FontAwesome6
+                          name={passwordVisible ? "eye-slash" : "eye"}
+                          size={14}
+                          color={appTheme.fontMainColor}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    {errors.password && (
+                      <Text className="mb-2 text-sm text-red-500">
+                        {errors?.password}
+                      </Text>
+                    )}
+                    <CustomContinueButton
+                      title={t("Login")}
+                      onPress={() => handleSubmit()}
+                      disabled={isLogging}
+                      className="self-center"
+                    />
+                  </View>
                 </View>
               );
             }}

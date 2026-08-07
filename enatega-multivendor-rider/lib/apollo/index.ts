@@ -22,7 +22,9 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import { Subscription } from "zen-observable-ts";
 
 import { RiderEnvironment } from "@/environment";
-import PublicAccessTokenService from "@/lib/services/public-access-token.service";
+import PublicAccessTokenService, {
+  RIDER_PUBLIC_ACCESS_USER_AGENT,
+} from "@/lib/services/public-access-token.service";
 import { getSecureItem, removeSecureItem } from "@/lib/services/secure-storage";
 import { IRestaurantLocation } from "@/lib/utils/interfaces";
 import { calculateDistance } from "@/lib/utils/methods/custom-functions";
@@ -117,7 +119,10 @@ export default function setupApollo({
     if (isAuthRedirecting) return;
     isAuthRedirecting = true;
     try {
-      await Promise.all([removeSecureItem(tokenKey), removeSecureItem(riderIdKey)]);
+      await Promise.all([
+        removeSecureItem(tokenKey),
+        removeSecureItem(riderIdKey),
+      ]);
       router.replace("/login");
     } finally {
       setTimeout(() => {
@@ -167,7 +172,7 @@ export default function setupApollo({
       authorization: token ? `Bearer ${token}` : "",
       "x-platform": Platform.OS,
       "accept-language": locale,
-      "user-agent": `Enatega-Rider-App/${Platform.OS}`,
+      "user-agent": RIDER_PUBLIC_ACCESS_USER_AGENT,
       ...operation.getContext().headers,
     };
 
@@ -200,7 +205,7 @@ export default function setupApollo({
       }),
   );
 
-  const errorLink = onError(({ graphQLErrors, networkError }) => {
+  const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
     const hasInvalidSession = (graphQLErrors || []).some((error) => {
       const code = error?.extensions?.code;
       const message = error.message.toLowerCase();
@@ -219,7 +224,11 @@ export default function setupApollo({
       );
     });
 
-    if (hasInvalidSession) {
+    const hadUserAuthorization = Boolean(
+      operation.getContext().headers?.authorization,
+    );
+
+    if (hasInvalidSession && hadUserAuthorization) {
       void handleInvalidSession();
     } else if (networkError && __DEV__) {
       console.warn("Network error while processing GraphQL request");

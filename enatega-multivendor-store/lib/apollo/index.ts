@@ -25,7 +25,10 @@ const isExpiredJwt = (token: string | null): boolean => {
   if (!token) return false;
   try {
     const payload = JSON.parse(globalThis.atob(token.split(".")[1]));
-    return typeof payload.exp === "number" && payload.exp * 1000 <= Date.now() + 15000;
+    return (
+      typeof payload.exp === "number" &&
+      payload.exp * 1000 <= Date.now() + 15000
+    );
   } catch {
     return true;
   }
@@ -84,7 +87,7 @@ const setupApollo = ({
         const token = await SecureStore.getItemAsync(tokenKey);
         if (isExpiredJwt(token)) {
           await handleInvalidSession(tokenKey, storeIdKey);
-          return {authorization: "", "x-platform": "mobile"};
+          return { authorization: "", "x-platform": "mobile" };
         }
         const params: Record<string, string> = {
           authorization: token ? `Bearer ${token}` : "",
@@ -154,7 +157,7 @@ const setupApollo = ({
       }),
   );
 
-  const errorLink = onError(({ graphQLErrors, networkError }) => {
+  const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
     const invalidCodes = ["TOKEN_EXPIRED", "INVALID_TOKEN", "UNAUTHENTICATED"];
     const hasInvalidSession = (graphQLErrors || []).some(
       (graphQLError) =>
@@ -166,7 +169,14 @@ const setupApollo = ({
       "statusCode" in networkError &&
       networkError.statusCode === 401;
 
-    if (hasInvalidSession || isUnauthorizedNetworkError) {
+    const hadUserAuthorization = Boolean(
+      operation.getContext().headers?.authorization,
+    );
+
+    if (
+      hadUserAuthorization &&
+      (hasInvalidSession || isUnauthorizedNetworkError)
+    ) {
       void handleInvalidSession(tokenKey, storeIdKey);
     }
   });
