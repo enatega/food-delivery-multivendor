@@ -17,7 +17,6 @@ import { useEffect, useRef } from 'react';
 // Utility imports
 import { Subscription } from 'zen-observable-ts';
 
-
 import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
 import { REFRESH_TOKEN } from '../api/graphql/mutations/authentication/refresh';
 import { print } from 'graphql';
@@ -43,6 +42,14 @@ let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
 let accessTokenRefreshPromise: Promise<string | null> | null = null;
 let isAuthRedirecting = false;
+
+function requireBaseUrl(value: string | undefined, name: string): string {
+  const normalized = value?.trim().replace(/\/+$/, '');
+  if (!normalized) {
+    throw new Error(`${name} is not configured`);
+  }
+  return `${normalized}/`;
+}
 
 type GraphQLErrorLike = {
   message?: string;
@@ -223,9 +230,7 @@ async function refreshAccessToken(serverUrl?: string): Promise<string | null> {
           headers: {
             'Content-Type': 'application/json',
             nonce: getNonce() || '',
-            'bop-auth': getMetricsToken()
-              ? `Bearer ${getMetricsToken()}`
-              : '',
+            'bop-auth': getMetricsToken() ? `Bearer ${getMetricsToken()}` : '',
             'x-platform': 'web',
             'X-Client-Type': 'web',
           },
@@ -252,7 +257,11 @@ async function refreshAccessToken(serverUrl?: string): Promise<string | null> {
 
       const refreshedSession = result.data?.refreshToken;
 
-      if (!response.ok || isGraphQLResponseError(result) || !refreshedSession?.token) {
+      if (
+        !response.ok ||
+        isGraphQLResponseError(result) ||
+        !refreshedSession?.token
+      ) {
         return null;
       }
 
@@ -280,10 +289,18 @@ async function refreshAccessToken(serverUrl?: string): Promise<string | null> {
 export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   const clientRef = useRef<ApolloClient<NormalizedCacheObject> | null>(null);
   const wsClientRef = useRef<SubscriptionClient | null>(null);
+  const SERVER_URL = requireBaseUrl(
+    process.env.NEXT_PUBLIC_SERVER_URL,
+    'NEXT_PUBLIC_SERVER_URL'
+  );
+  const WS_SERVER_URL = requireBaseUrl(
+    process.env.NEXT_PUBLIC_WS_SERVER_URL,
+    'NEXT_PUBLIC_WS_SERVER_URL'
+  );
 
   useEffect(() => {
     if (shouldRefreshToken()) {
-      void fetchMetricsToken(process.env.NEXT_PUBLIC_SERVER_URL);
+      void fetchMetricsToken(SERVER_URL);
     }
 
     return () => {
@@ -291,14 +308,11 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
       wsClientRef.current = null;
       clientRef.current = null;
     };
-  }, []);
+  }, [SERVER_URL]);
 
   if (clientRef.current) {
     return clientRef.current;
   }
-
-  const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
-  const WS_SERVER_URL = process.env.NEXT_PUBLIC_WS_SERVER_URL;
 
   initializeNonce();
 
@@ -319,48 +333,50 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   wsClientRef.current = wsClient;
   const wsLink = new WebSocketLink(wsClient);
 
-  const errorLink = new ApolloLink((operation, forward) =>
-    new Observable((observer) => {
-      let handle: Subscription | undefined;
+  const errorLink = new ApolloLink(
+    (operation, forward) =>
+      new Observable((observer) => {
+        let handle: Subscription | undefined;
 
-      const run = () => {
-        handle = forward(operation).subscribe({
-          next: observer.next.bind(observer),
-          complete: observer.complete.bind(observer),
-          error: async (error) => {
-            if (
-              hasExpiredAccessToken(error) &&
-              !isOperationAlreadyRetried(operation, 'accessTokenRetry')
-            ) {
-              markOperationRetried(operation, 'accessTokenRetry');
-              const refreshedToken = await refreshAccessToken(SERVER_URL);
+        const run = () => {
+          handle = forward(operation).subscribe({
+            next: observer.next.bind(observer),
+            complete: observer.complete.bind(observer),
+            error: async (error) => {
+              if (
+                hasExpiredAccessToken(error) &&
+                !isOperationAlreadyRetried(operation, 'accessTokenRetry')
+              ) {
+                markOperationRetried(operation, 'accessTokenRetry');
+                const refreshedToken = await refreshAccessToken(SERVER_URL);
 
-              if (refreshedToken) {
-                run();
-                return;
+                if (refreshedToken) {
+                  run();
+                  return;
+                }
               }
-            }
 
-            if (
-              hasExpiredAccessToken(error) ||
-              hasInvalidAccessToken(error)
-            ) {
-              handleInvalidSession();
-            }
+              if (
+                hasExpiredAccessToken(error) ||
+                hasInvalidAccessToken(error)
+              ) {
+                handleInvalidSession();
+              }
 
-            observer.error(error);
-          },
-        });
-      };
+              observer.error(error);
+            },
+          });
+        };
 
-      run();
-      return () => handle?.unsubscribe();
-    })
+        run();
+        return () => handle?.unsubscribe();
+      })
   );
 
   const request = async (operation: Operation): Promise<void> => {
     const token = getAccessToken();
-    const userId = typeof window === 'undefined' ? '' : localStorage.getItem('userId');
+    const userId =
+      typeof window === 'undefined' ? '' : localStorage.getItem('userId');
     const operationName = operation.operationName;
 
     if (operationName !== 'MetricsGeneral' && shouldRefreshToken()) {
