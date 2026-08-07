@@ -41,8 +41,8 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     checkoutContent: {
-      paddingHorizontal: scale(12),
-      paddingTop: scale(10),
+      paddingHorizontal: scale(8),
+      paddingTop: scale(8),
       paddingBottom: scale(112)
     },
     mapCard: {
@@ -53,7 +53,11 @@ const styles = (props = null) =>
       borderColor: props?.colors?.borderSubtle
     },
     detailsSection: {
-      marginTop: scale(10)
+      marginTop: scale(12)
+    },
+    addressRow: {
+      minHeight: scale(60),
+      justifyContent: 'center'
     },
     sectionInset: {
       paddingHorizontal: 0
@@ -144,7 +148,7 @@ const styles = (props = null) =>
     deliveryTime: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      minHeight: scale(54),
+      minHeight: scale(60),
       paddingHorizontal: scale(10)
     },
 
@@ -191,8 +195,8 @@ const styles = (props = null) =>
     },
 
     buttonContainer: {
-      paddingHorizontal: scale(12),
-      paddingTop: scale(12),
+      paddingHorizontal: scale(8),
+      paddingTop: scale(10),
       backgroundColor: props?.colors?.surface,
       borderTopWidth: StyleSheet.hairlineWidth,
       borderTopColor: props?.colors?.borderSubtle
@@ -326,7 +330,22 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props?.themeBackground : '#6FCF97'
     },
     mapView: {
-      height: scale(122)
+      height: scale(132)
+    },
+    mapLabel: {
+      position: 'absolute',
+      left: scale(9),
+      bottom: scale(9),
+      maxWidth: '72%',
+      minHeight: scale(32),
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: scale(6),
+      paddingHorizontal: scale(10),
+      backgroundColor: props?.colors?.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle,
+      borderRadius: scale(11)
     },
     mapUnavailable: {
       alignItems: 'center',
@@ -365,7 +384,7 @@ const styles = (props = null) =>
       marginTop: scale(26)
     },
     checkoutSkeleton: {
-      paddingHorizontal: scale(12),
+      paddingHorizontal: scale(8),
       paddingTop: scale(10),
       gap: scale(14)
     },

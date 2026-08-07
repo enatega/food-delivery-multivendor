@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useLayoutEffect, useRef, useCallback, useMemo } from 'react'
-import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert } from 'react-native'
+import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, StyleSheet } from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { AntDesign } from '@expo/vector-icons'
@@ -126,8 +126,11 @@ function Cart(props) {
         paddingRight: scale(25)
       },
       headerStyle: {
-        backgroundColor: tokens.colors.canvas
+        backgroundColor: tokens.colors.canvas,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: tokens.colors.borderSubtle
       },
+      headerShadowVisible: false,
       headerLeft: () => (
         <HeaderBackButton
           truncatedLabel=''
@@ -147,7 +150,7 @@ function Cart(props) {
         />
       )
     })
-  }, [props?.navigation])
+  }, [props?.navigation, t, tokens.colors.borderSubtle, tokens.colors.canvas, tokens.colors.textPrimary])
 
   useLayoutEffect(() => {
     if (!data) return

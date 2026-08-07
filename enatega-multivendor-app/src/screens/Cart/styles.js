@@ -56,10 +56,7 @@ const styles = (props = null) =>
     },
     itemContainer: {
       width: '100%',
-      backgroundColor: 'transparent',
-      paddingVertical: scale(12),
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.22)'
+      backgroundColor: 'transparent'
     },
     priceContainer: {
       width: '100%',

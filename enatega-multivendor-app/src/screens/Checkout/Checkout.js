@@ -298,8 +298,7 @@ function Checkout(props) {
       },
 
       headerStyle: {
-        backgroundColor: currentTheme.colors.canvas,
-        height: scale(54)
+        backgroundColor: currentTheme.colors.canvas
       },
       headerShadowVisible: false,
       headerLeft: () => (
@@ -686,6 +685,23 @@ function Checkout(props) {
                       <View style={styles().marker}>
                         <RestaurantMarker />
                       </View>
+                      {!!restaurant?.name && (
+                        <View style={styles(currentTheme).mapLabel}>
+                          <MaterialCommunityIcons
+                            name='storefront-outline'
+                            size={scale(16)}
+                            color={currentTheme.colors.accent}
+                          />
+                          <TextDefault
+                            numberOfLines={1}
+                            small
+                            bold
+                            textColor={currentTheme.colors.textPrimary}
+                          >
+                            {restaurant.name}
+                          </TextDefault>
+                        </View>
+                      )}
                     </View>
                   ) : (
                     <View style={[styles(currentTheme).mapView, styles(currentTheme).mapUnavailable]}>
@@ -699,7 +715,7 @@ function Checkout(props) {
                 <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} t={t} />
                 <View style={styles(currentTheme).detailsSection}>
                   {!isPickup && (
-                    <View>
+                    <View style={styles(currentTheme).addressRow}>
                       <Location locationIcon={currentTheme.newIconColor} locationLabel={currentTheme.newFontcolor} location={currentTheme.newFontcolor} navigation={props?.navigation} addresses={profile?.addresses} forwardIcon={true} screenName={'checkout'} />
                     </View>
                   )}
@@ -958,7 +974,12 @@ function Checkout(props) {
               </View>
             </ScrollView>
             {!isModalOpen && (
-              <View style={[styles(currentTheme).buttonContainer, { paddingBottom: inset.bottom + scale(10) }]}>
+              <View
+                style={[
+                  styles(currentTheme).buttonContainer,
+                  { paddingBottom: Math.max(scale(8), inset.bottom * 0.3) }
+                ]}
+              >
                 <TouchableOpacity
                   disabled={loadingOrder}
                   activeOpacity={0.7}
