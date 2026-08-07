@@ -1,4 +1,5 @@
-import { View, ScrollView, Dimensions, StyleSheet } from 'react-native'
+import { View, ScrollView, Dimensions, StyleSheet, TouchableOpacity } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
@@ -18,8 +19,6 @@ import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
 import darkMapStyle from '../../utils/DarkMapStyles'
 import { useTranslation } from 'react-i18next'
-import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
-
 import { checkStatus } from '../../components/Main/ActiveOrders/ProgressBar'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { PriceRow } from '../../components/OrderDetail/PriceRow'
@@ -228,13 +227,51 @@ function OrderDetail(props) {
 
   useEffect(() => {
     props?.navigation.setOptions({
-      headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
-      headerTitle: order?.deliveryAddress?.deliveryAddress ?? '',
+      headerLeft: () => (
+        <TouchableOpacity
+          accessibilityRole='button'
+          accessibilityLabel={t('back')}
+          activeOpacity={0.65}
+          hitSlop={10}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons
+            name={currentTheme.isRTL ? 'arrow-forward' : 'arrow-back'}
+            size={scale(23)}
+            color={currentTheme.colors.textPrimary}
+          />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity
+          accessibilityRole='button'
+          accessibilityLabel={t('help')}
+          activeOpacity={0.65}
+          hitSlop={10}
+          onPress={() => navigation.navigate('Help')}
+        >
+          <Ionicons
+            name='information-circle-outline'
+            size={scale(24)}
+            color={currentTheme.colors.textPrimary}
+          />
+        </TouchableOpacity>
+      ),
+      headerTitle: t('trackOrder'),
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.colors.textPrimary,
-        fontSize: scale(17),
+        fontSize: scale(16),
         fontWeight: '600'
+      },
+      headerLeftContainerStyle: {
+        paddingLeft: scale(14)
+      },
+      headerRightContainerStyle: {
+        paddingRight: scale(14)
+      },
+      headerTitleContainerStyle: {
+        marginHorizontal: scale(52)
       },
       headerStyle: {
         backgroundColor: currentTheme.colors.canvas,

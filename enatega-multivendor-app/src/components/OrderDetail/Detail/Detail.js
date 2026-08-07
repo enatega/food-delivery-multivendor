@@ -73,10 +73,11 @@ const ItemRow = ({ theme, quantity, title, variationTitle, options = ['raita', '
       <View>
         <CachedImage
           style={{
-            width: scale(48),
-            height: scale(64),
+            width: scale(54),
+            height: scale(54),
             borderRadius: scale(8)
           }}
+          resizeMode='cover'
           source={image ? { uri: image } : require('../../../assets/images/food_placeholder.png')}
         />
       </View>
