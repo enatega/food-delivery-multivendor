@@ -4,13 +4,13 @@ import { scale } from '../../utils/scaling'
 export const useStyles = (theme) =>
   StyleSheet.create({
     container: {
-      height: scale(50),
+      height: scale(46),
       marginTop: scale(10)
     },
     ovalContainer: {
       backgroundColor: theme?.colors?.surfaceSubtle || theme?.gray200,
       flex: 1,
-      borderRadius: scale(25),
+      borderRadius: scale(14),
       flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
       padding: scale(3),
       borderWidth: StyleSheet.hairlineWidth,
@@ -18,7 +18,7 @@ export const useStyles = (theme) =>
     },
     ovalButton: {
       flex: 1,
-      borderRadius: scale(22),
+      borderRadius: scale(11),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center'

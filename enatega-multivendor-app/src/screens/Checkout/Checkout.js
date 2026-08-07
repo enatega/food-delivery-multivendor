@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } 
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, TextInput, Dimensions } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { useSafeAreaInsets, initialWindowMetrics } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AntDesign, EvilIcons, Feather, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Modalize } from 'react-native-modalize'
 import { getTipping } from '../../apollo/queries'
@@ -26,7 +26,6 @@ import { useFocusEffect, StackActions } from '@react-navigation/native'
 import { textStyles } from '../../utils/textStyles'
 import { calculateAmount, calculateDistance } from '../../utils/customFunctions'
 import analytics from '../../utils/analytics'
-import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import styles from './styles'
@@ -234,8 +233,6 @@ function Checkout(props) {
   }), [cart, coupon?.discount, deliveryCharges, isPickup, restaurant?.tax, selectedTip, tip])
   const inset = useSafeAreaInsets()
 
-  const insets = initialWindowMetrics?.insets || { top: 0, bottom: 0, left: 0, right: 0 }
-
   function onTipping() {
     if (isNaN(tipAmount)) FlashMessage({ message: t('invalidAmount') })
     else if (Number(tipAmount) <= 0) {
@@ -301,20 +298,22 @@ function Checkout(props) {
       },
 
       headerStyle: {
-        backgroundColor: currentTheme.colors.canvas
+        backgroundColor: currentTheme.colors.canvas,
+        height: scale(54)
       },
+      headerShadowVisible: false,
       headerLeft: () => (
-        <HeaderBackButton
-          truncatedLabel=''
-          backImage={() => (
-            <View style={{ ...alignment.PLxSmall, width: scale(30) }}>
-              <AntDesign name='arrowleft' size={22} color={currentTheme.colors.icon} />
-            </View>
-          )}
-          onPress={() => {
-            navigationService.goBack()
-          }}
-        />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => navigationService.goBack()}
+          style={styles(currentTheme).headerBackButton}
+        >
+          <AntDesign
+            name={currentTheme.isRTL ? 'arrowright' : 'arrowleft'}
+            size={scale(22)}
+            color={currentTheme.colors.icon}
+          />
+        </TouchableOpacity>
       )
     })
   }, [props?.navigation, currentTheme, t])
@@ -700,7 +699,7 @@ function Checkout(props) {
                 <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} t={t} />
                 <View style={styles(currentTheme).detailsSection}>
                   {!isPickup && (
-                    <View style={alignment.PLsmall}>
+                    <View>
                       <Location locationIcon={currentTheme.newIconColor} locationLabel={currentTheme.newFontcolor} location={currentTheme.newFontcolor} navigation={props?.navigation} addresses={profile?.addresses} forwardIcon={true} screenName={'checkout'} />
                     </View>
                   )}
@@ -783,8 +782,6 @@ function Checkout(props) {
                     </View>
                   </>
                 )}
-                <View style={[styles(currentTheme).horizontalLine2, { width: '92%', alignSelf: 'center' }]} />
-
                 <View style={styles(currentTheme).voucherSec}>
                   {!coupon ? (
                     <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).voucherSecInner} onPress={() => onModalOpen(voucherModalRef)}>
@@ -842,7 +839,7 @@ function Checkout(props) {
                       <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
                         {t('AddTip')}
                       </TextDefault>
-                      <TextDefault numberOfLines={1} normal bolder uppercase textItalic textColor={currentTheme.fontNewColor}>
+                      <TextDefault numberOfLines={1} normal bolder uppercase textColor={currentTheme.colors.textSecondary}>
                         {t('optional')}
                       </TextDefault>
                     </View>
@@ -859,13 +856,13 @@ function Checkout(props) {
                               setSelectedTip((prevState) => (prevState === label ? null : label))
                             }}
                           >
-                            <TextDefault textColor={selectedTip === label ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
+                            <TextDefault textColor={selectedTip === label ? currentTheme.colors.accent : currentTheme.colors.textPrimary} normal bolder center>
                               {configuration.currencySymbol} {label}
                             </TextDefault>
                           </TouchableOpacity>
                         ))}
                         <TouchableOpacity activeOpacity={0.7} style={tip ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton} onPress={() => onModalOpen(tipModalRef)}>
-                          <TextDefault textColor={tip ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
+                          <TextDefault textColor={tip ? currentTheme.colors.accent : currentTheme.colors.textPrimary} normal bolder center>
                             {t('Other')}
                           </TextDefault>
                         </TouchableOpacity>
@@ -887,8 +884,6 @@ function Checkout(props) {
                       {calculatePrice(0, false)}
                     </TextDefault>
                   </View>
-                  <View style={styles(currentTheme).horizontalLine2} />
-
                   {!isPickup && (
                     <>
                       <View style={styles(currentTheme).billsec}>
@@ -900,7 +895,6 @@ function Checkout(props) {
                           {deliveryCharges.toFixed(2)}
                         </TextDefault>
                       </View>
-                      <View style={styles(currentTheme).horizontalLine2} />
                     </>
                   )}
 
@@ -916,7 +910,6 @@ function Checkout(props) {
 
                   {!isPickup && (
                     <>
-                      <View style={styles(currentTheme).horizontalLine2} />
                       <View style={styles(currentTheme).billsec}>
                         <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           {t('tip')}
@@ -931,7 +924,6 @@ function Checkout(props) {
 
                   {coupon && (
                     <View>
-                      <View style={styles(currentTheme).horizontalLine2} />
                       <View style={styles(currentTheme).billsec}>
                         <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           {t('voucherDiscount')}
@@ -943,8 +935,8 @@ function Checkout(props) {
                       </View>
                     </View>
                   )}
-                  <View style={styles(currentTheme).horizontalLine2} />
-                  <View style={styles(currentTheme).billsec}>
+                  <View style={styles(currentTheme).summaryDivider} />
+                  <View style={styles(currentTheme).totalRow}>
                     <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} H4 bolder>
                       {t('total')}
                     </TextDefault>
@@ -966,7 +958,7 @@ function Checkout(props) {
               </View>
             </ScrollView>
             {!isModalOpen && (
-              <View style={[styles(currentTheme).buttonContainer, Platform.OS === 'android' && {paddingBottom: insets.bottom + 10}]}>
+              <View style={[styles(currentTheme).buttonContainer, { paddingBottom: inset.bottom + scale(10) }]}>
                 <TouchableOpacity
                   disabled={loadingOrder}
                   activeOpacity={0.7}
@@ -979,7 +971,7 @@ function Checkout(props) {
                   style={[styles(currentTheme).button, { opacity: loadingOrder ? 0.5 : 1 }]}
                 >
                   {!loadingOrder && (
-                    <TextDefault textColor={currentTheme.color4} style={styles().checkoutBtn} bold H4>
+                    <TextDefault textColor={currentTheme.colors.onAccent} style={styles().checkoutBtn} bold H4>
                       {t('placeOrder')}
                     </TextDefault>
                   )}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -10,7 +10,7 @@ export const PaymentModeOption = ({ theme, icon, iconFamily, title, selected, on
     const IconComponent =
         iconFamily === 'material-community' ? MaterialCommunityIcons : FontAwesome
 
-    return (<Pressable onPress={onSelect} style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', minHeight: scale(48), borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: theme.colors?.borderSubtle }}>
+    return (<Pressable onPress={onSelect} style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', minHeight: scale(48) }}>
         <View style={{ width: scale(34), alignItems: 'center' }}>
             <IconComponent
                 name={icon}
