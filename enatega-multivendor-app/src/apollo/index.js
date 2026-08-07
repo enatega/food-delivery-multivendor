@@ -134,7 +134,10 @@ const setupApollo = ({
         }
 
         return {
-          authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : ''
+          authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : '',
+          'x-platform': Platform.OS,
+          'accept-language': i18n.language || 'en',
+          'user-agent': `EnategaApp/${Platform.OS}`
         }
       }
     }

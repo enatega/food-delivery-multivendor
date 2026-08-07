@@ -138,8 +138,12 @@ export default function setupApollo({
       lazy: true,
       connectionParams: async () => {
         const token = await getSecureItem(tokenKey);
+        const locale = (await AsyncStorage.getItem("lang")) || "en";
         const headers: Record<string, string> = {
           authorization: token ? `Bearer ${token}` : "",
+          "x-platform": Platform.OS,
+          "accept-language": locale,
+          "user-agent": RIDER_PUBLIC_ACCESS_USER_AGENT,
         };
 
         if (PUBLIC_ACCESS_REQUIRED) {
