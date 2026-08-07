@@ -29,6 +29,11 @@ const EMAIL = gql`
   ${emailExist}
 `
 
+const singleVendorDemoCredentials = {
+  email: Constants.expoConfig?.extra?.singleVendorCustomerDemoEmail ?? '',
+  password: Constants.expoConfig?.extra?.singleVendorCustomerDemoPassword ?? ''
+}
+
 export const useLogin = () => {
   const { t, i18n } = useTranslation()
   const Analytics = analytics()
@@ -39,9 +44,15 @@ export const useLogin = () => {
     mode === APP_MODES.SINGLE ? LOGIN_SINGLE_VENDOR : LOGIN
   const emailExistDocument =
     mode === APP_MODES.SINGLE ? EMAIL_EXIST_SINGLE_VENDOR : EMAIL
-  const [email, setEmail] = useState('')
-  const emailRef = useRef('')
-  const [password, setPassword] = useState('')
+  const initialEmail =
+    mode === APP_MODES.SINGLE ? singleVendorDemoCredentials.email : ''
+  const [email, setEmail] = useState(initialEmail)
+  const emailRef = useRef(initialEmail)
+  const [password, setPassword] = useState(
+    mode === APP_MODES.SINGLE
+      ? singleVendorDemoCredentials.password
+      : ''
+  )
   const [showPassword, setShowPassword] = useState(true)
   const [emailError, setEmailError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
@@ -72,13 +83,18 @@ export const useLogin = () => {
   // Reset password when registeredEmail becomes true
   useEffect(() => {
     if (registeredEmail) {
-      if (emailRef.current === 'demo-customer@enatega.com') {
+      if (
+        mode === APP_MODES.SINGLE &&
+        emailRef.current === singleVendorDemoCredentials.email
+      ) {
+        setPassword(singleVendorDemoCredentials.password)
+      } else if (emailRef.current === 'demo-customer@enatega.com') {
         setPassword('123123')
       } else {
         setPassword('')
       }
     }
-  }, [registeredEmail])
+  }, [mode, registeredEmail])
   function validateCredentials() {
     let result = true
     setEmailError(null)
@@ -215,7 +231,7 @@ export const useLogin = () => {
   }
 
   return {
-    setEmail,
+    email,
     password,
     setPassword,
     showPassword,

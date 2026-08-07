@@ -201,6 +201,12 @@ module.exports = () => {
       './plugins/withFmtConstevalFix'
     ],
     extra: {
+      singleVendorCustomerDemoEmail:
+        process.env.EXPO_PUBLIC_SINGLE_VENDOR_CUSTOMER_DEMO_EMAIL ??
+        (process.env.NODE_ENV !== 'production' ? 'customer@fresh.com' : ''),
+      singleVendorCustomerDemoPassword:
+        process.env.EXPO_PUBLIC_SINGLE_VENDOR_CUSTOMER_DEMO_PASSWORD ??
+        (process.env.NODE_ENV !== 'production' ? 'Customer@12345' : ''),
       liveActivity: {
         appGroupId: 'group.com.enatega.multivendor.shared',
         appScheme: 'enategamultivendor',

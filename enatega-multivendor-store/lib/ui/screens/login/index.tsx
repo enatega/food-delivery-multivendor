@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -27,11 +28,6 @@ import { CustomContinueButton } from "../../useable-components";
 import { useStoreMode } from "@/lib/context/global/store-mode.context";
 import { STORE_SERVER_MODES, StoreServerMode } from "@/lib/mode/store-mode";
 
-const emptyCredentials: ILoginInitialValues = {
-  username: "",
-  password: "",
-};
-
 const multiVendorDemoCredentials: ILoginInitialValues = {
   username:
     process.env.EXPO_PUBLIC_MULTI_VENDOR_STORE_DEMO_USERNAME ??
@@ -39,6 +35,15 @@ const multiVendorDemoCredentials: ILoginInitialValues = {
   password:
     process.env.EXPO_PUBLIC_MULTI_VENDOR_STORE_DEMO_PASSWORD ??
     (__DEV__ ? "Yalla0014yalla0014@" : ""),
+};
+
+const singleVendorDemoCredentials: ILoginInitialValues = {
+  username:
+    process.env.EXPO_PUBLIC_SINGLE_VENDOR_STORE_DEMO_USERNAME ??
+    (__DEV__ ? "store@fastfresh.local" : ""),
+  password:
+    process.env.EXPO_PUBLIC_SINGLE_VENDOR_STORE_DEMO_PASSWORD ??
+    (__DEV__ ? "Store@12345" : ""),
 };
 
 const LoginScreen = () => {
@@ -54,7 +59,7 @@ const LoginScreen = () => {
     () =>
       mode === STORE_SERVER_MODES.MULTI
         ? multiVendorDemoCredentials
-        : emptyCredentials,
+        : singleVendorDemoCredentials,
     [mode],
   );
 
@@ -93,10 +98,12 @@ const LoginScreen = () => {
               return (
                 <View className="mt-24 p-5 items-center gap-y-2">
                   <View
-                    className="flex-row w-full rounded-xl border p-1 mb-5"
+                    className="mb-6 flex-row self-stretch"
                     style={{
-                      backgroundColor: appTheme.screenBackground,
-                      borderColor: appTheme.borderLineColor,
+                      marginHorizontal: -20,
+                      minHeight: 56,
+                      borderBottomColor: appTheme.borderLineColor,
+                      borderBottomWidth: StyleSheet.hairlineWidth,
                     }}
                   >
                     {[
@@ -117,20 +124,38 @@ const LoginScreen = () => {
                           accessibilityState={{ selected }}
                           disabled={isLogging || isSwitchingMode}
                           onPress={() => onSelectMode(option.value)}
-                          className="flex-1 rounded-lg py-3 px-2"
+                          className="flex-1 flex-row items-center justify-center px-2"
                           style={{
                             backgroundColor: selected
+                              ? `${appTheme.primary}12`
+                              : "transparent",
+                            borderBottomColor: selected
                               ? appTheme.primary
                               : "transparent",
+                            borderBottomWidth: 2,
                             opacity: isLogging || isSwitchingMode ? 0.65 : 1,
                           }}
                         >
+                          <Icon
+                            name={
+                              option.value === STORE_SERVER_MODES.MULTI
+                                ? "grip"
+                                : "store"
+                            }
+                            size={16}
+                            color={
+                              selected
+                                ? appTheme.primary
+                                : appTheme.fontSecondColor
+                            }
+                            style={{ marginRight: 8 }}
+                          />
                           <Text
                             className="text-center text-sm font-semibold"
                             style={{
                               color: selected
-                                ? appTheme.black
-                                : appTheme.fontMainColor,
+                                ? appTheme.primary
+                                : appTheme.fontSecondColor,
                             }}
                           >
                             {option.label}

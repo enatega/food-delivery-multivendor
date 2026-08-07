@@ -18,10 +18,7 @@ import CustomIconTextField from '@/lib/ui/useable-components/input-icon-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 
 // Constants
-import {
-  APP_NAME,
-  SignInErrors,
-} from '@/lib/utils/constants';
+import { APP_NAME, SignInErrors } from '@/lib/utils/constants';
 
 // Methods
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
@@ -43,8 +40,12 @@ import { useUserContext } from '@/lib/hooks/useUser';
 import { DEFAULT_ROUTES } from '@/lib/utils/constants/routes';
 
 const initialValues: ISignInForm = {
-  email: '',
-  password: '',
+  email:
+    process.env.NEXT_PUBLIC_SINGLE_VENDOR_ADMIN_DEMO_EMAIL ??
+    (process.env.NODE_ENV !== 'production' ? 'admin@fastfresh.com' : ''),
+  password:
+    process.env.NEXT_PUBLIC_SINGLE_VENDOR_ADMIN_DEMO_PASSWORD ??
+    (process.env.NODE_ENV !== 'production' ? 'Admin@12345' : ''),
 };
 
 export default function LoginEmailPasswordMain() {
@@ -104,7 +105,7 @@ export default function LoginEmailPasswordMain() {
   return (
     <div className="flex h-full w-screen items-center justify-center bg-white dark:bg-dark-950">
       <div className="w-full md:w-1/2 lg:w-[30%]">
-        <Card className='dark:bg-dark-900 border dark:border-dark-600'>
+        <Card className="dark:bg-dark-900 border dark:border-dark-600">
           <div className="flex flex-col gap-2 ">
             <div className="mb-2 flex flex-col items-center gap-y-[0.5rem] p-2">
               <span className="font-inter text-center text-3xl font-semibold dark:text-white">

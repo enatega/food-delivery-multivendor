@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -34,11 +35,6 @@ import { CustomContinueButton } from "../../useable-components";
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { RIDER_SERVER_MODES, RiderServerMode } from "@/lib/mode/rider-mode";
 
-const emptyCredentials: ILoginInitialValues = {
-  username: "",
-  password: "",
-};
-
 const multiVendorDemoCredentials: ILoginInitialValues = {
   username:
     process.env.EXPO_PUBLIC_MULTI_VENDOR_RIDER_DEMO_USERNAME ??
@@ -46,6 +42,15 @@ const multiVendorDemoCredentials: ILoginInitialValues = {
   password:
     process.env.EXPO_PUBLIC_MULTI_VENDOR_RIDER_DEMO_PASSWORD ??
     (__DEV__ ? "Rider@123" : ""),
+};
+
+const singleVendorDemoCredentials: ILoginInitialValues = {
+  username:
+    process.env.EXPO_PUBLIC_SINGLE_VENDOR_RIDER_DEMO_USERNAME ??
+    (__DEV__ ? "enategaRider@gmail.com" : ""),
+  password:
+    process.env.EXPO_PUBLIC_SINGLE_VENDOR_RIDER_DEMO_PASSWORD ??
+    (__DEV__ ? "Enatega@123" : ""),
 };
 
 const LoginScreen = () => {
@@ -62,7 +67,7 @@ const LoginScreen = () => {
     () =>
       mode === RIDER_SERVER_MODES.MULTI
         ? multiVendorDemoCredentials
-        : emptyCredentials,
+        : singleVendorDemoCredentials,
     [mode],
   );
 
@@ -120,10 +125,12 @@ const LoginScreen = () => {
               return (
                 <View className="mt-24 p-5 items-center justify-between gap-y-2">
                   <View
-                    className="mb-6 w-full flex-row rounded-xl border p-1"
+                    className="mb-6 flex-row self-stretch"
                     style={{
-                      borderColor: appTheme.borderLineColor,
-                      backgroundColor: appTheme.themeBackground,
+                      marginHorizontal: -20,
+                      minHeight: 56,
+                      borderBottomColor: appTheme.borderLineColor,
+                      borderBottomWidth: StyleSheet.hairlineWidth,
                     }}
                   >
                     {(
@@ -140,16 +147,38 @@ const LoginScreen = () => {
                           accessibilityState={{ selected }}
                           disabled={isLogging}
                           onPress={() => void onModeSelected(serverMode)}
-                          className="flex-1 items-center rounded-lg px-3 py-3"
+                          className="flex-1 flex-row items-center justify-center px-2"
                           style={{
                             backgroundColor: selected
+                              ? `${appTheme.primary}12`
+                              : "transparent",
+                            borderBottomColor: selected
                               ? appTheme.primary
                               : "transparent",
+                            borderBottomWidth: 2,
                           }}
                         >
+                          <FontAwesome6
+                            name={
+                              serverMode === RIDER_SERVER_MODES.MULTI
+                                ? "grip"
+                                : "store"
+                            }
+                            size={16}
+                            color={
+                              selected
+                                ? appTheme.primary
+                                : appTheme.fontSecondColor
+                            }
+                            style={{ marginRight: 8 }}
+                          />
                           <Text
                             className="text-sm font-semibold"
-                            style={{ color: appTheme.fontMainColor }}
+                            style={{
+                              color: selected
+                                ? appTheme.primary
+                                : appTheme.fontSecondColor,
+                            }}
                           >
                             {label}
                           </Text>
