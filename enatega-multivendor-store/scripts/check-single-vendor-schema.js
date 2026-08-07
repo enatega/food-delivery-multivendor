@@ -8,7 +8,8 @@ const {
   validate,
 } = require("graphql");
 
-const DEFAULT_GRAPHQL_URL = "https://3086ptqf-8001.inc1.devtunnels.ms/graphql";
+const DEFAULT_GRAPHQL_URL =
+  "https://enatega-multivendor-api-production-9b09.up.railway.app/graphql";
 const sourceRoot = path.resolve(__dirname, "../lib/apollo");
 
 const collectTypeScriptFiles = (directory) =>

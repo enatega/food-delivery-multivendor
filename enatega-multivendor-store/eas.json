@@ -22,6 +22,10 @@
 
     "production": {
       "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL": "https://enatega-multivendor-api-production-9b09.up.railway.app/graphql",
+        "EXPO_PUBLIC_SINGLE_VENDOR_WS_GRAPHQL_URL": "wss://enatega-multivendor-api-production-9b09.up.railway.app/graphql"
+      },
       "ios": {
         "image": "macos-sequoia-15.6-xcode-26.2"
       }
