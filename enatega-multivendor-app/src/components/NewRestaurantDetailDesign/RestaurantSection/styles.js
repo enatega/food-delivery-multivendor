@@ -106,12 +106,12 @@ const styles = (props = null) =>
     categoriesGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      paddingHorizontal: 0
+      paddingHorizontal: 0,
+      columnGap: CATEGORY_GAP,
+      rowGap: CATEGORY_GAP
     },
     categoryWrapper: {
-      width: '50%',
-      paddingHorizontal: CATEGORY_GAP / 2,
-      paddingBottom: CATEGORY_GAP / 2
+      width: CATEGORY_CARD_WIDTH
     },
     categoryCard: {
       backgroundColor: props?.colors?.surface ?? props?.cardBackground ?? '#18181B',

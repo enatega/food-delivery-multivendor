@@ -49,12 +49,13 @@ const styles = (props = null) =>
     },
     deliveryDetailsOverlay: {
       position: 'absolute',
-      bottom: scale(12),
+      bottom: scale(28),
       left: scale(12),
       right: scale(12),
       flexDirection: 'row',
       alignItems: 'center',
-      gap: scale(10)
+      gap: scale(10),
+      zIndex: 3
     },
     detailPill: {
       backgroundColor: 'rgba(24, 24, 27, 0.86)',
@@ -79,7 +80,7 @@ const styles = (props = null) =>
       fontWeight: 'bold'
     },
     contentContainer: {
-      marginTop: -scale(18),
+      marginTop: -scale(16),
       marginHorizontal: scale(12),
       paddingHorizontal: scale(12),
       paddingTop: scale(12),

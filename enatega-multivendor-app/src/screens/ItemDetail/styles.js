@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
@@ -18,10 +17,34 @@ const styles = (props = null) =>
     subContainer: {
       width: '100%',
       backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff',
-      paddingHorizontal: props?.spacing?.lg ?? scale(16)
+      paddingHorizontal: props?.spacing?.md ?? scale(12)
     },
     scrollViewStyle: {
       backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff'
+    },
+    scrollContent: {
+      paddingBottom: scale(116)
+    },
+    productIntro: {
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      paddingTop: props?.spacing?.sm ?? scale(8),
+      paddingBottom: props?.spacing?.sm ?? scale(8)
+    },
+    productImage: {
+      width: '100%',
+      height: scale(226),
+      margin: 0,
+      borderRadius: props?.radii?.lg ?? scale(14),
+      overflow: 'hidden',
+      backgroundColor: props?.colors?.surfaceSubtle ?? '#202024'
+    },
+    imageFallback: {
+      width: '100%',
+      height: scale(190),
+      borderRadius: props?.radii?.lg ?? scale(14),
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: props?.colors?.surfaceSubtle ?? '#202024'
     },
     headerContainer: {
       position: 'absolute',
@@ -47,8 +70,13 @@ const styles = (props = null) =>
       marginVertical: props?.spacing?.lg ?? scale(16),
       backgroundColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)'
     },
+    optionSection: {
+      paddingVertical: props?.spacing?.sm ?? scale(8),
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.22)'
+    },
     input: {
-      backgroundColor: props !== null ? props?.themeBackground : 'black',
+      backgroundColor: props?.colors?.surfaceSubtle ?? props?.themeBackground ?? '#202024',
       borderRadius: props?.radii?.md ?? scale(10),
       height: scale(50),
       paddingLeft: scale(10),
@@ -58,8 +86,10 @@ const styles = (props = null) =>
       textAlign: props?.isRTL ? 'right' : 'left'
     },
     inputContainer: {
-      alignSelf: 'center',
-      zIndex: scale(1)
+      width: '100%',
+      paddingTop: props?.spacing?.sm ?? scale(8),
+      paddingBottom: props?.spacing?.md ?? scale(12),
+      zIndex: 1
     },
     backBtnContainer: {
       borderRadius: scale(50),
@@ -69,10 +99,14 @@ const styles = (props = null) =>
     descriptionText: {
       color: props?.colors?.textSecondary ?? props?.darkBgFont ?? '#52525B',
       ...props?.typeScale?.body,
-      paddingTop: props?.spacing?.md ?? scale(12),
-      paddingHorizontal: props?.spacing?.lg ?? scale(16),
-      maxWidth: '100%',
-      ...alignment.MRxSmall
+      paddingHorizontal: scale(2),
+      paddingBottom: props?.spacing?.sm ?? scale(8)
+    },
+    cartFooter: {
+      zIndex: 10,
+      backgroundColor: props?.colors?.surface ?? props?.themeBackground ?? '#18181B',
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.22)'
     }
   })
 export default styles

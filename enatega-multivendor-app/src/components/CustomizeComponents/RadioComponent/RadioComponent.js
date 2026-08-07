@@ -6,8 +6,8 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
-import { alignment } from '../../../utils/alignment'
 import { useTranslation } from 'react-i18next'
+import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
 
 function RadioComponent(props) {
   const { i18n } = useTranslation()
@@ -15,9 +15,11 @@ function RadioComponent(props) {
   const [options] = useState(props?.options)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
 
   function onPress(option) {
@@ -38,14 +40,14 @@ function RadioComponent(props) {
           <View style={styles(currentTheme).leftContainer}>
             <RadioButton
               size={11}
-              outerColor={currentTheme.iconColorDark}
-              innerColor={currentTheme.main}
+              outerColor={currentTheme.colors.borderStandard}
+              innerColor={currentTheme.colors.accent}
               animation={'bounceIn'}
               isSelected={selected ? selected._id === option._id : false}
               onPress={onPress.bind(this, option)}
             />
             <TextDefault
-              textColor={currentTheme.fontMainColor}
+              textColor={currentTheme.colors.textPrimary}
               style={styles(currentTheme).title}
               bolder
               isRTL
@@ -55,7 +57,7 @@ function RadioComponent(props) {
           </View>
           <View style={styles(currentTheme).rightContainer}>
             <TextDefault
-              textColor={currentTheme.fontMainColor}
+              textColor={currentTheme.colors.textSecondary}
               bolder
               isRTL
             >{`${configuration.currencySymbol}${option.price}`}</TextDefault>

@@ -7,12 +7,14 @@ import TextDefault from '../../Text/TextDefault/TextDefault'
 import { AntDesign } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import { useTranslation } from 'react-i18next'
+import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
 
 function CartComponent(props) {
   const { t } = useTranslation()
   const [quantity, setQuantity] = useState(props?.quantity || 1)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const { tokens } = useMultivendorTheme()
+  const currentTheme = { ...theme[themeContext.ThemeValue], ...tokens }
   function onAdd() {
     setQuantity(quantity + 1)
   }
@@ -23,7 +25,7 @@ function CartComponent(props) {
 
   return (
     <View style={styles(currentTheme).mainContainer}>
-      <View style={styles().subContainer}>
+      <View style={styles(currentTheme).subContainer}>
       <View style={styles(currentTheme).actionContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
@@ -36,12 +38,12 @@ function CartComponent(props) {
           <AntDesign
             name={quantity < 2 ? 'delete' : 'minus'}
             size={scale(18)}
-            color={currentTheme.color4}
+            color={currentTheme.colors.textPrimary}
           />
         </TouchableOpacity>
 
         <View style={styles(currentTheme).actionContainerView}>
-          <TextDefault H5 bold textColor={currentTheme.black}>
+          <TextDefault H5 bold textColor={currentTheme.colors.textPrimary}>
           {quantity}
           </TextDefault>
         </View>
@@ -53,21 +55,14 @@ function CartComponent(props) {
             styles(currentTheme).plusBtn
           ]}
           onPress={onAdd}>
-          <AntDesign name="plus" size={scale(18)} color={currentTheme.white} />
+          <AntDesign name='plus' size={scale(18)} color={currentTheme.colors.textOnAccent} />
         </TouchableOpacity>
       </View>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={props?.onPress.bind(this, quantity)}
-          style={
-            !props?.disabled
-              ? styles(currentTheme).btnContainer
-              : {
-                ...styles().btnContainer,
-                backgroundColor: currentTheme.main
-              }
-          }>
-          <TextDefault textColor={currentTheme.black} H5 bolder center>
+          style={[styles(currentTheme).btnContainer, !props?.disabled && styles(currentTheme).btnContainerPending]}>
+          <TextDefault textColor={currentTheme.colors.textOnAccent} H5 bolder center>
             {t('addToCart')}
           </TextDefault>
         </TouchableOpacity>
