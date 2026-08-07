@@ -1,6 +1,6 @@
 // Core
 import { Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // React Native
@@ -34,9 +34,18 @@ import { CustomContinueButton } from "../../useable-components";
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { RIDER_SERVER_MODES, RiderServerMode } from "@/lib/mode/rider-mode";
 
-const initial: ILoginInitialValues = {
+const emptyCredentials: ILoginInitialValues = {
   username: "",
   password: "",
+};
+
+const multiVendorDemoCredentials: ILoginInitialValues = {
+  username:
+    process.env.EXPO_PUBLIC_MULTI_VENDOR_RIDER_DEMO_USERNAME ??
+    (__DEV__ ? "ryanabotreef" : ""),
+  password:
+    process.env.EXPO_PUBLIC_MULTI_VENDOR_RIDER_DEMO_PASSWORD ??
+    (__DEV__ ? "Rider@123" : ""),
 };
 
 const LoginScreen = () => {
@@ -49,6 +58,13 @@ const LoginScreen = () => {
   const { t } = useTranslation();
   const { onLogin, isLogging } = useLogin();
   const { mode, selectMode } = useRiderMode();
+  const loginInitialValues = useMemo(
+    () =>
+      mode === RIDER_SERVER_MODES.MULTI
+        ? multiVendorDemoCredentials
+        : emptyCredentials,
+    [mode],
+  );
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
@@ -95,7 +111,8 @@ const LoginScreen = () => {
           // contentContainerStyle={{ height: height * 1 }}
         >
           <Formik
-            initialValues={initial}
+            initialValues={loginInitialValues}
+            enableReinitialize
             validationSchema={SignInSchema}
             onSubmit={onLoginHandler}
           >

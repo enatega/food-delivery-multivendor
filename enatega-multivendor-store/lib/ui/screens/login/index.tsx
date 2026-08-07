@@ -1,6 +1,6 @@
 // Core
 import { Formik } from "formik";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 // React Native
 import {
@@ -27,9 +27,18 @@ import { CustomContinueButton } from "../../useable-components";
 import { useStoreMode } from "@/lib/context/global/store-mode.context";
 import { STORE_SERVER_MODES, StoreServerMode } from "@/lib/mode/store-mode";
 
-const initial: ILoginInitialValues = {
+const emptyCredentials: ILoginInitialValues = {
   username: "",
   password: "",
+};
+
+const multiVendorDemoCredentials: ILoginInitialValues = {
+  username:
+    process.env.EXPO_PUBLIC_MULTI_VENDOR_STORE_DEMO_USERNAME ??
+    (__DEV__ ? "FalafelTmeer@yopmail.com" : ""),
+  password:
+    process.env.EXPO_PUBLIC_MULTI_VENDOR_STORE_DEMO_PASSWORD ??
+    (__DEV__ ? "Yalla0014yalla0014@" : ""),
 };
 
 const LoginScreen = () => {
@@ -41,6 +50,13 @@ const LoginScreen = () => {
   const { t } = useTranslation();
   const { isLogging, onLogin } = useLogin();
   const { isSwitchingMode, mode, selectMode } = useStoreMode();
+  const loginInitialValues = useMemo(
+    () =>
+      mode === STORE_SERVER_MODES.MULTI
+        ? multiVendorDemoCredentials
+        : emptyCredentials,
+    [mode],
+  );
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
@@ -68,7 +84,7 @@ const LoginScreen = () => {
           // contentContainerStyle={{ height: height * 1 }}
         >
           <Formik
-            initialValues={initial}
+            initialValues={loginInitialValues}
             enableReinitialize={true}
             validationSchema={SignInSchema}
             onSubmit={onLoginHandler}
