@@ -105,15 +105,14 @@ const styles = (props = null) =>
       ...alignment.PTlarge
     },
     modal: {
-      backgroundColor: props != null ? props?.cardBackground : '#FFF',
-      paddingTop: scale(10),
+      backgroundColor: props?.colors?.surface ?? props?.cardBackground ?? '#FFF',
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
       position: 'relative',
       zIndex: 9999999,
       shadowOpacity: 0,
-      borderWidth: scale(1),
-      borderColor: props != null ? props?.customBorder : '#FFF'
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? props?.customBorder
     },
     addressTextContainer: {
       display: 'flex',
@@ -130,8 +129,10 @@ const styles = (props = null) =>
         props != null ? props?.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
     },
     handle: {
-      width: scale(150),
-      backgroundColor: props != null ? props?.backgroundColor : 'transparent'
+      width: scale(36),
+      height: scale(4),
+      borderRadius: scale(2),
+      backgroundColor: props?.colors?.borderStandard ?? props?.backgroundColor
     },
     relative: {
       position: 'relative'

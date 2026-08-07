@@ -104,6 +104,7 @@ function Menu({ route, props }) {
   const navigation = useNavigation()
   const routeData = useRoute()
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -120,9 +121,9 @@ function Menu({ route, props }) {
 
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
-  const { tokens } = useMultivendorTheme()
   const { getCurrentLocation } = useLocation()
 
   const locationData = location
@@ -391,7 +392,26 @@ function Menu({ route, props }) {
     return allCuisines?.cuisines
   }, [allCuisines, isShopType, routeData, selectedType])
 
-  console.log('collectionData::', collectionData)
+  useEffect(() => {
+    if (!collection || !collectionData?.length) return
+
+    const normalizedCollection = collection.trim().toLowerCase()
+    const targetIndex = collectionData.findIndex(
+      (item) => item?.name?.trim().toLowerCase() === normalizedCollection
+    )
+    if (targetIndex < 0) return
+
+    setActiveCollection(collectionData[targetIndex].name)
+    const scrollTimer = setTimeout(() => {
+      flatListRef.current?.scrollToIndex({
+        index: targetIndex,
+        animated: true,
+        viewPosition: 0.5
+      })
+    }, 80)
+
+    return () => clearTimeout(scrollTimer)
+  }, [collection, collectionData])
 
   const setCurrentLocation = async () => {
     setBusy(true)
@@ -634,9 +654,10 @@ function Menu({ route, props }) {
   //   }
   // }
   const onPressCollection = (collection, index) => {
-    flatListRef.current.scrollToIndex({
+    flatListRef.current?.scrollToIndex({
       index: index,
-      animated: true
+      animated: true,
+      viewPosition: 0.5
     })
     if (activeCollection === collection.name) {
       // If the same collection is clicked again, deselect it
@@ -786,6 +807,15 @@ function Menu({ route, props }) {
           horizontal
           inverted={currentTheme?.isRTL}
           getItemLayout={getItemLayout}
+          onScrollToIndexFailed={({ index }) => {
+            setTimeout(() => {
+              flatListRef.current?.scrollToIndex({
+                index,
+                animated: true,
+                viewPosition: 0.5
+              })
+            }, 120)
+          }}
         />
       </View>
 
