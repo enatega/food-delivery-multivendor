@@ -310,7 +310,7 @@ function Checkout(props) {
           <AntDesign
             name={currentTheme.isRTL ? 'arrowright' : 'arrowleft'}
             size={scale(22)}
-            color={currentTheme.colors.icon}
+            color={currentTheme.colors.textPrimary}
           />
         </TouchableOpacity>
       )
@@ -977,7 +977,10 @@ function Checkout(props) {
               <View
                 style={[
                   styles(currentTheme).buttonContainer,
-                  { paddingBottom: Math.max(scale(8), inset.bottom * 0.3) }
+                  {
+                    marginBottom: -inset.bottom,
+                    paddingBottom: inset.bottom + scale(8)
+                  }
                 ]}
               >
                 <TouchableOpacity
@@ -992,7 +995,7 @@ function Checkout(props) {
                   style={[styles(currentTheme).button, { opacity: loadingOrder ? 0.5 : 1 }]}
                 >
                   {!loadingOrder && (
-                    <TextDefault textColor={currentTheme.colors.onAccent} style={styles().checkoutBtn} bold H4>
+                    <TextDefault textColor={currentTheme.colors.textOnAccent} style={styles().checkoutBtn} bold H4>
                       {t('placeOrder')}
                     </TextDefault>
                   )}

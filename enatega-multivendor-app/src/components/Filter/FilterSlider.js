@@ -20,7 +20,6 @@ const cloneFiltersState = (filters = {}) =>
     return acc
   }, {})
 
-
 const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
@@ -63,93 +62,93 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   const anySelected = Object.values(safeFilters).some((f) => (f.selected || []).length > 0)
 
   return (
-  <ScrollView
-    style={styles(currentTheme).container}
-    contentContainerStyle={styles(currentTheme).contentContainer}
-    showsVerticalScrollIndicator={false}
-  >
-    <View style={styles(currentTheme).headerRow}>
-      <TextDefault H3 bold textColor={currentTheme.colors.textPrimary} isRTL>
-        {t('filters')}
-      </TextDefault>
-      <TouchableOpacity
-        accessibilityRole='button'
-        accessibilityLabel={t('close')}
-        activeOpacity={0.7}
-        style={styles(currentTheme).closeBtn}
-        onPress={onClose}
-      >
-        <Feather name='x' size={20} color={currentTheme.colors.icon} />
-      </TouchableOpacity>
-    </View>
-
-    {Object.keys(safeFilters).map((filter, index) => (
-      <View style={styles(currentTheme).filterSection} key={'filters-' + filter + index}>
-        <TextDefault H5 bold textColor={currentTheme.colors.textPrimary} style={styles(currentTheme).sectionTitle} isRTL>
-          {t(filter)}
+    <ScrollView
+      style={styles(currentTheme).container}
+      contentContainerStyle={styles(currentTheme).contentContainer}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles(currentTheme).headerRow}>
+        <TextDefault H3 bold textColor={currentTheme.colors.textPrimary} isRTL>
+          {t('filters')}
         </TextDefault>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles(currentTheme).flatlist}
-        >
-          {safeFilters[filter].values.map((item, idx) => (
-            <TouchableOpacity
-              key={item + idx}
-              activeOpacity={0.8}
-              onPress={() => handleValueSelection(filter, item)}
-              style={[
-                styles(currentTheme).filterBtn,
-                safeFilters[filter].selected.includes(item) && styles(currentTheme).filterBtnSelected
-              ]}
-            >
-              <TextDefault
-                Normal
-                bold
-                textColor={
-                  safeFilters[filter].selected.includes(item)
-                    ? currentTheme.colors.accent
-                    : currentTheme.colors.textSecondary
-                }
-              >
-                {t(item)}
-              </TextDefault>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        {index < Object.keys(safeFilters).length - 1 && (
-          <View style={styles(currentTheme).divider} />
-        )}
-      </View>
-    ))}
-
-    <View style={styles(currentTheme).actions}>
-      {anySelected && (
         <TouchableOpacity
-          style={styles(currentTheme).clearBtn}
+          accessibilityRole='button'
+          accessibilityLabel={t('close')}
           activeOpacity={0.7}
-          onPress={clearFilters}
+          style={styles(currentTheme).closeBtn}
+          onPress={onClose}
         >
-          <TextDefault center bold textColor={currentTheme.colors.accent}>
-            {t('clearAll', 'Clear all')}
+          <Feather name='x' size={20} color={currentTheme.colors.textPrimary} />
+        </TouchableOpacity>
+      </View>
+
+      {Object.keys(safeFilters).map((filter, index) => (
+        <View style={styles(currentTheme).filterSection} key={'filters-' + filter + index}>
+          <TextDefault H5 bold textColor={currentTheme.colors.textPrimary} style={styles(currentTheme).sectionTitle} isRTL>
+            {t(filter)}
+          </TextDefault>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles(currentTheme).flatlist}
+          >
+            {safeFilters[filter].values.map((item, idx) => (
+              <TouchableOpacity
+                key={item + idx}
+                activeOpacity={0.8}
+                onPress={() => handleValueSelection(filter, item)}
+                style={[
+                  styles(currentTheme).filterBtn,
+                  safeFilters[filter].selected.includes(item) && styles(currentTheme).filterBtnSelected
+                ]}
+              >
+                <TextDefault
+                  Normal
+                  bold
+                  textColor={
+                    safeFilters[filter].selected.includes(item)
+                      ? currentTheme.colors.accent
+                      : currentTheme.colors.textSecondary
+                  }
+                >
+                  {t(item)}
+                </TextDefault>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {index < Object.keys(safeFilters).length - 1 && (
+            <View style={styles(currentTheme).divider} />
+          )}
+        </View>
+      ))}
+
+      <View style={styles(currentTheme).actions}>
+        {anySelected && (
+          <TouchableOpacity
+            style={styles(currentTheme).clearBtn}
+            activeOpacity={0.7}
+            onPress={clearFilters}
+          >
+            <TextDefault center bold textColor={currentTheme.colors.accent}>
+              {t('clearAll', 'Clear all')}
+            </TextDefault>
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          style={styles(currentTheme).applyBtn}
+          activeOpacity={0.8}
+          onPress={() => applyFilters(safeFilters)}
+        >
+          <TextDefault center bold H4 textColor={currentTheme.colors.textOnAccent}>
+            {t('apply')}
           </TextDefault>
         </TouchableOpacity>
-      )}
-
-      <TouchableOpacity
-        style={styles(currentTheme).applyBtn}
-        activeOpacity={0.8}
-        onPress={() => applyFilters(safeFilters)}
-      >
-        <TextDefault center bold H4 textColor={currentTheme.colors.onAccent}>
-          {t('apply')}
-        </TextDefault>
-      </TouchableOpacity>
-    </View>
-  </ScrollView>
-)
+      </View>
+    </ScrollView>
+  )
 }
 
 export default Filters
