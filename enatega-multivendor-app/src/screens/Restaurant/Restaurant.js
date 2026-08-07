@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useContext, useEffect, useRef, useMemo, useCallback, useDeferredValue } from 'react'
 import { View, TouchableOpacity, Alert, StatusBar, Platform, Dimensions, FlatList, Pressable } from 'react-native'
-import Animated, { Extrapolation, interpolate, useSharedValue, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
+import Animated, { useSharedValue, withTiming, withRepeat, useAnimatedStyle, useAnimatedScrollHandler } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from 'rn-placeholder'
 import { gql, useApolloClient, useQuery } from '@apollo/client'
@@ -18,18 +18,17 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { scale } from '../../utils/scaling'
 import { theme } from '../../utils/themeColors'
 import styles from './styles'
-import { alignment } from '../../utils/alignment'
 import analytics from '../../utils/analytics'
 import { popularItems, food } from '../../apollo/queries'
 import ItemCard from '../../components/ItemCards/ItemCards'
 import { IMAGE_LINK } from '../../utils/constants'
 import PopularIcon from '../../assets/SVG/popular'
 import { escapeRegExp } from '../../utils/regex'
-import { calculateDistance, isOpen } from '../../utils/customFunctions'
-import { LocationContext } from '../../context/Location'
+import { isOpen } from '../../utils/customFunctions'
 import ShimmerImage from '../../components/ShimmerImage/ShimmerImage'
 import { resolveRestaurantImage as resolveResolvedRestaurantImage } from '../../utils/resolveImageUrl'
 import OutOfStockModal from '../../components/OutOfStockModal/OutOfStockModal'
+import { useMultivendorTheme } from '../../ui/designSystem'
 
 const { height } = Dimensions.get('screen')
 
@@ -85,15 +84,16 @@ function Restaurant(props) {
   const propsData = route.params
   const scrollY = useSharedValue(0)
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
   const currentTheme = useMemo(
     () => ({
       isRTL: i18n.dir() === 'rtl',
-      ...theme[themeContext.ThemeValue]
+      ...theme[themeContext.ThemeValue],
+      ...tokens
     }),
-    [i18n, themeContext.ThemeValue]
+    [i18n, themeContext.ThemeValue, tokens]
   )
   const configuration = useContext(ConfigurationContext)
-  const { location } = useContext(LocationContext)
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
   const [searchOpen, setSearchOpen] = useState(false)
   const [search, setSearch] = useState('')
@@ -220,11 +220,6 @@ function Restaurant(props) {
     ))
   }, [categories])
 
-  const distance = useMemo(
-    () => calculateDistance(restaurant?.location?.coordinates?.[1], restaurant?.location?.coordinates?.[0], location?.latitude, location?.longitude),
-    [location?.latitude, location?.longitude, restaurant?.location?.coordinates]
-  )
-
   const displayedDeliveryMinutes = useMemo(
     () => restaurant?.estimatedDeliveryMinutes ?? restaurant?.deliveryTime ?? '...',
     [restaurant]
@@ -343,7 +338,7 @@ function Restaurant(props) {
   }, [scaleValue])
 
   const onPressItem = useCallback(
-    async (foodItem) => {
+    async(foodItem) => {
       if (!restaurant?.isAvailable || !isOpen(restaurant)) {
         Alert.alert(
           '',
@@ -372,7 +367,7 @@ function Restaurant(props) {
             },
             {
               text: t('okText'),
-              onPress: async () => {
+              onPress: async() => {
                 await addToCart(foodItem, true)
               }
             }
@@ -385,7 +380,7 @@ function Restaurant(props) {
   )
 
   const addToCart = useCallback(
-    async (foodItem, clearFlag) => {
+    async(foodItem, clearFlag) => {
       if (foodItem.variations.length === 1 && foodItem.variations[0].addons.length === 0) {
         await setCartRestaurant(foodItem.restaurant)
         const result = checkItemCart(foodItem._id)
@@ -562,7 +557,8 @@ function Restaurant(props) {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles(currentTheme).flex}>
       <View style={styles(currentTheme).flex}>
-        {searchOpen ? (
+        {searchOpen
+          ? (
           <View style={styles(currentTheme).flex}>
             <ImageHeader
               aboutObject={aboutObject}
@@ -596,7 +592,8 @@ function Restaurant(props) {
               }
             />
           </View>
-        ) : (
+            )
+          : (
           <>
             <ImageHeader
               aboutObject={aboutObject}
@@ -638,7 +635,7 @@ function Restaurant(props) {
               windowSize={7}
             />
           </>
-        )}
+            )}
 
         {cartCount > 0 && (
           <View style={styles(currentTheme).buttonContainer}>
@@ -732,14 +729,8 @@ const PopularGridRow = React.memo(function PopularGridRow({ currentTheme, items,
         </TextDefault>
       </View>
       <TextDefault
-        textColor={currentTheme.fontFourthColor}
-        style={{
-          ...alignment.PLmedium,
-          ...alignment.PRmedium,
-          fontSize: scale(12),
-          fontWeight: '400',
-          marginTop: scale(3)
-        }}
+        textColor={currentTheme.colors.textMuted}
+        style={styles(currentTheme).popularSubtitle}
         isRTL
       >
         {t('mostOrderedNow')}
@@ -794,11 +785,13 @@ const FoodRow = React.memo(function FoodRow({ configuration, currentTheme, item,
                   <TextDefault textColor={currentTheme.fontMainColor} style={[styles(currentTheme).headerText, { backgroundColor: 'transparent' }]} numberOfLines={1} bolder isRTL>
                     {item?.title}
                   </TextDefault>
-                  {item?.description ? (
+                  {item?.description
+                    ? (
                     <TextDefault style={styles(currentTheme).priceText} small isRTL>
                       {wrapContentAfterWords(item?.description, 5)}
                     </TextDefault>
-                  ) : null}
+                      )
+                    : null}
                   <View style={styles(currentTheme).dealPrice}>
                     <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} style={styles(currentTheme).priceText} bolder small isRTL>
                       {configuration.currencySymbol} {parseFloat(item?.variations?.[0]?.price ?? 0).toFixed(2)}
