@@ -5,10 +5,14 @@ const APP_MODES = {
 
 const MULTI_ENV_CONFIG = {
   development: {
-    GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',
-    WS_GRAPHQL_URL: 'wss://aws-server-v2.enatega.com/graphql',
-    SERVER_URL: 'https://aws-server-v2.enatega.com/graphql',
-    SERVER_REST_URL: 'https://aws-server-v2.enatega.com/',
+    // GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',
+    // WS_GRAPHQL_URL: 'wss://aws-server-v2.enatega.com/graphql',
+    // SERVER_URL: 'https://aws-server-v2.enatega.com/graphql',
+    // SERVER_REST_URL: 'https://aws-server-v2.enatega.com/',
+    GRAPHQL_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/graphql',
+    WS_GRAPHQL_URL: 'wss://3086ptqf-8001.inc1.devtunnels.ms/graphql',
+    SERVER_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/graphql',
+    SERVER_REST_URL: 'https://3086ptqf-8001.inc1.devtunnels.ms/',
     // GRAPHQL_URL: 'http://192.168.1.175:8001/graphql',
     // WS_GRAPHQL_URL: 'wss://192.168.1.175:8001/graphql',
     // SERVER_URL: 'http://192.168.1.175:8001/graphql',

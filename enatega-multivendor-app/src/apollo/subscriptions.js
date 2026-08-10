@@ -7,8 +7,28 @@ export const subscriptionOrder = `subscription SubscriptionOrder($id:String!){
         }
         completionTime
         preparationTime
+        eta {
+          phase source readyAt baseArrivalAt estimatedArrivalAt
+          windowStartAt windowEndAt durationSeconds distanceMeters
+          encodedPolyline calculatedAt lastLocationAt version
+        }
     }
   }`
+
+export const subscriptionOrderTracking = `subscription SubscriptionOrderTracking($id:String!){
+  subscriptionOrderTracking(id:$id){
+    orderId
+    status
+    riderLocation {
+      latitude longitude accuracy heading speed recordedAt
+    }
+    eta {
+      phase source readyAt baseArrivalAt estimatedArrivalAt
+      windowStartAt windowEndAt durationSeconds distanceMeters
+      encodedPolyline calculatedAt lastLocationAt version
+    }
+  }
+}`
 
 export const subscriptionRiderLocation = `subscription SubscriptionRiderLocation($riderId:String!){
     subscriptionRiderLocation(riderId:$riderId) {

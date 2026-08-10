@@ -88,6 +88,18 @@ export const GET_ACTIVE_ORDERS = gql`
         deliveryCharges
         tipping
         taxationAmount
+        completionTime
+        preparationTime
+        eta {
+          phase
+          source
+          readyAt
+          estimatedArrivalAt
+          windowStartAt
+          windowEndAt
+          calculatedAt
+          lastLocationAt
+        }
         rider {
           _id
           name
@@ -559,5 +571,4 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
     }
   }
 `;
-
 

@@ -1,161 +1,320 @@
-import { FlatList, Pressable, StyleSheet, Text, View, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View
+} from 'react-native'
+import React from 'react'
+import { Feather, FontAwesome6 } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../../utils/scaling'
-import { Entypo, AntDesign, FontAwesome6, Feather, Octicons } from '@expo/vector-icons'
 
-const SearchedAddress = ({ currentTheme, t, addressDetail, selectedType, setSelectedType, otherAddressDetails, setOtherAddressDetails, doorBell, setDoorBell }) => {
-  const [isModalVisible, setisModalVisible] = useState(false)
+const SearchedAddress = ({
+  currentTheme,
+  t,
+  addressDetail,
+  selectedType,
+  setSelectedType,
+  otherAddressDetails,
+  setOtherAddressDetails,
+  doorBell,
+  setDoorBell,
+  setactiveState,
+  bottomInset
+}) => {
+  const accent = currentTheme.singlevendorcolor || currentTheme.primaryBlue
+  const primaryText = currentTheme.colorTextPrimary || currentTheme.fontMainColor
+  const mutedText = currentTheme.colorTextMuted || currentTheme.fontSecondColor
+  const divider = currentTheme.newBorderColor2 || currentTheme.borderColor
 
   const locationTypes = [
-    {
-      id: 'apartment',
-      label: t('Apartment'),
-      icon: <FontAwesome6 name='building' size={18} color={currentTheme.iconColor} />
-    },
-    {
-      id: 'home',
-      label: t('Home'),
-      icon: <Feather name='home' size={18} color={currentTheme.iconColor} />
-    },
-    {
-      id: 'office',
-      label: t('Office'),
-      icon: <Feather name='briefcase' size={18} color={currentTheme.iconColor} />
-    },
-    {
-      id: 'other',
-      label: t('Other'),
-      icon: <Octicons name='location' size={18} color={currentTheme.iconColor} />
-    }
+    { id: 'apartment', label: t('Apartment'), icon: 'building', library: 'fontAwesome' },
+    { id: 'home', label: t('Home'), icon: 'home' },
+    { id: 'office', label: t('Office'), icon: 'briefcase' },
+    { id: 'other', label: t('Other'), icon: 'map-pin' }
   ]
 
-  const handleTypeSelection = (type) => {
-    setSelectedType(type.id)
-    setisModalVisible(false)
-  }
-
-  const getSelectedIcon = () => {
-    const selected = locationTypes.find((e) => {
-      return e.id === selectedType
-    })
-    return selected ? selected.icon : <AntDesign name='menu-unfold' size={18} color={currentTheme.colorTextMuted} />
-  }
-
-  const getSelectedLabel = () => {
-    const selected = locationTypes.find((e) => {
-      return e.id === selectedType
-    })
-    return selected ? selected.label : t('Select location type')
+  const renderLocationIcon = (type, color) => {
+    if (type.library === 'fontAwesome') {
+      return <FontAwesome6 name={type.icon} size={17} color={color} />
+    }
+    return <Feather name={type.icon} size={18} color={color} />
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: currentTheme.themeBackground, paddingHorizontal: 15 }}>
-      <View style={{ gap: scale(25) }}>
-        <View style={[styles(currentTheme).inputContainer, styles(currentTheme).border]}>
-          <TextDefault H5 bold numberOfLines={1}>
-            {addressDetail}
+    <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: currentTheme.themeBackground }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={0}
+    >
+      <ScrollView
+        keyboardShouldPersistTaps='handled'
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: bottomInset + 118 }
+        ]}
+      >
+        <View style={[styles.locationSection, { borderBottomColor: divider }]}>
+          <TextDefault small bold uppercase textColor={mutedText} style={styles.eyebrow}>
+            Selected location
           </TextDefault>
+          <View style={styles.locationRow}>
+            <View style={[styles.locationIcon, { backgroundColor: currentTheme.lowOpacityBlue }]}>
+              <Feather name='map-pin' size={20} color={accent} />
+            </View>
+            <TextDefault
+              H5
+              bolder
+              numberOfLines={3}
+              textColor={primaryText}
+              style={styles.addressText}
+            >
+              {addressDetail}
+            </TextDefault>
+            <Pressable
+              accessibilityRole='button'
+              onPress={() => setactiveState('searching')}
+              hitSlop={8}
+              style={({ pressed }) => [styles.changeButton, { opacity: pressed ? 0.55 : 1 }]}
+            >
+              <TextDefault H5 bolder textColor={accent}>
+                Change
+              </TextDefault>
+            </Pressable>
+          </View>
         </View>
 
-        <View style={{ gap: 4 }}>
-          <View style={{ display: 'flex', flexDirection: 'row', gap: 6, alignItems: 'center' }}>
-            <TextDefault H5 bold>
+        <View style={styles.sectionHeader}>
+          <View style={styles.labelRow}>
+            <TextDefault H4 bolder textColor={primaryText}>
               {t('Address details')}
             </TextDefault>
-            <View style={{ borderWidth: 1.5, borderColor: currentTheme.borderColor, paddingHorizontal: 4, paddingVertical: 2, borderRadius: scale(8) }}>
-              <TextDefault textColor={currentTheme.colorTextMuted} H5 bold>
-                {t('optional')}
-              </TextDefault>
-            </View>
-          </View>
-          <View style={[styles(currentTheme).inputContainer, styles(currentTheme).border]}>
-            <TextInput value={otherAddressDetails} onChangeText={setOtherAddressDetails} placeholder={t('Street name and number')} placeholderTextColor='#999' style={{ flex: 1, color: currentTheme.fontMainColor || '#000' }} />
-          </View>
-        </View>
-
-        <View style={{ gap: 4 }}>
-          <View style={{ display: 'flex', flexDirection: 'row', gap: 6, alignItems: 'center' }}>
-            <TextDefault H5 bold>
-              {t('Doorbell name')}
+            <TextDefault textColor={mutedText} style={styles.optionalText}>
+              {t('optional')}
             </TextDefault>
-            <View style={{ borderWidth: 1.5, borderColor: currentTheme.borderColor, paddingHorizontal: 4, paddingVertical: 2, borderRadius: scale(8) }}>
-              <TextDefault textColor={currentTheme.colorTextMuted} H5 bold>
-                {t('optional')}
+          </View>
+          <TextDefault textColor={mutedText} style={styles.supportingText}>
+            Add information that helps your courier find the entrance.
+          </TextDefault>
+        </View>
+
+        <View style={[styles.detailGroup, { backgroundColor: currentTheme.colorBgTertiary }]}>
+          <View style={styles.inputRow}>
+            <Feather name='navigation' size={18} color={mutedText} />
+            <View style={styles.inputCopy}>
+              <TextDefault small bold textColor={mutedText}>
+                Street, floor or landmark
               </TextDefault>
+              <TextInput
+                value={otherAddressDetails || ''}
+                onChangeText={setOtherAddressDetails}
+                placeholder={t('Street name and number')}
+                placeholderTextColor={currentTheme.gray400 || mutedText}
+                selectionColor={accent}
+                returnKeyType='next'
+                style={[styles.input, { color: primaryText }]}
+              />
             </View>
           </View>
-          <View style={[styles(currentTheme).inputContainer, styles(currentTheme).border]}>
-            <TextInput value={doorBell} onChangeText={setDoorBell} placeholder={t('Enter doorbell name')} placeholderTextColor='#999' style={{ flex: 1, color: currentTheme.fontMainColor || '#000' }} />
+          <View style={[styles.inputDivider, { backgroundColor: divider }]} />
+          <View style={styles.inputRow}>
+            <Feather name='bell' size={18} color={mutedText} />
+            <View style={styles.inputCopy}>
+              <TextDefault small bold textColor={mutedText}>
+                {t('Doorbell name')}
+              </TextDefault>
+              <TextInput
+                value={doorBell || ''}
+                onChangeText={setDoorBell}
+                placeholder={t('Enter doorbell name')}
+                placeholderTextColor={currentTheme.gray400 || mutedText}
+                selectionColor={accent}
+                returnKeyType='done'
+                style={[styles.input, { color: primaryText }]}
+              />
+            </View>
           </View>
         </View>
 
-        <View style={{ gap: 4 }}>
-          <View style={{ display: 'flex', flexDirection: 'row', gap: 6, alignItems: 'center' }}>
-            <TextDefault H5 bold>
+        <View style={styles.typeSection}>
+          <View style={styles.labelRow}>
+            <TextDefault H4 bolder textColor={primaryText}>
               {t('locationType')}
             </TextDefault>
-            <TextDefault textColor={currentTheme.red600} H5>
-              *
-            </TextDefault>
+            <View style={[styles.requiredDot, { backgroundColor: accent }]} />
           </View>
-          <TextDefault H5 textColor={currentTheme.colorTextMuted}>
+          <TextDefault textColor={mutedText} style={styles.supportingText}>
             {t('locationTypeDetails')}
           </TextDefault>
-          <Pressable onPress={() => setisModalVisible(!isModalVisible)} style={[styles(currentTheme).inputContainer, styles(currentTheme).border]}>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
-              {getSelectedIcon()}
 
-              <TextDefault H5 bold>
-                {getSelectedLabel()}
-              </TextDefault>
-            </View>
-            {isModalVisible ? <Entypo name='chevron-up' size={18} color={currentTheme.colorTextMuted} /> : <Entypo name='chevron-down' size={18} color={currentTheme.colorTextMuted} />}
-          </Pressable>
-          {isModalVisible && (
-            <FlatList
-              data={locationTypes}
-              contentContainerStyle={[styles(currentTheme).border]}
-              renderItem={(item) => {
-                return (
-                  <Pressable onPress={() => handleTypeSelection(item?.item)} style={styles(currentTheme).renderItem}>
-                    <View style={{ width: scale(20), alignItems: 'center' }}>{item.item.icon}</View>
-                    <Text>{item?.item.label}</Text>
-                  </Pressable>
-                )
-              }}
-            />
-          )}
+          <View style={[styles.typeSelector, { borderBottomColor: divider }]}>
+            {locationTypes.map((type) => {
+              const selected = selectedType === type.id
+              const iconColor = selected ? accent : mutedText
+
+              return (
+                <Pressable
+                  key={type.id}
+                  accessibilityRole='radio'
+                  accessibilityState={{ selected }}
+                  onPress={() => setSelectedType(type.id)}
+                  style={({ pressed }) => [
+                    styles.typeOption,
+                    { opacity: pressed ? 0.6 : 1 }
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.typeIcon,
+                      {
+                        backgroundColor: selected
+                          ? currentTheme.lowOpacityBlue
+                          : currentTheme.colorBgTertiary
+                      }
+                    ]}
+                  >
+                    {renderLocationIcon(type, iconColor)}
+                  </View>
+                  <TextDefault
+                    small
+                    bolder={selected}
+                    textColor={selected ? accent : primaryText}
+                    numberOfLines={1}
+                  >
+                    {type.label}
+                  </TextDefault>
+                  <View
+                    style={[
+                      styles.selectionLine,
+                      { backgroundColor: selected ? accent : 'transparent' }
+                    ]}
+                  />
+                </Pressable>
+              )
+            })}
+          </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
 export default SearchedAddress
 
-const styles = (currentTheme) =>
-  StyleSheet.create({
-    border: {
-      borderRadius: 12,
-      borderWidth: 2,
-      borderColor: currentTheme?.borderColor
-    },
-    inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingHorizontal: 10,
-      height: 40,
-      gap: 6
-    },
-    renderItem: {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: 6,
-      paddingHorizontal: scale(6),
-      paddingVertical: scale(12),
-      borderWidth: 0.6,
-      borderColor: currentTheme.borderColor
-    }
-  })
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 6
+  },
+  locationSection: {
+    paddingTop: 18,
+    paddingBottom: 20,
+    borderBottomWidth: StyleSheet.hairlineWidth
+  },
+  eyebrow: {
+    letterSpacing: 0.85,
+    marginBottom: 11
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  locationIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  addressText: {
+    flex: 1,
+    marginHorizontal: 12,
+    lineHeight: scale(19)
+  },
+  changeButton: {
+    minHeight: 36,
+    justifyContent: 'center'
+  },
+  sectionHeader: {
+    paddingTop: 25,
+    paddingBottom: 13
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  optionalText: {
+    marginLeft: 8
+  },
+  supportingText: {
+    marginTop: 5,
+    lineHeight: scale(17)
+  },
+  detailGroup: {
+    borderRadius: 18,
+    paddingHorizontal: 16
+  },
+  inputRow: {
+    minHeight: 72,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  inputCopy: {
+    flex: 1,
+    marginLeft: 13,
+    paddingTop: 11
+  },
+  input: {
+    minHeight: 38,
+    paddingVertical: 5,
+    paddingHorizontal: 0,
+    fontSize: scale(14)
+  },
+  inputDivider: {
+    height: StyleSheet.hairlineWidth,
+    marginLeft: 31
+  },
+  typeSection: {
+    paddingTop: 27
+  },
+  requiredDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginLeft: 8
+  },
+  typeSelector: {
+    flexDirection: 'row',
+    marginTop: 17,
+    borderBottomWidth: StyleSheet.hairlineWidth
+  },
+  typeOption: {
+    flex: 1,
+    minWidth: 0,
+    alignItems: 'center',
+    paddingBottom: 12
+  },
+  typeIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 7
+  },
+  selectionLine: {
+    position: 'absolute',
+    left: 10,
+    right: 10,
+    bottom: -1,
+    height: 2,
+    borderRadius: 1
+  }
+})

@@ -202,7 +202,7 @@ export const en = {
   Home: 'Home',
   Work: 'Work',
   Other: 'Other',
-  Apartment: 'Appartment',
+  Apartment: 'Apartment',
   House: 'House',
   Office: 'Office',
   addLabel: 'Add Label',

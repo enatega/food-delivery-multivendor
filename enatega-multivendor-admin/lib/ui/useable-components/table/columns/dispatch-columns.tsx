@@ -19,13 +19,12 @@ import {
   ASSIGN_RIDER,
   GET_ACTIVE_ORDERS,
   GET_RIDERS,
-  SUBSCRIPTION_ORDER,
   UPDATE_STATUS,
 } from '@/lib/api/graphql';
 
 // Hooks
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { useMutation, useSubscription } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 // Contexts
 import { ToastContext } from '@/lib/context/global/toast.context';
@@ -243,14 +242,30 @@ export const useDispatchOrderUI = () => {
   };
 
   const OrderFlowLabel = ({ rowData }: { rowData: IActiveOrders }) => {
-    useSubscription(SUBSCRIPTION_ORDER, {
-      variables: {
-        id: rowData._id,
-      },
-      fetchPolicy: 'network-only',
-    });
-
     return <p>{rowData.isPickedUp === false ? t('Delivery') : t('Pick Up')}</p>;
+  };
+
+  const renderEta = (rowData: IActiveOrders) => {
+    const start = rowData.eta?.windowStartAt;
+    const end = rowData.eta?.windowEndAt;
+    if (!start || !end) return <span className="text-gray-500">—</span>;
+    const window = `${new Date(start).toLocaleTimeString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+    })}–${new Date(end).toLocaleTimeString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+    })}`;
+    const calculatedAt = rowData.eta?.calculatedAt;
+    const freshness = calculatedAt
+      ? `ETA updated ${Math.max(0, Math.floor((Date.now() - new Date(calculatedAt).getTime()) / 60000))}m ago`
+      : rowData.eta?.source || '';
+    return (
+      <div className="flex flex-col whitespace-nowrap">
+        <span className="font-medium">{window}</span>
+        <span className="text-xs text-gray-500">{freshness}</span>
+      </div>
+    );
   };
 
   const renderRiderField = (rowData: IActiveOrders) => {
@@ -409,6 +424,11 @@ export const useDispatchOrderUI = () => {
       propertyName: 'orderStatus',
       headerName: t('Status'),
       body: (rowData: IActiveOrders) => renderStatusField(rowData),
+    },
+    {
+      propertyName: 'eta.estimatedArrivalAt',
+      headerName: 'ETA',
+      body: (rowData: IActiveOrders) => renderEta(rowData),
     },
   ];
 

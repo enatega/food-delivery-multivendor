@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { initialWindowMetrics } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createAddress, editAddress } from '../../../apollo/mutations'
 import { LocationContext } from '../../../context/Location'
 import gql from 'graphql-tag'
@@ -30,7 +30,7 @@ const EDIT_ADDRESS = gql`
 
 const useAddAddress = () => {
   const { t, i18n } = useTranslation()
-  const insets = initialWindowMetrics?.insets || { top: 0, bottom: 0, left: 0, right: 0 }
+  const insets = useSafeAreaInsets()
   const themeContext = useContext(ThemeContext)
   const { setLocation } = useContext(LocationContext)
   const navigation = useNavigation()

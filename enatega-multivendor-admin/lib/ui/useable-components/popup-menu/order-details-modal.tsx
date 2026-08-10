@@ -3,6 +3,11 @@ import { Dialog } from 'primereact/dialog';
 import { IExtendedOrder, Items } from '@/lib/utils/interfaces';
 import './order-detail-modal.css';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
+import {
+  ORDER_TRACKING,
+  SUBSCRIPTION_ORDER_TRACKING,
+} from '@/lib/api/graphql';
+import { useQuery, useSubscription } from '@apollo/client';
 
 interface IOrderDetailModalProps {
   visible: boolean;
@@ -16,6 +21,23 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
   restaurantData,
 }) => {
   const { CURRENT_SYMBOL } = useConfiguration();
+  const trackingEnabled =
+    visible && restaurantData?.orderStatus === 'PICKED' && Boolean(restaurantData?._id);
+  const { data: trackingQueryData } = useQuery(ORDER_TRACKING, {
+    variables: { id: restaurantData?._id },
+    skip: !trackingEnabled,
+    fetchPolicy: 'network-only',
+  });
+  const { data: trackingSubscriptionData } = useSubscription(
+    SUBSCRIPTION_ORDER_TRACKING,
+    {
+      variables: { id: restaurantData?._id },
+      skip: !trackingEnabled,
+    }
+  );
+  const liveTracking =
+    trackingSubscriptionData?.subscriptionOrderTracking ||
+    trackingQueryData?.orderTracking;
   const calculateSubtotal = (items: Items[]) => {
     let Subtotal = 0;
     for (let i = 0; i < items.length; i++) {
@@ -66,6 +88,42 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
             <p>Customer information is not available</p>
           )}
         </div>
+
+        {restaurantData.eta?.windowStartAt && restaurantData.eta?.windowEndAt && (
+          <div className="order-section dark:bg-dark-600">
+            <h3 className="section-header dark:text-primary-dark">
+              Delivery estimate
+            </h3>
+            <div className="information-grid">
+              <div className="information-item">
+                <span className="information-label">Arrival window</span>
+                <span>
+                  {new Date(restaurantData.eta.windowStartAt).toLocaleTimeString([], {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                  })}
+                  –
+                  {new Date(restaurantData.eta.windowEndAt).toLocaleTimeString([], {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                  })}
+                </span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Source</span>
+                <span>{restaurantData.eta.source || 'Unavailable'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Tracking freshness</span>
+                <span>
+                  {liveTracking?.riderLocation?.recordedAt
+                    ? new Date(liveTracking.riderLocation.recordedAt).toLocaleTimeString()
+                    : 'Waiting for rider location'}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Items Section */}
         <div className="order-section dark:bg-dark-600">

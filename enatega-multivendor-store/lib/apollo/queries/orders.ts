@@ -84,6 +84,16 @@ export const GET_ORDERS =
         deliveryCharges
         isPickedUp
         preparationTime
+        eta {
+          phase
+          source
+          readyAt
+          estimatedArrivalAt
+          windowStartAt
+          windowEndAt
+          calculatedAt
+          lastLocationAt
+        }
         acceptedAt
         isRinged
         instructions

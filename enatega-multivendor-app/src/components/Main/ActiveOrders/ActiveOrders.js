@@ -26,16 +26,10 @@ const getItemCount = (items = []) =>
   items.reduce((total, item) => total + (item?.quantity || 0), 0)
 
 const getRemainingTime = (order, currentTime) => {
-  if (!order?.createdAt || !order?.expectedTime) {
-    return calulateRemainingTime(order)
-  }
-
-  const createdAt = new Date(order.createdAt)
-  if (Number.isNaN(createdAt.getTime())) return calulateRemainingTime(order)
-
-  const expectedAt = createdAt.getTime() + Number(order.expectedTime) * 60000
-  const minutes = Math.max(0, Math.ceil((expectedAt - currentTime.getTime()) / 60000))
-  return minutes || calulateRemainingTime(order)
+  const target = order?.eta?.estimatedArrivalAt || order?.completionTime
+  const targetDate = new Date(target)
+  if (!target || Number.isNaN(targetDate.getTime())) return calulateRemainingTime(order)
+  return Math.max(0, Math.ceil((targetDate.getTime() - currentTime.getTime()) / 60000))
 }
 
 const ActiveOrders = ({ onActiveOrdersChange }) => {

@@ -23,6 +23,16 @@ module.exports = {
     plugins: [
       'expo-router',
       [
+        'expo-location',
+        {
+          locationAlwaysAndWhenInUsePermission:
+            'Enatega uses your location during active deliveries so customers can follow their rider.',
+          isIosBackgroundLocationEnabled: true,
+          isAndroidBackgroundLocationEnabled: true,
+          isAndroidForegroundServiceEnabled: true
+        }
+      ],
+      [
         'expo-splash-screen',
         {
           // Solid per-theme background, no visible logo. The plugin requires an
@@ -69,6 +79,8 @@ module.exports = {
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
           '$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!',
+        NSLocationAlwaysAndWhenInUseUsageDescription:
+          '$(PRODUCT_NAME) shares your location during active deliveries so customers can track their order.',
         UIBackgroundModes: ['location', 'fetch', 'remote-notification'],
         ITSAppUsesNonExemptEncryption: false
       }
@@ -76,7 +88,6 @@ module.exports = {
     android: {
       versionCode: 87,
       googleServicesFile: './google-services.json',
-      permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION'],
       config: {
         googleMaps: {
           ...(androidGoogleMapsApiKey ? { apiKey: androidGoogleMapsApiKey } : {})

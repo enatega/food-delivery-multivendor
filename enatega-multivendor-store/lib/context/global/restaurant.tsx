@@ -170,7 +170,10 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
                 };
               }
               const updatedOrders = [...restaurantOrders];
-              updatedOrders[orderIndex] = order;
+              updatedOrders[orderIndex] = {
+                ...restaurantOrders[orderIndex],
+                ...order,
+              };
               return {
                 restaurantOrders: updatedOrders,
               };

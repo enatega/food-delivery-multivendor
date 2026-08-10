@@ -1,6 +1,10 @@
 import { useSubscription } from "@apollo/client";
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
-import { SUBSCRIPTION_ORDER } from "@/lib/apollo/subscriptions";
+import {
+  SUBSCRIPTION_ORDER,
+  SUBSCRIPTION_ORDER_MULTI_VENDOR,
+} from "@/lib/apollo/subscriptions";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 import { MAX_TIME } from "@/lib/utils/constants";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { orderSubTotal } from "@/lib/utils/methods";
@@ -49,14 +53,18 @@ const Order = ({
   const { t } = useTranslation();
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
+  const { isSingleVendor } = useStoreMode();
 
   // Keep this order's status live in real time. The subscription result is
   // written into the normalized cache (keyed by _id), so orderStatus/isPickedUp
   // update here without waiting for a refetch or the 60s poll.
-  useSubscription(SUBSCRIPTION_ORDER, {
+  useSubscription(
+    isSingleVendor ? SUBSCRIPTION_ORDER : SUBSCRIPTION_ORDER_MULTI_VENDOR,
+    {
     variables: { id: order?._id },
     skip: !order?._id,
-  });
+    },
+  );
 
   // Ref
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -83,6 +91,16 @@ const Order = ({
   const prep = new Date(order.preparationTime ?? "2023-08-16T08:00:00.000Z");
   const diffTime = prep.getTime() - timeNow.getTime();
   const totalPrep = diffTime > 0 ? diffTime / 1000 : 0;
+  const etaWindow =
+    order.eta?.windowStartAt && order.eta?.windowEndAt
+      ? `${new Date(order.eta.windowStartAt).toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "2-digit",
+        })}–${new Date(order.eta.windowEndAt).toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "2-digit",
+        })}`
+      : null;
 
   const decision = !isAcceptButtonVisible
     ? acceptanceTime
@@ -628,6 +646,17 @@ const Order = ({
                   </Text>
 
                   <CountdownTimer duration={totalPrep} />
+                  {!isSingleVendor && etaWindow && (
+                    <Text
+                      style={{
+                        color: appTheme.fontSecondColor,
+                        fontSize: 12,
+                        marginTop: 2,
+                      }}
+                    >
+                      Estimated delivery {etaWindow}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>

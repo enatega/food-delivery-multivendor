@@ -34,17 +34,11 @@ function toRad(Value) {
 } */
 
 const calulateRemainingTime = (order) => {
-  // pick preparation or completion
-  const expectedTimeUTC = [ORDER_STATUS_ENUM.PENDING].includes(order?.orderStatus) ? order?.preparationTime : order?.completionTime
-
-  // convert UTC string → Date object → Local time
-  const targetLocal = new Date(expectedTimeUTC) // JS automatically shifts this to local tz
-
-  // difference in ms (uses local epoch under the hood)
-  const diffMs = targetLocal.getTime() - Date.now()
-
-  // convert ms → minutes
-  const remainingTime = Math.floor(diffMs / 1000 / 60)
+  if (order?.orderStatus === ORDER_STATUS_ENUM.PENDING) return 0
+  const target = order?.eta?.estimatedArrivalAt || order?.completionTime
+  const targetDate = new Date(target)
+  if (!target || Number.isNaN(targetDate.getTime())) return 0
+  const remainingTime = Math.ceil((targetDate.getTime() - Date.now()) / 60000)
 
   return remainingTime > 0 ? remainingTime : 0
 }

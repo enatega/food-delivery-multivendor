@@ -9,10 +9,12 @@ import {
 
 const MULTI_GRAPHQL_URL =
   process.env.EXPO_PUBLIC_GRAPHQL_URL ??
-  "https://aws-server-v2.enatega.com/graphql";
+  // "https://aws-server-v2.enatega.com/graphql";
+  "https://3086ptqf-8001.inc1.devtunnels.ms/graphql";
 const MULTI_WS_GRAPHQL_URL =
   process.env.EXPO_PUBLIC_WS_GRAPHQL_URL ??
-  "wss://aws-server-v2.enatega.com/graphql";
+  // "wss://aws-server-v2.enatega.com/graphql";
+  "wss://3086ptqf-8001.inc1.devtunnels.ms/graphql";
 const SINGLE_GRAPHQL_URL =
   process.env.EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL;
 const SINGLE_WS_GRAPHQL_URL =

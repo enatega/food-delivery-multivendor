@@ -102,14 +102,14 @@ export default function DispatchMain() {
     }
   }, [subscriptionData, refetch]);
 
-  //  POLLING FALLBACK - Polls every 5 seconds
+  // Slow polling is retained only as a fallback to the dispatcher subscription.
   useEffect(() => {
     // Start polling
     pollingIntervalRef.current = setInterval(() => {
       if (refetch && !active_orders_loading) {
         refetch();
       }
-    }, 5000); // Poll every 5 seconds
+    }, 30000);
 
     // Cleanup
     return () => {
