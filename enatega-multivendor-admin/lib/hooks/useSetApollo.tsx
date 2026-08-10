@@ -386,32 +386,49 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     (operation, forward) =>
       new Observable((observer) => {
         let handle: Subscription | undefined;
+
+        const retryWithFreshMetricsToken = async (): Promise<boolean> => {
+          if (
+            operation.operationName === 'MetricsGeneral' ||
+            isOperationAlreadyRetried(operation, 'metricsTokenRetry')
+          ) {
+            return false;
+          }
+
+          markOperationRetried(operation, 'metricsTokenRetry');
+          clearMetricsData();
+          initializeNonce();
+          const metricsToken = await fetchMetricsToken(SERVER_URL);
+          if (!metricsToken) return false;
+
+          await request(operation);
+          handle = forward(operation).subscribe({
+            next: observer.next.bind(observer),
+            error: observer.error.bind(observer),
+            complete: observer.complete.bind(observer),
+          });
+          return true;
+        };
+
         Promise.resolve(operation)
           .then((oper) => request(oper))
           .then(() => {
             handle = forward(operation).subscribe({
-              next: observer.next.bind(observer),
+              next: async (result) => {
+                if (
+                  isMetricsAuthError(result) &&
+                  (await retryWithFreshMetricsToken())
+                ) {
+                  return;
+                }
+
+                observer.next(result);
+              },
               error: async (error) => {
                 if (
-                  operation.operationName !== 'MetricsGeneral' &&
                   isMetricsAuthError(error) &&
-                  !isOperationAlreadyRetried(operation, 'metricsTokenRetry')
+                  (await retryWithFreshMetricsToken())
                 ) {
-                  markOperationRetried(operation, 'metricsTokenRetry');
-                  clearMetricsData();
-                  initializeNonce();
-                  const metricsToken = await fetchMetricsToken(SERVER_URL);
-                  if (!metricsToken) {
-                    observer.error(error);
-                    return;
-                  }
-                  await request(operation);
-
-                  handle = forward(operation).subscribe({
-                    next: observer.next.bind(observer),
-                    error: observer.error.bind(observer),
-                    complete: observer.complete.bind(observer),
-                  });
                   return;
                 }
 
