@@ -1,5 +1,10 @@
+import type {
+  IOrderEta,
+  IOrderTracking,
+} from "./orders.interface";
+
 interface Coordinates {
-  coordinates: [string, string];
+  coordinates: [number | string, number | string];
   __typename: string;
 }
 
@@ -97,5 +102,8 @@ export interface IOrderTrackingDetail {
   acceptedAt: string;
   pickedAt: string;
   preparationTime: string;
+  eta?: IOrderEta | null;
   __typename: string;
 }
+
+export type { IOrderEta, IOrderTracking };

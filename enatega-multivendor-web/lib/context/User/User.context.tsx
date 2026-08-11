@@ -29,6 +29,7 @@ import {
   IFood,
   IOption,
   IOrder,
+  IOrderEta,
   IProfileResponse,
   IRestaurant,
   IVariation,
@@ -139,6 +140,7 @@ export interface OrderType {
   acceptedAt?: string;
   pickedAt?: string;
   preparationTime: number;
+  eta?: IOrderEta | null;
 }
 
 export interface UserContextType {
@@ -436,8 +438,15 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
             let newList = [...((orders as IOrder[]) || ([] as IOrder[]))];
             const orderIndex = newList.findIndex((o: IOrder) => o._id === _id);
             if (orderIndex > -1) {
-              newList[orderIndex] =
-                subscriptionData.data.orderStatusChanged.order;
+              const update = subscriptionData.data.orderStatusChanged.order;
+              newList[orderIndex] = {
+                ...newList[orderIndex],
+                ...update,
+                restaurant: {
+                  ...newList[orderIndex].restaurant,
+                  ...update.restaurant,
+                },
+              };
             }
             return {
               orders: [...newList],

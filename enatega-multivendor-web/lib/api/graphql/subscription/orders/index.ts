@@ -12,6 +12,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
         name
         image
         slug
+        shopType
         address
         location {
           coordinates
@@ -72,6 +73,16 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       createdAt
       completionTime
       preparationTime
+      acceptedAt
+      assignedAt
+      pickedAt
+      deliveredAt
+      cancelledAt
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline calculatedAt lastLocationAt version
+      }
       }
     }
   }`;
@@ -86,6 +97,45 @@ export const SUBSCRIPTION_ORDER = gql`
       }
       completionTime
       preparationTime
+      isPickedUp
+      acceptedAt
+      assignedAt
+      pickedAt
+      deliveredAt
+      cancelledAt
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline
+        origin { latitude longitude }
+        destination { latitude longitude }
+        calculatedAt lastLocationAt version
+      }
+    }
+  }
+`;
+
+export const SUBSCRIPTION_ORDER_TRACKING = gql`
+  subscription SubscriptionOrderTracking($id: String!) {
+    subscriptionOrderTracking(id: $id) {
+      orderId
+      status
+      riderLocation {
+        latitude
+        longitude
+        accuracy
+        heading
+        speed
+        recordedAt
+      }
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline
+        origin { latitude longitude }
+        destination { latitude longitude }
+        calculatedAt lastLocationAt version
+      }
     }
   }
 `;
