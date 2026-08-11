@@ -24,7 +24,6 @@ import useAddToCart from '../ProductDetails/useAddToCart'
 import OrderSummarySkeleton from './OrderSummarySkeleton'
 import OrderStatusSkeleton from '../../components/Checkout/OrderConfirmation/OrderStatusSkeleton'
 import { LocationContext } from '../../../context/Location'
-import { useTimer } from '../../../ui/hooks/useTimer'
 import HomeCart from './HomeCart'
 import { usePullToRefresh } from '../../hooks/usePullToRefresh'
 import { isSingleVendorPickupOrder } from '../../utils/orderTrackingStatus'
@@ -85,19 +84,28 @@ const OrderConfirmationScreen = (props) => {
     creditsUsed
     // riderPhone
   } = useOrderConfirmation({ orderId })
-  const estimatedtime = useTimer(initialOrder?.completionTime)
 
   // ----------------------------------
   // 2️⃣ Real-time tracking (SUBSCRIPTION)
   // ----------------------------------
-  const { order: liveOrder } = useOrderTracking({
+  const { order: liveOrder, tracking } = useOrderTracking({
     orderId,
     initialOrder
   })
 
-  const orderStatus = liveOrder?.orderStatus
+  const orderStatus = liveOrder?.orderStatus || initialOrder?.orderStatus || orderData?.orderStatus
+  const publicOrderId = liveOrder?.orderId || initialOrder?.orderId || orderData?.orderId || orderNo
+  const routeOrderId = typeof orderId === 'string' && !/^[a-f\d]{24}$/i.test(orderId)
+    ? orderId
+    : null
+  const displayOrderId = String(publicOrderId || routeOrderId || '').replace(/^#/, '')
   const fulfillmentOrder = liveOrder || initialOrder || orderData
   const isPickUpOrder = isSingleVendorPickupOrder(fulfillmentOrder)
+  const eta = tracking?.eta || liveOrder?.eta || initialOrder?.eta || (
+    isPickUpOrder && fulfillmentOrder?.completionTime
+      ? { windowStartAt: fulfillmentOrder.completionTime, windowEndAt: fulfillmentOrder.completionTime }
+      : null
+  )
   // const riderLocation =
   //   {
   //     longitude: parseFloat(liveOrder?.rider?.location?.coordinates[0]) ?? undefined,
@@ -108,14 +116,21 @@ const OrderConfirmationScreen = (props) => {
   const addressLabel = userAddressLabel || liveOrder?.restaurant?.name
   const address = userAddress || liveOrder?.restaurant?.address || ''
 
+  const legacyRiderCoordinates = liveOrder?.rider?.location?.coordinates || initialOrder?.rider?.location?.coordinates
+  const etaOrigin = tracking?.eta?.origin || liveOrder?.eta?.origin || initialOrder?.eta?.origin
+  const etaDestination = tracking?.eta?.destination || liveOrder?.eta?.destination || initialOrder?.eta?.destination
   const riderLocation = !isPickUpOrder
-    ? {
-        longitude: parseFloat(liveOrder?.rider?.location?.coordinates[0]) ?? undefined,
-        latitude: parseFloat(liveOrder?.rider?.location?.coordinates[1]) ?? undefined
-      }
+    ? tracking?.riderLocation || (
+      Array.isArray(legacyRiderCoordinates) && legacyRiderCoordinates.length >= 2
+        ? {
+            longitude: Number(legacyRiderCoordinates[0]),
+            latitude: Number(legacyRiderCoordinates[1])
+          }
+        : etaOrigin || null
+    )
     : {
-        longitude: parseFloat(liveOrder?.restaurant?.location?.coordinates[0]) ?? undefined,
-        latitude: parseFloat(liveOrder?.restaurant?.location?.coordinates[1]) ?? undefined
+        longitude: parseFloat(fulfillmentOrder?.restaurant?.location?.coordinates[0]) ?? undefined,
+        latitude: parseFloat(fulfillmentOrder?.restaurant?.location?.coordinates[1]) ?? undefined
       }
 
   const { location } = useContext(LocationContext)
@@ -131,9 +146,10 @@ const OrderConfirmationScreen = (props) => {
   }
 
   const finalCustomerLocation = {
-    longitude: getValidCoordinate(customerLocation?.longitude, location?.longitude),
-    latitude: getValidCoordinate(customerLocation?.latitude, location?.latitude)
+    longitude: getValidCoordinate(customerLocation?.longitude, etaDestination?.longitude ?? location?.longitude),
+    latitude: getValidCoordinate(customerLocation?.latitude, etaDestination?.latitude ?? location?.latitude)
   }
+  const encodedRoute = tracking?.eta?.encodedPolyline || liveOrder?.eta?.encodedPolyline || initialOrder?.eta?.encodedPolyline || null
   const rider = liveOrder?.rider || null
   // ----------------------------------
   // 3️⃣ Derived UI states
@@ -145,6 +161,13 @@ const OrderConfirmationScreen = (props) => {
   const [summaryExpanded, setSummaryExpanded] = useState(false)
   const [showMap, setShowMap] = useState(false)
   const hasNavigatedRef = useRef(false)
+  const isInTransit = [ORDER_STATUS_ENUM.PICKED, 'ON_ROUTE'].includes(orderStatus)
+
+  useEffect(() => {
+    if (isInTransit && !isPickUpOrder) {
+      setShowMap(true)
+    }
+  }, [isInTransit, isPickUpOrder])
 
   // ----------------------------------
   // 4️⃣ Navigate to FeedBack when delivered
@@ -269,6 +292,13 @@ const OrderConfirmationScreen = (props) => {
   // ----------------------------------
   // 7️⃣ UI
   // ----------------------------------
+  const showDeliveryTime = [
+    ORDER_STATUS_ENUM.ACCEPTED,
+    ORDER_STATUS_ENUM.ASSIGNED,
+    ORDER_STATUS_ENUM.PICKED,
+    'ON_ROUTE'
+  ].includes(orderStatus)
+
   const orderStatusContent = loading
     ? <OrderStatusSkeleton />
     : isDelivered || isCancelled
@@ -284,7 +314,7 @@ const OrderConfirmationScreen = (props) => {
         )
       : (
         <>
-          <DeliveryTimeBanner minTime={estimatedtime?.timeLeft} maxTime={estimatedtime?.timeLeft + 5} isPickUpOrder={isPickUpOrder} />
+          {showDeliveryTime && <DeliveryTimeBanner eta={eta} orderStatus={orderStatus} riderLocation={riderLocation} isPickUpOrder={isPickUpOrder} />}
           <OrderStatusTimeline currentStatus={orderStatus} isPickUpOrder={isPickUpOrder} />
         </>
         )
@@ -292,10 +322,19 @@ const OrderConfirmationScreen = (props) => {
   return (
     <View style={styles(currentTheme).mainContainer}>
       <ScrollView style={styles().scrollView} contentContainerStyle={styles().contentContainer} showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={spinnerColor} colors={[spinnerColor]} />}>
+        {!!displayOrderId && (
+          <View style={styles(currentTheme).orderIdRow}>
+            <Feather name='hash' size={scale(15)} color={currentTheme.fontSecondColor} />
+            <TextDefault bold style={styles(currentTheme).orderIdText} textColor={currentTheme.fontSecondColor}>
+              {t('Order')} #{displayOrderId}
+            </TextDefault>
+          </View>
+        )}
+
         {orderStatusContent}
 
         {/* DELIVERY DETAILS */}
-        <DeliveryDetailsCard addressLabel={addressLabel} address={address} showMap={showMap} onToggleMap={setShowMap} isPickedUp={isPickUpOrder} mapComponent={<DeliveryMap isPickUpOrder={isPickUpOrder} customerLocation={finalCustomerLocation} riderLocation={riderLocation} showRoute={!isDelivered} />} />
+        <DeliveryDetailsCard addressLabel={addressLabel} address={address} showMap={showMap} onToggleMap={setShowMap} isPickedUp={isPickUpOrder} mapComponent={<DeliveryMap isPickUpOrder={isPickUpOrder} customerLocation={finalCustomerLocation} riderLocation={riderLocation} encodedPolyline={encodedRoute} showRoute={!isDelivered && isInTransit} />} />
         {/* CONTACT COURIER */}
         {rider && !isPickUpOrder && !isDelivered && !isCancelled && <ContactCourierCard onPress={() => handleContactCourier()} contactlessDelivery />}
 

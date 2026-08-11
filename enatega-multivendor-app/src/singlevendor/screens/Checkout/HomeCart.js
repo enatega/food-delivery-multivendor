@@ -297,7 +297,7 @@ const styles = (themeColors) =>
   StyleSheet.create({
     wrapper: {
       marginTop: scale(14),
-      marginHorizontal: scale(16),
+      marginHorizontal: scale(12),
       padding: scale(16),
       borderRadius: scale(18),
       backgroundColor: themeColors.cardBackground,

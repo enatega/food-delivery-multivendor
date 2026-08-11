@@ -1,8 +1,12 @@
-import { StyleSheet } from 'react-native';
-import { scale } from '../../../utils/scaling';
+import { StyleSheet } from 'react-native'
+import { scale } from '../../../utils/scaling'
 
-const styles = (props = null) =>
-  StyleSheet.create({
+const styles = (props = null) => {
+  const subtleBorder = props?.themeBackground === '#000'
+    ? 'rgba(255, 255, 255, 0.13)'
+    : 'rgba(15, 23, 42, 0.10)'
+
+  return StyleSheet.create({
     mainContainer: {
       flex: 1,
       backgroundColor: props !== null ? props.themeBackground : '#fff'
@@ -11,7 +15,7 @@ const styles = (props = null) =>
       flex: 1
     },
     contentContainer: {
-      paddingBottom: scale(50)
+      paddingBottom: scale(210)
     },
     stickyBottomContainer: {
       position: 'absolute',
@@ -19,32 +23,31 @@ const styles = (props = null) =>
       left: 0,
       right: 0,
       backgroundColor: props !== null ? props.themeBackground : '#fff',
-      paddingTop: scale(12),
-      paddingHorizontal: scale(16),
-      paddingBottom: scale(30),
-      borderTopWidth: 1,
-      borderTopColor: props !== null ? props.gray200 : '#E5E7EB',
+      paddingTop: scale(10),
+      paddingHorizontal: scale(12),
+      paddingBottom: scale(22),
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: subtleBorder,
       shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: -2
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 5
+      shadowOffset: { width: 0, height: -4 },
+      shadowOpacity: 0.06,
+      shadowRadius: 12,
+      elevation: 8
     },
     placeOrderButton: {
       backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9',
-      paddingVertical: scale(14),
-      borderRadius: scale(8),
+      minHeight: scale(50),
+      paddingVertical: scale(13),
+      borderRadius: scale(12),
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: scale(12)
+      marginTop: scale(10)
     },
     placeOrderButtonDisabled: {
       backgroundColor: props !== null ? props.gray200 : '#E5E7EB'
-    },
+    }
     // Small order fee tip moved to a separate component
-  });
+  })
+}
 
-export default styles;
+export default styles

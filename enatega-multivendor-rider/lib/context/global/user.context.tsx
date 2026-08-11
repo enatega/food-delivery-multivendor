@@ -146,6 +146,9 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     const unsubAssignOrder = subscribeToMore({
       document: assignedRiderSubscription,
       variables: { riderId },
+      onError: () => {
+        void refetchAssigned();
+      },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const { origin, order } = subscriptionData.data.subscriptionAssignRider;
@@ -166,6 +169,9 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       ? subscribeToMore({
           document: zoneOrdersSubscription,
           variables: { zoneId: zoneIdValue },
+          onError: () => {
+            void refetchAssigned();
+          },
           updateQuery: (prev, { subscriptionData }) => {
             if (!subscriptionData.data) return prev;
             const { origin, order } =
@@ -198,6 +204,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     assignedRiderSubscription,
     dataProfile,
     isRiderAvailable,
+    refetchAssigned,
     subscribeToMore,
     userId,
     zoneId,

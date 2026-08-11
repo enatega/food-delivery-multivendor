@@ -15,7 +15,7 @@ const REGISTER_SESSION = gql`
     $orderId: ID!
     $activityId: String!
     $platform: String!
-    $pushToken: String
+    $pushToken: String!
     $schemaVersion: Int
     $language: String
   ) {
@@ -34,7 +34,7 @@ const REGISTER_SESSION = gql`
 `
 
 const REMOVE_SESSION = gql`
-  mutation RemoveLiveActivitySession($orderId: ID!, $activityId: String) {
+  mutation RemoveLiveActivitySession($orderId: ID!, $activityId: String!) {
     removeLiveActivitySession(orderId: $orderId, activityId: $activityId) {
       success
       message
@@ -43,7 +43,7 @@ const REMOVE_SESSION = gql`
 `
 
 const { ActivityController } = NativeModules
-const ANDROID_SESSION_KEY = 'enatega-live-activity-session-v2'
+const SESSION_KEY = 'enatega-live-activity-session-v2'
 const RETRY_DELAYS_MS = [750, 2000, 5000]
 const defaultConfiguration = {
   appGroupId: 'group.com.enatega.multivendor.shared',
@@ -56,7 +56,8 @@ const defaultConfiguration = {
   ...(Constants.expoConfig?.extra?.liveActivity || {})
 }
 
-let apolloClient = null
+const apolloClients = new Map()
+let activeMode = null
 let tokenSubscription = null
 
 const tokenFingerprint = (token) => {
@@ -82,9 +83,11 @@ const registerSession = async(
   orderId,
   activityId,
   platform,
-  pushToken
+  pushToken,
+  mode = activeMode
 ) => {
-  if (!apolloClient) throw new Error('Live Activity Apollo client is unavailable.')
+  const apolloClient = apolloClients.get(mode)
+  if (!apolloClient) throw new Error(`Live Activity Apollo client is unavailable for ${mode || 'current mode'}.`)
   liveActivityLog('registering session', {
     orderId,
     activityId,
@@ -150,26 +153,30 @@ const initializeTokenObserver = () => {
   liveActivityLog('initializing iOS token observer')
   tokenSubscription = new NativeEventEmitter(ActivityController).addListener(
     'LiveActivityTokenUpdated',
-    ({ orderId, activityId, pushToken }) => {
+    async({ orderId, activityId, pushToken }) => {
       liveActivityLog('received iOS push-token event', {
         orderId,
         activityId,
         pushToken: tokenFingerprint(pushToken)
       })
       if (orderId && activityId && pushToken) {
+        const stored = await AsyncStorage.getItem(SESSION_KEY).catch(() => null)
+        const sessionMode = stored ? JSON.parse(stored)?.mode : activeMode
         registerSessionWithRetry(
           orderId,
           activityId,
           'IOS',
-          pushToken
+          pushToken,
+          sessionMode
         ).catch(() => {})
       }
     }
   )
 }
 
-const configure = (client) => {
-  apolloClient = client
+const configure = (client, mode) => {
+  activeMode = mode
+  apolloClients.set(mode, client)
   liveActivityLog('service configured', {
     platform: Platform.OS,
     apolloClientAvailable: Boolean(client)
@@ -197,7 +204,7 @@ const requestAndroidPermission = async() => {
   return granted
 }
 
-const initiateForOrder = async({ orderId, displayOrderId }) => {
+const initiateForOrder = async({ orderId, displayOrderId, mode = activeMode }) => {
   liveActivityLog('starting activity', {
     orderId,
     displayOrderId,
@@ -230,6 +237,10 @@ const initiateForOrder = async({ orderId, displayOrderId }) => {
   if (result.alreadyRunning) return result
 
   const platform = Platform.OS === 'ios' ? 'IOS' : 'ANDROID'
+  await AsyncStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify({ orderId, activityId: result.activityId, mode, platform })
+  )
   const pushToken =
     platform === 'IOS' ? result.pushToken : await messaging().getToken()
   liveActivityLog('resolved activity push token', {
@@ -239,17 +250,12 @@ const initiateForOrder = async({ orderId, displayOrderId }) => {
     pushToken: tokenFingerprint(pushToken)
   })
   if (pushToken) {
-    if (platform === 'ANDROID') {
-      await AsyncStorage.setItem(
-        ANDROID_SESSION_KEY,
-        JSON.stringify({ orderId, activityId: result.activityId })
-      )
-    }
     registerSessionWithRetry(
       orderId,
       result.activityId,
       platform,
-      pushToken
+      pushToken,
+      mode
     ).catch(() => {})
   }
   return result
@@ -257,12 +263,12 @@ const initiateForOrder = async({ orderId, displayOrderId }) => {
 
 const reregisterAndroidSession = async(pushToken) => {
   if (Platform.OS !== 'android' || !pushToken) return
-  const stored = await AsyncStorage.getItem(ANDROID_SESSION_KEY)
+  const stored = await AsyncStorage.getItem(SESSION_KEY)
   if (!stored) {
     liveActivityLog('Android re-registration skipped: no stored session')
     return
   }
-  const { orderId, activityId } = JSON.parse(stored)
+  const { orderId, activityId, mode } = JSON.parse(stored)
   if (orderId && activityId) {
     liveActivityLog('re-registering Android session', {
       orderId,
@@ -273,16 +279,15 @@ const reregisterAndroidSession = async(pushToken) => {
       orderId,
       activityId,
       'ANDROID',
-      pushToken
+      pushToken,
+      mode
     )
   }
 }
 
 const clearAndroidSession = async() => {
-  if (Platform.OS === 'android') {
-    await AsyncStorage.removeItem(ANDROID_SESSION_KEY)
-    liveActivityLog('cleared Android session')
-  }
+  await AsyncStorage.removeItem(SESSION_KEY)
+  liveActivityLog('cleared persisted session')
 }
 
 const stop = async(orderId, activityId) => {
@@ -290,6 +295,9 @@ const stop = async(orderId, activityId) => {
   if (ActivityController?.stopLiveActivity) {
     await ActivityController.stopLiveActivity().catch(() => {})
   }
+  const stored = await AsyncStorage.getItem(SESSION_KEY).catch(() => null)
+  const mode = stored ? JSON.parse(stored)?.mode : activeMode
+  const apolloClient = apolloClients.get(mode)
   await clearAndroidSession()
   if (orderId && apolloClient) {
     await apolloClient.mutate({

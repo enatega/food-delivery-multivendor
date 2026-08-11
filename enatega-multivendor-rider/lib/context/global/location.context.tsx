@@ -91,7 +91,8 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
     () =>
       (assignedOrders ?? []).some(
         (o: IOrder) =>
-          ["ASSIGNED", "PICKED"].includes(o.orderStatus) &&
+          (["ASSIGNED", "PICKED"].includes(o.orderStatus) ||
+            ["PICKED_UP", "ON_ROUTE"].includes(o.orderState ?? "")) &&
           o.rider?._id === dataProfile?._id,
       ),
     [assignedOrders, dataProfile?._id],
@@ -205,9 +206,9 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
     if (
       !locationPermission ||
       !token ||
-      (isMultiVendor && !isActivelyDelivering)
+      !isActivelyDelivering
     ) {
-      if (isMultiVendor) void stopBackgroundLocation();
+      void stopBackgroundLocation();
       return;
     }
 
@@ -217,9 +218,8 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
       () => cancelled,
     );
 
-    if (isMultiVendor) {
-      const environment = getEnvVars(mode);
-      void PublicAccessTokenService.getToken(
+    const environment = getEnvVars(mode);
+    void PublicAccessTokenService.getToken(
         client as ApolloClient<NormalizedCacheObject>,
       )
         .then((publicToken) =>
@@ -233,7 +233,6 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
         .catch((error) => {
           if (__DEV__) console.log("Unable to start background tracking", error);
         });
-    }
 
     return () => {
       cancelled = true;
@@ -241,7 +240,7 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
         locationListener.current.remove();
         locationListener.current = undefined;
       }
-      if (isMultiVendor) void stopBackgroundLocation();
+      void stopBackgroundLocation();
     };
   }, [
     client,

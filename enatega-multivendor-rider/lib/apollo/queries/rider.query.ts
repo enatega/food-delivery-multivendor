@@ -180,6 +180,21 @@ export const RIDER_ORDERS = gql`
       reason
       isRiderRinged
       preparationTime
+      eta {
+        phase
+        source
+        readyAt
+        baseArrivalAt
+        estimatedArrivalAt
+        windowStartAt
+        windowEndAt
+        durationSeconds
+        distanceMeters
+        encodedPolyline
+        calculatedAt
+        lastLocationAt
+        version
+      }
       rider {
         _id
         name
@@ -265,6 +280,21 @@ export const SINGLE_VENDOR_RIDER_ORDERS = gql`
       reason
       isRiderRinged
       preparationTime
+      eta {
+        phase
+        source
+        readyAt
+        baseArrivalAt
+        estimatedArrivalAt
+        windowStartAt
+        windowEndAt
+        durationSeconds
+        distanceMeters
+        encodedPolyline
+        calculatedAt
+        lastLocationAt
+        version
+      }
       rider {
         _id
         name

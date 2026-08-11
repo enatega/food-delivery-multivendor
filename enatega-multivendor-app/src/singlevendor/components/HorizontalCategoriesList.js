@@ -1,28 +1,29 @@
-import { View, FlatList, StyleSheet, Image, Text, TouchableOpacity } from 'react-native'
+import { View, FlatList, StyleSheet } from 'react-native'
 import React, { useContext } from 'react'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import RenderCategoryCard from './RenderCategoryCard'
 import { useNavigation } from '@react-navigation/native'
+import { scale } from '../../utils/scaling'
 
 const HorizontalCategoriesList = ({ categoriesData = [] }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const navigation = useNavigation()
-  const handleCategoryPress = (categoryViewType,categoryId) => {
+  const handleCategoryPress = (categoryViewType, categoryId) => {
     // Handle category press action
-    console.log('Category pressed:',categoryViewType, categoryId)
+    console.log('Category pressed:', categoryViewType, categoryId)
 
     if (categoryViewType === 'see-all') {
       // navigation.navigate('ProductExplorer')
       navigation.navigate('ProductExplorer', {
-        categoryId: categoryId
+        categoryId
       })
     } else {
       navigation.navigate('ProductsList', {
-        categoryId: categoryId
+        categoryId
 
       })
     }
@@ -36,7 +37,7 @@ const HorizontalCategoriesList = ({ categoriesData = [] }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles(currentTheme).scrollContent}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <RenderCategoryCard
             item={item}
             currentTheme={currentTheme}
@@ -54,10 +55,9 @@ const styles = (currentTheme) => StyleSheet.create({
     marginBottom: 10
   },
   scrollContent: {
-    paddingHorizontal: 20,
-    paddingRight: 10
-  },
+    paddingLeft: scale(12),
+    paddingRight: scale(4)
+  }
 })
 
 export default HorizontalCategoriesList
-

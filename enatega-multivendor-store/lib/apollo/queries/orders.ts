@@ -190,6 +190,21 @@ export const GET_ORDERS_SINGLE_VENDOR = gql`
       acceptedAt
       isRinged
       instructions
+      eta {
+        phase
+        source
+        readyAt
+        baseArrivalAt
+        estimatedArrivalAt
+        windowStartAt
+        windowEndAt
+        durationSeconds
+        distanceMeters
+        encodedPolyline
+        calculatedAt
+        lastLocationAt
+        version
+      }
       rider {
         _id
         name

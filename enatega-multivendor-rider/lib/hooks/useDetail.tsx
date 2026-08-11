@@ -12,6 +12,7 @@ import {
 import { GraphQLFormattedError } from "graphql";
 import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
+import { parseTimestamp } from "@/lib/utils/methods/date-time";
 import { GET_CONFIGURATION } from "../api/graphql/query/configuration";
 import {
   ASSIGN_ORDER,
@@ -55,10 +56,11 @@ const useDetails = (orderData: IOrder) => {
   // Derive the prep/now second-of-day values once per order instead of building
   // six `new Date()` objects on every render.
   const { preparationSeconds, currentSeconds } = useMemo(() => {
+    const preparationDate = parseTimestamp(order?.preparationTime);
     const preparationTime = {
-      hours: new Date(order?.preparationTime).getHours(),
-      minutes: new Date(order?.preparationTime).getMinutes(),
-      seconds: new Date(order?.preparationTime).getSeconds(),
+      hours: preparationDate?.getHours() ?? 0,
+      minutes: preparationDate?.getMinutes() ?? 0,
+      seconds: preparationDate?.getSeconds() ?? 0,
     };
     const currentTime = {
       hours: new Date().getHours(),

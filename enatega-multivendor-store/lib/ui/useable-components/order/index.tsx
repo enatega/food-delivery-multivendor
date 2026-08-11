@@ -7,7 +7,11 @@ import {
 import { useStoreMode } from "@/lib/context/global/store-mode.context";
 import { MAX_TIME } from "@/lib/utils/constants";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
-import { orderSubTotal } from "@/lib/utils/methods";
+import { formatAmount, orderSubTotal } from "@/lib/utils/methods";
+import {
+  formatTimestampTime,
+  parseTimestamp,
+} from "@/lib/utils/methods/date-time";
 import { getIsAcceptButtonVisible } from "@/lib/utils/methods/gloabl";
 import { ORDER_TYPE } from "@/lib/utils/types";
 import { memo, useContext, useEffect, useRef, useState } from "react";
@@ -88,18 +92,14 @@ const Order = ({
   );
 
   // Preparation Time
-  const prep = new Date(order.preparationTime ?? "2023-08-16T08:00:00.000Z");
-  const diffTime = prep.getTime() - timeNow.getTime();
+  const prep = parseTimestamp(order.preparationTime);
+  const diffTime = prep ? prep.getTime() - timeNow.getTime() : 0;
   const totalPrep = diffTime > 0 ? diffTime / 1000 : 0;
+  const etaWindowStart = formatTimestampTime(order.eta?.windowStartAt);
+  const etaWindowEnd = formatTimestampTime(order.eta?.windowEndAt);
   const etaWindow =
-    order.eta?.windowStartAt && order.eta?.windowEndAt
-      ? `${new Date(order.eta.windowStartAt).toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "2-digit",
-        })}–${new Date(order.eta.windowEndAt).toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "2-digit",
-        })}`
+    etaWindowStart && etaWindowEnd
+      ? `${etaWindowStart}–${etaWindowEnd}`
       : null;
 
   const decision = !isAcceptButtonVisible
@@ -348,7 +348,7 @@ const Order = ({
                                     fontWeight: "600",
                                   }}
                                 >
-                                  {`${configuration?.currencySymbol}${variation.price}`}
+                                  {`${configuration?.currencySymbol}${formatAmount(variation.price)}`}
                                 </Text>
                               </View>
                             </View>
@@ -376,7 +376,7 @@ const Order = ({
                                       fontSize: 12,
                                     }}
                                   >
-                                    {`(+${configuration?.currencySymbol}${option?.price})`}
+                                    {`(+${configuration?.currencySymbol}${formatAmount(option?.price)})`}
                                   </Text>
                                 </View>
                               ))}
@@ -393,7 +393,7 @@ const Order = ({
                   <Text
                     style={{ color: appTheme.fontMainColor, fontWeight: "600" }}
                   >
-                    {`${configuration?.currencySymbol}${itemTotal.toFixed(2)}`}
+                    {`${configuration?.currencySymbol}${formatAmount(itemTotal)}`}
                   </Text>
                 </View>
               </View>
@@ -426,7 +426,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {orderSubTotal(order)}
+            {formatAmount(orderSubTotal(order))}
           </Text>
         </View>
 
@@ -449,7 +449,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.tipping}
+            {formatAmount(order?.tipping)}
           </Text>
         </View>
 
@@ -472,7 +472,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.taxationAmount}
+            {formatAmount(order?.taxationAmount)}
           </Text>
         </View>
 
@@ -496,7 +496,7 @@ const Order = ({
               }}
             >
               {configuration?.currencySymbol}
-              {order?.discountAmount}
+              {formatAmount(order?.discountAmount)}
             </Text>
           </View>
         )}
@@ -521,7 +521,7 @@ const Order = ({
               }}
             >
               {configuration?.currencySymbol}
-              {order?.deliveryCharges}
+              {formatAmount(order?.deliveryCharges)}
             </Text>
           </View>
         )}
@@ -545,7 +545,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.orderAmount}
+            {formatAmount(order?.orderAmount)}
           </Text>
         </View>
 
@@ -646,7 +646,7 @@ const Order = ({
                   </Text>
 
                   <CountdownTimer duration={totalPrep} />
-                  {!isSingleVendor && etaWindow && (
+                  {etaWindow && (
                     <Text
                       style={{
                         color: appTheme.fontSecondColor,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ImageBackground } from 'react-native'
 import SwiperFlatList from 'react-native-swiper-flatlist'
-import { verticalScale } from '../../../utils/scaling'
+import { scale, verticalScale } from '../../../utils/scaling'
 import { useNavigation } from '@react-navigation/native'
 
 const { width } = Dimensions.get('window')
@@ -20,19 +20,18 @@ const HomeBanner = ({ banners = [], onBannerPress, autoplay = true, autoplayDela
     action: banner.action,
     screen: banner.screen,
     parameters: banner.parameters,
-    buttonText: banner.buttonText,
+    buttonText: banner.buttonText
   }))
 
   const bannersToDisplay = transformedBanners
 
   const handleBannerPress = (banner) => {
-
     console.log('Banner pressed:', banner)
     console.log('Screen value:', banner?.screen)
 
     if (!navigation) return
 
-    console.log("Navigating to:", banner.screen)
+    console.log('Navigating to:', banner.screen)
     switch (banner.screen) {
       case 'Category':
         navigation.navigate('ProductExplorer')
@@ -58,7 +57,6 @@ const HomeBanner = ({ banners = [], onBannerPress, autoplay = true, autoplayDela
       onBannerPress(banner)
     }
   }
-
 
   const renderBanner = ({ item }) => {
     return (
@@ -134,10 +132,10 @@ const styles = (tablet = false) => StyleSheet.create({
     marginBottom: tablet ? verticalScale(30) : 16
   },
   bannerContainer: {
-    width: width
+    width
   },
   imageBannerWrapper: {
-    paddingHorizontal: 16
+    paddingHorizontal: scale(12)
   },
   bannerImage: {
     width: '100%',

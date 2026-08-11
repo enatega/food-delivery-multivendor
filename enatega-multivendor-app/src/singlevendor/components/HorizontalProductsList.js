@@ -8,9 +8,10 @@ import SectionHeader from './SectionHeader'
 import { useNavigation } from '@react-navigation/native'
 import LoadingSkeleton from './LoadingSkeleton'
 import HorizontalProductsEmptyView from './HorizontalProductsEmptyView'
+import { scale } from '../../utils/scaling'
 
 const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, showSeeAll = true, viewType, setSearchVisible, containerStyles, categoryId }) => {
-  const { i18n, t } = useTranslation()
+  const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
@@ -21,7 +22,7 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
     if (viewType === 'see-all') {
       // navigation.navigate('ProductExplorer')
       navigation.navigate('ProductExplorer', {
-        categoryId: categoryId
+        categoryId
       })
     } else {
       setSearchVisible(true)
@@ -43,14 +44,16 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
   return (
     <View style={[styles(currentTheme).container, containerStyles]}>
       <SectionHeader title={listTitle} onSeeAll={handleSeeAll} showSeeAll={showSeeAll} containerStyles={containerStyles} />
-      {isLoading ? (
+      {isLoading
+        ? (
         <View style={styles().skeletonContainer}>
           <LoadingSkeleton width='45%' height={200} borderRadius={10} />
           <LoadingSkeleton width='45%' height={200} borderRadius={10} />
         </View>
-      ) : (
+          )
+        : (
         <FlatList ListEmptyComponent={<HorizontalProductsEmptyView />} data={ListData} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles(currentTheme).scrollContent, containerStyles]} keyExtractor={(item) => item.id.toString()} renderItem={({ item: drink }) => <ProductCard product={drink} onAddToCart={handleAddToCart} onCardPress={onProductPress} />} />
-      )}
+          )}
     </View>
   )
 }
@@ -62,8 +65,8 @@ const styles = (currentTheme) =>
       marginBottom: 10
     },
     scrollContent: {
-      paddingHorizontal: 20,
-      paddingRight: 10,
+      paddingLeft: scale(12),
+      paddingRight: scale(4),
       paddingVertical: 10
     },
     skeletonContainer: {

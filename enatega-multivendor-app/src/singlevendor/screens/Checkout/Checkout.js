@@ -1,5 +1,5 @@
 import React, { useState, useContext, useLayoutEffect, useRef, useCallback, useEffect } from 'react'
-import { View, ScrollView, TouchableOpacity, StatusBar, Platform } from 'react-native'
+import { View, ScrollView, TouchableOpacity, StatusBar, Platform, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { HeaderBackButton } from '@react-navigation/elements'
@@ -184,8 +184,7 @@ const Checkout = (props) => {
         ...textStyles.Bolder
       },
       headerTitleContainerStyle: {
-        paddingLeft: scale(25),
-        paddingRight: scale(25)
+        paddingHorizontal: scale(20)
       },
       headerStyle: {
         backgroundColor: currentTheme.newheaderBG,
@@ -194,7 +193,7 @@ const Checkout = (props) => {
         shadowOffset: { height: 0 },
         elevation: 0,
         borderBottomWidth: 0,
-        height: scale(100)
+        height: scale(84)
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -203,20 +202,19 @@ const Checkout = (props) => {
             <View style={{ ...alignment.PLsmall, alignItems: 'center' }}>
               <View
                 style={{
-                  width: scale(36),
-                  height: scale(36),
-                  borderRadius: scale(18),
+                  width: scale(34),
+                  height: scale(34),
+                  borderRadius: scale(17),
                   backgroundColor: currentTheme.colorBgTertiary || '#fff',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                  elevation: 3
+                  borderWidth: StyleSheet.hairlineWidth,
+                  borderColor: currentTheme.colorBorder,
+                  shadowColor: 'transparent',
+                  elevation: 0
                 }}
               >
-                <AntDesign name='arrowleft' size={20} color={currentTheme.fontMainColor || '#000'} />
+                <AntDesign name='arrowleft' size={19} color={currentTheme.fontMainColor || '#000'} />
               </View>
             </View>
           )}
@@ -421,7 +419,7 @@ const Checkout = (props) => {
           voucherBottomSheetRef={voucherBottomSheetRef}
         />
         {fulfillmentMode === 'delivery' && <TipSection selectedTip={tipAmount} onSelectTip={handleTipSelection} currencySymbol={currencySymbol} />}
-        <View style={{ height: scale(180) }} />
+        <View style={{ height: scale(24) }} />
       </ScrollView>
       <View style={styles(currentTheme).stickyBottomContainer}>
         {loading ? <OrderSummarySkeleton/> : error ? <OrderSummaryError onRetry={recalculateSummary} /> : <OrderSummary creditsUsed={creditsUsed} isCheckout={true} priorityDeliveryFee={deliveryTime == 'priority' ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={isBelowMaximumOrder ? minimumOrderFee : 0} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={fulfillmentMode === 'delivery' ? tipAmount : 0} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />}

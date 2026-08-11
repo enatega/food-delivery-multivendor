@@ -71,6 +71,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
         acceptedAt={item.acceptedAt}
         orderId={item.orderId}
         user={item.user}
+        eta={item.eta}
       />
     ),
     [route.key],

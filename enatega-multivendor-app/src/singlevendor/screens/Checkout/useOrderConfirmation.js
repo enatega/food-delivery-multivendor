@@ -19,25 +19,13 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
     data,
     loading,
     error,
-    refetch,
-    startPolling,
-    stopPolling
+    refetch
   } = useQuery(queryDocument, {
     variables: isHome ? undefined : variables,
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
     skip: shouldSkip
   })
-
-  useEffect(() => {
-    if (shouldSkip || error || !data) {
-      stopPolling()
-      return
-    }
-
-    startPolling(15000)
-    return stopPolling
-  }, [data, error, shouldSkip, startPolling, stopPolling])
 
   useEffect(() => {
     if (!isConnected) {
@@ -52,10 +40,7 @@ const useOrderConfirmation = ({ orderId, isHome = false } = {}) => {
   }, [isConnected, refetch])
 
   const retry = async() => {
-    stopPolling()
-    const result = await refetch()
-    if (result?.data) startPolling(15000)
-    return result
+    return refetch()
   }
 
   const orderQueryResponse = isHome ? data?.recentActiveOrder : data?.orderDetailsPage

@@ -62,6 +62,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         paymentStatus={item.paymentStatus}
         acceptedAt={item.acceptedAt}
         user={item.user}
+        eta={item.eta}
       />
     ),
     [route.key],

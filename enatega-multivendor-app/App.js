@@ -97,9 +97,7 @@ function ModeAwareApp() {
   )
 
   useEffect(() => {
-    if (mode !== APP_MODES.MULTI) return undefined
-
-    LiveActivityService.configure(client)
+    LiveActivityService.configure(client, mode)
     const unsubscribe = registerLiveActivityForegroundHandler()
     LiveActivityService.cleanAppGroupImages(24).catch(() => {})
     return unsubscribe

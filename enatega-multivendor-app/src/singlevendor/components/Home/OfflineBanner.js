@@ -2,12 +2,13 @@ import React from 'react'
 import { View } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import { scale } from '../../../utils/scaling'
 
 const OfflineBanner = ({ currentTheme, t }) => {
   return (
     <View
       style={{
-        marginHorizontal: 16,
+        marginHorizontal: scale(12),
         marginBottom: 12,
         paddingVertical: 16,
         paddingHorizontal: 14,

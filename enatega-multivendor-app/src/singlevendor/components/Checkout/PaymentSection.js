@@ -155,7 +155,7 @@
 // export default PaymentSection;
 
 import React, { useContext } from 'react'
-import { View, TouchableOpacity, StyleSheet, Image, Platform, TextInput } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native'
 import { Feather, Ionicons, FontAwesome } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -198,7 +198,7 @@ const PaymentSection = ({
     {
       id: 'COD',
       title: t('cod') || 'Cash on Delivery',
-      subtitle:  'Cash on Delivery'
+      subtitle: 'Cash on Delivery'
     }
   ]
 
@@ -230,24 +230,25 @@ const PaymentSection = ({
           <TouchableOpacity key={option.id} style={[styles(currentTheme).optionCard, isSelected && styles(currentTheme).optionCardSelected]} onPress={() => onSelectPaymentMethod(option.id)} activeOpacity={0.7}>
             {/* Left icon (logo when not selected for Apple/Google, otherwise radio) */}
             <View style={styles().radioButton}>
-              {!isSelected && option.id === 'GOOGLE_PAY' ? (
+              {!isSelected && option.id === 'GOOGLE_PAY'
+                ? (
                 <FontAwesome name='google' size={18} color='#4285F4' />
-              ) : 
-              !isSelected && option.id === 'APPLE_PAY' ? (
+                  )
+                : !isSelected && option.id === 'APPLE_PAY'
+                    ? (
                 <Ionicons name='logo-apple' size={20} color={currentTheme.fontMainColor || '#111'} />
-              )
-               :
-               !isSelected && option.id === 'PAYPAL' ? (
+                      )
+                    : !isSelected && option.id === 'PAYPAL'
+                        ? (
                 <Ionicons name='logo-paypal' size={20} color={currentTheme.fontMainColor || '#111'} />
-              )
-               :
-               !isSelected && option.id === 'STRIPE' ? (
+                          )
+                        : !isSelected && option.id === 'STRIPE'
+                            ? (
                 <Ionicons name='card' size={20} color={currentTheme.fontMainColor || '#111'} />
-              )
-              : 
-              (
+                              )
+                            : (
                 <View style={[styles(currentTheme).radioOuter, isSelected && styles(currentTheme).radioOuterSelected]}>{isSelected && <View style={styles(currentTheme).radioInner} />}</View>
-              )}
+                              )}
             </View>
 
             {/* Content */}
@@ -332,13 +333,15 @@ const PaymentSection = ({
             {selectedVoucher?.title || t('viewVouchers') || 'View vouchers'}
           </TextDefault>
         </TouchableOpacity>
-        {selectedVoucher ? (
+        {selectedVoucher
+          ? (
           <TouchableOpacity style={styles(currentTheme).voucherRemoveButton} onPress={onRemoveVoucher} activeOpacity={0.7}>
-            <TextDefault textColor={currentTheme.fontMainColor} bold>
+            <TextDefault textColor={currentTheme.red || '#EF4444'} bold>
               {t('remove') || 'Remove'}
             </TextDefault>
           </TouchableOpacity>
-        ) : null}
+            )
+          : null}
       </View>
 
       {/* <View style={styles().voucherInputRow}>
@@ -365,11 +368,22 @@ const PaymentSection = ({
   )
 }
 
-const styles = (props = null) =>
-  StyleSheet.create({
+const styles = (props = null) => {
+  const isDark = props?.themeBackground === '#000'
+  const subtleBorder = isDark
+    ? 'rgba(255, 255, 255, 0.13)'
+    : 'rgba(15, 23, 42, 0.10)'
+  const selectedBackground = isDark
+    ? 'rgba(14, 165, 233, 0.16)'
+    : 'rgba(14, 165, 233, 0.08)'
+  const removeBackground = isDark
+    ? 'rgba(248, 113, 113, 0.14)'
+    : 'rgba(239, 68, 68, 0.08)'
+
+  return StyleSheet.create({
     container: {
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(16)
+      paddingHorizontal: scale(12),
+      paddingVertical: scale(14)
     },
     sectionTitle: {
       marginBottom: scale(12)
@@ -380,17 +394,17 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: scale(12),
-      paddingHorizontal: scale(16),
+      paddingHorizontal: scale(14),
       marginBottom: scale(8),
-      borderRadius: scale(8),
-      borderWidth: 1,
-      borderColor: props ? props.gray200 : '#E5E7EB',
+      borderRadius: scale(10),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: subtleBorder,
       backgroundColor: props ? props.themeBackground : '#fff'
     },
     optionCardSelected: {
       borderColor: props ? props.primaryBlue : '#0EA5E9',
-      borderWidth: 2,
-      backgroundColor: props ? props.colorBgSecondary || 'rgba(14,165,233,0.08)' : 'rgba(14,165,233,0.08)'
+      borderWidth: 1,
+      backgroundColor: selectedBackground
     },
     radioButton: {
       marginRight: scale(12)
@@ -446,14 +460,19 @@ const styles = (props = null) =>
       paddingVertical: scale(6),
       paddingHorizontal: scale(10),
       borderRadius: scale(6),
-      borderWidth: 1,
-      borderColor: props ? props.gray200 : '#E5E7EB'
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: subtleBorder
     },
     voucherRemoveButton: {
+      minHeight: scale(34),
       paddingVertical: scale(6),
-      paddingHorizontal: scale(10),
-      borderRadius: scale(6),
-      backgroundColor: props ? props.gray200 : '#E5E7EB'
+      paddingHorizontal: scale(14),
+      borderRadius: scale(8),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: isDark ? 'rgba(248, 113, 113, 0.30)' : 'rgba(239, 68, 68, 0.20)',
+      backgroundColor: removeBackground,
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     voucherInputRow: {
       flexDirection: 'row',
@@ -484,5 +503,6 @@ const styles = (props = null) =>
       backgroundColor: props ? props.gray200 : '#E5E7EB'
     }
   })
+}
 
 export default PaymentSection

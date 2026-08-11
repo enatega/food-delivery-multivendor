@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
-import { View, TouchableOpacity, TextInput, StyleSheet, Switch } from 'react-native';
-import { MaterialIcons, Feather } from '@expo/vector-icons';
-import { useTranslation } from 'react-i18next';
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext';
-import { theme } from '../../../utils/themeColors';
-import { scale } from '../../../utils/scaling';
-import TextDefault from '../../../components/Text/TextDefault/TextDefault';
+import React, { useContext } from 'react'
+import { View, TouchableOpacity, TextInput, StyleSheet, Switch } from 'react-native'
+import { MaterialIcons, Feather } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
+import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../../utils/themeColors'
+import { scale } from '../../../utils/scaling'
+import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 
 const DeliveryOptions = ({
   deliveryAddress,
@@ -17,12 +17,12 @@ const DeliveryOptions = ({
   courierInstructions,
   onChangeCourierInstructions
 }) => {
-  const { t, i18n } = useTranslation();
-  const themeContext = useContext(ThemeContext);
+  const { t, i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
-  };
+  }
 
   return (
     <View style={styles(currentTheme).container}>
@@ -34,8 +34,9 @@ const DeliveryOptions = ({
       >
         <MaterialIcons
           name="location-on"
-          size={24}
-          color={currentTheme.fontMainColor}
+          size={22}
+          color={currentTheme.primaryBlue}
+          style={styles().rowIcon}
         />
         <View style={styles().addressContent}>
           <TextDefault
@@ -65,8 +66,9 @@ const DeliveryOptions = ({
       <View style={styles(currentTheme).optionRow}>
         <MaterialIcons
           name="door-front"
-          size={24}
-          color={currentTheme.fontMainColor}
+          size={22}
+          color={currentTheme.fontSecondColor}
+          style={styles().rowIcon}
         />
         <View style={styles().optionContent}>
           <TextDefault
@@ -90,6 +92,7 @@ const DeliveryOptions = ({
           onValueChange={onToggleLeaveAtDoor}
           trackColor={{ false: currentTheme.gray200, true: currentTheme.primaryBlue }}
           thumbColor="#fff"
+          style={styles().switch}
         />
       </View>
 
@@ -97,8 +100,9 @@ const DeliveryOptions = ({
       <View style={styles(currentTheme).optionRow}>
         <Feather
           name="phone-call"
-          size={22}
-          color={currentTheme.fontMainColor}
+          size={21}
+          color={currentTheme.fontSecondColor}
+          style={styles().rowIcon}
         />
         <View style={styles().optionContent}>
           <TextDefault
@@ -115,6 +119,7 @@ const DeliveryOptions = ({
           onValueChange={onToggleCallOnArrival}
           trackColor={{ false: currentTheme.gray200, true: currentTheme.primaryBlue }}
           thumbColor="#fff"
+          style={styles().switch}
         />
       </View>
 
@@ -122,7 +127,7 @@ const DeliveryOptions = ({
       <View style={styles(currentTheme).instructionsContainer}>
         <Feather
           name="message-square"
-          size={22}
+          size={20}
           color={currentTheme.fontSecondColor}
           style={{ marginTop: scale(2) }}
         />
@@ -136,56 +141,71 @@ const DeliveryOptions = ({
         />
       </View>
     </View>
-  );
-};
+  )
+}
 
-const styles = (props = null) =>
-  StyleSheet.create({
+const styles = (props = null) => {
+  const subtleBorder = props?.themeBackground === '#000'
+    ? 'rgba(255, 255, 255, 0.13)'
+    : 'rgba(15, 23, 42, 0.10)'
+
+  return StyleSheet.create({
     container: {
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(8)
+      paddingHorizontal: scale(12),
+      paddingTop: scale(2),
+      paddingBottom: scale(10)
     },
     addressRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: scale(16),
-      // borderBottomWidth: 1,
-      // borderBottomColor: props !== null ? props.gray200 : '#E5E7EB'
+      minHeight: scale(66),
+      paddingVertical: scale(12),
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: subtleBorder
     },
     addressContent: {
       flex: 1,
-      marginLeft: scale(12)
+      marginLeft: scale(12),
+      paddingRight: scale(8)
     },
     optionRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: scale(16),
-      // borderBottomWidth: 1,
-      // borderBottomColor: props !== null ? props.gray200 : '#E5E7EB'
+      minHeight: scale(62),
+      paddingVertical: scale(11),
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: subtleBorder
     },
     optionContent: {
       flex: 1,
-      marginLeft: scale(12)
+      marginLeft: scale(12),
+      paddingRight: scale(10)
+    },
+    rowIcon: {
+      width: scale(26),
+      textAlign: 'center'
+    },
+    switch: {
+      transform: [{ scaleX: 0.82 }, { scaleY: 0.82 }]
     },
     instructionsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: scale(0),
-      paddingHorizontal: scale(12),
-      borderWidth: 1,
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
-      borderRadius: scale(8),
-      backgroundColor: props !== null ? props.themeBackground : '#fff'
+      minHeight: scale(48),
+      paddingHorizontal: scale(4),
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: subtleBorder
     },
     instructionsInput: {
       flex: 1,
       marginLeft: scale(12),
       fontSize: scale(14),
       color: props !== null ? props.fontMainColor : '#000',
-      height: scale(40),
+      height: scale(46),
       paddingVertical: 0,
       paddingHorizontal: 0
     }
-  });
+  })
+}
 
-export default DeliveryOptions;
+export default DeliveryOptions

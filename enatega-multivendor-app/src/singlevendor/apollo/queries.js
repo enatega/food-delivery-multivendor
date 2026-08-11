@@ -567,6 +567,23 @@ export const ORDER_DETAILS_PAGE = gql`
         scheduledAt
         assignedAt
         instructions
+        eta {
+          phase
+          source
+          readyAt
+          baseArrivalAt
+          estimatedArrivalAt
+          windowStartAt
+          windowEndAt
+          durationSeconds
+          distanceMeters
+          encodedPolyline
+          origin { latitude longitude }
+          destination { latitude longitude }
+          calculatedAt
+          lastLocationAt
+          version
+        }
         
       }
       data {
@@ -733,6 +750,23 @@ export const Recent_ActiveOrder = gql`
         isPickedUp
         deliveryType
         deliveryCharges
+        eta {
+          phase
+          source
+          readyAt
+          baseArrivalAt
+          estimatedArrivalAt
+          windowStartAt
+          windowEndAt
+          durationSeconds
+          distanceMeters
+          encodedPolyline
+          origin { latitude longitude }
+          destination { latitude longitude }
+          calculatedAt
+          lastLocationAt
+          version
+        }
         acceptedAt
         pickedAt
         deliveredAt

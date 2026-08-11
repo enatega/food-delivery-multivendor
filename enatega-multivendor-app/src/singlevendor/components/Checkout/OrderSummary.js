@@ -205,13 +205,13 @@ const OrderSummary = ({
 const styles = (props = null) =>
   StyleSheet.create({
     container: {
-      paddingBottom: scale(8)
+      paddingBottom: scale(5)
     },
     summaryHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: scale(4)
+      minHeight: scale(34)
     },
     summaryHeaderLeft: {
       flexDirection: 'row',
@@ -235,7 +235,8 @@ const styles = (props = null) =>
       marginVertical: scale(8)
     },
     taxNote: {
-      marginTop: scale(4)
+      marginTop: scale(1),
+      opacity: 0.78
     }
   })
 

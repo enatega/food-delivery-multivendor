@@ -19,9 +19,16 @@ const navigationOptions = (props) => ({
     color: props?.fontMainColor,
     ...alignment.PTlarge
   },
+  headerBackVisible: false,
+  headerLeft: () => null,
+  headerLeftContainerStyle: {
+    width: 0
+  },
   headerTitleContainerStyle: {
-    left: scale(8),
-    right: scale(118),
+    left: 0,
+    right: scale(112),
+    marginLeft: 0,
+    paddingLeft: 0,
     alignItems: 'flex-start'
   },
   headerTitleAlign: 'left',

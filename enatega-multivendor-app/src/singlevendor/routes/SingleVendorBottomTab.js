@@ -26,6 +26,15 @@ const tabIconNames = {
   SVBrowse: 'search',
   SVProfile: 'profile'
 }
+
+const selectCartItemCount = state => state.items.reduce(
+  (total, item) => total + (item?.variations || []).reduce(
+    (variationTotal, variation) => variationTotal + (Number(variation?.quantity) || 0),
+    0
+  ),
+  0
+)
+
 const SingleVendorProfileTab = props => {
   const items = useCartStore(state => state.items)
   return (
@@ -42,6 +51,8 @@ const SingleVendorBottomTab = () => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  const cartItemCount = useCartStore(selectCartItemCount)
+  const cartBadge = cartItemCount > 99 ? '99+' : cartItemCount || undefined
 
   return (
     <Tab.Navigator
@@ -109,7 +120,18 @@ const SingleVendorBottomTab = () => {
         name='Cart'
         component={Cart}
         options={{
-          tabBarLabel: t('Cart')
+          tabBarLabel: t('Cart'),
+          tabBarBadge: cartBadge,
+          tabBarBadgeStyle: {
+            minWidth: scale(18),
+            height: scale(18),
+            borderRadius: scale(9),
+            paddingHorizontal: scale(4),
+            backgroundColor: currentTheme.primaryBlue || '#0EA5E9',
+            color: '#FFFFFF',
+            fontSize: scale(9),
+            fontWeight: '700'
+          }
         }}
         initialParams={{
           selectedType: 'grocery',

@@ -50,6 +50,16 @@ export interface IExtendedOrder extends IOrder {
   tipping?: number;
   reason?: string | null;
   taxationAmount?: number;
+  eta?: {
+    phase?: string;
+    source?: string;
+    readyAt?: string;
+    estimatedArrivalAt?: string;
+    windowStartAt?: string;
+    windowEndAt?: string;
+    calculatedAt?: string;
+    lastLocationAt?: string;
+  };
   itemsTitle?: string;
   OrderdeliveryAddress?: string;
   DateCreated?: string;

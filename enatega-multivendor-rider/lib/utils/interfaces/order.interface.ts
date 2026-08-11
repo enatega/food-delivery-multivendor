@@ -6,6 +6,17 @@ import { IRiderProfile } from "./user.interface";
 
 export interface IOrderComponentProps extends IGlobalComponentProps {
   tab: ORDER_TYPE;
+  _id: IOrder['_id'];
+  orderId: IOrder['orderId'];
+  orderStatus: IOrder['orderStatus'];
+  restaurant: IOrder['restaurant'];
+  deliveryAddress: IOrder['deliveryAddress'];
+  paymentMethod: IOrder['paymentMethod'];
+  orderAmount: IOrder['orderAmount'];
+  paymentStatus: IOrder['paymentStatus'];
+  acceptedAt: IOrder['acceptedAt'];
+  user: IOrder['user'];
+  eta?: IOrder['eta'];
 }
 
 export interface IOrder {
@@ -49,6 +60,18 @@ export interface IOrder {
   orderState?: string;
   preparationTime: string;
   completionTime: string;
+  eta?: {
+    phase?: string;
+    source?: string;
+    readyAt?: string;
+    estimatedArrivalAt?: string;
+    windowStartAt?: string;
+    windowEndAt?: string;
+    durationSeconds?: number;
+    distanceMeters?: number;
+    calculatedAt?: string;
+    lastLocationAt?: string;
+  };
   isPickedUp: boolean;
   isRiderRinged: boolean;
   rider: IRiderProfile;

@@ -71,6 +71,11 @@ export const SUBSCRIPTION_PLACE_ORDER = gql`
         isActive
         createdAt
         deliveryCharges
+        completionTime
+        preparationTime
+        eta {
+          phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+        }
         rider {
           _id
           name
@@ -113,6 +118,10 @@ export const SUBSCRIPTION_DISPATCH_ORDER = gql`
       orderStatus
       deliveryType
       preparationTime
+      completionTime
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
       expectedTime
       acceptedAt
       selectedPrepTime
@@ -138,6 +147,33 @@ export const SUBSCRIPTION_ORDER = gql`
       rider {
         _id
       }
+      completionTime
+      preparationTime
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
+    }
+  }
+`;
+
+export const ORDER_TRACKING = gql`
+  query OrderTracking($id: ID!) {
+    orderTracking(id: $id) {
+      orderId
+      status
+      riderLocation { latitude longitude accuracy heading speed recordedAt }
+      eta { phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt }
+    }
+  }
+`;
+
+export const SUBSCRIPTION_ORDER_TRACKING = gql`
+  subscription SubscriptionOrderTracking($id: String!) {
+    subscriptionOrderTracking(id: $id) {
+      orderId
+      status
+      riderLocation { latitude longitude accuracy heading speed recordedAt }
+      eta { phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt }
     }
   }
 `;

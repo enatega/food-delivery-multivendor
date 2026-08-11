@@ -9,8 +9,8 @@ export interface StoreEnvironment {
 const MULTI_VENDOR_ENVIRONMENT: StoreEnvironment = {
   // GRAPHQL_URL: "https://aws-server-v2.enatega.com/graphql",
   // WS_GRAPHQL_URL: "wss://aws-server-v2.enatega.com/graphql",
-  GRAPHQL_URL: "https://3086ptqf-8001.inc1.devtunnels.ms/graphql",
-  WS_GRAPHQL_URL: "wss://3086ptqf-8001.inc1.devtunnels.ms/graphql",
+  GRAPHQL_URL: "https://backup-server.enatega.com/graphql",
+  WS_GRAPHQL_URL: "wss://backup-server.enatega.com/graphql",
   PUBLIC_ACCESS_REQUIRED: true,
 };
 
@@ -27,13 +27,13 @@ const getSingleVendorEnvironment = (): StoreEnvironment => ({
       "EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL",
       process.env.EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL,
       "https://",
-    ) ?? "http://localhost:8001/graphql",
+    ) ?? "https://enatega-multivendor-api-production-9b09.up.railway.app/graphql",
   WS_GRAPHQL_URL:
     requireReleaseEndpoint(
       "EXPO_PUBLIC_SINGLE_VENDOR_WS_GRAPHQL_URL",
       process.env.EXPO_PUBLIC_SINGLE_VENDOR_WS_GRAPHQL_URL,
       "wss://",
-    ) ?? "ws://localhost:8001/graphql",
+    ) ?? "wss://enatega-multivendor-api-production-9b09.up.railway.app/graphql",
   PUBLIC_ACCESS_REQUIRED: true,
 });
 

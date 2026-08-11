@@ -80,6 +80,23 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       cancelledAt
       assignedAt
       instructions
+      eta {
+        phase
+        source
+        readyAt
+        baseArrivalAt
+        estimatedArrivalAt
+        windowStartAt
+        windowEndAt
+        durationSeconds
+        distanceMeters
+        encodedPolyline
+        origin { latitude longitude }
+        destination { latitude longitude }
+        calculatedAt
+        lastLocationAt
+        version
+      }
       }
     }
   }`
@@ -93,4 +110,32 @@ orderStatus
 paymentStatus
 paymentMethod
 }
+}`
+
+export const orderTracking = `query SingleVendorOrderTracking($id: ID!) {
+  orderTracking(id: $id) {
+    orderId
+    status
+    riderLocation { latitude longitude accuracy heading speed recordedAt }
+    eta {
+      phase source readyAt baseArrivalAt estimatedArrivalAt windowStartAt windowEndAt
+      durationSeconds distanceMeters encodedPolyline calculatedAt lastLocationAt version
+      origin { latitude longitude }
+      destination { latitude longitude }
+    }
+  }
+}`
+
+export const subscriptionOrderTracking = `subscription SingleVendorOrderTrackingUpdated($id: String!) {
+  subscriptionOrderTracking(id: $id) {
+    orderId
+    status
+    riderLocation { latitude longitude accuracy heading speed recordedAt }
+    eta {
+      phase source readyAt baseArrivalAt estimatedArrivalAt windowStartAt windowEndAt
+      durationSeconds distanceMeters encodedPolyline calculatedAt lastLocationAt version
+      origin { latitude longitude }
+      destination { latitude longitude }
+    }
+  }
 }`

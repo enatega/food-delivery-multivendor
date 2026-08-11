@@ -3,6 +3,7 @@ import React, { useContext } from 'react'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
+import { scale } from '../../utils/scaling'
 
 const SectionHeader = ({ title, onSeeAll, containerStyles, showSeeAll = true }) => {
   const { i18n, t } = useTranslation()
@@ -25,7 +26,7 @@ const styles = (currentTheme) => StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: scale(12),
     marginBottom: 15
   },
   title: {

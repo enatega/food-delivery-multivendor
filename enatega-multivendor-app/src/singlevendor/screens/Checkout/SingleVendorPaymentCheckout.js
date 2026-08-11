@@ -12,6 +12,7 @@ import { removeModeItem } from '../../../mode/storage'
 import { getToken } from '../../../utils/secureToken'
 import { paymentSuccess } from '../../apollo/subscriptions'
 import useCartStore from '../../stores/useCartStore'
+import LiveActivityService from '../../../utils/liveActivityService'
 
 const PAYMENT_SUCCESS = gql`
   ${paymentSuccess}
@@ -53,6 +54,8 @@ const SingleVendorPaymentCheckout = ({ route }) => {
   const completed = useRef(false)
   const {
     _id: displayOrderId,
+    orderId,
+    isPickedUp = false,
     payment_method: paymentMethod = 'card'
   } = route?.params || {}
 
@@ -83,6 +86,13 @@ const SingleVendorPaymentCheckout = ({ route }) => {
   const completePayment = async() => {
     if (completed.current) return
     completed.current = true
+    if (orderId && !isPickedUp) {
+      LiveActivityService.initiateForOrder({
+        orderId,
+        displayOrderId,
+        mode: APP_MODES.SINGLE
+      }).catch(error => console.warn('Unable to start delivery Live Activity', error?.message))
+    }
     clearCart()
     await removeModeItem('selectedVoucher', APP_MODES.SINGLE)
     navigation.dispatch(

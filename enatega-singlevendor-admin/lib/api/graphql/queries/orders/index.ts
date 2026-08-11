@@ -48,6 +48,18 @@ export const GET_ACTIVE_ORDERS = gql`
         status
         isActive
         createdAt
+        completionTime
+        preparationTime
+        eta {
+          phase
+          source
+          readyAt
+          estimatedArrivalAt
+          windowStartAt
+          windowEndAt
+          calculatedAt
+          lastLocationAt
+        }
         rider {
           _id
           name
@@ -139,6 +151,11 @@ export const GET_ORDER_BY_RESTAURANT = gql`
       deliveryCharges
       tipping
       taxationAmount
+      completionTime
+      preparationTime
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
       rider {
         _id
         name
@@ -210,6 +227,11 @@ export const GET_ORDER_BY_RESTAURANT_WITHOUT_PAGINATION = gql`
       deliveryCharges
       tipping
       taxationAmount
+      completionTime
+      preparationTime
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
     }
   }
 `;
@@ -284,6 +306,11 @@ export const GET_ORDERS = gql`
       deliveryCharges
       tipping
       taxationAmount
+      completionTime
+      preparationTime
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
       rider {
         _id
         name
@@ -367,6 +394,11 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
       deliveryCharges
       tipping
       taxationAmount
+      completionTime
+      preparationTime
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
       rider {
         _id
         name

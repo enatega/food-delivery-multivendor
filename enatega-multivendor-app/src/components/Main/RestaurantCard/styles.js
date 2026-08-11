@@ -18,12 +18,26 @@ const buildStyles = (props = null) => {
       borderRadius: props?.radii?.lg ?? 14,
       width: RESTAURANT_CARD_WIDTH,
       ...alignment.MRsmall,
-      backgroundColor: props?.colors?.surface ?? '#181818'
+      backgroundColor: 'transparent',
+      marginTop: scale(2),
+      marginBottom: scale(8),
+      overflow: 'visible',
+      // Match the restrained single-vendor card treatment. The outer wrapper
+      // owns the shadow while cardSurface clips media and ripple content.
+      shadowColor: props?.shadowColor ?? '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3
     },
     compactOfferContainer: {
       width: Math.max(scale(180), Math.min(scale(204), width * 0.51))
     },
     cardSurface: {
+      width: '100%',
       borderRadius: props?.radii?.lg ?? 14,
       overflow: 'hidden',
       backgroundColor: props?.colors?.surface ?? '#181818'

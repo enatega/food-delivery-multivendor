@@ -161,4 +161,5 @@ export const stopBackgroundLocation = async () => {
     await Location.stopLocationUpdatesAsync(RIDER_LOCATION_TASK);
   }
   await AsyncStorage.removeItem(CONFIG_KEY);
+  await AsyncStorage.removeItem(LAST_FIX_KEY);
 };

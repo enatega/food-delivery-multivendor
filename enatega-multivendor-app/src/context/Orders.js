@@ -29,6 +29,7 @@ const SINGLE_SUBSCRIPTION_ORDERS = gql`
 // Page-based pagination, matching the customer web app (offset stays 0, page
 // increments, `limit` items per page).
 const PAGE_LIMIT = 10
+const ACTIVE_ORDER_STATUSES = new Set(['PENDING', 'ACCEPTED', 'ASSIGNED', 'PICKED', 'ON_ROUTE'])
 
 const OrdersContext = React.createContext()
 
@@ -42,12 +43,23 @@ const dedupeById = (list = []) => {
   })
 }
 
+const mergeOrderUpdates = (orders = [], updates = []) => {
+  const byId = new Map(orders.map(order => [String(order?._id), order]))
+  updates.forEach(update => {
+    if (!update?._id) return
+    const id = String(update._id)
+    byId.set(id, { ...(byId.get(id) || {}), ...update })
+  })
+  return [...byId.values()]
+}
+
 export const OrdersProvider = ({ children, onOrderDelivered }) => {
   const { profile } = useContext(UserContext)
   const { mode } = useAppMode()
   const isSingleVendor = mode === APP_MODES.SINGLE
   const [activePage, setActivePage] = useState(1)
   const [pastPage, setPastPage] = useState(1)
+  const [singleVendorLiveOrders, setSingleVendorLiveOrders] = useState({})
 
   function onError(error) {
     console.log('error context orders', error?.message)
@@ -83,14 +95,24 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
     onError
   })
 
-  const activeOrders = useMemo(
-    () => dedupeById(dataActive?.getUsersActiveOrders ?? []),
-    [dataActive]
+  const liveOrderUpdates = useMemo(
+    () => isSingleVendor ? Object.values(singleVendorLiveOrders) : [],
+    [isSingleVendor, singleVendorLiveOrders]
   )
-  const pastOrders = useMemo(
-    () => dedupeById(dataPast?.getUsersPastOrders ?? []),
-    [dataPast]
-  )
+  const activeOrders = useMemo(() => {
+    const merged = mergeOrderUpdates(
+      dataActive?.getUsersActiveOrders ?? [],
+      liveOrderUpdates
+    )
+    return dedupeById(merged).filter(order => ACTIVE_ORDER_STATUSES.has(order?.orderStatus))
+  }, [dataActive, liveOrderUpdates])
+  const pastOrders = useMemo(() => {
+    const terminalUpdates = liveOrderUpdates.filter(order => !ACTIVE_ORDER_STATUSES.has(order?.orderStatus))
+    return dedupeById(mergeOrderUpdates(
+      dataPast?.getUsersPastOrders ?? [],
+      terminalUpdates
+    )).filter(order => !ACTIVE_ORDER_STATUSES.has(order?.orderStatus))
+  }, [dataPast, liveOrderUpdates])
   // Combined list kept for backward compatibility: screens that filter by
   // orderStatus (MyOrders, Profile, OrderDetail) keep working unchanged.
   const orders = useMemo(
@@ -99,27 +121,39 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
   )
 
   useEffect(() => {
+    setSingleVendorLiveOrders({})
+  }, [mode, profile?._id])
+
+  useEffect(() => {
     orders.forEach(order => {
       recordOrderOrigin(order, mode).catch(() => {})
     })
   }, [mode, orders])
 
-  // Keep real-time updates: whenever an order changes status, refetch both
-  // lists so orders move between the active and past tabs live. Using refetch
-  // (instead of manual cache surgery) keeps the two server-split lists correct.
+  // Apply single-vendor payloads directly so cards and order history move in
+  // the same render as the WebSocket event, without polling or refetching.
   useSubscription(
     isSingleVendor ? SINGLE_SUBSCRIPTION_ORDERS : SUBSCRIPTION_ORDERS,
     {
       variables: { userId: profile?._id },
       skip: !profile,
-      onSubscriptionData: ({ subscriptionData }) => {
-        refetchActive?.()
-        refetchPast?.()
-
-        const payload = subscriptionData?.data?.orderStatusChanged
+      onData: ({ data }) => {
+        const payload = data?.data?.orderStatusChanged
         const order = isSingleVendor ? payload?.rawOrder : payload?.order
         if (order) recordOrderOrigin(order, mode).catch(() => {})
-        if (order?.orderStatus === 'DELIVERED' && !order?.review) {
+        if (isSingleVendor && order?._id) {
+          setSingleVendorLiveOrders(current => ({
+            ...current,
+            [String(order._id)]: {
+              ...(current[String(order._id)] || {}),
+              ...order
+            }
+          }))
+        } else if (order) {
+          refetchActive?.()
+          refetchPast?.()
+        }
+        if (['DELIVERED', 'COMPLETED'].includes(order?.orderStatus) && !order?.review) {
           onOrderDelivered?.(order)
         }
       }

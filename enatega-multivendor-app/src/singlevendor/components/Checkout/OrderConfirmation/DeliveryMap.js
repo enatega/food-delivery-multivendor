@@ -1,41 +1,29 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useMemo, useRef } from 'react'
 import { View, StyleSheet, Image } from 'react-native'
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
-import MapViewDirections from 'react-native-maps-directions'
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT } from 'react-native-maps'
 import ThemeContext from '../../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../../utils/themeColors'
 import { scale } from '../../../../utils/scaling'
 import { mapStyle } from '../../../../utils/mapStyle'
-import useEnvVars from '../../../../../environment'
+import { decodePolyline, trimPolylineToRider } from '../../../../utils/polyline'
 
-const DeliveryMap = ({ 
+const DeliveryMap = ({
   riderLocation,
   customerLocation,
   restaurantLocation,
+  encodedPolyline,
   showRoute = true,
   isPickUpOrder = false
 }) => {
-  const { GOOGLE_MAPS_KEY } = useEnvVars();
-  const themeContext = useContext(ThemeContext);
-  const currentTheme = theme[themeContext.ThemeValue];
-  const mapRef = useRef(null);
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
+  const mapRef = useRef(null)
 
   const initialRegion = {
     latitude: customerLocation?.latitude ?? 25.2854,
     longitude: customerLocation?.longitude ?? 51.531,
     latitudeDelta: 0.02,
     longitudeDelta: 0.02
-  }
-
-  const fitToMarkers = (coordinates) => {
-    mapRef.current?.fitToCoordinates(coordinates, {
-      edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }
-    })
-  }
-
-  const DEFAULT_COORDINATE = {
-    latitude: 0,
-    longitude: 0
   }
 
   const hasValidCoords = riderLocation?.latitude != null && riderLocation?.longitude != null && riderLocation.latitude !== '' && riderLocation.longitude !== ''
@@ -45,8 +33,23 @@ const DeliveryMap = ({
         latitude: Number(riderLocation?.latitude),
         longitude: Number(riderLocation?.longitude)
       }
-    : DEFAULT_COORDINATE
-  const markerOpacity = hasValidCoords ? 1 : 0
+    : null
+  const routeCoordinates = useMemo(
+    () => trimPolylineToRider(decodePolyline(encodedPolyline), markerCoordinate),
+    [encodedPolyline, markerCoordinate?.latitude, markerCoordinate?.longitude]
+  )
+  const displayedRouteCoordinates = routeCoordinates.length > 1
+    ? routeCoordinates
+    : [markerCoordinate, customerLocation].filter(Boolean)
+
+  useEffect(() => {
+    if (displayedRouteCoordinates.length > 1) {
+      mapRef.current?.fitToCoordinates(displayedRouteCoordinates, {
+        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        animated: true
+      })
+    }
+  }, [routeCoordinates, markerCoordinate?.latitude, markerCoordinate?.longitude, customerLocation?.latitude, customerLocation?.longitude])
 
   return (
     <View style={styles().container}>
@@ -79,32 +82,24 @@ const DeliveryMap = ({
         )}
 
         {/* Rider Marker */}
-        <Marker coordinate={markerCoordinate}>
-          <View style={[styles().riderMarker, { opacity: markerOpacity }]}>
+        {markerCoordinate && <Marker coordinate={markerCoordinate}>
+          <View style={styles().riderMarker}>
             <Image
-              source={isPickUpOrder? require('../../../../assets/images/location.png') : require('../../../assets/images/rider-icon.png')}
+              source={isPickUpOrder ? require('../../../../assets/images/location.png') : require('../../../assets/images/rider-icon.png')}
               style={styles().riderIcon}
               resizeMode="contain"
             />
           </View>
-        </Marker>
+        </Marker>}
 
         {/* Route */}
-        {showRoute && riderLocation && customerLocation && GOOGLE_MAPS_KEY && (
-          <MapViewDirections
-            origin={riderLocation}
-            destination={customerLocation}
-            apikey={GOOGLE_MAPS_KEY}
-            strokeWidth={4}
-            strokeColor={currentTheme.headerMainFontColor || '#006189'}
-            optimizeWaypoints={true}
-            onReady={(result) => fitToMarkers(result.coordinates)}
-          />
+        {showRoute && displayedRouteCoordinates.length > 1 && (
+          <Polyline coordinates={displayedRouteCoordinates} strokeWidth={4} strokeColor={currentTheme.headerMainFontColor || '#006189'} />
         )}
       </MapView>
     </View>
-  );
-};
+  )
+}
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -158,6 +153,6 @@ const styles = (props = null) =>
       width: scale(32),
       height: scale(32)
     }
-  });
+  })
 
-export default DeliveryMap;
+export default DeliveryMap

@@ -123,6 +123,16 @@ export const SUBSCRIPTION_ORDER = gql`
       }
       completionTime
       preparationTime
+      eta {
+        phase
+        source
+        readyAt
+        estimatedArrivalAt
+        windowStartAt
+        windowEndAt
+        calculatedAt
+        lastLocationAt
+      }
     }
   }
 `;

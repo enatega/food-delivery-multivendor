@@ -1,91 +1,56 @@
-import React, { useContext, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
-import { useTranslation } from 'react-i18next';
-import ThemeContext from '../../../../ui/ThemeContext/ThemeContext';
-import { theme } from '../../../../utils/themeColors';
-import { scale } from '../../../../utils/scaling';
-import TextDefault from '../../../../components/Text/TextDefault/TextDefault';
+import React, { useContext, useEffect, useState } from 'react'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
+import ThemeContext from '../../../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../../../utils/themeColors'
+import { scale } from '../../../../utils/scaling'
+import TextDefault from '../../../../components/Text/TextDefault/TextDefault'
 
-const DeliveryDetailsCard = ({
-  addressLabel = 'Home',
-  address,
-  showMap = false,
-  mapComponent,
-  onToggleMap,
-  isPickedUp
-}) => {
-  const { t, i18n } = useTranslation();
-  const themeContext = useContext(ThemeContext);
+const DeliveryDetailsCard = ({ addressLabel = 'Home', address, showMap = false, mapComponent, onToggleMap, isPickedUp }) => {
+  const { t, i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
-  };
+  }
 
-  const [expanded, setExpanded] = useState(showMap);
+  const [expanded, setExpanded] = useState(showMap)
+
+  useEffect(() => {
+    if (showMap) setExpanded(true)
+  }, [showMap])
 
   const handleToggle = () => {
-    setExpanded(!expanded);
-    onToggleMap?.(!expanded);
-  };
+    setExpanded(!expanded)
+    onToggleMap?.(!expanded)
+  }
 
   return (
     <View style={styles(currentTheme).container}>
-      <TextDefault
-        textColor={currentTheme.fontMainColor}
-        H5
-        bolder
-        isRTL
-        style={styles().sectionTitle}
-      >
-        {isPickedUp ? (t('Pickup details') || 'Pickup details') : (t('Delivery details') || 'Delivery details')}
+      <TextDefault textColor={currentTheme.fontMainColor} H5 bolder isRTL style={styles().sectionTitle}>
+        {isPickedUp ? t('Pickup details') || 'Pickup details' : t('Delivery details') || 'Delivery details'}
       </TextDefault>
 
-      <TouchableOpacity
-        style={styles().addressRow}
-        onPress={handleToggle}
-        activeOpacity={0.7}
-      >
+      <TouchableOpacity style={styles().addressRow} onPress={handleToggle} activeOpacity={0.7}>
         <View style={styles().addressLeft}>
-          <MaterialIcons
-            name="home"
-            size={22}
-            color={currentTheme.fontMainColor}
-          />
+          <MaterialIcons name='home' size={22} color={currentTheme.fontMainColor} />
           <View style={styles().addressContent}>
-            <TextDefault
-              textColor={currentTheme.fontMainColor}
-              bold
-              isRTL
-            >
+            <TextDefault textColor={currentTheme.fontMainColor} bold isRTL>
               {addressLabel}
             </TextDefault>
-            <TextDefault
-              textColor={currentTheme.gray500}
-              small
-              bold
-              isRTL
-              numberOfLines={1}
-            >
+            <TextDefault textColor={currentTheme.gray500} small bold isRTL numberOfLines={1}>
               {address}
             </TextDefault>
           </View>
         </View>
-        <Feather
-          name={expanded ? 'chevron-up' : 'chevron-down'}
-          size={20}
-          color={currentTheme.fontMainColor}
-        />
+        <Feather name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color={currentTheme.fontMainColor} />
       </TouchableOpacity>
 
-      {expanded && mapComponent && (
-        <View style={styles().mapContainer}>
-          {mapComponent}
-        </View>
-      )}
+      {expanded && mapComponent && <View style={styles().mapContainer}>{mapComponent}</View>}
     </View>
-  );
-};
+  )
+}
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -119,6 +84,6 @@ const styles = (props = null) =>
       overflow: 'hidden',
       height: scale(180)
     }
-  });
+  })
 
-export default DeliveryDetailsCard;
+export default DeliveryDetailsCard

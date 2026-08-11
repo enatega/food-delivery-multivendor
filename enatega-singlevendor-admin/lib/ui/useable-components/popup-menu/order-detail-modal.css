@@ -91,3 +91,22 @@
   margin-top: 10px;
   font-size: 16px;
 }
+
+.information-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.information-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.information-label {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../../utils/scaling'
 
@@ -13,7 +13,9 @@ const SmallOrderFeeTip = ({
 }) => {
   return (
     <View style={styles(currentTheme).container}>
-      <View style={styles(currentTheme).accent} />
+      <View style={styles(currentTheme).iconContainer}>
+        <Feather name='info' size={14} color={currentTheme.primaryBlue || '#0EA5E9'} />
+      </View>
       <View style={styles(currentTheme).content}>
         <TextDefault textColor={currentTheme.fontMainColor} H6 bolder>
           {t('smallOrderFeeTitle') || 'Small order fee applies'}
@@ -28,7 +30,7 @@ const SmallOrderFeeTip = ({
         style={styles(currentTheme).closeButton}
         activeOpacity={0.7}
       >
-        <AntDesign name="close" size={14} color={currentTheme.fontMainColor} />
+        <Feather name='x' size={16} color={currentTheme.fontSecondColor} />
       </TouchableOpacity>
     </View>
   )
@@ -40,35 +42,29 @@ const styles = (props) =>
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: props?.cardBackground || '#fff',
-      borderRadius: scale(10),
-      borderWidth: 1,
-      borderColor: props?.newBorderColor2 || '#E4E4E7',
-      paddingVertical: scale(10),
-      paddingHorizontal: scale(12),
-      marginTop: scale(10),
-      marginBottom: scale(4),
-      shadowColor: props?.shadowColor || '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 6,
-      elevation: 3
+      borderRadius: scale(9),
+      paddingVertical: scale(8),
+      paddingHorizontal: scale(10),
+      marginTop: scale(7),
+      marginBottom: scale(2)
     },
-    accent: {
-      width: scale(6),
-      height: '100%',
-      borderRadius: scale(4),
-      backgroundColor: props?.primaryBlue || '#0EA5E9',
+    iconContainer: {
+      width: scale(24),
+      height: scale(24),
+      borderRadius: scale(12),
+      backgroundColor: props?.colorBgTertiary || '#F3F4F6',
+      alignItems: 'center',
+      justifyContent: 'center',
       marginRight: scale(10)
     },
     content: {
       flex: 1,
-      gap: scale(4)
+      gap: scale(1)
     },
     closeButton: {
-      width: scale(26),
-      height: scale(26),
-      borderRadius: scale(13),
-      backgroundColor: props?.colorBgTertiary || '#F3F4F6',
+      width: scale(28),
+      height: scale(28),
+      borderRadius: scale(14),
       alignItems: 'center',
       justifyContent: 'center',
       marginLeft: scale(8)

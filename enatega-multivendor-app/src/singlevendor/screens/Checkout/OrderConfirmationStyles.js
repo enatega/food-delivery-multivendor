@@ -14,6 +14,19 @@ const styles = (props = null) =>
     contentContainer: {
       paddingBottom: scale(220)
     },
+    orderIdRow: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      alignSelf: props?.isRTL ? 'flex-end' : 'flex-start',
+      gap: scale(4),
+      marginTop: scale(10),
+      marginHorizontal: scale(16),
+      marginBottom: scale(4)
+    },
+    orderIdText: {
+      fontSize: scale(12),
+      lineHeight: scale(18)
+    },
     stickyBottomContainer: {
       position: 'absolute',
       bottom: 0,

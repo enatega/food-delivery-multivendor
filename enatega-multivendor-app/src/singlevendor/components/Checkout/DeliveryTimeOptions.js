@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import { Feather } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { useNavigation } from '@react-navigation/native'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -13,7 +12,7 @@ import LoadingSkeleton from '../LoadingSkeleton'
 import ClickCollectConfirmModal from './ClickCollectConfirmModal'
 
 const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, mode = 'delivery', scheduledTime = null }) => {
-  console.log("🚀 ~ DeliveryTimeOptions ~ mode:", mode)
+  console.log('🚀 ~ DeliveryTimeOptions ~ mode:', mode)
   const { clearSchedule } = useScheduleStore()
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
@@ -24,7 +23,7 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
   }
   const configuration = useContext(ConfigurationContext)
   const currencySymbol = configuration?.currencySymbol || '€'
-  
+
   // State for Click & Collect modal
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [pendingSelection, setPendingSelection] = useState(null)
@@ -85,7 +84,7 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
 
   const handleModalConfirm = () => {
     console.log('✅ Modal confirmed, selecting:', pendingSelection)
-    
+
     if (pendingSelection === 'schedule') {
       // Navigate to schedule screen after confirmation
       setIsModalVisible(false)
@@ -97,7 +96,7 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
       onSelectTime(pendingSelection)
       setIsModalVisible(false)
     }
-    
+
     setPendingSelection(null)
   }
 
@@ -114,7 +113,7 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
       </TextDefault>
 
       {timeOptions.map((option) => {
-        if(mode === 'collection' && option.id === 'priority') return null
+        if (mode === 'collection' && option.id === 'priority') return null
         return (
           <TouchableOpacity key={option.id} style={[styles(currentTheme).optionCard, selectedTime === option.id && styles(currentTheme).optionCardSelected]} onPress={() => handleTimeSelect(option.id)} activeOpacity={0.7}>
             <View style={styles().radioButton}>
@@ -122,14 +121,16 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
             </View>
 
             <View style={styles().optionContent}>
-              {option.id === 'priority' && !priorityDeliveryFee ? (
+              {option.id === 'priority' && !priorityDeliveryFee
+                ? (
                 <>
                   <View style={{ gap: 4 }}>
                     <LoadingSkeleton height={10} width='100%' borderRadius={8} />
                     <LoadingSkeleton height={8} width='60%' borderRadius={8} />
                   </View>
                 </>
-              ) : (
+                  )
+                : (
                 <>
                   <TextDefault textColor={currentTheme.fontMainColor} bold bolder={selectedTime === option.id} isRTL>
                     {option.title}
@@ -138,7 +139,7 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
                     {option.subtitle}
                   </TextDefault>
                 </>
-              )}
+                  )}
               {option.id === 'schedule' && scheduledTime && selectedTime === 'schedule' && (
                 <TextDefault textColor={currentTheme.primaryBlue || '#0EA5E9'} small isRTL style={{ marginTop: scale(2) }}>
                   {t('Tap to change') || 'Tap to change'}
@@ -146,8 +147,6 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
               )}
             </View>
 
-            {/* Checkmark icon for selected option */}
-            {selectedTime === option.id && <Feather name='check-circle' size={20} color={currentTheme.primaryBlue || '#0EA5E9'} style={styles().checkIcon} />}
           </TouchableOpacity>
         )
       })}
@@ -163,30 +162,31 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
   )
 }
 
-const styles = (props = null) =>
-  StyleSheet.create({
+const styles = (props = null) => {
+  const subtleBorder = props?.themeBackground === '#000'
+    ? 'rgba(255, 255, 255, 0.13)'
+    : 'rgba(15, 23, 42, 0.10)'
+
+  return StyleSheet.create({
     container: {
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(16)
+      paddingHorizontal: scale(12),
+      paddingTop: scale(14),
+      paddingBottom: scale(10)
     },
     sectionTitle: {
-      marginBottom: scale(12)
+      marginBottom: scale(8)
     },
     optionCard: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: scale(8),
-      paddingHorizontal: scale(16),
-      marginBottom: scale(8),
-      borderRadius: scale(8),
-      borderWidth: 1,
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
-      backgroundColor: props !== null ? props.themeBackground : '#fff'
+      minHeight: scale(58),
+      paddingVertical: scale(11),
+      paddingHorizontal: scale(4),
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: subtleBorder
     },
     optionCardSelected: {
-      borderColor: props !== null ? props.primaryBlue : '#0EA5E9',
-      borderWidth: 2,
-      backgroundColor: props !== null ? props.colorBgSecondary || 'rgba(14, 165, 233, 0.08)' : 'rgba(14, 165, 233, 0.08)'
+      borderBottomColor: props !== null ? props.primaryBlue : '#0EA5E9'
     },
     radioButton: {
       marginRight: scale(12)
@@ -210,11 +210,10 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9'
     },
     optionContent: {
-      flex: 1
-    },
-    checkIcon: {
-      marginLeft: scale(8)
+      flex: 1,
+      paddingRight: scale(8)
     }
   })
+}
 
 export default DeliveryTimeOptions

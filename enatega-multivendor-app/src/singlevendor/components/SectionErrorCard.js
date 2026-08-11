@@ -73,7 +73,7 @@ const styles = (colors, compact) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     minHeight: scale(compact ? 62 : 78),
-    marginHorizontal: scale(16),
+    marginHorizontal: scale(12),
     marginVertical: scale(8),
     padding: scale(compact ? 11 : 14),
     borderRadius: scale(14),

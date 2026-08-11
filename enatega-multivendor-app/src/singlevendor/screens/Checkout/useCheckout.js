@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client'
 import { CALCULATE_CHECKOUT } from '../../apollo/queries'
-import { COUPON, PLACE_ORDER } from '../../apollo/mutations'
-import { Alert } from 'react-native'
+import { PLACE_ORDER } from '../../apollo/mutations'
 import { CommonActions, useNavigation } from '@react-navigation/native'
 import useCartStore from '../../stores/useCartStore'
 import { useContext } from 'react'
@@ -9,6 +8,7 @@ import ConfigurationContext from '../../../context/Configuration'
 import { APP_MODES } from '../../../mode/constants'
 import { recordOrderOrigin } from '../../../mode/orderOrigin'
 import { useModeSensitiveOperation } from '../../../mode/AppModeContext'
+import LiveActivityService from '../../../utils/liveActivityService'
 
 const ADDRESS_DELIVERY_ERROR = "Sorry! we can't deliver to your address."
 
@@ -19,12 +19,12 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
   const currencySymbol = configuration?.currencySymbol || '€'
   const [placeOrder, { loading: placingOrder }] = useMutation(PLACE_ORDER, {
     onCompleted: (data) => {
-      void recordOrderOrigin(data?.placeOrder, APP_MODES.SINGLE)
+      recordOrderOrigin(data?.placeOrder, APP_MODES.SINGLE).catch(() => {})
       console.log('Order placed successfully', data?.placeOrder?.paymentMethod)
       // navigation.navigate('OrderConfirmation', { data })
       // navigation.replace('OrderConfirmation', { data })
 
-      //empty cart
+      // Empty cart
 
       const paymentMethod = String(data?.placeOrder?.paymentMethod).trim().toUpperCase()
       console.log('Normalized paymentMethod:', paymentMethod)
@@ -34,6 +34,7 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
           navigation.navigate('SVPaymentCheckout', {
             _id: data?.placeOrder?.orderId,
             orderId: data?.placeOrder?._id,
+            isPickedUp: Boolean(data?.placeOrder?.isPickedUp),
             amount: data?.placeOrder?.orderAmount,
             // email: data?.placeOrder?.user.email,
             currency: currencySymbol,
@@ -41,6 +42,13 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
           })
         }, 500)
       } else {
+        if (data?.placeOrder?._id && !data?.placeOrder?.isPickedUp) {
+          LiveActivityService.initiateForOrder({
+            orderId: data.placeOrder._id,
+            displayOrderId: data.placeOrder.orderId,
+            mode: APP_MODES.SINGLE
+          }).catch(error => console.warn('Unable to start delivery Live Activity', error?.message))
+        }
         navigation.dispatch(
           CommonActions.reset({
             index: 1,
