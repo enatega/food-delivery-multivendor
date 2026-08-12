@@ -23,6 +23,8 @@ interface IGoogleMapTrackingComponent {
   destination: { lat: number; lng: number };
   eta?: IOrderEta | null;
   riderLocation?: IRiderTrackingLocation | null;
+  requireBackendRoute?: boolean;
+  showStaticLoadingImage?: boolean;
 }
 
 function GoogleMapTrackingComponent({
@@ -30,6 +32,8 @@ function GoogleMapTrackingComponent({
   destination,
   eta,
   riderLocation,
+  requireBackendRoute = false,
+  showStaticLoadingImage = true,
 }: IGoogleMapTrackingComponent) {
   const t = useTranslations();
   const { theme } = useTheme();
@@ -46,8 +50,15 @@ function GoogleMapTrackingComponent({
     const decoded = decodePolyline(eta?.encodedPolyline);
     const trimmed = trimPolylineToRider(decoded, riderLocation);
     if (trimmed.length > 1) return trimmed;
+    if (requireBackendRoute) return [];
     return riderCoordinate ? [riderCoordinate, destination] : [];
-  }, [destination, eta?.encodedPolyline, riderCoordinate, riderLocation]);
+  }, [
+    destination,
+    eta?.encodedPolyline,
+    requireBackendRoute,
+    riderCoordinate,
+    riderLocation,
+  ]);
 
   const fitRoute = useCallback(() => {
     if (!map || typeof window === "undefined" || !window.google) return;
@@ -63,6 +74,21 @@ function GoogleMapTrackingComponent({
   }, [fitRoute]);
 
   if (!isLoaded) {
+    if (!showStaticLoadingImage) {
+      return (
+        <div
+          className="flex h-80 items-center justify-center bg-gray-100 px-6 text-center dark:bg-gray-900"
+          aria-live="polite"
+        >
+          <div>
+            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-primary-color" />
+            <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+              Loading the interactive map…
+            </p>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="relative">
         <Image
@@ -83,6 +109,10 @@ function GoogleMapTrackingComponent({
           styles: theme === "dark" ? darkMapStyle : null,
           disableDefaultUI: true,
           zoomControl: true,
+          gestureHandling: "greedy",
+          draggable: true,
+          scrollwheel: true,
+          keyboardShortcuts: true,
         }}
         mapContainerStyle={{ width: "100%", height: "400px" }}
         center={riderCoordinate || destination}

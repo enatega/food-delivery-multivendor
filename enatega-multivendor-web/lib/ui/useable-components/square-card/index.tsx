@@ -1,6 +1,6 @@
 "use client";
 
-import Image from '@/lib/ui/useable-components/safe-image';
+import Image from "@/lib/ui/useable-components/safe-image";
 import React from "react";
 // import { ClockSvg, CycleSvg, FaceSvg } from "@/lib/utils/assets/svg";
 // import IconWithTitle from "../icon-with-title";
@@ -11,21 +11,24 @@ const SquareCard: React.FC<ICuisinesCardProps> = ({
   item,
   cuisines = false,
   showLogo = false,
-  shoptype
+  shoptype,
+  href,
 }) => {
   const router = useRouter();
   const getImgSrc = showLogo ? item?.logo : item?.image;
 
   const onClickHandler = () => {
-    if(shoptype){
-      router.push(
-        `/shop-type/${item?.slug}`
-      );
+    if (href) {
+      router.push(href);
+      return;
+    }
+    if (shoptype) {
+      router.push(`/shop-type/${item?.slug}`);
       return;
     }
     if (!cuisines) {
       router.push(
-        `/${item?.shopType === "restaurant" ? "restaurant" : "store"}/${item?.slug}/${item._id}`
+        `/${item?.shopType === "restaurant" ? "restaurant" : "store"}/${item?.slug}/${item._id}`,
       );
     } else {
       router.push(`/category/${item.name.toLowerCase().replace(/\s/g, "-")}`);

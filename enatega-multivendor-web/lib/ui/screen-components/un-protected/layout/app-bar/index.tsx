@@ -71,6 +71,8 @@ import { setUserLocale } from "@/lib/utils/methods/locale";
 import { Dialog } from "primereact/dialog";
 
 import CustomButton from "@/lib/ui/useable-components/button";
+import SingleVendorCart from "@/lib/ui/single-vendor/Cart";
+import { modeStorage, useAppMode } from "@/lib/mode";
 
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
@@ -82,6 +84,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   const t = useTranslations();
   const [, startTransition] = useTransition();
   const currentLocale = useLocale();
+  const { isSingleVendor } = useAppMode();
 
   // REf
   const menuRef = useRef<Menu>(null);
@@ -119,7 +122,11 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     refetchProfileData,
     setRefetchProfileData,
   } = useAuth();
-  const { queryData = [] } = useNearByRestaurantsPreview(true, 1, 100);
+  const { queryData = [] } = useNearByRestaurantsPreview(
+    !isSingleVendor,
+    1,
+    100,
+  );
 
   const {
     isSearchFocused,
@@ -140,7 +147,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   const onInit = () => {
     const current_location_ls = onUseLocalStorage(
       "get",
-      USER_CURRENT_LOCATION_LS_KEY
+      USER_CURRENT_LOCATION_LS_KEY,
     );
     const user_current_location = current_location_ls
       ? JSON.parse(current_location_ls)
@@ -152,7 +159,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     }
 
     const selectedAddress = profile?.addresses.find(
-      (address) => address.selected
+      (address) => address.selected,
     );
     // ✅ If there's a selected address, use that
     if (selectedAddress) {
@@ -434,7 +441,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               {/* Center Section */}
               <div className="order-3 w-full md:order-none md:w-auto">
                 <div
-                  className={`mx-auto w-full transition-all duration-300 ease-in-out ${isSearchFocused ? "max-w-full" : "max-w-[760px]"} md:px-0`}
+                  className={`mx-auto w-full transition-all duration-300 ease-in-out ${isSearchFocused ? "max-w-full" : "max-w-[620px]"} md:px-0`}
                 >
                   <div className="relative w-full">
                     <input
@@ -476,7 +483,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   <button
                     type="button"
                     aria-label={t("SearchBarPlaceholder")}
-                    className={`${iconButtonClassName} sm:hidden`}
+                    className={`${iconButtonClassName} order-0 sm:hidden`}
                     onClick={() => setIsSearchFocused(true)}
                   >
                     <SearchSvg width={18} height={18} />
@@ -484,7 +491,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {!authToken && !isSearchFocused ? (
                   <button
-                    className="flex h-10 min-w-[72px] items-center justify-center rounded-full bg-primary-color px-4 text-sm font-semibold text-white transition-all duration-200 hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.98] md:h-11 md:px-5"
+                    className="order-3 flex h-10 min-w-[72px] items-center justify-center rounded-full bg-primary-color px-4 text-sm font-semibold text-white transition-all duration-200 hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.98] md:h-11 md:px-5"
                     onClick={handleModalToggle}
                     type="button"
                   >
@@ -495,7 +502,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 ) : (
                   <button
                     type="button"
-                    className={`hidden min-w-0 items-center gap-2 rounded-full border border-transparent px-2 py-1.5 transition-all duration-200 hover:border-gray-200 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.99] dark:hover:border-gray-700 dark:hover:bg-gray-800 md:flex ${isSearchFocused ? "hidden" : ""}`}
+                    className={`order-3 hidden min-w-0 items-center gap-2 rounded-full border border-transparent px-2 py-1.5 transition-all duration-200 hover:border-gray-200 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.99] dark:hover:border-gray-700 dark:hover:bg-gray-800 md:flex ${isSearchFocused ? "hidden" : ""}`}
                     onClick={(event) => menuRef.current?.toggle(event)}
                     aria-controls="popup_menu_right"
                     aria-haspopup
@@ -522,11 +529,15 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   </button>
                 )}
                 {!isSearchFocused && (
-                  <div className="relative flex items-center gap-1 sm:gap-2">
+                  <div className="relative order-2 flex items-center gap-1 sm:gap-2">
                     <button
                       type="button"
                       onClick={toggleTheme}
-                      aria-label={theme === "dark" ? "Enable light mode" : "Enable dark mode"}
+                      aria-label={
+                        theme === "dark"
+                          ? "Enable light mode"
+                          : "Enable dark mode"
+                      }
                       className={iconButtonClassName}
                     >
                       <span className="text-lg leading-none">
@@ -540,10 +551,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       title="Languages"
                       className={iconButtonClassName}
                     >
-                      <FontAwesomeIcon
-                        icon={faGlobe}
-                        className="text-base"
-                      />
+                      <FontAwesomeIcon icon={faGlobe} className="text-base" />
                     </button>
                     <Menu
                       model={model}
@@ -561,7 +569,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     />
                   </div>
                 )}
-                <div className="p-0">
+                <div className="order-1 p-0">
                   {cartCount > 0 && !isSearchFocused && (
                     <div
                       className="hidden h-11 items-center justify-between gap-3 rounded-full bg-primary-color px-4 text-white shadow-sm transition-all duration-200 hover:brightness-95 lg:flex lg:min-w-[240px]"
@@ -771,26 +779,30 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
         visible={isCartOpen}
         onHide={() => {
           setIsCartOpen(false);
-          localStorage.setItem(
+          modeStorage.set(
             "newOrderInstructions",
-            localStorage.getItem("orderInstructions") || ""
+            modeStorage.get("orderInstructions") || "",
           );
-          localStorage.removeItem("orderInstructions");
+          modeStorage.remove("orderInstructions");
           window.dispatchEvent(new Event("orderInstructionsUpdated"));
         }}
         className={`!ml-0 !p-0 !m-0 w-full md:w-[430px] lg:w-[580px] dark:bg-gray-800`}
       >
-        <Cart
-          onClose={() => {
-            setIsCartOpen(false);
-            localStorage.setItem(
-              "newOrderInstructions",
-              localStorage.getItem("orderInstructions") || ""
-            );
-            localStorage.removeItem("orderInstructions");
-            window.dispatchEvent(new Event("orderInstructionsUpdated"));
-          }}
-        />
+        {isSingleVendor ? (
+          <SingleVendorCart onClose={() => setIsCartOpen(false)} />
+        ) : (
+          <Cart
+            onClose={() => {
+              setIsCartOpen(false);
+              modeStorage.set(
+                "newOrderInstructions",
+                modeStorage.get("orderInstructions") || "",
+              );
+              modeStorage.remove("orderInstructions");
+              window.dispatchEvent(new Event("orderInstructionsUpdated"));
+            }}
+          />
+        )}
       </Sidebar>
 
       {/* Logout Confirmation Dialog */}

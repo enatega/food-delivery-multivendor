@@ -6,10 +6,11 @@ export interface IBannerItemProps {
     action: string;
     screen: string;
     file: string;
-    parameters?: string[];
+    parameters?: string | string[];
+    buttonText?: string;
     shopType?: string;
     slug?: string;
-  }
+  };
 }
 
 export interface IBanner {
@@ -20,7 +21,8 @@ export interface IBanner {
   action: string;
   screen: string;
   file: string;
-  parameters?: string[];
+  parameters?: string | string[];
+  buttonText?: string;
   shopType?: string;
   slug?: string;
 }

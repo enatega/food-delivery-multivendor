@@ -8,8 +8,11 @@ import UpdatePhoneModal from "../../settings/main/update-phone";
 import { useState } from "react";
 import "primeicons/primeicons.css";
 import { useTranslations } from "next-intl";
+import { useAppMode } from "@/lib/mode";
+import { SINGLE_VENDOR_PROFILE } from "@/lib/api/graphql/single-vendor";
 
 export default function PersonalInfoMain() {
+  const { isSingleVendor } = useAppMode();
   const t = useTranslations();
   const [isUpdatePhoneModalVisible, setIsUpdatePhoneModalVisible] =
     useState<boolean>(false);
@@ -19,7 +22,7 @@ export default function PersonalInfoMain() {
 
   // Get profile data by using the query
   const { data: profileData, loading: profileLoading } = useQuery(
-    GET_USER_PROFILE,
+    isSingleVendor ? SINGLE_VENDOR_PROFILE : GET_USER_PROFILE,
     {
       fetchPolicy: "cache-and-network",
     },

@@ -9,10 +9,12 @@ import {
 } from "@/lib/utils/interfaces";
 import { useQuery } from "@apollo/client";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { modeStorage, useAppMode } from "@/lib/mode";
 
 export const LocationContext = React.createContext({} as ILocationContext);
 
 export const LocationProvider = ({ children }: ILocationProvider) => {
+  const { isSingleVendor } = useAppMode();
   // State
   const [location, setLocation] = useState<ILocation | null>(null);
 
@@ -25,7 +27,7 @@ export const LocationProvider = ({ children }: ILocationProvider) => {
   const isOnline = useNetworkStatus();
 
   // API
-  const { loading, error, data, refetch } = useQuery(GET_ZONES);
+  const { loading, error, data, refetch } = useQuery(GET_ZONES, { skip: isSingleVendor });
 
   // Effects
 
@@ -86,11 +88,11 @@ export const LocationProvider = ({ children }: ILocationProvider) => {
       isInitialRender.current = false;
       return;
     }
-    if (location) localStorage.setItem("location", JSON.stringify(location));
+    if (location) modeStorage.set("location", JSON.stringify(location));
   }, [location]);
 
   useEffect(() => {
-    const locationStr = localStorage.getItem("location");
+    const locationStr = modeStorage.get("location");
 
     if (locationStr && locationStr !== "undefined") {
       setLocation(JSON.parse(locationStr));

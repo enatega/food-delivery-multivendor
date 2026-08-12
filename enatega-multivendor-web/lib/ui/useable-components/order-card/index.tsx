@@ -2,7 +2,7 @@
 
 import { useCallback, useState, type FC } from "react";
 import { Rating } from "primereact/rating";
-import Image from '@/lib/ui/useable-components/safe-image';
+import Image from "@/lib/ui/useable-components/safe-image";
 import { twMerge } from "tailwind-merge";
 import {
   IOrder,
@@ -17,6 +17,7 @@ import useUser from "@/lib/hooks/useUser";
 import { CartItem } from "@/lib/context/User/User.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { formatEtaWindow } from "@/lib/utils/methods/order-eta";
+import { useAppMode } from "@/lib/mode";
 
 const OrderCard: FC<IOrderCardProps> = ({
   order,
@@ -28,6 +29,7 @@ const OrderCard: FC<IOrderCardProps> = ({
 }) => {
   const t = useTranslations();
   const { CURRENCY_SYMBOL } = useConfig();
+  const { isSingleVendor } = useAppMode();
   const etaWindow = formatEtaWindow(order.eta);
   const activeStatusText = (() => {
     if (order.isPickedUp) return "Collection order";
@@ -39,7 +41,9 @@ const OrderCard: FC<IOrderCardProps> = ({
       case "ASSIGNED":
         return etaWindow ? `Rider assigned · ${etaWindow}` : "Rider assigned";
       case "PICKED":
-        return etaWindow ? `On the way · ${etaWindow}` : "Your order is on the way";
+        return etaWindow
+          ? `On the way · ${etaWindow}`
+          : "Your order is on the way";
       default:
         return null;
     }
@@ -52,7 +56,7 @@ const OrderCard: FC<IOrderCardProps> = ({
   const [pendingReorderItems, setPendingReorderItems] = useState<any[]>([]);
 
   const handleTrackOrder = (order: IOrder) => {
-    handleTrackOrderClicked?.(order?._id);
+    handleTrackOrderClicked?.(isSingleVendor ? order?.orderId : order?._id);
   };
 
   const { cart, setCart, transformCartWithFoodInfo, setCartRestaurant } =

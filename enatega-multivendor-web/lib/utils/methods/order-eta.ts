@@ -20,7 +20,11 @@ export function parseBackendDate(
     typeof value === "string" && /^\d+$/.test(value.trim())
       ? Number(value)
       : value;
-  const date = new Date(normalized);
+  const timestamp =
+    typeof normalized === "number" && normalized < 1e12
+      ? normalized * 1000
+      : normalized;
+  const date = new Date(timestamp);
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
@@ -100,8 +104,7 @@ export function trimPolylineToRider(
 
   coordinates.forEach((coordinate, index) => {
     const distance =
-      (coordinate.lat - rider.lat) ** 2 +
-      (coordinate.lng - rider.lng) ** 2;
+      (coordinate.lat - rider.lat) ** 2 + (coordinate.lng - rider.lng) ** 2;
     if (distance < nearestDistance) {
       nearestDistance = distance;
       nearestIndex = index;

@@ -29,6 +29,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
   showLogo,
   cuisines,
   shopTypes,
+  itemHref,
 }) => {
   const [page, setPage] = useState(0);
   const [numVisible, setNumVisible] = useState(getNumVisible());
@@ -43,7 +44,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
     const width = window.innerWidth;
     if (width > 1280) return 6;
     const option = responsiveOptions.find(
-      (opt) => width <= parseInt(opt.breakpoint)
+      (opt) => width <= parseInt(opt.breakpoint),
     );
     return option ? option.numVisible : 6;
   }
@@ -110,7 +111,8 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
           <div className="flex items-center justify-end gap-x-2 mb-2">
             {pathname !== "/store" &&
               pathname !== "/restaurants" &&
-              !cuisines && !shopTypes && (
+              !cuisines &&
+              !shopTypes && (
                 <CustomButton
                   label={t("see_all")}
                   onClick={onSeeAllClick}
@@ -162,12 +164,17 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
             minWidth: "800px",
           }}
         >
-        
           <Carousel
             value={data}
             className={`discovery-carousel ${isRTL ? "rtl-carousel" : ""}`} // Add RTL class
             itemTemplate={(item) => (
-              <SquareCard item={item} showLogo={showLogo} cuisines={cuisines} shoptype={shopTypes} />
+              <SquareCard
+                item={item}
+                showLogo={showLogo}
+                cuisines={cuisines}
+                shoptype={shopTypes}
+                href={itemHref?.(item)}
+              />
             )}
             numVisible={numVisible}
             numScroll={1}

@@ -1,18 +1,56 @@
 // core
 import React from "react";
-import Image from '@/lib/ui/useable-components/safe-image';
+import Image from "@/lib/ui/useable-components/safe-image";
 // interface
 import { IBannerItemProps } from "@/lib/utils/interfaces";
 import { useRouter } from "next/navigation";
+import { useAppMode } from "@/lib/mode";
 
 const BannerCard: React.FC<IBannerItemProps> = ({ item }) => {
-  const isVideo = item?.file?.includes(".mp4") || item?.file?.includes(".webm") || item?.file?.includes("video");
+  const isVideo =
+    item?.file?.includes(".mp4") ||
+    item?.file?.includes(".webm") ||
+    item?.file?.includes("video");
 
   const router = useRouter();
+  const { isSingleVendor } = useAppMode();
+
+  const getSingleVendorTarget = () => {
+    const rawParameters = item?.parameters;
+    let parameters: Record<string, string> = {};
+
+    if (typeof rawParameters === "string") {
+      try {
+        parameters = JSON.parse(rawParameters);
+      } catch {
+        parameters = {};
+      }
+    } else if (Array.isArray(rawParameters)) {
+      parameters = Object.fromEntries(
+        rawParameters
+          .map((entry) => entry.split("="))
+          .filter(([key, value]) => key && value),
+      );
+    }
+
+    const screen = item?.screen?.toLowerCase();
+    const categoryId = parameters.categoryId || parameters.id || item?.slug;
+    const foodId = parameters.foodId || parameters.productId || parameters.id;
+
+    if (screen === "category" && categoryId) return `/category/${categoryId}`;
+    if (screen === "product" && foodId) return `/product/${foodId}`;
+    if (screen?.includes("deal")) return "/deals";
+    return "/browse";
+  };
+
   const onClickHandler = () => {
+    if (isSingleVendor) {
+      router.push(getSingleVendorTarget());
+      return;
+    }
     if (item?.action === "Navigate Specific Restaurant") {
       router.push(
-        `/${item?.shopType === "restaurant" ? "restaurant" : "store"}/${item?.slug}/${item?.screen}`
+        `/${item?.shopType === "restaurant" ? "restaurant" : "store"}/${item?.slug}/${item?.screen}`,
       );
     } else {
       if (item?.screen === "Top Brands") {

@@ -14,6 +14,8 @@ import { useTranslations } from "next-intl";
 import ErrorDisplay from "@/lib/ui/useable-components/slider-error-display";
 import { orderStatusChanged } from "@/lib/api/graphql/subscription";
 import useUser from "@/lib/hooks/useUser";
+import { useAppMode } from "@/lib/mode";
+import { SINGLE_VENDOR_ACTIVE_ORDERS, SINGLE_VENDOR_ORDER_STATUS, SINGLE_VENDOR_PAST_ORDERS } from "@/lib/api/graphql/single-vendor";
 
 const ORDER_STATUS_CHANGED = gql`
   ${orderStatusChanged}
@@ -28,8 +30,9 @@ export default function OrderHistoryScreen() {
   const limit = 5;
   const t = useTranslations();
   const { profile } = useUser();
+  const { isSingleVendor } = useAppMode();
 
-  const { data: orderUpdateData } = useSubscription(ORDER_STATUS_CHANGED, {
+  const { data: orderUpdateData } = useSubscription(isSingleVendor ? SINGLE_VENDOR_ORDER_STATUS : ORDER_STATUS_CHANGED, {
     variables: { userId: profile?._id || "" },
     skip: !profile?._id,
   });
@@ -40,11 +43,11 @@ export default function OrderHistoryScreen() {
     fetchMore: pastOrderFetchMore,
     networkStatus: pastOrderNetwork,
     error: pastOrderError,
-  } = useQuery(GET_USERS_PAST_ORDERS, {
+  } = useQuery(isSingleVendor ? SINGLE_VENDOR_PAST_ORDERS : GET_USERS_PAST_ORDERS, {
     variables: {
       page,
       limit,
-      offset: 0,
+      ...(isSingleVendor ? {} : { offset: 0 }),
     },
   });
 
@@ -54,11 +57,11 @@ export default function OrderHistoryScreen() {
     fetchMore: activeOrderFetchMore,
     networkStatus: activeOrderNetwork,
     error: activeOrderError,
-  } = useQuery(GET_USERS_ACTIVE_ORDERS, {
+  } = useQuery(isSingleVendor ? SINGLE_VENDOR_ACTIVE_ORDERS : GET_USERS_ACTIVE_ORDERS, {
     variables: {
       page,
       limit,
-      offset: 0,
+      ...(isSingleVendor ? {} : { offset: 0 }),
     },
   });
 
@@ -97,7 +100,9 @@ export default function OrderHistoryScreen() {
   }, [pastOrder, page, limit]);
 
   useEffect(() => {
-    const update = orderUpdateData?.orderStatusChanged?.order as
+    const update = (isSingleVendor
+      ? orderUpdateData?.orderStatusChanged?.rawOrder
+      : orderUpdateData?.orderStatusChanged?.order) as
       | IOrder
       | undefined;
     if (!update?._id) return;
@@ -124,7 +129,7 @@ export default function OrderHistoryScreen() {
       );
       setActiveOrders(upsert);
     }
-  }, [orderUpdateData]);
+  }, [isSingleVendor, orderUpdateData]);
 
   const loadMore = () => {
     // Stop completely if nothing has more data

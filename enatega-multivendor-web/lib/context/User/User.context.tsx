@@ -35,6 +35,17 @@ import {
   IVariation,
 } from "@/lib/utils/interfaces";
 import { invalidateClientSession } from "@/lib/utils/methods/auth";
+import { getAccessToken } from "@/lib/utils/methods/auth";
+import { modeStorage, useAppMode } from "@/lib/mode";
+import {
+  SINGLE_VENDOR_ACTIVE_ORDERS,
+  SINGLE_VENDOR_CLEAR_CART,
+  SINGLE_VENDOR_CART,
+  SINGLE_VENDOR_ORDER_STATUS,
+  SINGLE_VENDOR_PROFILE,
+  SINGLE_VENDOR_UPDATE_CART,
+  SINGLE_VENDOR_UPDATE_CART_COUNT,
+} from "@/lib/api/graphql/single-vendor";
 
 const SUBSCRIPTION_ORDERS = gql`
   ${orderStatusChanged}
@@ -65,6 +76,22 @@ export interface CartItem {
   variationTitle?: string;
   optionTitles?: string[];
   price?: string | number;
+  categoryId?: string;
+}
+
+export interface SingleVendorCartQuantityInput {
+  foodId: string;
+  categoryId: string;
+  variationId: string;
+  quantity: number;
+  image?: string;
+  foodTitle?: string;
+  variationTitle?: string;
+  unitPrice?: number;
+  addons?: Array<{
+    _id: string;
+    options: Array<{ _id: string }>;
+  }>;
 }
 
 export interface ProfileType {
@@ -88,6 +115,7 @@ export interface ProfileType {
     selected: boolean;
   }>;
   favourite: string[];
+  stripe_plan_id?: string;
 }
 
 export interface OrderType {
@@ -174,7 +202,7 @@ export interface UserContextType {
         _id: string;
       }>;
     }>,
-    specialInstructions?: string
+    specialInstructions?: string,
   ) => Promise<void>;
   checkItemCart: (itemId: string) => {
     exist: boolean;
@@ -190,19 +218,23 @@ export interface UserContextType {
   calculateSubtotal: () => string;
   transformCartWithFoodInfo: (
     cartItems: CartItem[],
-    foodsData: IRestaurant
+    foodsData: IRestaurant,
   ) => CartItem[];
   fetchProfile: LazyQueryExecFunction<any, OperationVariables>;
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+  setSingleVendorItemQuantity: (
+    input: SingleVendorCartQuantityInput,
+  ) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
+  const { isSingleVendor } = useAppMode();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const client = useApolloClient();
   const [token, setToken] = useState<string | null>(
-    typeof window !== "undefined" ? localStorage.getItem("token") : null
+    typeof window !== "undefined" ? getAccessToken() : null,
   );
   const [cart, setCart] = useState<CartItem[]>([]);
   const [restaurant, setRestaurant] = useState<string | null>(null);
@@ -210,6 +242,37 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
   const [saveNotificationToken] = useMutation(SAVE_NOTIFICATION_TOKEN_WEB, {
     onError,
   });
+  const normalizeSingleCart = useCallback(
+    (response: any): CartItem[] =>
+      (response?.foods ?? []).flatMap((food: any) =>
+        (food.variations ?? []).map((variation: any) => ({
+          key: variation._id || `${food.foodId}-${variation.variationId}`,
+          _id: food.foodId,
+          image: food.foodImage || "",
+          quantity: Number(variation.quantity) || 0,
+          variation: { _id: variation.variationId },
+          title: food.foodTitle,
+          foodTitle: food.foodTitle,
+          variationTitle: variation.variationTitle,
+          price: variation.unitPrice,
+          categoryId: food.categoryId,
+          addons: (variation.addons ?? []).map((addon: any) => ({
+            _id: addon.addonId,
+            options: [{ _id: addon.optionId }],
+          })),
+        })),
+      ),
+    [],
+  );
+  const [fetchSingleCart] = useLazyQuery(SINGLE_VENDOR_CART, {
+    fetchPolicy: "network-only",
+    onCompleted: (data) => setCart(normalizeSingleCart(data?.getUserCart)),
+  });
+  const [updateSingleCart] = useMutation(SINGLE_VENDOR_UPDATE_CART, {
+    onCompleted: (data) => setCart(normalizeSingleCart(data?.userCartData)),
+  });
+  const [updateSingleCartCount] = useMutation(SINGLE_VENDOR_UPDATE_CART_COUNT);
+  const [clearSingleCart] = useMutation(SINGLE_VENDOR_CLEAR_CART);
 
   const [
     fetchProfile,
@@ -219,7 +282,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       error: errorProfile,
       data: dataProfile,
     },
-  ] = useLazyQuery(GET_USER_PROFILE, {
+  ] = useLazyQuery(isSingleVendor ? SINGLE_VENDOR_PROFILE : GET_USER_PROFILE, {
     fetchPolicy: "cache-and-network",
     onCompleted: onProfileCompleted,
     onError,
@@ -236,7 +299,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       fetchMore: fetchMoreOrders,
       subscribeToMore: subscribeToMoreOrders,
     },
-  ] = useLazyQuery(ORDERS, {
+  ] = useLazyQuery(isSingleVendor ? SINGLE_VENDOR_ACTIVE_ORDERS : ORDERS, {
     variables: {
       page: 1,
       limit: 300,
@@ -268,7 +331,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
         // Find the variation
         const variationItem = foodItem.variations.find(
-          (v: IVariation) => v._id === cartItem.variation._id
+          (v: IVariation) => v._id === cartItem.variation._id,
         );
         if (!variationItem) return cartItem;
 
@@ -290,7 +353,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
             addon.options.forEach((opt) => {
               const optionItem = options.find(
-                (o: IOption) => o._id === opt._id
+                (o: IOption) => o._id === opt._id,
               );
               if (!optionItem) return;
 
@@ -312,38 +375,42 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
         };
       });
     },
-    []
+    [],
   );
 
-  const onInit = useCallback(async (isSubscribed: boolean) => {
-    if (!isSubscribed) return;
+  const onInit = useCallback(
+    async (isSubscribed: boolean) => {
+      if (!isSubscribed) return;
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    const _token = localStorage.getItem("token") || null;
-    setToken(_token);
+      const _token = getAccessToken() || null;
+      setToken(_token);
 
-    if (_token) {
-      await fetchProfile();
-      await fetchOrders();
-    }
+      if (_token) {
+        await fetchProfile();
+        await fetchOrders();
+        if (isSingleVendor) await fetchSingleCart();
+      }
 
-    setIsLoading(false);
-  }, [fetchProfile, fetchOrders]);
+      setIsLoading(false);
+    },
+    [fetchProfile, fetchOrders, fetchSingleCart, isSingleVendor],
+  );
 
   // Define setCartRestaurant before it's used in dependencies
   const setCartRestaurant = useCallback(async (id: string) => {
     setRestaurant(id);
     if (typeof window !== "undefined") {
-      localStorage.setItem("restaurant", id);
+      modeStorage.set("restaurant", id);
     }
   }, []);
 
   // Initialize from local storage
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedRestaurant = localStorage.getItem("restaurant");
-      const storedCart = localStorage.getItem("cartItems");
+      const storedRestaurant = modeStorage.get("restaurant");
+      const storedCart = modeStorage.get("cartItems");
 
       if (storedRestaurant) {
         setRestaurant(storedRestaurant);
@@ -374,8 +441,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     // Important: Include token as a dependency to refetch when it changes
   }, [token, onInit]);
 
-
-
   function onProfileCompleted(data: IProfileResponse) {
     if (data.profile) {
       updateNotificationToken();
@@ -390,11 +455,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     async (tokenReq: string, cb: () => void = () => {}) => {
       setToken(tokenReq);
       if (typeof window !== "undefined") {
-        localStorage.setItem("token", tokenReq);
+        modeStorage.set("token", tokenReq);
       }
       cb();
     },
-    []
+    [],
   );
 
   const logout = useCallback(async () => {
@@ -414,16 +479,33 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
     try {
       const unsubscribeOrders = subscribeToMoreOrders({
-        document: SUBSCRIPTION_ORDERS,
+        document: isSingleVendor
+          ? SINGLE_VENDOR_ORDER_STATUS
+          : SUBSCRIPTION_ORDERS,
         variables: { userId: dataProfile.profile._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
-          const { _id } = subscriptionData.data.orderStatusChanged
-            .order as IOrder;
+          const order = isSingleVendor
+            ? subscriptionData.data.orderStatusChanged.rawOrder
+            : subscriptionData.data.orderStatusChanged.order;
+          const { _id } = order as IOrder;
+          if (isSingleVendor) {
+            const previous = prev?.getUsersActiveOrders ?? [];
+            const existing = previous.findIndex(
+              (item: IOrder) => item._id === _id,
+            );
+            const next =
+              existing < 0
+                ? [order, ...previous]
+                : previous.map((item: IOrder) =>
+                    item._id === _id ? { ...item, ...order } : item,
+                  );
+            return { ...prev, getUsersActiveOrders: next };
+          }
           if (subscriptionData.data.orderStatusChanged.origin === "new") {
             if (
               ((prev?.orders as IOrder[]) || ([] as IOrder[]))?.findIndex(
-                (o: IOrder) => o._id === _id
+                (o: IOrder) => o._id === _id,
               ) > -1
             )
               return prev;
@@ -466,7 +548,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       const err = error as ApolloError;
       console.log("error subscribing order", err.message);
     }
-  }, [client, dataProfile, subscribeToMoreOrders]);
+  }, [client, dataProfile, isSingleVendor, subscribeToMoreOrders]);
 
   // Setup subscription when profile is loaded
   useEffect(() => {
@@ -476,6 +558,24 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
   const fetchMoreOrdersFunc = useCallback(() => {
     if (networkStatusOrders === 7 && fetchMoreOrders) {
+      if (isSingleVendor) {
+        void fetchMoreOrders({
+          variables: {
+            page:
+              Math.floor((dataOrders?.getUsersActiveOrders?.length ?? 0) / 20) +
+              1,
+            limit: 20,
+          },
+          updateQuery: (previousResult, { fetchMoreResult }) => ({
+            ...previousResult,
+            getUsersActiveOrders: [
+              ...(previousResult.getUsersActiveOrders ?? []),
+              ...(fetchMoreResult?.getUsersActiveOrders ?? []),
+            ],
+          }),
+        });
+        return;
+      }
       fetchMoreOrders({
         variables: { offset: dataOrders?.orders?.length + 1 || 0 },
         updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -490,16 +590,17 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
         },
       });
     }
-  }, [dataOrders, fetchMoreOrders, networkStatusOrders]);
+  }, [dataOrders, fetchMoreOrders, isSingleVendor, networkStatusOrders]);
 
   const clearCart = useCallback(() => {
     setCart([]);
     setRestaurant(null);
     if (typeof window !== "undefined") {
-      localStorage.removeItem("cartItems");
-      localStorage.removeItem("restaurant");
+      modeStorage.remove("cartItems");
+      modeStorage.remove("restaurant");
     }
-  }, []);
+    if (isSingleVendor) void clearSingleCart();
+  }, [clearSingleCart, isSingleVendor]);
 
   const addQuantity = useCallback(async (key: string, quantity: number = 1) => {
     setCart((prevCart) => {
@@ -513,7 +614,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
         // Save to local storage
         if (typeof window !== "undefined") {
-          localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+          modeStorage.set("cartItems", JSON.stringify(updatedCart));
         }
       }
 
@@ -533,11 +634,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
         // Update localStorage
         if (typeof window !== "undefined") {
           if (items.length === 0) {
-            localStorage.removeItem("cartItems");
-            localStorage.removeItem("restaurant");
+            modeStorage.remove("cartItems");
+            modeStorage.remove("restaurant");
             setRestaurant(null);
           } else {
-            localStorage.setItem("cartItems", JSON.stringify(items));
+            modeStorage.set("cartItems", JSON.stringify(items));
           }
         }
 
@@ -562,11 +663,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       // Update localStorage
       if (typeof window !== "undefined") {
         if (items.length === 0) {
-          localStorage.removeItem("cartItems");
-          localStorage.removeItem("restaurant");
+          modeStorage.remove("cartItems");
+          modeStorage.remove("restaurant");
           setRestaurant(null);
         } else {
-          localStorage.setItem("cartItems", JSON.stringify(items));
+          modeStorage.set("cartItems", JSON.stringify(items));
         }
       }
 
@@ -590,7 +691,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
         };
       }
     },
-    [cart]
+    [cart],
   );
 
   const numberOfCartItems = useCallback(() => {
@@ -611,8 +712,24 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
           _id: string;
         }>;
       }> = [],
-      specialInstructions: string = ""
+      specialInstructions: string = "",
     ) => {
+      if (isSingleVendor) {
+        void updateSingleCart({
+          variables: {
+            input: {
+              food: [
+                {
+                  _id: foodId,
+                  categoryId: restaurantId || "",
+                  variation: { _id: variationId, addons, count: quantity },
+                },
+              ],
+            },
+          },
+        });
+        return;
+      }
       // Check if we need to clear the cart (different restaurant)
       const needsClear = Boolean(restaurantId && restaurant !== restaurantId);
 
@@ -642,13 +759,125 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
         // Save to localStorage
         if (typeof window !== "undefined") {
-          localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+          modeStorage.set("cartItems", JSON.stringify(updatedCart));
         }
 
         return updatedCart;
       });
     },
-    [restaurant, setCartRestaurant]
+    [isSingleVendor, restaurant, setCartRestaurant, updateSingleCart],
+  );
+
+  const setSingleVendorItemQuantity = useCallback(
+    async (input: SingleVendorCartQuantityInput) => {
+      if (!isSingleVendor) return;
+
+      const quantity = Math.max(0, Math.floor(input.quantity));
+      const existing = cart.find(
+        (item) =>
+          item._id === input.foodId && item.variation._id === input.variationId,
+      );
+
+      setCart((currentCart) => {
+        const currentIndex = currentCart.findIndex(
+          (item) =>
+            item._id === input.foodId &&
+            item.variation._id === input.variationId,
+        );
+
+        if (quantity === 0) {
+          return currentCart.filter((_, index) => index !== currentIndex);
+        }
+
+        if (currentIndex >= 0) {
+          return currentCart.map((item, index) =>
+            index === currentIndex ? { ...item, quantity } : item,
+          );
+        }
+
+        return [
+          ...currentCart,
+          {
+            key: `optimistic:${input.foodId}:${input.variationId}`,
+            _id: input.foodId,
+            variation: { _id: input.variationId },
+            quantity,
+            categoryId: input.categoryId,
+            image: input.image ?? "",
+            title: input.foodTitle,
+            foodTitle: input.foodTitle,
+            variationTitle: input.variationTitle,
+            price: input.unitPrice,
+            addons: input.addons ?? [],
+          },
+        ];
+      });
+
+      try {
+        if (existing && !existing.key.startsWith("optimistic:")) {
+          const response = await updateSingleCartCount({
+            variables: {
+              input: {
+                variation_id: existing.key,
+                foodId: input.foodId,
+                categoryId: input.categoryId || existing.categoryId,
+                variationId: input.variationId,
+                action:
+                  quantity === 0
+                    ? "delete"
+                    : quantity > existing.quantity
+                      ? "increase"
+                      : "decrease",
+                count: quantity,
+              },
+            },
+          });
+
+          if (!response.data?.updateUserCartCount?.success) {
+            throw new Error(
+              response.data?.updateUserCartCount?.message ||
+                "Unable to update cart",
+            );
+          }
+        } else if (quantity > 0) {
+          const response = await updateSingleCart({
+            variables: {
+              input: {
+                food: [
+                  {
+                    _id: input.foodId,
+                    categoryId: input.categoryId,
+                    variation: {
+                      _id: input.variationId,
+                      addons: input.addons ?? [],
+                      count: quantity,
+                    },
+                  },
+                ],
+              },
+            },
+          });
+
+          if (!response.data?.userCartData?.success) {
+            throw new Error(
+              response.data?.userCartData?.message || "Unable to update cart",
+            );
+          }
+        }
+
+        await fetchSingleCart();
+      } catch (error) {
+        await fetchSingleCart();
+        throw error;
+      }
+    },
+    [
+      cart,
+      fetchSingleCart,
+      isSingleVendor,
+      updateSingleCart,
+      updateSingleCartCount,
+    ],
   );
 
   const updateCart = useCallback(
@@ -660,15 +889,15 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
 
       setCart(updatedCart);
       if (typeof window !== "undefined") {
-        localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+        modeStorage.set("cartItems", JSON.stringify(updatedCart));
       }
     },
-    [cart]
+    [cart],
   );
 
   const updateNotificationToken = useCallback(() => {
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("messaging-token");
+      const token = modeStorage.get("messaging-token");
       if (token) {
         saveNotificationToken({ variables: { token } });
       }
@@ -679,6 +908,28 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
     async (key: string, changeAmount: number) => {
       // Force change to be exactly +1 or -1
       const safeChange = changeAmount > 0 ? 1 : -1;
+
+      if (isSingleVendor) {
+        const item = cart.find((cartItem) => cartItem.key === key);
+        if (!item?.categoryId) return;
+
+        try {
+          await setSingleVendorItemQuantity({
+            foodId: item._id,
+            categoryId: item.categoryId,
+            variationId: item.variation._id,
+            quantity: Math.max(0, item.quantity + safeChange),
+            image: item.image,
+            foodTitle: item.foodTitle || item.title,
+            variationTitle: item.variationTitle,
+            unitPrice: Number(item.price) || 0,
+            addons: item.addons,
+          });
+        } catch (error) {
+          console.error("Unable to update Single Vendor cart item", error);
+        }
+        return;
+      }
 
       // Use a local variable that will be unique to each function call
       // This ensures the flag is reset for each new click
@@ -700,7 +951,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
         const currentItem = updatedCart[cartIndex];
         const currentQuantity = currentItem.quantity;
         console.log(
-          `[UserContext] Current quantity for ${key}: ${currentQuantity}`
+          `[UserContext] Current quantity for ${key}: ${currentQuantity}`,
         );
 
         // For decrement
@@ -728,32 +979,36 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
         // Update localStorage
         if (typeof window !== "undefined") {
           if (updatedCart.length === 0) {
-            localStorage.removeItem("cartItems");
-            localStorage.removeItem("restaurant");
+            modeStorage.remove("cartItems");
+            modeStorage.remove("restaurant");
             setRestaurant(null);
           } else {
-            localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+            modeStorage.set("cartItems", JSON.stringify(updatedCart));
           }
         }
 
         return updatedCart;
       });
     },
-    []
+    [cart, isSingleVendor, setSingleVendorItemQuantity],
   );
 
   const removeItem = useCallback(
     async (key: string) => {
       await deleteItem(key);
     },
-    [deleteItem]
+    [deleteItem],
   );
 
   const calculateSubtotal = useCallback(() => {
     return cart
       .reduce((total, item) => {
-        const priceRaw = (item.variation as { price?: number | string })?.price ?? item.price ?? 0;
-        const price = typeof priceRaw === 'string' ? parseFloat(priceRaw) : priceRaw;
+        const priceRaw =
+          (item.variation as { price?: number | string })?.price ??
+          item.price ??
+          0;
+        const price =
+          typeof priceRaw === "string" ? parseFloat(priceRaw) : priceRaw;
         const quantity = item.quantity ?? 0;
         return total + price * quantity;
       }, 0)
@@ -771,7 +1026,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       logout,
       loadingOrders: loadingOrders && calledOrders,
       errorOrders,
-      orders: dataOrders && dataOrders.orders ? dataOrders.orders : [],
+      orders: isSingleVendor
+        ? (dataOrders?.getUsersActiveOrders ?? [])
+        : (dataOrders?.orders ?? []),
       fetchOrders,
       fetchMoreOrdersFunc,
       networkStatusOrders,
@@ -792,6 +1049,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       calculateSubtotal,
       transformCartWithFoodInfo,
       setCart,
+      setSingleVendorItemQuantity,
     }),
     [
       token,
@@ -826,14 +1084,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       calculateSubtotal,
       transformCartWithFoodInfo,
       setCart,
-    ]
+      setSingleVendorItemQuantity,
+    ],
   );
-
-
-
-
-
-
 
   return (
     <UserContext.Provider value={contextValue}>

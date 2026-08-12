@@ -12,6 +12,7 @@ import { useSearchUI } from "@/lib/context/search/search.context";
 import TabItem from "@/lib/ui/useable-components/tab-item/TabItem";
 import { useTranslations } from "next-intl";
 import homeTabSvg from "@/lib/utils/assets/svg/houseTabsvg";
+import { useAppMode } from "@/lib/mode";
 
 export default function HomeLayout({
   children,
@@ -20,8 +21,9 @@ export default function HomeLayout({
   const pathname = usePathname();
   const [stickyTop, setStickyTop] = useState(0);
   const { isSearchFocused, setIsSearchFocused } = useSearchUI();
+  const { isSingleVendor } = useAppMode();
 
-  const onChangeScreen = (name: "Discovery" | "Restaurants" | "Store") => {
+  const onChangeScreen = (name: "Discovery" | "Restaurants" | "Store" | "Deals" | "Browse") => {
     switch (name) {
       case "Discovery":
         router.push("/discovery");
@@ -32,6 +34,12 @@ export default function HomeLayout({
       case "Store":
         router.push("/store");
         break;
+      case "Deals":
+        router.push("/deals");
+        break;
+      case "Browse":
+        router.push("/browse");
+        break;
       default:
         router.push("/discovery");
         break;
@@ -41,6 +49,8 @@ export default function HomeLayout({
   const isDiscovery = pathname === "/discovery";
   const isRestaurants = pathname === "/restaurants";
   const isStore = pathname === "/store";
+  const isDeals = pathname === "/deals";
+  const isBrowse = pathname === "/browse";
 
 
   const t = useTranslations();
@@ -78,18 +88,13 @@ export default function HomeLayout({
             onClick={() => onChangeScreen("Discovery")}
             Icon={homeTabSvg}
           />
-          <TabItem
-            active={isRestaurants}
-            label={t("tab_restaurants")}
-            onClick={() => onChangeScreen("Restaurants")}
-            Icon={CutlerySvg}
-          />
-          <TabItem
-            active={isStore}
-            label={t("tab_store")}
-            onClick={() => onChangeScreen("Store")}
-            Icon={StoreSvg}
-          />
+          {isSingleVendor ? <>
+            <TabItem active={isDeals} label="Deals" onClick={() => onChangeScreen("Deals")} Icon={CutlerySvg} />
+            <TabItem active={isBrowse} label="Browse" onClick={() => onChangeScreen("Browse")} Icon={StoreSvg} />
+          </> : <>
+            <TabItem active={isRestaurants} label={t("tab_restaurants")} onClick={() => onChangeScreen("Restaurants")} Icon={CutlerySvg} />
+            <TabItem active={isStore} label={t("tab_store")} onClick={() => onChangeScreen("Store")} Icon={StoreSvg} />
+          </>}
         </div>
       </div>
 
