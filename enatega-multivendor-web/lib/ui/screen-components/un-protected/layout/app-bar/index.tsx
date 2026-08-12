@@ -73,6 +73,7 @@ import { Dialog } from "primereact/dialog";
 import CustomButton from "@/lib/ui/useable-components/button";
 import SingleVendorCart from "@/lib/ui/single-vendor/Cart";
 import { modeStorage, useAppMode } from "@/lib/mode";
+import VendorModeToggle from "@/lib/ui/useable-components/vendor-mode-toggle";
 
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
@@ -491,7 +492,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {!authToken && !isSearchFocused ? (
                   <button
-                    className="order-3 flex h-10 min-w-[72px] items-center justify-center rounded-full bg-primary-color px-4 text-sm font-semibold text-white transition-all duration-200 hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.98] md:h-11 md:px-5"
+                    className="order-4 flex h-10 min-w-[72px] items-center justify-center rounded-full bg-primary-color px-4 text-sm font-semibold text-white transition-all duration-200 hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.98] md:h-11 md:px-5"
                     onClick={handleModalToggle}
                     type="button"
                   >
@@ -502,7 +503,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 ) : (
                   <button
                     type="button"
-                    className={`order-3 hidden min-w-0 items-center gap-2 rounded-full border border-transparent px-2 py-1.5 transition-all duration-200 hover:border-gray-200 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.99] dark:hover:border-gray-700 dark:hover:bg-gray-800 md:flex ${isSearchFocused ? "hidden" : ""}`}
+                    className={`order-4 hidden min-w-0 items-center gap-2 rounded-full border border-transparent px-2 py-1.5 transition-all duration-200 hover:border-gray-200 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.99] dark:hover:border-gray-700 dark:hover:bg-gray-800 md:flex ${isSearchFocused ? "hidden" : ""}`}
                     onClick={(event) => menuRef.current?.toggle(event)}
                     aria-controls="popup_menu_right"
                     aria-haspopup
@@ -567,6 +568,11 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
         shadow-lg
       "
                     />
+                  </div>
+                )}
+                {!authToken && !isSearchFocused && (
+                  <div className="order-3">
+                    <VendorModeToggle compact />
                   </div>
                 )}
                 <div className="order-1 p-0">

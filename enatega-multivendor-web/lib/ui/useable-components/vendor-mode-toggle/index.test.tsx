@@ -5,17 +5,27 @@ import VendorModeToggle from ".";
 const switchMode = vi.fn(async () => true);
 vi.mock("@/lib/mode", () => ({
   APP_MODES: { MULTI: "MULTI", SINGLE: "SINGLE" },
-  useAppMode: () => ({ mode: "MULTI", singleVendorAvailable: true, isModeSwitchBlocked: false, isSwitchingMode: false, switchMode }),
+  useAppMode: () => ({
+    mode: "MULTI",
+    singleVendorAvailable: true,
+    isModeSwitchBlocked: false,
+    isSwitchingMode: false,
+    switchMode,
+  }),
 }));
-vi.mock("@/lib/hooks/useUser", () => ({ default: () => ({ cartCount: 0, orders: [] }) }));
+vi.mock("@/lib/hooks/useUser", () => ({
+  default: () => ({ cartCount: 0, orders: [] }),
+}));
 
 describe("VendorModeToggle", () => {
   beforeEach(() => switchMode.mockClear());
+
   it("renders an accessible radio group and switches modes", async () => {
     render(<VendorModeToggle />);
-    expect(screen.getByRole("radiogroup", { name: "Delivery service" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("radiogroup", { name: "Delivery service" }),
+    ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("radio", { name: "Single Vendor" }));
     expect(switchMode).toHaveBeenCalledWith("SINGLE");
   });
 });
-
