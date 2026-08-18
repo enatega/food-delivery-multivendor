@@ -21,8 +21,8 @@ import { scale } from '../../utils/scaling'
 const Tab = createBottomTabNavigator()
 const tabIconNames = {
   SVDiscovery: 'discovery',
-  SVDeals: 'restaurants',
-  Cart: 'store',
+  SVDeals: 'deals',
+  Cart: 'cart',
   SVBrowse: 'search',
   SVProfile: 'profile'
 }
