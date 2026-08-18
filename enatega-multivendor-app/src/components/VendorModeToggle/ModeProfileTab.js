@@ -9,6 +9,7 @@ import VendorModeToggle from './VendorModeToggle'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { scale } from '../../utils/scaling'
+import { useAppMode } from '../../mode/AppModeContext'
 
 const ModeProfileTab = ({
   AuthenticatedComponent,
@@ -24,6 +25,7 @@ const ModeProfileTab = ({
   }
   const { cart, isLoggedIn } = useContext(UserContext)
   const { orders = [] } = useContext(OrdersContext) || {}
+  const { isModeToggleEnabled } = useAppMode()
   const activeStatuses = new Set(['PENDING', 'PICKED', 'ACCEPTED', 'ASSIGNED'])
   const hasActiveOrder = orders.some(order =>
     activeStatuses.has(order?.orderStatus)
@@ -32,15 +34,19 @@ const ModeProfileTab = ({
 
   return (
     <SafeAreaView edges={['top']} style={[styles.safeArea, { backgroundColor: currentTheme.themeBackground }]}>
-      <View style={[styles.toggleRegion, { borderBottomColor: currentTheme.newBorderColor2 || currentTheme.colorBorder }] }>
-        <VendorModeToggle
-          hasActiveOrder={hasActiveOrder}
-          hasCartItems={
-            hasCartItemsOverride ??
-            (Array.isArray(cart) && cart.length > 0)
-          }
-        />
-      </View>
+      {isModeToggleEnabled
+        ? (
+          <View style={[styles.toggleRegion, { borderBottomColor: currentTheme.newBorderColor2 || currentTheme.colorBorder }] }>
+            <VendorModeToggle
+              hasActiveOrder={hasActiveOrder}
+              hasCartItems={
+                hasCartItemsOverride ??
+                (Array.isArray(cart) && cart.length > 0)
+              }
+            />
+          </View>
+          )
+        : null}
       <View style={{ flex: 1 }}>
         <Screen {...screenProps} embeddedInModeProfileTab />
       </View>

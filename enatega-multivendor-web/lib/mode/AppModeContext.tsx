@@ -14,6 +14,7 @@ import {
   APP_MODES,
   APP_MODE_STORAGE_KEY,
   DEFAULT_APP_MODE,
+  getForcedAppMode,
   isAppMode,
   type AppMode,
 } from "./constants";
@@ -27,6 +28,7 @@ interface AppModeValue {
   isSwitchingMode: boolean;
   isModeSwitchBlocked: boolean;
   singleVendorAvailable: boolean;
+  isModeToggleEnabled: boolean;
   isSingleVendor: boolean;
   switchMode: (next: AppMode) => Promise<boolean>;
   beginModeSensitiveOperation: () => () => void;
@@ -41,23 +43,32 @@ export function AppModeProvider({ children }: { children: React.ReactNode }) {
   const [isSwitchingMode, setSwitchingMode] = useState(false);
   const [blockingCount, setBlockingCount] = useState(0);
   const blockers = useRef(new Set<symbol>());
+  const forcedMode = getForcedAppMode();
+  const isModeToggleEnabled = forcedMode === null;
   const singleVendorAvailable = isSingleVendorEnabled();
 
   useEffect(() => {
     migrateLegacyMultivendorStorage();
     const stored = window.localStorage.getItem(APP_MODE_STORAGE_KEY);
+    if (forcedMode) {
+      modeStorage.set(APP_MODE_STORAGE_KEY, forcedMode);
+      setMode(forcedMode);
+      setModeReady(true);
+      return;
+    }
     const next = isAppMode(stored) ? stored : DEFAULT_APP_MODE;
     if (next === APP_MODES.SINGLE && !singleVendorAvailable) {
       modeStorage.set(APP_MODE_STORAGE_KEY, APP_MODES.MULTI);
       setMode(APP_MODES.MULTI);
     } else setMode(next);
     setModeReady(true);
-  }, [singleVendorAvailable]);
+  }, [forcedMode, singleVendorAvailable]);
 
   const switchMode = useCallback(
     async (next: AppMode) => {
       if (
         !isAppMode(next) ||
+        !isModeToggleEnabled ||
         next === mode ||
         blockers.current.size > 0 ||
         (next === APP_MODES.SINGLE && !singleVendorAvailable)
@@ -73,7 +84,7 @@ export function AppModeProvider({ children }: { children: React.ReactNode }) {
         setSwitchingMode(false);
       }
     },
-    [mode, router, singleVendorAvailable],
+    [isModeToggleEnabled, mode, router, singleVendorAvailable],
   );
 
   const beginModeSensitiveOperation = useCallback(() => {
@@ -93,6 +104,7 @@ export function AppModeProvider({ children }: { children: React.ReactNode }) {
       isSwitchingMode,
       isModeSwitchBlocked: blockingCount > 0,
       singleVendorAvailable,
+      isModeToggleEnabled,
       isSingleVendor: mode === APP_MODES.SINGLE,
       switchMode,
       beginModeSensitiveOperation,
@@ -103,6 +115,7 @@ export function AppModeProvider({ children }: { children: React.ReactNode }) {
       isSwitchingMode,
       blockingCount,
       singleVendorAvailable,
+      isModeToggleEnabled,
       switchMode,
       beginModeSensitiveOperation,
     ],

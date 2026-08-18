@@ -69,6 +69,7 @@ export default function VendorModeToggle({
 }) {
   const {
     mode,
+    isModeToggleEnabled,
     singleVendorAvailable,
     isModeSwitchBlocked,
     isSwitchingMode,
@@ -76,7 +77,7 @@ export default function VendorModeToggle({
   } = useAppMode();
   const { cartCount, orders = [] } = useUser();
 
-  if (!singleVendorAvailable) return null;
+  if (!isModeToggleEnabled || !singleVendorAvailable) return null;
   const activeStatuses = new Set(["PENDING", "PICKED", "ACCEPTED", "ASSIGNED"]);
   const hasActiveOrder = orders.some((order) =>
     activeStatuses.has(order?.orderStatus),

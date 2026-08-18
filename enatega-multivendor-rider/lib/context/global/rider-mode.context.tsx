@@ -12,6 +12,7 @@ import {
 import { getSecureItem } from "@/lib/services/secure-storage";
 import {
   DEFAULT_RIDER_SERVER_MODE,
+  getForcedRiderServerMode,
   getRiderIdKey,
   getRiderTokenKey,
   isRiderServerMode,
@@ -25,6 +26,7 @@ interface RiderModeContextValue {
   modeReady: boolean;
   riderIdKey: string;
   tokenKey: string;
+  isModeToggleEnabled: boolean;
   selectMode: (mode: RiderServerMode) => Promise<boolean>;
 }
 
@@ -33,6 +35,7 @@ const RiderModeContext = createContext<RiderModeContextValue | undefined>(
 );
 
 export function RiderModeProvider({ children }: { children: ReactNode }) {
+  const forcedMode = getForcedRiderServerMode();
   const [mode, setMode] = useState<RiderServerMode>(DEFAULT_RIDER_SERVER_MODE);
   const [modeReady, setModeReady] = useState(false);
 
@@ -44,7 +47,10 @@ export function RiderModeProvider({ children }: { children: ReactNode }) {
       const persistedMode = await AsyncStorage.getItem(
         RIDER_SERVER_MODE_STORAGE_KEY,
       );
-      if (mounted && isRiderServerMode(persistedMode)) {
+      if (forcedMode) {
+        await AsyncStorage.setItem(RIDER_SERVER_MODE_STORAGE_KEY, forcedMode);
+        if (mounted) setMode(forcedMode);
+      } else if (mounted && isRiderServerMode(persistedMode)) {
         setMode(persistedMode);
       }
       if (mounted) setModeReady(true);
@@ -54,10 +60,11 @@ export function RiderModeProvider({ children }: { children: ReactNode }) {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [forcedMode]);
 
   const selectMode = useCallback(
     async (nextMode: RiderServerMode) => {
+      if (forcedMode && nextMode !== forcedMode) return false;
       if (nextMode === mode) return true;
 
       // A rider session is deliberately pinned to one backend. The login screen
@@ -69,7 +76,7 @@ export function RiderModeProvider({ children }: { children: ReactNode }) {
       setMode(nextMode);
       return true;
     },
-    [mode],
+    [forcedMode, mode],
   );
 
   const value = useMemo(
@@ -78,9 +85,10 @@ export function RiderModeProvider({ children }: { children: ReactNode }) {
       modeReady,
       riderIdKey: getRiderIdKey(mode),
       tokenKey: getRiderTokenKey(mode),
+      isModeToggleEnabled: forcedMode === null,
       selectMode,
     }),
-    [mode, modeReady, selectMode],
+    [forcedMode, mode, modeReady, selectMode],
   );
 
   return (

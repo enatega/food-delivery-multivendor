@@ -1,4 +1,4 @@
-import { APP_MODES, type AppMode } from "./constants";
+import { APP_MODES, getForcedAppMode, type AppMode } from "./constants";
 
 export interface ModeEnvironment {
   mode: AppMode;
@@ -15,6 +15,7 @@ const withTrailingSlash = (url = "") =>
   url ? `${url.replace(/\/$/, "")}/` : "";
 
 export const isSingleVendorEnabled = () =>
+  getForcedAppMode() === APP_MODES.SINGLE ||
   process.env.NEXT_PUBLIC_SINGLE_VENDOR_ENABLED === "true";
 
 export const getModeEnvironment = (mode: AppMode): ModeEnvironment => {

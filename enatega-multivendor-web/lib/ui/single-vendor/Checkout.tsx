@@ -17,6 +17,12 @@ import { getAccessToken } from "@/lib/utils/methods/auth";
 import useUser from "@/lib/hooks/useUser";
 import useCurrencyFormatter from "@/lib/hooks/useCurrencyFormatter";
 
+const toCheckoutCoordinate = (value: unknown): number | null => {
+  if (value === null || value === undefined || value === "") return null;
+  const coordinate = Number(value);
+  return Number.isFinite(coordinate) ? coordinate : null;
+};
+
 export default function SingleVendorCheckout() {
   const router = useRouter();
   const { mode } = useAppMode();
@@ -34,11 +40,13 @@ export default function SingleVendorCheckout() {
     profile?.addresses?.find((item) => item.selected) ??
     profile?.addresses?.[0];
   const coordinates = address?.location?.coordinates ?? [];
+  const latitude = toCheckoutCoordinate(coordinates[1]);
+  const longitude = toCheckoutCoordinate(coordinates[0]);
   const checkout = useQuery(SINGLE_VENDOR_CALCULATE_CHECKOUT, {
     variables: {
       isPickup: pickup,
-      latDestination: coordinates[1],
-      longDestination: coordinates[0],
+      latDestination: latitude,
+      longDestination: longitude,
       coupon: coupon || undefined,
     },
     skip: !profile || (!pickup && !address),

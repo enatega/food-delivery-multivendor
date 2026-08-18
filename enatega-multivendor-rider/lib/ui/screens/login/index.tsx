@@ -62,7 +62,7 @@ const LoginScreen = () => {
   const client = useApolloClient();
   const { t } = useTranslation();
   const { onLogin, isLogging } = useLogin();
-  const { mode, selectMode } = useRiderMode();
+  const { isModeToggleEnabled, mode, selectMode } = useRiderMode();
   const loginInitialValues = useMemo(
     () =>
       mode === RIDER_SERVER_MODES.MULTI
@@ -126,67 +126,69 @@ const LoginScreen = () => {
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
               return (
                 <View className="flex-1 items-center">
-                  <View
-                    className="flex-row self-stretch"
-                    style={{
-                      minHeight: 56,
-                      borderBottomColor: appTheme.borderLineColor,
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                    }}
-                  >
-                    {(
-                      [
-                        [RIDER_SERVER_MODES.MULTI, t("Multi Vendor")],
-                        [RIDER_SERVER_MODES.SINGLE, t("Single Vendor")],
-                      ] as const
-                    ).map(([serverMode, label]) => {
-                      const selected = mode === serverMode;
-                      return (
-                        <TouchableOpacity
-                          key={serverMode}
-                          accessibilityRole="button"
-                          accessibilityState={{ selected }}
-                          disabled={isLogging}
-                          onPress={() => void onModeSelected(serverMode)}
-                          className="flex-1 flex-row items-center justify-center px-2"
-                          style={{
-                            backgroundColor: selected
-                              ? `${appTheme.primary}12`
-                              : "transparent",
-                            borderBottomColor: selected
-                              ? appTheme.primary
-                              : "transparent",
-                            borderBottomWidth: 2,
-                          }}
-                        >
-                          <FontAwesome6
-                            name={
-                              serverMode === RIDER_SERVER_MODES.MULTI
-                                ? "grip"
-                                : "store"
-                            }
-                            size={16}
-                            color={
-                              selected
-                                ? appTheme.primary
-                                : appTheme.fontSecondColor
-                            }
-                            style={{ marginRight: 8 }}
-                          />
-                          <Text
-                            className="text-sm font-semibold"
+                  {isModeToggleEnabled && (
+                    <View
+                      className="flex-row self-stretch"
+                      style={{
+                        minHeight: 56,
+                        borderBottomColor: appTheme.borderLineColor,
+                        borderBottomWidth: StyleSheet.hairlineWidth,
+                      }}
+                    >
+                      {(
+                        [
+                          [RIDER_SERVER_MODES.MULTI, t("Multi Vendor")],
+                          [RIDER_SERVER_MODES.SINGLE, t("Single Vendor")],
+                        ] as const
+                      ).map(([serverMode, label]) => {
+                        const selected = mode === serverMode;
+                        return (
+                          <TouchableOpacity
+                            key={serverMode}
+                            accessibilityRole="button"
+                            accessibilityState={{ selected }}
+                            disabled={isLogging}
+                            onPress={() => void onModeSelected(serverMode)}
+                            className="flex-1 flex-row items-center justify-center px-2"
                             style={{
-                              color: selected
+                              backgroundColor: selected
+                                ? `${appTheme.primary}12`
+                                : "transparent",
+                              borderBottomColor: selected
                                 ? appTheme.primary
-                                : appTheme.fontSecondColor,
+                                : "transparent",
+                              borderBottomWidth: 2,
                             }}
                           >
-                            {label}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
+                            <FontAwesome6
+                              name={
+                                serverMode === RIDER_SERVER_MODES.MULTI
+                                  ? "grip"
+                                  : "store"
+                              }
+                              size={16}
+                              color={
+                                selected
+                                  ? appTheme.primary
+                                  : appTheme.fontSecondColor
+                              }
+                              style={{ marginRight: 8 }}
+                            />
+                            <Text
+                              className="text-sm font-semibold"
+                              style={{
+                                color: selected
+                                  ? appTheme.primary
+                                  : appTheme.fontSecondColor,
+                              }}
+                            >
+                              {label}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  )}
 
                   <View className="flex-1 w-full p-5 items-center justify-center gap-y-2">
                     {/* Icon */}

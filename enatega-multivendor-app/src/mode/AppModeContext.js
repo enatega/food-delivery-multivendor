@@ -14,6 +14,7 @@ import {
   APP_MODES,
   APP_MODE_STORAGE_KEY,
   DEFAULT_APP_MODE,
+  getForcedAppMode,
   isAppMode
 } from './constants'
 const { getEnvironmentConfig } = require('../../environment.config')
@@ -23,6 +24,7 @@ const AppModeContext = createContext({
   isModeReady: false,
   isSwitchingMode: false,
   isModeSwitchBlocked: false,
+  isModeToggleEnabled: true,
   beginModeSensitiveOperation: () => () => {},
   switchMode: async() => false
 })
@@ -33,16 +35,26 @@ export const AppModeProvider = ({ children }) => {
   const [isSwitchingMode, setIsSwitchingMode] = useState(false)
   const [blockingOperationCount, setBlockingOperationCount] = useState(0)
   const blockingOperations = useRef(new Set())
+  const forcedMode = getForcedAppMode()
+  const isModeToggleEnabled = forcedMode === null
   const singleVendorAvailable =
-    getEnvironmentConfig(Updates.channel, APP_MODES.SINGLE)
-      .SINGLE_VENDOR_ENABLED
+    forcedMode === APP_MODES.SINGLE ||
+    getEnvironmentConfig(Updates.channel, APP_MODES.SINGLE).SINGLE_VENDOR_ENABLED
 
   useEffect(() => {
     let mounted = true
 
     AsyncStorage.getItem(APP_MODE_STORAGE_KEY)
       .then(storedMode => {
-        if (!mounted || !isAppMode(storedMode)) return
+        if (!mounted) return
+        if (forcedMode) {
+          setMode(forcedMode)
+          if (storedMode !== forcedMode) {
+            AsyncStorage.setItem(APP_MODE_STORAGE_KEY, forcedMode).catch(() => {})
+          }
+          return
+        }
+        if (!isAppMode(storedMode)) return
         if (
           storedMode === APP_MODES.SINGLE &&
           !singleVendorAvailable
@@ -59,12 +71,13 @@ export const AppModeProvider = ({ children }) => {
     return () => {
       mounted = false
     }
-  }, [singleVendorAvailable])
+  }, [forcedMode, singleVendorAvailable])
 
   const switchMode = useCallback(async nextMode => {
     if (
       !isAppMode(nextMode) ||
       nextMode === mode ||
+      !isModeToggleEnabled ||
       blockingOperations.current.size > 0 ||
       (nextMode === APP_MODES.SINGLE && !singleVendorAvailable)
     ) return false
@@ -77,7 +90,7 @@ export const AppModeProvider = ({ children }) => {
     } finally {
       setIsSwitchingMode(false)
     }
-  }, [mode, singleVendorAvailable])
+  }, [isModeToggleEnabled, mode, singleVendorAvailable])
 
   const beginModeSensitiveOperation = useCallback(() => {
     const operation = Symbol('mode-sensitive-operation')
@@ -95,6 +108,7 @@ export const AppModeProvider = ({ children }) => {
     isModeReady,
     isSwitchingMode,
     isModeSwitchBlocked: blockingOperationCount > 0,
+    isModeToggleEnabled,
     beginModeSensitiveOperation,
     switchMode,
     singleVendorAvailable,
@@ -104,6 +118,7 @@ export const AppModeProvider = ({ children }) => {
     blockingOperationCount,
     isModeReady,
     isSwitchingMode,
+    isModeToggleEnabled,
     mode,
     singleVendorAvailable,
     switchMode

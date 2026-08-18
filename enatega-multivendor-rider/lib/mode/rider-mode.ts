@@ -18,6 +18,13 @@ export type RiderServerMode =
 export const DEFAULT_RIDER_SERVER_MODE: RiderServerMode =
   RIDER_SERVER_MODES.MULTI;
 
+export const getForcedRiderServerMode = (): RiderServerMode | null => {
+  const policy = process.env.EXPO_PUBLIC_VENDOR_MODE?.toUpperCase();
+  if (policy === RIDER_SERVER_MODES.SINGLE) return RIDER_SERVER_MODES.SINGLE;
+  if (policy === RIDER_SERVER_MODES.MULTI) return RIDER_SERVER_MODES.MULTI;
+  return null;
+};
+
 export const RIDER_SERVER_MODE_STORAGE_KEY =
   "@enatega/rider/selected-server-mode";
 const RIDER_STORAGE_MIGRATION_KEY = "@enatega/rider/server-storage-migrated-v1";

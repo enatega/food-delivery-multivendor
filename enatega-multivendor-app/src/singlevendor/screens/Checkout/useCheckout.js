@@ -12,6 +12,12 @@ import LiveActivityService from '../../../utils/liveActivityService'
 
 const ADDRESS_DELIVERY_ERROR = "Sorry! we can't deliver to your address."
 
+const toCheckoutCoordinate = value => {
+  if (value === null || value === undefined || value === '') return null
+  const coordinate = Number(value)
+  return Number.isFinite(coordinate) ? coordinate : null
+}
+
 const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlaceOrderError }) => {
   const navigation = useNavigation()
   const { clearCart } = useCartStore()
@@ -87,8 +93,8 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
   console.log('Fulfillment Mode:', fulfillmentMode)
   console.log('deliveryAddress:', deliveryAddress)
 
-  const latDestination = deliveryAddress?.latitude ?? null
-  const longDestination = deliveryAddress?.longitude ?? null
+  const latDestination = toCheckoutCoordinate(deliveryAddress?.latitude)
+  const longDestination = toCheckoutCoordinate(deliveryAddress?.longitude)
 
   const variables = {
     isPickup,

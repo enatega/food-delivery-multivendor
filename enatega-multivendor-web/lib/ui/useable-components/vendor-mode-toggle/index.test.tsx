@@ -7,6 +7,7 @@ vi.mock("@/lib/mode", () => ({
   APP_MODES: { MULTI: "MULTI", SINGLE: "SINGLE" },
   useAppMode: () => ({
     mode: "MULTI",
+    isModeToggleEnabled: true,
     singleVendorAvailable: true,
     isModeSwitchBlocked: false,
     isSwitchingMode: false,

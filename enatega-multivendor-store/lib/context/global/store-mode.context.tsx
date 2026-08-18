@@ -12,6 +12,7 @@ import React, {
 import getEnvVars, { StoreEnvironment } from "@/environment";
 import {
   DEFAULT_STORE_SERVER_MODE,
+  getForcedStoreServerMode,
   getStoreIdKey,
   getStoreTokenKey,
   isStoreServerMode,
@@ -26,6 +27,7 @@ interface StoreModeContextValue {
   isModeReady: boolean;
   isSwitchingMode: boolean;
   isSingleVendor: boolean;
+  isModeToggleEnabled: boolean;
   environment: StoreEnvironment;
   tokenKey: string;
   storeIdKey: string;
@@ -41,6 +43,7 @@ export const StoreModeProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const forcedMode = getForcedStoreServerMode();
   const [mode, setMode] = useState<StoreServerMode>(DEFAULT_STORE_SERVER_MODE);
   const [isModeReady, setIsModeReady] = useState(false);
   const [isSwitchingMode, setIsSwitchingMode] = useState(false);
@@ -52,7 +55,10 @@ export const StoreModeProvider = ({
       try {
         await migrateLegacyStoreSession();
         const storedMode = await AsyncStorage.getItem(STORE_SERVER_MODE_KEY);
-        if (mounted && isStoreServerMode(storedMode)) {
+        if (forcedMode) {
+          await AsyncStorage.setItem(STORE_SERVER_MODE_KEY, forcedMode);
+          if (mounted) setMode(forcedMode);
+        } else if (mounted && isStoreServerMode(storedMode)) {
           setMode(storedMode);
         }
       } finally {
@@ -64,12 +70,13 @@ export const StoreModeProvider = ({
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [forcedMode]);
 
   const selectMode = useCallback(
     async (nextMode: StoreServerMode) => {
       if (
         !isStoreServerMode(nextMode) ||
+        (forcedMode !== null && nextMode !== forcedMode) ||
         nextMode === mode ||
         isSwitchingMode
       ) {
@@ -90,7 +97,7 @@ export const StoreModeProvider = ({
         setIsSwitchingMode(false);
       }
     },
-    [isSwitchingMode, mode],
+    [forcedMode, isSwitchingMode, mode],
   );
 
   const value = useMemo<StoreModeContextValue>(
@@ -99,12 +106,13 @@ export const StoreModeProvider = ({
       isModeReady,
       isSwitchingMode,
       isSingleVendor: mode === STORE_SERVER_MODES.SINGLE,
+      isModeToggleEnabled: forcedMode === null,
       environment: getEnvVars(mode),
       tokenKey: getStoreTokenKey(mode),
       storeIdKey: getStoreIdKey(mode),
       selectMode,
     }),
-    [isModeReady, isSwitchingMode, mode, selectMode],
+    [forcedMode, isModeReady, isSwitchingMode, mode, selectMode],
   );
 
   return (

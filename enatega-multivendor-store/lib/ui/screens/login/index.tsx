@@ -54,7 +54,8 @@ const LoginScreen = () => {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { isLogging, onLogin } = useLogin();
-  const { isSwitchingMode, mode, selectMode } = useStoreMode();
+  const { isModeToggleEnabled, isSwitchingMode, mode, selectMode } =
+    useStoreMode();
   const loginInitialValues = useMemo(
     () =>
       mode === STORE_SERVER_MODES.MULTI
@@ -98,72 +99,74 @@ const LoginScreen = () => {
             {({ handleChange, handleBlur, handleSubmit, values, errors }) => {
               return (
                 <View className="flex-1 items-center">
-                  <View
-                    className="flex-row self-stretch"
-                    style={{
-                      minHeight: 56,
-                      borderBottomColor: appTheme.borderLineColor,
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                    }}
-                  >
-                    {[
-                      {
-                        label: t("Multi Vendor"),
-                        value: STORE_SERVER_MODES.MULTI,
-                      },
-                      {
-                        label: t("Single Vendor"),
-                        value: STORE_SERVER_MODES.SINGLE,
-                      },
-                    ].map((option) => {
-                      const selected = mode === option.value;
-                      return (
-                        <TouchableOpacity
-                          key={option.value}
-                          accessibilityRole="button"
-                          accessibilityState={{ selected }}
-                          disabled={isLogging || isSwitchingMode}
-                          onPress={() => onSelectMode(option.value)}
-                          className="flex-1 flex-row items-center justify-center px-2"
-                          style={{
-                            backgroundColor: selected
-                              ? `${appTheme.primary}12`
-                              : "transparent",
-                            borderBottomColor: selected
-                              ? appTheme.primary
-                              : "transparent",
-                            borderBottomWidth: 2,
-                            opacity: isLogging || isSwitchingMode ? 0.65 : 1,
-                          }}
-                        >
-                          <Icon
-                            name={
-                              option.value === STORE_SERVER_MODES.MULTI
-                                ? "grip"
-                                : "store"
-                            }
-                            size={16}
-                            color={
-                              selected
-                                ? appTheme.primary
-                                : appTheme.fontSecondColor
-                            }
-                            style={{ marginRight: 8 }}
-                          />
-                          <Text
-                            className="text-center text-sm font-semibold"
+                  {isModeToggleEnabled && (
+                    <View
+                      className="flex-row self-stretch"
+                      style={{
+                        minHeight: 56,
+                        borderBottomColor: appTheme.borderLineColor,
+                        borderBottomWidth: StyleSheet.hairlineWidth,
+                      }}
+                    >
+                      {[
+                        {
+                          label: t("Multi Vendor"),
+                          value: STORE_SERVER_MODES.MULTI,
+                        },
+                        {
+                          label: t("Single Vendor"),
+                          value: STORE_SERVER_MODES.SINGLE,
+                        },
+                      ].map((option) => {
+                        const selected = mode === option.value;
+                        return (
+                          <TouchableOpacity
+                            key={option.value}
+                            accessibilityRole="button"
+                            accessibilityState={{ selected }}
+                            disabled={isLogging || isSwitchingMode}
+                            onPress={() => onSelectMode(option.value)}
+                            className="flex-1 flex-row items-center justify-center px-2"
                             style={{
-                              color: selected
+                              backgroundColor: selected
+                                ? `${appTheme.primary}12`
+                                : "transparent",
+                              borderBottomColor: selected
                                 ? appTheme.primary
-                                : appTheme.fontSecondColor,
+                                : "transparent",
+                              borderBottomWidth: 2,
+                              opacity: isLogging || isSwitchingMode ? 0.65 : 1,
                             }}
                           >
-                            {option.label}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
+                            <Icon
+                              name={
+                                option.value === STORE_SERVER_MODES.MULTI
+                                  ? "grip"
+                                  : "store"
+                              }
+                              size={16}
+                              color={
+                                selected
+                                  ? appTheme.primary
+                                  : appTheme.fontSecondColor
+                              }
+                              style={{ marginRight: 8 }}
+                            />
+                            <Text
+                              className="text-center text-sm font-semibold"
+                              style={{
+                                color: selected
+                                  ? appTheme.primary
+                                  : appTheme.fontSecondColor,
+                              }}
+                            >
+                              {option.label}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  )}
 
                   <View className="flex-1 w-full p-5 items-center justify-center gap-y-2">
                     {/* Icon */}

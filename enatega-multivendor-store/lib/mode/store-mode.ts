@@ -12,6 +12,13 @@ export type StoreServerMode =
   (typeof STORE_SERVER_MODES)[keyof typeof STORE_SERVER_MODES];
 
 export const DEFAULT_STORE_SERVER_MODE = STORE_SERVER_MODES.MULTI;
+
+export const getForcedStoreServerMode = (): StoreServerMode | null => {
+  const policy = process.env.EXPO_PUBLIC_VENDOR_MODE?.toUpperCase();
+  if (policy === STORE_SERVER_MODES.SINGLE) return STORE_SERVER_MODES.SINGLE;
+  if (policy === STORE_SERVER_MODES.MULTI) return STORE_SERVER_MODES.MULTI;
+  return null;
+};
 export const STORE_SERVER_MODE_KEY = "@enatega/store/server-mode";
 
 const STORE_STORAGE_MIGRATION_KEY = "@enatega/store/server-storage-migrated-v1";
