@@ -21,7 +21,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@apollo/client": "^3.12.7",
+    "@apollo/client": "^4.2.5",
     "@expo/config-plugins": "~10.0.0",
     "@expo/metro-config": "~0.20.0",
     "@expo/prebuild-config": "~9.0.0",
