@@ -62,6 +62,7 @@ module.exports = () => {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.enatega.multivendor',
+      buildNumber: '137',
       icon: './assets/icon.png',
       googleServicesFile: './GoogleService-Info.plist',
       infoPlist: {
@@ -71,8 +72,6 @@ module.exports = () => {
         NSLocationWhenInUseUsageDescription:
           'Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.',
         UIBackgroundModes: ['remote-notification'],
-        NSUserTrackingUsageDescription:
-          'Allow this app to collect app-related data that can be used for tracking you or your device.',
         CFBundleURLTypes: urlTypes,
         ITSAppUsesNonExemptEncryption: false
       },
@@ -157,13 +156,6 @@ module.exports = () => {
             backgroundColor: '#0b1225', // dark
             image: './assets/splashTransparent.png'
           }
-        }
-      ],
-      [
-        'expo-tracking-transparency',
-        {
-          userTrackingPermission:
-            'Allow this app to collect app-related data that can be used for tracking you or your device.'
         }
       ],
       [

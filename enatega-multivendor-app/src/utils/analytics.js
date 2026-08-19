@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import useEnvVars from '../../environment'
 import * as amplitude from '@amplitude/analytics-react-native'
-import { getTrackingPermissions } from './useAppTrackingTrasparency'
 
 const Analytics = () => {
   const { AMPLITUDE_API_KEY } = useEnvVars()
@@ -46,20 +45,26 @@ const Analytics = () => {
     NAVIGATE_TO_FAQS: 'NAVIGATE_TO_FAQS'
   }
 
-  const initialize = async () => {
+  const initialize = async() => {
     try {
-      const trackingStatus = await getTrackingPermissions()
-      if (isInitialized || !apiKey /*  || trackingStatus !== 'granted' */) {
+      if (isInitialized || !apiKey) {
         return
       }
-      amplitude.init(apiKey)
+      amplitude.init(apiKey, undefined, {
+        migrateLegacyData: false,
+        trackingOptions: {
+          adid: false,
+          appSetId: false,
+          idfv: false
+        }
+      })
       isInitialized = true
     } catch (error) {
       console.log('Amplitude init error', error)
     }
   }
 
-  const identify = async (options, userId) => {
+  const identify = async(options, userId) => {
     try {
       await initialize()
       if (!isInitialized) return
@@ -80,7 +85,7 @@ const Analytics = () => {
     } catch (err) {}
   }
 
-  const track = async (event, options) => {
+  const track = async(event, options) => {
     try {
       await initialize()
       if (!isInitialized) return
