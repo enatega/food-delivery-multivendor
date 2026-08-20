@@ -142,7 +142,6 @@ function MainNavigator() {
         options={SLIDE_UP_RIGHT_ANIMATION}
       />
       <NavigationStack.Screen name='Account' component={Account} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen
         name='SearchScreen'
         getComponent={() => require('../screens/Search/SearchScreen').default}
@@ -233,6 +232,9 @@ function MainNavigator() {
       <NavigationStack.Screen name='Login' component={Login} />
       <NavigationStack.Screen name='Register' component={Register} />
       <NavigationStack.Screen name='PhoneNumber' component={PhoneNumber} />
+      {/* Registered outside the authenticated subset so Apple onboarding can
+          repair a missing first-authorization name immediately after login. */}
+      <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen name='ForgotPassword' component={ForgotPassword} />
       <NavigationStack.Screen name='SetYourPassword' component={SetYourPassword} />
       <NavigationStack.Screen name='EmailOtp' component={EmailOtp} />
@@ -290,7 +292,7 @@ function BottomTabNavigator() {
           flex: 1
         },
         tabBarLabelPosition: 'below-icon',
-        tabBarActiveTintColor: '#0EA5E9',
+        tabBarActiveTintColor: currentTheme.singleVendorBrandForeground,
         tabBarInactiveTintColor: currentTheme.fontNewColor,
         headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
       })}

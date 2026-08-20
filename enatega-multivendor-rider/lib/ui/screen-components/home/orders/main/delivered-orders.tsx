@@ -31,6 +31,8 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
     errorAssigned,
     assignedOrders,
     refetchAssigned,
+    loadMoreAssigned,
+    hasMoreAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
 
@@ -116,6 +118,8 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         alwaysBounceVertical
         refreshing={networkStatusAssigned === NetworkStatus.refetch}
         onRefresh={refetchAssigned}
+        onEndReached={hasMoreAssigned ? loadMoreAssigned : undefined}
+        onEndReachedThreshold={0.5}
         renderItem={renderItem}
         ListFooterComponent={<View style={{ height: 200 }} />}
         ListEmptyComponent={renderListEmptyComponent}

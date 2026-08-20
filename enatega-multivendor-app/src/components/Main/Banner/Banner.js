@@ -13,8 +13,10 @@ import { getCachedMediaUri, useCachedMediaUri } from '../../../utils/mediaCache'
 
 // Helper function to get media type from URL
 const getMediaTypeFromUrl = (url) => {
-  const extension = url?.split('.').pop().toLowerCase()
-  const videoExtensions = ['mp4']
+  if (!url || typeof url !== 'string') return 'image'
+  const path = url.split(/[?#]/, 1)[0]
+  const extension = path.split('.').pop()?.toLowerCase()
+  const videoExtensions = ['mp4', 'm4v', 'mov', 'webm']
   return videoExtensions.includes(extension) ? 'video' : 'image'
 }
 

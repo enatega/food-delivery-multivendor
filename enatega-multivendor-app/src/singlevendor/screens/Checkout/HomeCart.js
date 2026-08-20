@@ -225,7 +225,7 @@ const HomeCart = () => {
           </View>
 
           <View style={themedStyles.foodBadge}>
-            <Ionicons name='fast-food-sharp' size={scale(22)} color={currentTheme.primaryBlue} />
+            <Ionicons name='fast-food-sharp' size={scale(22)} color={currentTheme.singleVendorBrandForeground} />
           </View>
         </View>
 
@@ -325,8 +325,8 @@ const styles = (themeColors) =>
     },
     title: {
       color: themeColors.fontMainColor,
-      fontSize: scale(17),
-      lineHeight: scale(24)
+      fontSize: scale(15),
+      lineHeight: scale(21)
     },
     subtitle: {
       marginTop: scale(6),
@@ -356,7 +356,7 @@ const styles = (themeColors) =>
       marginRight: scale(8)
     },
     progressSegmentActive: {
-      backgroundColor: themeColors.primaryBlue
+      backgroundColor: themeColors.singleVendorBrand
     },
     actionsRow: {
       marginTop: scale(16),
@@ -378,7 +378,7 @@ const styles = (themeColors) =>
     actionText: {
       marginLeft: scale(8),
       color: themeColors.fontMainColor,
-      fontSize: scale(12)
+      fontSize: scale(11)
     },
     addressRow: {
       marginTop: scale(14),

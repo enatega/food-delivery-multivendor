@@ -14,7 +14,7 @@ const SmallOrderFeeTip = ({
   return (
     <View style={styles(currentTheme).container}>
       <View style={styles(currentTheme).iconContainer}>
-        <Feather name='info' size={14} color={currentTheme.primaryBlue || '#0EA5E9'} />
+        <Feather name='info' size={14} color={currentTheme.singleVendorBrandForeground} />
       </View>
       <View style={styles(currentTheme).content}>
         <TextDefault textColor={currentTheme.fontMainColor} H6 bolder>

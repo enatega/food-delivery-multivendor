@@ -31,7 +31,7 @@ const styles = (props = null) =>
     },
     showMoreButton: {
       // backgroundColor: 'transparent'
-      backgroundColor: theme?.Dark?.primaryBlue,
+      backgroundColor: theme?.Dark?.singleVendorBrand,
       borderRadius: scale(8),
       paddingVertical: verticalScale(6),
       paddingHorizontal: scale(16),
@@ -47,4 +47,3 @@ const styles = (props = null) =>
   })
 
 export default styles
-

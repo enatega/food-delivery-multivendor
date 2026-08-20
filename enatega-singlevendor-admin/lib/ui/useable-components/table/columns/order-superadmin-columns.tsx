@@ -42,7 +42,6 @@ export const ORDER_SUPER_ADMIN_COLUMNS = () => {
       propertyName: 'createdAt',
       body: (rowData: IExtendedOrder) => {
         let date: Date | null = null;
-        console.log("rowData.createdAt", rowData.createdAt)
         if (rowData?.createdAt) {
           const createdAt = rowData.createdAt;
           if (typeof createdAt === 'number') {

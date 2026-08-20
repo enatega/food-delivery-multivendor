@@ -35,7 +35,7 @@ const UpdateButton = ({ onPress, disabled, loading, currentTheme }) => {
 const styles = (props = null) =>
   StyleSheet.create({
     button: {
-      backgroundColor: props?.singlevendorcolor || '#0090CD',
+      backgroundColor: props?.singleVendorBrand || '#90E36D',
       borderRadius: scale(8),
       paddingVertical: verticalScale(14),
       alignItems: 'center',

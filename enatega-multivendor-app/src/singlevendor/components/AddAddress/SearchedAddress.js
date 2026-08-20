@@ -25,7 +25,7 @@ const SearchedAddress = ({
   setactiveState,
   bottomInset
 }) => {
-  const accent = currentTheme.singlevendorcolor || currentTheme.primaryBlue
+  const accent = currentTheme.singleVendorBrandForeground
   const primaryText = currentTheme.colorTextPrimary || currentTheme.fontMainColor
   const mutedText = currentTheme.colorTextMuted || currentTheme.fontSecondColor
   const divider = currentTheme.newBorderColor2 || currentTheme.borderColor
@@ -63,7 +63,7 @@ const SearchedAddress = ({
             Selected location
           </TextDefault>
           <View style={styles.locationRow}>
-            <View style={[styles.locationIcon, { backgroundColor: currentTheme.lowOpacityBlue }]}>
+            <View style={[styles.locationIcon, { backgroundColor: currentTheme.singleVendorBrandSubtle }]}> 
               <Feather name='map-pin' size={20} color={accent} />
             </View>
             <TextDefault
@@ -172,7 +172,7 @@ const SearchedAddress = ({
                       styles.typeIcon,
                       {
                         backgroundColor: selected
-                          ? currentTheme.lowOpacityBlue
+                          ? currentTheme.singleVendorBrandSubtle
                           : currentTheme.colorBgTertiary
                       }
                     ]}

@@ -169,7 +169,7 @@ const Cart = (props) => {
                     mutateClearCart()
                   }}
                 >
-                  <TextDefault textColor={currentTheme.primaryBlue} bolder>
+                  <TextDefault textColor={currentTheme.singleVendorBrandForeground} bolder>
                     {t('Clear cart') || 'Clear'}
                   </TextDefault>
                 </TouchableOpacity>
@@ -187,11 +187,11 @@ const Cart = (props) => {
         <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).checkoutButton, isBelowMinimumOrder && styles(currentTheme).checkoutButtonDisabled]} onPress={isBelowMinimumOrder ? null : handleCheckout} disabled={isBelowMinimumOrder}>
           <View style={styles().checkoutButtonContent}>
             <View style={[styles().cartBadge, !isBelowMinimumOrder && styles().cartBadgeActive]}>
-              <TextDefault textColor={isBelowMinimumOrder ? currentTheme.gray300 : currentTheme.primaryBlue} bold small>
+              <TextDefault textColor={isBelowMinimumOrder ? currentTheme.singleVendorDisabledForeground : currentTheme.singleVendorBrandForeground} bold small>
                 {cartCount}
               </TextDefault>
             </View>
-            <TextDefault textColor={isBelowMinimumOrder ? currentTheme.gray300 : currentTheme.white} bolder H5>
+            <TextDefault textColor={isBelowMinimumOrder ? currentTheme.singleVendorDisabledForeground : currentTheme.singleVendorOnBrand} bolder H5>
               {t('goToCheckout') || 'Go to checkout'}&nbsp;
               {formatAmount(grandTotal)} {currencySymbol}
             </TextDefault>

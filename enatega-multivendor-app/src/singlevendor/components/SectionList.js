@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet, Text } from 'react-native'
+import { View, FlatList, StyleSheet, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useContext, useCallback } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { theme } from '../../utils/themeColors'
@@ -12,7 +12,16 @@ import SectionListError from './SectionListError'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 
-const SectionList = ({ title = 'Limited time deals', data = [], loading = false, error = null, onRetry = null }) => {
+const SectionList = ({
+  title = 'Limited time deals',
+  data = [],
+  loading = false,
+  error = null,
+  onRetry = null,
+  hasMore = false,
+  onLoadMore = null,
+  loadingMore = false
+}) => {
   const { i18n, t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
@@ -80,6 +89,26 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false,
             updateCellsBatchingPeriod={50}
             initialNumToRender={10}
             windowSize={10}
+            ListFooterComponent={hasMore
+              ? (
+                <TouchableOpacity
+                  accessibilityRole='button'
+                  accessibilityLabel={t('loadMore', { defaultValue: 'Load more' })}
+                  activeOpacity={0.8}
+                  disabled={loadingMore}
+                  onPress={onLoadMore}
+                  style={styles(currentTheme).loadMoreButton}
+                >
+                  {loadingMore
+                    ? <ActivityIndicator color={currentTheme.singleVendorOnBrand || '#10200A'} />
+                    : (
+                      <Text style={styles(currentTheme).loadMoreText}>
+                        {t('loadMore', { defaultValue: 'Load more' })}
+                      </Text>
+                      )}
+                </TouchableOpacity>
+                )
+              : null}
           />
           )
         : (
@@ -92,7 +121,7 @@ const SectionList = ({ title = 'Limited time deals', data = [], loading = false,
               <Ionicons
                 name='pricetags-outline'
                 size={scale(26)}
-                color={currentTheme.primaryBlue}
+                color={currentTheme.singleVendorBrandForeground}
               />
             </View>
             <Text style={styles(currentTheme).emptyTitle}>
@@ -135,6 +164,22 @@ const styles = (currentTheme) =>
     rightCard: {
       marginLeft: 0
     },
+    loadMoreButton: {
+      alignItems: 'center',
+      alignSelf: 'center',
+      backgroundColor: currentTheme.singleVendorBrand || currentTheme.primary,
+      borderRadius: scale(10),
+      justifyContent: 'center',
+      marginBottom: scale(8),
+      minHeight: scale(42),
+      minWidth: scale(132),
+      paddingHorizontal: scale(20)
+    },
+    loadMoreText: {
+      color: currentTheme.singleVendorOnBrand || '#10200A',
+      fontSize: scale(14),
+      fontWeight: '700'
+    },
     emptyState: {
       alignItems: 'center',
       backgroundColor: currentTheme.cardBackground,
@@ -148,7 +193,7 @@ const styles = (currentTheme) =>
     },
     emptyIconContainer: {
       alignItems: 'center',
-      backgroundColor: currentTheme.lowOpacityBlue,
+      backgroundColor: currentTheme.singleVendorBrandSubtle,
       borderRadius: scale(24),
       height: scale(48),
       justifyContent: 'center',

@@ -94,7 +94,7 @@ const CartQuantityController = ({
         onPress={increase}
         disabled={isLoading}
       >
-        {isLoading ? <DotLoader color={currentTheme.primaryBlue} /> : <AntDesign name='plus' size={14} color={currentTheme.primaryBlue} />}
+        {isLoading ? <DotLoader color={currentTheme.singleVendorBrandForeground} /> : <AntDesign name='plus' size={14} color={currentTheme.singleVendorBrandForeground} />}
       </Pressable>
     )
   }
@@ -112,7 +112,7 @@ const CartQuantityController = ({
         onPress={decrease}
         disabled={isLoading}
       >
-        <AntDesign name={quantity <= 1 ? 'delete' : 'minus'} size={14} color="#FFFFFF" />
+        <AntDesign name={quantity <= 1 ? 'delete' : 'minus'} size={14} color={currentTheme.singleVendorOnBrand} />
       </Pressable>
 
       <View style={styles(currentTheme).countContainer}>
@@ -126,7 +126,7 @@ const CartQuantityController = ({
           )}
           {isLoading && (
             <View style={styles(currentTheme).countSpinner}>
-              <DotLoader color={currentTheme.primaryBlue || '#0EA5E9'} />
+              <DotLoader color={currentTheme.singleVendorBrandForeground} />
             </View>
           )}
         </View>
@@ -137,7 +137,7 @@ const CartQuantityController = ({
         onPress={increase}
         disabled={isLoading}
       >
-        <AntDesign name='plus' size={14} color="#FFFFFF" />
+        <AntDesign name='plus' size={14} color={currentTheme.singleVendorOnBrand} />
       </Pressable>
     </Animated.View>
   )
@@ -221,7 +221,7 @@ const styles = (currentTheme) =>
       shadowRadius: 2,
       elevation: 2,
       borderWidth: 1,
-      borderColor: currentTheme.primaryBlue || '#0EA5E9'
+      borderColor: currentTheme.singleVendorBrand
     },
     controllerLarge: {
       position: 'relative',
@@ -237,7 +237,7 @@ const styles = (currentTheme) =>
       borderRadius: 12,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: currentTheme.primaryBlue || '#0EA5E9'
+      backgroundColor: currentTheme.singleVendorBrand
     },
     countContainer: {
       minWidth: 24,

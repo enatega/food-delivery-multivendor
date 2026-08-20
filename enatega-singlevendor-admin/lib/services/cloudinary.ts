@@ -42,7 +42,6 @@ export const uploadImageToCloudinary: IUploadImageToCloudinary = async (
         '/upload/',
         '/upload/q_80/f_auto/c_scale/'
       );
-      console.log({ transformedUrl });
       return transformedUrl;
     } catch (e) {
       throw new Error('Error uploading image to Cloudinary');
@@ -61,7 +60,6 @@ export const uploadImageToCloudinary: IUploadImageToCloudinary = async (
       '/upload/',
       '/upload/f_auto,q_auto:eco,w_1080/' // for video
     );
-    console.log({ transformedUrl });
     return transformedUrl;
   }
 };

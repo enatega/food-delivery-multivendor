@@ -50,8 +50,8 @@ const OrderHistoryItem = ({ ordersData, currentTheme, onOrderPress }) => {
       Pending: '#B8860B',
       'Order Delivered': '#28A745',
       'Order Cancelled': '#DC3545',
-      Refunded: currentTheme.primaryBlue || currentTheme.primary || '#0EA5E9',
-      Scheduled: '#0EA5E9'
+      Refunded: currentTheme.singleVendorBrandForeground,
+      Scheduled: currentTheme.singleVendorBrandForeground
     }
     return colorMap[status] || currentTheme.fontMainColor
   }
@@ -192,10 +192,10 @@ const styles = (props = null) =>
       backgroundColor: props?.red ? `${props.red}24` : '#FFE6E6'
     },
     statusBadgeRefunded: {
-      backgroundColor: props?.lowOpacityBlue || 'rgba(14, 165, 233, 0.2)'
+      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE'
     },
     statusBadgeScheduled: {
-      backgroundColor: props?.lowOpacityBlue || 'rgba(14, 165, 233, 0.2)'
+      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE'
     },
     statusBadgeDefault: {
       backgroundColor: props?.colorBgTertiary || '#F5F5F5'

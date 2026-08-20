@@ -65,6 +65,5 @@ export function calculateZoomBasedOnCoordinates(
     last_point[1]
   );
   const zoomVal = calculateZoom(distance);
-  console.log(zoomVal);
   return zoomVal;
 }

@@ -20,6 +20,8 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import Spinner from '../../../components/Spinner/Spinner'
 import { updateUser } from '../../../apollo/mutations'
+import { useAppMode } from '../../../mode/AppModeContext'
+import { getModeHomeRoute } from '../../../mode/navigation'
 import { ScreenHeader } from '../../components/Common'
 
 import styles from './styles'
@@ -31,6 +33,7 @@ const UPDATEUSER = gql`
 const EditName = () => {
   const navigation = useNavigation()
   const route = useRoute()
+  const { mode } = useAppMode()
   const { t, i18n } = useTranslation()
   const { profile, refetchProfile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
@@ -66,6 +69,20 @@ const EditName = () => {
         message: t('userInfoUpdated')
       })
       refetchProfile()
+      if (route?.params?.onboarding) {
+        if (route?.params?.needsPhone) {
+          navigation.replace('PhoneNumber', {
+            name: name.trim(),
+            phone: ''
+          })
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [getModeHomeRoute(mode)]
+          })
+        }
+        return
+      }
       navigation.goBack()
     }
   }

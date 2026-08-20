@@ -1,5 +1,44 @@
 import gql from 'graphql-tag'
 
+export const GET_SINGLE_VENDOR_BANNERS = gql`
+  query SingleVendorBanners($page: Int, $limit: Int) {
+    singleVendorBanners(page: $page, limit: $limit) {
+      _id
+      title
+      description
+      action
+      screen
+      file
+      parameters
+      buttonText
+    }
+  }
+`
+
+export const GET_SINGLE_VENDOR_DEALS_SECTION = gql`
+  query SingleVendorDealSection($section: String!, $skip: Int, $limit: Int) {
+    singleVendorDeals(section: $section, skip: $skip, limit: $limit) {
+      items {
+        id
+        categoryId
+        title
+        description
+        image
+        isOutOfStock
+        variations {
+          id
+          title
+          price
+          isOutOfStock
+          deal { id discountType discountValue isActive }
+        }
+      }
+      totalCount
+      hasMore
+    }
+  }
+`
+
 export const COUPONS_BY_RESTAURANT_SINGLE_VENDOR = gql`
   query SingleVendorVouchers {
     couponsbyRestaurant {
@@ -246,6 +285,19 @@ export const SEARCH_FOOD = gql`
   }
 `
 
+export const SEARCH_SINGLE_VENDOR_FOODS = gql`
+  query SearchSingleVendorFoods($search: String!, $skip: Int, $limit: Int) {
+    searchSingleVendorFoods(search: $search, skip: $skip, limit: $limit) {
+      items {
+        id title description image categoryId subCategory isOutOfStock
+        variations { id title price deal { id discountType discountValue isActive } }
+      }
+      totalCount
+      hasMore
+    }
+  }
+`
+
 export const GET_LIMITED_TIME_FOODS_DEALS = gql`
   query GetLimitedTimeFoodsDeals {
     getLimitedTimeFoodsDeals {
@@ -341,6 +393,7 @@ export const GET_USER_CART = gql`
       minOrderAmount
       isBelowMinimumOrder
       cartId
+      cartRevision
       foods {
         categoryId
         foodId
@@ -373,6 +426,7 @@ export const GET_USER_CART = gql`
             id
             title
           }
+          specialInstructions
         }
         actualFoodTotal
         discountedFoodTotal
@@ -475,6 +529,9 @@ export const CALCULATE_CHECKOUT = gql`
       priorityDeliveryFees
       creditsUsed
       maximumOrderAmount
+      checkoutQuoteId
+      checkoutQuoteExpiresAt
+      cartRevision
     }
   }
 `

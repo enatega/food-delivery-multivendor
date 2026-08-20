@@ -15,7 +15,6 @@ import * as AppleAuthentication from 'expo-apple-authentication'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
 import { useAppMode } from '../../mode/AppModeContext'
@@ -38,7 +37,6 @@ const LOGIN = gql`
 `
 
 export const useCreateAccount = () => {
-  const Analytics = analytics()
   const navigation = useNavigation()
   const { mode } = useAppMode()
   const loginDocument =
@@ -116,7 +114,7 @@ export const useCreateAccount = () => {
     }
   }, [response])
 
-  const fetchUserInfo = async ({ accessToken, idToken }) => {
+  const fetchUserInfo = async({ accessToken, idToken }) => {
     logStep('fetchUserInfo: start', { hasAccessToken: !!accessToken })
     try {
       let user = {}
@@ -147,7 +145,7 @@ export const useCreateAccount = () => {
         idToken,
         password: '',
         name: user.name,
-        picture: user.photo || '',
+        picture: user.picture || user.photo || '',
         type: 'google'
       }
 
@@ -162,7 +160,7 @@ export const useCreateAccount = () => {
     }
   }
 
-  const signIn = async () => {
+  const signIn = async() => {
     logStep('signIn: tapped', {
       hasIosClientId: !!IOS_CLIENT_ID_GOOGLE,
       hasExpoClientId: !!EXPO_CLIENT_ID,
@@ -208,9 +206,9 @@ export const useCreateAccount = () => {
     navigation.navigate('Register')
   }
 
-  const navigateToPhone = () => {
+  const navigateToPhone = (name = '') => {
     navigation.navigate('PhoneNumber', {
-      name: googleUser,
+      name: name || googleUser,
       phone: ''
     })
   }
@@ -303,15 +301,25 @@ export const useCreateAccount = () => {
 
     try {
       const needsPhone = data?.login?.phone === ''
-      if (!needsPhone) navigateToMain()
+      const needsName =
+        loginButton === 'Apple' &&
+        !data?.login?.name?.trim()
 
       await setTokenAsync(data.login.token)
       FlashMessage({ message: 'Successfully logged in' })
 
-      if (needsPhone) {
+      if (needsName) {
+        logStep('onCompleted: Apple account has no persisted name → request name')
+        navigation.navigate(mode === APP_MODES.SINGLE ? 'EditNameSingleVendor' : 'EditName', {
+          name: '',
+          onboarding: true,
+          needsPhone
+        })
+      } else if (needsPhone) {
         logStep('onCompleted: no phone on account → navigate to PhoneNumber')
-        navigateToPhone()
+        navigateToPhone(data?.login?.name)
       } else {
+        navigateToMain()
         logStep('onCompleted: navigate to Main')
       }
     } finally {

@@ -62,7 +62,7 @@ export default function PaymentMain() {
       }
       window.location.href = data.url;
     } catch (error) {
-      console.log(error)
+      console.error('Payment action failed', error);
       showToast({
         type: 'error',
         title: t('Stripe Payment'),

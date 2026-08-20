@@ -86,7 +86,7 @@ const AccountManagement = () => {
       t('Are you sure you want to logout?'),
       [
         {
-          text: t('CancelText'),
+          text: t('Cancel'),
           style: 'cancel'
         },
         {

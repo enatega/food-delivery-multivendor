@@ -5,8 +5,14 @@ import WrapperSearchModal from './ProductExplorer/WrapperSearchModal'
 import SectionListError from './SectionListError'
 
 const WrapperHorizontalProductsList = ({ data = null, listTitle = '' }) => {
-  const { loading, data: productsData, error, refetch } = useHomeProducts({ categoryId: data?.id })
-  const products = productsData?.getCategoryItemsSingleVendor?.items
+  const hasPreview = Array.isArray(data?.items)
+  const { loading, data: productsData, error, refetch } = useHomeProducts({
+    categoryId: data?.id,
+    skipQuery: hasPreview
+  })
+  const products = hasPreview
+    ? data.items
+    : productsData?.getCategoryItemsSingleVendor?.items
   const [searchVisible, setSearchVisible] = useState(false)
 
   return (

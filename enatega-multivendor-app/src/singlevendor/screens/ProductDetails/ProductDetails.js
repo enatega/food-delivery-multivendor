@@ -1,38 +1,40 @@
-import { View, Text, ScrollView } from 'react-native'
+import { Alert, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import styles from './Styles'
+import { useMutation } from '@apollo/client'
 import useProductDetails from './useProductDetails'
-import useGetSimilarFoods from './useGetSimilarFoods'
 import { useNavigation } from '@react-navigation/native'
 import screenOptions from './screenOptions'
 import ProductInfo from '../../components/ProductDetails/ProductInfo'
 import SimilarProducts from '../../components/ProductDetails/SimilarProducts'
-import ProductOtherDetails from '../../components/ProductDetails/ProductOtherDetails'
-import LoadingSkeleton from '../../components/LoadingSkeleton'
 import ProductDetailsLoader from '../../components/ProductDetails/ProductDetailsLoader'
 import WrapperProductOtherDetails from '../../components/ProductDetails/WrapperProductOtherDetails'
 import Addons from './Addons'
 import Variations from './Variations'
-import OptionList from './OptionsList'
 import useAddToCart from './useAddToCart'
 import FloatingCartButton from '../../components/Cart/FloatingCartButton'
-import NutritionFactsSection from './NutritionFactsSection'
+import { EDIT_SINGLE_VENDOR_CART_ITEM } from '../../apollo/mutations'
+import useCartStore from '../../stores/useCartStore'
+import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 
 const ProductDetails = ({ route }) => {
-  const { productId, categoryId } = route?.params
+  const { productId, categoryId, editCartItem } = route?.params
+  const editVariation = editCartItem?.variations?.[0]
   const { loading, productInfoData, productOtherDetails } = useProductDetails({ foodId: productId, categoryId })
   const { t, currentTheme } = useAddToCart({ foodId: productId })
   const navigation = useNavigation()
 
   const variations = productInfoData?.variations || []
-  const selectedAddons = productInfoData.selectedAddons || []
   const [selectedVariationId, setSelectedVariationId] = useState(
     // productInfoData?.selectedVariations?.length > 0 ? productInfoData?.selectedVariations :
     variations?.length ? [variations[0]?.id] : []
   )
   const [selectedAddonIds, setSelectedAddonIds] = useState([])
   const [totalPrice, setTotalPrice] = useState(variations?.[0]?.price || 0)
+  const [quantity, setQuantity] = useState(editVariation?.quantity || 1)
+  const [specialInstructions, setSpecialInstructions] = useState(editVariation?.specialInstructions || '')
   const selectedAddonsRef = useRef([])
+  const cartRevision = useCartStore((state) => state.cartRevision)
+  const setCartFromServer = useCartStore((state) => state.setCartFromServer)
   const selectedVariation = variations?.find((v) => v.id === selectedVariationId[0])
 
   useLayoutEffect(() => {
@@ -41,8 +43,8 @@ const ProductDetails = ({ route }) => {
         backColor: currentTheme.themeBackground,
         fontColor: currentTheme.newFontcolor,
         iconColor: currentTheme.newIconColor,
-        currentTheme: currentTheme,
-        navigation: navigation,
+        currentTheme,
+        navigation,
         headerRight: null
       })
     )
@@ -50,8 +52,53 @@ const ProductDetails = ({ route }) => {
 
   useEffect(() => {
     if (!variations?.length) return
-    setSelectedVariationId([variations[0]?.id])
-  }, [variations])
+    const variationId = editVariation?.variationId || variations[0]?.id
+    setSelectedVariationId([variationId])
+    if (editVariation) {
+      const addonGroups = (editVariation.addons || []).map(addon => ({
+        _id: addon.addonId,
+        options: addon.optionId || []
+      }))
+      selectedAddonsRef.current = addonGroups
+      setSelectedAddonIds(addonGroups.flatMap(addon => addon.options))
+    }
+  }, [variations, editVariation?.variationId])
+
+  const [editCartItemMutation, { loading: editingCart }] = useMutation(EDIT_SINGLE_VENDOR_CART_ITEM, {
+    onCompleted: ({ editSingleVendorCartItem: response }) => {
+      if (!response?.success) {
+        Alert.alert(t('Error'), response?.message || t('cartUpdateFailed', { defaultValue: 'Unable to update this cart item.' }))
+        return
+      }
+      setCartFromServer({
+        cartId: response.cartId,
+        cartRevision: response.cartRevision,
+        foods: response.foods,
+        grandTotal: response.discountedGrandTotal,
+        maxOrderAmount: response.maxOrderAmount,
+        minOrderAmount: response.minOrderAmount,
+        isBelowMinimumOrder: response.isBelowMinimumOrder,
+        lowOrderFees: response.lowOrderFees
+      })
+      navigation.goBack()
+    },
+    onError: (error) => Alert.alert(t('Error'), error.message)
+  })
+
+  const saveCartEdit = () => editCartItemMutation({
+    variables: {
+      input: {
+        cartItemId: editVariation?._id,
+        foodId: productId,
+        categoryId,
+        variationId: selectedVariationId[0],
+        addons: selectedAddonsRef.current,
+        quantity,
+        specialInstructions,
+        expectedCartRevision: cartRevision
+      }
+    }
+  })
 
   // useEffect(() => {
   //   console.log('selectedAddons::', selectedAddons)
@@ -97,9 +144,11 @@ const ProductDetails = ({ route }) => {
   return (
     <>
       <ScrollView style={{ backgroundColor: currentTheme.themeBackground, minHeight: '100%' }} contentContainerStyle={{ paddingBottom: 20 }}>
-        {loading ? (
+        {loading
+          ? (
           <ProductDetailsLoader />
-        ) : (
+            )
+          : (
           <View style={{ gap: 10 }}>
             <ProductInfo
               t={t}
@@ -110,6 +159,9 @@ const ProductDetails = ({ route }) => {
               currentTheme={currentTheme}
               selectedVariationId={selectedVariationId[0]}
               selectedAddons={selectedAddonsRef?.current}
+              editMode={!!editVariation}
+              onSaveEdit={saveCartEdit}
+              editingCart={editingCart}
             />
             <WrapperProductOtherDetails t={t} currentTheme={currentTheme} productOtherDetails={productOtherDetails} />
             <Variations
@@ -154,6 +206,31 @@ const ProductDetails = ({ route }) => {
                 selectedAddonsRef.current = updatedSelectedAddons
               }}
             />
+            {!!editVariation && (
+              <View style={{ paddingHorizontal: 15, gap: 12 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <TextDefault bold>{t('Quantity')}</TextDefault>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+                    <TouchableOpacity accessibilityLabel={t('Decrease quantity')} onPress={() => setQuantity(value => Math.max(1, value - 1))}>
+                      <TextDefault H3 textColor={currentTheme.singleVendorBrandForeground}>−</TextDefault>
+                    </TouchableOpacity>
+                    <TextDefault bold>{quantity}</TextDefault>
+                    <TouchableOpacity accessibilityLabel={t('Increase quantity')} onPress={() => setQuantity(value => value + 1)}>
+                      <TextDefault H3 textColor={currentTheme.singleVendorBrandForeground}>+</TextDefault>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <TextInput
+                  value={specialInstructions}
+                  onChangeText={setSpecialInstructions}
+                  maxLength={500}
+                  multiline
+                  placeholder={t('itemInstructions', { defaultValue: 'Instructions for this item' })}
+                  placeholderTextColor={currentTheme.fontSecondColor}
+                  style={{ minHeight: 72, borderWidth: 1, borderColor: currentTheme.singleVendorBorder, borderRadius: 8, padding: 12, color: currentTheme.fontMainColor, textAlignVertical: 'top' }}
+                />
+              </View>
+            )}
             {/* <NutritionFactsSection
               t={t}
               currentTheme={currentTheme}
@@ -163,7 +240,7 @@ const ProductDetails = ({ route }) => {
               ingredients={productInfoData?.ingredients}
             /> */}
           </View>
-        )}
+            )}
         <SimilarProducts id={productId} />
       </ScrollView>
       <FloatingCartButton />

@@ -35,6 +35,8 @@
     // Remove unused imports automatically
     "unused-imports/no-unused-imports": "error",
 
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+
     // Remove unused variables but allow unused arguments prefixed with _
     "unused-imports/no-unused-vars": [
       "warn",

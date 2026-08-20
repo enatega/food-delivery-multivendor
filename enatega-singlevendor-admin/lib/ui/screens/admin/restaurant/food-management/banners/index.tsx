@@ -14,7 +14,6 @@ export default function BannerRestaurantScreen() {
     const {restaurantLayoutContextData} = useContext(RestaurantLayoutContext);
 
     const {restaurantId} = restaurantLayoutContextData
-    console.log("🚀 ~ BannerRestaurantScreen ~ restaurantId:", restaurantId)
 
   return (
     <div className="screen-container">

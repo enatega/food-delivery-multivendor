@@ -1,11 +1,13 @@
-import { useMutation } from '@apollo/client'
+import { useApolloClient, useMutation } from '@apollo/client'
 import { UPDATE_USER_CART_COUNT } from '../apollo/mutations'
+import { GET_USER_CART } from '../apollo/queries'
 import useCartStore from '../stores/useCartStore'
 import useCartQueue from './useCartQueue'
 
 const useUpdateUserCartCount = ({ onSuccess, onError } = {}) => {
-  const { updateCartItemQuantity } = useCartStore()
+  const { updateCartItemQuantity, setCartFromServer } = useCartStore()
   const { enqueueTask } = useCartQueue()
+  const client = useApolloClient()
 
   const [mutate, { loading, error }] = useMutation(UPDATE_USER_CART_COUNT, {
     onCompleted: (data, options) => {
@@ -30,6 +32,9 @@ const useUpdateUserCartCount = ({ onSuccess, onError } = {}) => {
     },
     onError: (err) => {
       console.error('Error updating cart:', err)
+      client.query({ query: GET_USER_CART, fetchPolicy: 'network-only' })
+        .then(({ data }) => data?.getUserCart && setCartFromServer(data.getUserCart))
+        .catch((reconcileError) => console.error('Error reconciling cart:', reconcileError))
       onError?.(err)
     }
   })

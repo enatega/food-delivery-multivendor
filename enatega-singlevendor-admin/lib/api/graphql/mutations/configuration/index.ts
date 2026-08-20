@@ -33,7 +33,6 @@ export const SAVE_SENDGRID_API_KEY = gql`
       sendGridEnabled
       sendGridEmail
       sendGridEmailName
-      sendGridPassword
     }
   }
 `;
@@ -90,7 +89,6 @@ export const SAVE_CLOUDINARY_CONFIGURATION = gql`
     saveCloudinaryConfiguration(configurationInput: $configurationInput) {
       _id
       cloudinaryUploadUrl
-      cloudinaryApiKey
     }
   }
 `;
@@ -139,7 +137,6 @@ export const SAVE_APP_CONFIGURATION = gql`
       _id
       termsAndConditions
       privacyPolicy
-      testOtp
     }
   }
 `;

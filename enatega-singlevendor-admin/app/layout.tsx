@@ -1,7 +1,7 @@
-import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
+import IntlProvider from '@/lib/providers/intl-provider';
 
 // ✅ Add metadata export for favicon
 export const metadata = {
@@ -38,9 +38,9 @@ export default async function RootLayout({
       </head>
       <body>
         <ThemeProvider attribute={'class'}>
-          <NextIntlClientProvider messages={messages}>
+          <IntlProvider locale={locale} messages={messages}>
             {children}
-          </NextIntlClientProvider>
+          </IntlProvider>
         </ThemeProvider>
       </body>
     </html>

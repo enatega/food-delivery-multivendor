@@ -117,7 +117,7 @@ export const styles = (currentTheme) =>
       marginRight: scale(8)
     },
     defaultBadge: {
-      backgroundColor: currentTheme?.colorBgSecondary || 'rgba(14, 165, 233, 0.2)',
+      backgroundColor: currentTheme?.singleVendorBrandSubtle || '#F3FFEE',
       paddingHorizontal: scale(10),
       paddingVertical: verticalScale(6),
       borderRadius: 8
@@ -148,14 +148,14 @@ export const styles = (currentTheme) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: currentTheme?.colorBgSecondary || 'rgba(14, 165, 233, 0.2)',
+      backgroundColor: currentTheme?.singleVendorBrandSubtle || '#F3FFEE',
       paddingVertical: verticalScale(14),
       borderRadius: 12
     },
     addButtonText: {
       fontSize: scale(16),
       fontWeight: '500',
-      color: currentTheme?.headerMainFontColor || '#0EA5E9',
+      color: currentTheme?.singleVendorBrandForeground || '#397A20',
       marginLeft: scale(8)
     }
   })

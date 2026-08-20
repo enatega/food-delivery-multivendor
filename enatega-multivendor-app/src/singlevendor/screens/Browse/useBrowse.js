@@ -5,7 +5,7 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLazyQuery } from '@apollo/client'
-import { SEARCH_FOOD } from '../../apollo/queries'
+import { SEARCH_SINGLE_VENDOR_FOODS } from '../../apollo/queries'
 import { useDebounce } from '../../../utils/useDebounce'
 import { useNavigation } from '@react-navigation/native'
 import { storeSearch } from '../../../utils/recentSearch'
@@ -24,7 +24,7 @@ const useBrowse = () => {
   const inputRef = useRef(null)
 
   // Queries and mutations
-  const [executeSearch, { loading, data, error }] = useLazyQuery(SEARCH_FOOD, {
+  const [executeSearch, { loading, data: searchData, error, fetchMore }] = useLazyQuery(SEARCH_SINGLE_VENDOR_FOODS, {
     fetchPolicy: 'network-only',
     onCompleted: () => {
       setisSearched(true)
@@ -32,14 +32,16 @@ const useBrowse = () => {
   })
 
   const getSearchResults = (searchTerm) => {
-    if (!searchTerm || !searchTerm.trim()) {
+    if (!searchTerm || searchTerm.trim().length < 2) {
       console.log('No search term provided')
       return Promise.resolve(null)
     }
 
     return executeSearch({
       variables: {
-        search: searchTerm
+        search: searchTerm,
+        skip: 0,
+        limit: 20
       }
     })
   }
@@ -54,6 +56,34 @@ const useBrowse = () => {
   }, 600)
 
   const retrySearch = () => getSearchResults(searchTerm)
+  const loadMore = () => {
+    const result = searchData?.searchSingleVendorFoods
+    if (loading || !result?.hasMore || !searchTerm.trim()) return Promise.resolve()
+    return fetchMore({
+      variables: {
+        search: searchTerm.trim(),
+        skip: result.items?.length || 0,
+        limit: 20
+      },
+      updateQuery: (previous, { fetchMoreResult }) => {
+        const incoming = fetchMoreResult?.searchSingleVendorFoods
+        if (!incoming) return previous
+        const byId = new Map(
+          [...(previous.searchSingleVendorFoods?.items || []), ...(incoming.items || [])]
+            .map(item => [item.id, item])
+        )
+        return {
+          searchSingleVendorFoods: {
+            ...incoming,
+            items: [...byId.values()]
+          }
+        }
+      }
+    })
+  }
+  const data = searchData
+    ? { searchFood: searchData.searchSingleVendorFoods?.items || [] }
+    : undefined
 
   const dismissKeyboard = () => {
     Keyboard.dismiss()
@@ -127,7 +157,9 @@ const useBrowse = () => {
     onProductPress,
     handleAddToCart,
     handleSeeAll,
-    isSearched
+    isSearched,
+    loadMore,
+    hasMore: !!searchData?.searchSingleVendorFoods?.hasMore
   }
 }
 

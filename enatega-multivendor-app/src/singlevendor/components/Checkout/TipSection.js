@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet, TextInput, Modal } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -64,14 +64,14 @@ const TipSection = ({ selectedTip, onSelectTip }) => {
       <View style={styles().tipOptionsContainer}>
         {tipOptions.map((amount) => (
           <TouchableOpacity key={amount} style={[styles(currentTheme).tipButton, selectedTip === amount && styles(currentTheme).tipButtonSelected]} onPress={() => onSelectTip(amount)} activeOpacity={0.7}>
-            <TextDefault textColor={selectedTip === amount ? '#fff' : currentTheme.fontMainColor} bold bolder={selectedTip === amount} isRTL>
+            <TextDefault textColor={selectedTip === amount ? currentTheme.singleVendorOnBrand : currentTheme.fontMainColor} bold bolder={selectedTip === amount} isRTL>
               {currencySymbol} {amount}
             </TextDefault>
           </TouchableOpacity>
         ))}
 
         <TouchableOpacity style={[styles(currentTheme).tipButton, !tipOptions.includes(selectedTip) && selectedTip > 0 && styles(currentTheme).tipButtonSelected]} onPress={() => setShowCustomModal(true)} activeOpacity={0.7}>
-          <TextDefault textColor={!tipOptions.includes(selectedTip) && selectedTip > 0 ? '#fff' : currentTheme.fontMainColor} bold bolder={!tipOptions.includes(selectedTip) && selectedTip > 0} isRTL>
+          <TextDefault textColor={!tipOptions.includes(selectedTip) && selectedTip > 0 ? currentTheme.singleVendorOnBrand : currentTheme.fontMainColor} bold bolder={!tipOptions.includes(selectedTip) && selectedTip > 0} isRTL>
             + {t('Custom') || 'Custom'}
           </TextDefault>
         </TouchableOpacity>
@@ -127,7 +127,7 @@ const TipSection = ({ selectedTip, onSelectTip }) => {
                 activeOpacity={0.7}
                 disabled={isInvalidTip}
               >
-                <TextDefault textColor='#fff' bolder isRTL>
+                <TextDefault textColor={currentTheme.singleVendorOnBrand} bolder isRTL>
                   {t('Confirm') || 'Confirm'}
                 </TextDefault>
               </TouchableOpacity>
@@ -155,7 +155,7 @@ const styles = (props = null) =>
     },
     tipOptionsContainer: {
       flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexWrap: 'wrap'
       // gap: scale(8)
       // justifyContent: 'space-between'
     },
@@ -169,8 +169,8 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.themeBackground : '#fff'
     },
     tipButtonSelected: {
-      backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9',
-      borderColor: props !== null ? props.primaryBlue : '#0EA5E9'
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
+      borderColor: props !== null ? props.singleVendorBrand : '#90E36D'
     },
     modalOverlay: {
       flex: 1,
@@ -222,7 +222,7 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.gray300 : '#D1D5DB'
     },
     modalButtonConfirm: {
-      backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9'
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D'
     },
     modalButtonDisabled: {
       opacity: 0.5
@@ -230,4 +230,3 @@ const styles = (props = null) =>
   })
 
 export default TipSection
-  

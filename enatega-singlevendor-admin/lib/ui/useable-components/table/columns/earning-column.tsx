@@ -11,7 +11,6 @@ export const EARNING_COLUMNS = ({
   // Hooks
   const t = useTranslations();
 
-  console.log({ isSuperAdmin });
 
   // Columns
   return [

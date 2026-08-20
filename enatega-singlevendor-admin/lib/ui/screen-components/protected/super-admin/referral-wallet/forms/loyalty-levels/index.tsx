@@ -101,7 +101,7 @@ export default function LoyaltyLevelsForm({
             setSubmitting(false);
           }, 1000);
         }}
-        validateOnChange={true}
+        validateOnChange={false}
       >
         {({ errors, handleSubmit, values, isSubmitting, setFieldValue }) => {
           return (

@@ -15,6 +15,8 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
 import { useRoute, useFocusEffect } from '@react-navigation/native'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage.js'
+import { useAppMode } from '../../../mode/AppModeContext.js'
+import { getModeHomeRoute } from '../../../mode/navigation.js'
 
 const UPDATEUSER = gql`
   ${updateUser}
@@ -24,8 +26,13 @@ const EditName = (props) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL : i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const { mode } = useAppMode()
   const route = useRoute()
-  const { name: initialName, phone } = route?.params
+  const {
+    name: initialName = '',
+    onboarding = false,
+    needsPhone = false
+  } = route?.params || {}
   const [mutate, { loading: loadingMutation }] = useMutation(UPDATEUSER, {
     onCompleted,
     onError,
@@ -101,7 +108,14 @@ const EditName = (props) => {
       FlashMessage({
         message: t('userInfoUpdated')
       })
-      navigationService.goBack()
+      if (onboarding && needsPhone) {
+        props.navigation.replace('PhoneNumber', { name: name.trim() })
+      } else if (onboarding) {
+        const homeRoute = getModeHomeRoute(mode)
+        props.navigation.navigate(homeRoute.name, homeRoute.params)
+      } else {
+        navigationService.goBack()
+      }
     }
   }
 

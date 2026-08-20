@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { View, Image, TouchableOpacity, Pressable } from 'react-native'
-import { AntDesign, Feather } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 import styles from './styles'
 import CartItemDescription from './CartItemDescription'
 import CartItemController from './CartItemController'
+import { normalizeSingleVendorMediaUrl } from '../../../utils/mediaUrl'
 
 const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€', onEdit, isLastItem = false, isFavourite = false, onAddToCart, isOrderHistory = false }) => {
   const { t, i18n } = useTranslation()
@@ -36,6 +37,16 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
     })
   }
 
+  const handleEdit = (event) => {
+    event?.stopPropagation?.()
+    if (onEdit) return onEdit(item)
+    navigation.navigate('ProductDetails', {
+      productId: item?.foodId,
+      categoryId: item?.categoryId,
+      editCartItem: item
+    })
+  }
+
   return (
     <Pressable
       onPress={handlePress}
@@ -44,32 +55,43 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
       {/* Left side: Image */}
 
       <View style={styles().imageContainer}>
-        <Image 
+        <Image
           source={
-            typeof item?.foodImage === 'number' 
-              ? item.foodImage 
+            typeof item?.foodImage === 'number'
+              ? item.foodImage
               : typeof item?.image === 'number'
-              ? item.image
-              : { uri: item?.foodImage || item?.image || '' }
-          } 
-          style={styles().productImage} 
+                ? item.image
+                : { uri: normalizeSingleVendorMediaUrl(item?.foodImage || item?.image || '') }
+          }
+          style={styles().productImage}
         />
       </View>
 
       {/* Middle and Right: Content */}
       <View style={styles().mainContent}>
         {/* Top Row: Title only */}
-        <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} bolder H5 isRTL>
-          {item?.foodTitle}
-        </TextDefault>
+        <View style={styles().titleRow}>
+          <TextDefault numberOfLines={1} textColor={currentTheme.fontMainColor} bolder H5 isRTL style={styles().titleText}>
+            {item?.foodTitle}
+          </TextDefault>
+          {!isFavourite && !isOrderHistory && (
+            <TouchableOpacity accessibilityRole='button' onPress={handleEdit} hitSlop={8}>
+              <TextDefault bold textColor={currentTheme.singleVendorBrandForeground}>
+                {t('Edit')}
+              </TextDefault>
+            </TouchableOpacity>
+          )}
+        </View>
 
         {/* Middle Row: Description with Dropdown - single line */}
          {
-          !isFavourite ? (
+          !isFavourite
+            ? (
              <CartItemDescription variations={item?.variations}></CartItemDescription>
-          ) : null
+              )
+            : null
          }
-       
+
         {/* Expanded Addons */}
         {/* {isDropdownOpen && item?.addons && item.addons.length > 0 && (
           <View style={styles().itemsDropdown}>
@@ -88,11 +110,14 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
 
         {/* Bottom Row: Quantity Controls (left) and Price (right) */}
         <View style={styles().bottomRow}>
-          {isOrderHistory ? (
+          {isOrderHistory
+            ? (
             <TextDefault textColor={currentTheme.fontSecondColor} style={styles().orderHistoryQuantity}>
               Qty {item?.quantity || item?.variations?.[0]?.quantity || 1}
             </TextDefault>
-          ) : isFavourite ? (
+              )
+            : isFavourite
+              ? (
             <TouchableOpacity
               style={styles(currentTheme).addToCartButton}
               onPress={() => {
@@ -103,11 +128,12 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
                 }
               }}
             >
-              <AntDesign name='plus' size={scale(12)} color={currentTheme.fontMainColor} />
+              <AntDesign name='plus' size={scale(12)} color={currentTheme.singleVendorOnBrand} />
             </TouchableOpacity>
-          ) : (
+                )
+              : (
             <CartItemController item={item} />
-          )}
+                )}
 
           <TextDefault textColor={currentTheme.gray} bold isRTL>
             {itemTotal}&nbsp;{currencySymbol}

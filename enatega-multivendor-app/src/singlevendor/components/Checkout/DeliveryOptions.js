@@ -35,7 +35,7 @@ const DeliveryOptions = ({
         <MaterialIcons
           name="location-on"
           size={22}
-          color={currentTheme.primaryBlue}
+          color={currentTheme.singleVendorBrandForeground}
           style={styles().rowIcon}
         />
         <View style={styles().addressContent}>
@@ -90,7 +90,7 @@ const DeliveryOptions = ({
         <Switch
           value={leaveAtDoor}
           onValueChange={onToggleLeaveAtDoor}
-          trackColor={{ false: currentTheme.gray200, true: currentTheme.primaryBlue }}
+          trackColor={{ false: currentTheme.gray200, true: currentTheme.singleVendorBrand }}
           thumbColor="#fff"
           style={styles().switch}
         />
@@ -117,7 +117,7 @@ const DeliveryOptions = ({
         <Switch
           value={callOnArrival}
           onValueChange={onToggleCallOnArrival}
-          trackColor={{ false: currentTheme.gray200, true: currentTheme.primaryBlue }}
+          trackColor={{ false: currentTheme.gray200, true: currentTheme.singleVendorBrand }}
           thumbColor="#fff"
           style={styles().switch}
         />
@@ -133,7 +133,7 @@ const DeliveryOptions = ({
         />
         <TextInput
           style={styles(currentTheme).instructionsInput}
-          placeholder={t('Instructions for the courier') || 'Instructions for the courier'}
+          placeholder={courierInstructions ? '' : (t('Instructions for the courier') || 'Instructions for the courier')}
           placeholderTextColor={currentTheme.fontSecondColor}
           value={courierInstructions}
           onChangeText={onChangeCourierInstructions}

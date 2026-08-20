@@ -57,7 +57,7 @@ const SelectionOnMap = ({ currentTheme, themeContext, setState, addressDetail, l
         {addressDetail && (
           <View style={[styles(currentTheme).calloutWrapper, styles(currentTheme).shadow]}>
             {loading ? (
-              <Spinner size='small' spinnerColor={currentTheme.primaryBlue} />
+              <Spinner size='small' spinnerColor={currentTheme.singleVendorBrandForeground} />
             ) : (
               <TextDefault center bolder small numberOfLines={2}>
                 {addressDetail}
@@ -133,7 +133,7 @@ const styles = (currentTheme) =>
       shadowRadius: 5
     },
     markerContainer: {
-      backgroundColor: currentTheme?.lowOpacityBlue,
+      backgroundColor: currentTheme?.singleVendorBrandSubtle,
       width: 50,
       height: 50,
       justifyContent: 'center',
@@ -141,7 +141,7 @@ const styles = (currentTheme) =>
       borderRadius: 25
     },
     marker: {
-      backgroundColor: currentTheme?.headerMainFontColor ?? '#006189',
+      backgroundColor: currentTheme?.singleVendorBrandForeground ?? '#397A20',
       width: 20,
       height: 20,
       borderWidth: scale(3),

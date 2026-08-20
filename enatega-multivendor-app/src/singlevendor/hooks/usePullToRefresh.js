@@ -35,7 +35,7 @@ export const usePullToRefresh = (onRefreshFunctions = []) => {
   return {
     refreshing,
     handleRefresh,
-    spinnerColor: currentTheme.primaryBlue,
+    spinnerColor: currentTheme.singleVendorBrandForeground,
     color: currentTheme.themeBackground
   };
 };

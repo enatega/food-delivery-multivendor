@@ -275,7 +275,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
 
     const color =
       isCompleted || isActive
-        ? currentTheme.primaryBlue
+        ? currentTheme.singleVendorBrandForeground
         : currentTheme.gray400
 
     if (status.icon === 'bike') {
@@ -284,7 +284,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
           <MaterialCommunityIcons
             name="bike-fast"
             size={18}
-            color={isCompleted ? '#fff' : color}
+            color={isCompleted ? currentTheme.singleVendorOnBrand : color}
           />
         </View>
       )
@@ -301,7 +301,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
         <Feather
           name={isCompleted ? 'check' : status.icon}
           size={16}
-          color={isCompleted ? '#fff' : color}
+          color={isCompleted ? currentTheme.singleVendorOnBrand : color}
         />
       </View>
     )
@@ -322,7 +322,7 @@ const OrderStatusTimeline = ({ currentStatus, statusTimes = {}, isPickUpOrder })
                   style={[
                     componentStyles.line,
                     state === 'completed' && {
-                      backgroundColor: currentTheme.primaryBlue
+                      backgroundColor: currentTheme.singleVendorBrand
                     }
                   ]}
                 />
@@ -379,8 +379,8 @@ const styles = (theme) =>
       backgroundColor: 'transparent'
     },
     completed: {
-      backgroundColor: theme.primaryBlue,
-      borderColor: theme.primaryBlue
+      backgroundColor: theme.singleVendorBrand,
+      borderColor: theme.singleVendorBrand
     },
     active: {
       backgroundColor: 'transparent'

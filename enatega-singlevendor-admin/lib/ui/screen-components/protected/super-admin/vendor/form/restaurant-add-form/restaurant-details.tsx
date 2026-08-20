@@ -102,7 +102,6 @@ export default function RestaurantDetails({
 
   // API
   const { data: restaurantData } = useQuery(GET_RESTAURANTS);
-  console.log('restaurant data ==> ', restaurantData);
   // Mutation
   const [createRestaurant] = useMutation(CREATE_RESTAURANT, {
     onError,
@@ -167,7 +166,6 @@ export default function RestaurantDetails({
         (restaurant) =>
           restaurant.name.toLowerCase() === data.name.toLowerCase()
       );
-      console.log('existingRestaurant ==> ', existingRestaurant);
       if (existingRestaurant) {
         showToast({
           type: 'error',

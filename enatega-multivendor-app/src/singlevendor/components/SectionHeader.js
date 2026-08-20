@@ -35,7 +35,7 @@ const styles = (currentTheme) => StyleSheet.create({
     color: currentTheme.fontMainColor
   },
   seeAllButton: {
-    backgroundColor: currentTheme.lowOpacityBlue,
+    backgroundColor: currentTheme.singleVendorBrandSubtle,
     borderWidth: 1,
     borderColor: currentTheme.colorBorder,
     paddingHorizontal: 16,
@@ -44,7 +44,7 @@ const styles = (currentTheme) => StyleSheet.create({
   },
   seeAllText: {
     fontSize: 14,
-    color: currentTheme.primaryBlue,
+    color: currentTheme.singleVendorBrandForeground,
     fontWeight: '500'
   }
 })

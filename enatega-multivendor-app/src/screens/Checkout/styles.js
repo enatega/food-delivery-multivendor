@@ -80,7 +80,7 @@ const styles = (props = null) =>
       marginBottom: scale(20)
     },
     tipSec: {
-      marginTop: scale(26),
+      marginTop: props?.spacing?.lg ?? scale(16),
       marginBottom: scale(8),
       paddingHorizontal: 0
     },
@@ -98,7 +98,7 @@ const styles = (props = null) =>
       width: '100%',
       backgroundColor: 'transparent',
       paddingHorizontal: 0,
-      marginTop: scale(30),
+      marginTop: props?.spacing?.lg ?? scale(16),
       marginBottom: scale(8)
     },
     modal: {
@@ -369,7 +369,7 @@ const styles = (props = null) =>
     },
     voucherSec: {
       paddingHorizontal: 0,
-      marginTop: scale(24)
+      marginTop: props?.spacing?.lg ?? scale(16)
     },
     voucherSecInner: {
       display: 'flex',
@@ -381,7 +381,7 @@ const styles = (props = null) =>
     },
     paymentSec: {
       paddingHorizontal: 0,
-      marginTop: scale(26)
+      marginTop: props?.spacing?.lg ?? scale(16)
     },
     checkoutSkeleton: {
       paddingHorizontal: scale(8),

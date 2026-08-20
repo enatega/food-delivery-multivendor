@@ -1,5 +1,6 @@
-import { View, StyleSheet, Modal, Pressable, FlatList } from 'react-native'
+import { View, StyleSheet, Modal, Pressable } from 'react-native'
 import React from 'react'
+import { FlashList } from '@shopify/flash-list'
 import SearchInput from './SearchInput'
 import { Ionicons } from '@expo/vector-icons'
 import SearchesList from './SearchesList'
@@ -7,7 +8,7 @@ import ProductCard from '../ProductCard'
 import EmptySearch from './EmptySearch'
 import SectionErrorCard from '../SectionErrorCard'
 
-const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm, setSearchTerm, currentTheme, t, insets, data, loading, error, onRetry, debouncedSearch, onProductPress, handleAddToCart, isSearched }) => {
+const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm, setSearchTerm, currentTheme, t, insets, data, loading, error, onRetry, debouncedSearch, onProductPress, handleAddToCart, isSearched, loadMore, hasMore }) => {
   const searchData = data?.searchFood && data?.searchFood?.length > 0 ? data?.searchFood : []
 
   const onBackPress = () => {
@@ -39,7 +40,7 @@ const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm
           : isSearched
             ? (
           <>
-            <FlatList
+            <FlashList
             estimatedItemSize={190}
               contentContainerStyle={{ paddingLeft: 0, paddingBottom: insets.bottom + 24 }}
               data={searchData}
@@ -49,6 +50,8 @@ const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm
               }}
               numColumns={2}
               showsVerticalScrollIndicator={false}
+              onEndReached={hasMore ? loadMore : undefined}
+              onEndReachedThreshold={0.5}
               ListEmptyComponent={<EmptySearch currentTheme={currentTheme} t={t} />}
             />
           </>

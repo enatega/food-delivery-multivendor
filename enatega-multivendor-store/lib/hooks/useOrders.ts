@@ -8,7 +8,7 @@ import { ORDER_DISPATCH_TYPE } from "../utils/constants";
 export default function useOrders() {
   const [currentTab, setCurrentTab] = useState<string>(ORDER_DISPATCH_TYPE[0]);
 
-  const { loading, error, data, refetch, networkStatus } = useContext(
+  const { loading, error, data, refetch, networkStatus, loadMoreOrders, hasMoreOrders } = useContext(
     RestaurantProvider.Context,
   );
   const activeOrders = useMemo(
@@ -55,6 +55,8 @@ export default function useOrders() {
     data,
     refetch,
     networkStatus,
+    loadMoreOrders,
+    hasMoreOrders,
     hasNewOrders,
     ringedOrderIds,
     activeOrders,

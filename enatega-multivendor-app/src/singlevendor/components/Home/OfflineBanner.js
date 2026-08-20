@@ -55,10 +55,10 @@ const OfflineBanner = ({ currentTheme, t }) => {
           paddingHorizontal: 10,
           paddingVertical: 6,
           borderRadius: 999,
-          backgroundColor: currentTheme?.lowOpacityBlue || 'rgba(14,165,233,0.2)'
+          backgroundColor: currentTheme?.singleVendorBrandSubtle || '#F3FFEE'
         }}
       >
-        <TextDefault textColor={currentTheme?.colorTextPrimary || currentTheme?.primaryBlue} H6 bolder>
+        <TextDefault textColor={currentTheme?.singleVendorBrandForeground} H6 bolder>
           {t('offlineBadge') || 'Offline'}
         </TextDefault>
       </View>

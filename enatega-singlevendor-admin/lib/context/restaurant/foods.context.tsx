@@ -1,7 +1,7 @@
 'use client';
 
 // Core
-import { createContext, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 
 // Interface
 import {
@@ -34,15 +34,22 @@ export const FoodsProvider = ({ children }: IFoodProvider) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   // Functions
-  const onFoodFormVisible = (status: boolean) => {
+  const onFoodFormVisible = useCallback((status: boolean) => {
     setFoodFormVisible(status);
-  };
+  }, []);
 
-  const onActiveStepChange = (activeStep: number) => {
+  const onActiveStepChange = useCallback((activeStep: number) => {
     setActiveIndex(activeStep);
-  };
+  }, []);
 
-  const onClearFoodData = () => {
+  const onSetFoodContextData = useCallback((data: Partial<IFoodContextPropData>) => {
+    setFoodContextData((prevData) => ({
+      ...prevData,
+      ...data,
+    }));
+  }, []);
+
+  const onClearFoodData = useCallback(() => {
     setActiveIndex(0);
     onFoodFormVisible(false);
     onSetFoodContextData({
@@ -54,16 +61,9 @@ export const FoodsProvider = ({ children }: IFoodProvider) => {
 
       isEditing: false,
     });
-  };
+  }, [onFoodFormVisible, onSetFoodContextData]);
 
-  const onSetFoodContextData = (data: Partial<IFoodContextPropData>) => {
-    setFoodContextData((prevData) => ({
-      ...prevData,
-      ...data,
-    }));
-  };
-
-  const value: IFoodContextProps = {
+  const value = useMemo<IFoodContextProps>(() => ({
     // Form Visibility
     isFoodFormVisible,
     onFoodFormVisible,
@@ -75,7 +75,15 @@ export const FoodsProvider = ({ children }: IFoodProvider) => {
     // Context Data
     foodContextData,
     onSetFoodContextData,
-  };
+  }), [
+    isFoodFormVisible,
+    onFoodFormVisible,
+    activeIndex,
+    onActiveStepChange,
+    onClearFoodData,
+    foodContextData,
+    onSetFoodContextData,
+  ]);
 
   return (
     <FoodsContext.Provider value={value}>{children}</FoodsContext.Provider>

@@ -337,8 +337,8 @@ export const Deactivate = `
   }
   `
 export const login = `
-  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$idToken:String,$name:String,$notificationToken:String){
-    login(email:$email,password:$password,type:$type,appleId:$appleId,idToken:$idToken,name:$name,notificationToken:$notificationToken){
+  mutation Login($email:String,$password:String,$type:String!,$appleId:String,$appleNonce:String,$idToken:String,$name:String,$notificationToken:String){
+    login(email:$email,password:$password,type:$type,appleId:$appleId,appleNonce:$appleNonce,idToken:$idToken,name:$name,notificationToken:$notificationToken){
      userId
      token
      tokenExpiration

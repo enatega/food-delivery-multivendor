@@ -8,25 +8,40 @@ const useCartQueueStore = create((set, get) => ({
   loadingItemIds: {},
 
   enqueue: (task, itemId) =>
-    set((state) => ({
-      queue: [...state.queue, task],
-      loadingItemIds: {
-        ...state.loadingItemIds,
-        [itemId]: true
+    set((state) => {
+      const queue = [...state.queue]
+      const replaceFrom = state.isProcessing ? 1 : 0
+      const existingIndex = itemId
+        ? queue.findIndex((queued, index) => index >= replaceFrom && queued?.__itemId === itemId)
+        : -1
+
+      if (existingIndex >= 0) queue[existingIndex] = task
+      else queue.push(task)
+
+      return {
+        queue,
+        loadingItemIds: {
+          ...state.loadingItemIds,
+          ...(itemId ? { [itemId]: true } : {})
+        }
       }
-    })),
+    }),
 
   dequeue: () =>
     set((state) => {
       const [finished] = state.queue
       const nextLoading = { ...state.loadingItemIds }
 
-      if (finished?.__itemId) {
+      const remaining = state.queue.slice(1)
+      if (
+        finished?.__itemId &&
+        !remaining.some(task => task?.__itemId === finished.__itemId)
+      ) {
         delete nextLoading[finished.__itemId]
       }
 
       return {
-        queue: state.queue.slice(1),
+        queue: remaining,
         loadingItemIds: nextLoading
       }
     }),

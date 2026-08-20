@@ -13,9 +13,6 @@ const HorizontalCategoriesList = ({ categoriesData = [] }) => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const navigation = useNavigation()
   const handleCategoryPress = (categoryViewType, categoryId) => {
-    // Handle category press action
-    console.log('Category pressed:', categoryViewType, categoryId)
-
     if (categoryViewType === 'see-all') {
       // navigation.navigate('ProductExplorer')
       navigation.navigate('ProductExplorer', {

@@ -150,7 +150,7 @@ const styles = (currentTheme) =>
       height: scale(26),
       marginRight: scale(6),
       borderRadius: scale(13),
-      backgroundColor: `${currentTheme.main || '#0EA5E9'}18`
+      backgroundColor: currentTheme.singleVendorBrandSubtle
     },
     content: {
       flex: 1,

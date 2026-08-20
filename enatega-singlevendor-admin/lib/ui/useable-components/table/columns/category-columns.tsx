@@ -19,6 +19,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import { GET_SUBCATEGORIES_BY_PARENT_ID } from '@/lib/api/graphql/queries/sub-categories';
+import { normalizeManagedMediaUrl } from '@/lib/utils/media';
 
 interface ColumnDefinition {
   headerName: string;
@@ -85,7 +86,12 @@ export const CATEGORY_TABLE_COLUMNS = ({
     propertyName: 'image',
     body: (item: ICategory) =>
       item?.image ? (
-        <Image src={item.image} width={40} height={40} alt="thumbnail" />
+        <Image
+          src={normalizeManagedMediaUrl(item.image)}
+          width={40}
+          height={40}
+          alt="thumbnail"
+        />
       ) : (
         <>
           <div className="w-10 h-10 rounded-sm bg-gray-500 mr-1.5 flex items-center justify-center">

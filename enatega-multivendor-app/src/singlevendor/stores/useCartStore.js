@@ -2,6 +2,7 @@ import { create } from 'zustand'
 
 const useCartStore = create((set) => ({
   cartId: null,
+  cartRevision: 1,
   items: [],
   grandTotal: 0,
   loading: false,
@@ -16,6 +17,7 @@ const useCartStore = create((set) => ({
   setCartFromServer: (cart) =>
     set({
       cartId: cart.cartId,
+      cartRevision: cart.cartRevision || 1,
       items: cart.foods || [],
       grandTotal: cart.grandTotal,
       loading: false,
@@ -35,10 +37,11 @@ const useCartStore = create((set) => ({
   clearCart: () =>
     set({
       cartId: null,
+      cartRevision: 1,
       items: [],
       grandTotal: 0,
       error: null,
-      isBelowMinimumOrder: true,
+      isBelowMinimumOrder: true
     }),
 
   setLoading: (loading) => set({ loading }),
@@ -47,7 +50,6 @@ const useCartStore = create((set) => ({
   updateCartItemQuantity: ({ _id, foodId, variationId, quantity, foodTotal, itemTotal, grandTotal, isBelowMinimumOrder }) => {
     set((state) => {
       // 1️⃣ Create new items array
-      
       const newItems = state.items
         .map((item) => {
           if (item.variations[0]._id !== _id) return item
@@ -78,7 +80,7 @@ const useCartStore = create((set) => ({
     set((state) => {
       const existingFoodIndex = state.items.findIndex((f) => f.foodId === food.foodId)
 
-      let newItems = [...state.items]
+      const newItems = [...state.items]
 
       if (existingFoodIndex !== -1) {
         // Replace entire food (server is source of truth)

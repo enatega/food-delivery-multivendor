@@ -129,7 +129,9 @@ const DeliveredStatus = ({
     subtitle ||
     (isCancelled
       ? t('Your order has been cancelled')
-      : isPickUpOrder ? t('Your grocery has been collected.') : t('Your grocery has been delivered.'))
+      : isPickUpOrder
+        ? t('orderCollectedMessage', { defaultValue: 'Your order has been collected. Thank you for using Enatega.' })
+        : t('Your grocery has been delivered.'))
 
   return (
     <View style={styles(currentTheme).container}>
@@ -162,20 +164,19 @@ const DeliveredStatus = ({
 
       <TextDefault
         textColor={currentTheme.colorTextMuted}
-        isRTL
         center
         bolder
-        style={styles().subtitle}
+        style={styles().messageText}
       >
         {resolvedSubtitle}
       </TextDefault>
 
-      {!isCancelled && (
+      {!isCancelled && !isPickUpOrder && (
         <TextDefault
           textColor={currentTheme.colorTextMuted}
-          isRTL
           center
           bolder
+          style={styles().messageText}
         >
           {t('thanksForUsing')} {appName}.
         </TextDefault>
@@ -213,7 +214,9 @@ const styles = (props = null) =>
     title: {
       marginBottom: scale(8)
     },
-    subtitle: {
+    messageText: {
+      width: '100%',
+      textAlign: 'center',
       marginBottom: scale(4)
     }
   })

@@ -70,6 +70,7 @@ const useCart = () => {
       setHasFetchedCart(true)
       setCartFromServer({
         cartId: data.getUserCart.cartId,
+        cartRevision: data.getUserCart.cartRevision,
         foods: data.getUserCart.foods,
         grandTotal: data.getUserCart.discountedGrandTotal,
         // grandTotal: data.getUserCart.actualGrandTotal,

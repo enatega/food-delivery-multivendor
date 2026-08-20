@@ -77,13 +77,19 @@ export const GET_ORDER_BY_RESTAURANT = gql`
     $page: Int
     $rows: Int
     $search: String
+    $orderStatus: [String]
   ) {
     ordersByRestId(
       restaurant: $restaurant
       page: $page
       rows: $rows
       search: $search
+      orderStatus: $orderStatus
     ) {
+      totalCount
+      currentPage
+      totalPages
+      orders {
       _id
       orderId
       restaurant {
@@ -161,6 +167,7 @@ export const GET_ORDER_BY_RESTAURANT = gql`
         name
         username
         available
+      }
       }
     }
   }

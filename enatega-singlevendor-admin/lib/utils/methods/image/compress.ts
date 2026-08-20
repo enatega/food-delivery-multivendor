@@ -3,26 +3,36 @@ export const compressImage = (
   maxWidth = 800,
   quality = 0.7
 ): Promise<File> => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
     const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
 
     img.onload = () => {
-      const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
+      URL.revokeObjectURL(objectUrl);
+      const ratio = Math.min(1, maxWidth / img.width, maxWidth / img.height);
       canvas.width = img.width * ratio;
       canvas.height = img.height * ratio;
 
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       canvas.toBlob(
         (blob) => {
-          resolve(new File([blob!], file.name, { type: file.type }));
+          if (!blob) {
+            reject(new Error('Image compression failed'));
+            return;
+          }
+          resolve(new File([blob], file.name, { type: file.type }));
         },
         file.type,
         quality
       );
     };
 
-    img.src = URL.createObjectURL(file);
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Invalid image file'));
+    };
+    img.src = objectUrl;
   });
 };

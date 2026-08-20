@@ -118,7 +118,7 @@ export default function RestaurantCard({ restaurant }: IRestaurantCardProps) {
     try {
       await deleteRestaurant({ variables: { id: _id } });
     } catch (err) {
-      console.log({ err });
+      console.error('Restaurant action failed', err);
     }
   };
 

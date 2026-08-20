@@ -172,7 +172,6 @@ export default function CommissionRateMain() {
     if (data?.restaurants) {
       let updatedRestaurants = data.restaurants.map((v) => {
         let obj = { ...v };
-        console.log(v.commissionRate);
         // if (v.commissionRate === null) obj['commissionRate'] = 25;
 
         return obj;

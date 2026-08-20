@@ -85,7 +85,7 @@ const styles = (currentTheme) =>
       position: 'absolute',
       height: verticalScale(62),
       width: '200%',
-      backgroundColor: currentTheme.lowOpacityBlue,
+      backgroundColor: currentTheme.singleVendorBrandSubtle,
       top: 0,
       left: -scale(16),
       right: -scale(16)

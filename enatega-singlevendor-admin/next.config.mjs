@@ -3,11 +3,31 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin();
 const production = process.env.NODE_ENV === 'production';
 
+const backendImagePattern = (() => {
+  try {
+    const backendUrl = new URL(process.env.NEXT_PUBLIC_SERVER_URL);
+    if (!['http:', 'https:'].includes(backendUrl.protocol)) return [];
+
+    return [
+      {
+        protocol: backendUrl.protocol.slice(0, -1),
+        hostname: backendUrl.hostname,
+        port: backendUrl.port,
+        pathname: '/media/**',
+      },
+    ];
+  } catch {
+    return [];
+  }
+})();
+
 if (production) {
   const httpUrl = process.env.NEXT_PUBLIC_SERVER_URL;
   const wsUrl = process.env.NEXT_PUBLIC_WS_SERVER_URL;
   if (!httpUrl?.startsWith('https://') || !wsUrl?.startsWith('wss://')) {
-    throw new Error('Production requires HTTPS NEXT_PUBLIC_SERVER_URL and WSS NEXT_PUBLIC_WS_SERVER_URL.');
+    throw new Error(
+      'Production requires HTTPS NEXT_PUBLIC_SERVER_URL and WSS NEXT_PUBLIC_WS_SERVER_URL.'
+    );
   }
 }
 
@@ -19,21 +39,33 @@ const nextConfig = {
       { protocol: 'https', hostname: 'assets.enatega.com' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
-      { protocol: 'https', hostname: 'enatega-backend.s3.eu-north-1.amazonaws.com' },
+      {
+        protocol: 'https',
+        hostname: 'enatega-backend.s3.eu-north-1.amazonaws.com',
+      },
       { protocol: 'https', hostname: '*.s3.*.amazonaws.com' },
+      ...backendImagePattern,
     ],
   },
   async headers() {
-    return [{
-      source: '/:path*',
-      headers: [
-        { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
-        { key: 'X-Content-Type-Options', value: 'nosniff' },
-        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-        { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(self)' },
-        { key: 'X-Frame-Options', value: 'DENY' },
-      ],
-    }];
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=(self)',
+          },
+          { key: 'X-Frame-Options', value: 'DENY' },
+        ],
+      },
+    ];
   },
   compiler: {
     removeConsole: production ? { exclude: ['error'] } : false,

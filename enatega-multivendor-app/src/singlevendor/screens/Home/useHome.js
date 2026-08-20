@@ -1,5 +1,8 @@
-import { gql, useMutation, useQuery } from '@apollo/client'
-import { GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR, GET_BANNERS } from '../../apollo/queries'
+import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client'
+import {
+  GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR,
+  GET_SINGLE_VENDOR_BANNERS
+} from '../../apollo/queries'
 import { useTranslation } from 'react-i18next'
 import { useCallback, useContext, useMemo, useRef } from 'react'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -23,10 +26,28 @@ const useHome = () => {
   const modalRef = useRef()
   const { isLoggedIn, profile } = useContext(UserContext)
   const { location, setLocation, isConnected } = useContext(LocationContext)
+  const client = useApolloClient()
 
-  const { loading, data, error, refetch } = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR)
-  const { loading: bannersLoading, data: bannersData, error: bannersError, refetch: refetchBanners } = useQuery(GET_BANNERS)
-  
+  const categoriesQuery = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR, {
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true
+  })
+  const bannersQuery = useQuery(GET_SINGLE_VENDOR_BANNERS, {
+    variables: { page: 1, limit: 10 },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true
+  })
+
+  const refetch = useCallback(async() => {
+    await Promise.allSettled([
+      categoriesQuery.refetch(),
+      bannersQuery.refetch(),
+      client.refetchQueries({ include: ['SingleVendorDealSection'] })
+    ])
+  }, [bannersQuery.refetch, categoriesQuery.refetch, client])
+
   const [mutate] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -35,7 +56,7 @@ const useHome = () => {
     console.log(error)
   }
 
-  const setAddressLocation = async (address) => {
+  const setAddressLocation = async(address) => {
     setLocation({
       _id: address._id,
       label: address.label,
@@ -55,22 +76,22 @@ const useHome = () => {
     Other: CustomOtherIcon
   }
 
-const onOpen = useCallback(() => {
-  console.log("open")
-  if (modalRef.current) {
-    modalRef.current.open()
-  }
-}, [])
+  const onOpen = useCallback(() => {
+    console.log('open')
+    if (modalRef.current) {
+      modalRef.current.open()
+    }
+  }, [])
 
   return {
-    loading,
-    data,
-    error,
+    loading: categoriesQuery.loading,
+    data: categoriesQuery.data,
+    error: categoriesQuery.error,
     refetch,
-    bannersLoading,
-    bannersData,
-    bannersError,
-    refetchBanners,
+    bannersLoading: bannersQuery.loading,
+    bannersData: { banners: bannersQuery.data?.singleVendorBanners || [] },
+    bannersError: bannersQuery.error,
+    refetchBanners: bannersQuery.refetch,
     t,
     currentTheme,
     isLoggedIn,

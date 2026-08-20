@@ -34,8 +34,6 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
   });
 
   /*   useEffect(() => {
-    console.log('GoogleMapsProvider - API Key:', apiKey);
-    console.log('GoogleMapsProvider - Libraries:', libraries);
 
     const loadGoogleMapsScript = (key: string) => {
       return new Promise<void>((resolve, reject) => {
@@ -45,7 +43,6 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
         );
 
         if (existingScript) {
-          console.log('Google Maps script already exists');
           resolve();
           return;
         }
@@ -56,7 +53,6 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
         script.defer = true;
 
         script.onload = () => {
-          console.log('Google Maps script loaded manually');
           setManualIsLoaded(true);
           resolve();
         };

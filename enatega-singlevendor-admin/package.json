@@ -15,7 +15,8 @@
     "prettier": "prettier --write .",
     "prepare": "husky",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "check:single-vendor-schema": "node scripts/check-single-vendor-schema.js"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",

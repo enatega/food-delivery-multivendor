@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import useCartStore from '../../stores/useCartStore'
-
+import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../../utils/themeColors'
 
 const FloatingCartButton = () => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
 
   const items = useCartStore((state) => state.items)
 
@@ -21,18 +24,18 @@ const FloatingCartButton = () => {
   if (!totalQuantity) return null
 
   return (
-    <View style={[styles.container, { bottom: insets.bottom + 16 }]}>
+    <View style={[styles(currentTheme).container, { bottom: insets.bottom + 16 }]}>
       <Pressable
         onPress={() => navigation.navigate('Cart')}
         style={({ pressed }) => [
-          styles.button,
-          pressed && styles.pressed
+          styles(currentTheme).button,
+          pressed && styles(currentTheme).pressed
         ]}
       >
-        <MaterialCommunityIcons name="cart" size={22} color="#fff" />
+        <MaterialCommunityIcons name='cart' size={22} color={currentTheme.singleVendorOnBrand} />
 
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{totalQuantity}</Text>
+        <View style={styles(currentTheme).badge}>
+          <Text style={styles(currentTheme).badgeText}>{totalQuantity}</Text>
         </View>
       </Pressable>
     </View>
@@ -41,7 +44,7 @@ const FloatingCartButton = () => {
 
 export default FloatingCartButton
 
-const styles = StyleSheet.create({
+const styles = (currentTheme = {}) => StyleSheet.create({
   container: {
     position: 'absolute',
     right: 20,
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 32,
-    backgroundColor: '#1E88E5',
+    backgroundColor: currentTheme.singleVendorBrand,
     justifyContent: 'center',
     alignItems: 'center',
 

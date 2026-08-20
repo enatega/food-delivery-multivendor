@@ -9,8 +9,9 @@ import CartQuantityController from '../Cart/CartQuantityController'
 import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
 import useAddToCart from '../../screens/ProductDetails/useAddToCart'
 import useCartStore from '../../stores/useCartStore'
+import { normalizeSingleVendorMediaUrl } from '../../../utils/mediaUrl'
 
-const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, selectedAddons }) => {
+const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, selectedAddons, editMode = false, onSaveEdit, editingCart = false }) => {
   const config = useContext(ConfigurationContext)
 
   // Todo: temp states for handling fav and item count
@@ -39,12 +40,12 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
   return (
     <>
       <View style={styles().imageContainer}>
-        <Image source={{ uri: productInfoData?.image }} style={styles().image} />
+        <Image source={{ uri: normalizeSingleVendorMediaUrl(productInfoData?.image) }} style={styles().image} />
       </View>
 
       <View style={[styles().containerPadding, { gap: 18 }]}>
         <View style={styles().titleContainer}>
-          <TextDefault bolder H2 numberOfLines={3} style={{ flexShrink: 1, flex: 1, paddingRight: 8}}>
+          <TextDefault bolder H2 numberOfLines={3} style={{ flexShrink: 1, flex: 1, paddingRight: 8 }}>
             {productInfoData?.title}
           </TextDefault>
           <ToggleFavorite id={productInfoData?.id} />
@@ -53,9 +54,10 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
         <View style={[styles().priceRow, { alignItems: 'center' }]}>
           <View style={styles().priceLeft}>
             <View style={[styles().flex, { alignItems: 'center', gap: 12 }]}>
-              {hasDeal ? (
+              {hasDeal
+                ? (
                 <>
-                  <TextDefault style={styles(currentTheme).finalPrice} H4 bolder textColor={currentTheme.singlevendorcolor}>
+                  <TextDefault style={styles(currentTheme).finalPrice} H4 bolder textColor={currentTheme.singleVendorBrandForeground}>
                     {config?.currencySymbol}
                     {'\u00A0'}
                     {discountPrice}
@@ -66,13 +68,14 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
                     {actualPrice}
                   </TextDefault>
                 </>
-              ) : (
+                  )
+                : (
                 <TextDefault H4 bolder textColor={currentTheme.fontSecondColor}>
                   {config?.currencySymbol}
                   {'\u00A0'}
                   {productInfoData?.price}
                 </TextDefault>
-              )}
+                  )}
             </View>
             {productInfoData?.isPopular && (
               <View style={[styles(currentTheme).popular, styles().flexCenter]}>
@@ -85,7 +88,21 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
           </View>
 
           <View style={styles().priceRight}>
-            {isInCart ? (
+            {editMode
+              ? (
+              <View style={{ alignItems: 'flex-end', minWidth: 130 }}>
+                <ContinueWithPhoneButton
+                  containerStyles={{ minWidth: 130 }}
+                  textStyle={{ paddingHorizontal: 8 }}
+                  isLoading={editingCart}
+                  isDisabled={editingCart}
+                  title='Save changes'
+                  onPress={onSaveEdit}
+                />
+              </View>
+                )
+              : isInCart
+                ? (
               <CartQuantityController
                 foodId={productInfoData?.id}
                 categoryId={productInfoData?.categoryId}
@@ -94,18 +111,19 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
                 defaultQuantity={1}
                 variant="details"
               />
-            ) : (
-              <View style={{ alignItems:'flex-end', minWidth: 130 }}>
+                  )
+                : (
+              <View style={{ alignItems: 'flex-end', minWidth: 130 }}>
                 <ContinueWithPhoneButton
-                containerStyles={{minWidth:130}}
-                textStyle={{paddingHorizontal:8}}
+                containerStyles={{ minWidth: 130 }}
+                textStyle={{ paddingHorizontal: 8 }}
                   isLoading={updateUserCartLoading }
                   isDisabled={updateUserCartLoading}
                   title='addToCart'
                   onPress={() => addItemToCart(productInfoData?.id, productInfoData?.categoryId, selectedVariation, selectedAddons || [], 1)}
                 />
               </View>
-            )}
+                  )}
           </View>
         </View>
       </View>
@@ -164,7 +182,7 @@ const styles = (props = null) =>
       justifyContent: 'space-between'
     },
     popular: {
-      backgroundColor: props !== null ? props?.primaryBlue : '#0090CD',
+      backgroundColor: props !== null ? props?.singleVendorBrand : '#90E36D',
       minWidth: 80,
       maxWidth: 120,
       gap: 4,
@@ -173,7 +191,7 @@ const styles = (props = null) =>
       borderRadius: 6
     },
     finalPrice: {
-      color: props?.primaryBlue
+      color: props?.singleVendorBrandForeground
     },
 
     originalPrice: {

@@ -68,8 +68,9 @@ export default function CategoryAddForm({
     refetch: refetchSubCatrgories,
   } = useQuery<ISubCategoryByParentIdResponse>(GET_SUBCATEGORIES_BY_PARENT_ID, {
     variables: {
-      parentCategoryId: category?._id,
+      parentCategoryId: category?._id ?? '',
     },
+    skip: !category?._id,
   });
   const { restaurantLayoutContextData } = useContext(RestaurantLayoutContext);
   const restaurantId = restaurantLayoutContextData?.restaurantId || '';
@@ -295,7 +296,6 @@ export default function CategoryAddForm({
                               maxFileSize={0}
                               maxFileWidth={1980}
                               maxFileHeight={1080}
-                              fileTypes={[]}
                             />
                           </div>
 
@@ -340,7 +340,6 @@ export default function CategoryAddForm({
                                                 onClick={async () => {
                                                   if (value._id) {
                                                     remove(index);
-                                                    console.log(value._id);
                                                     await deleteSubCategory({
                                                       variables: {
                                                         deleteSubCategoryId2:

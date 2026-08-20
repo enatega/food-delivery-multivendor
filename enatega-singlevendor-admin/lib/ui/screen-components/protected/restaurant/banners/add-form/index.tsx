@@ -32,7 +32,6 @@ const BannerRestaurantAddForm = ({
   restaurantId,
   position = 'right',
 }: IBannerRestaurantAddFormComponentProps) => {
-  console.log("🚀 ~ restaurantId:", restaurantId)
   // Hooks
   const t = useTranslations();
   const { showToast } = useToast();
@@ -44,7 +43,6 @@ const BannerRestaurantAddForm = ({
     skip: !restaurantId,
     fetchPolicy: 'cache-and-network'
   });
-  console.log("🚀 ~ foodData:", foodData)
 
   
 

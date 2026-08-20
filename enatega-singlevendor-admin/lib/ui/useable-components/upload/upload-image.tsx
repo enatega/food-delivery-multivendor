@@ -10,10 +10,11 @@ import { IImageUploadComponentProps } from '@/lib/utils/interfaces';
 import Image from 'next/image';
 
 // Hooks
-import { memo, useCallback, useContext, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 
 // Utils
 import { compressImage, compressVideo } from '@/lib/utils/methods';
+import { normalizeManagedMediaUrl } from '@/lib/utils/media';
 
 // Components
 import CustomLoader from '../custom-progress-indicator';
@@ -31,6 +32,68 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'use-intl';
 
+const DEFAULT_FILE_TYPES = [
+  'image/webp',
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'video/webm',
+  'video/mp4',
+] as const;
+
+const MEDIA_TYPE_BY_EXTENSION: Record<string, string> = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  gif: 'image/gif',
+  webp: 'image/webp',
+  mp4: 'video/mp4',
+  webm: 'video/webm',
+};
+
+const normalizeMediaType = (mediaType: string): string => {
+  const normalized = mediaType.toLowerCase().trim();
+
+  if (normalized === 'image/jpg' || normalized === 'image/pjpeg') {
+    return 'image/jpeg';
+  }
+
+  return normalized;
+};
+
+const getAcceptedFile = (
+  event: FileUploadSelectEvent,
+  allowedFileTypes: readonly string[]
+): File | undefined => {
+  const allowedTypes = new Set(allowedFileTypes.map(normalizeMediaType));
+
+  return Array.from(event.files || []).reduce<File | undefined>(
+    (acceptedFile, file) => {
+      if (acceptedFile) return acceptedFile;
+
+      const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
+      const canonicalType = MEDIA_TYPE_BY_EXTENSION[extension];
+      if (!canonicalType || !allowedTypes.has(canonicalType)) return undefined;
+
+      const reportedType = normalizeMediaType(file.type);
+      const hasGenericType =
+        !reportedType || reportedType === 'application/octet-stream';
+
+      // Browsers do not always report a MIME type for local files. We can safely
+      // fall back to the extension because the API validates the file signature.
+      if (!hasGenericType && reportedType !== canonicalType) return undefined;
+
+      if (file.type === canonicalType) return file;
+
+      return new File([file], file.name, {
+        type: canonicalType,
+        lastModified: file.lastModified,
+      });
+    },
+    undefined
+  );
+};
+
 function CustomUploadImageComponent({
   name,
   title,
@@ -39,14 +102,7 @@ function CustomUploadImageComponent({
   onSetImageUrl,
   existingImageUrl,
   style,
-  fileTypes = [
-    'image/webp',
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'video/webm',
-    'video/mp4',
-  ],
+  fileTypes,
   isRequired = false,
 }: IImageUploadComponentProps & { isRequired?: boolean }) {
   // Context
@@ -66,15 +122,18 @@ function CustomUploadImageComponent({
 
   // Hooks
   const t = useTranslations();
+  const allowedFileTypes =
+    fileTypes && fileTypes.length > 0 ? fileTypes : DEFAULT_FILE_TYPES;
+  const acceptsVideo = allowedFileTypes.some((type) =>
+    normalizeMediaType(type).startsWith('video/')
+  );
 
-  // Filter Files
-  const filterFiles = (event: FileUploadSelectEvent): File | undefined => {
-    const files = Array.from(event.files || []);
-    const extracted_files = files.filter((file) =>
-      file.name.match(/\.(jpg|jpeg|png|gif|webp|avif|mp4|webm)$/)
-    );
-    return extracted_files.length ? extracted_files[0] : files[0];
-  };
+  useEffect(
+    () => () => {
+      if (imageFile.startsWith('blob:')) URL.revokeObjectURL(imageFile);
+    },
+    [imageFile]
+  );
 
   // Upload to S3
   const uploadImageToS3 = useCallback(
@@ -86,7 +145,9 @@ function CustomUploadImageComponent({
       try {
         // Compress file based on type
         let processedFile: File;
-        if (file.type.startsWith('image/')) {
+        if (file.type === 'image/gif') {
+          processedFile = file;
+        } else if (file.type.startsWith('image/')) {
           processedFile = await compressImage(file, 800, 0.7);
         } else if (file.type.startsWith('video/')) {
           processedFile = await compressVideo(file);
@@ -102,17 +163,18 @@ function CustomUploadImageComponent({
         });
 
         const { data } = await uploadToS3({
-          variables: { image: base64 },
+          variables: { image: base64, publicMedia: true },
         });
 
         const imageUrl = data?.uploadImageToS3?.imageUrl;
 
         if (imageUrl) {
           onSetImageUrl(name, imageUrl);
+          setImageValidationErr({ bool: false, msg: '' });
           showToast({
             type: 'info',
             title: title,
-            message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
+            message: `${acceptsVideo ? t('File') : t('Image')} ${t('has been uploaded successfully')}.`,
             duration: 2500,
           });
         } else {
@@ -123,7 +185,7 @@ function CustomUploadImageComponent({
         showToast({
           type: 'error',
           title: title,
-          message: `${fileTypes.includes('video/webm') || fileTypes.includes('video/mp4') ? t('File') : t('Image')} ${t('Upload Failed')}`,
+          message: `${acceptsVideo ? t('File') : t('Image')} ${t('Upload Failed')}`,
           duration: 2500,
         });
         setImageValidationErr({
@@ -135,26 +197,25 @@ function CustomUploadImageComponent({
         setIsUploading(false);
       }
     },
-    [
-      name,
-      onSetImageUrl,
-      showToast,
-      title,
-      // validateImage,
-      fileTypes,
-    ]
+    [name, onSetImageUrl, showToast, title, acceptsVideo, t]
   );
 
   // Select Image
   const handleFileSelect = useCallback(
     (event: FileUploadSelectEvent): void => {
-      const result = filterFiles(event);
+      const result = getAcceptedFile(event, allowedFileTypes);
       if (result) {
+        setImageValidationErr({ bool: false, msg: '' });
         setCurrentFileType(result.type);
         uploadImageToS3(result);
+        return;
       }
+      setImageValidationErr({
+        bool: true,
+        msg: t('Unsupported file type'),
+      });
     },
-    [uploadImageToS3]
+    [allowedFileTypes, t, uploadImageToS3]
   );
 
   // Handle cancel click
@@ -187,7 +248,7 @@ function CustomUploadImageComponent({
         <FileUpload
           headerClassName="dark:text-white"
           contentClassName="dark:text-white"
-          accept={fileTypes?.join(',')}
+          accept={allowedFileTypes.map(normalizeMediaType).join(',')}
           id={`${name}-upload`}
           className="mx-auto -mt-7 h-28 w-44 items-center dark:text-white justify-center rounded-md bg-transparent"
           onSelect={(e) => handleFileSelect(e)}
@@ -210,9 +271,9 @@ function CustomUploadImageComponent({
                     <div className="flex w-12 flex-col items-center justify-center">
                       <div className="relative my-2 h-12 w-12 overflow-hidden rounded-md dark:text-white">
                         {existingImageUrl ? (
-                          existingImageUrl.includes('video/') ? (
+                          /\.(mp4|webm)(?:[?#]|$)/i.test(existingImageUrl) ? (
                             <video
-                              src={existingImageUrl}
+                              src={normalizeManagedMediaUrl(existingImageUrl)}
                               width={100}
                               height={100}
                               autoPlay
@@ -221,7 +282,7 @@ function CustomUploadImageComponent({
                           ) : (
                             <Image
                               alt="User avatar"
-                              src={existingImageUrl}
+                              src={normalizeManagedMediaUrl(existingImageUrl)}
                               width={100}
                               height={100}
                             />
@@ -229,7 +290,7 @@ function CustomUploadImageComponent({
                         ) : imageFile ? (
                           <Image
                             alt="User avatar"
-                            src={imageFile}
+                            src={normalizeManagedMediaUrl(imageFile)}
                             width={100}
                             height={100}
                           />
@@ -301,7 +362,9 @@ function CustomUploadImageComponent({
                     >
                       {currentFileType.startsWith('video/') ? (
                         <video
-                          src={URL.createObjectURL(extractedFile)}
+                          src={normalizeManagedMediaUrl(
+                            imageFile || URL.createObjectURL(extractedFile)
+                          )}
                           width={100}
                           height={100}
                           autoPlay
@@ -309,7 +372,9 @@ function CustomUploadImageComponent({
                         />
                       ) : (
                         <Image
-                          src={URL.createObjectURL(extractedFile)}
+                          src={normalizeManagedMediaUrl(
+                            imageFile || URL.createObjectURL(extractedFile)
+                          )}
                           width={100}
                           height={100}
                           alt={object.fileNameElement.props}

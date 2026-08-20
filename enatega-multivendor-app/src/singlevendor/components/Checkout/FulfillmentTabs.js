@@ -31,7 +31,7 @@ const FulfillmentTabs = ({ selectedMode, onSelectMode }) => {
           activeOpacity={0.7}
         >
           <TextDefault
-            textColor={selectedMode === 'delivery' ? currentTheme.primaryBlue : currentTheme.fontSecondColor}
+            textColor={selectedMode === 'delivery' ? currentTheme.singleVendorBrandForeground : currentTheme.fontSecondColor}
             bold
             bolder={selectedMode === 'delivery'}
             isRTL
@@ -50,7 +50,7 @@ const FulfillmentTabs = ({ selectedMode, onSelectMode }) => {
           activeOpacity={0.7}
         >
           <TextDefault
-            textColor={selectedMode === 'collection' ? currentTheme.primaryBlue : currentTheme.fontSecondColor}
+            textColor={selectedMode === 'collection' ? currentTheme.singleVendorBrandForeground : currentTheme.fontSecondColor}
             bold
             bolder={selectedMode === 'collection'}
             isRTL
@@ -96,7 +96,7 @@ const styles = (props = null) => {
       width: scale(44),
       height: scale(3),
       borderRadius: scale(2),
-      backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9'
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D'
     }
   })
 }

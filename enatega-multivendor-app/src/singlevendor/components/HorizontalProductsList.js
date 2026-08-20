@@ -17,8 +17,6 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   const handleSeeAll = () => {
-    // Handle see all action
-    console.log(`See all ${listTitle.toLowerCase()}`)
     if (viewType === 'see-all') {
       // navigation.navigate('ProductExplorer')
       navigation.navigate('ProductExplorer', {
@@ -29,10 +27,7 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
     }
   }
 
-  const handleAddToCart = (drink) => {
-    // Handle add to cart action
-    console.log('Add to cart:', drink.name)
-  }
+  const handleAddToCart = () => {}
 
   const onProductPress = (id, itemCategoryId) => {
     navigation.navigate('ProductDetails', {

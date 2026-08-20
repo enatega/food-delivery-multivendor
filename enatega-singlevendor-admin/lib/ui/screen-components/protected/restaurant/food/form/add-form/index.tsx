@@ -1,7 +1,7 @@
 'use client';
 
 // Core imports
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
@@ -41,6 +41,14 @@ import { FoodSchema, VariationSchema } from '@/lib/utils/schema';
 
 // Error Handling
 import { ProgressSpinner } from 'primereact/progressspinner';
+
+const CombinedFoodSchema = Yup.object().shape({
+  ...FoodSchema.fields,
+  variations: Yup.array()
+    .of(VariationSchema)
+    .min(1, 'At least one variation is required')
+    .required('Required'),
+});
 
 const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
   // Hooks
@@ -102,7 +110,7 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
   };
 
   // Initial Values
-  const getInitialValues = () => {
+  const initialValues = useMemo<IFoodNewFormValues>(() => {
     // Basic Food Data
     const basicInfo: IFoodDetailsForm = {
       _id: foodContextData?.food?.data?._id || '',
@@ -149,22 +157,12 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
       ...basicInfo,
       variations,
     };
-  };
-
-  // Validation Schema
-  const CombinedSchema = Yup.object().shape({
-    ...FoodSchema.fields,
-    variations: Yup.array()
-      .of(VariationSchema)
-      .min(1, 'At least one variation is required')
-      .required('Required'),
-  });
+  }, [foodContextData?.food]);
 
   const handleSubmit = async (
     values: IFoodNewFormValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    console.log('Form Value......', values);
     setSubmitting(true);
     try {
       // Helper function to clean __typename from objects
@@ -433,18 +431,14 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
         </h2>
 
         <Formik<IFoodNewFormValues> // Added explicit type here
-          initialValues={getInitialValues()}
-          validationSchema={CombinedSchema}
+          initialValues={initialValues}
+          validationSchema={CombinedFoodSchema}
           enableReinitialize
-          validateOnChange={true}
+          validateOnChange={false}
           validateOnBlur={true}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors: formErrors, isValid }) => {
-            // Log validation errors to console for debugging
-            if (Object.keys(formErrors).length > 0) {
-              console.log('Form validation errors:', formErrors);
-            }
             const isLoading =
               isSubmitting || createFoodLoading || updateFoodLoading;
             return (

@@ -1,10 +1,10 @@
-import { View, Platform, StatusBar, RefreshControl } from 'react-native'
+import { Platform, StatusBar, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import React, { useEffect, useState, useRef, useMemo, useContext } from 'react'
-import { useQuery } from '@apollo/client'
+import React, { useState, useRef, useMemo, useContext } from 'react'
+import { NetworkStatus, useQuery } from '@apollo/client'
 import { useFocusEffect } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
-import { GET_LIMITED_TIME_FOODS_DEALS ,GET_WEEKLY_FOODS_DEALS ,GET_NEW_OFFERS_FOODS_DEALS} from '../../apollo/queries'
+import { GET_SINGLE_VENDOR_DEALS_SECTION } from '../../apollo/queries'
 import SectionList from '../../components/SectionList'
 import { FlashList } from '@shopify/flash-list'
 import HorizontalSubCategoriesList from '../../components/HorizontalSubCategoriesList'
@@ -12,6 +12,35 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import styles from './Styles'
 import { usePullToRefresh } from '../../hooks/usePullToRefresh'
+
+const DEAL_PAGE_SIZE = 20
+
+const fetchNextDealsPage = async(query, section) => {
+  const currentPage = query.data?.singleVendorDeals
+  if (!currentPage?.hasMore || query.networkStatus === NetworkStatus.fetchMore) return
+
+  await query.fetchMore({
+    variables: {
+      section,
+      skip: currentPage.items.length,
+      limit: DEAL_PAGE_SIZE
+    },
+    updateQuery: (previous, { fetchMoreResult }) => {
+      const nextPage = fetchMoreResult?.singleVendorDeals
+      if (!nextPage) return previous
+
+      return {
+        singleVendorDeals: {
+          ...nextPage,
+          items: [
+            ...(previous?.singleVendorDeals?.items || []),
+            ...nextPage.items
+          ]
+        }
+      }
+    }
+  })
+}
 
 const Deals = () => {
   const { t, i18n } = useTranslation()
@@ -23,11 +52,8 @@ const Deals = () => {
 
   const [activeSubCategoryIndex, setActiveSubCategoryIndex] = useState(0)
   const activeSubCategoryIndexRef = useRef(0)
-  console.log('activeSubCategoryIndex',activeSubCategoryIndex);
-  
   const dealsListRef = useRef(null)
   const subCatListRef = useRef(null)
-  const isAutoScrollingRef = useRef(false)
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -39,7 +65,7 @@ const Deals = () => {
   })
 
   const dealCategories = [
-   
+
     {
       subCategoryId: '1',
       subCategoryName: t('Limited time deals')
@@ -51,19 +77,19 @@ const Deals = () => {
     {
       subCategoryId: '3',
       subCategoryName: t('New offers')
-    },
-    
+    }
+
   ]
 
   const handleSubCategoryPress = (index) => {
     setActiveSubCategoryIndex(index)
-    activeSubCategoryIndexRef.current = index      
-      dealsListRef.current?.scrollToIndex({
-        index: index,
-        animated: true,
-        viewPosition: 0
-      })
-    
+    activeSubCategoryIndexRef.current = index
+    dealsListRef.current?.scrollToIndex({
+      index,
+      animated: true,
+      viewPosition: 0
+    })
+
     // Scroll subcategory list to center the selected item
     subCatListRef.current?.scrollToIndex({
       index,
@@ -72,88 +98,112 @@ const Deals = () => {
     })
   }
 
-  const { data, loading, error, refetch: refetchLimitedTime } = useQuery(GET_LIMITED_TIME_FOODS_DEALS)
-  const { data: weeklydealsData, loading: weeklydealsLoading, error: weeklydealsError, refetch: refetchWeekly } = useQuery(GET_WEEKLY_FOODS_DEALS)
-  const { data: newoffersdealsData, loading: newoffersdealsLoading, error: newoffersdealsError, refetch: refetchNewOffers } = useQuery(GET_NEW_OFFERS_FOODS_DEALS)
+  const limitedTimeQuery = useQuery(GET_SINGLE_VENDOR_DEALS_SECTION, {
+    variables: { section: 'LIMITED_TIME', skip: 0, limit: DEAL_PAGE_SIZE },
+    fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true
+  })
+  const weeklyQuery = useQuery(GET_SINGLE_VENDOR_DEALS_SECTION, {
+    variables: { section: 'WEEKLY', skip: 0, limit: DEAL_PAGE_SIZE },
+    fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true
+  })
+  const newOffersQuery = useQuery(GET_SINGLE_VENDOR_DEALS_SECTION, {
+    variables: { section: 'NEW_OFFERS', skip: 0, limit: DEAL_PAGE_SIZE },
+    fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true
+  })
 
-  const refreshAllData = async () => {
-    await Promise.all([
-      refetchLimitedTime(),
-      refetchNewOffers(),
-      refetchWeekly(),
+  const refreshAllData = async() => {
+    await Promise.allSettled([
+      limitedTimeQuery.refetch(),
+      weeklyQuery.refetch(),
+      newOffersQuery.refetch()
     ])
   }
   const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refreshAllData])
-  
 
   // Create sections array for FlashList
   const sections = useMemo(() => [
     {
       id: 'limited-time',
       title: t('Limited time deals'),
-      data: data?.getLimitedTimeFoodsDeals?.items || [],
-      loading,
-      error,
-      onRetry: refetchLimitedTime
+      data: limitedTimeQuery.data?.singleVendorDeals?.items || [],
+      loading: limitedTimeQuery.loading && !limitedTimeQuery.data,
+      error: limitedTimeQuery.error,
+      onRetry: limitedTimeQuery.refetch,
+      hasMore: limitedTimeQuery.data?.singleVendorDeals?.hasMore || false,
+      loadingMore: limitedTimeQuery.networkStatus === NetworkStatus.fetchMore,
+      onLoadMore: () => fetchNextDealsPage(limitedTimeQuery, 'LIMITED_TIME')
     },
     {
       id: 'weekly',
       title: t('weekly deals'),
-      data: weeklydealsData?.getWeeklyFoodsDeals?.items || [],
-      loading: weeklydealsLoading,
-      error: weeklydealsError,
-      onRetry: refetchWeekly
+      data: weeklyQuery.data?.singleVendorDeals?.items || [],
+      loading: weeklyQuery.loading && !weeklyQuery.data,
+      error: weeklyQuery.error,
+      onRetry: weeklyQuery.refetch,
+      hasMore: weeklyQuery.data?.singleVendorDeals?.hasMore || false,
+      loadingMore: weeklyQuery.networkStatus === NetworkStatus.fetchMore,
+      onLoadMore: () => fetchNextDealsPage(weeklyQuery, 'WEEKLY')
     },
     {
       id: 'new-offers',
       title: t('New offers'),
-      data: newoffersdealsData?.getNewOffersFoodsDeals?.items || [],
-      loading: newoffersdealsLoading,
-      error: newoffersdealsError,
-      onRetry: refetchNewOffers
+      data: newOffersQuery.data?.singleVendorDeals?.items || [],
+      loading: newOffersQuery.loading && !newOffersQuery.data,
+      error: newOffersQuery.error,
+      onRetry: newOffersQuery.refetch,
+      hasMore: newOffersQuery.data?.singleVendorDeals?.hasMore || false,
+      loadingMore: newOffersQuery.networkStatus === NetworkStatus.fetchMore,
+      onLoadMore: () => fetchNextDealsPage(newOffersQuery, 'NEW_OFFERS')
     }
   ], [
     t,
-    data?.getLimitedTimeFoodsDeals?.items,
-    loading,
-    error,
-    refetchLimitedTime,
-    weeklydealsData?.getWeeklyFoodsDeals?.items,
-    weeklydealsLoading,
-    weeklydealsError,
-    refetchWeekly,
-    newoffersdealsData?.getNewOffersFoodsDeals?.items,
-    newoffersdealsLoading,
-    newoffersdealsError,
-    refetchNewOffers
+    limitedTimeQuery.data,
+    limitedTimeQuery.loading,
+    limitedTimeQuery.error,
+    limitedTimeQuery.refetch,
+    limitedTimeQuery.networkStatus,
+    limitedTimeQuery.fetchMore,
+    weeklyQuery.data,
+    weeklyQuery.loading,
+    weeklyQuery.error,
+    weeklyQuery.refetch,
+    weeklyQuery.networkStatus,
+    weeklyQuery.fetchMore,
+    newOffersQuery.data,
+    newOffersQuery.loading,
+    newOffersQuery.error,
+    newOffersQuery.refetch,
+    newOffersQuery.networkStatus,
+    newOffersQuery.fetchMore
   ])
-
-  useEffect(() => {
-    console.log('get new offers deals Data:', JSON.stringify(newoffersdealsData?.getNewOffersFoodsDeals?.items,null,2))
-    console.log('GET newoffer loading  WITH_DEAL Loading:', newoffersdealsLoading)
-    console.log('GET new offer errore_DEALS_WITH_DEAL Error:', newoffersdealsError)
-  }, [newoffersdealsData, newoffersdealsLoading, newoffersdealsError])
 
   const renderSectionItem = ({ item, index }) => {
     return (
-      <SectionList 
-        title={item.title} 
-        data={item.data} 
+      <SectionList
+        title={item.title}
+        data={item.data}
         loading={item.loading}
         error={item.error}
         onRetry={item.onRetry}
+        hasMore={item.hasMore}
+        onLoadMore={item.onLoadMore}
+        loadingMore={item.loadingMore}
       />
     )
   }
 
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
-    console.log('viewableItems',viewableItems);
     if (!viewableItems.length) return
 
-    const activeSectionIndex = viewableItems[0].index;
-    console.log('activeSectionIndex',activeSectionIndex,activeSubCategoryIndex);
+    const activeSectionIndex = viewableItems[0].index
     if (activeSectionIndex !== activeSubCategoryIndexRef.current) {
-      setActiveSubCategoryIndex(activeSectionIndex);
+      setActiveSubCategoryIndex(activeSectionIndex)
       activeSubCategoryIndexRef.current = activeSectionIndex
       subCatListRef.current?.scrollToIndex({
         index: activeSectionIndex,
@@ -161,9 +211,8 @@ const Deals = () => {
         viewPosition: 0.5
       })
     }
-  },[activeSubCategoryIndex]).current
+  }, [activeSubCategoryIndex]).current
 
-  
   const keyExtractor = (item) => item.id
 
   return (
@@ -176,11 +225,11 @@ const Deals = () => {
       />
       <FlashList
         onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={{ 
+        viewabilityConfig={{
           // itemVisiblePercentThreshold: 100
-        
+
           viewAreaCoveragePercentThreshold: 50,
-          minimumViewTime: 200,
+          minimumViewTime: 200
         }}
         ref={dealsListRef}
         data={sections}

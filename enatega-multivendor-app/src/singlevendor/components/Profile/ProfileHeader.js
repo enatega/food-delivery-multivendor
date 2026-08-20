@@ -42,7 +42,7 @@ const styles = (currentTheme) =>
       paddingHorizontal: scale(16),
       paddingTop: verticalScale(18),
       paddingBottom: verticalScale(22),
-      backgroundColor: currentTheme.lowOpacityBlue
+      backgroundColor: currentTheme.singleVendorBrandSubtle
     },
     welcomeText: {
       color: currentTheme.colorTextMuted,

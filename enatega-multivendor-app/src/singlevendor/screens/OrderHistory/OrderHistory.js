@@ -98,7 +98,7 @@ const OrderHistory = () => {
                       ]}
                     >
                       <TextDefault
-                        textColor={isActive ? currentTheme.primaryBlue : currentTheme.colorTextMuted}
+                        textColor={isActive ? currentTheme.singleVendorBrandForeground : currentTheme.colorTextMuted}
                         style={styles(currentTheme).tabsItemText}
                         bold
                       >
@@ -120,7 +120,7 @@ const OrderHistory = () => {
               <Ionicons
                 name={isReversed ? 'swap-vertical' : 'swap-vertical-outline'}
                 size={18}
-                color={isReversed ? currentTheme.primaryBlue : currentTheme?.fontMainColor}
+                color={isReversed ? currentTheme.singleVendorBrandForeground : currentTheme?.fontMainColor}
               />
             </TouchableOpacity>
           </View>

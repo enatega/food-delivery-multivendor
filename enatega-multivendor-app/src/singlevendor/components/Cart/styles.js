@@ -23,6 +23,15 @@ const styles = (props = null) =>
     mainContent: {
       flex: 1
     },
+    titleRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: scale(8)
+    },
+    titleText: {
+      flex: 1
+    },
     descriptionRow: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -68,9 +77,9 @@ const styles = (props = null) =>
       width: scale(25),
       height: scale(25),
       borderRadius: scale(20),
-      backgroundColor: props !== null ? props.white : '#FFFFFF',
-      borderWidth: 2,
-      borderColor: props !== null ? props.newBorderColor2 : '#D1D5DB',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
+      borderWidth: 1,
+      borderColor: props !== null ? props.singleVendorBrand : '#90E36D',
       alignItems: 'center',
       justifyContent: 'center',
       shadowColor: '#000',

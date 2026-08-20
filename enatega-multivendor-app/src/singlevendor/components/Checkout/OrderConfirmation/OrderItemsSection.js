@@ -6,6 +6,7 @@ import ThemeContext from '../../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../../utils/themeColors'
 import { scale } from '../../../../utils/scaling'
 import TextDefault from '../../../../components/Text/TextDefault/TextDefault'
+import { normalizeSingleVendorMediaUrl } from '../../../../utils/mediaUrl'
 
 const OrderItemRow = ({ item, currencySymbol, currentTheme, isExpanded }) => {
   const [showDetails, setShowDetails] = useState(false)
@@ -14,7 +15,7 @@ const OrderItemRow = ({ item, currencySymbol, currentTheme, isExpanded }) => {
 
   return (
     <TouchableOpacity style={styles(currentTheme).itemRow} onPress={() => setShowDetails(!showDetails)} activeOpacity={0.7}>
-      <Image source={{ uri: item.image }} style={styles().itemImage} />
+      <Image source={{ uri: normalizeSingleVendorMediaUrl(item.image) }} style={styles().itemImage} />
       <View style={styles().itemContent}>
         <TextDefault textColor={currentTheme.fontMainColor} bold isRTL numberOfLines={1}>
           {item.foodTitle}
@@ -68,7 +69,7 @@ const OrderItemsSection = ({ items = [], currencySymbol = '€', initialExpanded
         <TouchableOpacity style={styles().collapsedRow} onPress={() => setExpanded(!expanded)} activeOpacity={0.7}>
           <View style={styles().imageStack}>
             {displayImages.map((item, index) => (
-              <Image key={index} source={{ uri: item.image }} style={[styles().stackedImage, { marginLeft: index > 0 ? -scale(12) : 0, zIndex: displayImages.length - index }]} />
+              <Image key={index} source={{ uri: normalizeSingleVendorMediaUrl(item.image) }} style={[styles().stackedImage, { marginLeft: index > 0 ? -scale(12) : 0, zIndex: displayImages.length - index }]} />
             ))}
             {remainingCount > 0 && (
               <View style={[styles(currentTheme).remainingBadge, { marginLeft: -scale(12) }]}>

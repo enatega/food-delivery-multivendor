@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, FlatList } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import SearchListItem from './SearchListItem'
@@ -6,11 +6,22 @@ import { getRecentSearches, clearRecentSearches, removeSearchTerm } from '../../
 
 const RecentSearches = ({ currentTheme, t, setSearchTerm }) => {
   const [recentSearchResults, setrecentSearchResults] = useState([])
+
   useEffect(() => {
-    getRecentSearches('recentSearches').then((res) => {
+    getRecentSearches().then((res) => {
       setrecentSearchResults(res)
     })
   }, [])
+
+  const handleClearAll = async() => {
+    await clearRecentSearches()
+    setrecentSearchResults([])
+  }
+
+  const handleRemoveSearch = async(searchTerm) => {
+    const updatedSearches = await removeSearchTerm(searchTerm)
+    setrecentSearchResults(updatedSearches)
+  }
 
   return (
     <>
@@ -18,21 +29,24 @@ const RecentSearches = ({ currentTheme, t, setSearchTerm }) => {
         <TextDefault H5 bolder>
           {t('Recent')}
         </TextDefault>
-        <TouchableOpacity onPress={() => clearRecentSearches('recentSearches').then(() => setrecentSearchResults([]))}>
-          <TextDefault H5 bolder textColor={currentTheme?.primaryBlue}>
-            {t('Clear All')}
-          </TextDefault>
-        </TouchableOpacity>
+        {recentSearchResults.length > 0 && (
+          <TouchableOpacity onPress={handleClearAll}>
+            <TextDefault H5 bolder textColor={currentTheme?.singleVendorBrandForeground}>
+              {t('Clear All')}
+            </TextDefault>
+          </TouchableOpacity>
+        )}
       </View>
       <View style={{ borderBottomWidth: 0.8, borderBottomColor: currentTheme?.borderBottomColor }} />
 
       <FlatList
         data={recentSearchResults}
-        renderItem={(item) => <SearchListItem isRecent={true}
-        onPressHandler={() => setSearchTerm(item?.item)}
-        deleteHandler={() => removeSearchTerm(item?.item, 'recentSearches').then(() => getRecentSearches('recentSearches').then((res) => setrecentSearchResults(res)))}
-        title={item?.item} t={t} currentThem={currentTheme} />}
-        ListEmptyComponent={<TextDefault H5 center style={{ marginTop: 20, paddingHorizontal:30 }}>{t("No recent searches found, Search your taste")}</TextDefault>}
+        keyExtractor={(item) => item}
+        renderItem={({ item }) => <SearchListItem isRecent
+        onPressHandler={() => setSearchTerm(item)}
+        deleteHandler={() => handleRemoveSearch(item)}
+        title={item} t={t} currentTheme={currentTheme} />}
+        ListEmptyComponent={<TextDefault H5 center style={{ marginTop: 20, paddingHorizontal: 30 }}>{t('No recent searches found, Search your taste')}</TextDefault>}
       />
     </>
   )
@@ -40,7 +54,7 @@ const RecentSearches = ({ currentTheme, t, setSearchTerm }) => {
 
 export default RecentSearches
 
-const styles = (currentTheme) =>
+const styles = () =>
   StyleSheet.create({
     flex: {
       display: 'flex',

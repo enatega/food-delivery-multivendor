@@ -5,6 +5,7 @@ import ThemeContext from '../../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../../utils/themeColors'
 import { scale } from '../../../../utils/scaling'
 import { mapStyle } from '../../../../utils/mapStyle'
+import darkMapStyle from '../../../../utils/DarkMapStyles'
 import { decodePolyline, trimPolylineToRider } from '../../../../utils/polyline'
 
 const DeliveryMap = ({
@@ -17,6 +18,7 @@ const DeliveryMap = ({
 }) => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
+  const isDarkTheme = themeContext.ThemeValue === 'Dark'
   const mapRef = useRef(null)
 
   const initialRegion = {
@@ -58,7 +60,8 @@ const DeliveryMap = ({
         style={styles().map}
         provider={PROVIDER_DEFAULT}
         initialRegion={initialRegion}
-        customMapStyle={mapStyle}
+        customMapStyle={isDarkTheme ? darkMapStyle : mapStyle}
+        userInterfaceStyle={isDarkTheme ? 'dark' : 'light'}
         zoomEnabled={true}
         scrollEnabled={true}
         rotateEnabled={false}
@@ -94,7 +97,7 @@ const DeliveryMap = ({
 
         {/* Route */}
         {showRoute && displayedRouteCoordinates.length > 1 && (
-          <Polyline coordinates={displayedRouteCoordinates} strokeWidth={4} strokeColor={currentTheme.headerMainFontColor || '#006189'} />
+          <Polyline coordinates={displayedRouteCoordinates} strokeWidth={4} strokeColor={currentTheme.singleVendorBrandForeground || '#397A20'} />
         )}
       </MapView>
     </View>
@@ -130,7 +133,7 @@ const styles = (props = null) =>
       width: scale(18),
       height: scale(18),
       borderRadius: 50,
-      backgroundColor: props?.headerMainFontColor || '#006189',
+      backgroundColor: props?.singleVendorBrandForeground || '#397A20',
       borderWidth: 2,
       borderColor: '#fff',
       position: 'absolute',
@@ -141,7 +144,7 @@ const styles = (props = null) =>
       width: scale(56),
       height: scale(56),
       borderRadius: scale(28),
-      backgroundColor: 'rgba(14, 165, 233, 0.2)',
+      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE',
       position: 'absolute',
       top: scale(-20)
     },

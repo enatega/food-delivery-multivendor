@@ -27,7 +27,7 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
   const onCartUpdateSuccessRef = useRef(onCartUpdateSuccess)
   onCartUpdateSuccessRef.current = onCartUpdateSuccess
 
-  const [updateUserCart, { loading: updateUserCartLoading, error: updateUserCartError }] = useMutation(UPDATE_USER_CART, {
+  const [updateUserCart, { loading: updateUserCartLoading }] = useMutation(UPDATE_USER_CART, {
     onCompleted: (data) => {
       const response = data?.userCartData
       console.log('response_response', JSON.stringify(response, null, 2))
@@ -41,6 +41,7 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
 
       setCartFromServer({
         cartId: response.cartId,
+        cartRevision: response.cartRevision,
         foods: response.foods,
         grandTotal: response.discountedGrandTotal,
         maxOrderAmount: response.maxOrderAmount,
@@ -57,7 +58,7 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
     }
   })
 
-  const addItemToCart = (foodId, categoryId, variationId, addons, count, orderItems) => {
+  const addItemToCart = (foodId, categoryId, variationId, addons, count, orderItems, specialInstructions = '') => {
     if (!isLoggedIn) {
       navigation.navigate('CreateAccount')
       return
@@ -90,7 +91,8 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
     const singleItemList = [
       {
         _id: foodId,
-        categoryId: '123',
+        categoryId,
+        specialInstructions,
         variation: {
           _id: variationId,
           addons,

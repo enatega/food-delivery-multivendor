@@ -14,8 +14,8 @@ const HorizontalProductsEmptyView = () => {
   return (
     <View style={styles(currentTheme).emptyView}>
       <View style={{ alignItems: 'center', gap: 10, padding: 10 }}>
-        <FontAwesome6 name='file-excel' size={35} color={currentTheme.primaryBlue} />
-        <TextDefault H5 bold textColor={currentTheme.primaryBlue}>
+        <FontAwesome6 name='file-excel' size={35} color={currentTheme.singleVendorBrandForeground} />
+        <TextDefault H5 bold textColor={currentTheme.singleVendorBrandForeground}>
           {t('There is no items for this category')}
         </TextDefault>
       </View>
@@ -31,9 +31,9 @@ const styles = (currentTheme) =>
       minWidth: '90%',
       maxHeight: '100%',
       height: 180,
-      backgroundColor: currentTheme?.lowOpacityBlue || '#E0F2FE',
+      backgroundColor: currentTheme?.singleVendorBrandSubtle || '#F3FFEE',
       borderWidth: 1,
-      borderColor: currentTheme?.primaryBlue || '#0EA5E9',
+      borderColor: currentTheme?.singleVendorBrand || '#90E36D',
       borderRadius: 10,
       // marginHorizontal: 20,
       display: 'flex',

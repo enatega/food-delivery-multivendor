@@ -1,7 +1,7 @@
 'use client';
 
 // Core
-import { createContext, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 
 // Interface
 import {
@@ -28,10 +28,10 @@ export const RestaurantLayoutProvider = ({ children }: IProvider) => {
   const [isAddOptionsVisible, setIsAddOptionsVisible] = useState(false);
   const [option, setOption] = useState<IOptions | null>(null);
   const [restaurantLayoutContextData, setRestaurantLayoutContextData] =
-    useState<RestaurantLayoutContextData>({
+    useState<RestaurantLayoutContextData>(() => ({
       restaurantId: onUseLocalStorage('get', SELECTED_RESTAURANT),
-      shopType: onUseLocalStorage('get', SELECTED_SHOPTYPE ),
-    } as RestaurantLayoutContextData);
+      shopType: onUseLocalStorage('get', SELECTED_SHOPTYPE),
+    }) as RestaurantLayoutContextData);
   const [isAddSubCategoriesVisible, setIsAddSubCategoriesVisible] = useState({
     bool: false,
     parentCategoryId: '',
@@ -43,15 +43,15 @@ export const RestaurantLayoutProvider = ({ children }: IProvider) => {
   const [subCategoryParentId, setSubCategoryParentId] = useState<string>('');
 
   // Handlers
-  const onSetRestaurantLayoutContextData = (
+  const onSetRestaurantLayoutContextData = useCallback((
     data: Partial<RestaurantLayoutContextData>
   ) => {
     setRestaurantLayoutContextData((prevData) => ({
       ...prevData,
       ...data,
     }));
-  };
-  const value: RestaurantLayoutContextProps = {
+  }, []);
+  const value = useMemo<RestaurantLayoutContextProps>(() => ({
     restaurantLayoutContextData,
     onSetRestaurantLayoutContextData,
     isAddSubCategoriesVisible,
@@ -67,8 +67,18 @@ export const RestaurantLayoutProvider = ({ children }: IProvider) => {
     isAddOptionsVisible,
     setIsAddOptionsVisible,
     option,
-    setOption
-  };
+    setOption,
+  }), [
+    restaurantLayoutContextData,
+    onSetRestaurantLayoutContextData,
+    isAddSubCategoriesVisible,
+    category,
+    subCategories,
+    isSubCategoryModalOpen,
+    subCategoryParentId,
+    isAddOptionsVisible,
+    option,
+  ]);
 
   return (
     <RestaurantLayoutContext.Provider value={value}>

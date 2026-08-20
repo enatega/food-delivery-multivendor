@@ -90,6 +90,7 @@ export const resolveMultivendorTokens = (themeName, legacyTheme = {}) => {
     colors: {
       ...colors,
       accent: legacyTheme.main || '#90E36D',
+      accentForeground: isDark ? '#B9F3A0' : '#397A20',
       accentSubtle: isDark ? 'rgba(144, 227, 109, 0.14)' : 'rgba(144, 227, 109, 0.18)',
       focus: legacyTheme.main || '#90E36D'
     },

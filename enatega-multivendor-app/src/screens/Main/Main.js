@@ -159,12 +159,7 @@ function Main(props) {
 
   // "Top grocery picks" is derived from the single most-ordered fetch above
   // (grocery subset) instead of a second grocery-filtered network request.
-  const mostOrderedGroceryStores = useMemo(
-    () => (mostOrderedRestaurantsVar || []).filter(
-      (item) => item?.shopType?.toLowerCase() === 'grocery'
-    ),
-    [mostOrderedRestaurantsVar]
-  )
+  const mostOrderedGroceryStores = orderData?.mostOrderedGroceryStores
   const mostOrderedGroceryLoading = orderLoading
   const mostOrderedGroceryError = orderError
 

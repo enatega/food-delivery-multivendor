@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ImageBackground } from 'react-native'
+import { normalizeSingleVendorMediaUrl } from '../../../utils/mediaUrl'
 import SwiperFlatList from 'react-native-swiper-flatlist'
 import { scale, verticalScale } from '../../../utils/scaling'
 import { useNavigation } from '@react-navigation/native'
+import VideoBanner from '../../../components/Main/Banner/VideoBanner'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const { width } = Dimensions.get('window')
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 const isTablet = Math.min(screenWidth, screenHeight) >= 768
+const VIDEO_EXTENSIONS = new Set(['mp4', 'm4v', 'mov', 'webm'])
+
+const isVideoUrl = (url) => {
+  if (typeof url !== 'string') return false
+  const path = url.split(/[?#]/, 1)[0]
+  return VIDEO_EXTENSIONS.has(path.split('.').pop()?.toLowerCase())
+}
 
 const HomeBanner = ({ banners = [], onBannerPress, autoplay = true, autoplayDelay = 3 }) => {
   const s = styles(isTablet)
   const navigation = useNavigation()
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const transformedBanners = banners.map(banner => ({
     id: banner._id,
@@ -58,7 +69,41 @@ const HomeBanner = ({ banners = [], onBannerPress, autoplay = true, autoplayDela
     }
   }
 
-  const renderBanner = ({ item }) => {
+  const renderContent = (item) => (
+    <LinearGradient
+      colors={[
+        'rgba(8, 15, 7, 0.72)',
+        'rgba(8, 15, 7, 0.38)',
+        'rgba(8, 15, 7, 0.06)',
+        'transparent'
+      ]}
+      locations={[0, 0.42, 0.76, 1]}
+      start={{ x: 0, y: 0.5 }}
+      end={{ x: 1, y: 0.5 }}
+      style={s.textOverlay}
+    >
+      <View style={s.textContent}>
+        {item.title && (
+          <Text style={s.titleText} numberOfLines={2}>
+            {item.title}
+          </Text>
+        )}
+        <TouchableOpacity
+          style={s.detailButton}
+          onPress={(event) => {
+            event.stopPropagation()
+            handleBannerPress(item)
+          }}
+          activeOpacity={0.8}
+        >
+          <Text style={s.detailButtonText}>{item.buttonText || 'View offer'}</Text>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
+  )
+
+  const renderBanner = ({ item, index }) => {
+    const video = isVideoUrl(item.image)
     return (
         <TouchableOpacity
           activeOpacity={0.9}
@@ -66,39 +111,26 @@ const HomeBanner = ({ banners = [], onBannerPress, autoplay = true, autoplayDela
           style={s.bannerContainer}
         >
         <View style={s.imageBannerWrapper}>
-          {/* Background Image with Content Overlay */}
-          <ImageBackground
-            source={typeof item.image === 'string' ? { uri: item.image } : item.image}
-            style={s.bannerImage}
-            imageStyle={s.bannerImageStyle}
-            resizeMode="cover"
-            onError={(error) => {
-              console.log('❌ Image load error for banner:', item.id, error.nativeEvent.error)
-            }}
-            onLoad={() => {
-              console.log('✅ Image loaded successfully for banner:', item.id)
-            }}
-          >
-            {/* Text Content - Now inside ImageBackground without absolute positioning */}
-            <View style={s.textOverlay}>
-              {/* Left Side - Title, Description, Button */}
-              <View style={s.textContent}>
-                {item.title && (
-                  <Text style={s.titleText} numberOfLines={2}>
-                    {item.title}
-                  </Text>
-                )}
-
-                <TouchableOpacity
-                  style={s.detailButton}
-                  onPress={() => handleBannerPress(item)}
-                  activeOpacity={0.8}
-                >
-                  <Text style={s.detailButtonText}>{item.buttonText}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ImageBackground>
+          {video
+            ? (
+              <VideoBanner
+                source={normalizeSingleVendorMediaUrl(item.image)}
+                shouldPlay={index === activeIndex}
+                style={s.bannerImage}
+              >
+                {renderContent(item)}
+              </VideoBanner>
+              )
+            : (
+              <ImageBackground
+                source={typeof item.image === 'string' ? { uri: normalizeSingleVendorMediaUrl(item.image) } : item.image}
+                style={s.bannerImage}
+                imageStyle={s.bannerImageStyle}
+                resizeMode='cover'
+              >
+                {renderContent(item)}
+              </ImageBackground>
+              )}
         </View>
       </TouchableOpacity>
     )
@@ -118,6 +150,7 @@ const HomeBanner = ({ banners = [], onBannerPress, autoplay = true, autoplayDela
         showPagination={bannersToDisplay.length > 1}
         data={bannersToDisplay}
         renderItem={renderBanner}
+        onChangeIndex={({ index }) => setActiveIndex(index)}
         paginationStyle={s.pagination}
         paginationStyleItem={s.paginationDot}
         paginationStyleItemActive={s.paginationDotActive}
@@ -148,27 +181,27 @@ const styles = (tablet = false) => StyleSheet.create({
   },
   textOverlay: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: scale(20),
+    paddingVertical: verticalScale(18),
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     minHeight: '100%'
   },
   textContent: {
     flex: 1,
-    justifyContent: 'space-between', // Changed to space-between
-    paddingRight: 10,
-    maxWidth: '50%',
-    height: '100%' // Added to fill the full height
+    alignItems: 'flex-start',
+    gap: verticalScale(10),
+    justifyContent: 'center',
+    maxWidth: '66%'
   },
   titleText: {
-    fontSize: 22,
+    fontSize: scale(20),
     fontWeight: '700',
-    color: '#000000',
-    marginBottom: 4,
-    textShadowColor: 'rgba(255, 255, 255, 0.5)',
+    color: '#FFFFFF',
+    lineHeight: scale(25),
+    textShadowColor: 'rgba(0, 0, 0, 0.45)',
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3
+    textShadowRadius: 2
   },
   descriptionText: {
     fontSize: 18,
@@ -180,21 +213,22 @@ const styles = (tablet = false) => StyleSheet.create({
     textShadowRadius: 3
   },
   detailButton: {
-    backgroundColor: '#0891B2',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: 'rgba(255, 255, 255, 0.55)',
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingVertical: verticalScale(7),
+    paddingHorizontal: scale(13),
+    borderRadius: scale(8),
     alignSelf: 'flex-start',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.14,
+    shadowRadius: 2
   },
   detailButtonText: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '600'
+    color: '#10200A',
+    fontSize: scale(12),
+    fontWeight: '700'
   },
   dealHighlightContainer: {
     alignItems: 'flex-end',
@@ -229,7 +263,7 @@ const styles = (tablet = false) => StyleSheet.create({
     marginHorizontal: 4
   },
   paginationDotActive: {
-    backgroundColor: '#006189',
+    backgroundColor: '#90E36D',
     width: 24
   },
   paginationDotInactive: {

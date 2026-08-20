@@ -7,7 +7,7 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { Ionicons } from '@expo/vector-icons'
 
 const Browse = () => {
-  const { dismissKeyboard, modalVisible, setModalVisible, handleClearSearch, handleModalClose, t, currentTheme, insets, inputRef, searchTerm, setSearchTerm, data, loading, error, retrySearch, debouncedSearch, onProductPress, handleAddToCart, handleSeeAll, isSearched } = useBrowse()
+  const { dismissKeyboard, modalVisible, setModalVisible, handleClearSearch, handleModalClose, t, currentTheme, insets, inputRef, searchTerm, setSearchTerm, data, loading, error, retrySearch, debouncedSearch, onProductPress, handleAddToCart, handleSeeAll, isSearched, loadMore, hasMore } = useBrowse()
 
   return (
     <TouchableWithoutFeedback onPress={() => dismissKeyboard()}>
@@ -19,7 +19,7 @@ const Browse = () => {
 
         <AllCategories currentTheme={currentTheme} t={t} handleSeeAll={handleSeeAll} />
 
-        <BrowseModal visible={modalVisible} onClose={handleModalClose} inputRef={inputRef} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleClearSearch={handleClearSearch} currentTheme={currentTheme} t={t} insets={insets} data={data} loading={loading} error={error} onRetry={retrySearch} debouncedSearch={debouncedSearch} onProductPress={onProductPress} handleAddToCart={handleAddToCart} isSearched={isSearched} />
+        <BrowseModal visible={modalVisible} onClose={handleModalClose} inputRef={inputRef} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleClearSearch={handleClearSearch} currentTheme={currentTheme} t={t} insets={insets} data={data} loading={loading} error={error} onRetry={retrySearch} debouncedSearch={debouncedSearch} onProductPress={onProductPress} handleAddToCart={handleAddToCart} isSearched={isSearched} loadMore={loadMore} hasMore={hasMore} />
 
         {/* <SearchModal visible={isCategoryModalVisible} onClose={() => setisCategoryModalVisible(false)} items={products} isPaginated={true} categoryId={categoryId} /> */}
       </View>

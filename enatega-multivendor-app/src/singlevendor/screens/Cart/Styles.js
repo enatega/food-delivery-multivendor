@@ -72,7 +72,7 @@ const styles = (props = null) =>
       marginBottom: scale(12)
     },
     checkoutButton: {
-      backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
       paddingVertical: scale(12),
       paddingHorizontal: scale(20),
       borderRadius: scale(8),
@@ -80,7 +80,7 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     checkoutButtonDisabled: {
-      backgroundColor: '#F4F4F5'
+      backgroundColor: props !== null ? props.singleVendorDisabledBackground : '#F4F4F5'
     },
     checkoutButtonContent: {
       flexDirection: 'row',

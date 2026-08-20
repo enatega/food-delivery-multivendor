@@ -93,7 +93,7 @@ const VendorModeToggle = ({ hasActiveOrder = false, hasCartItems = false }) => {
               <Feather
                 name={icons[itemMode]}
                 size={scale(15)}
-                color={selected ? currentTheme.primaryBlue : currentTheme.colorTextMuted}
+                color={selected ? currentTheme.singleVendorBrandForeground : currentTheme.colorTextMuted}
                 style={styles(currentTheme).buttonIcon}
               />
               <Text style={[styles(currentTheme).label, selected && styles(currentTheme).selectedLabel]}>
@@ -105,7 +105,7 @@ const VendorModeToggle = ({ hasActiveOrder = false, hasCartItems = false }) => {
       {isSwitchingMode
         ? (
           <View style={styles(currentTheme).loader}>
-            <ActivityIndicator color={currentTheme.primaryBlue} size='small' />
+            <ActivityIndicator color={currentTheme.singleVendorBrandForeground} size='small' />
           </View>
           )
         : null}
@@ -136,8 +136,8 @@ const styles = (currentTheme) => StyleSheet.create({
     borderRightWidth: StyleSheet.hairlineWidth
   },
   selectedButton: {
-    backgroundColor: `${currentTheme.primaryBlue}12`,
-    borderBottomColor: currentTheme.primaryBlue
+    backgroundColor: currentTheme.singleVendorBrandSubtle,
+    borderBottomColor: currentTheme.singleVendorBrand
   },
   label: {
     color: currentTheme.colorTextMuted,
@@ -145,7 +145,7 @@ const styles = (currentTheme) => StyleSheet.create({
     fontWeight: '600'
   },
   selectedLabel: {
-    color: currentTheme.primaryBlue
+    color: currentTheme.singleVendorBrandForeground
   },
   buttonIcon: { marginRight: scale(7) },
   loader: {

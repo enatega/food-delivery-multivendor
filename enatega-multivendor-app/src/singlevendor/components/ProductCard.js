@@ -7,6 +7,7 @@ import ProductImageOverlay from './ProductImageOverlay'
 import ConfigurationContext from '../../context/Configuration'
 import { getDealPricing } from '../utils/helper'
 import CartQuantityController from './Cart/CartQuantityController'
+import { normalizeSingleVendorMediaUrl } from '../../utils/mediaUrl'
 
 const ProductCard = ({ product, onCardPress, containerStyles }) => {
   const { i18n } = useTranslation()
@@ -17,7 +18,7 @@ const ProductCard = ({ product, onCardPress, containerStyles }) => {
   const variation = product?.variations?.[0]
   const deal = variation?.deal
 
-  const { finalPrice, discountAmount } = getDealPricing(variation?.price, deal)
+  const { finalPrice } = getDealPricing(variation?.price, deal)
   const hasDeal = Boolean(deal)
 
   return (
@@ -28,10 +29,10 @@ const ProductCard = ({ product, onCardPress, containerStyles }) => {
       style={[styles(currentTheme).card, containerStyles]}
     >
       <ImageBackground
-        onError={(err) => {
+        onError={() => {
           // console.log("Error loading images",err)
         }}
-        source={{ uri: typeof product?.image == 'number' ? '' : product?.image }}
+        source={{ uri: typeof product?.image === 'number' ? '' : normalizeSingleVendorMediaUrl(product?.image) }}
         style={styles(currentTheme).imageContainer}
         imageStyle={styles(currentTheme).productImage}
       >
@@ -41,7 +42,7 @@ const ProductCard = ({ product, onCardPress, containerStyles }) => {
           </View>
         )}
         <ProductImageOverlay
-          hasDeal={product.variations[0].deal ? true : false}
+          hasDeal={Boolean(product.variations[0].deal)}
           product={product}
           dealText={product?.dealText || 'Deal'}
           control={
@@ -59,7 +60,8 @@ const ProductCard = ({ product, onCardPress, containerStyles }) => {
       </ImageBackground>
       <View style={styles(currentTheme).contentContainer}>
         <View style={styles(currentTheme).priceContainer}>
-          {hasDeal ? (
+          {hasDeal
+            ? (
             <>
               <Text style={styles(currentTheme).finalPrice}>
                 {finalPrice} {configuration?.currencySymbol}
@@ -69,11 +71,12 @@ const ProductCard = ({ product, onCardPress, containerStyles }) => {
                 {variation?.price} {configuration?.currencySymbol}
               </Text>
             </>
-          ) : (
+              )
+            : (
             <Text style={styles(currentTheme).finalPrice}>
               {variation?.price} {configuration?.currencySymbol}
             </Text>
-          )}
+              )}
         </View>
         <Text style={styles(currentTheme).productName} numberOfLines={3} ellipsizeMode='tail'>
           {product?.title}
@@ -124,7 +127,7 @@ const styles = (currentTheme) =>
     price: {
       fontSize: 16,
       fontWeight: 'bold',
-      color: currentTheme.primaryBlue,
+      color: currentTheme.singleVendorBrandForeground,
       marginBottom: 4
     },
     productName: {
@@ -155,7 +158,7 @@ const styles = (currentTheme) =>
     finalPrice: {
       fontSize: 16,
       fontWeight: '700',
-      color: currentTheme.primaryBlue,
+      color: currentTheme.singleVendorBrandForeground,
       marginRight: 6
     },
 
@@ -169,7 +172,7 @@ const styles = (currentTheme) =>
       position: 'absolute',
       top: 8,
       left: 8,
-      backgroundColor: currentTheme.primaryBlue,
+      backgroundColor: currentTheme.singleVendorBrand,
       paddingHorizontal: 8,
       paddingVertical: 4,
       borderRadius: 6
@@ -178,7 +181,7 @@ const styles = (currentTheme) =>
     dealBadgeText: {
       fontSize: 11,
       fontWeight: '700',
-      color: '#fff'
+      color: currentTheme.singleVendorOnBrand
     }
   })
 

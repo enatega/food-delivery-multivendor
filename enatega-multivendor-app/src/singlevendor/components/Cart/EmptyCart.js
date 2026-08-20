@@ -82,7 +82,7 @@ const styles = (currentTheme = null) =>
       alignItems: 'center'
     },
     button: {
-      backgroundColor: currentTheme ? currentTheme.lightBlue : '#CCE9F5',
+      backgroundColor: currentTheme ? currentTheme.singleVendorBrand : '#90E36D',
       paddingVertical: scale(14),
       paddingHorizontal: scale(40),
       borderRadius: scale(8),

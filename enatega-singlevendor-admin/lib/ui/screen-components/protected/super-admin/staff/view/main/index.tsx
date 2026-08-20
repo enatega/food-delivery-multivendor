@@ -84,7 +84,6 @@ export default function StaffMain({
       label: t('Delete'),
       command: (data?: IStaffResponse) => {
         if (data) {
-          console.log(data);
           setDeleteId(data._id);
         }
       },
@@ -116,8 +115,7 @@ export default function StaffMain({
         onConfirm={() => {
           mutateDelete({
             variables: { id: deleteId },
-            onCompleted: (res) => {
-              console.log('Delete Response:', res);
+            onCompleted: () => {
               showToast({
                 type: 'success',
                 title: t('Success'),

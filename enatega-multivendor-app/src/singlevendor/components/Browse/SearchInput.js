@@ -19,13 +19,13 @@ const SearchInput = ({ currentTheme, handleClearSearch, inputRef, searchTerm, se
         onChangeText={setSearchTerm}
         placeholder='Search'
         placeholderTextColor={currentTheme.colorTextMuted}
-        selectionColor={currentTheme.primaryBlue}
+        selectionColor={currentTheme.singleVendorBrandForeground}
       />
 
       {loading
         ? (
         <View>
-          <Spinner spinnerColor={currentTheme.primaryBlue} size='small' />
+          <Spinner spinnerColor={currentTheme.singleVendorBrandForeground} size='small' />
         </View>
           )
         : searchTerm.length > 0

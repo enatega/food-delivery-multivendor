@@ -30,7 +30,6 @@ export default function WithdrawRequestAddForm({
   const { showToast } = useToast();
   const { restaurantProfileResponse } = useContext(ProfileContext);
 
-  console.log(restaurantProfileResponse?.data);
 
   const t = useTranslations();
 

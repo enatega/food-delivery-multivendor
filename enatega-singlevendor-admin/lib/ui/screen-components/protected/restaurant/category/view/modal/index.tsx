@@ -29,8 +29,9 @@ export default function SubCategoriesPreiwModal({
   const { data: sub_categories_data, loading: sub_categories_loading } =
     useQuery(GET_SUBCATEGORIES_BY_PARENT_ID, {
       variables: {
-        parentCategoryId: subCategoryParentId,
+        parentCategoryId: subCategoryParentId ?? '',
       },
+      skip: !isSubCategoryModalOpen || !subCategoryParentId,
     }) as QueryResult<
       ISubCategoryByParentIdResponse | undefined,
       { parentCategoryId: string }

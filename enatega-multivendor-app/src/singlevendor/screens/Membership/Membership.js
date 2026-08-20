@@ -53,7 +53,7 @@ const Membership = () => {
 
         {loading ? (
           <View style={styles(currentTheme).verticalMargin}>
-            <Spinner spinnerColor={currentTheme?.primaryBlue} />
+            <Spinner spinnerColor={currentTheme?.singleVendorBrandForeground} />
           </View>
         ) : error ? (
           <View style={[styles().verticalMargin, { padding: scale(14), borderRadius: scale(10), borderWidth: 1, borderColor: currentTheme?.newBorderColor2, justifyContent: 'center', alignItems: 'center' }]}>

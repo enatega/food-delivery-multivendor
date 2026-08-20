@@ -91,7 +91,7 @@ export default function VendorUpdateForms() {
       });
       // setIsUpdateProfileVisible(false);
     } catch (error) {
-      console.log('error', error);
+      console.error('Vendor profile update failed', error);
 
       showToast({
         type: 'error',
@@ -152,7 +152,6 @@ export default function VendorUpdateForms() {
                 isSubmitting,
                 setFieldValue,
               }) => {
-                console.log('errors', errors);
                 return (
                   <>
                     <div>

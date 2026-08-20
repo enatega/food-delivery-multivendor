@@ -9,7 +9,7 @@ const SearchListItem = ({ isRecent = false, title, deleteHandler, onPressHandler
       <TouchableOpacity hitSlop={10} onPress={onPressHandler} style={[styles().flex, { width: '85%', justifyContent: 'flex-start' }]}>
         {isRecent ? <Octicons name='history' size={18} color={currentTheme?.iconColor} /> : <Ionicons name='search' size={18} color={currentTheme?.colorTextMuted} />}
         <TextDefault H5 textColor={currentTheme?.colorTextMuted}>
-          {t(title)}
+          {isRecent ? title : t(title)}
         </TextDefault>
       </TouchableOpacity>
 

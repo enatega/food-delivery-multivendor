@@ -262,7 +262,7 @@ const PaymentSection = ({
             </View>
 
             {/* Check icon */}
-            {isSelected && <Feather name='check-circle' size={20} color={currentTheme.primaryBlue || '#0EA5E9'} style={styles().checkIcon} />}
+            {isSelected && <Feather name='check-circle' size={20} color={currentTheme.singleVendorBrandForeground} style={styles().checkIcon} />}
           </TouchableOpacity>
         )
       })}
@@ -373,9 +373,7 @@ const styles = (props = null) => {
   const subtleBorder = isDark
     ? 'rgba(255, 255, 255, 0.13)'
     : 'rgba(15, 23, 42, 0.10)'
-  const selectedBackground = isDark
-    ? 'rgba(14, 165, 233, 0.16)'
-    : 'rgba(14, 165, 233, 0.08)'
+  const selectedBackground = props?.singleVendorBrandSubtle || (isDark ? '#203519' : '#F3FFEE')
   const removeBackground = isDark
     ? 'rgba(248, 113, 113, 0.14)'
     : 'rgba(239, 68, 68, 0.08)'
@@ -402,7 +400,7 @@ const styles = (props = null) => {
       backgroundColor: props ? props.themeBackground : '#fff'
     },
     optionCardSelected: {
-      borderColor: props ? props.primaryBlue : '#0EA5E9',
+      borderColor: props ? props.singleVendorBrand : '#90E36D',
       borderWidth: 1,
       backgroundColor: selectedBackground
     },
@@ -419,13 +417,13 @@ const styles = (props = null) => {
       justifyContent: 'center'
     },
     radioOuterSelected: {
-      borderColor: props ? props.primaryBlue : '#0EA5E9'
+      borderColor: props ? props.singleVendorBrand : '#90E36D'
     },
     radioInner: {
       width: scale(10),
       height: scale(10),
       borderRadius: scale(5),
-      backgroundColor: props ? props.primaryBlue : '#0EA5E9'
+      backgroundColor: props ? props.singleVendorBrand : '#90E36D'
     },
     optionContent: {
       flex: 1
@@ -495,7 +493,7 @@ const styles = (props = null) => {
       paddingHorizontal: scale(14),
       borderRadius: scale(8),
       marginLeft: scale(8),
-      backgroundColor: props ? props.singlevendorcolor : '#0090CD',
+      backgroundColor: props ? props.singleVendorBrand : '#90E36D',
       alignItems: 'center',
       justifyContent: 'center'
     },

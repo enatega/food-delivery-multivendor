@@ -181,7 +181,7 @@ const OrderFeesModal = ({
             onPress={onClose}
           >
             <TextDefault
-              textColor="#fff"
+              textColor={currentTheme.singleVendorOnBrand}
               bolder
               H4
             >
@@ -279,7 +279,7 @@ const styles = (currentTheme = null) =>
       marginBottom: scale(16)
     },
     okButton: {
-      backgroundColor: '#0EA5E9',
+      backgroundColor: currentTheme.singleVendorBrand,
       paddingVertical: scale(12),
       borderRadius: scale(12),
       alignItems: 'center',

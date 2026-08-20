@@ -69,7 +69,7 @@ const styles = (props = null) =>
       // elevation: 5
     },
     confirmButton: {
-      backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
       paddingVertical: scale(14),
       borderRadius: scale(8),
       alignItems: 'center',
@@ -90,7 +90,7 @@ const styles = (props = null) =>
       paddingHorizontal: scale(32)
     },
     retryButton: {
-      backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
       paddingVertical: scale(12),
       paddingHorizontal: scale(32),
       borderRadius: scale(8),

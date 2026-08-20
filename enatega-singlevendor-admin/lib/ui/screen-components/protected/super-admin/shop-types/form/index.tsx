@@ -201,7 +201,7 @@ export default function ShopTypesForm({
 
           setSubmitting(false);
         }}
-        validateOnChange={true}
+        validateOnChange={false}
       >
         {({ errors, handleSubmit, values, isSubmitting, setFieldValue }) => {
           return (

@@ -98,7 +98,7 @@ export default function FoodDetails() {
   } = useQueryGQL(
     GET_SUBCATEGORIES_BY_PARENT_ID,
     {
-      parentCategoryId: categoryDropDown?.code,
+      parentCategoryId: categoryDropDown?.code ?? '',
     },
     {
       enabled: !!categoryDropDown?.code,

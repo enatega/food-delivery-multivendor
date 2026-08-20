@@ -30,7 +30,7 @@ const TimeSlotList = ({ timeSlots, selectedTimeSlot, onSelectTimeSlot }) => {
             activeOpacity={0.7}
           >
             <TextDefault
-              textColor={isSelected ? (currentTheme.singlevendorcolor || '#0090CD') : currentTheme.fontSecondColor}
+              textColor={isSelected ? currentTheme.singleVendorBrandForeground : currentTheme.fontSecondColor}
               bolder
               // bolder={isSelected}
               center
@@ -63,8 +63,8 @@ const styles = (props = null) =>
       justifyContent: 'center'
     },
     timeSlotButtonSelected: {
-      backgroundColor: props !== null ? props.colorBgSecondary : '#CCE9F5',
-      borderColor: props !== null ? props.singlevendorcolor : '#0090CD',
+      backgroundColor: props !== null ? props.singleVendorBrandSubtle : '#F3FFEE',
+      borderColor: props !== null ? props.singleVendorBrand : '#90E36D',
       borderWidth: 1
     }
   });

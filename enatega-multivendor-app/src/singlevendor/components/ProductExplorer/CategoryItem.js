@@ -27,32 +27,35 @@
 //   activeText: { color: '#007AFF', fontWeight: '600' },
 // });
 
-
-import React, { memo } from 'react'
+import React, { memo, useContext } from 'react'
 import { Text, Pressable, StyleSheet, View } from 'react-native'
+import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
+import { theme } from '../../../utils/themeColors'
 
 const CategoryItem = ({
   title,
   active,
   onPress,
-  variant = 'pill',
+  variant = 'pill'
 }) => {
   const isUnderline = variant === 'underline'
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
 
   return (
     <Pressable
       onPress={onPress}
       style={[
-        styles.container,
-        isUnderline ? styles.underlineContainer : styles.pillContainer,
-        active && !isUnderline && styles.activePill,
+        styles(currentTheme).container,
+        isUnderline ? styles(currentTheme).underlineContainer : styles(currentTheme).pillContainer,
+        active && !isUnderline && styles(currentTheme).activePill
       ]}
     >
       <Text
         style={[
-          styles.text,
-          active && styles.activeText,
-          isUnderline && styles.underlineText,
+          styles(currentTheme).text,
+          active && styles(currentTheme).activeText,
+          isUnderline && styles(currentTheme).underlineText
         ]}
       >
         {title}
@@ -62,8 +65,8 @@ const CategoryItem = ({
       {isUnderline && (
         <View
           style={[
-            styles.underline,
-            active && styles.underlineActive,
+            styles(currentTheme).underline,
+            active && styles(currentTheme).underlineActive
           ]}
         />
       )}
@@ -73,22 +76,22 @@ const CategoryItem = ({
 
 export default memo(CategoryItem)
 
-const styles = StyleSheet.create({
+const styles = (currentTheme) => StyleSheet.create({
   /* Base */
   container: {
     alignItems: 'center',
-    marginHorizontal: 8,
- 
+    marginHorizontal: 8
+
   },
 
   text: {
     fontSize: 14,
-    color: '#555',
+    color: currentTheme.colorTextMuted
   },
 
   activeText: {
-    color: '#007AFF',
-    fontWeight: '600',
+    color: currentTheme.singleVendorBrandForeground,
+    fontWeight: '600'
   },
 
   /* Pill variant */
@@ -96,22 +99,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 18,
-    backgroundColor: '#EEE',
+    backgroundColor: currentTheme.colorBgTertiary
   },
 
   activePill: {
-    backgroundColor: '#CDEEFF',
+    backgroundColor: currentTheme.singleVendorBrandSubtle
   },
 
   /* Underline variant */
   underlineContainer: {
-    paddingVertical: 10,
-    
+    paddingVertical: 10
+
   },
 
   underlineText: {
     fontSize: 14,
-    paddingHorizontal:12
+    paddingHorizontal: 12
   },
 
   underline: {
@@ -119,10 +122,10 @@ const styles = StyleSheet.create({
     height: 2,
     width: '100%', // ✅ full width of item
     backgroundColor: 'transparent',
-    borderRadius: 1,
+    borderRadius: 1
   },
 
   underlineActive: {
-    backgroundColor: '#007AFF',
-  },
+    backgroundColor: currentTheme.singleVendorBrand
+  }
 })

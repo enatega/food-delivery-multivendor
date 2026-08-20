@@ -124,7 +124,7 @@ export default function VendorAddForm({
         },
       });
     } catch (error) {
-      console.log('error during add vendor ==> ', error);
+      console.error('Vendor creation failed', error);
       showToast({
         type: 'error',
         title: `${isEditingVendor ? t('Edit') : t('Create')} ${t('Vendor')}`,

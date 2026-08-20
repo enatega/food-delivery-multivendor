@@ -12,7 +12,7 @@ const EmptySearch = ({currentTheme, t}) => {
             {t('Recent')}
           </TextDefault>
           <TouchableOpacity onPress={() => console.log('clear all called')}>
-            <TextDefault H5 bolder textColor={currentTheme?.primaryBlue}>
+            <TextDefault H5 bolder textColor={currentTheme?.singleVendorBrandForeground}>
               0 {t('found')}
             </TextDefault>
           </TouchableOpacity>

@@ -15,7 +15,7 @@ const VoucherCard = ({ voucher, currentTheme, onUse, onRemove, voucherInUse }) =
         {/* Left side - Discount Badge */}
         <View style={styles(currentTheme).discountBadge}>
           <TextDefault
-            textColor="#006189"
+            textColor={currentTheme.singleVendorBrandForeground}
             style={styles(currentTheme).discountAmount}
             bolder
             center
@@ -23,7 +23,7 @@ const VoucherCard = ({ voucher, currentTheme, onUse, onRemove, voucherInUse }) =
             {voucher.discountAmount}
           </TextDefault>
           <TextDefault
-            textColor="#006189"
+            textColor={currentTheme.singleVendorBrandForeground}
             style={styles(currentTheme).discountLabel}
             bolder
             center
@@ -68,7 +68,7 @@ const VoucherCard = ({ voucher, currentTheme, onUse, onRemove, voucherInUse }) =
                 {
                   backgroundColor: isActive
                     ? currentTheme.gray200 || '#E5E7EB'
-                    : currentTheme.primaryBlue
+                    : currentTheme.singleVendorBrandForeground
                 }
               ]}
               onPress={isActive ? onRemove : onUse}
@@ -152,7 +152,7 @@ const styles = (props = null) =>
     },
     discountBadge: {
       width: scale(80),
-      backgroundColor: props?.lowOpacityBlue || '#CCE9F5',
+      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE',
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: verticalScale(16),
@@ -204,7 +204,7 @@ const styles = (props = null) =>
       position: 'relative'
     },
     useButton: {
-      backgroundColor: '#0090CD',
+      backgroundColor: props?.singleVendorBrand || '#90E36D',
       borderRadius: scale(8),
       paddingHorizontal: scale(12),
       paddingVertical: verticalScale(6),

@@ -47,7 +47,7 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
   const [updateWithdrawReqStatus, { loading: status_change_loading }] =
     useMutation(UPDATE_WITHDRAW_REQUEST, {
       onError: (err) => {
-        console.log('error updating withdraw request status', err);
+        console.error('Error updating withdraw request status', err);
         showToast({
           type: 'error',
           title: 'Update Withdraw Request',
@@ -121,7 +121,6 @@ export const WITHDRAW_REQUESTS_TABLE_COLUMNS = ({
     async (e: any, rowData: IWithDrawRequest) => {
       try {
         setSelectedWithDrawRequest(e.value.code);
-        console.log('New status:', setSelectedWithDrawRequest);
         setIsChangingStatus({
           _id: rowData._id,
           bool: true,

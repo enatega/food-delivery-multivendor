@@ -28,7 +28,7 @@ module.exports = () => {
   return {
     name: 'Enatega Multi',
     scheme: 'enategamultivendor',
-    version: '1.1.36',
+    version: '1.1.37',
     description:
       "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     slug: 'enategamultivendor',
@@ -62,7 +62,7 @@ module.exports = () => {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.enatega.multivendor',
-      buildNumber: '137',
+      buildNumber: '138',
       icon: './assets/icon.png',
       googleServicesFile: './GoogleService-Info.plist',
       infoPlist: {
@@ -89,7 +89,7 @@ module.exports = () => {
       androidCollapsedTitle: 'Enatega Multivendor'
     },
     android: {
-      versionCode: 136,
+      versionCode: 138,
       package: 'com.enatega.multivendor',
       userInterfaceStyle: 'automatic',
       // Disable ADB/cloud backups so the AsyncStorage DB (JWT) can't be pulled

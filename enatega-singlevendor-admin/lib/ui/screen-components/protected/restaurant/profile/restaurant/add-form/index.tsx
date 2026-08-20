@@ -38,7 +38,6 @@ const UpdateRestaurantsProfileForm = ({
 
   // Handlers
   const onHandleStepChange = (order: number) => {
-    console.log('next step', order);
     onActiveStepChange(order);
   };
 

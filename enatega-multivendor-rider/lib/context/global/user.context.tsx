@@ -71,6 +71,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   >([] as IRiderEarningsArray[]);
   const [userId, setUserId] = useState("");
   const [zoneId, setZoneId] = useState("");
+  const [hasMoreAssigned, setHasMoreAssigned] = useState(true);
 
   const {
     loading: loadingProfile,
@@ -93,18 +94,32 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     networkStatus: networkStatusAssigned,
     subscribeToMore,
     refetch: refetchAssigned,
+    fetchMore: fetchMoreAssigned,
   } = useQuery(riderOrdersQuery, {
     // Orders change constantly (status updates, new assignments), so every
     // fetch/refetch/poll must hit the network rather than falling back to
     // cache-first, which could serve stale order lists.
     fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
-    pollInterval: 30000,
+    pollInterval: isSingleVendor ? 0 : 30000,
     skip: !userId,
-    variables: {
-      userId,
-    },
+    variables: isSingleVendor ? {limit: 50, offset: 0} : {userId},
   });
+  const loadMoreAssigned = useCallback(async () => {
+    if (!isSingleVendor || loadingAssigned || !hasMoreAssigned) return;
+    const existing = dataAssigned?.riderOrders ?? [];
+    const {data: nextPage} = await fetchMoreAssigned({
+      variables: {limit: 50, offset: existing.length},
+      updateQuery: (previous, {fetchMoreResult}) => {
+        const incoming = fetchMoreResult?.riderOrders ?? [];
+        const byId = new Map(
+          [...(previous.riderOrders ?? []), ...incoming].map((order: IOrder) => [order._id, order]),
+        );
+        return {riderOrders: [...byId.values()]};
+      },
+    });
+    setHasMoreAssigned((nextPage?.riderOrders?.length ?? 0) === 50);
+  }, [dataAssigned?.riderOrders, fetchMoreAssigned, hasMoreAssigned, isSingleVendor, loadingAssigned]);
   const isRiderAvailable = Boolean(dataProfile?.rider?.available);
 
   const getUserId = useCallback(async () => {
@@ -269,6 +284,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       errorAssigned,
       assignedOrders,
       refetchAssigned,
+      loadMoreAssigned,
+      hasMoreAssigned,
       refetchProfile,
       networkStatusAssigned,
     }),
@@ -284,6 +301,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       errorAssigned,
       assignedOrders,
       refetchAssigned,
+      loadMoreAssigned,
+      hasMoreAssigned,
       refetchProfile,
       networkStatusAssigned,
     ],

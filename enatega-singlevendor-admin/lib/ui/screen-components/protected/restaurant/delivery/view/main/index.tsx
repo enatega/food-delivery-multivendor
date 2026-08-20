@@ -92,7 +92,7 @@ const DeliveryMain = () => {
         onSubmit={async (values) => {
           await onCreateDelivery(values);
         }}
-        validateOnChange
+        validateOnChange={false}
         enableReinitialize
       >
         {({ values, errors, handleSubmit, isSubmitting, setFieldValue }) => {

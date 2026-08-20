@@ -102,7 +102,7 @@ const ScheduleOrderMain = () => {
         refetch();
       },
       onError: (err) => {
-        console.log(err.graphQLErrors);
+        console.error('Scheduled order update failed', err.graphQLErrors);
         const message =
           err.graphQLErrors?.[0]?.message ||
           err.message ||

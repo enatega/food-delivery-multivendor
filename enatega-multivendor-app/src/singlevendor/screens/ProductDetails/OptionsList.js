@@ -128,16 +128,16 @@ const styles = currentTheme =>
       marginRight: 12
     },
     selected: {
-      borderColor: currentTheme.primaryBlue || '#007AFF'
+      borderColor: currentTheme.singleVendorBrand
     },
     innerDot: {
       width: 10,
       height: 10,
       borderRadius: 5,
-      backgroundColor: currentTheme.primaryBlue || '#007AFF'
+      backgroundColor: currentTheme.singleVendorBrand
     },
     check: {
-      color: currentTheme.primaryBlue || '#007AFF',
+      color: currentTheme.singleVendorBrandForeground,
       fontSize: 14,
       fontWeight: '700'
     },
@@ -151,7 +151,7 @@ const styles = currentTheme =>
     },
     badge: {
       fontSize: 12,
-      color: currentTheme.primaryBlue || '#007AFF',
+      color: currentTheme.singleVendorBrandForeground,
       marginTop: 2
     },
     price: {

@@ -333,10 +333,10 @@ const ScheduleDeliveryTime = (props) => {
             activeOpacity={0.7}
           >
             {retrying ? (
-              <ActivityIndicator size="small" color="#fff" />
+              <ActivityIndicator size='small' color={currentTheme.singleVendorOnBrand} />
             ) : (
               <TextDefault
-                textColor="#fff"
+                textColor={currentTheme.singleVendorOnBrand}
                 bold
                 isRTL
               >
@@ -419,7 +419,7 @@ const ScheduleDeliveryTime = (props) => {
               activeOpacity={0.7}
             >
               <TextDefault
-                textColor={selectedTimeSlot ? '#fff' : currentTheme.fontSecondColor}
+                textColor={selectedTimeSlot ? currentTheme.singleVendorOnBrand : currentTheme.fontSecondColor}
                 bolder
                 H5
               >

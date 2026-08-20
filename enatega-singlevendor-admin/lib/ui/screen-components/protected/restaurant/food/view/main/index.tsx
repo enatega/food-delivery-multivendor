@@ -242,7 +242,7 @@ export default function FoodsMain() {
       fetchPolicy: 'network-only',
       refetchWritePolicy: 'overwrite',
       onError(err) {
-        console.log({ err });
+        console.error('Food deletion failed', err);
       },
     }
   ) as LazyQueryResultTuple<
@@ -410,7 +410,7 @@ export default function FoodsMain() {
       label: t('Edit'),
       command: async (data?: IFoodNew) => {
         if (subCategoriesLoading) {
-          return console.log({ subCategoriesLoading });
+          return;
         }
 
         const sub_ctg_id = foodsData?.restaurant.categories.flatMap((fd) =>

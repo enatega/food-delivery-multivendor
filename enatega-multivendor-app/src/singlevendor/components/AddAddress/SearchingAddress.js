@@ -19,7 +19,7 @@ const SearchingAddress = ({
   isSearched,
   bottomInset
 }) => {
-  const accent = currentTheme.singlevendorcolor || currentTheme.primaryBlue
+  const accent = currentTheme.singleVendorBrandForeground
   const primaryText = currentTheme.colorTextPrimary || currentTheme.fontMainColor
   const mutedText = currentTheme.colorTextMuted || currentTheme.fontSecondColor
   const borderColor = currentTheme.newBorderColor2 || currentTheme.borderColor
@@ -30,7 +30,7 @@ const SearchingAddress = ({
       onPress={() => handlePlaceSelect(item)}
       style={({ pressed }) => [styles.resultRow, { opacity: pressed ? 0.58 : 1 }]}
     >
-      <View style={[styles.resultIcon, { backgroundColor: currentTheme.lowOpacityBlue }]}>
+      <View style={[styles.resultIcon, { backgroundColor: currentTheme.singleVendorBrandSubtle }]}> 
         <Feather name='map-pin' size={17} color={accent} />
       </View>
       <View style={styles.resultCopy}>
@@ -95,7 +95,7 @@ const SearchingAddress = ({
           { borderBottomColor: borderColor, opacity: pressed ? 0.62 : 1 }
         ]}
       >
-        <View style={[styles.mapIcon, { backgroundColor: currentTheme.lowOpacityBlue }]}>
+        <View style={[styles.mapIcon, { backgroundColor: currentTheme.singleVendorBrandSubtle }]}> 
           <Feather name='map' size={20} color={accent} />
         </View>
         <View style={styles.mapCopy}>

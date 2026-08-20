@@ -1,11 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React from 'react'
+import { normalizeSingleVendorMediaUrl } from '../../utils/mediaUrl'
 
 const RenderCategoryCard = ({ item: category, currentTheme, handleCategoryPress, widthSize }) => {
   return (
     <TouchableOpacity style={[styles(currentTheme).categoryCard, {width: widthSize ? widthSize : 80}]} onPress={() => handleCategoryPress(category?.viewType, category?.id)} activeOpacity={0.7}>
       <View style={[styles(currentTheme).imageContainer, { width: widthSize ? widthSize : 80, height: widthSize ? widthSize : 80 }]}>
-        <Image source={{ uri: category?.image }} style={styles(currentTheme).categoryImage} resizeMode='cover' />
+        <Image source={{ uri: normalizeSingleVendorMediaUrl(category?.image) }} style={styles(currentTheme).categoryImage} resizeMode='cover' />
       </View>
       <Text style={styles(currentTheme).categoryLabel}>{category.name}</Text>
     </TouchableOpacity>

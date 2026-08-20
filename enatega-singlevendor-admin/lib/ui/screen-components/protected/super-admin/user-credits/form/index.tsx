@@ -202,7 +202,7 @@ export default function UserCreditsForm({
 
           setSubmitting(false);
         }}
-        validateOnChange={true}
+        validateOnChange={false}
       >
         {({
           errors,

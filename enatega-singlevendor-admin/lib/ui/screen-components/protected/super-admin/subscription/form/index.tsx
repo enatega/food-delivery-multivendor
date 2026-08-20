@@ -143,7 +143,7 @@ export default function SubscriptionForm({
             setSubmitting(false);
           }
         }}
-        validateOnChange={true}
+        validateOnChange={false}
       >
         {({ errors, handleSubmit, values, isSubmitting, setFieldValue }) => {
           return (

@@ -33,7 +33,7 @@ const SectionErrorCard = ({ title, message, onRetry, compact = false, style }) =
   return (
     <View accessibilityRole='alert' style={[themedStyles.card, style]}>
       <View style={themedStyles.iconWrap}>
-        <Feather name='wifi-off' size={scale(compact ? 17 : 20)} color={currentTheme.primaryBlue} />
+        <Feather name='wifi-off' size={scale(compact ? 17 : 20)} color={currentTheme.singleVendorBrandForeground} />
       </View>
       <View style={themedStyles.copy}>
         {!!title && (
@@ -55,8 +55,8 @@ const SectionErrorCard = ({ title, message, onRetry, compact = false, style }) =
           style={({ pressed }) => [themedStyles.retry, pressed && themedStyles.retryPressed]}
         >
           {retrying
-            ? <ActivityIndicator color='#FFFFFF' size='small' />
-            : <Feather name='refresh-cw' size={scale(15)} color='#FFFFFF' />}
+            ? <ActivityIndicator color={currentTheme.singleVendorOnBrand} size='small' />
+            : <Feather name='refresh-cw' size={scale(15)} color={currentTheme.singleVendorOnBrand} />}
           {!compact && (
             <TextDefault bold style={themedStyles.retryText}>
               {t('retry', { defaultValue: 'Retry' })}
@@ -92,7 +92,7 @@ const styles = (colors, compact) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: scale(20),
-    backgroundColor: `${colors.primaryBlue || '#0EA5E9'}18`
+    backgroundColor: colors.singleVendorBrandSubtle || '#F3FFEE'
   },
   copy: {
     flex: 1,
@@ -118,10 +118,10 @@ const styles = (colors, compact) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: scale(10),
-    backgroundColor: colors.primaryBlue || '#0EA5E9'
+    backgroundColor: colors.singleVendorBrand || '#90E36D'
   },
   retryPressed: { opacity: 0.78 },
-  retryText: { color: '#FFFFFF', fontSize: scale(12) }
+  retryText: { color: colors.singleVendorOnBrand || '#10200A', fontSize: scale(12) }
 })
 
 export default SectionErrorCard

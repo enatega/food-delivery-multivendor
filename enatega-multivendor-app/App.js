@@ -55,6 +55,7 @@ import {
   inferNotificationMode,
   savePendingOrderNavigation
 } from './src/mode/orderOrigin'
+import { getGoogleAuthConfigurationErrors } from './src/utils/googleAuthConfig'
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -79,8 +80,22 @@ function ModeAwareApp() {
     CLARITY_ENABLED,
     GRAPHQL_URL,
     WS_GRAPHQL_URL,
-    PUBLIC_ACCESS_REQUIRED
+    PUBLIC_ACCESS_REQUIRED,
+    EXPO_CLIENT_ID,
+    ANDROID_CLIENT_ID_GOOGLE,
+    IOS_CLIENT_ID_GOOGLE
   } = useEnvVars()
+
+  useEffect(() => {
+    const invalidFields = getGoogleAuthConfigurationErrors({
+      webClientId: EXPO_CLIENT_ID,
+      androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+      iosClientId: IOS_CLIENT_ID_GOOGLE
+    })
+    if (invalidFields.length) {
+      console.warn('[GoogleAuth] Invalid or missing client ID fields:', invalidFields.join(', '))
+    }
+  }, [EXPO_CLIENT_ID, ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE])
   const client = useMemo(
     () => setupApolloClient({
       GRAPHQL_URL,

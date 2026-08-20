@@ -77,6 +77,7 @@ export const UPDATE_USER_CART = gql`
       maxOrderAmount
       minOrderAmount
       cartId
+      cartRevision
       foods {
         categoryId
         foodId
@@ -109,6 +110,51 @@ export const UPDATE_USER_CART = gql`
             id
             title
           }
+          specialInstructions
+        }
+        actualFoodTotal
+        discountedFoodTotal
+        foodTotal
+      }
+    }
+  }
+`
+
+export const EDIT_SINGLE_VENDOR_CART_ITEM = gql`
+  mutation EditSingleVendorCartItem($input: EditSingleVendorCartItemInput!) {
+    editSingleVendorCartItem(input: $input) {
+      success
+      message
+      actualGrandTotal
+      discountedGrandTotal
+      totalDiscount
+      hasDeals
+      isBelowMinimumOrder
+      lowOrderFees
+      maxOrderAmount
+      minOrderAmount
+      cartId
+      cartRevision
+      foods {
+        categoryId
+        foodId
+        foodTitle
+        foodImage
+        variations {
+          _id
+          variationId
+          variationTitle
+          unitPrice
+          quantity
+          addons { addonId optionId title price }
+          addonsTotal
+          actualUnitPrice
+          discountedUnitPrice
+          actualItemTotal
+          discountedItemTotal
+          itemTotal
+          dealId
+          specialInstructions
         }
         actualFoodTotal
         discountedFoodTotal
@@ -133,8 +179,8 @@ export const UPDATE_USER_CART_COUNT = gql`
 `
 
 export const PLACE_ORDER = gql`
-  mutation PlaceOrder($paymentMethod: String!, $address: AddressInput!, $tipping: Float!, $orderDate: String!, $isPickedUp: Boolean!, $specialInstructions: String, $couponCode: String, $instructions: String, $scheduleData: ScheduleData, $isPriority: Boolean) {
-    placeOrder(paymentMethod: $paymentMethod, address: $address, tipping: $tipping, orderDate: $orderDate, isPickedUp: $isPickedUp, specialInstructions: $specialInstructions, couponCode: $couponCode, instructions: $instructions, scheduleData: $scheduleData, isPriority: $isPriority) {
+  mutation PlaceOrder($paymentMethod: String!, $address: AddressInput!, $tipping: Float!, $orderDate: String!, $isPickedUp: Boolean!, $specialInstructions: String, $couponCode: String, $instructions: String, $scheduleData: ScheduleData, $isPriority: Boolean, $idempotencyKey: String, $checkoutQuoteId: String) {
+    placeOrder(paymentMethod: $paymentMethod, address: $address, tipping: $tipping, orderDate: $orderDate, isPickedUp: $isPickedUp, specialInstructions: $specialInstructions, couponCode: $couponCode, instructions: $instructions, scheduleData: $scheduleData, isPriority: $isPriority, idempotencyKey: $idempotencyKey, checkoutQuoteId: $checkoutQuoteId) {
       _id
       orderId
       paymentMethod

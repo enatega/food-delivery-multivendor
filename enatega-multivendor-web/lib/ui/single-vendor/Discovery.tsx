@@ -3,11 +3,7 @@
 import { useQuery } from "@apollo/client";
 
 import {
-  SINGLE_VENDOR_BANNERS,
-  SINGLE_VENDOR_CATALOG,
-  SINGLE_VENDOR_CATEGORIES,
-  SINGLE_VENDOR_LIMITED_DEALS,
-  SINGLE_VENDOR_WEEKLY_DEALS,
+  SINGLE_VENDOR_DISCOVERY,
 } from "@/lib/api/graphql/single-vendor";
 import type { ModeProduct } from "@/lib/mode/types";
 import DiscoveryBannerSection from "@/lib/ui/screen-components/protected/home/discovery/banner-section";
@@ -50,21 +46,14 @@ function SectionError({ message }: { message: string }) {
 }
 
 export default function SingleVendorDiscovery() {
-  const categories = useQuery(SINGLE_VENDOR_CATEGORIES, {
+  const discovery = useQuery(SINGLE_VENDOR_DISCOVERY, {
+    variables: { previewLimit: 10, dealLimit: 20 },
     fetchPolicy: "cache-and-network",
   });
-  const catalog = useQuery(SINGLE_VENDOR_CATALOG, {
-    fetchPolicy: "cache-and-network",
-  });
-  const limited = useQuery(SINGLE_VENDOR_LIMITED_DEALS, {
-    fetchPolicy: "cache-and-network",
-  });
-  const weekly = useQuery(SINGLE_VENDOR_WEEKLY_DEALS, {
-    fetchPolicy: "cache-and-network",
-  });
+  const discoveryData = discovery.data?.singleVendorDiscovery;
 
   const categoryData = (
-    categories.data?.getRestaurantCategoriesSingleVendor || []
+    discoveryData?.categories || []
   ).map((category: any) => ({
     _id: category.id,
     name: category.name,
@@ -73,17 +62,20 @@ export default function SingleVendorDiscovery() {
     shopType: "single-vendor",
     slug: category.id,
   }));
-  const catalogData =
-    catalog.data?.getAllCategoriesWithSubCategoriesDataSeeAllSingleVendor || [];
+  const catalogData = discoveryData?.categories || [];
 
   return (
     <div className="pb-12">
-      <DiscoveryBannerSection query={SINGLE_VENDOR_BANNERS} />
+      <DiscoveryBannerSection
+        banners={discoveryData?.banners}
+        loading={discovery.loading}
+        error={discovery.error}
+      />
       <SingleVendorActiveOrderCard />
 
-      {categories.loading && !categoryData.length ? (
+      {discovery.loading && !categoryData.length ? (
         <CuisinesSliderSkeleton />
-      ) : categories.error ? (
+      ) : discovery.error ? (
         <SectionError message="Unable to fetch categories. Please try again shortly." />
       ) : (
         <CuisinesSliderCard
@@ -96,38 +88,38 @@ export default function SingleVendorDiscovery() {
         />
       )}
 
-      {limited.loading && !limited.data ? (
+      {discovery.loading && !discovery.data ? (
         <SingleVendorProductSectionSkeleton />
       ) : (
         <SingleVendorProductSection
           title="Limited-time offers"
           products={normalizeProducts(
-            limited.data?.getLimitedTimeFoodsDeals?.items,
+            discoveryData?.deals?.limitedTime?.items,
           )}
         />
       )}
 
-      {weekly.loading && !weekly.data ? (
+      {discovery.loading && !discovery.data ? (
         <SingleVendorProductSectionSkeleton />
       ) : (
         <SingleVendorProductSection
           title="Weekly offers"
-          products={normalizeProducts(weekly.data?.getWeeklyFoodsDeals?.items)}
+          products={normalizeProducts(discoveryData?.deals?.weekly?.items)}
         />
       )}
 
-      {catalog.loading && !catalogData.length ? (
+      {discovery.loading && !catalogData.length ? (
         <SingleVendorProductSectionSkeleton />
-      ) : catalog.error ? (
+      ) : discovery.error ? (
         <SectionError message="Unable to fetch products. Please try again shortly." />
       ) : (
         catalogData.map((category: any) => (
           <SingleVendorProductSection
-            key={category.categoryId}
-            title={category.categoryName}
+            key={category.id}
+            title={category.name}
             products={normalizeProducts(category.items).map((product) => ({
               ...product,
-              categoryId: category.categoryId,
+              categoryId: category.id,
             }))}
           />
         ))

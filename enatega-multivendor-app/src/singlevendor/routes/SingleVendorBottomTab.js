@@ -75,7 +75,7 @@ const SingleVendorBottomTab = () => {
             currentTheme.horizontalLine ||
             'rgba(148, 163, 184, 0.28)'
         },
-        tabBarActiveTintColor: '#0EA5E9',
+        tabBarActiveTintColor: currentTheme.singleVendorBrandForeground,
         tabBarInactiveTintColor: currentTheme.fontNewColor,
         tabBarLabelStyle: { fontSize: 12 },
         tabBarLabelPosition: 'below-icon'
@@ -127,8 +127,8 @@ const SingleVendorBottomTab = () => {
             height: scale(18),
             borderRadius: scale(9),
             paddingHorizontal: scale(4),
-            backgroundColor: currentTheme.primaryBlue || '#0EA5E9',
-            color: '#FFFFFF',
+            backgroundColor: currentTheme.singleVendorBrand,
+            color: currentTheme.singleVendorOnBrand,
             fontSize: scale(9),
             fontWeight: '700'
           }

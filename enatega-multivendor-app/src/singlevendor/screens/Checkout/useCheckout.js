@@ -3,7 +3,7 @@ import { CALCULATE_CHECKOUT } from '../../apollo/queries'
 import { PLACE_ORDER } from '../../apollo/mutations'
 import { CommonActions, useNavigation } from '@react-navigation/native'
 import useCartStore from '../../stores/useCartStore'
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import ConfigurationContext from '../../../context/Configuration'
 import { APP_MODES } from '../../../mode/constants'
 import { recordOrderOrigin } from '../../../mode/orderOrigin'
@@ -23,6 +23,9 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
   const { clearCart } = useCartStore()
   const configuration = useContext(ConfigurationContext)
   const currencySymbol = configuration?.currencySymbol || '€'
+  const idempotencyKeyRef = useRef(
+    `sv-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  )
   const [placeOrder, { loading: placingOrder }] = useMutation(PLACE_ORDER, {
     onCompleted: (data) => {
       recordOrderOrigin(data?.placeOrder, APP_MODES.SINGLE).catch(() => {})
@@ -149,6 +152,8 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
     priorityDeliveryFee: checkout?.priorityDeliveryFees,
     // deliveryDiscount: checkout?.deliveryDiscount ?? 0,
     creditsUsed: checkout?.creditsUsed ?? 0,
+    checkoutQuoteId: checkout?.checkoutQuoteId,
+    idempotencyKey: idempotencyKeyRef.current,
     placeOrder,
     placingOrder,
     recalculateSummary

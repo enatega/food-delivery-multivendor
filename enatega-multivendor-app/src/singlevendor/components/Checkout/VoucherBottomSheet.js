@@ -13,7 +13,7 @@ import { COUPON } from '../../apollo/mutations'
 const VoucherBottomSheet = React.forwardRef(({ onApplyVoucher }, ref) => {
   const [applyCoupon, { loading: applyingCoupon }] = useMutation(COUPON, {
     onCompleted: (data) => {
-      console.log('coupon applied successfully',data)
+      console.log('coupon applied successfully', data)
       if (!data?.coupon?.success) {
         Alert.alert('Coupon Error', data?.coupon?.message || 'Failed to apply coupon')
       } else {
@@ -66,28 +66,32 @@ const VoucherBottomSheet = React.forwardRef(({ onApplyVoucher }, ref) => {
 
         {/* Input Field */}
         <View style={styles(currentTheme).inputContainer}>
-          <TextInput style={styles(currentTheme).input} placeholder={t('voucherCode')} placeholderTextColor={currentTheme.fontSecondColor} value={voucherCode} onChangeText={setVoucherCode}  autoCorrect={false} />
+          <TextInput style={styles(currentTheme).input} placeholder={t('voucherCode')} placeholderTextColor={currentTheme.fontSecondColor} value={voucherCode} onChangeText={setVoucherCode} autoCorrect={false} />
         </View>
 
         {/* Apply Button */}
         <TouchableOpacity style={[styles(currentTheme).applyButton, !voucherCode.trim() && styles(currentTheme).applyButtonDisabled]} onPress={handleApply} disabled={!voucherCode.trim()} activeOpacity={0.7}>
-          {applyingCoupon ? (
-            <ActivityIndicator size='small' color={currentTheme.white} />
-          ) : (
-            <TextDefault textColor={voucherCode.trim() ? '#fff' : currentTheme.fontSecondColor} bolder H5>
+          {applyingCoupon
+            ? (
+            <ActivityIndicator size='small' color={currentTheme.singleVendorOnBrand} />
+              )
+            : (
+            <TextDefault textColor={voucherCode.trim() ? currentTheme.singleVendorOnBrand : currentTheme.singleVendorDisabledForeground} bolder H5>
               {t('apply')}
             </TextDefault>
-          )}
+              )}
         </TouchableOpacity>
       </View>
     </Modalize>
   )
 })
 
+VoucherBottomSheet.displayName = 'VoucherBottomSheet'
+
 const styles = (props = null) =>
   StyleSheet.create({
     modalStyle: {
-      backgroundColor: props !== null ? props.themeBackground : '#fff',
+      backgroundColor: props !== null ? props.singleVendorSurface : '#fff',
       borderTopLeftRadius: scale(20),
       borderTopRightRadius: scale(20)
     },
@@ -114,7 +118,7 @@ const styles = (props = null) =>
       width: scale(30),
       height: scale(30),
       borderRadius: scale(20),
-      backgroundColor: props !== null ? props.gray200 : '#F3F4F6',
+      backgroundColor: props !== null ? props.singleVendorDisabledBackground : '#F3F4F6',
       alignItems: 'center',
       justifyContent: 'center'
     },
@@ -125,8 +129,8 @@ const styles = (props = null) =>
       height: scale(40),
       borderRadius: scale(8),
       borderWidth: 1,
-      borderColor: props !== null ? props.gray200 : '#E5E7EB',
-      backgroundColor: props !== null ? props.gray100 : '#F9FAFB',
+      borderColor: props !== null ? props.singleVendorBorder : '#E5E7EB',
+      backgroundColor: props !== null ? props.singleVendorSurface : '#F9FAFB',
       paddingHorizontal: scale(16),
       fontSize: scale(16),
       color: props !== null ? props.fontMainColor : '#000',
@@ -135,12 +139,12 @@ const styles = (props = null) =>
     applyButton: {
       height: scale(40),
       borderRadius: scale(8),
-      backgroundColor: props !== null ? props.singlevendorcolor : '#0090CD',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
       alignItems: 'center',
       justifyContent: 'center'
     },
     applyButtonDisabled: {
-      backgroundColor: props !== null ? props.gray200 : '#E5E7EB'
+      backgroundColor: props !== null ? props.singleVendorDisabledBackground : '#E5E7EB'
     }
   })
 

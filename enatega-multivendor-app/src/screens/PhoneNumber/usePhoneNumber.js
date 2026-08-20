@@ -91,7 +91,7 @@ const useRegister = () => {
     try {
       await mutate({
         variables: {
-          name: profile?.name ?? name ?? '',
+          name: profile?.name?.trim() || name?.trim() || '',
           phone: toE164(phone, country?.cca2),
           phoneIsVerified: true
         }
@@ -121,7 +121,7 @@ const useRegister = () => {
       name: 'PhoneOtp',
       merge: true,
       params: {
-        name: profile?.name ?? name ?? '',
+        name: profile?.name?.trim() || name?.trim() || '',
         phone: concatPhone,
         screen: route?.params?.screen,
         prevScreen: route?.params?.prevScreen

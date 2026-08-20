@@ -1,5 +1,32 @@
 import { gql } from "@apollo/client";
 
+export const SINGLE_VENDOR_DISCOVERY = gql`
+  query SingleVendorDiscovery($previewLimit: Int, $dealLimit: Int) {
+    singleVendorDiscovery(previewLimit: $previewLimit, dealLimit: $dealLimit) {
+      catalogVersion
+      banners {
+        _id title description action screen file parameters buttonText
+      }
+      categories {
+        id name icon image description itemCount viewType
+        pagination { totalItems hasMore }
+        items {
+          id title description image isOutOfStock
+          variations {
+            id title price isOutOfStock
+            deal { id discountType discountValue isActive }
+          }
+        }
+      }
+      deals {
+        limitedTime { items { id title description image variations { id title price deal { id discountType discountValue isActive } } } totalCount hasMore }
+        weekly { items { id title description image variations { id title price deal { id discountType discountValue isActive } } } totalCount hasMore }
+        newOffers { items { id title description image variations { id title price deal { id discountType discountValue isActive } } } totalCount hasMore }
+      }
+    }
+  }
+`;
+
 export const SINGLE_VENDOR_CONFIGURATION = gql`
   query SingleVendorConfiguration {
     configuration: publicConfiguration {
@@ -338,21 +365,14 @@ export const SINGLE_VENDOR_WEEKLY_DEALS = gql`
 `;
 
 export const SINGLE_VENDOR_SEARCH = gql`
-  query SearchFood($search: String) {
-    searchFood(search: $search) {
-      id
-      title
-      description
-      subCategory
-      categoryId
-      image
-      isOutOfStock
-      isFavourite
-      variations {
-        id
-        name
-        price
+  query SearchSingleVendorFoods($search: String!, $skip: Int, $limit: Int) {
+    searchSingleVendorFoods(search: $search, skip: $skip, limit: $limit) {
+      items {
+        id title description subCategory categoryId image isOutOfStock
+        variations { id title price deal { id discountType discountValue isActive } }
       }
+      totalCount
+      hasMore
     }
   }
 `;
@@ -502,6 +522,9 @@ export const SINGLE_VENDOR_CALCULATE_CHECKOUT = gql`
       priorityDeliveryFees
       creditsUsed
       maximumOrderAmount
+      checkoutQuoteId
+      checkoutQuoteExpiresAt
+      cartRevision
       items {
         foodId
         foodTitle
@@ -553,6 +576,8 @@ export const SINGLE_VENDOR_PLACE_ORDER = gql`
     $instructions: String
     $scheduleData: ScheduleData
     $isPriority: Boolean
+    $idempotencyKey: String
+    $checkoutQuoteId: String
   ) {
     placeOrder(
       paymentMethod: $paymentMethod
@@ -565,6 +590,8 @@ export const SINGLE_VENDOR_PLACE_ORDER = gql`
       instructions: $instructions
       scheduleData: $scheduleData
       isPriority: $isPriority
+      idempotencyKey: $idempotencyKey
+      checkoutQuoteId: $checkoutQuoteId
     ) {
       _id
       orderId

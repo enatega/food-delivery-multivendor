@@ -109,8 +109,8 @@ export const GET_ORDERS =
   `;
 
 export const GET_ORDERS_SINGLE_VENDOR = gql`
-  query SingleVendorStoreOrders {
-    restaurantOrders {
+  query SingleVendorStoreOrders($offset: Int, $limit: Int) {
+    restaurantOrders(offset: $offset, limit: $limit) {
       _id
       orderId
       id

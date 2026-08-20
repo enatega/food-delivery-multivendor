@@ -77,7 +77,6 @@ export default function DispatchMain() {
   // Handle subscription data
   useEffect(() => {
     if (subscriptionData) {
-      console.log('🔥 Real-time order update received via WebSocket!');
 
       if (refetchTimeoutRef.current) {
         clearTimeout(refetchTimeoutRef.current);

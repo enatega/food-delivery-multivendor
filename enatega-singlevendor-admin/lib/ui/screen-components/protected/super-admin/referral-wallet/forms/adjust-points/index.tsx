@@ -125,7 +125,7 @@ export default function AdjustPointsForm({
             setSubmitting(false);
           }, 1000);
         }}
-        validateOnChange={true}
+        validateOnChange={false}
       >
         {({ errors, handleSubmit, values, isSubmitting, setFieldValue }) => {
           const selectedUser =

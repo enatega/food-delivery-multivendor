@@ -141,7 +141,7 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
                 </>
                   )}
               {option.id === 'schedule' && scheduledTime && selectedTime === 'schedule' && (
-                <TextDefault textColor={currentTheme.primaryBlue || '#0EA5E9'} small isRTL style={{ marginTop: scale(2) }}>
+                <TextDefault textColor={currentTheme.singleVendorBrandForeground} small isRTL style={{ marginTop: scale(2) }}>
                   {t('Tap to change') || 'Tap to change'}
                 </TextDefault>
               )}
@@ -186,7 +186,7 @@ const styles = (props = null) => {
       borderBottomColor: subtleBorder
     },
     optionCardSelected: {
-      borderBottomColor: props !== null ? props.primaryBlue : '#0EA5E9'
+      borderBottomColor: props !== null ? props.singleVendorBrand : '#90E36D'
     },
     radioButton: {
       marginRight: scale(12)
@@ -201,13 +201,13 @@ const styles = (props = null) => {
       justifyContent: 'center'
     },
     radioOuterSelected: {
-      borderColor: props !== null ? props.primaryBlue : '#0EA5E9'
+      borderColor: props !== null ? props.singleVendorBrand : '#90E36D'
     },
     radioInner: {
       width: scale(10),
       height: scale(10),
       borderRadius: scale(5),
-      backgroundColor: props !== null ? props.primaryBlue : '#0EA5E9'
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D'
     },
     optionContent: {
       flex: 1,

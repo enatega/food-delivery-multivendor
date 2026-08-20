@@ -323,7 +323,7 @@ const SearchScreen = () => {
             const tagButton = (
               <TouchableOpacity onPress={() => handleTagPress(tag)}>
                 <View style={styles(searchTheme).tagItem}>
-                  <TextDefault textColor={tokens.colors.accent} numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
+                  <TextDefault textColor={tokens.colors.accentForeground} numberOfLines={1} ellipsizeMode='tail'>{tag}</TextDefault>
                 </View>
               </TouchableOpacity>
             )

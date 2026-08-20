@@ -19,7 +19,7 @@ const SectionAction = ({ label, onPress, style }) => {
         style
       ]}
     >
-      <TextDefault textColor={tokens.colors.accent} style={themedStyles.label}>
+      <TextDefault textColor={tokens.colors.accentForeground} style={themedStyles.label}>
         {label}
       </TextDefault>
     </Pressable>

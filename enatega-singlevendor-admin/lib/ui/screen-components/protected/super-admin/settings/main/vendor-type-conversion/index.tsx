@@ -19,9 +19,7 @@ export default function VendorTypeConversionComponent() {
     TOGGLE_VENDOR_TYPE_CONFIGURATION,
     {
       refetchQueries: [{ query: GET_CONFIGURATION }],
-      onCompleted: (data) => {
-        console.log(data?.saveVendorTypeToggle);
-
+      onCompleted: () => {
         showToast({
           type: 'success',
           title: 'Toggle Vendor Type',

@@ -159,24 +159,21 @@
 //   subcategoryList: { marginTop: 10, marginBottom: 22 }
 // })
 
-import React, { useEffect, useRef, useState, useMemo } from 'react'
+import React, { useRef, useState } from 'react'
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 
 import ProductCard from '../ProductCard'
-import CategoryItem from './CategoryItem'
 import HorizontalProductsEmptyView from '../HorizontalProductsEmptyView'
 import { GET_CATEGORY_PRODUCTS } from '../../apollo/queries'
 
 const PAGE_SIZE = 20
-const productsCache = {}
 
 const ProductPage = ({ category }) => {
   const navigation = useNavigation()
   const productListRef = useRef(null)
-  const subCatListRef = useRef(null)
 
   const [products, setProducts] = useState([])
   const [hasMore, setHasMore] = useState(true)
@@ -187,20 +184,11 @@ const ProductPage = ({ category }) => {
       limit: PAGE_SIZE,
       offset: 0
     },
-    skip: !!productsCache[category.categoryId],
     onCompleted: (data) => {
-      productsCache[category.categoryId] = data.getCategoryProducts
       setProducts(data.getCategoryProducts.items)
       setHasMore(data.getCategoryProducts.hasMore)
     }
   })
-
-  useEffect(() => {
-    if (productsCache[category.categoryId]) {
-      setProducts(productsCache[category.categoryId].items)
-      setHasMore(productsCache[category.categoryId].hasMore)
-    }
-  }, [category.categoryId])
 
   const loadMore = () => {
     if (!hasMore || loading) return
@@ -216,10 +204,6 @@ const ProductPage = ({ category }) => {
     })
   }
 
-  const subCategories = useMemo(() => {
-    return [{ subCategoryId: 'all', subCategoryName: 'All items' }, ...(category.subCategories ?? [])]
-  }, [category.subCategories])
-
   return (
     <>
       {/* Todo: can show subcategories */}
@@ -233,14 +217,22 @@ const ProductPage = ({ category }) => {
         estimatedItemSize={190}
         onEndReached={loadMore}
         onEndReachedThreshold={0.6}
-        renderItem={({ item }) => <ProductCard product={item} onCardPress={() => navigation.navigate('ProductDetails', { productId: item?.id, categoryId: category?.categoryId })} containerStyles={{ width: '94%', minHeight: 220  , maxHeight: 220, marginBottom: 12, marginRight: 10, marginLeft: 6 }} />}
+        renderItem={({ item }) => (
+          <ProductCard
+            product={item}
+            onCardPress={() => navigation.navigate('ProductDetails', { productId: item?.id, categoryId: category?.categoryId })}
+            containerStyles={{ width: '94%', minHeight: 220, maxHeight: 220, marginBottom: 12, marginRight: 10, marginLeft: 6 }}
+          />
+        )}
         ListFooterComponent={hasMore ? <ActivityIndicator style={{ marginVertical: 20 }} /> : null}
         ListEmptyComponent={
-          !loading && products.length === 0 ? (
+          !loading && products.length === 0
+            ? (
             <View style={styles.loadingContainer}>
               <HorizontalProductsEmptyView />
             </View>
-          ) : null
+              )
+            : null
         }
         showsVerticalScrollIndicator={false}
       />

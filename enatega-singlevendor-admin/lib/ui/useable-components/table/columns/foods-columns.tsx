@@ -1,5 +1,6 @@
 // import ActionMenu from '../../action-menu';
 import Image from 'next/image';
+import { normalizeManagedMediaUrl } from '@/lib/utils/media';
 
 // Interface
 import { IActionMenuProps, IFoodNew } from '@/lib/utils/interfaces';
@@ -121,15 +122,18 @@ export const FOODS_TABLE_COLUMNS = ({
           let type: string;
           let value: number;
 
-          if ('name' in deal && typeof deal.name === 'string') { // This is IFoodDealType
+          if ('name' in deal && typeof deal.name === 'string') {
+            // This is IFoodDealType
             name = deal.name;
             type = deal.type || '';
             value = deal.value || 0;
-          } else if ('dealName' in deal && deal.dealName) { // This is IDealFormValues or IDeal with dealName
+          } else if ('dealName' in deal && deal.dealName) {
+            // This is IDealFormValues or IDeal with dealName
             name = deal.dealName;
             type = deal.discountType || '';
             value = deal.discountValue || 0;
-          } else if ('title' in deal && deal.title) { // This is IDeal with title
+          } else if ('title' in deal && deal.title) {
+            // This is IDeal with title
             name = deal.title;
             type = deal.discountType || '';
             value = deal.discountValue || 0;
@@ -192,7 +196,12 @@ export const FOODS_TABLE_COLUMNS = ({
       propertyName: 'image',
       body: (item: IFoodNew) =>
         item.image ? (
-          <Image src={item.image} width={40} height={40} alt="item.png" />
+          <Image
+            src={normalizeManagedMediaUrl(item.image)}
+            width={40}
+            height={40}
+            alt="item.png"
+          />
         ) : (
           <></>
         ),

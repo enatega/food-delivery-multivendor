@@ -18,6 +18,8 @@ export interface IUserContextProps {
   errorAssigned: ApolloError | undefined;
   assignedOrders: IOrder[] | null;
   refetchAssigned: () => void;
+  loadMoreAssigned: () => Promise<void>;
+  hasMoreAssigned: boolean;
   refetchProfile: () => Promise<unknown>;
   networkStatusAssigned: NetworkStatus;
   modalVisible: IRiderEarnings & { bool: boolean };

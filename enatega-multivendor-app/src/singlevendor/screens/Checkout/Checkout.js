@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect, useRef, useCallback, useEffect } from 'react'
+import React, { useState, useContext, useLayoutEffect, useRef, useCallback } from 'react'
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -6,7 +6,6 @@ import { HeaderBackButton } from '@react-navigation/elements'
 import { useTranslation } from 'react-i18next'
 
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import ConfigurationContext from '../../../context/Configuration'
 import UserContext from '../../../context/User'
 import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
@@ -32,7 +31,7 @@ import CustomHomeIcon from '../../../assets/SVG/imageComponents/CustomHomeIcon'
 import CustomWorkIcon from '../../../assets/SVG/imageComponents/CustomWorkIcon'
 import CustomApartmentIcon from '../../../assets/SVG/imageComponents/CustomApartmentIcon'
 import CustomOtherIcon from '../../../assets/SVG/imageComponents/CustomOtherIcon'
-import { PLACE_ORDER, COUPON } from '../../apollo/mutations'
+import { COUPON } from '../../apollo/mutations'
 import { useMutation } from '@apollo/client'
 import { ActivityIndicator } from 'react-native-paper'
 import OrderSummaryError from '../../components/Checkout/OrderSummaryError'
@@ -43,10 +42,8 @@ import {
   removeModeItem,
   setModeItem
 } from '../../../mode/storage'
-import LoadingSkeleton from '../../components/LoadingSkeleton'
 import OrderSummarySkeleton from './OrderSummarySkeleton'
 import SmallOrderFeeTip from '../../components/Checkout/SmallOrderFeeTip'
-import SmallOrderFeeSubscribeCard from '../../components/Checkout/SmallOrderFeeSubscribeCard'
 
 const Checkout = (props) => {
   const { location, setLocation } = useContext(LocationContext)
@@ -56,7 +53,7 @@ const Checkout = (props) => {
   const { t, i18n } = useTranslation()
 
   const themeContext = useContext(ThemeContext)
-  const { cart, cartCount } = useContext(UserContext)
+  const { cart } = useContext(UserContext)
 
   // Get schedule from Zustand store
   const { selectedSchedule } = useScheduleStore()
@@ -80,23 +77,22 @@ const Checkout = (props) => {
 
   // State management
   const [fulfillmentMode, setFulfillmentMode] = useState('delivery') // 'delivery' or 'collection'
-  const [deliveryAddress, setDeliveryAddress] = useState(null)
   const [leaveAtDoor, setLeaveAtDoor] = useState(false)
   const [callOnArrival, setCallOnArrival] = useState(false)
   const [courierInstructions, setCourierInstructions] = useState('')
   const [deliveryTime, setDeliveryTime] = useState(selectedSchedule ? 'schedule' : 'standard') // 'priority', 'standard', 'schedule'
   const [paymentMethod, setPaymentMethod] = useState('COD') // 'card' or 'voucher'
-  const [selectedCard, setSelectedCard] = useState('**** 9432')
+  const [selectedCard] = useState('**** 9432')
   const [selectedVoucher, setSelectedVoucher] = useState(null)
   const [voucherCode, setVoucherCode] = useState('')
   const [tipAmount, setTipAmount] = useState(0)
   const [summaryExpanded, setSummaryExpanded] = useState(false)
   const [isWrongAddressModalVisible, setIsWrongAddressModalVisible] = useState(false)
   const [isSmallOrderFeeTipVisible, setIsSmallOrderFeeTipVisible] = useState(true)
-  const [isSmallOrderFeePromoVisible, setIsSmallOrderFeePromoVisible] = useState(false)
-  const [isSmallOrderFeePromoExpanded, setIsSmallOrderFeePromoExpanded] = useState(false)
+  const [, setIsSmallOrderFeePromoVisible] = useState(false)
+  const [, setIsSmallOrderFeePromoExpanded] = useState(false)
   const isSubscribed = Boolean(profile?.stripe_plan_id)
-  const { loading, subtotal, deliveryFee, serviceFee,currencySymbol, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount, originalDeliveryCharges, freeDeliveriesRemaining, isBelowMaximumOrder, placeOrder, placingOrder, refetch, error, couponDiscountAmount, couponApplied, recalculateSummary, priorityDeliveryFee ,creditsUsed,maximumOrderAmount} = useCheckout({
+  const { loading, subtotal, deliveryFee, serviceFee, currencySymbol, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount, originalDeliveryCharges, freeDeliveriesRemaining, isBelowMaximumOrder, placeOrder, placingOrder, error, couponDiscountAmount, couponApplied, recalculateSummary, priorityDeliveryFee, creditsUsed, maximumOrderAmount, checkoutQuoteId, idempotencyKey } = useCheckout({
     fulfillmentMode,
     deliveryAddress: location,
     selectedVoucher,
@@ -141,12 +137,12 @@ const Checkout = (props) => {
     }
   })
 
-  error && console.log('error_____onError', placeOrder);
+  error && console.log('error_____onError', placeOrder)
 
   console.log('checkout hook data:', location, loading, subtotal, deliveryFee, serviceFee, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount)
   React.useEffect(() => {
     console.log('📦 Fulfillment Mode Changed:', fulfillmentMode)
-    
+
     // When switching to collection mode, clear the delivery time selection
     if (fulfillmentMode === 'collection') {
       console.log('🔄 Switching to Click & Collect - clearing delivery time selection')
@@ -224,7 +220,7 @@ const Checkout = (props) => {
     })
   }, [props?.navigation, currentTheme])
 
-  const getAndApplySelectedVoucher = useCallback(async () => {
+  const getAndApplySelectedVoucher = useCallback(async() => {
     try {
       const voucher = await getModeItem('selectedVoucher', APP_MODES.SINGLE)
       const parsedVoucher = JSON.parse(voucher)
@@ -242,7 +238,7 @@ const Checkout = (props) => {
         StatusBar.setBackgroundColor(currentTheme.menuBar)
       }
       StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
-      
+
       getAndApplySelectedVoucher()
 
       // Handle schedule selection for both delivery and collection modes
@@ -259,16 +255,6 @@ const Checkout = (props) => {
       }
     }, [currentTheme, themeContext, selectedSchedule, fulfillmentMode, deliveryTime, getAndApplySelectedVoucher])
   )
-
-  // Calculate totals
-  const calculateSubtotal = () => {
-    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  }
-
-  // const subtotal = calculateSubtotal();
-  // const deliveryFee = fulfillmentMode === 'delivery' && deliveryTime === 'priority' ? 1.99 : 0;
-  const tipAmountToAdd = fulfillmentMode === 'delivery' ? tipAmount : 0
-  // const total = subtotal + deliveryFee + tipAmountToAdd;
 
   const handlePlaceOrder = () => {
     // Prepare order data with complete delivery information
@@ -294,18 +280,18 @@ const Checkout = (props) => {
       // Include scheduled delivery details if schedule is selected
       ...(deliveryTime === 'schedule' &&
         selectedSchedule && {
-          scheduledDelivery: {
-            date: selectedSchedule.date,
-            dateLabel: selectedSchedule.dateLabel,
-            dayName: selectedSchedule.dayName,
-            timeSlot: {
-              id: selectedSchedule.timeSlot.id,
-              time: selectedSchedule.timeSlot.time,
-              startTime: selectedSchedule.timeSlot.startTime,
-              endTime: selectedSchedule.timeSlot.endTime
-            }
+        scheduledDelivery: {
+          date: selectedSchedule.date,
+          dateLabel: selectedSchedule.dateLabel,
+          dayName: selectedSchedule.dayName,
+          timeSlot: {
+            id: selectedSchedule.timeSlot.id,
+            time: selectedSchedule.timeSlot.time,
+            startTime: selectedSchedule.timeSlot.startTime,
+            endTime: selectedSchedule.timeSlot.endTime
           }
-        })
+        }
+      })
     }
 
     const modifiedLocation = {
@@ -318,7 +304,7 @@ const Checkout = (props) => {
     }
 
     const orderVariables = {
-      paymentMethod: paymentMethod,
+      paymentMethod,
       address: modifiedLocation,
       tipping: tipAmount,
       orderDate: `${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}`,
@@ -328,11 +314,13 @@ const Checkout = (props) => {
       instructions: orderData?.deliveryPreferences?.courierInstructions || '',
       scheduleData: {
         scheduleTimeId: selectedSchedule?.timeSlot?.id || null,
-        isScheduled: deliveryTime === 'schedule' ? true : false,
+        isScheduled: deliveryTime === 'schedule',
         dayId: selectedSchedule?.dayId || null
       },
 
-      isPriority: deliveryTime === 'priority' ? true : false
+      isPriority: deliveryTime === 'priority',
+      checkoutQuoteId,
+      idempotencyKey
     }
     console.log('🛒 PLACE ORDER - Complete Order Data:', selectedSchedule, orderData, orderVariables)
     placeOrder({
@@ -364,7 +352,7 @@ const Checkout = (props) => {
 
   const modalFooter = () => <AddressModalFooter onClose={() => modalRef.current.close()}></AddressModalFooter>
 
-  const setAddressLocation = async (address) => {
+  const setAddressLocation = async(address) => {
     if (modalRef?.current) {
       modalRef?.current?.close()
     }
@@ -376,7 +364,6 @@ const Checkout = (props) => {
       deliveryAddress: address.deliveryAddress,
       details: address.details
     })
-    mutate({ variables: { id: address._id } })
   }
   const onOpen = useCallback(() => {
     console.log('open')
@@ -422,7 +409,7 @@ const Checkout = (props) => {
         <View style={{ height: scale(24) }} />
       </ScrollView>
       <View style={styles(currentTheme).stickyBottomContainer}>
-        {loading ? <OrderSummarySkeleton/> : error ? <OrderSummaryError onRetry={recalculateSummary} /> : <OrderSummary creditsUsed={creditsUsed} isCheckout={true} priorityDeliveryFee={deliveryTime == 'priority' ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={isBelowMaximumOrder ? minimumOrderFee : 0} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={fulfillmentMode === 'delivery' ? tipAmount : 0} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />}
+        {loading ? <OrderSummarySkeleton/> : error ? <OrderSummaryError onRetry={recalculateSummary} /> : <OrderSummary creditsUsed={creditsUsed} isCheckout={true} priorityDeliveryFee={deliveryTime === 'priority' ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={isBelowMaximumOrder ? minimumOrderFee : 0} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={fulfillmentMode === 'delivery' ? tipAmount : 0} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />}
         {minimumOrderFee > 0 && isSmallOrderFeeTipVisible && (
           <SmallOrderFeeTip
             currencySymbol={currencySymbol}
@@ -448,13 +435,15 @@ const Checkout = (props) => {
           />
         )} */}
         <TouchableOpacity style={[styles(currentTheme).placeOrderButton, !isOrderValid() && styles(currentTheme).placeOrderButtonDisabled]} onPress={handlePlaceOrder} disabled={!isOrderValid()} activeOpacity={0.7}>
-          {placingOrder ? (
-            <ActivityIndicator size={18} color={currentTheme.white} />
-          ) : (
-            <TextDefault textColor={isOrderValid() ? '#fff' : currentTheme.fontSecondColor} bolder H5>
+          {placingOrder
+            ? (
+            <ActivityIndicator size={18} color={currentTheme.singleVendorOnBrand} />
+              )
+            : (
+            <TextDefault textColor={isOrderValid() ? currentTheme.singleVendorOnBrand : currentTheme.fontSecondColor} bolder H5>
               {t('placeOrder') || 'Place order'}
             </TextDefault>
-          )}
+              )}
         </TouchableOpacity>
       </View>
       <VoucherBottomSheet ref={voucherBottomSheetRef} onApplyVoucher={handleApplyVoucher} />

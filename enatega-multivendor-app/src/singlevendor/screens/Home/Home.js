@@ -22,6 +22,8 @@ import { usePullToRefresh } from '../../hooks/usePullToRefresh'
 import SectionErrorCard from '../../components/SectionErrorCard'
 import SelectedLocation from '../../../components/Main/Location/Location'
 import RestaurantScheduleTime from '../../components/RestaurantScheduleTime/RestaurantScheduleTime'
+import DiscoveryDeals from '../../components/Home/DiscoveryDeals'
+import { HomeBannerSkeleton, HomeCategoriesSkeleton } from '../../components/Home/HomeSectionSkeletons'
 
 const Home = () => {
   const {
@@ -36,13 +38,15 @@ const Home = () => {
     setAddressLocation,
     onOpen,
     modalRef,
+    loading,
     bannersData,
+    bannersLoading,
     bannersError,
     isConnected,
     refetch,
     refetchBanners
   } = useHome()
-  const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetch, refetchBanners])
+  const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetch])
   useCart()
   const categoriesData = data?.getRestaurantCategoriesSingleVendor ?? []
 
@@ -113,32 +117,37 @@ const Home = () => {
         {isConnected
           ? (
           <>
-            {bannersError
-              ? (
+            {bannersLoading && !bannersData?.banners?.length
+              ? <HomeBannerSkeleton />
+              : bannersError
+                ? (
                 <SectionErrorCard
                   compact
                   title={t('offers', { defaultValue: 'Offers' })}
                   onRetry={refetchBanners}
                 />
-                )
-              : <HomeBanner banners={bannersData?.banners || []} />}
+                  )
+                : <HomeBanner banners={bannersData?.banners || []} />}
             {orderConfirmation}
           </>
             )
           : (
           <OfflineBanner currentTheme={currentTheme} t={t} />
             )}
-        {error
-          ? (
+        {loading && !categoriesData.length
+          ? <HomeCategoriesSkeleton />
+          : error
+            ? (
             <SectionErrorCard
               title={t('categories', { defaultValue: 'Categories' })}
               onRetry={refetch}
             />
-            )
-          : <HorizontalCategoriesList categoriesData={categoriesData} />}
+              )
+            : <HorizontalCategoriesList categoriesData={categoriesData} />}
+        <DiscoveryDeals />
       </View>
     ),
-    [isConnected, bannersData, bannersError, orderConfirmation, currentTheme, t, categoriesData, error, refetch, refetchBanners]
+    [isConnected, bannersData, bannersLoading, bannersError, orderConfirmation, currentTheme, t, categoriesData, loading, error, refetch, refetchBanners]
   )
   return (
     <SafeAreaView

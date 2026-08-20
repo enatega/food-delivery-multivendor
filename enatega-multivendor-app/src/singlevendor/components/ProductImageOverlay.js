@@ -44,7 +44,7 @@ const styles = (currentTheme) =>
       position: 'absolute',
       top: 8,
       left: 8,
-      backgroundColor: currentTheme.primaryBlue,
+      backgroundColor: currentTheme.singleVendorBrand,
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: 8,
@@ -53,7 +53,7 @@ const styles = (currentTheme) =>
       zIndex: 1
     },
     dealText: {
-      color: currentTheme.white,
+      color: currentTheme.singleVendorOnBrand,
       fontSize: 10,
       fontWeight: '600',
       marginLeft: 4
@@ -82,7 +82,7 @@ const styles = (currentTheme) =>
       position: 'absolute',
       top: 8,
       left: 8,
-      backgroundColor: currentTheme.primaryBlue,
+      backgroundColor: currentTheme.singleVendorBrand,
       paddingHorizontal: 8,
       paddingVertical: 4,
       borderRadius: 6
@@ -91,7 +91,7 @@ const styles = (currentTheme) =>
     dealBadgeText: {
       fontSize: 11,
       fontWeight: '700',
-      color: '#fff'
+      color: currentTheme.singleVendorOnBrand
     }
   })
 

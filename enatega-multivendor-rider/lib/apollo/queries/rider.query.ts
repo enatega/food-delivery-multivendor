@@ -208,8 +208,8 @@ export const RIDER_ORDERS = gql`
 // backend uses orderState as the authoritative lifecycle field, while retaining
 // orderStatus only as a legacy compatibility field.
 export const SINGLE_VENDOR_RIDER_ORDERS = gql`
-  query SingleVendorRiderOrders {
-    riderOrders {
+  query SingleVendorRiderOrders($limit: Int, $offset: Int) {
+    riderOrders(limit: $limit, offset: $offset) {
       _id
       orderId
       createdAt

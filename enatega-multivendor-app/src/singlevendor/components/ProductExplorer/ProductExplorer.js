@@ -150,7 +150,7 @@
 //   }
 // })
 
-import React, { useRef, useState, useContext, useEffect } from 'react'
+import React, { useRef, useState, useContext, useLayoutEffect, useMemo } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import PagerView from 'react-native-pager-view'
@@ -175,6 +175,8 @@ const ProductExplorer = () => {
   const pageRef = useRef(null)
   const themeContext = useContext(ThemeContext)
   const hasInitializedRef = useRef(false)
+  const appliedRouteCategoryRef = useRef(null)
+  const centeredCategoryIndexRef = useRef(null)
 
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
 
@@ -197,35 +199,48 @@ const ProductExplorer = () => {
     debouncedSearch,
     onProductPress,
     handleAddToCart,
-    isSearched
+    isSearched,
+    loadMore,
+    hasMore
   } = useBrowse()
 
   const categories = data?.getAllCategoriesWithSubCategoriesOnlySeeAllSingleVendor ?? []
-  console.log('🚀 ~ ProductExplorer ~ categories:', categories)
+  const routeCategoryId = route?.params?.categoryId
+  const requestedCategoryIndex = useMemo(() => {
+    if (!categories.length || !routeCategoryId) return 0
 
-  useEffect(() => {
-    if (hasInitializedRef.current) return
+    const normalizedRouteCategoryId = String(routeCategoryId)
+    const foundIndex = categories.findIndex((category) =>
+      [category?.categoryId, category?.id]
+        .filter(Boolean)
+        .some((id) => String(id) === normalizedRouteCategoryId)
+    )
+
+    return foundIndex >= 0 ? foundIndex : 0
+  }, [categories, routeCategoryId])
+
+  useLayoutEffect(() => {
     if (!categories.length) return
+    const normalizedRouteCategoryId = routeCategoryId == null ? '' : String(routeCategoryId)
 
-    const routeCategoryId = route?.params?.categoryId
-    let initialIndex = 0
+    if (
+      hasInitializedRef.current &&
+      appliedRouteCategoryRef.current === normalizedRouteCategoryId
+    ) return
 
-    if (routeCategoryId) {
-      const foundIndex = categories.findIndex(
-        (category) => category?.categoryId === routeCategoryId || category?.id === routeCategoryId
-      )
-      if (foundIndex >= 0) initialIndex = foundIndex
+    setActiveCategoryIndex(requestedCategoryIndex)
+    if (hasInitializedRef.current) {
+      pageRef.current?.setPageWithoutAnimation(requestedCategoryIndex)
     }
-
-    setActiveCategoryIndex(initialIndex)
-    pageRef.current?.setPage(initialIndex)
     catListRef.current?.scrollToIndex({
-      index: initialIndex,
+      index: requestedCategoryIndex,
       animated: false,
       viewPosition: 0.5
     })
+    centeredCategoryIndexRef.current = requestedCategoryIndex
+    appliedRouteCategoryRef.current = normalizedRouteCategoryId
     hasInitializedRef.current = true
-  }, [categories, route?.params?.categoryId])
+  }, [categories, requestedCategoryIndex, routeCategoryId])
 
   if (loading) return <ProductExplorerSkeleton />
 
@@ -276,15 +291,22 @@ const ProductExplorer = () => {
 
         <PagerView
           ref={pageRef}
+          initialPage={requestedCategoryIndex}
           style={{ flex: 1 }}
           onPageSelected={(e) => {
             const index = e.nativeEvent.position
-            setActiveCategoryIndex(index)
-            catListRef.current?.scrollToIndex({
-              index,
-              animated: true,
-              viewPosition: 0.5
-            })
+            setActiveCategoryIndex((currentIndex) =>
+              currentIndex === index ? currentIndex : index
+            )
+
+            if (centeredCategoryIndexRef.current !== index) {
+              catListRef.current?.scrollToIndex({
+                index,
+                animated: true,
+                viewPosition: 0.5
+              })
+              centeredCategoryIndexRef.current = index
+            }
           }}
         >
 
@@ -298,7 +320,7 @@ const ProductExplorer = () => {
 
       {/* <SearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} /> */}
 
-        <BrowseModal visible={modalVisible} onClose={handleModalClose} inputRef={inputRef} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleClearSearch={handleClearSearch} currentTheme={currentTheme} t={t} insets={insets} data={searchedData} loading={searchedLoading} error={searchError} onRetry={retrySearch} debouncedSearch={debouncedSearch} onProductPress={onProductPress} handleAddToCart={handleAddToCart} isSearched={isSearched} />
+        <BrowseModal visible={modalVisible} onClose={handleModalClose} inputRef={inputRef} searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleClearSearch={handleClearSearch} currentTheme={currentTheme} t={t} insets={insets} data={searchedData} loading={searchedLoading} error={searchError} onRetry={retrySearch} debouncedSearch={debouncedSearch} onProductPress={onProductPress} handleAddToCart={handleAddToCart} isSearched={isSearched} loadMore={loadMore} hasMore={hasMore} />
 
     </>
   )

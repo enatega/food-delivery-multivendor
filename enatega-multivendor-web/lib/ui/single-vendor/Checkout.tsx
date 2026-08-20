@@ -1,7 +1,7 @@
 "use client";
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   SINGLE_VENDOR_CALCULATE_CHECKOUT,
   SINGLE_VENDOR_PLACE_ORDER,
@@ -36,6 +36,9 @@ export default function SingleVendorCheckout() {
   const [priority, setPriority] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [schedule, setSchedule] = useState<any>(null);
+  const idempotencyKey = useRef(
+    `sv-web-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+  );
   const address =
     profile?.addresses?.find((item) => item.selected) ??
     profile?.addresses?.[0];
@@ -84,6 +87,8 @@ export default function SingleVendorCheckout() {
         instructions,
         isPriority: priority,
         couponCode: coupon || undefined,
+        checkoutQuoteId: summary?.checkoutQuoteId,
+        idempotencyKey: idempotencyKey.current,
         scheduleData: schedule
           ? {
               isScheduled: true,

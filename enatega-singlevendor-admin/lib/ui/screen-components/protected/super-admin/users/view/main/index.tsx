@@ -85,7 +85,6 @@ export default function UsersMain({
 
   const handleRowClick = (event: DataTableRowClickEvent) => {
     router.push(`/general/users/user-detail/${event.data._id}`);
-    console.log('Row clicked:', event.data);
   };
 
   return (

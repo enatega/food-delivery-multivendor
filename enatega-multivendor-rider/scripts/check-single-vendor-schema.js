@@ -61,10 +61,26 @@ const fetchSchema = async (graphqlUrl) => {
   return buildClientSchema(payload.data);
 };
 
+const loadLocalSchema = (modulePath) => {
+  const absoluteModulePath = path.resolve(modulePath);
+  const typeDefs = require(absoluteModulePath);
+  const serverGraphql = require(
+    path.resolve(path.dirname(absoluteModulePath), "../../node_modules/graphql"),
+  );
+  const serverSchema = serverGraphql.buildASTSchema(typeDefs);
+  const introspection = serverGraphql.graphqlSync({
+    schema: serverSchema,
+    source: serverGraphql.getIntrospectionQuery(),
+  });
+  return buildClientSchema(introspection.data);
+};
+
 const main = async () => {
   const graphqlUrl =
     process.env.SINGLE_VENDOR_GRAPHQL_URL ?? DEFAULT_GRAPHQL_URL;
-  const schema = await fetchSchema(graphqlUrl);
+  const schema = process.env.SINGLE_VENDOR_SCHEMA_MODULE
+    ? loadLocalSchema(process.env.SINGLE_VENDOR_SCHEMA_MODULE)
+    : await fetchSchema(graphqlUrl);
   const documents = readDocuments();
   const failures = [];
 
@@ -89,7 +105,7 @@ const main = async () => {
   }
 
   console.log(
-    `Validated ${documents.length} rider GraphQL documents against ${graphqlUrl}`,
+    `Validated ${documents.length} rider GraphQL documents against ${process.env.SINGLE_VENDOR_SCHEMA_MODULE ? 'the local single-vendor schema' : graphqlUrl}`,
   );
 };
 

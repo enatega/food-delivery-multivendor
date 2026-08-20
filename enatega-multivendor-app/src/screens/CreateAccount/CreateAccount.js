@@ -1,26 +1,36 @@
 import React, { useEffect, useLayoutEffect } from 'react'
-import { View, Image, TouchableOpacity, Dimensions, StatusBar, Platform, KeyboardAvoidingView } from 'react-native'
+import { View, Image, TouchableOpacity, StatusBar, Platform } from 'react-native'
 import styles from './styles'
 import FdGoogleBtn from '../../ui/FdSocialBtn/FdGoogleBtn/FdGoogleBtn'
 import FdEmailBtn from '../../ui/FdSocialBtn/FdEmailBtn/FdEmailBtn'
 import Spinner from '../../components/Spinner/Spinner'
 import * as AppleAuthentication from 'expo-apple-authentication'
+import * as Crypto from 'expo-crypto'
+import * as SecureStore from 'expo-secure-store'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { useCreateAccount } from './useCreateAccount'
 import { useTranslation } from 'react-i18next'
 import { scale } from '../../utils/scaling'
-import { alignment } from '../../utils/alignment'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { decodeJwtToken } from '../../utils/decode-jwt'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { dismissSessionExpiredModal } from '../../utils/session'
+import { gql, useApolloClient } from '@apollo/client'
+import { useAppMode } from '../../mode/AppModeContext'
+import { APP_MODES } from '../../mode/constants'
 
-const { height } = Dimensions.get('window')
+const APPLE_AUTH_NONCE = gql`
+  query AppleAuthNonce {
+    appleAuthNonce
+  }
+`
 
 const CreateAccount = (props) => {
   const { enableApple, loginButton, loginButtonSetter, loading, setLoading, themeContext, currentTheme, statusBarBackgroundColor, mutateLogin, navigateToLogin, navigation, signIn } = useCreateAccount()
+  const apolloClient = useApolloClient()
+  const { mode } = useAppMode()
 
   const { t } = useTranslation()
 
@@ -31,7 +41,7 @@ const CreateAccount = (props) => {
   }, [navigation])
 
   useEffect(() => {
-    void dismissSessionExpiredModal()
+    dismissSessionExpiredModal()
   }, [])
 
   const renderAppleAction = () => {
@@ -56,13 +66,28 @@ const CreateAccount = (props) => {
         buttonStyle={themeContext.ThemeValue === 'Dark' ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
         cornerRadius={scale(28)}
         style={styles().appleBtn}
-        onPress={async () => {
+        onPress={async() => {
           try {
             loginButtonSetter('Apple')
             setLoading(true)
+            const state = Crypto.randomUUID()
+            const appleNonce = mode === APP_MODES.MULTI
+              ? (await apolloClient.query({
+                  query: APPLE_AUTH_NONCE,
+                  fetchPolicy: 'no-cache'
+                }))?.data?.appleAuthNonce
+              : Crypto.randomUUID()
+            if (!appleNonce) {
+              throw new Error('Apple authentication session could not be initialized.')
+            }
             const credential = await AppleAuthentication.signInAsync({
-              requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL]
+              requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL],
+              state,
+              nonce: appleNonce
             })
+            if (credential.state !== state) {
+              throw new Error('Apple login response could not be verified.')
+            }
             const idToken = credential?.identityToken
             if (!idToken) {
               FlashMessage({
@@ -72,19 +97,46 @@ const CreateAccount = (props) => {
               loginButtonSetter(null)
               return
             }
-            const user_details = decodeJwtToken(idToken)
+            const userDetails = decodeJwtToken(idToken)
 
-            if (!user_details) {
+            if (!userDetails) {
               throw new Error('Apple login token is invalid.')
             }
 
-            const { givenName, familyName } = credential.fullName || {}
-            const name = givenName || familyName ? `${givenName ?? ''} ${familyName ?? ''}`.trim() : ''
-            const appleId = credential.user ?? user_details?.sub
-            const email = credential?.email ?? user_details?.email
+            const credentialName = credential.fullName
+              ? AppleAuthentication.formatFullName(
+                credential.fullName,
+                'medium'
+              ).trim()
+              : ''
+            const appleId = credential.user ?? userDetails?.sub
+            const email = credential?.email ?? userDetails?.email
+            const appleNameStorageKey = appleId
+              ? `apple_name_${await Crypto.digestStringAsync(
+                  Crypto.CryptoDigestAlgorithm.SHA256,
+                  appleId
+                )}`
+              : null
+            let name = credentialName
+
+            if (appleNameStorageKey) {
+              try {
+                if (credentialName) {
+                  // Apple only supplies the name during the first authorization.
+                  // Persist it before any network request can fail.
+                  await SecureStore.setItemAsync(appleNameStorageKey, credentialName)
+                } else {
+                  name = (await SecureStore.getItemAsync(appleNameStorageKey)) || ''
+                }
+              } catch (_storageError) {
+                // Authentication can continue; the backend/onboarding repairs a
+                // missing display name when Keychain access is unavailable.
+              }
+            }
 
             const user = {
               appleId,
+              appleNonce,
               phone: '',
               email,
               idToken,
@@ -96,8 +148,8 @@ const CreateAccount = (props) => {
 
             await mutateLogin(user)
           } catch (e) {
-            if (e.code !== 'ERR_CANCELED') {
-              if (__DEV__) console.error('Apple Sign In Error:', e)
+            if (e.code !== 'ERR_REQUEST_CANCELED') {
+              if (process.env.NODE_ENV === 'development') console.error('Apple Sign In Error:', e)
               FlashMessage({
                 message: e?.message?.toLowerCase()?.includes('token')
                   ? 'Your social sign-in token is invalid or expired. Please sign in again.'
@@ -126,13 +178,15 @@ const CreateAccount = (props) => {
 
   const renderGuestButton = () => (
     <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).guestButton} onPress={() => navigation.navigate('Discovery')} disabled={props.loadingIcon}>
-      {props.loadingIcon ? (
+      {props.loadingIcon
+        ? (
           <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
-      ) : (
+          )
+        : (
           <TextDefault H4 textColor={currentTheme.primary} center bold>
             {t('continueAsGuest')}
           </TextDefault>
-      )}
+          )}
     </TouchableOpacity>
   )
 

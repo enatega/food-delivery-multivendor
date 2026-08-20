@@ -136,7 +136,7 @@ export default function VendorsLayoutRestaurantCard({
     try {
       await deleteRestaurant({ variables: { id: _id } });
     } catch (err) {
-      console.log(err);
+      console.error('Restaurant action failed', err);
       showToast({
         type: 'error',
         title: t('Store Status'),
