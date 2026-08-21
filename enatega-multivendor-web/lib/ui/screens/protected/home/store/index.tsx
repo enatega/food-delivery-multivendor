@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import useNearByRestaurantsPreview from "@/lib/hooks/useNearByRestaurantsPreview";
 import useGetCuisines from "@/lib/hooks/useGetCuisines";
@@ -14,10 +14,13 @@ export default function StoreScreen() {
   const [items, setItems] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
-  
-  const { loading, error, queryData, fetchMore } = useNearByRestaurantsPreview(true, page, limit, "grocery");
-  const { loading:cuisinesloading, groceryCuisinesData } = useGetCuisines();
- 
+  const { loading, error, queryData, fetchMore } = useNearByRestaurantsPreview(
+    true,
+    page,
+    limit,
+    "grocery",
+  );
+  const { loading: cuisinesloading, groceryCuisinesData } = useGetCuisines();
 
   // ✅ Initial load
   useEffect(() => {
@@ -56,11 +59,9 @@ export default function StoreScreen() {
       const scrollTop = document.body.scrollTop;
       const clientHeight = document.body.clientHeight;
       const scrollHeight = document.body.scrollHeight;
-      console.log("scrollTop, clientHeight, scrollHeight", scrollTop, clientHeight, scrollHeight);
-      const bottom = scrollTop + clientHeight >= scrollHeight - 300;   
+      const bottom = scrollTop + clientHeight >= scrollHeight - 300;
 
       if (bottom && !loading) {
-        console.log("near bottom reached")
         loadMore();
       }
     };
@@ -69,13 +70,12 @@ export default function StoreScreen() {
     return () => document.body.removeEventListener("scroll", handleScroll);
   }, [fetchMore, hasMore, loading, loadMore]);
 
-
-  return ( 
+  return (
     <GenericListingComponent
       queryData={queryData}
-      headingTitle= {t('StoresPage.headingTitle')}
-      cuisineSectionTitle={t('StoresPage.cuisineSectionTitle')}
-      mainSectionTitle={t('StoresPage.mainSectionTitle')}
+      headingTitle={t("StoresPage.headingTitle")}
+      cuisineSectionTitle={t("StoresPage.cuisineSectionTitle")}
+      mainSectionTitle={t("StoresPage.mainSectionTitle")}
       mainData={items} // ✅ pass paginated items
       cuisineDataFromHook={groceryCuisinesData}
       loading={loading}

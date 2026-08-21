@@ -3,7 +3,7 @@
 // core
 import Image from "@/lib/ui/useable-components/safe-image";
 import React from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 // Assets
 import { FiClock, FiStar } from "react-icons/fi";
@@ -27,7 +27,6 @@ const Card: React.FC<ICardProps> = ({
 }) => {
   const router = useRouter();
   const t = useTranslations();
-  const pathname = usePathname();
   const { setIsSearchFocused, setFilter, filter } = useSearchUI();
 
   const { CURRENCY_SYMBOL } = useConfig();
@@ -35,9 +34,9 @@ const Card: React.FC<ICardProps> = ({
 
   return (
     <div
-      className={`group relative w-full cursor-pointer overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface ${
-        pathname === "/restaurants" || pathname === "/store" ? "my-3" : "my-2"
-      } dark:border-gray-800 dark:bg-gray-900 dark:text-white`}
+      role="link"
+      tabIndex={0}
+      className="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface transition-shadow hover:shadow-[0_12px_30px_rgba(21,25,20,0.09)] focus-visible:outline-none dark:border-gray-800 dark:bg-gray-900 dark:text-white"
       onClick={() => {
         if (!isOpen) {
           handleUpdateIsModalOpen(true, item._id);
@@ -51,6 +50,12 @@ const Card: React.FC<ICardProps> = ({
         setFilter("");
         setIsSearchFocused(false);
         saveSearchedKeyword(filter);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          event.currentTarget.click();
+        }
       }}
     >
       {/* Image Container */}

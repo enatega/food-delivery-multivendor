@@ -114,9 +114,11 @@ export default function HomeLayout({
 
       {/* Scrollable Content */}
       <div
-        className={`flex-1 bg-dispatch-ground pb-8 dark:bg-gray-950 ${isSearchFocused ? "pointer-events-none blur-md" : ""}`}
+        className={`flex-1 bg-dispatch-ground dark:bg-gray-950 ${isSearchFocused ? "pointer-events-none blur-md" : ""}`}
       >
-        <PaddingContainer>{children}</PaddingContainer>
+        <PaddingContainer className="pb-24 pt-5 sm:pb-12 sm:pt-7 lg:pt-9">
+          {children}
+        </PaddingContainer>
       </div>
     </div>
   );

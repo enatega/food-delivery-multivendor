@@ -30,7 +30,7 @@ function getVisibleCount() {
 
 export function SingleVendorProductSectionSkeleton() {
   return (
-    <section className="mt-5 animate-pulse" aria-busy="true">
+    <section className="mt-8 animate-pulse sm:mt-10" aria-busy="true">
       <div className="mb-4 h-6 w-48 bg-gray-200 dark:bg-gray-700" />
       <div className="grid grid-cols-2 gap-3 max-[320px]:grid-cols-1 min-[641px]:grid-cols-4 min-[1025px]:grid-cols-5 min-[1281px]:grid-cols-6 min-[1537px]:grid-cols-8">
         {Array.from({ length: 8 }, (_, index) => (
@@ -103,7 +103,7 @@ export default function SingleVendorProductSection({
   };
 
   return (
-    <section className="mt-5" dir={isRTL ? "rtl" : "ltr"}>
+    <section className="mt-8 sm:mt-10" dir={isRTL ? "rtl" : "ltr"}>
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-lg font-medium tracking-[-0.02em] text-dispatch-ink sm:text-xl dark:text-white">
           {title}

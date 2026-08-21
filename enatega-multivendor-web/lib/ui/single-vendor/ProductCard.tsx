@@ -16,8 +16,8 @@ export default function SingleVendorProductCard({
   const variation = product.variations?.[0];
   const href = `/product/${product.id}${product.categoryId ? `?categoryId=${product.categoryId}` : ""}`;
   return (
-    <article className="group relative h-full overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface dark:border-gray-800 dark:bg-gray-900">
-      <Link href={href} className="block h-full">
+    <article className="group relative h-full overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface transition-shadow hover:shadow-[0_12px_30px_rgba(21,25,20,0.09)] dark:border-gray-800 dark:bg-gray-900">
+      <Link href={href} className="block h-full focus-visible:outline-none">
         <div className="relative aspect-[16/9] overflow-hidden bg-dispatch-map dark:bg-gray-800">
           {product.image ? (
             <Image

@@ -1,38 +1,26 @@
-"use client"
+"use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Tooltip } from "react-tooltip";
-import CustomButton from "../button";
 import { useTranslations } from "use-intl";
 
 const MapViewButton: React.FC = () => {
-  const t = useTranslations()
+  const t = useTranslations();
   const pathname = usePathname();
 
-  const showMapViewButton = pathname === "/restaurants" || pathname === "/store";
+  const showMapViewButton =
+    pathname === "/restaurants" || pathname === "/store";
+
+  if (!showMapViewButton) return null;
 
   return (
-    showMapViewButton ? (
-      <div className="flex items-center gap-2 ">
-        <Link href={`/mapview${pathname}`}>
-        <CustomButton
-              label={t("map_view")}
-              className="text-secondary-color transition-colors duration-200 text-sm md:text-base hidden sm:block"
-            />
-        </Link>
-        <Link
-          href={`/mapview${pathname}`}
-          className="bg-white hover:bg-gray-100 transition-colors duration-200 text-gray-900 rounded-full p-2 flex items-center justify-center shadow-md"
-          data-tooltip-id="view-on-map"
-          data-tooltip-content={`${t("view_label")} ${pathname
-            .charAt(1)
-            .toUpperCase()}${pathname.slice(2)} t("onMap_label")}`}
-        >
-          <i className="pi pi-map" style={{ fontSize: "1rem" }}></i>
-          <Tooltip id="view-on-map" />
-        </Link>
-      </div>
-    ) : ''
+    <Link
+      href={`/mapview${pathname}`}
+      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-dispatch-map px-3.5 text-sm font-medium text-dispatch-ink transition-colors hover:bg-primary-light hover:text-primary-dark focus-visible:outline-none dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
+    >
+      <i className="pi pi-map text-sm" aria-hidden />
+      <span className="hidden sm:inline">{t("map_view")}</span>
+      <span className="sr-only sm:hidden">{t("map_view")}</span>
+    </Link>
   );
 };
 

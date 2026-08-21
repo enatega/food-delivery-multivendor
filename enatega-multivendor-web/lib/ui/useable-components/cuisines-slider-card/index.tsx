@@ -110,9 +110,9 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
 
   return (
     data?.length > 0 && (
-      <section className={`mt-5 ${last && "mb-10"}`}>
+      <section className={`mt-8 sm:mt-10 ${last && "mb-10"}`}>
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-medium tracking-[-0.02em] text-dispatch-ink sm:text-xl dark:text-white">
+          <h2 className="font-dispatch text-lg font-medium tracking-[-0.02em] text-dispatch-ink sm:text-xl dark:text-white">
             {headingLabel}
           </h2>
           <div className="mb-2 flex items-center justify-end gap-x-2">
