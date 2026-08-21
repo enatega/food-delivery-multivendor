@@ -15,6 +15,14 @@ const WrapperHorizontalProductsList = ({ data = null, listTitle = '' }) => {
     : productsData?.getCategoryItemsSingleVendor?.items
   const [searchVisible, setSearchVisible] = useState(false)
 
+  const hasNoProducts = Array.isArray(products)
+    ? products.length === 0
+    : !loading
+
+  if (!error && hasNoProducts) {
+    return null
+  }
+
   return (
     <>
       {error

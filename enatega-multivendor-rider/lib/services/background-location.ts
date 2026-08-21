@@ -130,11 +130,11 @@ TaskManager.defineTask(RIDER_LOCATION_TASK, async ({data, error}) => {
 });
 
 export const startBackgroundLocation = async (config: BackgroundConfig) => {
-  await AsyncStorage.setItem(CONFIG_KEY, JSON.stringify(config));
   const foreground = await Location.getForegroundPermissionsAsync();
   if (foreground.status !== "granted") return false;
-  const background = await Location.requestBackgroundPermissionsAsync();
+  const background = await Location.getBackgroundPermissionsAsync();
   if (background.status !== "granted") return false;
+  await AsyncStorage.setItem(CONFIG_KEY, JSON.stringify(config));
   if (await Location.hasStartedLocationUpdatesAsync(RIDER_LOCATION_TASK)) {
     return true;
   }

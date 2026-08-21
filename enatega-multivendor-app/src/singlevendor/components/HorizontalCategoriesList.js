@@ -26,6 +26,10 @@ const HorizontalCategoriesList = ({ categoriesData = [] }) => {
     }
   }
 
+  if (!categoriesData.length) {
+    return null
+  }
+
   return (
     <View style={styles(currentTheme).container}>
       <FlatList

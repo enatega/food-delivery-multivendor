@@ -17,10 +17,20 @@ const DiscoveryDealRail = ({ section, title }) => {
     return <SectionListError title={title} onRetry={refetch} />
   }
 
+  const items = data?.singleVendorDeals?.items
+
+  const hasNoItems = Array.isArray(items)
+    ? items.length === 0
+    : !loading
+
+  if (hasNoItems) {
+    return null
+  }
+
   return (
     <HorizontalProductsList
       listTitle={title}
-      ListData={data?.singleVendorDeals?.items || []}
+      ListData={items || []}
       isLoading={loading && !data}
       showSeeAll={false}
     />
