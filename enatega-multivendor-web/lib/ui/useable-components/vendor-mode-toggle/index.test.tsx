@@ -17,6 +17,14 @@ vi.mock("@/lib/mode", () => ({
 vi.mock("@/lib/hooks/useUser", () => ({
   default: () => ({ cartCount: 0, orders: [] }),
 }));
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) =>
+    ({
+      delivery_label: "Delivery",
+      tab_restaurants: "Restaurants",
+      tab_store: "Store",
+    })[key] || key,
+}));
 
 describe("VendorModeToggle", () => {
   beforeEach(() => switchMode.mockClear());
@@ -24,9 +32,9 @@ describe("VendorModeToggle", () => {
   it("renders an accessible radio group and switches modes", async () => {
     render(<VendorModeToggle />);
     expect(
-      screen.getByRole("radiogroup", { name: "Delivery service" }),
+      screen.getByRole("radiogroup", { name: "Delivery" }),
     ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("radio", { name: "Single Vendor" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Store" }));
     expect(switchMode).toHaveBeenCalledWith("SINGLE");
   });
 });

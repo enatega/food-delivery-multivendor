@@ -78,7 +78,7 @@ export function AppModeProvider({ children }: { children: React.ReactNode }) {
       try {
         modeStorage.set(APP_MODE_STORAGE_KEY, next);
         setMode(next);
-        router.replace(routeAfterModeSwitch());
+        router.replace(routeAfterModeSwitch(next));
         return true;
       } finally {
         setSwitchingMode(false);

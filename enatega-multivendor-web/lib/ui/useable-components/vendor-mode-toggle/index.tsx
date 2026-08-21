@@ -2,6 +2,7 @@
 
 import { APP_MODES, type AppMode, useAppMode } from "@/lib/mode";
 import useUser from "@/lib/hooks/useUser";
+import { useTranslations } from "next-intl";
 
 function ModeIcon({ mode }: { mode: AppMode }) {
   if (mode === APP_MODES.MULTI) {
@@ -51,17 +52,6 @@ function ModeIcon({ mode }: { mode: AppMode }) {
   );
 }
 
-const MODE_DETAILS = {
-  [APP_MODES.MULTI]: {
-    label: "Multi Vendor",
-    description: "Explore nearby restaurants and stores",
-  },
-  [APP_MODES.SINGLE]: {
-    label: "Single Vendor",
-    description: "Shop directly from one marketplace",
-  },
-} as const;
-
 export default function VendorModeToggle({
   compact = false,
 }: {
@@ -75,6 +65,7 @@ export default function VendorModeToggle({
     isSwitchingMode,
     switchMode,
   } = useAppMode();
+  const t = useTranslations();
   const { cartCount, orders = [] } = useUser();
 
   if (!isModeToggleEnabled || !singleVendorAvailable) return null;
@@ -104,17 +95,18 @@ export default function VendorModeToggle({
   return (
     <div
       role="radiogroup"
-      aria-label="Delivery service"
+      aria-label={t("delivery_label")}
       aria-busy={isSwitchingMode}
-      className={`grid items-stretch gap-1.5 rounded-[18px] border border-gray-200/90 bg-gray-100/80 p-1.5 shadow-[inset_0_1px_2px_rgba(15,23,42,0.04),0_4px_16px_rgba(15,23,42,0.06)] backdrop-blur-sm dark:border-gray-700/80 dark:bg-gray-800/80 dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.2),0_6px_18px_rgba(0,0,0,0.18)] ${
+      className={`grid items-stretch gap-1 rounded-xl bg-dispatch-map p-1 dark:bg-gray-800 ${
         compact
-          ? "w-[244px] max-w-full grid-cols-[0.95fr_1fr]"
-          : "w-full max-w-[540px] grid-cols-2"
+          ? "w-[220px] max-w-full grid-cols-2"
+          : "w-full max-w-[480px] grid-cols-2"
       }`}
     >
       {([APP_MODES.MULTI, APP_MODES.SINGLE] as const).map((itemMode) => {
         const selected = itemMode === mode;
-        const details = MODE_DETAILS[itemMode];
+        const label =
+          itemMode === APP_MODES.MULTI ? t("tab_restaurants") : t("tab_store");
 
         return (
           <button
@@ -122,62 +114,38 @@ export default function VendorModeToggle({
             type="button"
             role="radio"
             aria-checked={selected}
-            aria-label={details.label}
+            aria-label={label}
             disabled={isSwitchingMode || isModeSwitchBlocked}
             onClick={() => void requestSwitch(itemMode)}
-            className={`group relative isolate flex min-w-0 items-center overflow-hidden rounded-[13px] text-start transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-offset-gray-800 ${
-              compact ? "h-9 justify-center gap-1.5 px-2" : "gap-3 px-3 py-2.5"
+            className={`group relative flex min-w-0 items-center justify-center overflow-hidden rounded-lg text-center transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color disabled:cursor-not-allowed disabled:opacity-60 ${
+              compact ? "h-9 gap-1.5 px-2" : "gap-2 px-3 py-2.5"
             } ${
               selected
-                ? "bg-gradient-to-br from-primary-color to-primary-dark text-white shadow-[0_5px_14px_rgba(90,193,47,0.3)]"
-                : "text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow-sm dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                ? "bg-primary-light text-primary-dark ring-1 ring-primary-color/35 dark:bg-primary-color/15"
+                : "text-dispatch-muted hover:bg-dispatch-surface hover:text-dispatch-ink dark:hover:bg-gray-700"
             }`}
           >
-            {selected && (
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-2 top-0 h-px bg-white/55"
-              />
-            )}
-
             <span
               aria-hidden="true"
-              className={`flex shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
-                compact ? "h-5 w-5 p-1" : "h-9 w-9 p-2"
-              } ${
-                selected
-                  ? "bg-white/20 text-white shadow-inner"
-                  : "bg-white text-gray-500 shadow-sm ring-1 ring-gray-200/70 group-hover:text-primary-dark dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-600"
-              }`}
+              className={`flex shrink-0 items-center justify-center transition-colors ${compact ? "h-4 w-4" : "h-5 w-5"} ${selected ? "text-primary-dark" : "text-dispatch-muted"}`}
             >
               <ModeIcon mode={itemMode} />
             </span>
 
             <span className={compact ? "min-w-0" : "min-w-0 flex-1"}>
               <span
-                className={`block whitespace-nowrap font-semibold ${
+                className={`block truncate font-medium ${
                   compact ? "text-[11px] leading-none" : "text-sm leading-5"
                 }`}
               >
-                {details.label}
+                {label}
               </span>
-              {!compact && (
-                <span
-                  className={`mt-0.5 block truncate text-[11px] leading-4 ${
-                    selected
-                      ? "text-white/80"
-                      : "text-gray-400 dark:text-gray-500"
-                  }`}
-                >
-                  {details.description}
-                </span>
-              )}
             </span>
 
             {isSwitchingMode && selected && (
               <span
                 aria-hidden="true"
-                className="h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                className="h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 border-primary-color/30 border-t-primary-dark"
               />
             )}
           </button>

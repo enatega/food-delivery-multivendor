@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -59,20 +58,20 @@ const AppLayout = ({ children }: IProvider) => {
   }, [])
 
   const UI = (
-    <div className="layout-main">
+    <div className="layout-main min-h-dvh bg-dispatch-ground text-dispatch-ink dark:bg-gray-950 dark:text-white">
       <div className={`
-        layout-top-container transtion-all duration-300 ease-in-out h-[100px] md:h-[64px]
-        ${isScrolled ? '!fixed !top-0 left-0 shadow-lg' : ''}
+        layout-top-container transition-all duration-300 ease-out
+        ${isScrolled ? '!fixed !top-0 left-0 shadow-dispatch' : ''}
       `}>
         <AppTopbar handleModalToggle={handleModalToggle} />
       </div>
       <div className={`layout-main-container ${isSearchFocused && 'blur-md overflow-hidden h-screen '}`}>
-        <div className="layout-main w-full min-h-screen dark:bg-gray-900">
+        <main className="layout-main min-h-screen w-full bg-dispatch-ground dark:bg-gray-950">
           <StripeOrderRecovery />
           {children}
-        </div>
+        </main>
       </div>
-      <div className="pb-[45px] md:pb-0 bg-[#141414]">
+      <div className="bg-dispatch-ink pb-[72px] md:pb-0">
         <AppFooter />
       </div>
       <AuthModal

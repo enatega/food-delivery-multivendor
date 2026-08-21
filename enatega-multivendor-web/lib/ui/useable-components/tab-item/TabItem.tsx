@@ -1,27 +1,33 @@
 interface TabItemProps {
-    active: boolean;
-    label: string;
-    onClick: () => void;
-    Icon: React.FC<{ color: string }>;
-  }
-  
-  export default function TabItem({ active, label, onClick, Icon }: TabItemProps) {
-    const baseClasses =
-      "flex flex-col sm:flex-row items-center justify-center w-24 rtl:ml-2 md:rtl:ml-2 sm:w-36 gap-x-1 p-2 md:pt-2 md:pb-2 md:pl-4 md:pr-4 rounded-full cursor-pointer transition-all duration-300 whitespace-nowrap";
-  
-    const activeClasses = "text-secondary-color sm:bg-secondary-color sm:text-white";
-    const inactiveClasses = "bg-gray-100 sm:hover:bg-gray-200 text-gray-500";
-  
-    return (
-      <div
-        className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}
-        onClick={onClick}
-      >
-        <Icon color="currentColor" />
-        <span className="font-inter font-medium text-[12px] md:text-sm sm:inline">
-          {label}
-        </span>
-      </div>
-    );
-  }
-  
+  active: boolean;
+  label: string;
+  onClick: () => void;
+  Icon: React.FC<{ color: string }>;
+}
+
+export default function TabItem({
+  active,
+  label,
+  onClick,
+  Icon,
+}: TabItemProps) {
+  const baseClasses =
+    "group flex min-h-11 flex-1 items-center justify-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors sm:-mb-px sm:min-h-[52px] sm:flex-none sm:px-4 sm:py-0";
+
+  const activeClasses =
+    "border-primary-color bg-primary-light text-primary-dark sm:bg-transparent dark:bg-gray-800 dark:text-white";
+  const inactiveClasses =
+    "border-transparent text-dispatch-muted hover:border-primary-color hover:text-primary-dark dark:text-gray-300";
+
+  return (
+    <button
+      type="button"
+      aria-current={active ? "page" : undefined}
+      className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}
+      onClick={onClick}
+    >
+      <Icon color="currentColor" />
+      <span className="font-inter text-xs sm:text-sm">{label}</span>
+    </button>
+  );
+}

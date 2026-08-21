@@ -2,9 +2,7 @@
 
 import { useQuery } from "@apollo/client";
 
-import {
-  SINGLE_VENDOR_DISCOVERY,
-} from "@/lib/api/graphql/single-vendor";
+import { SINGLE_VENDOR_DISCOVERY } from "@/lib/api/graphql/single-vendor";
 import type { ModeProduct } from "@/lib/mode/types";
 import DiscoveryBannerSection from "@/lib/ui/screen-components/protected/home/discovery/banner-section";
 import CuisinesSliderCard from "@/lib/ui/useable-components/cuisines-slider-card";
@@ -14,6 +12,7 @@ import SingleVendorProductSection, {
   SingleVendorProductSectionSkeleton,
 } from "./ProductSection";
 import SingleVendorActiveOrderCard from "./ActiveOrderCard";
+import { useTranslations } from "next-intl";
 
 const normalizeProducts = (items: any[] = []): ModeProduct[] =>
   items.map((item) => ({
@@ -39,30 +38,38 @@ const normalizeProducts = (items: any[] = []): ModeProduct[] =>
 
 function SectionError({ message }: { message: string }) {
   return (
-    <div className="mt-7 rounded-md border border-red-300 px-4 py-8 text-center text-sm text-red-500 dark:border-red-900 dark:text-red-300">
+    <div className="mt-7 rounded-xl border border-red-300 px-4 py-8 text-center text-sm text-red-500 dark:border-red-900 dark:text-red-300">
       {message}
     </div>
   );
 }
 
 export default function SingleVendorDiscovery() {
+  const t = useTranslations();
   const discovery = useQuery(SINGLE_VENDOR_DISCOVERY, {
     variables: { previewLimit: 10, dealLimit: 20 },
     fetchPolicy: "cache-and-network",
   });
   const discoveryData = discovery.data?.singleVendorDiscovery;
 
-  const categoryData = (
-    discoveryData?.categories || []
-  ).map((category: any) => ({
-    _id: category.id,
-    name: category.name,
-    description: category.description,
-    image: category.image || category.icon,
-    shopType: "single-vendor",
-    slug: category.id,
-  }));
+  const categoryData = (discoveryData?.categories || []).map(
+    (category: any) => ({
+      _id: category.id,
+      name: category.name,
+      description: category.description,
+      image: category.image || category.icon,
+      shopType: "single-vendor",
+      slug: category.id,
+    }),
+  );
   const catalogData = discoveryData?.categories || [];
+  const dealProducts = normalizeProducts([
+    ...(discoveryData?.deals?.limitedTime?.items || []),
+    ...(discoveryData?.deals?.weekly?.items || []),
+  ]).filter(
+    (product, index, products) =>
+      products.findIndex((candidate) => candidate.id === product.id) === index,
+  );
 
   return (
     <div className="pb-12">
@@ -76,10 +83,10 @@ export default function SingleVendorDiscovery() {
       {discovery.loading && !categoryData.length ? (
         <CuisinesSliderSkeleton />
       ) : discovery.error ? (
-        <SectionError message="Unable to fetch categories. Please try again shortly." />
+        <SectionError message={t("something_went_wrong_please_try_again")} />
       ) : (
         <CuisinesSliderCard
-          title="Browse categories"
+          title={t("shop-types")}
           data={categoryData}
           showLogo={false}
           cuisines={false}
@@ -92,26 +99,15 @@ export default function SingleVendorDiscovery() {
         <SingleVendorProductSectionSkeleton />
       ) : (
         <SingleVendorProductSection
-          title="Limited-time offers"
-          products={normalizeProducts(
-            discoveryData?.deals?.limitedTime?.items,
-          )}
-        />
-      )}
-
-      {discovery.loading && !discovery.data ? (
-        <SingleVendorProductSectionSkeleton />
-      ) : (
-        <SingleVendorProductSection
-          title="Weekly offers"
-          products={normalizeProducts(discoveryData?.deals?.weekly?.items)}
+          title={t("discount_label")}
+          products={dealProducts}
         />
       )}
 
       {discovery.loading && !catalogData.length ? (
         <SingleVendorProductSectionSkeleton />
       ) : discovery.error ? (
-        <SectionError message="Unable to fetch products. Please try again shortly." />
+        <SectionError message={t("something_went_wrong_please_try_again")} />
       ) : (
         catalogData.map((category: any) => (
           <SingleVendorProductSection

@@ -11,21 +11,9 @@ import { useAuth } from "@/lib/context/auth/auth.context";
 import useCurrencyFormatter from "@/lib/hooks/useCurrencyFormatter";
 import useUser from "@/lib/hooks/useUser";
 import Image from "@/lib/ui/useable-components/safe-image";
+import { useTranslations } from "next-intl";
 
 const ACTIVE_STATUSES = ["PENDING", "ACCEPTED", "ASSIGNED", "PICKED"];
-
-function getOrderMessage(status: string, isPickedUp: boolean) {
-  if (status === "PICKED") {
-    return isPickedUp ? "Ready for collection" : "Your order is on the way";
-  }
-  if (status === "ASSIGNED") return "A courier has been assigned";
-  if (status === "ACCEPTED") {
-    return isPickedUp
-      ? "Your collection is being prepared"
-      : "Your order is being prepared";
-  }
-  return "We have received your order";
-}
 
 function formatEta(value?: string | null) {
   if (!value) return null;
@@ -35,6 +23,7 @@ function formatEta(value?: string | null) {
 }
 
 export default function SingleVendorActiveOrderCard() {
+  const t = useTranslations();
   const { authToken } = useAuth();
   const { profile } = useUser();
   const { formatCurrency } = useCurrencyFormatter();
@@ -52,23 +41,23 @@ export default function SingleVendorActiveOrderCard() {
   if (recent.loading && !recent.data) {
     return (
       <div
-        className="my-6 h-44 animate-pulse rounded-2xl bg-gray-100 dark:bg-gray-800"
-        aria-label="Loading active order"
+        className="my-6 h-28 animate-pulse rounded-xl border border-dispatch-line bg-dispatch-surface dark:border-gray-800 dark:bg-gray-900"
+        aria-label={t("loading_orders")}
       />
     );
   }
   if (recent.error && !recent.data) {
     return (
-      <div className="my-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 dark:border-red-900 dark:bg-red-950/20">
+      <div className="my-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-5 py-4 dark:border-red-900 dark:bg-red-950/20">
         <p className="text-sm text-red-600 dark:text-red-300">
-          Your active order could not be loaded.
+          {t("something_went_wrong_please_try_again")}
         </p>
         <button
           type="button"
           onClick={() => void recent.refetch()}
-          className="rounded-full border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 dark:border-red-800 dark:text-red-300"
+          className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 dark:border-red-800 dark:text-red-300"
         >
-          Try again
+          {t("try_again_button")}
         </button>
       </div>
     );
@@ -101,14 +90,14 @@ export default function SingleVendorActiveOrderCard() {
     : order.deliveryAddress?.deliveryAddress;
 
   return (
-    <section className="my-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+    <section className="my-7 overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface dark:border-gray-800 dark:bg-gray-900">
       <Link
         href={`/order/${order.orderId}/tracking`}
-        aria-label={`Track active order ${order.orderId}`}
-        className="group block p-5 sm:p-6"
+        aria-label={t("track_order_button_label")}
+        className="group block p-4 sm:p-5"
       >
         <div className="flex items-start gap-4">
-          <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-light text-primary-color dark:bg-gray-700">
+          <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-light text-primary-dark dark:bg-gray-800">
             {order.restaurant?.image ? (
               <Image
                 src={order.restaurant.image}
@@ -144,30 +133,19 @@ export default function SingleVendorActiveOrderCard() {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <p className="text-xs font-semibold tracking-wide text-primary-color uppercase">
-                  Active order
+                <p className="text-xs font-medium text-primary-dark">
+                  {t("active_orders_title")}
                 </p>
-                <h2 className="mt-1 text-lg font-bold text-gray-900 sm:text-xl dark:text-white">
-                  {getOrderMessage(
-                    order.orderStatus,
-                    Boolean(order.isPickedUp),
-                  )}
+                <h2 className="mt-1 text-lg font-medium leading-tight text-dispatch-ink dark:text-white sm:text-xl">
+                  {order.restaurant?.name || `#${order.orderId}`}
                 </h2>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  {order.restaurant?.name || "Current order"}
-                  {eta ? ` · Expected by ${eta}` : ""}
+                  {eta || `#${order.orderId}`}
                 </p>
               </div>
-              <span className="rounded-full bg-primary-light px-3 py-1 text-xs font-semibold text-primary-color dark:bg-gray-700">
-                {order.orderStatus.charAt(0) +
-                  order.orderStatus.slice(1).toLowerCase()}
-              </span>
             </div>
 
-            <div
-              className="mt-5 flex gap-2"
-              aria-label={`${progress} of 4 order stages completed`}
-            >
+            <div className="mt-5 flex gap-2" aria-hidden="true">
               {ACTIVE_STATUSES.map((status, index) => (
                 <span
                   key={status}
@@ -179,16 +157,17 @@ export default function SingleVendorActiveOrderCard() {
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-600 dark:text-gray-300">
               <span>#{order.orderId}</span>
               <span>
-                {itemCount} {itemCount === 1 ? "item" : "items"}
+                {itemCount}{" "}
+                {itemCount === 1 ? t("item_label") : t("items_label")}
               </span>
-              <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="font-medium text-gray-900 dark:text-white">
                 {formatCurrency(order.orderAmount)}
               </span>
               {destination && (
                 <span className="max-w-sm truncate">{destination}</span>
               )}
-              <span className="ms-auto font-semibold text-primary-color transition group-hover:translate-x-0.5">
-                Track order →
+              <span className="ms-auto font-medium text-primary-dark transition group-hover:translate-x-0.5">
+                {t("track_order_button_label")} →
               </span>
             </div>
           </div>

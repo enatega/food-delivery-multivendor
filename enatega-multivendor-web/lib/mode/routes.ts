@@ -9,7 +9,6 @@ const MULTI_ONLY = [
 const SINGLE_ONLY = [
   /^\/deals/,
   /^\/browse/,
-  /^\/category\//,
   /^\/product\//,
   /^\/profile\/(favorites|vouchers|wallet|membership|referral)/,
 ];
@@ -19,4 +18,8 @@ export const isRouteCompatible = (pathname: string, mode: AppMode) => {
   return !rules.some((rule) => rule.test(pathname));
 };
 
-export const routeAfterModeSwitch = () => "/";
+export const getModeHomeRoute = (mode: AppMode): "/" | "/discovery" =>
+  mode === APP_MODES.SINGLE ? "/discovery" : "/";
+
+export const routeAfterModeSwitch = (nextMode: AppMode) =>
+  getModeHomeRoute(nextMode);

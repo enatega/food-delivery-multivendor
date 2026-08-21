@@ -39,18 +39,29 @@ vi.mock("@/lib/hooks/useCurrencyFormatter", () => ({
     formatCurrency: (value: number) => `$${value.toFixed(2)}`,
   }),
 }));
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) =>
+    ({
+      active_orders_title: "Active Orders",
+      item_label: "item",
+      items_label: "items",
+      loading_orders: "Loading orders",
+      something_went_wrong_please_try_again:
+        "Something went wrong. Please try again.",
+      track_order_button_label: "Track your order",
+      try_again_button: "Try Again",
+    })[key] || key,
+}));
 
 describe("SingleVendorActiveOrderCard", () => {
   it("shows the latest order and links with its public orderId", () => {
     render(<SingleVendorActiveOrderCard />);
 
     const trackingLink = screen.getByRole("link", {
-      name: "Track active order SV-1042",
+      name: "Track your order",
     });
     expect(trackingLink).toHaveAttribute("href", "/order/SV-1042/tracking");
-    expect(
-      screen.getByText("Your order is being prepared"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Enatega Market")).toBeInTheDocument();
     expect(screen.getByText("$24.50")).toBeInTheDocument();
     expect(trackingLink).not.toHaveAttribute(
       "href",

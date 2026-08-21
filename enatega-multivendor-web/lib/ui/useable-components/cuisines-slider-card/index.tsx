@@ -15,8 +15,9 @@ import CustomButton from "../button";
 import { useTranslations } from "next-intl";
 
 const responsiveOptions = [
-  { breakpoint: "1280px", numVisible: 6, numScroll: 1 },
-  { breakpoint: "1024px", numVisible: 4, numScroll: 1 },
+  { breakpoint: "1536px", numVisible: 8, numScroll: 1 },
+  { breakpoint: "1280px", numVisible: 7, numScroll: 1 },
+  { breakpoint: "1024px", numVisible: 6, numScroll: 1 },
   { breakpoint: "640px", numVisible: 3, numScroll: 1 },
   { breakpoint: "425px", numVisible: 2, numScroll: 1 },
   { breakpoint: "320px", numVisible: 1, numScroll: 1 },
@@ -40,17 +41,23 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
   const t = useTranslations();
 
   function getNumVisible() {
-    if (typeof window === "undefined") return 6;
+    if (typeof window === "undefined") return 8;
     const width = window.innerWidth;
-    if (width > 1280) return 6;
-    const option = responsiveOptions.find(
-      (opt) => width <= parseInt(opt.breakpoint),
-    );
-    return option ? option.numVisible : 6;
+    if (width <= 320) return 1;
+    if (width <= 425) return 2;
+    if (width <= 640) return 3;
+    if (width <= 1024) return 6;
+    if (width <= 1280) return 7;
+    if (width <= 1536) return 8;
+    return 10;
   }
 
   const numScroll = 1;
   const totalItems = data?.length || 0;
+  const shouldUseFixedCardColumns = totalItems > 0 && totalItems < numVisible;
+  const fixedColumnStyle = {
+    "--cuisine-card-column-width": `${100 / numVisible}%`,
+  } as React.CSSProperties;
 
   const next = () => {
     setUserInteracted(true);
@@ -103,12 +110,12 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
 
   return (
     data?.length > 0 && (
-      <div className={` mt-7 ${last && "mb-20"}`}>
-        <div className="flex justify-between mx-[6px]">
-          <span className="font-inter font-bold text-xl sm:text-2xl leading-8 tracking-normal text-gray-900 dark:text-white">
+      <section className={`mt-5 ${last && "mb-10"}`}>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-medium tracking-[-0.02em] text-dispatch-ink sm:text-xl dark:text-white">
             {headingLabel}
-          </span>
-          <div className="flex items-center justify-end gap-x-2 mb-2">
+          </h2>
+          <div className="mb-2 flex items-center justify-end gap-x-2">
             {pathname !== "/store" &&
               pathname !== "/restaurants" &&
               !cuisines &&
@@ -116,13 +123,15 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
                 <CustomButton
                   label={t("see_all")}
                   onClick={onSeeAllClick}
-                  className="text-secondary-color transition-colors duration-200 text-sm md:text-base "
+                  className="text-sm font-medium text-primary-color transition-colors hover:text-primary-hover md:text-base"
                 />
               )}
             {data.length > numVisible && (
               <div className="gap-x-2 hidden md:flex">
                 <button
-                  className="w-8 h-8 flex items-center justify-center shadow-md rounded-full dark:bg-gray-800"
+                  type="button"
+                  aria-label={headingLabel}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-dispatch-muted transition hover:bg-dispatch-map hover:text-primary-dark dark:bg-gray-900"
                   onClick={prev}
                 >
                   {isRTL ? (
@@ -138,7 +147,9 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
                   )}
                 </button>
                 <button
-                  className="w-8 h-8 flex items-center justify-center shadow-md rounded-full dark:bg-gray-800"
+                  type="button"
+                  aria-label={headingLabel}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-dispatch-muted transition hover:bg-dispatch-map hover:text-primary-dark dark:bg-gray-900"
                   onClick={next}
                 >
                   {isRTL ? (
@@ -157,16 +168,11 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
             )}
           </div>
         </div>
-        <div
-          className=""
-          style={{
-            width: data.length < 4 ? "max-content" : "100%",
-            minWidth: "800px",
-          }}
-        >
+        <div className="w-full">
           <Carousel
             value={data}
-            className={`discovery-carousel ${isRTL ? "rtl-carousel" : ""}`} // Add RTL class
+            className={`discovery-carousel cuisine-card-carousel ${shouldUseFixedCardColumns ? "low-count-carousel" : ""} ${isRTL ? "rtl-carousel" : ""}`}
+            style={shouldUseFixedCardColumns ? fixedColumnStyle : undefined}
             itemTemplate={(item) => (
               <SquareCard
                 item={item}
@@ -185,7 +191,7 @@ const CuisinesSliderCard: CuisinesSliderCardComponent = ({
             onPageChange={(e) => setPage(e.page)}
           />
         </div>
-      </div>
+      </section>
     )
   );
 };

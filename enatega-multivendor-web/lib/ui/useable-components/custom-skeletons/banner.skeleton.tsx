@@ -1,27 +1,39 @@
-import React from 'react';
-
-export default function DiscoveryBannerSkeleton() {
+export default function DiscoveryBannerSkeleton({
+  single: _single = false,
+}: {
+  single?: boolean;
+}) {
   return (
-    <div className="discovery-carousel-skeleton animate-pulse">
-      <div className="flex space-x-4 overflow-hidden">
-        {[...Array(2)].map((_, index) => (
-          <div 
-            key={index} 
-            className="carousel-item md:mr-[12px] relative w-[890px] h-[300px]"
+    <div
+      className="mt-5 grid sm:mt-7 lg:grid-cols-[minmax(0,1fr)_240px] xl:grid-cols-[minmax(0,1fr)_280px]"
+      aria-hidden="true"
+    >
+      <div className="relative z-10 h-[260px] overflow-hidden rounded-[28px] bg-dispatch-map sm:h-[320px] lg:h-[390px] lg:rounded-r-[195px]">
+        <div className="absolute bottom-7 left-6 w-[58%] space-y-3 sm:bottom-9 sm:left-9">
+          <div className="h-3 w-24 animate-pulse rounded-full bg-dispatch-line" />
+          <div className="h-8 w-3/4 animate-pulse rounded bg-dispatch-line" />
+          <div className="h-4 w-full animate-pulse rounded bg-dispatch-line" />
+          <div className="h-10 w-28 animate-pulse rounded-xl bg-dispatch-line" />
+        </div>
+      </div>
+      <div className="relative z-20 mt-3 flex gap-4 overflow-hidden py-2 lg:-ml-6 lg:mt-0 lg:block lg:h-[390px] lg:overflow-visible lg:py-0">
+        {[
+          "lg:left-7 lg:top-[33px]",
+          "lg:left-[62px] lg:top-[152px]",
+          "lg:left-7 lg:top-[271px]",
+        ].map((position, item) => (
+          <div
+            key={item}
+            className={`flex shrink-0 items-center gap-4 lg:absolute ${position}`}
           >
-            {/* Background gradient overlay */}
-            <div className="absolute inset-0 bg-gray-200 rounded-xl opacity-70"></div>
-            
-            {/* Skeleton content */}
-            <div className="absolute inset-0 flex flex-col justify-end p-4">
-              {/* Title skeleton */}
-              <div className="bg-gray-300 h-8 w-3/4 mb-2 rounded"></div>
-              
-              {/* Description skeleton */}
-              <div className="bg-gray-400 h-4 w-1/2 rounded"></div>
-            </div>
+            <div className="h-[78px] w-[78px] animate-pulse rounded-full bg-dispatch-map lg:h-[86px] lg:w-[86px]" />
+            <div className="hidden h-3 w-20 animate-pulse rounded-full bg-dispatch-line sm:block" />
           </div>
         ))}
+        <div className="mt-3 ml-auto flex items-center gap-2 lg:absolute lg:bottom-0 lg:right-0 lg:mt-0">
+          <div className="h-10 w-10 animate-pulse rounded-full bg-dispatch-map" />
+          <div className="h-10 w-10 animate-pulse rounded-full bg-dispatch-map" />
+        </div>
       </div>
     </div>
   );

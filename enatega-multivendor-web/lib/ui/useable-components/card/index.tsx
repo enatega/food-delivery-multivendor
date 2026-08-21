@@ -1,14 +1,12 @@
 "use client";
 
 // core
-import Image from '@/lib/ui/useable-components/safe-image';
+import Image from "@/lib/ui/useable-components/safe-image";
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
 
 // Assets
-import { FiClock } from "react-icons/fi";
-import { CycleSvg, FaceSvg } from "@/lib/utils/assets/svg";
-import IconWithTitle from "../icon-with-title";
+import { FiClock, FiStar } from "react-icons/fi";
 
 // Hooks
 import { useSearchUI } from "@/lib/context/search/search.context";
@@ -30,20 +28,16 @@ const Card: React.FC<ICardProps> = ({
   const router = useRouter();
   const t = useTranslations();
   const pathname = usePathname();
-  const shouldTruncate = item.name?.length > 15;
-  const { setIsSearchFocused, setFilter, isSearchFocused, filter } =
-    useSearchUI();
+  const { setIsSearchFocused, setFilter, filter } = useSearchUI();
 
-  const { DELIVERY_RATE, CURRENCY_SYMBOL } = useConfig();
+  const { CURRENCY_SYMBOL } = useConfig();
   const isOpen = isRestaurantOpen(item);
 
   return (
     <div
-      className={`relative rounded-md shadow-md cursor-pointer hover:scale-102 hover:opacity-95 transition-transform duration-500 max-h-[272px] w-[96%] ml-[2%] ${
-        pathname === "/restaurants" || pathname === "/store"
-          ? "my-[2%]"
-          : "my-[4%]"
-      } dark:bg-gray-800 dark:text-white`}
+      className={`group relative w-full cursor-pointer overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface ${
+        pathname === "/restaurants" || pathname === "/store" ? "my-3" : "my-2"
+      } dark:border-gray-800 dark:bg-gray-900 dark:text-white`}
       onClick={() => {
         if (!isOpen) {
           handleUpdateIsModalOpen(true, item._id);
@@ -60,63 +54,66 @@ const Card: React.FC<ICardProps> = ({
       }}
     >
       {/* Image Container */}
-      <div
-        className={`relative w-full ${isSearchFocused ? "h-[160px]" : "h-[160px]"}`}
-      >
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-dispatch-map">
         <Image
           src={item?.image}
           alt={item?.name}
           fill
-          className="object-cover rounded-t-md"
+          className="object-cover transition duration-500 group-hover:scale-[1.025]"
           unoptimized
         />
       </div>
 
       {/* Overlay if closed */}
       {!isOpen && (
-        <div className="absolute rounded-md top-0 left-0 w-full h-[160px] bg-black/50 opacity-75 z-20 flex items-center justify-center">
-          <div className="text-white text-center z-30">
-            <p className="text-lg font-bold">{t("closed_label")}</p>
-            <p className="text-sm">{t("currently_closed_message")}</p>
+        <div className="absolute inset-x-0 top-0 z-20 flex aspect-[16/9] items-center justify-center bg-dispatch-ink/35 backdrop-blur-[2px]">
+          <div className="z-30 px-3 text-center text-white drop-shadow-sm">
+            <p className="text-sm font-medium sm:text-base">
+              {t("closed_label")}
+            </p>
+            <p className="mt-0.5 hidden text-xs sm:block">
+              {t("currently_closed_message")}
+            </p>
           </div>
         </div>
       )}
 
       {/* Content Section */}
-      <div className="p-2 flex flex-col justify-between flex-shrink">
+      <div className="flex flex-col justify-between p-2.5">
         {/* Name & Cuisines */}
-        <div className="flex flex-row justify-between items-center relative border-b border-dashed pb-1 dark:border-gray-700">
-          <div className="w-[70%]">
+        <div className="relative min-w-0">
+          <div className="min-w-0 flex-1">
             <p
-              title={shouldTruncate ? item?.name : ""}
-              className="text-base lg:text-lg text-[#374151] font-semibold line-clamp-1 dark:text-white"
+              title={item?.name}
+              className="line-clamp-1 text-[15px] font-medium leading-tight text-dispatch-ink dark:text-white sm:text-base"
             >
               {item?.name}
             </p>
-            <p className="text-xs xl:text-sm text-[#4B5563] font-light line-clamp-1 dark:text-gray-400 hover:line-clamp-2">
+            <p className="mt-1 line-clamp-1 text-xs text-dispatch-muted dark:text-gray-400">
               {item?.cuisines.map((cuisine) => cuisine).join(", ")}
-            </p>
-          </div>
-
-          {/* Delivery Time */}
-          <div className="bg-primary-light dark:bg-gray-700 rounded-md flex items-center justify-center px-2 py-2 h-[40px] gap-1">
-            <FiClock className="text-sm text-primary-color" />
-            <p className="text-xs text-primary-color font-light lg:font-normal text-center flex justify-center items-center dark:text-primary-color">
-              {`${item?.deliveryTime}`} min
             </p>
           </div>
         </div>
 
-        {/* Icons Section */}
-        <div className="flex flex-row justify-between w-[80%] sm:w-[100%] lg:w-[75%] pt-1">
-          <div className="flex items-center justify-center gap-1 text-secondary-color dark:text-primary-color">
-            <span>{CURRENCY_SYMBOL}</span>
-            <p className="font-light text-[10px]">{item?.minimumOrder}</p>
-          </div>
-          {DELIVERY_RATE && (
-            <IconWithTitle logo={CycleSvg} title={DELIVERY_RATE} />
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-dispatch-muted">
+          {item?.deliveryTime != null && (
+            <span className="inline-flex items-center gap-1 tabular-nums">
+              <FiClock aria-hidden />
+              {item.deliveryTime} {t("min_label")}
+            </span>
           )}
-          <IconWithTitle logo={FaceSvg} title={item?.reviewAverage} />
+          {item?.reviewAverage != null && (
+            <span className="inline-flex items-center gap-1 tabular-nums">
+              <FiStar aria-hidden className="text-primary-dark" />
+              {item.reviewAverage}
+            </span>
+          )}
+          {item?.minimumOrder != null && (
+            <span className="tabular-nums">
+              {CURRENCY_SYMBOL}
+              {item.minimumOrder}
+            </span>
+          )}
         </div>
       </div>
 
@@ -128,7 +125,9 @@ const Card: React.FC<ICardProps> = ({
       >
         <div className="text-center pt-10 dark:text-white">
           <p className="text-lg font-bold pb-3">
-            {item.shopType === "restaurant" ? "Restaurant" : "Store"}{" "}
+            {item.shopType === "restaurant"
+              ? t("restaurant_label")
+              : t("store_label")}{" "}
             {t("is_closed_label")}
           </p>
           <p className="text-sm">{t("see_menu_prompt")}</p>

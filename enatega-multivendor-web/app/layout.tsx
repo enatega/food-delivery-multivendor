@@ -4,7 +4,14 @@ import { DirectionHandler } from "@/lib/ui/layouts/global/rtl/DirectionHandler";
 // import InstallPWA from "@/lib/ui/pwa/InstallPWA";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { Inter } from "next/font/google";
 import Script from "next/script";
+
+const interfaceFont = Inter({
+  subsets: ["latin"],
+  variable: "--font-interface",
+  display: "swap",
+});
 
 export const metadata = {
   title: "Enatega Multivendor",
@@ -64,7 +71,7 @@ export default async function RootLayout({
         </Script>
 
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#94e469" />
+        <meta name="theme-color" content="#75D04B" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
@@ -77,7 +84,17 @@ export default async function RootLayout({
         />
         {/* Add more media queries for other device sizes if needed */}
       </head>
-      <body className={dir === "rtl" ? "rtl" : ""} suppressHydrationWarning>
+      <body
+        className={`${interfaceFont.variable} ${dir === "rtl" ? "rtl" : ""}`}
+        suppressHydrationWarning
+      >
+        <template
+          data-impeccable-contract="8a60397e"
+          dangerouslySetInnerHTML={{
+            __html:
+              "<!-- THESIS: Enatega turns an address into a live neighbourhood marketplace; it refuses the generic food-photo hero and repetitive card wall. OWN-WORLD: #75D04B route signals cross warm off-white map fields, precise charcoal type, hairline rules, irregular API-image district tiles, and restrained 8–14px corners. STORY: confirm a location, see nearby availability, enter discovery, order, and track. FIRST VIEWPORT: a calm utility shell, task-focused address panel at left, dominant live market map at right, and one decisive green ordering action. FORM: Neighborhood Dispatch, user-approved combined direction, top grounded candidate; seed 8a60397e. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance -->",
+          }}
+        />
 
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>

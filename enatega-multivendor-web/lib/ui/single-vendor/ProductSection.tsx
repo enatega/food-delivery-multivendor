@@ -9,32 +9,42 @@ import type { ModeProduct } from "@/lib/mode/types";
 import SingleVendorProductCard from "./ProductCard";
 
 const responsiveOptions = [
-  { breakpoint: "1280px", numVisible: 4, numScroll: 1 },
-  { breakpoint: "1024px", numVisible: 3, numScroll: 1 },
+  { breakpoint: "1536px", numVisible: 6, numScroll: 1 },
+  { breakpoint: "1280px", numVisible: 5, numScroll: 1 },
+  { breakpoint: "1024px", numVisible: 4, numScroll: 1 },
   { breakpoint: "640px", numVisible: 2, numScroll: 1 },
-  { breakpoint: "425px", numVisible: 1, numScroll: 1 },
+  { breakpoint: "425px", numVisible: 2, numScroll: 1 },
+  { breakpoint: "320px", numVisible: 1, numScroll: 1 },
 ];
 
 function getVisibleCount() {
   if (typeof window === "undefined") return 5;
   const width = window.innerWidth;
-  if (width > 1280) return 5;
-  const option = responsiveOptions.find(
-    ({ breakpoint }) => width <= Number.parseInt(breakpoint),
-  );
-  return option?.numVisible ?? 5;
+  if (width <= 320) return 1;
+  if (width <= 640) return 2;
+  if (width <= 1024) return 4;
+  if (width <= 1280) return 5;
+  if (width <= 1536) return 6;
+  return 8;
 }
 
 export function SingleVendorProductSectionSkeleton() {
   return (
-    <section className="mt-7 animate-pulse" aria-busy="true">
-      <div className="mx-[6px] mb-4 h-7 w-48 rounded bg-gray-200 dark:bg-gray-700" />
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-5">
-        {Array.from({ length: 5 }, (_, index) => (
+    <section className="mt-5 animate-pulse" aria-busy="true">
+      <div className="mb-4 h-6 w-48 bg-gray-200 dark:bg-gray-700" />
+      <div className="grid grid-cols-2 gap-3 max-[320px]:grid-cols-1 min-[641px]:grid-cols-4 min-[1025px]:grid-cols-5 min-[1281px]:grid-cols-6 min-[1537px]:grid-cols-8">
+        {Array.from({ length: 8 }, (_, index) => (
           <div
             key={index}
-            className={`${index > 1 ? "hidden md:block" : ""} ${index > 3 ? "md:hidden xl:block" : ""} h-64 rounded-md bg-gray-100 dark:bg-gray-800`}
-          />
+            className="overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface dark:border-gray-800 dark:bg-gray-900"
+          >
+            <div className="aspect-[16/9] bg-dispatch-map dark:bg-gray-800" />
+            <div className="space-y-2 p-2.5">
+              <div className="h-4 w-3/4 bg-dispatch-line" />
+              <div className="h-3 w-full bg-dispatch-line" />
+              <div className="h-4 w-1/3 bg-dispatch-line" />
+            </div>
+          </div>
         ))}
       </div>
     </section>
@@ -80,6 +90,10 @@ export default function SingleVendorProductSection({
   if (!products.length) return null;
 
   const maxPage = Math.max(products.length - numVisible, 0);
+  const shouldUseFixedCardColumns = products.length < numVisible;
+  const fixedColumnStyle = {
+    "--single-product-column-width": `${100 / numVisible}%`,
+  } as React.CSSProperties;
   const move = (direction: -1 | 1) => {
     setUserInteracted(true);
     setPage((current) => {
@@ -89,9 +103,9 @@ export default function SingleVendorProductSection({
   };
 
   return (
-    <section className="mt-7" dir={isRTL ? "rtl" : "ltr"}>
-      <div className="mx-[6px] mb-2 flex items-center justify-between">
-        <h2 className="font-inter text-xl leading-8 font-bold tracking-normal text-gray-900 sm:text-2xl dark:text-white">
+    <section className="mt-5" dir={isRTL ? "rtl" : "ltr"}>
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="text-lg font-medium tracking-[-0.02em] text-dispatch-ink sm:text-xl dark:text-white">
           {title}
         </h2>
 
@@ -99,17 +113,17 @@ export default function SingleVendorProductSection({
           <div className="hidden items-center gap-x-2 md:flex">
             <button
               type="button"
-              aria-label={`Previous ${title}`}
+              aria-label={title}
               onClick={() => move(-1)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-dispatch-muted transition hover:bg-dispatch-map hover:text-primary-dark dark:bg-gray-900 dark:text-white"
             >
               <FontAwesomeIcon icon={isRTL ? faAngleRight : faAngleLeft} />
             </button>
             <button
               type="button"
-              aria-label={`Next ${title}`}
+              aria-label={title}
               onClick={() => move(1)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-dispatch-muted transition hover:bg-dispatch-map hover:text-primary-dark dark:bg-gray-900 dark:text-white"
             >
               <FontAwesomeIcon icon={isRTL ? faAngleLeft : faAngleRight} />
             </button>
@@ -119,9 +133,10 @@ export default function SingleVendorProductSection({
 
       <Carousel
         value={products}
-        className={`discovery-carousel single-vendor-product-carousel ${isRTL ? "rtl-carousel" : ""}`}
+        className={`discovery-carousel single-vendor-product-carousel ${shouldUseFixedCardColumns ? "low-count-carousel" : ""} ${isRTL ? "rtl-carousel" : ""}`}
+        style={shouldUseFixedCardColumns ? fixedColumnStyle : undefined}
         itemTemplate={(product) => (
-          <div className="mx-2 mb-6 h-full py-2">
+          <div className="mx-1.5 mb-5 h-full py-2">
             <SingleVendorProductCard product={product} />
           </div>
         )}

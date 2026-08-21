@@ -1,4 +1,3 @@
-import { Carousel } from "primereact/carousel";
 // query
 import { GET_BANNERS } from "@/lib/api/graphql/queries";
 // gql
@@ -8,8 +7,8 @@ import DiscoveryBannerSkeleton from "@/lib/ui/useable-components/custom-skeleton
 // Interface
 import { IGetBannersResponse } from "@/lib/utils/interfaces";
 // banner card
-import BannerCard from "./banner-card";
-import { useEffect, useState } from "react";
+import OrbitBannerCarousel from "./banner-card";
+import { useAppMode } from "@/lib/mode";
 
 export default function DiscoveryBannerSection({
   query = GET_BANNERS,
@@ -22,7 +21,12 @@ export default function DiscoveryBannerSection({
   loading?: boolean;
   error?: unknown;
 }) {
-  const { data, loading: queryLoading, error: queryError } = useQuery<IGetBannersResponse>(query, {
+  const { isSingleVendor } = useAppMode();
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery<IGetBannersResponse>(query, {
     fetchPolicy: "cache-and-network",
     skip: banners !== undefined,
   });
@@ -30,14 +34,8 @@ export default function DiscoveryBannerSection({
   const error = suppliedError ?? queryError;
   const bannerItems = banners ?? data?.banners;
 
-  // Check if RTL (client-side only)
-  const [isRTL, setIsRTL] = useState(false);
-  useEffect(() => {
-    setIsRTL(document.documentElement.dir === "rtl");
-  }, []);
-
   if (loading) {
-    return <DiscoveryBannerSkeleton />;
+    return <DiscoveryBannerSkeleton single={isSingleVendor} />;
   }
   if (error) {
     return null;
@@ -45,24 +43,5 @@ export default function DiscoveryBannerSection({
 
   if (!bannerItems?.length) return null;
 
-  return (
-    <div dir={isRTL ? "rtl" : "ltr"} className="mt-10 sm:mt-0">
-      <Carousel
-        className={`discovery-carousel ${isRTL ? "rtl-carousel" : ""}`} // Add RTL class
-        value={bannerItems}
-        numVisible={2}
-        numScroll={1}
-        circular
-        style={{ width: "100%" }}
-        showNavigators
-        showIndicators={false}
-        itemTemplate={(item) => <BannerCard item={item} />}
-        autoplayInterval={5000}
-        responsiveOptions={[
-          { breakpoint: "768px", numVisible: 1, numScroll: 1 }, // Mobile
-          { breakpoint: "1024px", numVisible: 2, numScroll: 1 }, // Tablets
-        ]}
-      />
-    </div>
-  );
+  return <OrbitBannerCarousel items={bannerItems} />;
 }

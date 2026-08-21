@@ -16,7 +16,7 @@ function CuisinesSection({
   error,
 }: ICuisinesSectionProps) {
   if (loading) {
-    return <CuisinesSliderSkeleton />;
+    return <CuisinesSliderSkeleton showDescription />;
   }
 
   if (error) {

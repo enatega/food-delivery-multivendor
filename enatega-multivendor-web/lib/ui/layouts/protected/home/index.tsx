@@ -4,9 +4,8 @@ import { IProtectedHomeLayoutComponent } from "@/lib/utils/interfaces";
 import { usePathname, useRouter } from "next/navigation";
 
 // Svg
-import { CutlerySvg,StoreSvg } from "@/lib/utils/assets/svg";
+import { CutlerySvg, StoreSvg } from "@/lib/utils/assets/svg";
 import PaddingContainer from "@/lib/ui/useable-components/containers/padding";
-import { useEffect, useState } from "react";
 // context
 import { useSearchUI } from "@/lib/context/search/search.context";
 import TabItem from "@/lib/ui/useable-components/tab-item/TabItem";
@@ -19,11 +18,12 @@ export default function HomeLayout({
 }: IProtectedHomeLayoutComponent) {
   const router = useRouter();
   const pathname = usePathname();
-  const [stickyTop, setStickyTop] = useState(0);
   const { isSearchFocused, setIsSearchFocused } = useSearchUI();
   const { isSingleVendor } = useAppMode();
 
-  const onChangeScreen = (name: "Discovery" | "Restaurants" | "Store" | "Deals" | "Browse") => {
+  const onChangeScreen = (
+    name: "Discovery" | "Restaurants" | "Store" | "Deals" | "Browse",
+  ) => {
     switch (name) {
       case "Discovery":
         router.push("/discovery");
@@ -52,20 +52,10 @@ export default function HomeLayout({
   const isDeals = pathname === "/deals";
   const isBrowse = pathname === "/browse";
 
-
   const t = useTranslations();
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      setStickyTop(window.scrollY > 300 ? 16 : 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
 
   return (
-    <div className="w-screen h-full flex flex-col ">
+    <div className="flex min-h-full w-full flex-col">
       {/* click-away handler */}
       {isSearchFocused && (
         <div
@@ -79,28 +69,52 @@ export default function HomeLayout({
       )}
       {/* Sticky Top Tabs */}
       <div
-        className={`sm:sticky sm:top-${stickyTop} sm:left-0 fixed bottom-0 left-0 w-full bg-gray-100 dark:bg-gray-900 sm:bg-white z-30 pt-2 pb-2 sm:pt-3 sm:pb-3 ${isSearchFocused && "opacity-0"}`}
+        className={`fixed inset-x-0 bottom-0 z-30 border-t border-dispatch-line bg-dispatch-surface/95 shadow-[0_-8px_24px_rgba(21,25,20,0.06)] backdrop-blur-xl transition-opacity sm:sticky sm:top-[72px] sm:border-b sm:border-t-0 sm:bg-dispatch-surface sm:shadow-none sm:backdrop-blur-none dark:border-gray-800 dark:bg-gray-950/95 ${isSearchFocused ? "pointer-events-none opacity-0" : "opacity-100"}`}
       >
-        <div className="flex justify-center items-center space-x-4 md:space-x-6 p-2 md:p-4 overflow-x-auto mt-6 lg:mt-0">
+        <div className="mx-auto flex max-w-dispatch-page items-stretch justify-center overflow-x-auto px-2 sm:justify-start sm:gap-2 sm:px-5 lg:px-6 xl:px-8">
           <TabItem
             active={isDiscovery}
             label={t("tab_discovery")}
             onClick={() => onChangeScreen("Discovery")}
             Icon={homeTabSvg}
           />
-          {isSingleVendor ? <>
-            <TabItem active={isDeals} label="Deals" onClick={() => onChangeScreen("Deals")} Icon={CutlerySvg} />
-            <TabItem active={isBrowse} label="Browse" onClick={() => onChangeScreen("Browse")} Icon={StoreSvg} />
-          </> : <>
-            <TabItem active={isRestaurants} label={t("tab_restaurants")} onClick={() => onChangeScreen("Restaurants")} Icon={CutlerySvg} />
-            <TabItem active={isStore} label={t("tab_store")} onClick={() => onChangeScreen("Store")} Icon={StoreSvg} />
-          </>}
+          {isSingleVendor ? (
+            <>
+              <TabItem
+                active={isDeals}
+                label={t("discount_label")}
+                onClick={() => onChangeScreen("Deals")}
+                Icon={CutlerySvg}
+              />
+              <TabItem
+                active={isBrowse}
+                label={t("tab_store")}
+                onClick={() => onChangeScreen("Browse")}
+                Icon={StoreSvg}
+              />
+            </>
+          ) : (
+            <>
+              <TabItem
+                active={isRestaurants}
+                label={t("tab_restaurants")}
+                onClick={() => onChangeScreen("Restaurants")}
+                Icon={CutlerySvg}
+              />
+              <TabItem
+                active={isStore}
+                label={t("tab_store")}
+                onClick={() => onChangeScreen("Store")}
+                Icon={StoreSvg}
+              />
+            </>
+          )}
         </div>
       </div>
 
       {/* Scrollable Content */}
       <div
-        className={`flex-1 overflow-auto bg-white dark:bg-gray-900 mt-4 sm:mt-0 ${isSearchFocused && "blur-md cursor-default"}`}
+        className={`flex-1 bg-dispatch-ground pb-8 dark:bg-gray-950 ${isSearchFocused ? "pointer-events-none blur-md" : ""}`}
       >
         <PaddingContainer>{children}</PaddingContainer>
       </div>
