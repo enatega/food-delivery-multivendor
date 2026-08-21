@@ -92,7 +92,7 @@ const styles = (currentTheme) =>
     },
     primaryButton: {
       width: '100%',
-      backgroundColor: currentTheme?.singleVendorBrandSubtle || '#F3FFEE',
+      backgroundColor: currentTheme?.singleVendorBrandSubtle || '#EEF5FA',
       borderRadius: scale(6),
       paddingVertical: verticalScale(12),
       alignItems: 'center',
@@ -100,7 +100,7 @@ const styles = (currentTheme) =>
     },
     shareButton: {
       width: '100%',
-      backgroundColor: currentTheme?.singleVendorBrand || '#90E36D',
+      backgroundColor: currentTheme?.singleVendorBrand || '#003B6F',
       borderRadius: scale(6),
       paddingVertical: verticalScale(12),
       alignItems: 'center',

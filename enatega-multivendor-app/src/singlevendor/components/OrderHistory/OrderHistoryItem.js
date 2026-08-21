@@ -192,10 +192,10 @@ const styles = (props = null) =>
       backgroundColor: props?.red ? `${props.red}24` : '#FFE6E6'
     },
     statusBadgeRefunded: {
-      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE'
+      backgroundColor: props?.singleVendorBrandSubtle || '#EEF5FA'
     },
     statusBadgeScheduled: {
-      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE'
+      backgroundColor: props?.singleVendorBrandSubtle || '#EEF5FA'
     },
     statusBadgeDefault: {
       backgroundColor: props?.colorBgTertiary || '#F5F5F5'

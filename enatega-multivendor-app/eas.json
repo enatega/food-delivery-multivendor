@@ -5,7 +5,9 @@
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "APP_ENV": "development"
+        "APP_ENV": "development",
+        "EXPO_PUBLIC_VENDOR_MODE": "MULTI",
+        "NEXT_PUBLIC_VENDOR_MODE": "MULTI"
       },
       "android": {
         "buildType": "apk"
@@ -19,7 +21,9 @@
       "channel": "staging",
       "distribution": "internal",
       "env": {
-        "APP_ENV": "staging"
+        "APP_ENV": "staging",
+        "EXPO_PUBLIC_VENDOR_MODE": "MULTI",
+        "NEXT_PUBLIC_VENDOR_MODE": "MULTI"
       },
       "android": {
         "buildType": "apk"
@@ -32,7 +36,9 @@
         "EXPO_PUBLIC_SINGLE_VENDOR_GRAPHQL_URL": "https://enatega-multivendor-api-production-9b09.up.railway.app/graphql",
         "EXPO_PUBLIC_SINGLE_VENDOR_WS_GRAPHQL_URL": "wss://enatega-multivendor-api-production-9b09.up.railway.app/graphql",
         "EXPO_PUBLIC_SINGLE_VENDOR_REST_URL": "https://enatega-multivendor-api-production-9b09.up.railway.app/",
-        "EXPO_PUBLIC_SINGLE_VENDOR_ENABLED": "true"
+        "EXPO_PUBLIC_SINGLE_VENDOR_ENABLED": "true",
+        "EXPO_PUBLIC_VENDOR_MODE": "MULTI",
+        "NEXT_PUBLIC_VENDOR_MODE": "MULTI"
       },
       "ios": {
         "image": "macos-sequoia-15.6-xcode-26.2"

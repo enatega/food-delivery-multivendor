@@ -18,7 +18,7 @@ export const az = {
     getStarted: 'Başla!',
     welcome:
       'Yalla-ya xoş gəlmisiniz, bəzən sizə yalnız sevgi lazımdır. Amma arada bir az yemək də zərər verməz.',
-    welcomeScreen: 'Enatega-ya Xoş Gəlmisiniz',
+    welcomeScreen: 'N\'Dore.Ai-ya Xoş Gəlmisiniz',
     loginBtn: 'Daxil ol',
     registerBtn: 'Qeydiyyatdan keç',
     name: 'Ad',
@@ -574,8 +574,8 @@ export const az = {
     none: 'heç biri',
     yourEmail: 'E-poçtunuzu daxil edərək asanlıqla daxil olun!',
     yourEmailPassword: 'Giriş üçün indi şifrələrinizi daxil edin!',
-    brandName: 'Enatega',
-    welcomeText: 'Enatega-ya Xoş Gəlmisiniz',
+    brandName: 'N\'Dore.Ai',
+    welcomeText: 'N\'Dore.Ai-ya Xoş Gəlmisiniz',
     createAccountDesc:
       'Ən yaxşı restoranlardan həzz alın və ya yaxınlıqdakı mağazalardan ehtiyaclarınızı çatdırın',
     phoneNumber: 'Telefon Nömrəsi',
@@ -635,7 +635,7 @@ export const az = {
     Done: 'Tamam',
     addMessage: 'Mesaj Əlavə Et',
     kindlyBeAdvisedText: 'Xahiş olunur ki, mesajınızın sifarişinizi məkana çatdıracaq kuryer tərəfindən də görünə biləcəyini nəzərə alasınız.',
-    exploreYallaCities: 'Enatega Şəhərlərini Kəşf Et',
+    exploreYallaCities: 'N\'Dore.Ai Şəhərlərini Kəşf Et',
     Card: 'Kart',
     lebelAlreadyExist: "'{{selectedLabel}}' etiketi artıq mövcuddur. Zəhmət olmasa başqa birini seçin.",
     UpdateAvailable: 'Yeniləmə Mövcuddur',

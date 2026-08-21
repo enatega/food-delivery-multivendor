@@ -55,7 +55,7 @@ const OfflineBanner = ({ currentTheme, t }) => {
           paddingHorizontal: 10,
           paddingVertical: 6,
           borderRadius: 999,
-          backgroundColor: currentTheme?.singleVendorBrandSubtle || '#F3FFEE'
+          backgroundColor: currentTheme?.singleVendorBrandSubtle || '#EEF5FA'
         }}
       >
         <TextDefault textColor={currentTheme?.singleVendorBrandForeground} H6 bolder>

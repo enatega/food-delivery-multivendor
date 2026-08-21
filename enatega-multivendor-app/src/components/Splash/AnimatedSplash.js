@@ -1,14 +1,14 @@
 /**
- * AnimatedSplash — Enatega animated splash screen (dark + light, all screen sizes)
+ * AnimatedSplash — N'Dore.Ai animated splash screen (dark + light, all screen sizes)
  *
  * A 1:1 port of the approved splash video, rendered natively with Reanimated.
  * - Theme follows the app's persisted theme preference
  * - Scales to any device size / aspect ratio (design frame: 540 x 1170)
  * - Plays intro, then holds a gentle idle loop until `ready` is true,
- *   then plays the green outro and calls `onFinish`
+ *   then plays the brand-color outro and calls `onFinish`
  *
  * Deps: react-native-reanimated (v2/v3), expo-linear-gradient — both already
- * part of the Enatega apps.
+ * part of the customer app.
  *
  * Usage (App.js):
  *   const [appReady, setAppReady] = useState(false)
@@ -31,33 +31,36 @@ import Animated, {
   withSequence,
   Easing,
   cancelAnimation,
-  interpolate,
-  runOnJS
+  interpolate
 } from 'react-native-reanimated'
 
-const PIN = require('./assets/pin.png')
+const MARK = require('./assets/brandMark.png')
 const WM_WHITE = require('./assets/wordmarkWhite.png')
 const WM_NAVY = require('./assets/wordmarkNavy.png')
 const GLOW = require('./assets/glow.png')
 
 const THEMES = {
   dark: {
-    bg: ['#111c33', '#0b1225', '#070d1e'],
+    bg: ['#071527', '#001c37', '#020b15'],
     wordmark: WM_WHITE,
-    ring: 'rgba(110,224,122,0.85)',
-    underline: '#6ee07a',
+    wordmarkTint: '#ffffff',
+    ring: 'rgba(211,167,56,0.78)',
+    underline: '#d3a738',
+    glow: '#d3a738',
     orbOpacity: 1
   },
   light: {
-    bg: ['#ffffff', '#f4f8f5', '#e7efe9'],
+    bg: ['#fffdf7', '#fff8e7', '#f4e7c4'],
     wordmark: WM_NAVY,
-    ring: 'rgba(47,164,87,0.75)',
-    underline: '#3fb85a',
+    wordmarkTint: undefined,
+    ring: 'rgba(179,19,43,0.5)',
+    underline: '#b3132b',
+    glow: '#d3a738',
     orbOpacity: 0.8
   }
 }
 
-const GREEN = '#5ecf72'
+const BRAND_NAVY = '#003b6f'
 const OUT_CUBIC = Easing.out(Easing.cubic)
 const IN_CUBIC = Easing.in(Easing.cubic)
 const INOUT_CUBIC = Easing.inOut(Easing.cubic)
@@ -135,14 +138,14 @@ export default function AnimatedSplash({
       // wordmark + underline out
       wmOp.value = withTiming(0, { duration: 220, easing: IN_CUBIC })
       underline.value = withTiming(0, { duration: 200 })
-      // glow flares as the green floods out from behind the pin
+      // glow flares as the brand color floods out from behind the mark
       glowOp.value = withTiming(1, { duration: 320, easing: IN_CUBIC })
       glowScale.value = withTiming(2.6, { duration: 380, easing: IN_CUBIC })
       wipe.value = withTiming(1, { duration: 430, easing: IN_CUBIC })
       // pin crossfades into the white mark while the circle engulfs it
       whitePin.value = withDelay(140, withTiming(1, { duration: 260, easing: INOUT_CUBIC }))
       if (onFinish) {
-        // small hold on the green end-frame, then hand off to the app
+        // small hold on the brand end-frame, then hand off to the app
         setTimeout(() => onFinish(), 680)
       }
     }, wait)
@@ -174,11 +177,11 @@ export default function AnimatedSplash({
   const pinWhiteStyle = useAnimatedStyle(() => ({ opacity: whitePin.value }))
   const wmWrapStyle = useAnimatedStyle(() => ({ opacity: wmOp.value }))
   const wmClipStyle = useAnimatedStyle(() => ({
-    width: 252 * sf * wmReveal.value
+    width: 300 * sf * wmReveal.value
   }))
   const underlineStyle = useAnimatedStyle(() => ({
     opacity: 0.9 * underline.value * wmOp.value,
-    width: 190 * sf * underline.value
+    width: 210 * sf * underline.value
   }))
   const wipeStyle = useAnimatedStyle(() => ({
     transform: [{ scale: interpolate(wipe.value, [0, 1], [0, coverScale]) }]
@@ -196,24 +199,59 @@ export default function AnimatedSplash({
       {/* ambient orbs */}
       <Animated.Image
         source={GLOW}
-        style={[styles.orb, { width: 340 * sf, height: 340 * sf, left: -120 * sf, top: 120 * sf, opacity: 0.4 * theme.orbOpacity }]}
+        style={[
+          styles.orb,
+          {
+            width: 340 * sf,
+            height: 340 * sf,
+            left: -120 * sf,
+            top: 120 * sf,
+            opacity: 0.32 * theme.orbOpacity,
+            tintColor: '#d3a738'
+          }
+        ]}
       />
       <Animated.Image
         source={GLOW}
-        style={[styles.orb, { width: 300 * sf, height: 300 * sf, right: -110 * sf, top: height * 0.55, opacity: 0.32 * theme.orbOpacity }]}
+        style={[
+          styles.orb,
+          {
+            width: 300 * sf,
+            height: 300 * sf,
+            right: -110 * sf,
+            top: height * 0.55,
+            opacity: 0.26 * theme.orbOpacity,
+            tintColor: '#b3132b'
+          }
+        ]}
       />
       <Animated.Image
         source={GLOW}
-        style={[styles.orb, { width: 260 * sf, height: 260 * sf, left: 60 * sf, bottom: -80 * sf, opacity: 0.26 * theme.orbOpacity }]}
+        style={[
+          styles.orb,
+          {
+            width: 260 * sf,
+            height: 260 * sf,
+            left: 60 * sf,
+            bottom: -80 * sf,
+            opacity: 0.22 * theme.orbOpacity,
+            tintColor: '#167eb5'
+          }
+        ]}
       />
 
-      {/* glow behind pin */}
+      {/* glow behind brand mark */}
       <Animated.Image
         source={GLOW}
         style={[
           styles.center,
           glowStyle,
-          { width: 460 * sf, height: 460 * sf, top: CY - 230 * sf }
+          {
+            width: 460 * sf,
+            height: 460 * sf,
+            top: CY - 230 * sf,
+            tintColor: theme.glow
+          }
         ]}
       />
 
@@ -247,7 +285,7 @@ export default function AnimatedSplash({
         ]}
       />
 
-      {/* green outro wipe (behind the pin, above bg) */}
+      {/* brand-color outro wipe (behind the mark, above bg) */}
       <Animated.View
         style={[
           styles.center,
@@ -257,22 +295,22 @@ export default function AnimatedSplash({
             height: wipeBase,
             top: CY - wipeBase / 2 + 4 * sf,
             borderRadius: wipeBase / 2,
-            backgroundColor: GREEN
+            backgroundColor: BRAND_NAVY
           }
         ]}
       />
 
-      {/* pin (brand-color + white crossfade layers) */}
+      {/* brand mark (full-color + white crossfade layers) */}
       <Animated.View
         style={[
           styles.center,
           pinGroupStyle,
-          { width: 158 * sf, height: 208 * sf, top: CY - 118 * sf }
+          { width: 230 * sf, height: 230 * sf, top: CY - 130 * sf }
         ]}
       >
-        <Animated.Image source={PIN} style={[styles.fill, pinColorStyle]} resizeMode="contain" />
+        <Animated.Image source={MARK} style={[styles.fill, pinColorStyle]} resizeMode="contain" />
         <Animated.Image
-          source={PIN}
+          source={MARK}
           style={[styles.fill, pinWhiteStyle, { tintColor: '#ffffff' }]}
           resizeMode="contain"
         />
@@ -280,12 +318,20 @@ export default function AnimatedSplash({
 
       {/* wordmark: left-to-right wipe reveal */}
       <Animated.View
-        style={[styles.center, wmWrapStyle, { width: 252 * sf, height: 42 * sf, top: CY + 110 * sf }]}
+        style={[
+          styles.center,
+          wmWrapStyle,
+          { width: 300 * sf, height: 51 * sf, top: CY + 118 * sf }
+        ]}
       >
         <Animated.View style={[styles.wmClip, wmClipStyle]}>
           <Animated.Image
             source={theme.wordmark}
-            style={{ width: 252 * sf, height: 42 * sf }}
+            style={{
+              width: 300 * sf,
+              height: 51 * sf,
+              tintColor: theme.wordmarkTint
+            }}
             resizeMode="contain"
           />
         </Animated.View>
@@ -296,7 +342,12 @@ export default function AnimatedSplash({
         style={[
           styles.center,
           underlineStyle,
-          { height: 3 * sf, top: CY + 168 * sf, borderRadius: 2, backgroundColor: theme.underline }
+          {
+            height: 3 * sf,
+            top: CY + 181 * sf,
+            borderRadius: 2,
+            backgroundColor: theme.underline
+          }
         ]}
       />
     </Animated.View>

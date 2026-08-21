@@ -48,9 +48,9 @@ const RETRY_DELAYS_MS = [750, 2000, 5000]
 const defaultConfiguration = {
   appGroupId: 'group.com.enatega.multivendor.shared',
   appScheme: 'enategamultivendor',
-  brandName: 'Enatega',
-  primaryColor: '#90E36D',
-  accentColor: '#FFA921',
+  brandName: 'N\'Dore.Ai',
+  primaryColor: '#003B6F',
+  accentColor: '#B3132B',
   logoResourceName: 'enatega_logo',
   riderResourceName: 'enatega_rider',
   ...(Constants.expoConfig?.extra?.liveActivity || {})

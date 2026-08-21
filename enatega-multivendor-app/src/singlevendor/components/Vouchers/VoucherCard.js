@@ -152,7 +152,7 @@ const styles = (props = null) =>
     },
     discountBadge: {
       width: scale(80),
-      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE',
+      backgroundColor: props?.singleVendorBrandSubtle || '#EEF5FA',
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: verticalScale(16),
@@ -204,7 +204,7 @@ const styles = (props = null) =>
       position: 'relative'
     },
     useButton: {
-      backgroundColor: props?.singleVendorBrand || '#90E36D',
+      backgroundColor: props?.singleVendorBrand || '#003B6F',
       borderRadius: scale(8),
       paddingHorizontal: scale(12),
       paddingVertical: verticalScale(6),

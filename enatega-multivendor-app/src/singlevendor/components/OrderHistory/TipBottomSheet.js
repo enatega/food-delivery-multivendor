@@ -299,8 +299,8 @@ const styles = (props = null) =>
       marginRight: 0,
     },
     tipButtonSelected: {
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
-      borderColor: props !== null ? props.singleVendorBrand : '#90E36D'
+      backgroundColor: props !== null ? props.singleVendorBrand : '#003B6F',
+      borderColor: props !== null ? props.singleVendorBrand : '#003B6F'
     },
     customTipButton: {
       flex: 1,
@@ -316,7 +316,7 @@ const styles = (props = null) =>
     doneButton: {
       height: scale(40),
       borderRadius: scale(8),
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#003B6F',
       alignItems: 'center',
       justifyContent: 'center'
     },

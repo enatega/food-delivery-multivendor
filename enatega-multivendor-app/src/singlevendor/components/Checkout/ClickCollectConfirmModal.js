@@ -165,7 +165,7 @@ const styles = (currentTheme = null) =>
       marginBottom: scale(16)
     },
     confirmButton: {
-      backgroundColor: currentTheme?.singleVendorBrand || '#90E36D',
+      backgroundColor: currentTheme?.singleVendorBrand || '#003B6F',
       paddingVertical: scale(12),
       borderRadius: scale(12),
       alignItems: 'center',

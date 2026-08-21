@@ -219,7 +219,7 @@ const styles = (currentTheme = null) =>
     },
     progressFill: {
       height: '100%',
-      backgroundColor: currentTheme ? currentTheme.singleVendorBrand : '#90E36D',
+      backgroundColor: currentTheme ? currentTheme.singleVendorBrand : '#003B6F',
       borderRadius: scale(2)
     }
   });

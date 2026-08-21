@@ -18,7 +18,7 @@ export const hi = {
     getStarted: 'शुरू करें!',
     welcome:
       "Yalla में आपका स्वागत है, कभी-कभी आपको बस प्यार की ज़रूरत होती है। लेकिन थोड़ा खाना अब और फिर चोट नहीं पहुंचाता।",
-    welcomeScreen: 'Enatega में आपका स्वागत है',
+    welcomeScreen: 'N\'Dore.Ai में आपका स्वागत है',
     loginBtn: 'लॉगिन',
     registerBtn: 'रजिस्टर',
     name: 'नाम',
@@ -575,8 +575,8 @@ export const hi = {
     none: 'कोई नहीं',
     yourEmail: 'अपना ईमेल दर्ज करके आसानी से लॉग इन करें!',
     yourEmailPassword: 'पहुंच के लिए अब अपना पासवर्ड दर्ज करें!',
-    brandName: 'Enatega',
-    welcomeText: 'Enatega में आपका स्वागत है',
+    brandName: 'N\'Dore.Ai',
+    welcomeText: 'N\'Dore.Ai में आपका स्वागत है',
     createAccountDesc:
       'सर्वश्रेष्ठ रेस्तरां का आनंद लें या पास के स्टोर से आवश्यक वस्तुएं प्राप्त करें, डिलीवर किया गया',
     phoneNumber: 'फोन नंबर',
@@ -636,7 +636,7 @@ export const hi = {
     Done: 'हो गया',
     addMessage: 'संदेश जोड़ें',
     kindlyBeAdvisedText: 'कृपया ध्यान दें कि आपका संदेश उस कूरियर पार्टनर को भी दिखाई दे सकता है जो आपके ऑर्डर को वेन्यू तक पहुंचाने के लिए जिम्मेदार है।',
-    exploreYallaCities: 'Enatega शहरों का अन्वेषण करें',
+    exploreYallaCities: 'N\'Dore.Ai शहरों का अन्वेषण करें',
     Card: 'कार्ड',
     lebelAlreadyExist: "लेबल '{{selectedLabel}}' पहले से मौजूद है। कृपया कोई अन्य चुनें।",
     UpdateAvailable: 'अद्यतन उपलब्ध',

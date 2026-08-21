@@ -94,7 +94,7 @@ const styles = (props) =>
       flex: 1
     },
     badge: {
-      backgroundColor: props?.singleVendorBrand || '#90E36D',
+      backgroundColor: props?.singleVendorBrand || '#003B6F',
       borderRadius: scale(6),
       paddingHorizontal: scale(6),
       paddingVertical: verticalScale(3),
@@ -116,7 +116,7 @@ const styles = (props) =>
       marginBottom: verticalScale(10)
     },
     subscribeButton: {
-      backgroundColor: props?.singleVendorBrand || '#90E36D',
+      backgroundColor: props?.singleVendorBrand || '#003B6F',
       paddingVertical: verticalScale(8),
       borderRadius: scale(8),
       alignSelf: 'flex-start',

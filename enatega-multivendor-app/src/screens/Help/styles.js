@@ -98,7 +98,7 @@ const styles = (props = null) =>
       marginTop: scale(14),
       minHeight: scale(44),
       borderRadius: scale(22),
-      backgroundColor: props !== null ? props?.primary : '#90E36D',
+      backgroundColor: props !== null ? props?.primary : '#003B6F',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',

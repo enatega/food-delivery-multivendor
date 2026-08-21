@@ -589,8 +589,8 @@ secureAccountWithPhone: 'Wir verwenden Ihre Nummer nur, wenn wir Sie bezüglich 
     'Melden Sie sich einfach an, indem Sie Ihre E-Mail-Adresse eingeben!',
   yourEmailPassword:
     'Bitte geben Sie jetzt Ihr Passwort ein, um Zugriff zu erhalten!',
-    brandName: 'Enatega',
-    welcomeText: 'Willkommen bei Enatega',
+    brandName: 'N\'Dore.Ai',
+    welcomeText: 'Willkommen bei N\'Dore.Ai',
   createAccountDesc:
     'Genießen Sie die besten Restaurants oder erhalten Sie, was Sie von nahegelegenen Geschäften benötigen, geliefert!',
     phoneNumber: 'Telefonnummer',

@@ -92,7 +92,7 @@ const styles = (colors, compact) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: scale(20),
-    backgroundColor: colors.singleVendorBrandSubtle || '#F3FFEE'
+    backgroundColor: colors.singleVendorBrandSubtle || '#EEF5FA'
   },
   copy: {
     flex: 1,
@@ -118,7 +118,7 @@ const styles = (colors, compact) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: scale(10),
-    backgroundColor: colors.singleVendorBrand || '#90E36D'
+    backgroundColor: colors.singleVendorBrand || '#003B6F'
   },
   retryPressed: { opacity: 0.78 },
   retryText: { color: colors.singleVendorOnBrand || '#10200A', fontSize: scale(12) }

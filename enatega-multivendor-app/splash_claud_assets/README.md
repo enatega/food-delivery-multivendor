@@ -1,31 +1,32 @@
-# Enatega Animated Splash (React Native / Expo component)
+# N'Dore.Ai Animated Splash (React Native / Expo component)
 
-Native port of the approved splash video. One component replaces both theme videos:
+Native port of the approved splash motion. One component replaces both theme videos:
 it reads the system theme at runtime, scales to every screen size and aspect ratio
-(phones and tablets), and plays its green outro only when the app is actually ready.
+(phones and tablets), and plays its navy outro only when the app is actually ready.
 
 ## Contents
 
 ```
 AnimatedSplash.js        the component (self-contained)
-assets/pin.png           Enatega pin logo (transparent, 2x)
-assets/wordmarkWhite.png ENATEGA wordmark for dark theme
-assets/wordmarkNavy.png  ENATEGA wordmark for light theme
-assets/glow.png          radial green glow (shared by orbs + logo glow)
+assets/brandMark.png     N'Dore.Ai emblem (transparent)
+assets/wordmarkWhite.png N'Dore.Ai wordmark for dark theme
+assets/wordmarkNavy.png  N'Dore.Ai wordmark for light theme
+assets/glow.png          tintable radial glow (shared by orbs + logo glow)
 ```
 
 Total assets ≈ 250 KB — smaller than a single splash video, shared by both themes.
 
 ## Requirements
 
-Already present in the Enatega apps — no new packages:
+Already present in the customer app — no new packages:
 
 - `react-native-reanimated` (v2 or v3)
 - `expo-linear-gradient`
 
 ## Install
 
-Copy the folder into each app (customer / rider / restaurant), e.g. `src/components/AnimatedSplash/`.
+The branded implementation is installed in the customer app at
+`src/components/Splash/AnimatedSplash.js`.
 
 ## Usage
 
@@ -58,7 +59,7 @@ export default function App() {
 |---|---|---|
 | `ready` | `true` | While `false`, the splash holds its idle loop (logo bob + glow breathing). When it becomes `true`, the outro plays and `onFinish` fires ~0.7s later. |
 | `minDuration` | `2400` (ms) | Minimum time on screen so the intro always completes, even if the app is ready instantly. |
-| `onFinish` | — | Called after the outro finishes on the green end-frame. Unmount the splash here. |
+| `onFinish` | — | Called after the outro finishes on the navy end-frame. Unmount the splash here. |
 
 If the app takes longer than 3s to load, the splash simply keeps breathing — no
 frozen last frame, no black gap (an advantage over the fixed-length video).
@@ -76,11 +77,11 @@ In `app.json` (expo-splash-screen):
       "expo-splash-screen",
       {
         "image": "./assets/splash_static_light.png",
-        "backgroundColor": "#f4f8f5",
+        "backgroundColor": "#FFF8E7",
         "resizeMode": "cover",
         "dark": {
           "image": "./assets/splash_static_dark.png",
-          "backgroundColor": "#0b1225"
+          "backgroundColor": "#071527"
         }
       }
     ]
@@ -99,8 +100,7 @@ animated component.
 
 - The video versions' shimmer/gloss sweeps were intentionally left out — they would
   require an extra dependency (`@react-native-masked-view/masked-view`). The core
-  motion (ring pulses, spring-in, glow, wordmark wipe, underline, idle float, green
+  motion (ring pulses, spring-in, glow, wordmark wipe, underline, idle float, navy
   outro) is identical. Easy to add later if wanted.
 - Timings mirror the approved video: intro ≈ 1.9s, idle loop, outro ≈ 0.7s.
-- The green end-frame color is `#5ecf72`, same as the videos, so any existing
-  fade-into-app transition behaves identically.
+- The end-frame color is the N'Dore.Ai primary navy `#003B6F`.

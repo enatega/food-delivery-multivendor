@@ -263,7 +263,7 @@ const styles = (tablet = false) => StyleSheet.create({
     marginHorizontal: 4
   },
   paginationDotActive: {
-    backgroundColor: '#90E36D',
+    backgroundColor: '#003B6F',
     width: 24
   },
   paginationDotInactive: {

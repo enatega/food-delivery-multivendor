@@ -41,7 +41,7 @@ const styles = (props = null) =>
     btnContainer: {
       flex: 1,
       height: scale(48),
-      backgroundColor: props?.colors?.accent ?? props?.main ?? '#90E36D',
+      backgroundColor: props?.colors?.accent ?? props?.main ?? '#003B6F',
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: props?.radii?.md ?? scale(10)
@@ -74,7 +74,7 @@ const styles = (props = null) =>
       backgroundColor: 'transparent'
     },
     plusBtn: {
-      backgroundColor: props?.colors?.accent ?? '#90E36D'
+      backgroundColor: props?.colors?.accent ?? '#003B6F'
     },
     actionContainerView: {
       justifyContent: 'center',

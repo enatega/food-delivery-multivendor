@@ -8,7 +8,7 @@ const styles = theme =>
   StyleSheet.create({
     button: {
       alignItems: 'center',
-      backgroundColor: theme?.singleVendorBrand || '#90E36D',
+      backgroundColor: theme?.singleVendorBrand || '#003B6F',
       borderRadius: scale(8),
       height: height * 0.06,
       justifyContent: 'center',

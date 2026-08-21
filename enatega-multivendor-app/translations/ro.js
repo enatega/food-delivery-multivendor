@@ -18,7 +18,7 @@ export const ro = {
     getStarted: 'Începeți!',
     welcome:
       'Bine ați venit la Yalla, uneori tot ce ai nevoie este dragoste. Dar puțină mâncare din când în când nu strică.',
-    welcomeScreen: 'Bine ați venit la Enatega',
+    welcomeScreen: 'Bine ați venit la N\'Dore.Ai',
     loginBtn: 'Conectare',
     registerBtn: 'Înregistrare',
     name: 'Nume',
@@ -574,8 +574,8 @@ export const ro = {
     none: 'niciunul',
     yourEmail: 'Conectați-vă ușor introducând email-ul!',
     yourEmailPassword: 'Vă rugăm să introduceți parola acum pentru acces!',
-    brandName: 'Enatega',
-    welcomeText: 'Bine ați venit la Enatega',
+    brandName: 'N\'Dore.Ai',
+    welcomeText: 'Bine ați venit la N\'Dore.Ai',
     createAccountDesc:
       'Bucurați-vă de cele mai bune restaurante sau obțineți ce aveți nevoie de la magazinele din apropiere, livrate',
     phoneNumber: 'Număr de telefon',
@@ -634,7 +634,7 @@ export const ro = {
     Done: 'Gata',
     addMessage: 'Adăugați mesaj',
     kindlyBeAdvisedText: 'Vă rugăm să fiți informat că mesajul dumneavoastră ar putea fi vizibil și pentru partenerul de livrare responsabil cu livrarea comenzii la destinație.',
-    exploreYallaCities: 'Explorați orașele Enatega',
+    exploreYallaCities: 'Explorați orașele N\'Dore.Ai',
     Card: 'Card',
     lebelAlreadyExist: "Eticheta '{{selectedLabel}}' există deja. Vă rugăm să alegeți alta.",
     UpdateAvailable: 'Actualizare disponibilă',

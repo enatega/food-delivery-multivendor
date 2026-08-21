@@ -88,10 +88,10 @@ const styles = (currentTheme, isDisable) =>
       elevation: 5
     },
     planCardSelected: {
-      borderColor: currentTheme?.colorTextPrimary || '#397A20',
-      backgroundColor: currentTheme?.singleVendorBrandSubtle || '#F3FFEE',
+      borderColor: currentTheme?.colorTextPrimary || '#003B6F',
+      backgroundColor: currentTheme?.singleVendorBrandSubtle || '#EEF5FA',
       // Blue tinted shadow for selected state
-      shadowColor: currentTheme?.singleVendorBrandForeground || '#397A20',
+      shadowColor: currentTheme?.singleVendorBrandForeground || '#003B6F',
       shadowOffset: {
         width: 0,
         height: 4
@@ -104,7 +104,7 @@ const styles = (currentTheme, isDisable) =>
       position: 'absolute',
       top: -12,
       right: scale(20),
-      backgroundColor: currentTheme?.singleVendorBrand || '#90E36D',
+      backgroundColor: currentTheme?.singleVendorBrand || '#003B6F',
       paddingHorizontal: scale(12),
       paddingVertical: verticalScale(6),
       borderRadius: scale(8)
@@ -163,7 +163,7 @@ const styles = (currentTheme, isDisable) =>
     },
     subscribeButton: {
       width: '100%',
-      backgroundColor: isDisable ? currentTheme?.colorBgTertiary : currentTheme?.singleVendorBrand || '#90E36D',
+      backgroundColor: isDisable ? currentTheme?.colorBgTertiary : currentTheme?.singleVendorBrand || '#003B6F',
       borderRadius: scale(8),
       paddingVertical: verticalScale(10),
       alignItems: 'center',

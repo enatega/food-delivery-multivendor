@@ -172,7 +172,7 @@ const styles = (props = null) =>
       paddingVertical: scale(6),
       paddingHorizontal: scale(12),
       borderRadius: scale(999),
-      backgroundColor: props?.newButtonBackground || '#F3FFEE',
+      backgroundColor: props?.newButtonBackground || '#EEF5FA',
       marginBottom: scale(12)
     },
     emptyTitle: {

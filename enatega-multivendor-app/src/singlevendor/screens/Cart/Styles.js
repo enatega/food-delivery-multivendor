@@ -72,7 +72,7 @@ const styles = (props = null) =>
       marginBottom: scale(12)
     },
     checkoutButton: {
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#003B6F',
       paddingVertical: scale(12),
       paddingHorizontal: scale(20),
       borderRadius: scale(8),

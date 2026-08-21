@@ -139,7 +139,7 @@ const styles = (props = null) =>
     applyButton: {
       height: scale(40),
       borderRadius: scale(8),
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#003B6F',
       alignItems: 'center',
       justifyContent: 'center'
     },

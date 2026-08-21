@@ -15,7 +15,7 @@ const buildStyles = (props = null) =>
     },
     selectedImageContainer: {
       borderWidth: 2,
-      borderColor: props?.colors?.accent ?? '#90E36D'
+      borderColor: props?.colors?.accent ?? '#003B6F'
     },
     collectionImage: {
       height: '100%',

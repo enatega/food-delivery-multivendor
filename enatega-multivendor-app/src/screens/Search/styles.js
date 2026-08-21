@@ -50,7 +50,7 @@ const styles = (tokens = null) =>
       borderRadius: scale(16),
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: tokens?.colors?.accentSubtle ?? 'rgba(144, 227, 109, 0.14)'
+      backgroundColor: tokens?.colors?.accentSubtle ?? 'rgba(0, 59, 111, 0.14)'
     },
     recentText: {
       flex: 1,
@@ -79,7 +79,7 @@ const styles = (tokens = null) =>
       paddingVertical: scale(9),
       paddingHorizontal: scale(14),
       borderRadius: tokens?.radii?.round ?? scale(999),
-      backgroundColor: tokens?.colors?.accentSubtle ?? 'rgba(144, 227, 109, 0.14)',
+      backgroundColor: tokens?.colors?.accentSubtle ?? 'rgba(0, 59, 111, 0.14)',
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: tokens?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)'
     },

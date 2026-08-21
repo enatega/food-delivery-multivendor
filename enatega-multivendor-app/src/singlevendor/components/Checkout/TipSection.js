@@ -169,8 +169,8 @@ const styles = (props = null) =>
       backgroundColor: props !== null ? props.themeBackground : '#fff'
     },
     tipButtonSelected: {
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
-      borderColor: props !== null ? props.singleVendorBrand : '#90E36D'
+      backgroundColor: props !== null ? props.singleVendorBrand : '#003B6F',
+      borderColor: props !== null ? props.singleVendorBrand : '#003B6F'
     },
     modalOverlay: {
       flex: 1,
@@ -222,7 +222,7 @@ const styles = (props = null) =>
       borderColor: props !== null ? props.gray300 : '#D1D5DB'
     },
     modalButtonConfirm: {
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D'
+      backgroundColor: props !== null ? props.singleVendorBrand : '#003B6F'
     },
     modalButtonDisabled: {
       opacity: 0.5

@@ -96,7 +96,7 @@ const styles = (props = null) => {
       width: scale(44),
       height: scale(3),
       borderRadius: scale(2),
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D'
+      backgroundColor: props !== null ? props.singleVendorBrand : '#003B6F'
     }
   })
 }

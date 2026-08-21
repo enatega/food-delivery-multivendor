@@ -97,7 +97,7 @@ const DeliveryMap = ({
 
         {/* Route */}
         {showRoute && displayedRouteCoordinates.length > 1 && (
-          <Polyline coordinates={displayedRouteCoordinates} strokeWidth={4} strokeColor={currentTheme.singleVendorBrandForeground || '#397A20'} />
+          <Polyline coordinates={displayedRouteCoordinates} strokeWidth={4} strokeColor={currentTheme.singleVendorBrandForeground || '#003B6F'} />
         )}
       </MapView>
     </View>
@@ -133,7 +133,7 @@ const styles = (props = null) =>
       width: scale(18),
       height: scale(18),
       borderRadius: 50,
-      backgroundColor: props?.singleVendorBrandForeground || '#397A20',
+      backgroundColor: props?.singleVendorBrandForeground || '#003B6F',
       borderWidth: 2,
       borderColor: '#fff',
       position: 'absolute',
@@ -144,7 +144,7 @@ const styles = (props = null) =>
       width: scale(56),
       height: scale(56),
       borderRadius: scale(28),
-      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE',
+      backgroundColor: props?.singleVendorBrandSubtle || '#EEF5FA',
       position: 'absolute',
       top: scale(-20)
     },

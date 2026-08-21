@@ -59,7 +59,7 @@ const styles = (props = null) =>
       borderColor: props !== null ? props?.red600 : '#DC2626'
     },
     btnEdit: {
-      borderColor: props !== null ? props?.linkColor : '#397A20'
+      borderColor: props !== null ? props?.linkColor : '#003B6F'
     }
   });
 

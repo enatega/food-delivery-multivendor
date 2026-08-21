@@ -86,7 +86,7 @@ const styles = (currentTheme) =>
       marginBottom: 10
     },
     payBtn: {
-      backgroundColor: currentTheme?.singleVendorBrand ?? '#90E36D',
+      backgroundColor: currentTheme?.singleVendorBrand ?? '#003B6F',
       borderRadius: 10,
       paddingVertical: 14,
       paddingHorizontal: 20,

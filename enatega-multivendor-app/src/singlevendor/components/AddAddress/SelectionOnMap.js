@@ -141,7 +141,7 @@ const styles = (currentTheme) =>
       borderRadius: 25
     },
     marker: {
-      backgroundColor: currentTheme?.singleVendorBrandForeground ?? '#397A20',
+      backgroundColor: currentTheme?.singleVendorBrandForeground ?? '#003B6F',
       width: 20,
       height: 20,
       borderWidth: scale(3),

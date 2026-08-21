@@ -18,7 +18,7 @@ export const vi = {
     getStarted: 'Bắt đầu!',
     welcome:
       "Chào mừng đến với Yalla, đôi khi bạn chỉ cần tình yêu. Nhưng thỉnh thoảng ăn một chút cũng không hại gì.",
-    welcomeScreen: 'Chào mừng đến với Enatega',
+    welcomeScreen: 'Chào mừng đến với N\'Dore.Ai',
     loginBtn: 'Đăng nhập',
     registerBtn: 'Đăng ký',
     name: 'Tên',
@@ -574,8 +574,8 @@ export const vi = {
     none: 'Không có',
     yourEmail: 'Đăng nhập dễ dàng bằng email của bạn!',
     yourEmailPassword: 'Bây giờ nhập mật khẩu của bạn để truy cập!',
-    brandName: 'Enatega',
-    welcomeText: 'Chào mừng đến với Enatega',
+    brandName: 'N\'Dore.Ai',
+    welcomeText: 'Chào mừng đến với N\'Dore.Ai',
     createAccountDesc:
       'Thưởng thức những nhà hàng tốt nhất hoặc nhận giao hàng từ các cửa hàng gần đó bất cứ thứ gì bạn muốn',
     phoneNumber: 'Số điện thoại',
@@ -634,7 +634,7 @@ export const vi = {
     Done: 'Xong',
     addMessage: 'Thêm tin nhắn',
     kindlyBeAdvisedText: 'Xin lưu ý rằng tin nhắn của bạn cũng có thể được hiển thị cho đối tác giao hàng giao đơn hàng của bạn.',
-    exploreYallaCities: 'Khám phá các thành phố Enatega',
+    exploreYallaCities: 'Khám phá các thành phố N\'Dore.Ai',
     Card: 'Thẻ',
     lebelAlreadyExist: "Nhãn '{{selectedLabel}}' đã tồn tại. Vui lòng chọn một nhãn khác.",
     UpdateAvailable: 'Có bản cập nhật',

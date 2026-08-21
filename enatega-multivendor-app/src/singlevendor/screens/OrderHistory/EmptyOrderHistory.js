@@ -66,7 +66,7 @@ const styles = (props = null) =>
       marginBottom: verticalScale(24)
     },
     button: {
-      backgroundColor: props?.singleVendorBrandSubtle || '#F3FFEE',
+      backgroundColor: props?.singleVendorBrandSubtle || '#EEF5FA',
       minWidth: scale(300),
       paddingHorizontal: scale(24),
       paddingVertical: verticalScale(14),
