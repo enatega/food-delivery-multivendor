@@ -100,9 +100,9 @@ export default function OrderTrackingScreen({
         completionTime:
           subscriptionData.completionTime ||
           orderTrackingDetails.completionTime,
+        reason: subscriptionData.reason || orderTrackingDetails.reason,
       }
       : orderTrackingDetails;
-
   if (mergedOrderDetails?.orderStatus === "PICKUP") {
     mergedOrderDetails = {
       ...mergedOrderDetails,

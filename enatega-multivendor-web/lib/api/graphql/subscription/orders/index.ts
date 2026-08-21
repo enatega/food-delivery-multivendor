@@ -86,6 +86,7 @@ export const SUBSCRIPTION_ORDER = gql`
       }
       completionTime
       preparationTime
+      reason
     }
   }
 `;

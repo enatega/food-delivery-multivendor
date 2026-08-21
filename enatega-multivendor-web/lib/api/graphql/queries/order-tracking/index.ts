@@ -81,6 +81,7 @@ export const ORDER_TRACKING = gql`query OrderDetails($orderDetailsId: String!) {
     createdAt
     completionTime
     cancelledAt
+    reason
     assignedAt
     deliveredAt
     acceptedAt

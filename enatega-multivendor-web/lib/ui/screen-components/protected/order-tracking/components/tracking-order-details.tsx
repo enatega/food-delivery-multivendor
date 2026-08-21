@@ -303,6 +303,7 @@ function TrackingOrderDetails({
       <CancelOrderSuccessModal
         visible={setshowCancelOrderSuccessModal}
         onHide={() => setSetshowCancelOrderSuccessModal(false)}
+        reason={orderTrackingDetails.reason}
       />
     </div>
   );

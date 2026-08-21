@@ -7,11 +7,13 @@ import React from "react";
 interface CancelOrderSuccessModalProps {
   visible: boolean;
   onHide: () => void;
+  reason?: string;
 }
 //  const theme = useTheme();
 function CancelOrderSuccessModal({
   visible,
   onHide,
+  reason,
 }: CancelOrderSuccessModalProps) {
   // const router = useRouter();
   // create a function when user onHide then it will redirect to discover screen
@@ -68,6 +70,11 @@ function CancelOrderSuccessModal({
         <h2 className="text-xl font-semibold mb-2 dark:text-gray-100">
           {t("your_order_is_cancelled")}
         </h2>
+        {reason?.trim() && (
+          <p className="text-gray-700 text-sm text-center mb-2 dark:text-gray-300">
+            {reason}
+          </p>
+        )}
         <p className="text-gray-600 text-sm text-center dark:text-gray-400">
           {t("delete_success")}
         </p>
