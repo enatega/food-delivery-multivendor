@@ -13,6 +13,27 @@ import { GET_NOTIFICATIONS, SEND_NOTIFICATION_USER } from '@/lib/api/graphql';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useTranslations } from 'next-intl';
 
+const formatNotificationDate = (createdAt: string) => {
+  if (!createdAt) return '—';
+
+  const timestamp = Number(createdAt);
+  const date = new Date(Number.isNaN(timestamp) ? createdAt : timestamp);
+
+  if (Number.isNaN(date.getTime())) return '—';
+
+  const formattedDate = date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+  const formattedTime = date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  return `${formattedDate}, ${formattedTime}`;
+};
+
 export const NOTIFICATIONS_TABLE_COLUMNS = () => {
   // Hooks
   const t = useTranslations();
@@ -67,7 +88,7 @@ export const NOTIFICATIONS_TABLE_COLUMNS = () => {
         headerName: t('Date'),
         propertyName: 'createdAt',
         body: (rowData: INotification) => {
-          return <span>{rowData.createdAt}</span>;
+          return <span>{formatNotificationDate(rowData.createdAt)}</span>;
         },
       },
       {
