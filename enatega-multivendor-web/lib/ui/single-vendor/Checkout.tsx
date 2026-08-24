@@ -16,6 +16,7 @@ import {
 import { getAccessToken } from "@/lib/utils/methods/auth";
 import useUser from "@/lib/hooks/useUser";
 import useCurrencyFormatter from "@/lib/hooks/useCurrencyFormatter";
+import { useUserAddress } from "@/lib/context/address/address.context";
 
 const toCheckoutCoordinate = (value: unknown): number | null => {
   if (value === null || value === undefined || value === "") return null;
@@ -28,6 +29,7 @@ export default function SingleVendorCheckout() {
   const { mode } = useAppMode();
   const environment = getModeEnvironment(mode);
   const { profile, cart, clearCart } = useUser();
+  const { userAddress } = useUserAddress();
   const { currencySymbol, currency, formatCurrency } = useCurrencyFormatter();
   const [pickup, setPickup] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("COD");
@@ -39,12 +41,18 @@ export default function SingleVendorCheckout() {
   const idempotencyKey = useRef(
     `sv-web-${Date.now()}-${Math.random().toString(36).slice(2)}`,
   );
-  const address =
+  const profileAddress =
     profile?.addresses?.find((item) => item.selected) ??
     profile?.addresses?.[0];
+  const userAddressCoordinates = userAddress?.location?.coordinates;
+  const hasUserAddressCoordinates =
+    toCheckoutCoordinate(userAddressCoordinates?.[1]) !== null &&
+    toCheckoutCoordinate(userAddressCoordinates?.[0]) !== null;
+  const address = hasUserAddressCoordinates ? userAddress : profileAddress;
   const coordinates = address?.location?.coordinates ?? [];
   const latitude = toCheckoutCoordinate(coordinates[1]);
   const longitude = toCheckoutCoordinate(coordinates[0]);
+  const hasDeliveryCoordinates = latitude !== null && longitude !== null;
   const checkout = useQuery(SINGLE_VENDOR_CALCULATE_CHECKOUT, {
     variables: {
       isPickup: pickup,
@@ -52,7 +60,7 @@ export default function SingleVendorCheckout() {
       longDestination: longitude,
       coupon: coupon || undefined,
     },
-    skip: !profile || (!pickup && !address),
+    skip: !profile || (!pickup && !hasDeliveryCoordinates),
     fetchPolicy: "network-only",
   });
   const scheduleQuery = useQuery(SINGLE_VENDOR_SCHEDULE);
@@ -61,7 +69,12 @@ export default function SingleVendorCheckout() {
   const summary = checkout.data?.calculateCheckout;
 
   const submit = async () => {
-    if (!profile || (!pickup && !address) || !cart.length) return;
+    if (
+      !profile ||
+      (!pickup && (!address || !hasDeliveryCoordinates)) ||
+      !cart.length
+    )
+      return;
     const result = await placeOrder({
       variables: {
         paymentMethod,
@@ -77,8 +90,8 @@ export default function SingleVendorCheckout() {
               label: address!.label,
               deliveryAddress: address!.deliveryAddress,
               details: address!.details || "",
-              longitude: String(coordinates[0]),
-              latitude: String(coordinates[1]),
+              longitude: String(longitude),
+              latitude: String(latitude),
             },
         tipping: pickup ? 0 : tip,
         orderDate: new Date().toISOString(),
@@ -293,7 +306,9 @@ export default function SingleVendorCheckout() {
         )}
         <button
           disabled={
-            placeState.loading || checkout.loading || (!pickup && !address)
+            placeState.loading ||
+            checkout.loading ||
+            (!pickup && !hasDeliveryCoordinates)
           }
           onClick={() => void submit()}
           className="w-full rounded-full bg-primary-color px-5 py-3 font-semibold text-white disabled:opacity-50"
