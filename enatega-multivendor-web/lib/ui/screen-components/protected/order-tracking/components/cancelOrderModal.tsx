@@ -11,7 +11,7 @@ interface CancelOrderModalProps {
   visible: boolean;
   onHide: () => void;
   orderId: string;
-  onSuccess: () => void;
+  onSuccess: (reason?: string) => void;
 }
 
 function CancelOrderModal({
@@ -33,7 +33,7 @@ function CancelOrderModal({
         message: t("order_cancelled_success_message"),
       });
       console.log("onSuccess is called");
-      onSuccess();
+      onSuccess(data?.abortOrder?.reason);
       // Refresh the order tracking page to show the updated status
     },
     onError: (error) => {

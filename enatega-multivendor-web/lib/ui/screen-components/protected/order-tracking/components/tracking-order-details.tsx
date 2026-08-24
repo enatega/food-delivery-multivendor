@@ -17,6 +17,9 @@ function TrackingOrderDetails({
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
   const [setshowCancelOrderSuccessModal, setSetshowCancelOrderSuccessModal] =
     useState(orderTrackingDetails?.orderStatus === "CANCELLED" ? true : false);
+  const [cancellationReason, setCancellationReason] = useState<
+    string | undefined
+  >(undefined);
   const { CURRENCY_SYMBOL } = useConfig();
   // Format currency values
   const formatCurrency = (amount: number) => {
@@ -294,8 +297,9 @@ function TrackingOrderDetails({
         onHide={() => {
           setIsCancelModalVisible(false);
         }}
-        onSuccess={() => {
+        onSuccess={(reason) => {
           setIsCancelModalVisible(false);
+          setCancellationReason(reason);
           setSetshowCancelOrderSuccessModal(true);
         }}
         orderId={orderTrackingDetails._id}
@@ -303,7 +307,7 @@ function TrackingOrderDetails({
       <CancelOrderSuccessModal
         visible={setshowCancelOrderSuccessModal}
         onHide={() => setSetshowCancelOrderSuccessModal(false)}
-        reason={orderTrackingDetails.reason}
+        reason={cancellationReason ?? orderTrackingDetails.reason}
       />
     </div>
   );
