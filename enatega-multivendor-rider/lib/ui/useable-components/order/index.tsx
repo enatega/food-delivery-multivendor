@@ -26,6 +26,11 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import SpinnerComponent from "../spinner";
 
+// Chat preview state per order id, shared across recycled order cards.
+type IChatPreview = { hasUnread: boolean; lastMessage: string | null };
+
+const chatPreviews = new Map<string, IChatPreview>();
+
 const Order = ({
   orderId,
   _id,
@@ -54,8 +59,10 @@ const Order = ({
   // order while the rider hasn't opened the chat. Only active for PICKED orders
   // (when the chat button is shown).
   const { dataProfile } = useContext(UserContext);
-  const [hasUnread, setHasUnread] = useState(false);
-  const [lastMessage, setLastMessage] = useState<string | null>(null);
+  const [, setChatPreviewVersion] = useState(0);
+  const chatPreview = _id ? chatPreviews.get(_id) : undefined;
+  const hasUnread = chatPreview?.hasUnread ?? false;
+  const lastMessage = chatPreview?.lastMessage ?? null;
   useSubscription(SUBSCRIPTION_NEW_MESSAGE, {
     variables: { order: _id },
     skip: !_id || orderStatus !== "PICKED",
@@ -63,14 +70,23 @@ const Order = ({
       const msg = data?.data?.subscriptionNewMessage;
       if (!msg) return;
       if (msg.user?.id !== dataProfile?._id) {
-        setHasUnread(true);
-        setLastMessage(String(msg.message ?? "").trim() || null);
+        chatPreviews.set(_id, {
+          hasUnread: true,
+          lastMessage: String(msg.message ?? "").trim() || null,
+        });
+        setChatPreviewVersion((version) => version + 1);
       }
     },
   });
 
   const openChat = () => {
-    setHasUnread(false);
+    if (_id) {
+      chatPreviews.set(_id, {
+        hasUnread: false,
+        lastMessage: chatPreviews.get(_id)?.lastMessage ?? null,
+      });
+      setChatPreviewVersion((version) => version + 1);
+    }
     router.push({
       pathname: "/chat",
       params: {
