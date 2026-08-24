@@ -13,11 +13,18 @@ import { GET_NOTIFICATIONS, SEND_NOTIFICATION_USER } from '@/lib/api/graphql';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useTranslations } from 'next-intl';
 
-const formatNotificationDate = (createdAt: string) => {
-  if (!createdAt) return '—';
+const formatNotificationDate = (
+  createdAt: string | number | null | undefined
+) => {
+  if (createdAt === null || createdAt === undefined) return '—';
 
-  const timestamp = Number(createdAt);
-  const date = new Date(Number.isNaN(timestamp) ? createdAt : timestamp);
+  const value = typeof createdAt === 'string' ? createdAt.trim() : createdAt;
+  if (value === '') return '—';
+
+  const timestamp = typeof value === 'number' ? value : Number(value);
+  const date = new Date(
+    typeof value === 'number' || !Number.isNaN(timestamp) ? timestamp : value
+  );
 
   if (Number.isNaN(date.getTime())) return '—';
 
