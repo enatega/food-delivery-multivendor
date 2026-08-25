@@ -186,7 +186,10 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
         return t("Completed");
       }
       case "CANCELLED": {
-        return orderTrackingDetails.reason || t("Cancelled");
+        const cancellationReason = orderTrackingDetails.reason?.trim();
+        return cancellationReason
+          ? `${t("Cancelled")} ${cancellationReason}`
+          : t("Cancelled");
       }
       default:
         return t("Processing");
