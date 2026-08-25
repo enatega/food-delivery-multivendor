@@ -307,7 +307,7 @@ function TrackingOrderDetails({
       <CancelOrderSuccessModal
         visible={setshowCancelOrderSuccessModal}
         onHide={() => setSetshowCancelOrderSuccessModal(false)}
-        reason={cancellationReason ?? orderTrackingDetails.reason}
+        reason={cancellationReason?.trim() || orderTrackingDetails.reason}
       />
     </div>
   );
