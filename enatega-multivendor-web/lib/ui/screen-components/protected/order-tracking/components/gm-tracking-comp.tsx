@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 
 import HomeIcon from "../../../../../assets/home_icon.png";
 import RiderIcon from "../../../../../assets/rider_icon.png";
+import StoreIcon from "../../../../../assets/enatega-logo.png";
 import Image from "@/lib/ui/useable-components/safe-image";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
 import { useTheme } from "@/lib/providers/ThemeProvider";
@@ -21,6 +22,7 @@ import {
 interface IGoogleMapTrackingComponent {
   isLoaded: boolean;
   destination: { lat: number; lng: number };
+  origin?: { lat: number; lng: number } | null;
   eta?: IOrderEta | null;
   riderLocation?: IRiderTrackingLocation | null;
   requireBackendRoute?: boolean;
@@ -30,6 +32,7 @@ interface IGoogleMapTrackingComponent {
 function GoogleMapTrackingComponent({
   isLoaded,
   destination,
+  origin,
   eta,
   riderLocation,
   requireBackendRoute = false,
@@ -51,10 +54,12 @@ function GoogleMapTrackingComponent({
     const trimmed = trimPolylineToRider(decoded, riderLocation);
     if (trimmed.length > 1) return trimmed;
     if (requireBackendRoute) return [];
-    return riderCoordinate ? [riderCoordinate, destination] : [];
+    if (riderCoordinate) return [riderCoordinate, destination];
+    return origin ? [origin, destination] : [];
   }, [
     destination,
     eta?.encodedPolyline,
+    origin,
     requireBackendRoute,
     riderCoordinate,
     riderLocation,
@@ -64,10 +69,11 @@ function GoogleMapTrackingComponent({
     if (!map || typeof window === "undefined" || !window.google) return;
     const bounds = new window.google.maps.LatLngBounds();
     route.forEach((point) => bounds.extend(point));
+    if (origin) bounds.extend(origin);
     bounds.extend(destination);
     if (riderCoordinate) bounds.extend(riderCoordinate);
     map.fitBounds(bounds, 48);
-  }, [destination, map, riderCoordinate, route]);
+  }, [destination, map, origin, riderCoordinate, route]);
 
   useEffect(() => {
     fitRoute();
@@ -115,7 +121,7 @@ function GoogleMapTrackingComponent({
           keyboardShortcuts: true,
         }}
         mapContainerStyle={{ width: "100%", height: "400px" }}
-        center={riderCoordinate || destination}
+        center={riderCoordinate || origin || destination}
         zoom={14}
         onLoad={setMap}
         onUnmount={() => setMap(null)}
@@ -127,6 +133,15 @@ function GoogleMapTrackingComponent({
             scaledSize: new window.google.maps.Size(40, 40),
           }}
         />
+        {origin && (
+          <Marker
+            position={origin}
+            icon={{
+              url: StoreIcon.src,
+              scaledSize: new window.google.maps.Size(40, 40),
+            }}
+          />
+        )}
         {riderCoordinate && (
           <Marker
             position={riderCoordinate}

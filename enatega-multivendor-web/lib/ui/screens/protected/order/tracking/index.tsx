@@ -19,6 +19,7 @@ import { RatingModal } from "@/lib/ui/screen-components/protected/profile";
 import ReactConfetti from "react-confetti";
 import ChatRider from "@/lib/ui/screen-components/protected/order-tracking/components/ChatRider";
 import { GoogleMapsContext } from "@/lib/context/global/google-maps.context";
+import { isLiveDeliveryTrackingStatus } from "@/lib/ui/screen-components/protected/order-tracking/services/tracking-status";
 
 interface IOrderTrackingScreenProps {
   orderId: string;
@@ -30,7 +31,7 @@ export default function OrderTrackingScreen({
   //states
   const [showRatingModal, setShowRatingModal] = useState<boolean>(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [showChat, setShowChat] = useState(false)
+  const [showChat, setShowChat] = useState(false);
 
   //Queries and Mutations
   const { isLoaded } = useContext(GoogleMapsContext);
@@ -40,8 +41,6 @@ export default function OrderTrackingScreen({
     subscriptionData,
     trackingData,
   } = useTracking({ orderId: orderId });
-
-
 
   const { showToast } = useToast();
 
@@ -62,7 +61,6 @@ export default function OrderTrackingScreen({
       duration: 3000,
     });
 
-
     // Add a small delay before navigation
     // Use window.location for a hard redirect
     setTimeout(() => {
@@ -79,35 +77,39 @@ export default function OrderTrackingScreen({
     });
   }
   const mergedOrderDetails =
-    orderTrackingDetails && subscriptionData ?
-      {
-        ...orderTrackingDetails,
-        ...subscriptionData,
-        rider: subscriptionData.rider || orderTrackingDetails.rider,
-        eta:
-          trackingData?.eta ||
-          subscriptionData.eta ||
-          orderTrackingDetails.eta,
-      }
+    orderTrackingDetails && subscriptionData
+      ? {
+          ...orderTrackingDetails,
+          ...subscriptionData,
+          rider: subscriptionData.rider || orderTrackingDetails.rider,
+          eta:
+            trackingData?.eta ||
+            subscriptionData.eta ||
+            orderTrackingDetails.eta,
+        }
       : orderTrackingDetails
-        ? { ...orderTrackingDetails, eta: trackingData?.eta || orderTrackingDetails.eta }
+        ? {
+            ...orderTrackingDetails,
+            eta: trackingData?.eta || orderTrackingDetails.eta,
+          }
         : orderTrackingDetails;
 
   const destination = useMemo(() => {
-    const coordinates = mergedOrderDetails?.deliveryAddress?.location?.coordinates;
+    const coordinates =
+      mergedOrderDetails?.deliveryAddress?.location?.coordinates;
     const lat = Number(coordinates?.[1]);
     const lng = Number(coordinates?.[0]);
     return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
   }, [mergedOrderDetails?.deliveryAddress?.location?.coordinates]);
   const showLiveMap =
     !mergedOrderDetails?.isPickedUp &&
-    mergedOrderDetails?.orderStatus === "PICKED" &&
+    isLiveDeliveryTrackingStatus(mergedOrderDetails?.orderStatus) &&
     Boolean(destination);
 
   // Get restaurant ID for reviews query
   const restaurantId = useMemo(
     () => mergedOrderDetails?.restaurant?._id,
-    [mergedOrderDetails?.restaurant?._id]
+    [mergedOrderDetails?.restaurant?._id],
   );
 
   // Fetch reviews data for the specified restaurant
@@ -125,7 +127,7 @@ export default function OrderTrackingScreen({
     return reviewsData.reviewsByRestaurant.reviews.some(
       (review: IReview) =>
         review?.order?.user?.email === profile.profile.email &&
-        review?.order?._id === orderId
+        review?.order?._id === orderId,
     );
   }, [
     reviewsData?.reviewsByRestaurant?.reviews,
@@ -138,11 +140,10 @@ export default function OrderTrackingScreen({
     orderId: string | undefined,
     ratingValue: number,
     comment?: string,
-    aspects: string[] = []
+    aspects: string[] = [],
   ) => {
     const reviewDescription = comment?.trim() || undefined;
-    const reviewComments =
-      aspects?.filter(Boolean).join(", ") || undefined;
+    const reviewComments = aspects?.filter(Boolean).join(", ") || undefined;
 
     // Here you would  call an API to save the rating
     try {
@@ -166,8 +167,8 @@ export default function OrderTrackingScreen({
 
   // useEffect to handle order status changes
   useEffect(() => {
-    if (mergedOrderDetails?.orderStatus == 'PICKED') {
-      setShowChat(true)
+    if (mergedOrderDetails?.orderStatus == "PICKED") {
+      setShowChat(true);
     }
 
     if (mergedOrderDetails?.orderStatus == "DELIVERED") {
@@ -255,21 +256,24 @@ export default function OrderTrackingScreen({
                 {/* Help Card - positioned on the left */}
                 <div className="md:ml-0 w-full md:w-auto md:flex-none">
                   <TrackingHelpCard />
-                  {showChat &&
-                    <ChatRider orderId={orderId} customerId={profile?.profile?._id} />
-
-                  }
+                  {showChat && (
+                    <ChatRider
+                      orderId={orderId}
+                      customerId={profile?.profile?._id}
+                    />
+                  )}
                 </div>
               </div>
 
               {/* Order Details - Full width to match status card */}
               <div className="flex justify-center md:justify-start">
-                {isOrderTrackingDetailsLoading ?
+                {isOrderTrackingDetailsLoading ? (
                   <TrackingOrderDetailsDummy />
-                  : <TrackingOrderDetails
+                ) : (
+                  <TrackingOrderDetails
                     orderTrackingDetails={mergedOrderDetails}
                   />
-                }
+                )}
               </div>
             </PaddingContainer>
           </div>

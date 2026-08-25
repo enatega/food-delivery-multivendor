@@ -317,7 +317,7 @@ export default function OrbitBannerCarousel({
               <button
                 type="button"
                 onClick={() => navigateForBanner(activeItem)}
-                className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-dispatch-ink shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition hover:bg-primary-color hover:text-primary-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-[#151914] shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition hover:bg-primary-color focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 {activeItem.buttonText || t("show_items_btn")}
                 <FiArrowRight aria-hidden />

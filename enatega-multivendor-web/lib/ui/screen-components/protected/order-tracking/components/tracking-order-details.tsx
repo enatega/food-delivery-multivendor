@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Image from '@/lib/ui/useable-components/safe-image';
+import Image from "@/lib/ui/useable-components/safe-image";
 import { IOrderTrackingDetail } from "@/lib/utils/interfaces/order-tracking-detail.interface";
 import CancelOrderModal from "./cancelOrderModal";
 import CancelOrderSuccessModal from "./cancel-order-success-modal";
@@ -10,8 +10,22 @@ import { useTranslations } from "next-intl";
 
 function TrackingOrderDetails({
   orderTrackingDetails,
+  summaryAmounts,
+  showCancelAction = true,
 }: {
   orderTrackingDetails: IOrderTrackingDetail;
+  summaryAmounts?: {
+    subtotal: number;
+    deliveryCharge: number;
+    tax: number;
+    tip: number;
+    minimumOrderFee: number;
+    priorityDeliveryFee: number;
+    discount: number;
+    creditsApplied: number;
+    total: number;
+  };
+  showCancelAction?: boolean;
 }) {
   const t = useTranslations();
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
@@ -48,10 +62,13 @@ function TrackingOrderDetails({
 
   // Calculate subtotal (items only)
   const calculateSubtotal = () => {
+    if (summaryAmounts) return summaryAmounts.subtotal;
     if (!orderTrackingDetails?.items) return 0;
 
     return orderTrackingDetails?.items.reduce((total, item) => {
-      return total + item?.variation?.price * item?.quantity;
+      const unitPrice =
+        item?.variation?.discounted ?? item?.variation?.price ?? 0;
+      return total + unitPrice * item?.quantity;
     }, 0);
   };
 
@@ -69,7 +86,8 @@ function TrackingOrderDetails({
   // };
 
   const calculateItemTotal = (item: any) => {
-    const variationPrice = item.variation.price || 0;
+    const variationPrice =
+      item.variation?.discounted ?? item.variation?.price ?? 0;
     const addonsPrice =
       item.addons?.reduce((sum: number, addon: any) => {
         return (
@@ -180,7 +198,7 @@ function TrackingOrderDetails({
         ))}
       </div>
       <div className="border-gray-200 border-b">
-        <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-base sm:text-lg md:text-[16px] lg:text-[18px] mb-4">
+        <h2 className="mb-4 text-base font-semibold text-gray-900 dark:text-gray-100 sm:text-lg">
           {t("order_details_instruction_label")}
         </h2>
         <p className="text-gray-500 dark:text-gray-300 mb-4 leading-5 sm:leading-5 tracking-normal font-inter text-xs sm:text-sm md:text-sm align-middle">
@@ -202,7 +220,10 @@ function TrackingOrderDetails({
                 {item.quantity}x {item.title}
               </span>
               <span>
-                {formatCurrency(item.variation.price * item.quantity)}
+                {formatCurrency(
+                  (item.variation?.discounted ?? item.variation?.price ?? 0) *
+                    item.quantity,
+                )}
               </span>
             </div>
           ))}
@@ -213,17 +234,25 @@ function TrackingOrderDetails({
             <span>{formatCurrency(calculateSubtotal())}</span>
           </div>
 
-          {orderTrackingDetails.taxationAmount > 0 && (
+          {(summaryAmounts?.tax ?? orderTrackingDetails.taxationAmount) > 0 && (
             <div className="flex justify-between">
               <span>{t("order_details_tax_label")}</span>
-              <span>{formatCurrency(orderTrackingDetails.taxationAmount)}</span>
+              <span>
+                {formatCurrency(
+                  summaryAmounts?.tax ?? orderTrackingDetails.taxationAmount,
+                )}
+              </span>
             </div>
           )}
 
-          {orderTrackingDetails.tipping > 0 && (
+          {(summaryAmounts?.tip ?? orderTrackingDetails.tipping) > 0 && (
             <div className="flex justify-between">
               <span>{t("order_details_tip_label")}</span>
-              <span>{formatCurrency(orderTrackingDetails.tipping)}</span>
+              <span>
+                {formatCurrency(
+                  summaryAmounts?.tip ?? orderTrackingDetails.tipping,
+                )}
+              </span>
             </div>
           )}
 
@@ -237,47 +266,96 @@ function TrackingOrderDetails({
           <div className="flex justify-between">
             <span>{t("order_details_delivery_charge_label")}</span>
             <span>
-              {formatCurrency(orderTrackingDetails.deliveryCharges || 0)}
+              {formatCurrency(
+                summaryAmounts?.deliveryCharge ??
+                  orderTrackingDetails.deliveryCharges ??
+                  0,
+              )}
             </span>
           </div>
 
-          <div className="flex justify-between">
-            <span>{t("discount_label")}</span>
+          {(summaryAmounts?.minimumOrderFee ?? 0) > 0 && (
+            <div className="flex justify-between">
+              <span>{t("order_details_minimum_order_fee_label")}</span>
+              <span>
+                {formatCurrency(summaryAmounts?.minimumOrderFee ?? 0)}
+              </span>
+            </div>
+          )}
 
-            <span className="text-red-500">
-              -{""} {formatCurrency(orderTrackingDetails.discountAmount || 0)}
-            </span>
-          </div>
+          {(summaryAmounts?.priorityDeliveryFee ?? 0) > 0 && (
+            <div className="flex justify-between">
+              <span>{t("order_details_priority_delivery_fee_label")}</span>
+              <span>
+                {formatCurrency(summaryAmounts?.priorityDeliveryFee ?? 0)}
+              </span>
+            </div>
+          )}
+
+          {(summaryAmounts?.discount ?? orderTrackingDetails.discountAmount) >
+            0 && (
+            <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+              <span>{t("discount_label")}</span>
+              <span>
+                -
+                {formatCurrency(
+                  summaryAmounts?.discount ??
+                    orderTrackingDetails.discountAmount ??
+                    0,
+                )}
+              </span>
+            </div>
+          )}
+
+          {(summaryAmounts?.creditsApplied ?? 0) > 0 && (
+            <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+              <span>{t("order_details_credits_applied_label")}</span>
+              <span>
+                -{formatCurrency(summaryAmounts?.creditsApplied ?? 0)}
+              </span>
+            </div>
+          )}
 
           <div className="flex justify-between font-semibold pt-2 border-t dark:border-gray-700">
             <span>{t("order_details_total_label")}</span>
-            <span>{formatCurrency(orderTrackingDetails.orderAmount)}</span>
+            <span>
+              {formatCurrency(
+                summaryAmounts?.total ?? orderTrackingDetails.orderAmount,
+              )}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Payment Info */}
-      <div className="border rounded-md p-4 dark:border-gray-700">
+      <div className="rounded-xl border p-4 dark:border-gray-700">
         <h4 className="font-semibold mb-2 dark:text-gray-100">
           {t("order_details_paid_with_label")}
         </h4>
         <div className="flex items-center gap-2 text-sm">
-          <span className="text-gray-500 dark:text-gray-400">
-            {orderTrackingDetails.paymentMethod === "COD" ? "💵" : "💳"}
-          </span>
+          <i
+            aria-hidden
+            className={`pi ${
+              orderTrackingDetails.paymentMethod === "COD"
+                ? "pi-wallet"
+                : "pi-credit-card"
+            } text-gray-500 dark:text-gray-400`}
+          />
           <span className="text-gray-700 dark:text-gray-300">
             {orderTrackingDetails.paymentMethod === "COD"
               ? t("order_details_cash_on_delivery_label")
               : orderTrackingDetails.paymentMethod}
           </span>
           <span className="ml-auto font-semibold dark:text-gray-100">
-            {formatCurrency(orderTrackingDetails.orderAmount)}
+            {formatCurrency(
+              summaryAmounts?.total ?? orderTrackingDetails.orderAmount,
+            )}
           </span>
         </div>
       </div>
 
       {/* Cancel Button - only show for pending/accepted orders */}
-      {canCancelOrder() && (
+      {showCancelAction && canCancelOrder() && (
         <div className="text-center">
           <button
             onClick={() => setIsCancelModalVisible(true)}
@@ -288,22 +366,25 @@ function TrackingOrderDetails({
         </div>
       )}
 
-      {/* Cancel Order Modal */}
-      <CancelOrderModal
-        visible={isCancelModalVisible}
-        onHide={() => {
-          setIsCancelModalVisible(false);
-        }}
-        onSuccess={() => {
-          setIsCancelModalVisible(false);
-          setSetshowCancelOrderSuccessModal(true);
-        }}
-        orderId={orderTrackingDetails._id}
-      />
-      <CancelOrderSuccessModal
-        visible={setshowCancelOrderSuccessModal}
-        onHide={() => setSetshowCancelOrderSuccessModal(false)}
-      />
+      {showCancelAction && (
+        <>
+          <CancelOrderModal
+            visible={isCancelModalVisible}
+            onHide={() => {
+              setIsCancelModalVisible(false);
+            }}
+            onSuccess={() => {
+              setIsCancelModalVisible(false);
+              setSetshowCancelOrderSuccessModal(true);
+            }}
+            orderId={orderTrackingDetails._id}
+          />
+          <CancelOrderSuccessModal
+            visible={setshowCancelOrderSuccessModal}
+            onHide={() => setSetshowCancelOrderSuccessModal(false)}
+          />
+        </>
+      )}
     </div>
   );
 }

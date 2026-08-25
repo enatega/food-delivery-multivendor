@@ -3,6 +3,7 @@
 import { useQuery } from "@apollo/client";
 
 import { SINGLE_VENDOR_DISCOVERY } from "@/lib/api/graphql/single-vendor";
+import { getSingleVendorDealPricing } from "@/lib/mode/singleVendorPricing";
 import type { ModeProduct } from "@/lib/mode/types";
 import DiscoveryBannerSection from "@/lib/ui/screen-components/protected/home/discovery/banner-section";
 import CuisinesSliderCard from "@/lib/ui/useable-components/cuisines-slider-card";
@@ -21,19 +22,26 @@ const normalizeProducts = (items: any[] = []): ModeProduct[] =>
     description: item.description,
     image: item.image,
     categoryId: item.categoryId,
-    variations: (item.variations || []).map((variation: any) => ({
-      id: variation.id || variation._id,
-      title: variation.title,
-      name: variation.name,
-      price: Number(
-        variation.deal?.isActive
-          ? variation.price -
-              (variation.deal.discountType === "percentage"
-                ? (variation.price * variation.deal.discountValue) / 100
-                : variation.deal.discountValue)
-          : variation.price,
-      ),
-    })),
+    isOutOfStock: Boolean(item.isOutOfStock ?? item.outofstock),
+    variations: (item.variations || []).map((variation: any) => {
+      const { finalPrice } = getSingleVendorDealPricing(
+        variation.price,
+        variation.deal,
+      );
+
+      return {
+        id: variation.id || variation._id,
+        title: variation.title,
+        name: variation.name,
+        price: Number(variation.price) || 0,
+        discountedPrice:
+          variation.discountedUnitPrice == null
+            ? finalPrice
+            : Number(variation.discountedUnitPrice),
+        isOutOfStock: Boolean(variation.isOutOfStock ?? variation.outofstock),
+        deal: variation.deal,
+      };
+    }),
   }));
 
 function SectionError({ message }: { message: string }) {
@@ -46,6 +54,7 @@ function SectionError({ message }: { message: string }) {
 
 export default function SingleVendorDiscovery() {
   const t = useTranslations();
+  const dealsSectionTitle = t("tab_deals");
   const discovery = useQuery(SINGLE_VENDOR_DISCOVERY, {
     variables: { previewLimit: 10, dealLimit: 20 },
     fetchPolicy: "cache-and-network",
@@ -86,7 +95,7 @@ export default function SingleVendorDiscovery() {
         <SectionError message={t("something_went_wrong_please_try_again")} />
       ) : (
         <CuisinesSliderCard
-          title={t("shop-types")}
+          title={t("categories_label")}
           data={categoryData}
           showLogo={false}
           cuisines={false}
@@ -99,7 +108,7 @@ export default function SingleVendorDiscovery() {
         <SingleVendorProductSectionSkeleton />
       ) : (
         <SingleVendorProductSection
-          title={t("discount_label")}
+          title={dealsSectionTitle}
           products={dealProducts}
         />
       )}

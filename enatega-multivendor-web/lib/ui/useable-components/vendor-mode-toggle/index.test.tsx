@@ -21,8 +21,8 @@ vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) =>
     ({
       delivery_label: "Delivery",
-      tab_restaurants: "Restaurants",
-      tab_store: "Store",
+      multi_vendor_label: "Multi Vendor",
+      single_vendor_label: "Single Vendor",
     })[key] || key,
 }));
 
@@ -34,7 +34,7 @@ describe("VendorModeToggle", () => {
     expect(
       screen.getByRole("radiogroup", { name: "Delivery" }),
     ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("radio", { name: "Store" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Single Vendor" }));
     expect(switchMode).toHaveBeenCalledWith("SINGLE");
   });
 });

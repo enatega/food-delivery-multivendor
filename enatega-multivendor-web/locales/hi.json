@@ -123,6 +123,13 @@
   "grocerylist": "किराना सूची",
   "toppicks": "शीर्ष किराना चयन",
   "shop-types": "दुकान के प्रकार",
+  "categories_label": "श्रेणियाँ",
+  "all_categories_label": "सभी श्रेणियाँ",
+  "tab_deals": "ऑफ़र",
+  "tab_browse": "ब्राउज़ करें",
+  "order_details_minimum_order_fee_label": "कम ऑर्डर शुल्क",
+  "order_details_priority_delivery_fee_label": "प्राथमिकता डिलीवरी शुल्क",
+  "order_details_credits_applied_label": "उपयोग किया गया क्रेडिट",
   "app_version": "1.0.0",
   "no_items_found": "कोई आइटम नहीं मिला",
   "something_went_wrong": "कुछ गलत हो गया",
@@ -181,6 +188,8 @@
   "tab_discovery": "खोज",
   "tab_restaurants": "रेस्तरां",
   "tab_store": "स्टोर",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "आपके निकट",
   "generic_listing_heading": "आपके निकट रेस्तरां",
   "generic_listing_cuisine_section": "व्यंजन",
@@ -919,5 +928,88 @@
   "show_more_orders": "अधिक ऑर्डर देखें",
   "your_email": "your@email.com",
   "Select_your_address_prompt": "अपना पता चुनें।",
-  "Our-brands": "हमारे ब्रांड"
+  "Our-brands": "हमारे ब्रांड",
+  "Landing": {
+    "hero": {
+      "eyebrow": "एक ऐप। रोज़मर्रा की संभावनाएँ।",
+      "title": "| आपकी ज़रूरत की हर चीज़,",
+      "accent": "| खूबसूरती से डिलीवर की गई।",
+      "body": "| भोजन, किराने का सामान और रोज़मर्रा की ज़रूरी चीज़ें, एक साधारण अनुभव में एक साथ लाए गए।"
+    },
+    "categories": {
+      "label": "| डिलीवरी कैटेगरी",
+      "food": "| खाना",
+      "groceries": "| किराने का सामान",
+      "essentials": "| ज़रूरी चीज़ें",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "| उस शहर को ढूँढ़ना।",
+      "ready": "| शहर चुना गया। जब आप तैयार हों तो आइटम दिखाएँ।",
+      "cityError": "| हम उस शहर का पता नहीं लगा सके। एक और सुझाव चुनें।",
+      "locating": "अपनी मौजूदा लोकेशन ढूँढी जा रही है।",
+      "locationError": "| हम आपकी लोकेशन एक्सेस नहीं कर सके। इसके बजाय शहर खोजें।"
+    },
+    "journey": {
+      "eyebrow": "| Enatega कैसे चलता है",
+      "title": "| आपके शहर से,",
+      "accent": "| आपके दरवाज़े तक।",
+      "bagAlt": "| Enatega डिलीवरी बैग",
+      "stages": {
+        "choose": {
+          "title": "| चुनें",
+          "body": "| खाना, किराने का सामान या ज़रूरी चीज़ें।"
+        },
+        "moving": {
+          "title": "| चलना",
+          "body": "| आपके शहर का एक साफ़ सफ़र।"
+        },
+        "arrived": {
+          "title": "| पहुँच गए हैं",
+          "body": "आपकी ज़रूरत के मुताबिक डिलीवर किया गया।"
+        }
+      }
+    },
+    "cta": {
+      "label": "| Enatega के साथ काम करें",
+      "business": {
+        "eyebrow": "| व्यवसायों के लिए",
+        "title": "| Enatega के साथ आगे बढ़ें।",
+        "body": "| अपने स्टोर को ज़्यादा ग्राहकों के करीब लाएँ।",
+        "action": "| पार्टनर बनें"
+      },
+      "rider": {
+        "eyebrow": "| राइडर के लिए",
+        "title": "| Enatega के साथ राइड करें।",
+        "body": "| अपने शेड्यूल के मुताबिक डिलीवरी करें।",
+        "action": "| राइडर बनें"
+      }
+    },
+    "footer": {
+      "rights": "| सर्वाधिकार सुरक्षित।"
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

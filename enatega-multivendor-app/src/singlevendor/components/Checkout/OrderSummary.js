@@ -28,7 +28,8 @@ const OrderSummary = ({
   priorityDeliveryFee = 0,
   orderNumber = null,
   isCheckout,
-  creditsUsed
+  creditsUsed,
+  dealDiscount = 0
 }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
@@ -73,7 +74,7 @@ const OrderSummary = ({
               {t('Item subtotal') || 'Item subtotal'}
             </TextDefault>
             <TextDefault textColor={currentTheme.fontMainColor} isRTL>
-              {subtotal.toFixed(2)}&nbsp;{currencySymbol}
+              {(subtotal + dealDiscount).toFixed(2)}&nbsp;{currencySymbol}
             </TextDefault>
           </View>
 
@@ -150,6 +151,17 @@ const OrderSummary = ({
               </TextDefault>
               <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
                 -{couponDiscountAmount.toFixed(2)}&nbsp;{currencySymbol}
+              </TextDefault>
+            </View>
+          )}
+
+          {dealDiscount > 0 && (
+            <View style={styles().summaryRow}>
+              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+                {t('Deals savings', { defaultValue: 'Deals savings' })}
+              </TextDefault>
+              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+                -{dealDiscount.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
           )}

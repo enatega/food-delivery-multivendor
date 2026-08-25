@@ -4,19 +4,28 @@ import { useEffect, useMemo, useState } from 'react';
 // Prime React
 import { Chart } from 'primereact/chart';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
-import { GET_DASHBOARD_USERS_BY_YEAR } from '@/lib/api/graphql';
+import {
+  GET_DASHBOARD_USERS_BY_YEAR,
+  GET_SINGLE_VENDOR_DASHBOARD_CATALOG,
+} from '@/lib/api/graphql';
 import {
   IDashboardUsersByYearResponseGraphQL,
   IQueryResult,
+  ISingleVendorDashboardCatalogResponseGraphQL,
 } from '@/lib/utils/interfaces';
 import DashboardUsersByYearStatsSkeleton from '@/lib/ui/useable-components/custom-skeletons/dasboard.user.year.stats.skeleton';
 import { useTranslations } from 'next-intl';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
+import { getSingleVendorDashboardMetrics } from '../single-vendor-dashboard-metrics';
 
 // Dummy
 
 export default function GrowthOverView() {
   // Hooks
   const t = useTranslations();
+  const { IS_FETCHING_CONFIGURATION, IS_MULTIVENDOR } = useConfiguration();
+  const isSingleVendor = IS_MULTIVENDOR === false;
+  const currentYear = new Date().getFullYear();
 
   // States
   const [chartData, setChartData] = useState({});
@@ -26,7 +35,7 @@ export default function GrowthOverView() {
   const { data, loading } = useQueryGQL(
     GET_DASHBOARD_USERS_BY_YEAR,
     {
-      year: new Date().getFullYear(),
+      year: currentYear,
     },
     {
       fetchPolicy: 'network-only',
@@ -37,15 +46,33 @@ export default function GrowthOverView() {
     undefined
   >;
 
+  const { data: catalogData, loading: catalogLoading } = useQueryGQL(
+    GET_SINGLE_VENDOR_DASHBOARD_CATALOG,
+    {},
+    {
+      enabled: isSingleVendor,
+      fetchPolicy: 'network-only',
+      debounceMs: 300,
+    }
+  ) as IQueryResult<
+    ISingleVendorDashboardCatalogResponseGraphQL | undefined,
+    undefined
+  >;
+
   const dashboardUsersByYear = useMemo(() => {
     if (!data) return null;
     return {
       usersCount: data?.getDashboardUsersByYear?.usersCount ?? [],
       vendorsCount: data?.getDashboardUsersByYear?.vendorsCount ?? [],
       restaurantsCount: data?.getDashboardUsersByYear?.restaurantsCount ?? [],
-      ridersCount: data?.getDashboardUsersByYear?.ridersCount ?? 0,
+      ridersCount: data?.getDashboardUsersByYear?.ridersCount ?? [],
     };
   }, [data]);
+
+  const catalogMetrics = useMemo(
+    () => getSingleVendorDashboardMetrics(catalogData, currentYear),
+    [catalogData, currentYear]
+  );
 
   // Handlers
   const onChartDataChange = () => {
@@ -72,16 +99,20 @@ export default function GrowthOverView() {
       ],
       datasets: [
         {
-          label: t('Stores'),
-          data: dashboardUsersByYear?.restaurantsCount ?? [],
+          label: t(isSingleVendor ? 'Categories' : 'Stores'),
+          data: isSingleVendor
+            ? catalogMetrics.categoriesByMonth
+            : (dashboardUsersByYear?.restaurantsCount ?? []),
           fill: false,
           borderColor: documentStyle.getPropertyValue('--pink-500'),
           backgroundColor: documentStyle.getPropertyValue('--pink-100'),
           tension: 0.5,
         },
         {
-          label: t('Vendors'),
-          data: dashboardUsersByYear?.vendorsCount ?? [],
+          label: t(isSingleVendor ? 'Products' : 'Vendors'),
+          data: isSingleVendor
+            ? catalogMetrics.productsByMonth
+            : (dashboardUsersByYear?.vendorsCount ?? []),
           fill: false,
           borderColor: documentStyle.getPropertyValue('--blue-500'),
           backgroundColor: documentStyle.getPropertyValue('--blue-100'),
@@ -96,7 +127,7 @@ export default function GrowthOverView() {
           tension: 0.5,
         },
         {
-          label: t('Users'),
+          label: t(isSingleVendor ? 'Customers' : 'Users'),
           data: dashboardUsersByYear?.usersCount ?? [],
           fill: true,
 
@@ -147,16 +178,24 @@ export default function GrowthOverView() {
   // Use Effect
   useEffect(() => {
     onChartDataChange();
-  }, [dashboardUsersByYear]);
+  }, [catalogMetrics, dashboardUsersByYear, isSingleVendor, t]);
 
   return (
     <div className={`w-full p-3`}>
       <h2 className="text-lg font-semibold">{t('Growth Overview')}</h2>
       <p className="text-gray-500">
-        {t('Tracking Stakeholders Growth Over the Year')}
+        {IS_FETCHING_CONFIGURATION
+          ? '\u00A0'
+          : t(
+              isSingleVendor
+                ? 'Tracking Business Growth Over the Year'
+                : 'Tracking Stakeholders Growth Over the Year'
+            )}
       </p>
       <div className="mt-4 bg-white dark:bg-dark-950">
-        {loading ? (
+        {loading ||
+        IS_FETCHING_CONFIGURATION ||
+        (isSingleVendor && catalogLoading) ? (
           <DashboardUsersByYearStatsSkeleton />
         ) : (
           <Chart type="line" data={chartData} options={chartOptions} />

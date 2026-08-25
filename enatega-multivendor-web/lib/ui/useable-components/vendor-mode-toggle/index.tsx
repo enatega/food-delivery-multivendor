@@ -54,8 +54,10 @@ function ModeIcon({ mode }: { mode: AppMode }) {
 
 export default function VendorModeToggle({
   compact = false,
+  landing = false,
 }: {
   compact?: boolean;
+  landing?: boolean;
 }) {
   const {
     mode,
@@ -98,15 +100,19 @@ export default function VendorModeToggle({
       aria-label={t("delivery_label")}
       aria-busy={isSwitchingMode}
       className={`grid items-stretch gap-1 rounded-xl bg-dispatch-map p-1 dark:bg-gray-800 ${
-        compact
-          ? "w-[220px] max-w-full grid-cols-2"
+        landing
+          ? "w-[260px] max-w-full grid-cols-2 md:w-[380px]"
+          : compact
+          ? "w-[260px] max-w-full grid-cols-2"
           : "w-full max-w-[480px] grid-cols-2"
       }`}
     >
       {([APP_MODES.MULTI, APP_MODES.SINGLE] as const).map((itemMode) => {
         const selected = itemMode === mode;
         const label =
-          itemMode === APP_MODES.MULTI ? t("tab_restaurants") : t("tab_store");
+          itemMode === APP_MODES.MULTI
+            ? t("multi_vendor_label")
+            : t("single_vendor_label");
 
         return (
           <button
@@ -118,7 +124,11 @@ export default function VendorModeToggle({
             disabled={isSwitchingMode || isModeSwitchBlocked}
             onClick={() => void requestSwitch(itemMode)}
             className={`group relative flex min-w-0 items-center justify-center overflow-hidden rounded-lg text-center transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color disabled:cursor-not-allowed disabled:opacity-60 ${
-              compact ? "h-9 gap-1.5 px-2" : "gap-2 px-3 py-2.5"
+              landing
+                ? "h-9 gap-1.5 px-2 md:h-12 md:px-4"
+                : compact
+                  ? "h-9 gap-1.5 px-2"
+                  : "gap-2 px-3 py-2.5"
             } ${
               selected
                 ? "bg-primary-light text-primary-dark ring-1 ring-primary-color/35 dark:bg-primary-color/15"
@@ -127,7 +137,7 @@ export default function VendorModeToggle({
           >
             <span
               aria-hidden="true"
-              className={`flex shrink-0 items-center justify-center transition-colors ${compact ? "h-4 w-4" : "h-5 w-5"} ${selected ? "text-primary-dark" : "text-dispatch-muted"}`}
+              className={`shrink-0 items-center justify-center transition-colors ${compact || landing ? "hidden" : "flex h-5 w-5"} ${selected ? "text-primary-dark" : "text-dispatch-muted"}`}
             >
               <ModeIcon mode={itemMode} />
             </span>
@@ -135,7 +145,11 @@ export default function VendorModeToggle({
             <span className={compact ? "min-w-0" : "min-w-0 flex-1"}>
               <span
                 className={`block truncate font-medium ${
-                  compact ? "text-[11px] leading-none" : "text-sm leading-5"
+                  landing
+                    ? "text-[11px] leading-none md:text-sm md:leading-5"
+                    : compact
+                      ? "text-[11px] leading-none"
+                      : "text-sm leading-5"
                 }`}
               >
                 {label}

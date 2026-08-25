@@ -1,3 +1,5 @@
+import { isLiveDeliveryTrackingStatus } from "@/lib/ui/screen-components/protected/order-tracking/services/tracking-status";
+
 export const SINGLE_VENDOR_TRACKING_STAGES = [
   "PENDING",
   "ACCEPTED",
@@ -74,5 +76,4 @@ export const getSingleVendorTrackingStatus = (
     : stateStatus;
 };
 
-export const isSingleVendorLiveTrackingStatus = (status?: string) =>
-  status === "PICKED" || status === "ON_ROUTE";
+export const isSingleVendorLiveTrackingStatus = isLiveDeliveryTrackingStatus;

@@ -7,15 +7,7 @@ import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import useDebouncedCartQuantity from '../../hooks/useDebouncedCartQuantity'
 
-const CartQuantityController = ({
-  foodId,
-  categoryId,
-  variationId,
-  addons = [],
-  defaultQuantity = 0,
-  collapsedWhenZero = false,
-  variant = 'overlay'
-}) => {
+const CartQuantityController = ({ foodId, categoryId, variationId, addons = [], defaultQuantity = 0, collapsedWhenZero = false, variant = 'overlay', isOutOfStock = false }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
@@ -89,29 +81,15 @@ const CartQuantityController = ({
 
   if (collapsedWhenZero && quantity === 0) {
     return (
-      <Pressable
-        style={[styles(currentTheme).addButton, variant === 'details' && styles(currentTheme).addButtonLarge]}
-        onPress={increase}
-        disabled={isLoading}
-      >
+      <Pressable style={[styles(currentTheme).addButton, variant === 'details' && styles(currentTheme).addButtonLarge, isOutOfStock && styles(currentTheme).disabledButton]} onPress={increase} disabled={isLoading || isOutOfStock} accessibilityRole='button' accessibilityState={{ disabled: isLoading || isOutOfStock }} accessibilityLabel={isOutOfStock ? 'Out of stock' : 'Add to cart'}>
         {isLoading ? <DotLoader color={currentTheme.singleVendorBrandForeground} /> : <AntDesign name='plus' size={14} color={currentTheme.singleVendorBrandForeground} />}
       </Pressable>
     )
   }
 
   return (
-    <Animated.View
-      style={[
-        styles(currentTheme).controller,
-        variant === 'details' && styles(currentTheme).controllerLarge,
-        controllerAnimatedStyle
-      ]}
-    >
-      <Pressable
-        style={styles(currentTheme).controlButton}
-        onPress={decrease}
-        disabled={isLoading}
-      >
+    <Animated.View style={[styles(currentTheme).controller, variant === 'details' && styles(currentTheme).controllerLarge, controllerAnimatedStyle]}>
+      <Pressable style={styles(currentTheme).controlButton} onPress={decrease} disabled={isLoading} accessibilityState={{ disabled: isLoading }}>
         <AntDesign name={quantity <= 1 ? 'delete' : 'minus'} size={14} color={currentTheme.singleVendorOnBrand} />
       </Pressable>
 
@@ -132,11 +110,7 @@ const CartQuantityController = ({
         </View>
       </View>
 
-      <Pressable
-        style={styles(currentTheme).controlButton}
-        onPress={increase}
-        disabled={isLoading}
-      >
+      <Pressable style={[styles(currentTheme).controlButton, isOutOfStock && styles(currentTheme).disabledButton]} onPress={increase} disabled={isLoading || isOutOfStock} accessibilityState={{ disabled: isLoading || isOutOfStock }}>
         <AntDesign name='plus' size={14} color={currentTheme.singleVendorOnBrand} />
       </Pressable>
     </Animated.View>
@@ -149,11 +123,7 @@ const DotLoader = ({ color, size = 3, gap = 2 }) => {
   const d3 = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
-    const pulse = (val) =>
-      Animated.sequence([
-        Animated.timing(val, { toValue: 1, duration: 260, useNativeDriver: true }),
-        Animated.timing(val, { toValue: 0, duration: 260, useNativeDriver: true })
-      ])
+    const pulse = (val) => Animated.sequence([Animated.timing(val, { toValue: 1, duration: 260, useNativeDriver: true }), Animated.timing(val, { toValue: 0, duration: 260, useNativeDriver: true })])
 
     const animation = Animated.loop(Animated.stagger(120, [pulse(d1), pulse(d2), pulse(d3)]))
     animation.start()
@@ -204,6 +174,11 @@ const styles = (currentTheme) =>
       width: 28,
       height: 28,
       borderRadius: 14
+    },
+    disabledButton: {
+      opacity: 0.45,
+      shadowOpacity: 0,
+      elevation: 0
     },
     controller: {
       position: 'absolute',

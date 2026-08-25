@@ -1,7 +1,4 @@
-import type {
-  IOrderEta,
-  IOrderTracking,
-} from "./orders.interface";
+import type { IOrderEta, IOrderTracking } from "./orders.interface";
 
 interface Coordinates {
   coordinates: [number | string, number | string];
@@ -85,10 +82,18 @@ export interface IOrderTrackingDetail {
   paymentMethod: string;
   paidAmount: number;
   orderAmount: number;
-  discountAmount:number;
+  discountAmount: number;
+  itemsSubTotal?: number;
+  deliveryDiscount?: number;
+  couponDiscount?: number;
+  minimumOrderFee?: number;
+  priorityDeliveryFees?: number;
+  creditsApplied?: number;
+  deliverChargesAmount?: number;
+  isPriority?: boolean;
   orderStatus: string;
   deliveryCharges: number;
-  instructions:string;
+  instructions: string;
   tipping: number;
   taxationAmount: number;
   orderDate: string;

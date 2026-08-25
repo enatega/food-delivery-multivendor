@@ -703,6 +703,7 @@ export const en = {
   emptyCartDescription: 'Add something you love to get started.',
   goToCheckout: 'Go to checkout',
   itemAddedToCart: 'Item added to cart',
+  out_of_stock_label: 'Out of stock',
   viewVouchers: 'View vouchers',
   enterVoucher: 'Enter voucher code',
   smallOrderFeeTitle: 'Small order fee',

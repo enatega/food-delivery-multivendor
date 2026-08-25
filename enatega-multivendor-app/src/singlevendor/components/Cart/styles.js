@@ -53,6 +53,21 @@ const styles = (props = null) =>
       alignItems: 'center',
       marginTop: scale(8)
     },
+    priceBlock: {
+      alignItems: 'flex-end',
+      gap: scale(2)
+    },
+    originalPrice: {
+      textDecorationLine: 'line-through'
+    },
+    dealBadge: {
+      alignSelf: 'flex-end',
+      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
+      borderRadius: scale(5),
+      overflow: 'hidden',
+      paddingHorizontal: scale(6),
+      paddingVertical: scale(3)
+    },
     quantityControls: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -90,6 +105,17 @@ const styles = (props = null) =>
       shadowOpacity: 0.1,
       shadowRadius: 3,
       elevation: 3
+    },
+    disabledAddToCartButton: {
+      backgroundColor: props !== null ? props.colorBgTertiary : '#E5E7EB',
+      borderColor: props !== null ? props.colorBorder : '#D1D5DB',
+      elevation: 0,
+      opacity: 0.6,
+      shadowOpacity: 0
+    },
+    outOfStockLabel: {
+      alignSelf: 'flex-start',
+      marginTop: scale(4)
     },
     orderHistoryQuantity: {
       fontSize: scale(12),

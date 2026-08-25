@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useAuth } from "@/lib/context/auth/auth.context";
 import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
+import { useTranslations } from "next-intl";
 
 interface CartQuantityControllerProps {
   foodId: string;
@@ -16,6 +17,7 @@ interface CartQuantityControllerProps {
   image?: string;
   unitPrice?: number;
   variant?: "overlay" | "details";
+  isOutOfStock?: boolean;
 }
 
 export default function CartQuantityController({
@@ -27,7 +29,9 @@ export default function CartQuantityController({
   image,
   unitPrice,
   variant = "overlay",
+  isOutOfStock = false,
 }: CartQuantityControllerProps) {
+  const t = useTranslations();
   const { authToken, setIsAuthModalVisible } = useAuth();
   const { cart, setSingleVendorItemQuantity } = useUser();
   const { showToast } = useToast();
@@ -39,6 +43,7 @@ export default function CartQuantityController({
   const isDetails = variant === "details";
 
   const changeQuantity = async (nextQuantity: number) => {
+    if (isOutOfStock && nextQuantity > quantity) return;
     if (!authToken) {
       setIsAuthModalVisible(true);
       return;
@@ -89,19 +94,25 @@ export default function CartQuantityController({
     return (
       <motion.button
         type="button"
-        disabled={isUpdating}
-        aria-label={`Add ${foodTitle || "product"} to cart`}
+        disabled={isUpdating || isOutOfStock}
+        aria-label={
+          isOutOfStock
+            ? `${foodTitle || "Product"} is out of stock`
+            : `Add ${foodTitle || "product"} to cart`
+        }
         onClick={(event) => {
           stopEvent(event);
           void changeQuantity(1);
         }}
-        whileHover={{ scale: isDetails ? 1.015 : 1.08 }}
-        whileTap={{ scale: isDetails ? 0.98 : 0.9 }}
+        whileHover={
+          isOutOfStock ? undefined : { scale: isDetails ? 1.015 : 1.08 }
+        }
+        whileTap={isOutOfStock ? undefined : { scale: isDetails ? 0.98 : 0.9 }}
         className={`${
           isDetails
             ? "relative h-14 w-full min-w-[190px] gap-3 rounded-2xl border-transparent bg-primary-color px-5 text-white shadow-[0_10px_24px_rgba(90,193,47,0.28)] hover:brightness-95 sm:w-auto"
             : "absolute end-2.5 top-2.5 h-9 min-w-9"
-        } z-20 inline-flex items-center justify-center ${isDetails ? "" : "rounded-full border border-primary-color/25 bg-white text-primary-color shadow-[0_5px_18px_rgba(0,0,0,0.16)] hover:bg-primary-light dark:bg-gray-900 dark:hover:bg-gray-800"} transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/50 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70`}
+        } z-20 inline-flex items-center justify-center ${isDetails ? "" : "rounded-full border border-primary-color/25 bg-white text-primary-color shadow-[0_5px_18px_rgba(0,0,0,0.16)] hover:bg-primary-light dark:bg-gray-900 dark:hover:bg-gray-800"} transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-dispatch-line disabled:bg-dispatch-map disabled:text-dispatch-muted disabled:opacity-100 disabled:shadow-none dark:disabled:bg-gray-800`}
       >
         {isDetails ? (
           <>
@@ -109,7 +120,7 @@ export default function CartQuantityController({
               <FiShoppingBag aria-hidden className="h-[18px] w-[18px]" />
             </span>
             <span className="font-semibold tracking-[-0.01em]">
-              Add to cart
+              {isOutOfStock ? t("out_of_stock_label") : "Add to cart"}
             </span>
             <span className="ms-auto inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-primary-color shadow-sm">
               <FiPlus aria-hidden className="h-4 w-4" />
@@ -170,7 +181,7 @@ export default function CartQuantityController({
 
       <motion.button
         type="button"
-        disabled={isUpdating}
+        disabled={isUpdating || isOutOfStock}
         aria-label="Increase quantity"
         onClick={(event) => {
           stopEvent(event);

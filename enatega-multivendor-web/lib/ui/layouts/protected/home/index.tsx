@@ -12,6 +12,7 @@ import TabItem from "@/lib/ui/useable-components/tab-item/TabItem";
 import { useTranslations } from "next-intl";
 import homeTabSvg from "@/lib/utils/assets/svg/houseTabsvg";
 import { useAppMode } from "@/lib/mode";
+import { FiSearch } from "react-icons/fi";
 
 export default function HomeLayout({
   children,
@@ -71,7 +72,7 @@ export default function HomeLayout({
       <div
         className={`fixed inset-x-0 bottom-0 z-30 border-t border-dispatch-line bg-dispatch-surface/95 shadow-[0_-8px_24px_rgba(21,25,20,0.06)] backdrop-blur-xl transition-opacity sm:sticky sm:top-[72px] sm:border-b sm:border-t-0 sm:bg-dispatch-surface sm:shadow-none sm:backdrop-blur-none dark:border-gray-800 dark:bg-gray-950/95 ${isSearchFocused ? "pointer-events-none opacity-0" : "opacity-100"}`}
       >
-        <div className="mx-auto flex max-w-dispatch-page items-stretch justify-center overflow-x-auto px-2 sm:justify-start sm:gap-2 sm:px-5 lg:px-6 xl:px-8">
+        <div className="mx-auto flex max-w-dispatch-page items-stretch justify-center overflow-x-auto overflow-y-hidden px-2 sm:justify-start sm:gap-2 sm:px-5 lg:px-6 xl:px-8">
           <TabItem
             active={isDiscovery}
             label={t("tab_discovery")}
@@ -82,15 +83,15 @@ export default function HomeLayout({
             <>
               <TabItem
                 active={isDeals}
-                label={t("discount_label")}
+                label={t("tab_deals")}
                 onClick={() => onChangeScreen("Deals")}
                 Icon={CutlerySvg}
               />
               <TabItem
                 active={isBrowse}
-                label={t("tab_store")}
+                label={t("tab_browse")}
                 onClick={() => onChangeScreen("Browse")}
-                Icon={StoreSvg}
+                Icon={FiSearch}
               />
             </>
           ) : (

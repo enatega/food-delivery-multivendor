@@ -11,6 +11,12 @@ import { normalizeProducts } from "./Discovery";
 import Image from "@/lib/ui/useable-components/safe-image";
 import useCurrencyFormatter from "@/lib/hooks/useCurrencyFormatter";
 import CartQuantityController from "./CartQuantityController";
+import {
+  getSingleVendorDealLabel,
+  getSingleVendorDealPricing,
+} from "@/lib/mode/singleVendorPricing";
+import { useTranslations } from "next-intl";
+import { getFirstAvailableVariation } from "@/lib/mode/singleVendorStock";
 
 export default function SingleVendorProductDetails({
   foodId,
@@ -20,6 +26,7 @@ export default function SingleVendorProductDetails({
   categoryId?: string;
 }) {
   const { formatCurrency } = useCurrencyFormatter();
+  const t = useTranslations();
   const productQuery = useQuery(SINGLE_VENDOR_PRODUCT, {
     variables: { foodId, categoryId },
   });
@@ -30,13 +37,29 @@ export default function SingleVendorProductDetails({
   const [toggleFavorite] = useMutation(SINGLE_VENDOR_TOGGLE_FAVORITE);
   const product = productQuery.data?.getFoodDetails;
   if (productQuery.loading)
-    return (
-      <div className="h-96 animate-pulse rounded-2xl bg-gray-100 dark:bg-gray-800" />
-    );
+    return <div className="skeleton-surface h-96 animate-pulse rounded-2xl" />;
   if (!product) return <p className="py-10">Product not found.</p>;
-  const variationId = selectedVariation || product.variations?.[0]?.id;
+  const defaultVariation =
+    getFirstAvailableVariation(product.variations) || product.variations?.[0];
+  const variationId = selectedVariation || defaultVariation?.id;
   const variation = product.variations?.find(
     (item: any) => item.id === variationId,
+  );
+  const selectedPricing = getSingleVendorDealPricing(
+    variation?.price,
+    variation?.deal,
+  );
+  const selectedFinalPrice =
+    variation?.discountedUnitPrice ?? selectedPricing.finalPrice;
+  const selectedDealLabel = getSingleVendorDealLabel(
+    variation?.deal,
+    formatCurrency,
+  );
+  const selectedHasDeal =
+    Boolean(selectedDealLabel) &&
+    Number(selectedFinalPrice) < Number(variation?.price);
+  const selectedIsOutOfStock = Boolean(
+    product.isOutOfStock || variation?.isOutOfStock,
   );
   return (
     <div className="pb-12 pt-6">
@@ -45,11 +68,21 @@ export default function SingleVendorProductDetails({
           {product.image && (
             <Image
               src={product.image}
-              alt=""
+              alt={product.title}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
+          )}
+          {selectedHasDeal && (
+            <span className="absolute start-4 top-4 rounded-lg bg-primary-color px-3 py-2 text-xs font-bold text-dispatch-ink shadow-sm">
+              {selectedDealLabel}
+            </span>
+          )}
+          {selectedIsOutOfStock && (
+            <span className="absolute inset-x-4 bottom-4 rounded-lg bg-dispatch-ink/90 px-3 py-2 text-center text-sm font-semibold text-white backdrop-blur-sm">
+              {t("out_of_stock_label")}
+            </span>
           )}
         </div>
         <div>
@@ -69,37 +102,64 @@ export default function SingleVendorProductDetails({
             {product.description}
           </p>
           <div className="mt-6 space-y-3">
-            {product.variations?.map((variation: any) => (
-              <label
-                key={variation.id}
-                className="flex cursor-pointer items-center justify-between rounded-xl border border-gray-200 p-4 dark:border-gray-700"
-              >
-                <span>
-                  <input
-                    type="radio"
-                    name="variation"
-                    checked={variationId === variation.id}
-                    onChange={() => setSelectedVariation(variation.id)}
-                    className="me-3"
-                  />
-                  {variation.title}
-                </span>
-                <strong>
-                  {formatCurrency(
-                    variation.discountedUnitPrice ?? variation.price,
-                  )}
-                </strong>
-              </label>
-            ))}
+            {product.variations?.map((variation: any) => {
+              const pricing = getSingleVendorDealPricing(
+                variation.price,
+                variation.deal,
+              );
+              const finalPrice =
+                variation.discountedUnitPrice ?? pricing.finalPrice;
+              const hasDeal = Number(finalPrice) < Number(variation.price);
+              const isOutOfStock = Boolean(
+                product.isOutOfStock || variation.isOutOfStock,
+              );
+
+              return (
+                <label
+                  key={variation.id}
+                  className={`flex cursor-pointer items-center justify-between gap-4 rounded-xl border p-4 ${isOutOfStock ? "border-gray-200 bg-gray-50 text-gray-500 dark:border-gray-700 dark:bg-gray-900/60 dark:text-gray-400" : "border-gray-200 dark:border-gray-700"}`}
+                >
+                  <span className="min-w-0">
+                    <input
+                      type="radio"
+                      name="variation"
+                      checked={variationId === variation.id}
+                      onChange={() => setSelectedVariation(variation.id)}
+                      className="me-3"
+                    />
+                    {variation.title}
+                    {isOutOfStock && (
+                      <span className="ms-2 text-xs font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">
+                        {t("out_of_stock_label")}
+                      </span>
+                    )}
+                  </span>
+                  <span className="flex shrink-0 items-baseline gap-2">
+                    <strong className={hasDeal ? "text-primary-dark" : ""}>
+                      {formatCurrency(finalPrice)}
+                    </strong>
+                    {hasDeal && (
+                      <span className="text-sm text-gray-500 line-through dark:text-gray-400">
+                        {formatCurrency(variation.price)}
+                      </span>
+                    )}
+                  </span>
+                </label>
+              );
+            })}
           </div>
           <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-gray-700 dark:bg-gray-800">
             <div className="min-w-0">
               <p className="font-semibold text-gray-900 dark:text-white">
-                Ready to order?
+                {selectedIsOutOfStock
+                  ? t("out_of_stock_label")
+                  : "Ready to order?"}
               </p>
-              <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                Add this option now and adjust the quantity anytime.
-              </p>
+              {!selectedIsOutOfStock && (
+                <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+                  Add this option now and adjust the quantity anytime.
+                </p>
+              )}
             </div>
             <CartQuantityController
               variant="details"
@@ -109,7 +169,8 @@ export default function SingleVendorProductDetails({
               foodTitle={product.title}
               variationTitle={variation?.title}
               image={product.image}
-              unitPrice={variation?.discountedUnitPrice ?? variation?.price}
+              unitPrice={Number(selectedFinalPrice)}
+              isOutOfStock={selectedIsOutOfStock}
             />
           </div>
           {product.ingredients && (

@@ -39,7 +39,7 @@ export default function SingleVendorDeals() {
     <div className="pb-12">
       {products.length > 0 ? (
         <SingleVendorProductSection
-          title={t("discount_label")}
+          title={t("tab_deals")}
           products={products}
         />
       ) : (

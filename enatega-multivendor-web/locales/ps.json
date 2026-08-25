@@ -135,6 +135,13 @@
   "app_version": "1.0.0",
   "no_items_found": "هیڅ توکي ونه موندل شول",
   "shop-types": "دکانونو ډولونه",
+  "categories_label": "کټګورۍ",
+  "all_categories_label": "ټولې کټګورۍ",
+  "tab_deals": "وړاندیزونه",
+  "tab_browse": "لټون",
+  "order_details_minimum_order_fee_label": "د لږ فرمایش فیس",
+  "order_details_priority_delivery_fee_label": "د لومړیتوب رسولو فیس",
+  "order_details_credits_applied_label": "کارول شوی کریډیټ",
   "something_went_wrong": "یو څه ناسم شول",
   "for_rest": "د هوټلونو لپاره",
   "for_riders": "د کوریارانو لپاره",
@@ -191,6 +198,8 @@
   "tab_discovery": "موندنه",
   "tab_restaurants": "هوټل",
   "tab_store": "پلورنځی",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "ستاسو شاوخوا",
   "generic_listing_heading": "ستاسو شاوخوا هوټل",
   "generic_listing_cuisine_section": "د خواړو ډولونه",
@@ -919,5 +928,88 @@
   "show_more_orders": "د امرونو بیشتر نیشاندن",
   "your_email": "ستاسو@بریښنالیک.com",
   "Select_your_address_prompt": "خپله پته غوره کړئ.",
-  "Our-brands": "زموږ برانډونه"
+  "Our-brands": "زموږ برانډونه",
+  "Landing": {
+    "hero": {
+      "eyebrow": "One app. Everyday possibilities.",
+      "title": "Everything you need,",
+      "accent": "beautifully delivered.",
+      "body": "Food, groceries and everyday essentials, brought together in one simple experience."
+    },
+    "categories": {
+      "label": "Delivery categories",
+      "food": "Food",
+      "groceries": "Groceries",
+      "essentials": "Essentials",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Finding that city.",
+      "ready": "City selected. Show items when you are ready.",
+      "cityError": "We could not locate that city. Choose another suggestion.",
+      "locating": "Finding your current location.",
+      "locationError": "We could not access your location. Search for a city instead."
+    },
+    "journey": {
+      "eyebrow": "How Enatega moves",
+      "title": "From your city,",
+      "accent": "to your doorstep.",
+      "bagAlt": "Enatega delivery bag",
+      "stages": {
+        "choose": {
+          "title": "Choose",
+          "body": "Food, groceries or essentials."
+        },
+        "moving": {
+          "title": "Moving",
+          "body": "One clear journey across your city."
+        },
+        "arrived": {
+          "title": "Arrived",
+          "body": "Delivered where you need it."
+        }
+      }
+    },
+    "cta": {
+      "label": "Work with Enatega",
+      "business": {
+        "eyebrow": "For businesses",
+        "title": "Grow with Enatega.",
+        "body": "Bring your store closer to more customers.",
+        "action": "Become a partner"
+      },
+      "rider": {
+        "eyebrow": "For riders",
+        "title": "Ride with Enatega.",
+        "body": "Deliver on your schedule.",
+        "action": "Become a rider"
+      }
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

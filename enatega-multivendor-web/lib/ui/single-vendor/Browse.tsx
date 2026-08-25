@@ -61,7 +61,7 @@ export default function SingleVendorBrowse() {
     <div className="pb-12">
       <header className="border-b border-dispatch-line pb-5 sm:pb-6 dark:border-gray-800">
         <h1 className="font-dispatch text-2xl font-semibold leading-tight tracking-[-0.025em] text-dispatch-ink sm:text-3xl dark:text-white">
-          {t("Footer.products")}
+          {t("all_categories_label")}
         </h1>
         <div className="relative mt-5 max-w-3xl">
           <i
@@ -110,11 +110,11 @@ export default function SingleVendorBrowse() {
           {Array.from({ length: 6 }, (_, index) => (
             <div
               key={index}
-              className="animate-pulse rounded-xl bg-dispatch-surface p-2 dark:bg-gray-900"
+              className="animate-pulse rounded-xl bg-dispatch-surface p-2"
             >
-              <div className="aspect-square rounded-lg bg-dispatch-map dark:bg-gray-800" />
-              <div className="mt-3 h-4 w-2/3 rounded bg-dispatch-line" />
-              <div className="mt-2 h-3 w-1/3 rounded bg-dispatch-line" />
+              <div className="skeleton-surface aspect-square rounded-lg" />
+              <div className="skeleton-line mt-3 h-4 w-2/3 rounded" />
+              <div className="skeleton-line mt-2 h-3 w-1/3 rounded" />
             </div>
           ))}
         </div>
@@ -137,7 +137,7 @@ export default function SingleVendorBrowse() {
                   />
                 </div>
               )}
-              <p className="mt-3 line-clamp-1 px-1 text-[15px] font-medium leading-tight text-dispatch-ink dark:text-white">
+              <p className="mt-3 line-clamp-1 px-1 text-sm font-medium leading-tight text-dispatch-ink dark:text-white">
                 {category.name}
               </p>
               <p className="px-1 pb-1 pt-1 text-xs text-dispatch-muted">

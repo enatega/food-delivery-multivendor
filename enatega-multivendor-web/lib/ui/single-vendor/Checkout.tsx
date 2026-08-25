@@ -277,12 +277,17 @@ export default function SingleVendorCheckout() {
       <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
         <h2 className="text-xl font-semibold dark:text-white">Order summary</h2>
         {checkout.loading ? (
-          <div className="my-5 h-32 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-700" />
+          <div className="skeleton-surface my-5 h-32 animate-pulse rounded-xl" />
         ) : (
           <dl className="my-5 space-y-2 text-sm text-gray-600 dark:text-gray-300">
             <div className="flex justify-between">
               <dt>Subtotal</dt>
-              <dd>{formatCurrency(summary?.subtotal)}</dd>
+              <dd>
+                {formatCurrency(
+                  Number(summary?.subtotal ?? 0) +
+                    Number(summary?.discountDetails?.dealDiscount ?? 0),
+                )}
+              </dd>
             </div>
             <div className="flex justify-between">
               <dt>Delivery</dt>
@@ -292,10 +297,10 @@ export default function SingleVendorCheckout() {
               <dt>Tax</dt>
               <dd>{formatCurrency(summary?.taxAmount)}</dd>
             </div>
-            {summary?.totalDiscount > 0 && (
+            {summary?.discountDetails?.dealDiscount > 0 && (
               <div className="flex justify-between text-primary-color">
-                <dt>Discount</dt>
-                <dd>{formatCurrency(-summary.totalDiscount)}</dd>
+                <dt>Deals savings</dt>
+                <dd>{formatCurrency(-summary.discountDetails.dealDiscount)}</dd>
               </div>
             )}
             <div className="flex justify-between border-t pt-3 text-base font-bold dark:border-gray-700">

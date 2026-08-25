@@ -36,7 +36,11 @@ const SquareCard: React.FC<ICuisinesCardProps> = ({
   };
   return (
     <article
-      className="group m-1.5 mb-3 cursor-pointer overflow-hidden rounded-xl bg-dispatch-surface dark:bg-gray-900 dark:text-white"
+      className={`group m-1.5 mb-3 cursor-pointer dark:text-white ${
+        cuisines
+          ? "overflow-visible bg-transparent"
+          : "overflow-hidden rounded-xl bg-dispatch-surface dark:bg-gray-900"
+      }`}
       onClick={onClickHandler}
     >
       {/* Image Container */}
@@ -59,10 +63,14 @@ const SquareCard: React.FC<ICuisinesCardProps> = ({
 
       {/* Content Section */}
       <div
-        className={`flex flex-grow flex-col justify-between px-1 pt-2 ${cuisines ? "text-center" : ""}`}
+        className={`flex flex-grow flex-col justify-between ${
+          cuisines
+            ? "mx-auto max-w-28 items-center pt-2 text-center"
+            : "px-1.5 pb-1.5 pt-2"
+        }`}
       >
-        <div className="flex flex-row justify-between items-center relative">
-          <div className="min-w-0">
+        <div className="relative flex w-full flex-row items-center justify-between">
+          <div className="min-w-0 w-full">
             <p className="line-clamp-1 text-sm font-normal leading-tight text-dispatch-ink dark:text-white sm:text-[15px]">
               {item?.name}
             </p>

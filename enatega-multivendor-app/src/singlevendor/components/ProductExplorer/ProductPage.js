@@ -214,14 +214,15 @@ const ProductPage = ({ category }) => {
         data={products}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        estimatedItemSize={190}
+        estimatedItemSize={236}
+        contentContainerStyle={{ paddingHorizontal: 4 }}
         onEndReached={loadMore}
         onEndReachedThreshold={0.6}
         renderItem={({ item }) => (
           <ProductCard
-            product={item}
+            product={{ ...item, categoryId: item?.categoryId || category?.categoryId }}
             onCardPress={() => navigation.navigate('ProductDetails', { productId: item?.id, categoryId: category?.categoryId })}
-            containerStyles={{ width: '94%', minHeight: 220, maxHeight: 220, marginBottom: 12, marginRight: 10, marginLeft: 6 }}
+            layout='grid'
           />
         )}
         ListFooterComponent={hasMore ? <ActivityIndicator style={{ marginVertical: 20 }} /> : null}

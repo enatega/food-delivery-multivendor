@@ -4,7 +4,21 @@ export interface ModeProduct {
   description?: string;
   image?: string;
   categoryId?: string;
-  variations: Array<{ id: string; title?: string; name?: string; price: number }>;
+  isOutOfStock?: boolean;
+  variations: Array<{
+    id: string;
+    title?: string;
+    name?: string;
+    price: number;
+    discountedPrice?: number;
+    isOutOfStock?: boolean;
+    deal?: {
+      id?: string;
+      discountType?: string | null;
+      discountValue?: number | string | null;
+      isActive?: boolean | null;
+    } | null;
+  }>;
 }
 
 export interface ModeCart {
@@ -29,7 +43,11 @@ export interface ModeOrderTracking {
   orderId: string;
   status: string;
   riderLocation?: { latitude: number; longitude: number };
-  eta?: { phase?: string; estimatedArrivalAt?: string; encodedPolyline?: string };
+  eta?: {
+    phase?: string;
+    estimatedArrivalAt?: string;
+    encodedPolyline?: string;
+  };
 }
 
 export interface ModeProfile {
@@ -38,4 +56,3 @@ export interface ModeProfile {
   email: string;
   phone?: string;
 }
-

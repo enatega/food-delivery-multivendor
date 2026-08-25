@@ -1,6 +1,9 @@
 "use client";
+
 import { useQuery, useSubscription } from "@apollo/client";
+import { useContext, useMemo } from "react";
 import Link from "next/link";
+
 import {
   SINGLE_VENDOR_ORDER_DETAILS,
   SINGLE_VENDOR_ORDER_STATUS,
@@ -8,29 +11,31 @@ import {
   SINGLE_VENDOR_TRACKING,
   SINGLE_VENDOR_TRACKING_UPDATED,
 } from "@/lib/api/graphql/single-vendor";
-import useCurrencyFormatter from "@/lib/hooks/useCurrencyFormatter";
+import { GoogleMapsContext } from "@/lib/context/global/google-maps.context";
+import { useConfig } from "@/lib/context/configuration/configuration.context";
 import useUser from "@/lib/hooks/useUser";
 import GoogleMapTrackingComponent from "@/lib/ui/screen-components/protected/order-tracking/components/gm-tracking-comp";
-import { GoogleMapsContext } from "@/lib/context/global/google-maps.context";
-import { useContext, useMemo } from "react";
-import { useConfig } from "@/lib/context/configuration/configuration.context";
-import {
-  formatEtaTime,
-  formatEtaWindow,
-  isTrackingLocationStale,
-} from "@/lib/utils/methods/order-eta";
+import TrackingHelpCard from "@/lib/ui/screen-components/protected/order-tracking/components/tracking-help-card";
+import TrackingOrderDetails from "@/lib/ui/screen-components/protected/order-tracking/components/tracking-order-details";
+import TrackingStatusCard from "@/lib/ui/screen-components/protected/order-tracking/components/tracking-status-card";
+import { PaddingContainer } from "@/lib/ui/useable-components/containers";
+import type { IOrderTrackingDetail } from "@/lib/utils/interfaces/order-tracking-detail.interface";
+import type { IOrderTracking } from "@/lib/utils/interfaces/orders.interface";
 import {
   getSingleVendorTrackingStatus,
   isSingleVendorLiveTrackingStatus,
-  SINGLE_VENDOR_TRACKING_STAGES,
 } from "./orderTrackingStatus";
+import {
+  getGeoJsonCoordinate,
+  getSingleVendorTrackingAmounts,
+  normalizeSingleVendorTrackingOrder,
+} from "./singleVendorOrderTracking";
 
 export default function SingleVendorOrderTracking({
   orderId,
 }: {
   orderId: string;
 }) {
-  const { formatCurrency } = useCurrencyFormatter();
   const { profile } = useUser();
   const { isLoaded, loadError: mapLoadError } = useContext(GoogleMapsContext);
   const { GOOGLE_MAPS_KEY } = useConfig();
@@ -51,6 +56,7 @@ export default function SingleVendorOrderTracking({
     fetchPolicy: "network-only",
   });
   const initialOrder = details.data?.orderDetailsPage?.rawOrder;
+  const summaryData = details.data?.orderDetailsPage?.data;
   const orderUpdate = useSubscription(SINGLE_VENDOR_ORDER_STATUS, {
     variables: { userId: profile?._id || "" },
     skip: !profile?._id,
@@ -66,8 +72,13 @@ export default function SingleVendorOrderTracking({
     : initialOrder;
   const orderStatus = getSingleVendorTrackingStatus(order);
   const trackingId = order?._id;
+  const isCustomerPickup =
+    order?.deliveryType === "PICKUP" ||
+    (!order?.deliveryType && Boolean(order?.isPickedUp));
   const trackingEnabled =
-    Boolean(trackingId) && isSingleVendorLiveTrackingStatus(orderStatus);
+    Boolean(trackingId) &&
+    !isCustomerPickup &&
+    isSingleVendorLiveTrackingStatus(orderStatus);
   const tracking = useQuery(SINGLE_VENDOR_TRACKING, {
     variables: { id: trackingId || "" },
     skip: !trackingEnabled,
@@ -85,43 +96,79 @@ export default function SingleVendorOrderTracking({
       orderStatus: latest?.status || order?.orderStatus,
     }) || "PENDING";
   const eta = latest?.eta || order?.eta;
-  const isPickupOrder =
-    order?.deliveryType === "PICKUP" ||
-    (!order?.deliveryType && Boolean(order?.isPickedUp));
   const destination = useMemo(() => {
-    const etaDestination = eta?.destination;
-    const etaLat = Number(etaDestination?.latitude);
-    const etaLng = Number(etaDestination?.longitude);
-    if (Number.isFinite(etaLat) && Number.isFinite(etaLng)) {
-      return { lat: etaLat, lng: etaLng };
+    const etaLatitudeValue = eta?.destination?.latitude;
+    const etaLongitudeValue = eta?.destination?.longitude;
+    const etaLatitude = Number(etaLatitudeValue);
+    const etaLongitude = Number(etaLongitudeValue);
+    if (
+      etaLatitudeValue !== null &&
+      etaLatitudeValue !== undefined &&
+      etaLongitudeValue !== null &&
+      etaLongitudeValue !== undefined &&
+      Number.isFinite(etaLatitude) &&
+      Number.isFinite(etaLongitude)
+    ) {
+      return { lat: etaLatitude, lng: etaLongitude };
     }
 
-    const coordinates = order?.deliveryAddress?.location?.coordinates;
-    const lat = Number(coordinates?.[1]);
-    const lng = Number(coordinates?.[0]);
-    return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
-  }, [eta?.destination, order?.deliveryAddress?.location?.coordinates]);
-  // Only the dedicated tracking query/subscription is authoritative for the
-  // live rider coordinate. ETA origin is route metadata, not rider GPS.
-  const riderLocation = latest?.riderLocation || null;
-  const hasBackendRoute = Boolean(eta?.encodedPolyline);
-  const showLiveMap =
-    !isPickupOrder &&
-    Boolean(destination) &&
-    isSingleVendorLiveTrackingStatus(status);
-  const etaWindow = formatEtaWindow(eta);
-  const trackingStale = isTrackingLocationStale(riderLocation, eta);
-  const lastTrackingUpdate = formatEtaTime(
-    riderLocation?.recordedAt || eta?.lastLocationAt,
-  );
-  const stageIndex = SINGLE_VENDOR_TRACKING_STAGES.indexOf(
-    status as (typeof SINGLE_VENDOR_TRACKING_STAGES)[number],
-  );
-  if (details.loading || (isLegacyObjectId && legacyOrder.loading))
-    return (
-      <div className="h-96 animate-pulse rounded-3xl bg-gray-100 dark:bg-gray-800" />
+    return getGeoJsonCoordinate(order?.deliveryAddress?.location);
+  }, [eta?.destination, order?.deliveryAddress?.location]);
+  const storeLocation = useMemo(() => {
+    const restaurantLocation = getGeoJsonCoordinate(
+      order?.restaurant?.location,
     );
-  if (!order)
+    if (restaurantLocation) return restaurantLocation;
+
+    const etaLatitudeValue = eta?.origin?.latitude;
+    const etaLongitudeValue = eta?.origin?.longitude;
+    const etaLatitude = Number(etaLatitudeValue);
+    const etaLongitude = Number(etaLongitudeValue);
+    return etaLatitudeValue !== null &&
+      etaLatitudeValue !== undefined &&
+      etaLongitudeValue !== null &&
+      etaLongitudeValue !== undefined &&
+      Number.isFinite(etaLatitude) &&
+      Number.isFinite(etaLongitude)
+      ? { lat: etaLatitude, lng: etaLongitude }
+      : null;
+  }, [eta?.origin, order?.restaurant?.location]);
+  const riderLocation = latest?.riderLocation || null;
+  const normalizedOrder = useMemo(
+    () =>
+      order
+        ? normalizeSingleVendorTrackingOrder(order, summaryData, status, eta)
+        : null,
+    [eta, order, status, summaryData],
+  );
+  const summaryAmounts = useMemo(
+    () =>
+      normalizedOrder ? getSingleVendorTrackingAmounts(normalizedOrder) : null,
+    [normalizedOrder],
+  );
+  const trackingData = useMemo(
+    () =>
+      ({
+        ...latest,
+        eta,
+        riderLocation,
+      }) as IOrderTracking,
+    [eta, latest, riderLocation],
+  );
+  const showLiveMap = trackingEnabled && Boolean(destination);
+
+  if (details.loading || (isLegacyObjectId && legacyOrder.loading)) {
+    return (
+      <div className="w-screen pb-20 dark:bg-gray-900">
+        <div className="skeleton-surface h-[400px] animate-pulse" />
+        <PaddingContainer className="mt-8">
+          <div className="skeleton-surface h-44 max-w-2xl animate-pulse rounded-xl" />
+        </PaddingContainer>
+      </div>
+    );
+  }
+
+  if (!order || !normalizedOrder || !summaryAmounts) {
     return (
       <div className="mx-auto my-12 max-w-lg rounded-2xl border border-red-200 bg-red-50 p-6 text-center dark:border-red-900 dark:bg-red-950/20">
         <p className="font-semibold text-red-600 dark:text-red-300">
@@ -132,138 +179,69 @@ export default function SingleVendorOrderTracking({
         </p>
         <Link
           href="/profile/order-history"
-          className="mt-5 inline-block rounded-full bg-primary-color px-5 py-2.5 font-semibold text-white"
+          className="mt-5 inline-block rounded-xl bg-primary-color px-5 py-2.5 font-semibold text-dispatch-ink"
         >
           View my orders
         </Link>
       </div>
     );
+  }
+
   return (
-    <div className="mx-auto max-w-5xl py-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-sm text-gray-500">Order</p>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            #{order.orderId}
-          </h1>
-        </div>
-        <span className="rounded-full bg-primary-light px-4 py-2 font-semibold text-primary-color">
-          {status}
-        </span>
-      </div>
-      {showLiveMap && destination && (
-        <section className="mt-8 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 px-5 py-4 dark:border-gray-700">
-            <div>
-              <h2 className="font-bold text-gray-900 dark:text-white">
-                Live delivery tracking
-              </h2>
-              <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                Your courier location and route update automatically.
-              </p>
-            </div>
-            {GOOGLE_MAPS_KEY && riderLocation && hasBackendRoute && (
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary-light px-3 py-1.5 text-xs font-semibold text-primary-color dark:bg-gray-700">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-primary-color" />
-                {trackingStale ? "Last known location" : "Live"}
-              </span>
+    <div className="flex min-h-full w-screen flex-col bg-dispatch-ground pb-20 text-dispatch-ink dark:bg-gray-900 dark:text-gray-100">
+      <div className="scrollable-container flex-1">
+        {showLiveMap && (
+          <section aria-label="Order locations and delivery route">
+            {!GOOGLE_MAPS_KEY ? (
+              <TrackingUnavailable message="The interactive map is not configured." />
+            ) : mapLoadError ? (
+              <TrackingUnavailable message="Google Maps could not be loaded. Please try again." />
+            ) : destination ? (
+              <GoogleMapTrackingComponent
+                isLoaded={isLoaded}
+                destination={destination}
+                origin={storeLocation}
+                eta={trackingEnabled ? eta : null}
+                riderLocation={riderLocation}
+                requireBackendRoute={trackingEnabled && Boolean(riderLocation)}
+                showStaticLoadingImage={false}
+              />
+            ) : (
+              <TrackingUnavailable message="The customer location is unavailable for this order." />
             )}
-          </div>
-          {!GOOGLE_MAPS_KEY ? (
-            <TrackingUnavailable message="The interactive map is not configured. Add the shared Google Maps browser key to enable live tracking." />
-          ) : mapLoadError ? (
-            <TrackingUnavailable message="Google Maps could not be loaded. Check that the shared browser key allows this web origin and has Maps JavaScript API enabled." />
-          ) : !riderLocation ? (
-            <TrackingUnavailable message="Waiting for the rider’s first GPS location…" />
-          ) : !hasBackendRoute ? (
-            <TrackingUnavailable message="The backend is calculating the road route from the rider to your address…" />
-          ) : (
-            <GoogleMapTrackingComponent
-              isLoaded={isLoaded}
-              destination={destination}
-              eta={eta}
-              riderLocation={riderLocation}
-              requireBackendRoute
-              showStaticLoadingImage={false}
-            />
-          )}
-        </section>
-      )}
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
-        <section className="rounded-3xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <h2 className="text-xl font-bold dark:text-white">
-            Delivery progress
-          </h2>
-          <div className="mt-6 space-y-5">
-            {SINGLE_VENDOR_TRACKING_STAGES.map((stage, index) => (
-              <div key={stage} className="flex items-center gap-4">
-                <div
-                  className={`h-4 w-4 rounded-full ${index <= stageIndex ? "bg-primary-color" : "bg-gray-200 dark:bg-gray-600"}`}
-                />
-                <span
-                  className={
-                    index <= stageIndex
-                      ? "font-semibold text-gray-900 dark:text-white"
-                      : "text-gray-400"
-                  }
-                >
-                  {stage.charAt(0) + stage.slice(1).toLowerCase()}
-                </span>
+          </section>
+        )}
+
+        <div className="mt-8 md:mt-10">
+          <PaddingContainer>
+            <div className="mb-8 flex flex-col items-center justify-between gap-6 md:flex-row md:items-start">
+              <TrackingStatusCard
+                orderTrackingDetails={normalizedOrder as IOrderTrackingDetail}
+                trackingData={trackingData}
+              />
+
+              <div className="w-full md:w-auto md:flex-none">
+                <TrackingHelpCard />
+                {normalizedOrder.rider?.phone && (
+                  <a
+                    href={`tel:${normalizedOrder.rider.phone}`}
+                    className="mt-3 block min-h-11 w-full rounded-xl bg-primary-color px-5 py-3 text-center text-sm font-semibold text-dispatch-ink transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus md:max-w-xs"
+                  >
+                    Contact courier
+                  </a>
+                )}
               </div>
-            ))}
-          </div>
-          {eta && (
-            <div className="mt-8 rounded-xl bg-primary-light p-4 text-primary-color dark:bg-gray-700">
-              <p className="text-sm font-semibold">Estimated arrival</p>
-              <p className="mt-1 text-xl font-bold">
-                {etaWindow ||
-                  formatEtaTime(eta.estimatedArrivalAt) ||
-                  "Calculating…"}
-              </p>
-              <p className="mt-1 text-sm">
-                {trackingStale && lastTrackingUpdate
-                  ? `Rider location temporarily unavailable — last updated ${lastTrackingUpdate}`
-                  : isSingleVendorLiveTrackingStatus(status)
-                    ? "Your order is on the way."
-                    : "We’re updating your delivery estimate."}
-              </p>
             </div>
-          )}
-        </section>
-        <aside className="rounded-3xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <h2 className="font-bold dark:text-white">Order summary</h2>
-          <div className="my-4 space-y-3">
-            {order.items?.map((item: any) => (
-              <div
-                key={item._id}
-                className="flex justify-between text-sm text-gray-600 dark:text-gray-300"
-              >
-                <span>
-                  {item.quantity} × {item.title}
-                </span>
-                <span>{item.variation?.title}</span>
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between border-t pt-4 font-bold dark:border-gray-700 dark:text-white">
-            <span>Total</span>
-            <span>{formatCurrency(order.orderAmount)}</span>
-          </div>
-          {order.rider?.phone && (
-            <a
-              href={`tel:${order.rider.phone}`}
-              className="mt-5 block w-full rounded-full bg-primary-color py-3 text-center font-semibold text-white"
-            >
-              Contact courier
-            </a>
-          )}
-          <Link
-            href="/profile/getHelp"
-            className="mt-3 block text-center text-sm text-primary-color"
-          >
-            Get help
-          </Link>
-        </aside>
+
+            <div className="flex justify-center md:justify-start">
+              <TrackingOrderDetails
+                orderTrackingDetails={normalizedOrder as IOrderTrackingDetail}
+                summaryAmounts={summaryAmounts}
+                showCancelAction={false}
+              />
+            </div>
+          </PaddingContainer>
+        </div>
       </div>
     </div>
   );
@@ -271,12 +249,16 @@ export default function SingleVendorOrderTracking({
 
 function TrackingUnavailable({ message }: { message: string }) {
   return (
-    <div className="flex h-64 items-center justify-center bg-gray-50 px-6 text-center dark:bg-gray-900">
+    <div className="flex h-[400px] items-center justify-center bg-dispatch-map px-6 text-center dark:bg-gray-950">
       <div className="max-w-md">
-        <p className="font-semibold text-gray-800 dark:text-gray-100">
-          Live route temporarily unavailable
+        <i
+          className="pi pi-map-marker text-2xl text-primary-color"
+          aria-hidden
+        />
+        <p className="mt-3 font-semibold text-dispatch-ink dark:text-gray-100">
+          Map temporarily unavailable
         </p>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-dispatch-muted dark:text-gray-400">
           {message}
         </p>
       </div>

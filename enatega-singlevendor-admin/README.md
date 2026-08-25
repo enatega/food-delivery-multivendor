@@ -4,9 +4,13 @@ This project is a Restaurant Delivery Management System built with modern web te
 
 ## Local Setup
 
-1. Copy `.env.example` to `.env` and configure `NEXT_PUBLIC_SERVER_URL`, `NEXT_PUBLIC_WS_SERVER_URL`, and `NEXT_PUBLIC_GOOGLE_MAPS_KEY` for the local environment.
+1. Copy `.env.example` to `.env` and configure `NEXT_PUBLIC_SERVER_URL`, `NEXT_PUBLIC_WS_SERVER_URL`, `NEXT_PUBLIC_GOOGLE_MAPS_KEY`, and `NEXT_PUBLIC_MULTIVENDOR_ADMIN_URL` for the local environment.
 2. Run `npm install`.
 3. Run `npm run dev`.
+
+## Admin application link
+
+Set `NEXT_PUBLIC_MULTIVENDOR_ADMIN_URL` to the deployed Multi-vendor Admin URL. The header link defaults to `https://multivendor-admin-backup.netlify.app` when the variable is not configured.
 
 ## Technologies Used
 

@@ -55,7 +55,15 @@ const Analytics = () => {
         trackingOptions: {
           adid: false,
           appSetId: false,
-          idfv: false
+          carrier: false,
+          deviceManufacturer: false,
+          deviceModel: false,
+          idfv: false,
+          ipAddress: false,
+          language: false,
+          osName: false,
+          osVersion: false,
+          platform: false
         }
       })
       isInitialized = true

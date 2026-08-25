@@ -29,6 +29,7 @@ import {
   faGlobe,
   faFaceFrown,
   faGear,
+  faArrowUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from 'next-themes';
 
@@ -51,9 +52,7 @@ import { LayoutContextProps } from '@/lib/utils/interfaces';
 import { IWebNotification } from '@/lib/utils/interfaces/notification.interface';
 
 // Constants
-import {
-  languageTypes,
-} from '@/lib/utils/constants';
+import { languageTypes } from '@/lib/utils/constants';
 
 // Methods
 import { timeAgo } from '@/lib/utils/methods/timeAgo';
@@ -66,7 +65,12 @@ import { TLocale } from '@/lib/utils/types/locale';
 import { setUserLocale } from '@/lib/utils/methods/locale';
 
 // GraphQL
-import { useApolloClient, useMutation, useQuery, useSubscription } from '@apollo/client';
+import {
+  useApolloClient,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from '@apollo/client';
 import { RIDER_UPDATED_SUBSCRIPTION } from '@/lib/api/graphql/subscription/rider-subscription';
 import {
   GET_WEB_NOTIFICATIONS,
@@ -76,6 +80,10 @@ import ThemeToggle from '@/lib/ui/useable-components/theme-button';
 import { clearStoredSessionState } from '@/lib/utils/methods/auth';
 import { clearMetricsData } from '@/lib/utils/methods/security';
 import { OWNER_LOGOUT } from '@/lib/api/graphql/mutations/authentication';
+
+const multivendorAdminUrl =
+  process.env.NEXT_PUBLIC_MULTIVENDOR_ADMIN_URL ??
+  'https://multivendor-admin-backup.netlify.app';
 
 const AppTopbar = () => {
   // States
@@ -161,7 +169,9 @@ const AppTopbar = () => {
   };
 
   const onConfirmLogout = async () => {
-    await apolloClient.mutate({ mutation: OWNER_LOGOUT }).catch(() => undefined);
+    await apolloClient
+      .mutate({ mutation: OWNER_LOGOUT })
+      .catch(() => undefined);
     setUser(null);
     clearStoredSessionState();
     clearMetricsData();
@@ -228,7 +238,7 @@ const AppTopbar = () => {
     <div
       className={` dark:bg-dark-950 dark:text-white  dark:border-dark-600 ${classes['layout-topbar']}`}
     >
-      <div className="flex items-center cursor-pointer">
+      <div className="flex shrink-0 items-center cursor-pointer">
         <div id="sidebar-opening-icon">
           <button onClick={() => showSuperAdminSidebar()}>
             <FontAwesomeIcon icon={faBars} />
@@ -238,7 +248,7 @@ const AppTopbar = () => {
           <AppLogo />
         </div>
       </div>
-      <div className="hidden items-center space-x-5 md:flex">
+      <div className="hidden min-w-0 items-center space-x-5 md:flex">
         {shouldShow('Zone') && (
           <TextIconClickable
             icon={faMap}
@@ -269,6 +279,18 @@ const AppTopbar = () => {
             onClick={() => onRedirectToPage('/dispatch')}
           />
         )}
+        <a
+          href={multivendorAdminUrl}
+          className="inline-flex h-10 min-w-10 shrink-0 items-center justify-center gap-2 rounded-md border border-gray-200 px-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-primary-color hover:bg-secondary-color hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:border-dark-600 dark:text-white dark:hover:border-primary-color dark:hover:bg-dark-600"
+          aria-label="Open Multi Vendor Admin"
+          title="Open Multi Vendor Admin"
+        >
+          <FontAwesomeIcon
+            icon={faArrowUpRightFromSquare}
+            className="h-3.5 w-3.5"
+          />
+          <span className="hidden xl:inline">Multi Vendor Admin</span>
+        </a>
         <div className="relative z-50">
           <FontAwesomeIcon
             icon={faBell}
@@ -369,7 +391,9 @@ const AppTopbar = () => {
             aria-controls="popup_menu_right"
             aria-haspopup
           >
-            <span>{user?.name ?? ''}</span>
+            <span className="hidden max-w-32 truncate xl:inline">
+              {user?.name ?? ''}
+            </span>
 
             <Image
               src={
@@ -444,7 +468,7 @@ const AppTopbar = () => {
           className="absolute right-4 top-8 z-50 rounded-lg bg-white dark:bg-dark-950 p-4 shadow-lg dark:border dark:border-dark-600 dark:text-white"
           ref={containerRef}
         >
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex w-56 max-w-[calc(100vw-4rem)] flex-col items-center space-y-4">
             {shouldShow('Notification') && (
               <FontAwesomeIcon
                 icon={faBell}
@@ -473,6 +497,17 @@ const AppTopbar = () => {
                 onClick={() => onRedirectToPage('/dispatch')}
               />
             )}
+            <a
+              href={multivendorAdminUrl}
+              className="inline-flex min-h-11 w-full items-center gap-3 rounded-md bg-gray-50 px-3 text-sm font-medium text-gray-800 transition-colors hover:bg-secondary-color focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:bg-dark-600 dark:text-white dark:hover:bg-dark-500"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <FontAwesomeIcon
+                icon={faArrowUpRightFromSquare}
+                className="h-4 w-4 shrink-0"
+              />
+              <span>Multi Vendor Admin</span>
+            </a>
             <TextIconClickable
               icon={faGear}
               className="justify-between"

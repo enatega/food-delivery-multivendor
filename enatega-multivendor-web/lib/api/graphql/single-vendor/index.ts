@@ -5,23 +5,117 @@ export const SINGLE_VENDOR_DISCOVERY = gql`
     singleVendorDiscovery(previewLimit: $previewLimit, dealLimit: $dealLimit) {
       catalogVersion
       banners {
-        _id title description action screen file parameters buttonText
+        _id
+        title
+        description
+        action
+        screen
+        file
+        parameters
+        buttonText
       }
       categories {
-        id name icon image description itemCount viewType
-        pagination { totalItems hasMore }
+        id
+        name
+        icon
+        image
+        description
+        itemCount
+        viewType
+        pagination {
+          totalItems
+          hasMore
+        }
         items {
-          id title description image isOutOfStock
+          id
+          title
+          description
+          image
+          isOutOfStock
           variations {
-            id title price isOutOfStock
-            deal { id discountType discountValue isActive }
+            id
+            title
+            price
+            isOutOfStock
+            deal {
+              id
+              discountType
+              discountValue
+              isActive
+            }
           }
         }
       }
       deals {
-        limitedTime { items { id title description image variations { id title price deal { id discountType discountValue isActive } } } totalCount hasMore }
-        weekly { items { id title description image variations { id title price deal { id discountType discountValue isActive } } } totalCount hasMore }
-        newOffers { items { id title description image variations { id title price deal { id discountType discountValue isActive } } } totalCount hasMore }
+        limitedTime {
+          items {
+            id
+            title
+            description
+            image
+            isOutOfStock
+            variations {
+              id
+              title
+              price
+              isOutOfStock
+              deal {
+                id
+                discountType
+                discountValue
+                isActive
+              }
+            }
+          }
+          totalCount
+          hasMore
+        }
+        weekly {
+          items {
+            id
+            title
+            description
+            image
+            isOutOfStock
+            variations {
+              id
+              title
+              price
+              isOutOfStock
+              deal {
+                id
+                discountType
+                discountValue
+                isActive
+              }
+            }
+          }
+          totalCount
+          hasMore
+        }
+        newOffers {
+          items {
+            id
+            title
+            description
+            image
+            isOutOfStock
+            variations {
+              id
+              title
+              price
+              isOutOfStock
+              deal {
+                id
+                discountType
+                discountValue
+                isActive
+              }
+            }
+          }
+          totalCount
+          hasMore
+        }
       }
     }
   }
@@ -163,10 +257,12 @@ export const SINGLE_VENDOR_CATALOG = gql`
         title
         image
         description
+        isOutOfStock
         variations {
           id
           title
           price
+          isOutOfStock
           deal {
             id
             discountType
@@ -184,10 +280,12 @@ export const SINGLE_VENDOR_CATALOG = gql`
           title
           image
           description
+          isOutOfStock
           variations {
             id
             title
             price
+            isOutOfStock
             deal {
               id
               discountType
@@ -222,10 +320,12 @@ export const SINGLE_VENDOR_CATEGORY = gql`
         title
         description
         image
+        isOutOfStock
         variations {
           id
           title
           price
+          isOutOfStock
           deal {
             id
             discountType
@@ -252,6 +352,7 @@ export const SINGLE_VENDOR_PRODUCT = gql`
       description
       image
       isPopular
+      isOutOfStock
       cartQuantity
       usage
       ingredients
@@ -265,10 +366,17 @@ export const SINGLE_VENDOR_PRODUCT = gql`
         id
         title
         price
+        isOutOfStock
         cartQuantity
         isSelected
         actualUnitPrice
         discountedUnitPrice
+        deal {
+          id
+          discountType
+          discountValue
+          isActive
+        }
         addons {
           id
           title
@@ -296,10 +404,18 @@ export const SINGLE_VENDOR_SIMILAR_PRODUCTS = gql`
         description
         image
         categoryId
+        isOutOfStock
         variations {
           id
           title
           price
+          isOutOfStock
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
         }
       }
       pagination {
@@ -368,8 +484,25 @@ export const SINGLE_VENDOR_SEARCH = gql`
   query SearchSingleVendorFoods($search: String!, $skip: Int, $limit: Int) {
     searchSingleVendorFoods(search: $search, skip: $skip, limit: $limit) {
       items {
-        id title description subCategory categoryId image isOutOfStock
-        variations { id title price deal { id discountType discountValue isActive } }
+        id
+        title
+        description
+        subCategory
+        categoryId
+        image
+        isOutOfStock
+        variations {
+          id
+          title
+          price
+          isOutOfStock
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
+        }
       }
       totalCount
       hasMore
@@ -415,6 +548,12 @@ export const SINGLE_VENDOR_CART = gql`
           discountedItemTotal
           itemTotal
           dealId
+          dealInfo {
+            dealId
+            dealTitle
+            discountValue
+            discountType
+          }
         }
         actualFoodTotal
         discountedFoodTotal
@@ -455,8 +594,22 @@ export const SINGLE_VENDOR_UPDATE_CART = gql`
             title
             price
           }
+          addonsTotal
+          actualUnitPrice
+          discountedUnitPrice
+          actualItemTotal
+          discountedItemTotal
           itemTotal
+          dealId
+          dealInfo {
+            dealId
+            dealTitle
+            discountValue
+            discountType
+          }
         }
+        actualFoodTotal
+        discountedFoodTotal
         foodTotal
       }
     }
@@ -512,6 +665,9 @@ export const SINGLE_VENDOR_CALCULATE_CHECKOUT = gql`
       taxPercentage
       grandTotal
       totalDiscount
+      discountDetails {
+        dealDiscount
+      }
       hasActiveSubscription
       freeDeliveriesRemaining
       minimumOrderAmount
@@ -705,6 +861,13 @@ export const SINGLE_VENDOR_FAVORITES = gql`
           title
           price
           discounted
+          isOutOfStock
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
         }
       }
     }
@@ -936,6 +1099,85 @@ export const SINGLE_VENDOR_ORDER_DETAILS = gql`
           calculatedAt
           lastLocationAt
           version
+        }
+      }
+      data {
+        _id
+        orderId
+        paidAmount
+        orderAmount
+        orderStatus
+        paymentStatus
+        deliveryCharges
+        deliveryDiscount
+        couponDiscount
+        tipping
+        taxationAmount
+        orderDate
+        isPriority
+        isPickedUp
+        completionTime
+        instructions
+        itemsSubTotal
+        minimumOrderFee
+        minimumOrderAmount
+        isBelowMinimumOrder
+        isBelowMaximumOrder
+        freeDeliveriesRemaining
+        priorityDeliveryFees
+        deliverChargesAmount
+        couponDiscountApplied
+        creditsApplied
+        rider {
+          phone
+        }
+        deliveryAddress {
+          _id
+          deliveryAddress
+          details
+          label
+          id
+          location {
+            coordinates
+          }
+        }
+        items {
+          _id
+          food
+          title
+          description
+          image
+          quantity
+          specialInstructions
+          isActive
+          foodImage
+          foodTitle
+          variationImage
+          variationTitle
+          variationTotal
+          foodQuantity
+          variation {
+            title
+            image
+            price
+            discounted
+            _id
+            createdAt
+            updatedAt
+          }
+          addons {
+            title
+            description
+            quantityMinimum
+            quantityMaximum
+            isActive
+            options {
+              title
+              description
+              price
+              isActive
+            }
+          }
         }
       }
     }

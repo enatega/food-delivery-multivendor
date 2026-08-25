@@ -30,7 +30,12 @@ export const GET_SINGLE_VENDOR_DEALS_SECTION = gql`
           title
           price
           isOutOfStock
-          deal { id discountType discountValue isActive }
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
         }
       }
       totalCount
@@ -61,10 +66,12 @@ export const GET_ALL_CATEGORIES_WITH_SUBCATEGORIES_DATA = gql`
         title
         image
         description
+        isOutOfStock
         variations {
           id
           title
           price
+          isOutOfStock
           deal {
             id
             discountType
@@ -82,10 +89,12 @@ export const GET_ALL_CATEGORIES_WITH_SUBCATEGORIES_DATA = gql`
           title
           image
           description
+          isOutOfStock
           variations {
             id
             title
             price
+            isOutOfStock
             deal {
               id
               discountType
@@ -124,10 +133,12 @@ export const GET_CATEGORY_ITEMS_SINGLE_VENDOR = gql`
         title
         description
         image
+        isOutOfStock
         variations {
           id
           title
           price
+          isOutOfStock
           deal {
             id
             discountType
@@ -171,6 +182,7 @@ export const GET_FOOD_DETAILS = gql`
       description
       image
       isPopular
+      isOutOfStock
       cartQuantity
       usage
       ingredients
@@ -190,6 +202,7 @@ export const GET_FOOD_DETAILS = gql`
         id
         title
         price
+        isOutOfStock
         addons {
           id
           title
@@ -208,6 +221,12 @@ export const GET_FOOD_DETAILS = gql`
 
         actualUnitPrice
         discountedUnitPrice
+        deal {
+          id
+          discountType
+          discountValue
+          isActive
+        }
       }
     }
   }
@@ -222,10 +241,18 @@ export const GET_SIMILAR_FOODS = gql`
         description
         image
         categoryId
+        isOutOfStock
         variations {
           id
           title
           price
+          isOutOfStock
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
         }
       }
       pagination {
@@ -289,8 +316,25 @@ export const SEARCH_SINGLE_VENDOR_FOODS = gql`
   query SearchSingleVendorFoods($search: String!, $skip: Int, $limit: Int) {
     searchSingleVendorFoods(search: $search, skip: $skip, limit: $limit) {
       items {
-        id title description image categoryId subCategory isOutOfStock
-        variations { id title price deal { id discountType discountValue isActive } }
+        id
+        title
+        description
+        image
+        categoryId
+        subCategory
+        isOutOfStock
+        variations {
+          id
+          title
+          price
+          isOutOfStock
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
+        }
       }
       totalCount
       hasMore
@@ -460,10 +504,12 @@ export const GET_RECOMMENDED_FOODS = gql`
       }
       items {
         categoryId
+        isOutOfStock
         variations {
           title
           price
           id
+          isOutOfStock
           deal {
             isActive
             id
@@ -517,6 +563,7 @@ export const CALCULATE_CHECKOUT = gql`
         subscriptionDiscount
         freeDeliveryApplied
         couponDiscount
+        dealDiscount
       }
       hasActiveSubscription
       freeDeliveriesRemaining
@@ -635,13 +682,18 @@ export const ORDER_DETAILS_PAGE = gql`
           durationSeconds
           distanceMeters
           encodedPolyline
-          origin { latitude longitude }
-          destination { latitude longitude }
+          origin {
+            latitude
+            longitude
+          }
+          destination {
+            latitude
+            longitude
+          }
           calculatedAt
           lastLocationAt
           version
         }
-        
       }
       data {
         _id
@@ -818,8 +870,14 @@ export const Recent_ActiveOrder = gql`
           durationSeconds
           distanceMeters
           encodedPolyline
-          origin { latitude longitude }
-          destination { latitude longitude }
+          origin {
+            latitude
+            longitude
+          }
+          destination {
+            latitude
+            longitude
+          }
           calculatedAt
           lastLocationAt
           version
@@ -951,6 +1009,12 @@ export const GET_FAVORITE_FOODS_SINGLE_VENDOR = gql`
           title
           price
           discounted
+          deal {
+            id
+            discountType
+            discountValue
+            isActive
+          }
           addons
           isOutOfStock
           name
@@ -1190,10 +1254,12 @@ export const GET_CATEGORY_PRODUCTS = gql`
         image
         description
         subCategory
+        isOutOfStock
         variations {
           id
           title
           price
+          isOutOfStock
           deal {
             id
             discountType

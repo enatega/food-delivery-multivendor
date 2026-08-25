@@ -39,16 +39,13 @@ const SectionList = ({
     })
   }, [data, navigation])
 
-  const renderProduct = useCallback(({ item, index }) => {
+  const renderProduct = useCallback(({ item }) => {
     return (
       <ProductCard
         product={item}
         onAddToCart={handleAddToCart}
         onCardPress={onProductPress}
-        containerStyles={[
-          styles(currentTheme).productCard,
-          index % 2 === 0 ? styles(currentTheme).leftCard : styles(currentTheme).rightCard
-        ]}
+        layout='grid'
       />
     )
   }, [currentTheme, handleAddToCart, onProductPress])
@@ -82,7 +79,6 @@ const SectionList = ({
             keyExtractor={keyExtractor}
             renderItem={renderProduct}
             contentContainerStyle={styles(currentTheme).listContent}
-            columnWrapperStyle={styles(currentTheme).row}
             showsVerticalScrollIndicator={false}
             removeClippedSubviews={true}
             maxToRenderPerBatch={10}
@@ -148,21 +144,6 @@ const styles = (currentTheme) =>
       ...alignment.PLlarge,
       ...alignment.PRlarge,
       ...alignment.PBsmall
-    },
-    row: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: scale(16)
-    },
-    productCard: {
-      width: '48%',
-      marginRight: 0
-    },
-    leftCard: {
-      marginRight: '2%'
-    },
-    rightCard: {
-      marginLeft: 0
     },
     loadMoreButton: {
       alignItems: 'center',

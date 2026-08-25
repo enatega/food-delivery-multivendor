@@ -128,6 +128,13 @@
   "for_riders": "Pour les livreurs",
   "reviews": "avis",
   "shop-types": "Types de magasins",
+  "categories_label": "Catégories",
+  "all_categories_label": "Toutes les catégories",
+  "tab_deals": "Offres",
+  "tab_browse": "Parcourir",
+  "order_details_minimum_order_fee_label": "Frais de petite commande",
+  "order_details_priority_delivery_fee_label": "Frais de livraison prioritaire",
+  "order_details_credits_applied_label": "Crédit utilisé",
   "grocerylist": "Liste d'épicerie",
   "toppicks": "Meilleurs choix d'épicerie",
   "redirecting_in": "Redirection dans",
@@ -184,6 +191,8 @@
   "tab_discovery": "Découverte",
   "tab_restaurants": "Restaurants",
   "tab_store": "Magasin",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "près de chez vous",
   "generic_listing_heading": "Restaurants près de chez vous",
   "generic_listing_cuisine_section": "Cuisines",
@@ -836,5 +845,88 @@
   "show_more_orders": "Afficher plus de commandes",
   "your_email": " ",
   "Select_your_address_prompt": " Sélectionnez votre adresse.",
-  "Our-brands": "Nos marques"
+  "Our-brands": "Nos marques",
+  "Landing": {
+    "hero": {
+      "eyebrow": "Une seule application. Possibilités quotidiennes.",
+      "title": "Tout ce dont vous avez besoin,",
+      "accent": "magnifiquement livré.",
+      "body": "Nourriture, épicerie et produits du quotidien réunis dans une expérience simple."
+    },
+    "categories": {
+      "label": "Catégories de livraison",
+      "food": "Nourriture",
+      "groceries": "Épicerie",
+      "essentials": "Essentiels",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Trouver cette ville.",
+      "ready": "Ville sélectionnée. Afficher les éléments lorsque vous êtes prêt.",
+      "cityError": "Nous n'avons pas pu localiser cette ville. Choisissez une autre suggestion.",
+      "locating": "Trouver votre position actuelle.",
+      "locationError": "Nous n'avons pas pu accéder à votre position. Recherchez plutôt une ville."
+    },
+    "journey": {
+      "eyebrow": "Comment Enatega se déplace",
+      "title": "De votre ville,",
+      "accent": "jusqu'à votre porte.",
+      "bagAlt": "Sac de livraison Enatega",
+      "stages": {
+        "choose": {
+          "title": "Choisissez",
+          "body": "Nourriture, épicerie ou articles de première nécessité."
+        },
+        "moving": {
+          "title": "Déménagement",
+          "body": "Un voyage clair à travers votre ville."
+        },
+        "arrived": {
+          "title": "Arrivé",
+          "body": "Livré là où vous en avez besoin."
+        }
+      }
+    },
+    "cta": {
+      "label": "Travailler avec Enatega",
+      "business": {
+        "eyebrow": "Pour les entreprises",
+        "title": "Développer avec Enatega.",
+        "body": "Rapprochez votre magasin d'un plus grand nombre de clients.",
+        "action": "Devenez partenaire"
+      },
+      "rider": {
+        "eyebrow": "Pour les passagers",
+        "title": "Voyagez avec Enatega.",
+        "body": "Livrez à votre rythme.",
+        "action": "Devenez passager"
+      }
+    },
+    "footer": {
+      "rights": "Tous droits réservés."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

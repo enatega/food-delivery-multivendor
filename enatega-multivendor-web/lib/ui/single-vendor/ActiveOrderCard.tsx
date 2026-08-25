@@ -41,7 +41,7 @@ export default function SingleVendorActiveOrderCard() {
   if (recent.loading && !recent.data) {
     return (
       <div
-        className="my-6 h-28 animate-pulse rounded-xl border border-dispatch-line bg-dispatch-surface dark:border-gray-800 dark:bg-gray-900"
+        className="skeleton-surface skeleton-ring my-6 h-28 animate-pulse rounded-xl border"
         aria-label={t("loading_orders")}
       />
     );

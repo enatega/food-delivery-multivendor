@@ -38,14 +38,14 @@ Customers browse by current or saved delivery address, search nearby vendors or 
 
 - Preserve the Enatega name and existing logo.
 - Preserve the current primary green family: `#75D04B` primary, `#F3FFEE` light, `#5AC12F` dark, plus the established hover, pressed, focus, and disabled states.
-- The replacement visual direction is **Neighborhood Dispatch**: urban wayfinding and delivery-route structure, warm neutral surfaces, disciplined typography, real marketplace imagery, and address-first interaction.
+- The shipped visual direction is **Quiet Orbit**: an elegant pure-white multivendor landing canvas with precise Inter typography, restrained Cormorant Garamond italic accents, brand-green route geometry, pale-sage grounding fields, and address-first interaction.
 - The result must avoid generic AI/SaaS styling, interchangeable food-delivery templates, gratuitous glass effects, excessive rounded cards, decorative gradients, and ungrounded marketing copy.
 - New surface development is comp-first: high-fidelity desktop and mobile compositions are approved before production UI code.
-- The approved composition combines the Address Dispatch Board foundation with the Neighbourhood Strip Map's irregular district imagery and the Dispatch Ticket's decisive green ordering action.
+- The approved multivendor root composition uses one city gateway with a green landing action, an isolated food-grocery-essentials product orbit with autonomous oval route markers, the restored More than delivery customer-business-rider strip, a low-amplitude Choose–Moving–Arrived scroll journey, and a final branch to restaurant or rider partnership. It intentionally sends marketplace listings to discovery instead of duplicating them on `/`.
 
 ## Evidence on Hand
 
-- Existing logos and product imagery live under `public/assets/` and `lib/assets/`.
+- Existing logos and product imagery live under `public/assets/` and `lib/assets/`; the regenerated Quiet Orbit still lifes, per-asset generation metadata, and aggregate provenance live under `public/assets/images/landing/quiet-orbit/`. Their transparent alpha was validated before the final WebP encoding.
 - Real vendor, product, category, banner, rating, delivery, and order data is supplied by the existing GraphQL APIs.
 - The current implementation demonstrates the complete route set and product behavior but is visual evidence and an anti-reference rather than authority for the replacement design.
 - Existing promotional percentage, zero-fee, and superlative claims require product-owner verification before reuse.

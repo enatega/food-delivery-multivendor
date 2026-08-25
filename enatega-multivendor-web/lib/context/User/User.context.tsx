@@ -37,6 +37,7 @@ import {
 import { invalidateClientSession } from "@/lib/utils/methods/auth";
 import { getAccessToken } from "@/lib/utils/methods/auth";
 import { modeStorage, useAppMode } from "@/lib/mode";
+import { getSingleVendorCartUnitPrice } from "@/lib/mode/singleVendorPricing";
 import {
   SINGLE_VENDOR_ACTIVE_ORDERS,
   SINGLE_VENDOR_CLEAR_CART,
@@ -76,6 +77,14 @@ export interface CartItem {
   variationTitle?: string;
   optionTitles?: string[];
   price?: string | number;
+  actualUnitPrice?: number;
+  discountedUnitPrice?: number;
+  dealInfo?: {
+    dealId?: string;
+    dealTitle?: string;
+    discountValue?: number;
+    discountType?: string;
+  } | null;
   categoryId?: string;
 }
 
@@ -254,7 +263,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
           title: food.foodTitle,
           foodTitle: food.foodTitle,
           variationTitle: variation.variationTitle,
-          price: variation.unitPrice,
+          price: getSingleVendorCartUnitPrice(variation),
+          actualUnitPrice: Number(
+            variation.actualUnitPrice ?? variation.unitPrice ?? 0,
+          ),
+          discountedUnitPrice: Number(
+            variation.discountedUnitPrice ?? variation.unitPrice ?? 0,
+          ),
+          dealInfo: variation.dealInfo,
           categoryId: food.categoryId,
           addons: (variation.addons ?? []).map((addon: any) => ({
             _id: addon.addonId,

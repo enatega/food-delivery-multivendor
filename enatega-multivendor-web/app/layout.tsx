@@ -6,6 +6,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Inter } from "next/font/google";
 import Script from "next/script";
+import "@fontsource/barlow-condensed/600.css";
+import "@fontsource/cormorant-garamond/500-italic.css";
 
 const interfaceFont = Inter({
   subsets: ["latin"],
@@ -89,10 +91,10 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <template
-          data-impeccable-contract="8a60397e"
+          data-impeccable-contract="c6a71e2f"
           dangerouslySetInnerHTML={{
             __html:
-              "<!-- THESIS: Enatega turns an address into a live neighbourhood marketplace; it refuses the generic food-photo hero and repetitive card wall. OWN-WORLD: #75D04B route signals cross warm off-white map fields, precise charcoal type, hairline rules, irregular API-image district tiles, and restrained 8–14px corners. STORY: confirm a location, see nearby availability, enter discovery, order, and track. FIRST VIEWPORT: a calm utility shell, task-focused address panel at left, dominant live market map at right, and one decisive green ordering action. FORM: Neighborhood Dispatch, user-approved combined direction, top grounded candidate; seed 8a60397e. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance -->",
+              "<!-- THESIS: Quiet Orbit presents Enatega as one elegant everyday-delivery system without duplicating discovery content. OWN-WORLD: #75D04B route geometry crosses warm ivory, pale sage, and charcoal fields with precise oversized type, editorial italic accents, hairline rules, isolated product still lifes, and restrained 12–16px corners. STORY: select a city, understand the food-grocery-essentials orbit, follow the Choose-Moving-Arrived route, then branch toward business or rider partnership. FIRST VIEWPORT: a concise city gateway at left and a calm three-product orbit at right, joined by one animated route and one decisive action. FORM: Quiet Orbit, implemented from the user-approved hero and scroll-story frames; seed c6a71e2f. FINISH: the independent finish review, visual evidence, detector pass, design documentation, and raster provenance are part of the shipping contract -->",
           }}
         />
 

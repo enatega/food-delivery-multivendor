@@ -11,6 +11,8 @@ import styles from './styles'
 import CartItemDescription from './CartItemDescription'
 import CartItemController from './CartItemController'
 import { normalizeSingleVendorMediaUrl } from '../../../utils/mediaUrl'
+import { getDealLabel, getDealPricing } from '../../utils/helper'
+import { isProductOutOfStock } from '../../utils/stock'
 
 const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€', onEdit, isLastItem = false, isFavourite = false, onAddToCart, isOrderHistory = false }) => {
   const { t, i18n } = useTranslation()
@@ -21,10 +23,16 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
     ...theme[themeContext.ThemeValue]
   }
 
-  // Handle both cart items (discountedUnitPrice) and favorite items (price)
-  const unitPrice = item.variations[0]?.discountedUnitPrice ?? item.variations[0]?.price ?? 0
-  const quantity = item.variations[0]?.quantity ?? 1
-  const itemTotal = (parseFloat(unitPrice) * quantity).toFixed(2)
+  const variation = item.variations[0] || {}
+  const previewPricing = getDealPricing(variation.price, variation.deal)
+  const unitPrice = variation.discountedUnitPrice ?? (previewPricing.discountAmount > 0 ? previewPricing.finalPrice : variation.price) ?? 0
+  const actualUnitPrice = variation.actualUnitPrice ?? variation.unitPrice ?? variation.price ?? unitPrice
+  const quantity = variation.quantity ?? 1
+  const discountedItemTotal = Number(variation.discountedItemTotal ?? variation.itemTotal ?? parseFloat(unitPrice) * quantity)
+  const actualItemTotal = Number(variation.actualItemTotal ?? parseFloat(actualUnitPrice) * quantity)
+  const hasDeal = actualItemTotal > discountedItemTotal
+  const dealLabel = getDealLabel(variation.dealInfo ?? variation.deal, currencySymbol)
+  const isOutOfStock = isProductOutOfStock(item)
 
   console.log('CartItem Rendered:', item.variations[0])
   const handlePress = () => {
@@ -48,23 +56,11 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
   }
 
   return (
-    <Pressable
-      onPress={handlePress}
-      style={[styles(currentTheme).itemContainer, isLastItem && styles().itemContainerLast]}
-    >
+    <Pressable onPress={handlePress} style={[styles(currentTheme).itemContainer, isLastItem && styles().itemContainerLast]}>
       {/* Left side: Image */}
 
       <View style={styles().imageContainer}>
-        <Image
-          source={
-            typeof item?.foodImage === 'number'
-              ? item.foodImage
-              : typeof item?.image === 'number'
-                ? item.image
-                : { uri: normalizeSingleVendorMediaUrl(item?.foodImage || item?.image || '') }
-          }
-          style={styles().productImage}
-        />
+        <Image source={typeof item?.foodImage === 'number' ? item.foodImage : typeof item?.image === 'number' ? item.image : { uri: normalizeSingleVendorMediaUrl(item?.foodImage || item?.image || '') }} style={styles().productImage} />
       </View>
 
       {/* Middle and Right: Content */}
@@ -83,14 +79,14 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
           )}
         </View>
 
+        {isFavourite && isOutOfStock && (
+          <TextDefault style={styles(currentTheme).outOfStockLabel} textColor={currentTheme.errorColor || '#DC2626'} bold small>
+            {t('out_of_stock_label', { defaultValue: 'Out of stock' })}
+          </TextDefault>
+        )}
+
         {/* Middle Row: Description with Dropdown - single line */}
-         {
-          !isFavourite
-            ? (
-             <CartItemDescription variations={item?.variations}></CartItemDescription>
-              )
-            : null
-         }
+        {!isFavourite ? <CartItemDescription variations={item?.variations}></CartItemDescription> : null}
 
         {/* Expanded Addons */}
         {/* {isDropdownOpen && item?.addons && item.addons.length > 0 && (
@@ -119,8 +115,12 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
             : isFavourite
               ? (
             <TouchableOpacity
-              style={styles(currentTheme).addToCartButton}
+              style={[styles(currentTheme).addToCartButton, isOutOfStock && styles(currentTheme).disabledAddToCartButton]}
+              disabled={isOutOfStock}
+              accessibilityState={{ disabled: isOutOfStock }}
+              accessibilityLabel={isOutOfStock ? t('out_of_stock_label', { defaultValue: 'Out of stock' }) : t('addToCart')}
               onPress={() => {
+                if (isOutOfStock) return
                 if (onAddToCart) {
                   onAddToCart(item)
                 } else {
@@ -135,9 +135,21 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
             <CartItemController item={item} />
                 )}
 
-          <TextDefault textColor={currentTheme.gray} bold isRTL>
-            {itemTotal}&nbsp;{currencySymbol}
-          </TextDefault>
+          <View style={styles().priceBlock}>
+            {hasDeal && dealLabel && (
+              <TextDefault style={styles(currentTheme).dealBadge} textColor={currentTheme.singleVendorOnBrand} bold>
+                {dealLabel}
+              </TextDefault>
+            )}
+            <TextDefault textColor={hasDeal ? currentTheme.singleVendorBrandForeground : currentTheme.gray} bold isRTL>
+              {discountedItemTotal.toFixed(2)}&nbsp;{currencySymbol}
+            </TextDefault>
+            {hasDeal && (
+              <TextDefault style={styles().originalPrice} textColor={currentTheme.fontSecondColor} small isRTL>
+                {actualItemTotal.toFixed(2)}&nbsp;{currencySymbol}
+              </TextDefault>
+            )}
+          </View>
         </View>
       </View>
     </Pressable>

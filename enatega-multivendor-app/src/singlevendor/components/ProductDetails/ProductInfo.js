@@ -10,6 +10,8 @@ import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneB
 import useAddToCart from '../../screens/ProductDetails/useAddToCart'
 import useCartStore from '../../stores/useCartStore'
 import { normalizeSingleVendorMediaUrl } from '../../../utils/mediaUrl'
+import { getDealLabel } from '../../utils/helper'
+import { getFirstAvailableVariation, isProductOutOfStock, isVariationOutOfStock } from '../../utils/stock'
 
 const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, selectedAddons, editMode = false, onSaveEdit, editingCart = false }) => {
   const config = useContext(ConfigurationContext)
@@ -19,7 +21,8 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
   const items = useCartStore((state) => state.items)
   const { addItemToCart, updateUserCartLoading } = useAddToCart({ foodId: productInfoData?.id })
 
-  const selectedVariation = selectedVariationId || productInfoData?.variations?.[0]?.id
+  const firstAvailableVariation = getFirstAvailableVariation(productInfoData?.variations)
+  const selectedVariation = selectedVariationId || firstAvailableVariation?.id || productInfoData?.variations?.[0]?.id
   const isInCart = useMemo(() => {
     const foodId = productInfoData?.id
     if (!foodId || !selectedVariation || !Array.isArray(items)) return false
@@ -28,19 +31,31 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
     return cartItem.variations.some((v) => v?.variationId === selectedVariation || v?._id === selectedVariation)
   }, [items, productInfoData?.id, selectedVariation])
 
-  const actualPrice = productInfoData?.price
-  const discountPrice = productInfoData?.variations?.[0].discountedUnitPrice
-
-  console.log('actualUnitPrice', actualPrice)
-  console.log('discountedUnitPrice', discountPrice)
-
+  const selectedVariationData = productInfoData?.variations?.find((variation) => variation?.id === selectedVariation) || productInfoData?.variations?.[0]
+  const actualPrice = Number(productInfoData?.originalPrice ?? productInfoData?.price ?? 0)
+  const discountPrice = Number(productInfoData?.discountedPrice ?? selectedVariationData?.discountedUnitPrice ?? actualPrice)
+  const dealLabel = getDealLabel(selectedVariationData?.deal, config?.currencySymbol)
   const hasDeal = discountPrice < actualPrice
-  console.log('hasDeal', hasDeal)
+  const isOutOfStock = isProductOutOfStock(productInfoData) || isVariationOutOfStock(selectedVariationData)
 
   return (
     <>
       <View style={styles().imageContainer}>
         <Image source={{ uri: normalizeSingleVendorMediaUrl(productInfoData?.image) }} style={styles().image} />
+        {hasDeal && dealLabel && (
+          <View style={styles(currentTheme).dealBadge}>
+            <TextDefault bold textColor={currentTheme.singleVendorOnBrand}>
+              {dealLabel}
+            </TextDefault>
+          </View>
+        )}
+        {isOutOfStock && (
+          <View style={styles(currentTheme).outOfStockBadge}>
+            <TextDefault bold textColor='#FFFFFF'>
+              {t('out_of_stock_label', { defaultValue: 'Out of stock' })}
+            </TextDefault>
+          </View>
+        )}
       </View>
 
       <View style={[styles().containerPadding, { gap: 18 }]}>
@@ -91,36 +106,24 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
             {editMode
               ? (
               <View style={{ alignItems: 'flex-end', minWidth: 130 }}>
-                <ContinueWithPhoneButton
-                  containerStyles={{ minWidth: 130 }}
-                  textStyle={{ paddingHorizontal: 8 }}
-                  isLoading={editingCart}
-                  isDisabled={editingCart}
-                  title='Save changes'
-                  onPress={onSaveEdit}
-                />
+                <ContinueWithPhoneButton containerStyles={{ minWidth: 130 }} textStyle={{ paddingHorizontal: 8 }} isLoading={editingCart} isDisabled={editingCart || isOutOfStock} title='Save changes' onPress={onSaveEdit} />
               </View>
                 )
               : isInCart
                 ? (
-              <CartQuantityController
-                foodId={productInfoData?.id}
-                categoryId={productInfoData?.categoryId}
-                variationId={selectedVariation}
-                addons={selectedAddons || []}
-                defaultQuantity={1}
-                variant="details"
-              />
+              <CartQuantityController foodId={productInfoData?.id} categoryId={productInfoData?.categoryId} variationId={selectedVariation} addons={selectedAddons || []} defaultQuantity={1} variant='details' isOutOfStock={isOutOfStock} />
                   )
                 : (
               <View style={{ alignItems: 'flex-end', minWidth: 130 }}>
                 <ContinueWithPhoneButton
-                containerStyles={{ minWidth: 130 }}
-                textStyle={{ paddingHorizontal: 8 }}
-                  isLoading={updateUserCartLoading }
-                  isDisabled={updateUserCartLoading}
-                  title='addToCart'
-                  onPress={() => addItemToCart(productInfoData?.id, productInfoData?.categoryId, selectedVariation, selectedAddons || [], 1)}
+                  containerStyles={{ minWidth: 130 }}
+                  textStyle={{ paddingHorizontal: 8 }}
+                  isLoading={updateUserCartLoading}
+                  isDisabled={updateUserCartLoading || isOutOfStock}
+                  title={isOutOfStock ? 'out_of_stock_label' : 'addToCart'}
+                  onPress={() => {
+                    if (!isOutOfStock) addItemToCart(productInfoData?.id, productInfoData?.categoryId, selectedVariation, selectedAddons || [], 1)
+                  }}
                 />
               </View>
                   )}
@@ -197,5 +200,25 @@ const styles = (props = null) =>
     originalPrice: {
       color: props?.fontSecondColor,
       textDecorationLine: 'line-through'
+    },
+    dealBadge: {
+      position: 'absolute',
+      top: scale(12),
+      left: scale(12),
+      backgroundColor: props?.singleVendorBrand,
+      borderRadius: scale(6),
+      paddingHorizontal: scale(10),
+      paddingVertical: scale(6)
+    },
+    outOfStockBadge: {
+      position: 'absolute',
+      left: scale(12),
+      right: scale(12),
+      bottom: scale(12),
+      borderRadius: scale(6),
+      paddingHorizontal: scale(10),
+      paddingVertical: scale(8),
+      alignItems: 'center',
+      backgroundColor: 'rgba(21, 25, 20, 0.9)'
     }
   })

@@ -31,18 +31,18 @@ function getVisibleCount() {
 export function SingleVendorProductSectionSkeleton() {
   return (
     <section className="mt-8 animate-pulse sm:mt-10" aria-busy="true">
-      <div className="mb-4 h-6 w-48 bg-gray-200 dark:bg-gray-700" />
+      <div className="skeleton-line mb-4 h-6 w-48" />
       <div className="grid grid-cols-2 gap-3 max-[320px]:grid-cols-1 min-[641px]:grid-cols-4 min-[1025px]:grid-cols-5 min-[1281px]:grid-cols-6 min-[1537px]:grid-cols-8">
         {Array.from({ length: 8 }, (_, index) => (
           <div
             key={index}
-            className="overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface dark:border-gray-800 dark:bg-gray-900"
+            className="skeleton-ring overflow-hidden rounded-xl border bg-dispatch-surface"
           >
-            <div className="aspect-[16/9] bg-dispatch-map dark:bg-gray-800" />
+            <div className="skeleton-surface aspect-[16/9]" />
             <div className="space-y-2 p-2.5">
-              <div className="h-4 w-3/4 bg-dispatch-line" />
-              <div className="h-3 w-full bg-dispatch-line" />
-              <div className="h-4 w-1/3 bg-dispatch-line" />
+              <div className="skeleton-line h-4 w-3/4" />
+              <div className="skeleton-line h-3 w-full" />
+              <div className="skeleton-line h-4 w-1/3" />
             </div>
           </div>
         ))}

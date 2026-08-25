@@ -8,11 +8,25 @@ export const GET_DASHBOARD_USERS = gql`
       vendorsCount
       restaurantsCount
       ridersCount
-      
     }
   }
 `;
 
+export const GET_SINGLE_VENDOR_DASHBOARD_CATALOG = gql`
+  query GetSingleVendorDashboardCatalog {
+    restaurants {
+      _id
+      categories {
+        _id
+        createdAt
+        foods {
+          _id
+          createdAt
+        }
+      }
+    }
+  }
+`;
 
 export const GET_DASHBOARD_USERS_BY_YEAR = gql`
   query GetDashboardUsersByYear($year: Int!) {

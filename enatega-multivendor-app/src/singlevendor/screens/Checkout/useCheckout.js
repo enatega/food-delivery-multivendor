@@ -12,7 +12,7 @@ import LiveActivityService from '../../../utils/liveActivityService'
 
 const ADDRESS_DELIVERY_ERROR = "Sorry! we can't deliver to your address."
 
-const toCheckoutCoordinate = value => {
+const toCheckoutCoordinate = (value) => {
   if (value === null || value === undefined || value === '') return null
   const coordinate = Number(value)
   return Number.isFinite(coordinate) ? coordinate : null
@@ -23,9 +23,7 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
   const { clearCart } = useCartStore()
   const configuration = useContext(ConfigurationContext)
   const currencySymbol = configuration?.currencySymbol || '€'
-  const idempotencyKeyRef = useRef(
-    `sv-${Date.now()}-${Math.random().toString(36).slice(2)}`
-  )
+  const idempotencyKeyRef = useRef(`sv-${Date.now()}-${Math.random().toString(36).slice(2)}`)
   const [placeOrder, { loading: placingOrder }] = useMutation(PLACE_ORDER, {
     onCompleted: (data) => {
       recordOrderOrigin(data?.placeOrder, APP_MODES.SINGLE).catch(() => {})
@@ -56,7 +54,7 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
             orderId: data.placeOrder._id,
             displayOrderId: data.placeOrder.orderId,
             mode: APP_MODES.SINGLE
-          }).catch(error => console.warn('Unable to start delivery Live Activity', error?.message))
+          }).catch((error) => console.warn('Unable to start delivery Live Activity', error?.message))
         }
         navigation.dispatch(
           CommonActions.reset({
@@ -135,6 +133,7 @@ const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlac
     minimumOrderFee: checkout?.minimumOrderFee ?? 0,
     taxAmount: checkout?.taxAmount ?? 0,
     totalDiscount: checkout?.totalDiscount ?? 0,
+    dealDiscount: checkout?.discountDetails?.dealDiscount ?? 0,
     total: checkout?.grandTotal ?? 0,
 
     minimumOrderAmount: checkout?.minimumOrderAmount ?? 0,

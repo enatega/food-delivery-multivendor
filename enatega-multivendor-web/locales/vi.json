@@ -131,6 +131,13 @@
   "Grocery-cuisines": "Ẩm thực tạp hóa",
   "addresses": "Địa chỉ",
   "shop-types": "Các loại cửa hàng",
+  "categories_label": "Danh mục",
+  "all_categories_label": "Tất cả danh mục",
+  "tab_deals": "Ưu đãi",
+  "tab_browse": "Duyệt",
+  "order_details_minimum_order_fee_label": "Phí đơn hàng nhỏ",
+  "order_details_priority_delivery_fee_label": "Phí giao hàng ưu tiên",
+  "order_details_credits_applied_label": "Tín dụng đã dùng",
   "grocerylist": "Danh sách tạp hóa",
   "toppicks": "Lựa chọn tạp hóa hàng đầu",
   "app_version": "1.0.0",
@@ -191,6 +198,8 @@
   "tab_discovery": "Khám phá",
   "tab_restaurants": "Nhà hàng",
   "tab_store": "Cửa hàng",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "gần bạn",
   "generic_listing_heading": "Nhà hàng gần bạn",
   "generic_listing_cuisine_section": "Ẩm thực",
@@ -918,5 +927,88 @@
   "show_more_orders": "Hiển thị thêm đơn hàng",
   "your_email": "email@cuaban.com",
   "Select_your_address_prompt": "Chọn địa chỉ của bạn.",
-  "Our-brands": "Thương hiệu của chúng tôi"
+  "Our-brands": "Thương hiệu của chúng tôi",
+  "Landing": {
+    "hero": {
+      "eyebrow": "One app. Everyday possibilities.",
+      "title": "Everything you need,",
+      "accent": "beautifully delivered.",
+      "body": "Food, groceries and everyday essentials, brought together in one simple experience."
+    },
+    "categories": {
+      "label": "Delivery categories",
+      "food": "Food",
+      "groceries": "Groceries",
+      "essentials": "Essentials",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Finding that city.",
+      "ready": "City selected. Show items when you are ready.",
+      "cityError": "We could not locate that city. Choose another suggestion.",
+      "locating": "Finding your current location.",
+      "locationError": "We could not access your location. Search for a city instead."
+    },
+    "journey": {
+      "eyebrow": "How Enatega moves",
+      "title": "From your city,",
+      "accent": "to your doorstep.",
+      "bagAlt": "Enatega delivery bag",
+      "stages": {
+        "choose": {
+          "title": "Choose",
+          "body": "Food, groceries or essentials."
+        },
+        "moving": {
+          "title": "Moving",
+          "body": "One clear journey across your city."
+        },
+        "arrived": {
+          "title": "Arrived",
+          "body": "Delivered where you need it."
+        }
+      }
+    },
+    "cta": {
+      "label": "Work with Enatega",
+      "business": {
+        "eyebrow": "For businesses",
+        "title": "Grow with Enatega.",
+        "body": "Bring your store closer to more customers.",
+        "action": "Become a partner"
+      },
+      "rider": {
+        "eyebrow": "For riders",
+        "title": "Ride with Enatega.",
+        "body": "Deliver on your schedule.",
+        "action": "Become a rider"
+      }
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

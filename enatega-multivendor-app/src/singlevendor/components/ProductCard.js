@@ -5,60 +5,56 @@ import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import ProductImageOverlay from './ProductImageOverlay'
 import ConfigurationContext from '../../context/Configuration'
-import { getDealPricing } from '../utils/helper'
+import { getDealLabel, getDealPricing } from '../utils/helper'
 import CartQuantityController from './Cart/CartQuantityController'
 import { normalizeSingleVendorMediaUrl } from '../../utils/mediaUrl'
+import { getFirstAvailableVariation, isProductOutOfStock } from '../utils/stock'
 
-const ProductCard = ({ product, onCardPress, containerStyles }) => {
-  const { i18n } = useTranslation()
+const ProductCard = ({ product, onCardPress, containerStyles, layout = 'horizontal' }) => {
+  const { i18n, t } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const configuration = useContext(ConfigurationContext)
 
-  const variation = product?.variations?.[0]
+  const isGrid = layout === 'grid'
+  const variation = getFirstAvailableVariation(product?.variations) || product?.variations?.[0]
+  const isOutOfStock = isProductOutOfStock(product)
   const deal = variation?.deal
 
-  const { finalPrice } = getDealPricing(variation?.price, deal)
-  const hasDeal = Boolean(deal)
+  const { finalPrice, discountAmount } = getDealPricing(variation?.price, deal)
+  const dealLabel = getDealLabel(deal, configuration?.currencySymbol)
+  const hasDeal = discountAmount > 0 && Boolean(dealLabel)
 
   return (
     <Pressable
       onPress={() => {
         onCardPress && onCardPress(product?.id, product?.categoryId)
       }}
-      style={[styles(currentTheme).card, containerStyles]}
+      style={[styles(currentTheme).card, isGrid && styles(currentTheme).gridCard, containerStyles]}
+      accessibilityRole='button'
+      accessibilityLabel={`${product?.title || t('product', { defaultValue: 'Product' })}${isOutOfStock ? `, ${t('out_of_stock_label', { defaultValue: 'Out of stock' })}` : ''}`}
     >
       <ImageBackground
         onError={() => {
           // console.log("Error loading images",err)
         }}
         source={{ uri: typeof product?.image === 'number' ? '' : normalizeSingleVendorMediaUrl(product?.image) }}
-        style={styles(currentTheme).imageContainer}
-        imageStyle={styles(currentTheme).productImage}
+        style={[styles(currentTheme).imageContainer, isGrid && styles(currentTheme).gridImageContainer]}
+        imageStyle={[styles(currentTheme).productImage, isOutOfStock && styles(currentTheme).outOfStockImage]}
       >
         {hasDeal && (
           <View style={styles(currentTheme).dealBadge}>
-            <Text style={styles(currentTheme).dealBadgeText}>{deal.discountType === 'PERCENTAGE' ? `${deal.discountValue}% OFF` : `${configuration?.currencySymbol}${deal.discountValue} OFF`}</Text>
+            <Text style={styles(currentTheme).dealBadgeText}>{dealLabel}</Text>
           </View>
         )}
-        <ProductImageOverlay
-          hasDeal={Boolean(product.variations[0].deal)}
-          product={product}
-          dealText={product?.dealText || 'Deal'}
-          control={
-            <CartQuantityController
-              foodId={product?.id}
-              categoryId={product?.categoryId}
-              variationId={variation?.id}
-              addons={[]}
-              defaultQuantity={0}
-              collapsedWhenZero
-              variant="overlay"
-            />
-          }
-        />
+        {isOutOfStock && (
+          <View style={styles(currentTheme).outOfStockBadge}>
+            <Text style={styles(currentTheme).outOfStockText}>{t('out_of_stock_label', { defaultValue: 'Out of stock' })}</Text>
+          </View>
+        )}
+        <ProductImageOverlay hasDeal={hasDeal} product={product} dealText={product?.dealText || 'Deal'} control={<CartQuantityController foodId={product?.id} categoryId={product?.categoryId} variationId={variation?.id} addons={[]} defaultQuantity={0} collapsedWhenZero variant='overlay' isOutOfStock={isOutOfStock} />} />
       </ImageBackground>
-      <View style={styles(currentTheme).contentContainer}>
+      <View style={[styles(currentTheme).contentContainer, isGrid && styles(currentTheme).gridContentContainer]}>
         <View style={styles(currentTheme).priceContainer}>
           {hasDeal
             ? (
@@ -78,7 +74,7 @@ const ProductCard = ({ product, onCardPress, containerStyles }) => {
             </Text>
               )}
         </View>
-        <Text style={styles(currentTheme).productName} numberOfLines={3} ellipsizeMode='tail'>
+        <Text style={styles(currentTheme).productName} numberOfLines={isGrid ? 2 : 3} ellipsizeMode='tail'>
           {product?.title}
         </Text>
         {/* Todo: can show variations specific price and product size. */}
@@ -108,8 +104,22 @@ const styles = (currentTheme) =>
       shadowRadius: 4,
       elevation: 3
     },
+    gridCard: {
+      flex: 1,
+      width: 'auto',
+      minHeight: 224,
+      marginHorizontal: 6,
+      marginRight: 6,
+      marginBottom: 12,
+      overflow: 'hidden'
+    },
     contentContainer: {
       padding: 12
+    },
+    gridContentContainer: {
+      flexGrow: 1,
+      minHeight: 88,
+      justifyContent: 'flex-start'
     },
     imageContainer: {
       width: '100%',
@@ -119,10 +129,37 @@ const styles = (currentTheme) =>
       overflow: 'hidden',
       position: 'relative'
     },
+    gridImageContainer: {
+      height: 136,
+      marginBottom: 0,
+      borderRadius: 0,
+      borderTopLeftRadius: 12,
+      borderTopRightRadius: 12
+    },
     productImage: {
       width: '100%',
       height: '100%',
       resizeMode: 'cover'
+    },
+    outOfStockImage: {
+      opacity: 0.55
+    },
+    outOfStockBadge: {
+      position: 'absolute',
+      left: 8,
+      right: 8,
+      bottom: 8,
+      borderRadius: 6,
+      paddingHorizontal: 8,
+      paddingVertical: 5,
+      alignItems: 'center',
+      backgroundColor: 'rgba(21, 25, 20, 0.9)',
+      zIndex: 2
+    },
+    outOfStockText: {
+      color: '#FFFFFF',
+      fontSize: 12,
+      fontWeight: '700'
     },
     price: {
       fontSize: 16,

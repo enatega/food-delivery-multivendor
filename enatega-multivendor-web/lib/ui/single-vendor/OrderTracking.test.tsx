@@ -9,6 +9,7 @@ const subscriptionOptions: Array<{
 }> = [];
 let subscribedRawOrder: Record<string, unknown> = {};
 let trackingPayload: Record<string, unknown> | undefined;
+let summaryPayload: Record<string, unknown> = {};
 
 vi.mock("@apollo/client", async () => {
   const actual =
@@ -32,8 +33,21 @@ vi.mock("@apollo/client", async () => {
                 orderStatus: "PENDING",
                 orderState: "PENDING",
                 orderAmount: 24,
+                taxationAmount: 0,
+                tipping: 0,
+                deliveryCharges: 0,
+                paymentMethod: "COD",
+                restaurant: {
+                  _id: "store-id",
+                  name: "Enatega Store",
+                  location: { coordinates: [74.3, 31.5] },
+                },
+                deliveryAddress: {
+                  location: { coordinates: [74.32, 31.52] },
+                },
                 items: [],
               },
+              data: summaryPayload,
             },
           },
         };
@@ -76,7 +90,43 @@ vi.mock("@/lib/hooks/useCurrencyFormatter", () => ({
 }));
 
 vi.mock("@/lib/context/configuration/configuration.context", () => ({
-  useConfig: () => ({ GOOGLE_MAPS_KEY: "browser-map-key" }),
+  useConfig: () => ({
+    GOOGLE_MAPS_KEY: "browser-map-key",
+    CURRENCY_SYMBOL: "$",
+  }),
+}));
+
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) =>
+    ({
+      estimated_Delivery_time: "Estimated Delivery Time",
+      PendingRestaurant: "We’re confirming your order with the store.",
+      AcceptedRestaurantSimple: "The store is preparing your order.",
+      Assigned: "A rider has been assigned.",
+      Picked: "Your order is on the way.",
+      live_updates_enabled_label: "Live updates enabled",
+      need_help_with_order_text: "Need help with your order?",
+      get_help_link_text: "Get Help",
+      order_details_subheading: "Order",
+      order_details_heading: "Order Details",
+      order_details_no_instructions_text: "No special instructions",
+      order_details_instruction_label: "Instructions",
+      order_details_summary_label: "Summary",
+      order_details_items_label: "items",
+      order_details_subtotal_label: "Subtotal",
+      order_details_tax_label: "Tax",
+      order_details_tip_label: "Tip",
+      Addons_label: "Addons",
+      order_details_delivery_charge_label: "Delivery Charge",
+      order_details_minimum_order_fee_label: "Low order fee",
+      order_details_priority_delivery_fee_label: "Priority delivery fee",
+      discount_label: "Discount",
+      order_details_credits_applied_label: "Credits applied",
+      order_details_total_label: "Total",
+      order_details_paid_with_label: "Paid with",
+      order_details_cash_on_delivery_label: "Cash on delivery",
+      order_status_cancelled_label: "Cancelled",
+    })[key] || key,
 }));
 
 vi.mock(
@@ -84,6 +134,7 @@ vi.mock(
   () => ({
     default: ({
       destination,
+      origin,
       riderLocation,
       eta,
       requireBackendRoute,
@@ -91,6 +142,7 @@ vi.mock(
       <div
         data-testid="single-vendor-live-map"
         data-destination={`${destination.lat},${destination.lng}`}
+        data-origin={`${origin?.lat},${origin?.lng}`}
         data-rider={`${riderLocation?.latitude},${riderLocation?.longitude}`}
         data-polyline={eta?.encodedPolyline}
         data-backend-route={String(requireBackendRoute)}
@@ -106,6 +158,7 @@ describe("Single Vendor order tracking", () => {
     queryOptions.length = 0;
     subscriptionOptions.length = 0;
     trackingPayload = undefined;
+    summaryPayload = {};
     subscribedRawOrder = {
       _id: "order-object-id",
       orderId: "SV-1001",
@@ -117,7 +170,7 @@ describe("Single Vendor order tracking", () => {
   it("renders store acceptance from the customer order subscription without polling", () => {
     render(<SingleVendorOrderTracking orderId="SV-1001" />);
 
-    expect(screen.getByText("ACCEPTED")).toBeInTheDocument();
+    expect(screen.getByText("Accepted")).toBeInTheDocument();
     expect(queryOptions.every((options) => !("pollInterval" in options))).toBe(
       true,
     );
@@ -129,6 +182,22 @@ describe("Single Vendor order tracking", () => {
             variables: { userId: "customer-id" },
             skip: false,
           }),
+        }),
+      ]),
+    );
+  });
+
+  it("hides the map before rider pickup", () => {
+    render(<SingleVendorOrderTracking orderId="SV-1001" />);
+
+    expect(
+      screen.queryByTestId("single-vendor-live-map"),
+    ).not.toBeInTheDocument();
+    expect(subscriptionOptions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          operation: "SingleVendorOrderTrackingUpdated",
+          options: expect.objectContaining({ skip: true }),
         }),
       ]),
     );
@@ -162,7 +231,7 @@ describe("Single Vendor order tracking", () => {
 
     render(<SingleVendorOrderTracking orderId="SV-1001" />);
 
-    expect(screen.getByText("Live delivery tracking")).toBeInTheDocument();
+    expect(screen.getByText("Picked")).toBeInTheDocument();
     expect(screen.getByTestId("single-vendor-live-map")).toHaveAttribute(
       "data-destination",
       "31.52,74.32",
@@ -187,5 +256,31 @@ describe("Single Vendor order tracking", () => {
         }),
       ]),
     );
+  });
+
+  it("renders tax, fees, discounts, credits, and the authoritative total", () => {
+    summaryPayload = {
+      orderAmount: 105,
+      itemsSubTotal: 100,
+      taxationAmount: 4,
+      tipping: 3,
+      deliverChargesAmount: 8,
+      minimumOrderFee: 1,
+      priorityDeliveryFees: 2,
+      deliveryDiscount: 2,
+      couponDiscount: 5,
+      creditsApplied: 6,
+    };
+
+    render(<SingleVendorOrderTracking orderId="SV-1001" />);
+
+    expect(screen.getByText("Tax")).toBeInTheDocument();
+    expect(screen.getByText("Low order fee")).toBeInTheDocument();
+    expect(screen.getByText("Priority delivery fee")).toBeInTheDocument();
+    expect(screen.getByText("Discount")).toBeInTheDocument();
+    expect(screen.getByText("Credits applied")).toBeInTheDocument();
+    expect(screen.getAllByText("$105.00")).not.toHaveLength(0);
+    expect(screen.getByText("-$7.00")).toBeInTheDocument();
+    expect(screen.getByText("-$6.00")).toBeInTheDocument();
   });
 });

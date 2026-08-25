@@ -7,10 +7,10 @@ import { theme } from '../../../utils/themeColors'
 import ConfigurationContext from '../../../context/Configuration'
 import AccountSectionHeader from '../../components/AccountSectionHeader'
 import CartItem from '../../components/Cart/CartItem'
-import CartSkeleton from './FavoriteCartSkeleton'
 import { scale, verticalScale } from '../../../utils/scaling'
 import useFavoriteProducts from './useFavoriteProducts'
 import FavoriteCartSkeleton from './FavoriteCartSkeleton'
+import { getFirstAvailableVariation } from '../../utils/stock'
 const PAGE_LIMIT = 10
 
 const MyFavorites = () => {
@@ -24,13 +24,12 @@ const MyFavorites = () => {
   }
 
   const [page, setPage] = useState(0)
-  const { data: favoriteFoodsData, loading: favoriteFoodsLoading, error: favoriteFoodsError, refetch } = useFavoriteProducts({
+  const { data: favoriteFoodsData, loading: favoriteFoodsLoading, refetch } = useFavoriteProducts({
     skip: 0,
     limit: PAGE_LIMIT,
     skipQuery: false
   })
-  console.log('favoriteFoodsData_outSide____', JSON.stringify(favoriteFoodsData, null, 2));
-
+  console.log('favoriteFoodsData_outSide____', JSON.stringify(favoriteFoodsData, null, 2))
 
   const [favoriteItems, setFavoriteItems] = useState([])
   const [isLoadingMore, setIsLoadingMore] = useState(false)
@@ -48,7 +47,7 @@ const MyFavorites = () => {
 
   useEffect(() => {
     if (favoriteFoodsData?.getFavoriteFoodsSingleVendor?.data) {
-      console.log('favoriteFoodsData', JSON.stringify(favoriteFoodsData?.getFavoriteFoodsSingleVendor?.data, null, 2));
+      console.log('favoriteFoodsData', JSON.stringify(favoriteFoodsData?.getFavoriteFoodsSingleVendor?.data, null, 2))
 
       const transformedItems = favoriteFoodsData.getFavoriteFoodsSingleVendor.data.map((food, index) => {
         // Transform variations to include quantity property
@@ -58,7 +57,7 @@ const MyFavorites = () => {
         })) || []
 
         // Calculate total price based on first available variation
-        const availableVariation = transformedVariations.find(v => !v.isOutOfStock) || transformedVariations[0]
+        const availableVariation = getFirstAvailableVariation(transformedVariations) || transformedVariations[0]
         const foodTotal = availableVariation ? (availableVariation.price * availableVariation.quantity).toFixed(2) : '0.00'
 
         return {
@@ -69,7 +68,7 @@ const MyFavorites = () => {
           description: food.description || '',
           image: food.image || '',
           variations: transformedVariations,
-          foodTotal: foodTotal,
+          foodTotal,
           isOutOfStock: food.isOutOfStock,
           subCategory: food.subCategory,
           categoryId: food?.categoryId
@@ -92,14 +91,14 @@ const MyFavorites = () => {
 
   const currencySymbol = configuration?.currencySymbol || '€'
 
-  const handleLoadMore = async () => {
+  const handleLoadMore = async() => {
     if (isLoadingMore || favoriteFoodsLoading) return
 
     setIsLoadingMore(true)
     const nextPage = page + 1
     setPage(nextPage)
 
-    const { data } = await refetch({
+    await refetch({
       skip: nextPage * PAGE_LIMIT,
       limit: PAGE_LIMIT
     })

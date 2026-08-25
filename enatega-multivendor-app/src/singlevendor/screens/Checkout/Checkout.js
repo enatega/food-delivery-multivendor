@@ -37,11 +37,7 @@ import { ActivityIndicator } from 'react-native-paper'
 import OrderSummaryError from '../../components/Checkout/OrderSummaryError'
 import { WrongAddressModal } from '../../../components/Checkout/WrongAddressModal'
 import { APP_MODES } from '../../../mode/constants'
-import {
-  getModeItem,
-  removeModeItem,
-  setModeItem
-} from '../../../mode/storage'
+import { getModeItem, removeModeItem, setModeItem } from '../../../mode/storage'
 import OrderSummarySkeleton from './OrderSummarySkeleton'
 import SmallOrderFeeTip from '../../components/Checkout/SmallOrderFeeTip'
 
@@ -92,7 +88,7 @@ const Checkout = (props) => {
   const [, setIsSmallOrderFeePromoVisible] = useState(false)
   const [, setIsSmallOrderFeePromoExpanded] = useState(false)
   const isSubscribed = Boolean(profile?.stripe_plan_id)
-  const { loading, subtotal, deliveryFee, serviceFee, currencySymbol, minimumOrderFee, taxAmount, total, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount, originalDeliveryCharges, freeDeliveriesRemaining, isBelowMaximumOrder, placeOrder, placingOrder, error, couponDiscountAmount, couponApplied, recalculateSummary, priorityDeliveryFee, creditsUsed, maximumOrderAmount, checkoutQuoteId, idempotencyKey } = useCheckout({
+  const { loading, subtotal, deliveryFee, serviceFee, currencySymbol, minimumOrderFee, taxAmount, total, dealDiscount, isBelowMinimumOrder, minimumOrderAmount, deliveryDiscount, originalDeliveryCharges, freeDeliveriesRemaining, isBelowMaximumOrder, placeOrder, placingOrder, error, couponDiscountAmount, couponApplied, recalculateSummary, priorityDeliveryFee, creditsUsed, maximumOrderAmount, checkoutQuoteId, idempotencyKey } = useCheckout({
     fulfillmentMode,
     deliveryAddress: location,
     selectedVoucher,
@@ -409,7 +405,17 @@ const Checkout = (props) => {
         <View style={{ height: scale(24) }} />
       </ScrollView>
       <View style={styles(currentTheme).stickyBottomContainer}>
-        {loading ? <OrderSummarySkeleton/> : error ? <OrderSummaryError onRetry={recalculateSummary} /> : <OrderSummary creditsUsed={creditsUsed} isCheckout={true} priorityDeliveryFee={deliveryTime === 'priority' ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={isBelowMaximumOrder ? minimumOrderFee : 0} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={fulfillmentMode === 'delivery' ? tipAmount : 0} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />}
+        {loading
+          ? (
+          <OrderSummarySkeleton />
+            )
+          : error
+            ? (
+          <OrderSummaryError onRetry={recalculateSummary} />
+              )
+            : (
+          <OrderSummary creditsUsed={creditsUsed} dealDiscount={dealDiscount} isCheckout={true} priorityDeliveryFee={deliveryTime === 'priority' ? priorityDeliveryFee : 0} couponDiscountAmount={couponApplied ? couponDiscountAmount : 0} minimumOrderFee={isBelowMaximumOrder ? minimumOrderFee : 0} freeDeliveriesRemaining={freeDeliveriesRemaining} subtotal={subtotal} deliveryFee={deliveryFee} serviceFee={serviceFee} deliveryDiscount={deliveryDiscount ?? 0} originalDeliveryCharges={originalDeliveryCharges} tipAmount={fulfillmentMode === 'delivery' ? tipAmount : 0} total={total} currencySymbol={currencySymbol} expanded={summaryExpanded} onToggleExpanded={() => setSummaryExpanded(!summaryExpanded)} />
+              )}
         {minimumOrderFee > 0 && isSmallOrderFeeTipVisible && (
           <SmallOrderFeeTip
             currencySymbol={currencySymbol}
@@ -448,13 +454,7 @@ const Checkout = (props) => {
       </View>
       <VoucherBottomSheet ref={voucherBottomSheetRef} onApplyVoucher={handleApplyVoucher} />
       <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
-      <WrongAddressModal
-        theme={currentTheme}
-        modalVisible={isWrongAddressModalVisible}
-        setModalVisible={() => setIsWrongAddressModalVisible(false)}
-        handleNavigation={handleWrongAddressSelectAnother}
-        isSingleVendor={true}
-      />
+      <WrongAddressModal theme={currentTheme} modalVisible={isWrongAddressModalVisible} setModalVisible={() => setIsWrongAddressModalVisible(false)} handleNavigation={handleWrongAddressSelectAnother} isSingleVendor={true} />
     </View>
   )
 }

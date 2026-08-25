@@ -28,7 +28,7 @@ module.exports = () => {
   return {
     name: 'Enatega Multi',
     scheme: 'enategamultivendor',
-    version: '1.1.38',
+    version: '1.1.39',
     description:
       "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     slug: 'enategamultivendor',
@@ -62,7 +62,7 @@ module.exports = () => {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.enatega.multivendor',
-      buildNumber: '139',
+      buildNumber: '141',
       icon: './assets/icon.png',
       googleServicesFile: './GoogleService-Info.plist',
       infoPlist: {
@@ -74,6 +74,13 @@ module.exports = () => {
         UIBackgroundModes: ['remote-notification'],
         CFBundleURLTypes: urlTypes,
         ITSAppUsesNonExemptEncryption: false
+      },
+      privacyManifests: {
+        // Enatega uses first-party product analytics and diagnostics only. It
+        // does not link app data with third-party data for advertising, share
+        // data with brokers, or access IDFA.
+        NSPrivacyTracking: false,
+        NSPrivacyTrackingDomains: []
       },
       config: {
         ...(iosGoogleMapsApiKey ? { googleMapsApiKey: iosGoogleMapsApiKey } : {})
@@ -89,7 +96,7 @@ module.exports = () => {
       androidCollapsedTitle: 'Enatega Multivendor'
     },
     android: {
-      versionCode: 139,
+      versionCode: 140,
       package: 'com.enatega.multivendor',
       userInterfaceStyle: 'automatic',
       // Disable ADB/cloud backups so the AsyncStorage DB (JWT) can't be pulled
@@ -177,7 +184,10 @@ module.exports = () => {
         'expo-build-properties',
         {
           ios: {
-            useFrameworks: 'static'
+            useFrameworks: 'static',
+            // Merge pod privacy manifests into the app manifest so the archive
+            // Apple reviews reflects every native dependency declaration.
+            privacyManifestAggregationEnabled: true
           }
         }
       ],

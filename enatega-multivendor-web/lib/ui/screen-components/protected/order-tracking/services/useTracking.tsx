@@ -9,12 +9,10 @@ import {
   SUBSCRIPTION_ORDER,
   SUBSCRIPTION_ORDER_TRACKING,
 } from "@/lib/api/graphql/subscription";
+import { isLiveDeliveryTrackingStatus } from "./tracking-status";
 
 function useTracking({ orderId }: { orderId: string }) {
-  const {
-    data: orderTrackingDetails,
-    loading,
-  } = useQuery(ORDER_TRACKING, {
+  const { data: orderTrackingDetails, loading } = useQuery(ORDER_TRACKING, {
     fetchPolicy: "cache-and-network",
     // Keep the last-known data on screen while a background refetch is in
     // flight instead of dropping back to a loading state on every update.
@@ -33,7 +31,9 @@ function useTracking({ orderId }: { orderId: string }) {
     orderTrackingDetails?.orderDetails?.orderStatus;
   const isDeliveryOrder = !orderTrackingDetails?.orderDetails?.isPickedUp;
   const trackingEnabled =
-    Boolean(orderId) && isDeliveryOrder && currentStatus === "PICKED";
+    Boolean(orderId) &&
+    isDeliveryOrder &&
+    isLiveDeliveryTrackingStatus(currentStatus);
 
   const { data: initialTrackingData } = useQuery(ORDER_LIVE_TRACKING, {
     variables: { id: orderId },

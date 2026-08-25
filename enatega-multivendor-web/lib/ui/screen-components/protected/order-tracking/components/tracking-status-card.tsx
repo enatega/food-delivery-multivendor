@@ -34,6 +34,7 @@ function TrackingStatusCard({
       "ACCEPTED",
       "ASSIGNED",
       "PICKED",
+      "ON_ROUTE",
       "DELIVERED",
     ];
     const currentStatus = orderTrackingDetails?.orderStatus || "PENDING";
@@ -63,7 +64,7 @@ function TrackingStatusCard({
   const etaWindow = formatEtaWindow(eta);
   const showEta =
     !orderTrackingDetails.isPickedUp &&
-    ["ACCEPTED", "ASSIGNED", "PICKED"].includes(
+    ["ACCEPTED", "ASSIGNED", "PICKED", "ON_ROUTE"].includes(
       orderTrackingDetails.orderStatus,
     ) &&
     Boolean(etaWindow);
@@ -83,7 +84,7 @@ function TrackingStatusCard({
         if (readyAt) {
           if (readyAt > nowDate) {
             const minLeft = Math.ceil(
-              (readyAt.getTime() - nowDate.getTime()) / 60000
+              (readyAt.getTime() - nowDate.getTime()) / 60000,
             );
             return isRestaurant
               ? t("AcceptedRestaurantPrep", { min: minLeft, riderMessage: "" })
@@ -113,8 +114,13 @@ function TrackingStatusCard({
         }
         return t("Picked");
       }
+      case "ON_ROUTE": {
+        return t("Picked");
+      }
       case "DELIVERED": {
-        const deliveredTime = parseBackendDate(orderTrackingDetails.deliveredAt);
+        const deliveredTime = parseBackendDate(
+          orderTrackingDetails.deliveredAt,
+        );
         if (deliveredTime) {
           const deliveredString = deliveredTime.toLocaleTimeString([], {
             hour: "2-digit",
@@ -138,6 +144,10 @@ function TrackingStatusCard({
         return t("Processing");
     }
   };
+  const currentStatusLabel = orderTrackingDetails.orderStatus
+    .toLowerCase()
+    .replaceAll("_", " ")
+    .replace(/^\w/, (character) => character.toUpperCase());
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 w-full max-w-2xl">
@@ -150,11 +160,17 @@ function TrackingStatusCard({
           <span />
         )}
 
-        {orderTrackingDetails.orderStatus === "CANCELLED" && (
-          <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full text-xs">
-            {t("order_status_cancelled_label")}
-          </span>
-        )}
+        <span
+          className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+            orderTrackingDetails.orderStatus === "CANCELLED"
+              ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+              : "bg-primary-light text-secondary-color dark:bg-[#2E3B23] dark:text-primary-color"
+          }`}
+        >
+          {orderTrackingDetails.orderStatus === "CANCELLED"
+            ? t("order_status_cancelled_label")
+            : currentStatusLabel}
+        </span>
       </div>
 
       {/* Status indicator with icon */}
@@ -221,21 +237,21 @@ function TrackingStatusCard({
           )}
           {(orderTrackingDetails.orderStatus === "DELIVERED" ||
             orderTrackingDetails.orderStatus === "COMPLETED") && (
-              <div className="w-8 h-8 flex items-center justify-center bg-primary-color dark:bg-primary-light rounded-full">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-white"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            )}
+            <div className="w-8 h-8 flex items-center justify-center bg-primary-color dark:bg-primary-light rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-white"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          )}
           {orderTrackingDetails.orderStatus === "CANCELLED" && (
             <div className="w-8 h-8 flex items-center justify-center bg-red-100 dark:bg-red-900 rounded-full">
               <svg
@@ -261,8 +277,11 @@ function TrackingStatusCard({
       </div>
 
       {/* Segmented Progress Bars */}
-      <div className="grid grid-cols-5 gap-2 mb-4">
-        {[0, 1, 2, 3, 4].map((index) => {
+      <div
+        className="mb-4 grid grid-cols-6 gap-2"
+        aria-label={`Delivery progress: ${currentStatusLabel}`}
+      >
+        {[0, 1, 2, 3, 4, 5].map((index) => {
           const status = getStepStatus(index);
           return (
             <div
@@ -270,12 +289,13 @@ function TrackingStatusCard({
               className="h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden"
             >
               <div
-                className={`h-full rounded-full transition-all duration-500 ${status === "completed"
-                  ? "bg-primary-color"
-                  : status === "active"
-                    ? "bg-primary-color animate-pulse"
-                    : "bg-gray-200 dark:bg-gray-700"
-                  }`}
+                className={`h-full rounded-full transition-all duration-500 ${
+                  status === "completed"
+                    ? "bg-primary-color"
+                    : status === "active"
+                      ? "bg-primary-color animate-pulse"
+                      : "bg-gray-200 dark:bg-gray-700"
+                }`}
                 style={{
                   width:
                     status === "completed"

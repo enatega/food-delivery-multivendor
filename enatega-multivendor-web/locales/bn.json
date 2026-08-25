@@ -135,6 +135,13 @@
   "app_version": "1.0.0",
   "no_items_found": "কোনো আইটেম পাওয়া যায়নি",
   "shop-types": "দোকানের ধরন",
+  "categories_label": "বিভাগসমূহ",
+  "all_categories_label": "সব বিভাগ",
+  "tab_deals": "অফারসমূহ",
+  "tab_browse": "ব্রাউজ",
+  "order_details_minimum_order_fee_label": "কম অর্ডার ফি",
+  "order_details_priority_delivery_fee_label": "অগ্রাধিকার ডেলিভারি ফি",
+  "order_details_credits_applied_label": "ব্যবহৃত ক্রেডিট",
   "something_went_wrong": "কিছু ভুল হয়েছে",
   "for_rest": "রেস্টুরেন্টের জন্য",
   "for_riders": "রাইডারদের জন্য",
@@ -191,6 +198,8 @@
   "tab_discovery": "আবিষ্কার",
   "tab_restaurants": "রেস্টুরেন্ট",
   "tab_store": "দোকান",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "আপনার কাছাকাছি",
   "generic_listing_heading": "আপনার কাছাকাছি রেস্টুরেন্ট",
   "generic_listing_cuisine_section": "রান্নার ধরন",
@@ -918,5 +927,88 @@
   "show_more_orders": "আরও অর্ডার দেখান",
   "your_email": "your@email.com",
   "Select_your_address_prompt": "আপনার ঠিকানা নির্বাচন করুন।",
-  "Our-brands": "আমাদের ব্র্যান্ড"
+  "Our-brands": "আমাদের ব্র্যান্ড",
+  "Landing": {
+    "hero": {
+      "eyebrow": "One app. Everyday possibilities.",
+      "title": "Everything you need,",
+      "accent": "beautifully delivered.",
+      "body": "Food, groceries and everyday essentials, brought together in one simple experience."
+    },
+    "categories": {
+      "label": "Delivery categories",
+      "food": "Food",
+      "groceries": "Groceries",
+      "essentials": "Essentials",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Finding that city.",
+      "ready": "City selected. Show items when you are ready.",
+      "cityError": "We could not locate that city. Choose another suggestion.",
+      "locating": "Finding your current location.",
+      "locationError": "We could not access your location. Search for a city instead."
+    },
+    "journey": {
+      "eyebrow": "How Enatega moves",
+      "title": "From your city,",
+      "accent": "to your doorstep.",
+      "bagAlt": "Enatega delivery bag",
+      "stages": {
+        "choose": {
+          "title": "Choose",
+          "body": "Food, groceries or essentials."
+        },
+        "moving": {
+          "title": "Moving",
+          "body": "One clear journey across your city."
+        },
+        "arrived": {
+          "title": "Arrived",
+          "body": "Delivered where you need it."
+        }
+      }
+    },
+    "cta": {
+      "label": "Work with Enatega",
+      "business": {
+        "eyebrow": "For businesses",
+        "title": "Grow with Enatega.",
+        "body": "Bring your store closer to more customers.",
+        "action": "Become a partner"
+      },
+      "rider": {
+        "eyebrow": "For riders",
+        "title": "Ride with Enatega.",
+        "body": "Deliver on your schedule.",
+        "action": "Become a rider"
+      }
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

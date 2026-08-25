@@ -4,10 +4,13 @@ import AppLinks from "@/lib/ui/useable-components/Footer/AppLinks";
 import FooterLinks from "@/lib/ui/useable-components/Footer/FooterLinks";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { isMarketplaceLandingPath } from "@/lib/ui/screens/unprotected/landing/landing-state";
 
 const AppFooter = () => {
   const t = useTranslations();
   const pathname = usePathname();
+  const isLandingPage = isMarketplaceLandingPath(pathname);
 
   const isDiscoveryPage =
     pathname?.endsWith("/restaurants") ||
@@ -71,6 +74,40 @@ const AppFooter = () => {
       },
     ],
   };
+
+  if (isLandingPage) {
+    const landingLinks = [
+      { label: t("Footer.aboutUs"), href: "/about" },
+      { label: t("Footer.forRestaurants"), href: "/restaurantInfo" },
+      { label: t("Footer.forRiders"), href: "/rider" },
+      { label: t("Footer.privacyPolicy"), href: "/privacy" },
+      { label: t("Footer.contact"), href: "https://ninjascode.com/" },
+    ];
+
+    return (
+      <footer className="w-full bg-[#101310] text-white">
+        <div className="mx-auto flex max-w-dispatch-page flex-col gap-8 px-6 py-10 md:flex-row md:items-end md:justify-between md:px-10 lg:px-16">
+          <AppLinks />
+          <div className="flex flex-col gap-5 md:items-end">
+            <nav aria-label={t("Footer.company")} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/68">
+              {landingLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="transition-colors hover:text-primary-color focus-visible:outline-none"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+            <p className="text-xs text-white/45">
+              © {new Date().getFullYear()} Enatega. {t("Landing.footer.rights")}
+            </p>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <div

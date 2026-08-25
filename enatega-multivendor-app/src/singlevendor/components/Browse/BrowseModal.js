@@ -41,12 +41,12 @@ const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm
             ? (
           <>
             <FlashList
-            estimatedItemSize={190}
-              contentContainerStyle={{ paddingLeft: 0, paddingBottom: insets.bottom + 24 }}
+              estimatedItemSize={236}
+              contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: insets.bottom + 24 }}
               data={searchData}
               keyExtractor={(item) => item?.id}
               renderItem={({ item }) => {
-                return <ProductCard product={item} onCardPress={onProductPress} onAddToCart={handleAddToCart} containerStyles={{ width: '46%', minHeight: 220, maxHeight: 220, marginBottom: 12, marginRight: 10, marginLeft: 6 }}/>
+                return <ProductCard product={item} onCardPress={onProductPress} onAddToCart={handleAddToCart} layout='grid' />
               }}
               numColumns={2}
               showsVerticalScrollIndicator={false}

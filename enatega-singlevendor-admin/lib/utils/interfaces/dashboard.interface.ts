@@ -29,7 +29,7 @@ export interface IDashboardOrderStatsComponentsProps {
 
 export interface IDashboardGrowthOverviewComponentsProps {
   isStoreView: boolean;
-  dateFilter: IDateFilter
+  dateFilter: IDateFilter;
 }
 
 export interface IDateFilter {
@@ -39,7 +39,7 @@ export interface IDateFilter {
 }
 
 export interface IDashboardRestaurantStatesTableComponentsProps {
-  dateFilter: IDateFilter
+  dateFilter: IDateFilter;
 }
 
 export interface IDashboardRestaurantStatsTableComponentsProps
@@ -71,6 +71,20 @@ export interface IDashboardUsersByYearResponseGraphQL {
     restaurantsCount: number[];
     ridersCount: number[];
   };
+}
+
+export interface ISingleVendorDashboardCatalogResponseGraphQL {
+  restaurants: {
+    _id: string;
+    categories: {
+      _id: string;
+      createdAt: string;
+      foods: {
+        _id: string;
+        createdAt: string;
+      }[];
+    }[];
+  }[];
 }
 
 export interface IDashboardOrdersByTypeResponseGraphQL {

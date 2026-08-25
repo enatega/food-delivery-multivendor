@@ -3,7 +3,7 @@
 // Core
 import { Sidebar } from "primereact/sidebar";
 import { Menu } from "primereact/menu";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/lib/providers/ThemeProvider";
 import { flushSync } from "react-dom";
 import {
@@ -75,6 +75,7 @@ import { modeStorage, useAppMode } from "@/lib/mode";
 import { getModeHomeRoute } from "@/lib/mode/routes";
 import VendorModeToggle from "@/lib/ui/useable-components/vendor-mode-toggle";
 import { FiMoon, FiSun, FiUser } from "react-icons/fi";
+import { isMarketplaceLandingPath } from "@/lib/ui/screens/unprotected/landing/landing-state";
 
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
@@ -86,6 +87,12 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   const [, startTransition] = useTransition();
   const currentLocale = useLocale();
   const { isSingleVendor, mode } = useAppMode();
+  const pathname = usePathname();
+  const isMarketplaceLanding = isMarketplaceLandingPath(
+    pathname,
+    isSingleVendor,
+  );
+  const showHeaderSearch = !isMarketplaceLanding && !isSingleVendor;
 
   // REf
   const menuRef = useRef<Menu>(null);
@@ -138,6 +145,12 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     setSearchedKeywords,
   } = useSearchUI();
 
+  useEffect(() => {
+    if (showHeaderSearch) return;
+    setIsSearchFocused(false);
+    setFilter("");
+  }, [showHeaderSearch, setFilter, setIsSearchFocused]);
+
   // Format subtotal for display
   const formattedSubtotal =
     cartCount > 0
@@ -146,6 +159,8 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
 
   // Handlers
   const onInit = () => {
+    if (isMarketplaceLanding) return;
+
     const current_location_ls = onUseLocalStorage(
       "get",
       USER_CURRENT_LOCATION_LS_KEY,
@@ -237,7 +252,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // UseEffects
   useEffect(() => {
     onInit();
-  }, [GOOGLE_MAPS_KEY, profile]);
+  }, [GOOGLE_MAPS_KEY, isMarketplaceLanding, profile]);
 
   useEffect(() => {
     if (refetchProfileData) {
@@ -394,22 +409,28 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   return (
     <>
       <nav
-        className={`layout-top-bar z-50 w-full bg-dispatch-surface ${isSearchFocused ? "sticky top-0" : ""}`}
+        className={`layout-top-bar z-50 w-full bg-[var(--dispatch-header)] ${isSearchFocused ? "sticky top-0" : ""}`}
       >
         <div className="w-full">
           <PaddingContainer>
-            <div className="flex min-h-[72px] w-full flex-wrap items-center gap-x-3 gap-y-2 py-2.5 md:grid md:grid-cols-[minmax(220px,auto)_minmax(260px,1fr)_auto] md:gap-x-5 md:gap-y-0">
+            <div
+              className={`flex min-h-[72px] w-full flex-wrap items-center gap-x-3 gap-y-2 py-2.5 md:grid md:gap-x-5 md:gap-y-0 ${
+                isMarketplaceLanding
+                  ? "md:grid-cols-[1fr_auto_1fr]"
+                  : "md:grid-cols-[minmax(220px,auto)_minmax(260px,1fr)_auto]"
+              }`}
+            >
               {/* Left Section */}
               <div className="flex min-w-0 items-center gap-2 md:gap-3">
                 {!isSearchFocused && (
                   <div
                     onClick={logoClickHandler}
-                    className="flex shrink-0 cursor-pointer items-center text-xl font-bold text-gray-900 dark:text-white"
+                    className={`flex shrink-0 cursor-pointer items-center text-xl font-bold text-gray-900 dark:text-white ${isMarketplaceLanding ? "md:origin-left md:scale-110" : ""}`}
                   >
                     <Logo fillColor="#000000" darkmode="#FFFFFFFF" />
                   </div>
                 )}
-                {!isSearchFocused && (
+                {!isSearchFocused && !isMarketplaceLanding && (
                   <button
                     type="button"
                     title={userAddress?.deliveryAddress || ""}
@@ -420,7 +441,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       <LocationSvg width={20} height={20} />
                     </div>
                     <span
-                      className="min-w-0 truncate text-sm font-normal leading-6 text-dispatch-ink xl:text-[15px]"
+                      className="min-w-0 truncate text-sm font-normal leading-6 text-dispatch-ink"
                       title={userAddress?.deliveryAddress || ""}
                     >
                       {fittedAddress(userAddress?.deliveryAddress)}
@@ -436,43 +457,55 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               </div>
 
               {/* Center Section */}
-              <div className="order-3 w-full md:order-none md:w-auto">
-                <div
-                  className={`mx-auto w-full transition-all duration-300 ease-in-out ${isSearchFocused ? "max-w-full" : "max-w-[500px]"} md:px-0`}
-                >
-                  <div className="relative w-full">
-                    <input
-                      id="search-input"
-                      value={filter}
-                      onChange={handleSearchInputChange}
-                      onFocus={() => setIsSearchFocused(true)}
-                      placeholder={t("SearchBarPlaceholder")}
-                      className={`
+              {(isMarketplaceLanding || showHeaderSearch) && (
+                <div className="order-3 w-full md:order-none md:w-auto">
+                  {isMarketplaceLanding ? (
+                    <div className="mx-auto flex w-full justify-center md:w-auto">
+                      <VendorModeToggle landing />
+                    </div>
+                  ) : (
+                    <div
+                      className={`mx-auto w-full transition-all duration-300 ease-in-out ${isSearchFocused ? "max-w-full" : "max-w-[500px]"} md:px-0`}
+                    >
+                      <div className="relative w-full">
+                        <input
+                          id="search-input"
+                          value={filter}
+                          onChange={handleSearchInputChange}
+                          onFocus={() => setIsSearchFocused(true)}
+                          placeholder={t("SearchBarPlaceholder")}
+                          className={`
                         min-h-11 w-full rounded-xl border border-transparent bg-dispatch-map px-4 py-2.5 pr-11 text-sm text-dispatch-ink transition-colors duration-200 placeholder:text-dispatch-muted focus:border-primary-color focus:bg-dispatch-surface focus:outline-none focus:ring-2 focus:ring-primary-focus
                         block
                         dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 dark:focus:border-primary-color
                       `}
-                    />
+                        />
 
-                    {!isSearchFocused && (
-                      <div className="pointer-events-none absolute inset-y-0 right-3 hidden items-center sm:flex">
-                        <SearchSvg width={18} height={18} />
+                        {!isSearchFocused && (
+                          <div className="pointer-events-none absolute inset-y-0 right-3 hidden items-center sm:flex">
+                            <SearchSvg width={18} height={18} />
+                          </div>
+                        )}
+
+                        {isSearchFocused && (
+                          <button
+                            type="button"
+                            aria-label={t("close_label")}
+                            className="absolute right-2 top-1/2 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-95 dark:bg-gray-700 dark:hover:bg-gray-600 sm:flex"
+                            onClick={() => setFilter("")}
+                          >
+                            <CircleCrossSvg
+                              color="black"
+                              width={16}
+                              height={16}
+                            />
+                          </button>
+                        )}
                       </div>
-                    )}
-
-                    {isSearchFocused && (
-                      <button
-                        type="button"
-                        aria-label={t("close_label")}
-                        className="absolute right-2 top-1/2 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-95 dark:bg-gray-700 dark:hover:bg-gray-600 sm:flex"
-                        onClick={() => setFilter("")}
-                      >
-                        <CircleCrossSvg color="black" width={16} height={16} />
-                      </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
-              </div>
+              )}
 
               {/* Right Section */}
               <div className="ml-auto flex min-w-0 items-center justify-end gap-1 sm:gap-2">
@@ -488,12 +521,14 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {!authToken && !isSearchFocused ? (
                   <button
-                    className="order-4 flex h-11 items-center justify-center gap-2 rounded-xl px-2.5 text-sm font-medium text-dispatch-ink transition-colors duration-200 hover:bg-dispatch-map hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color active:scale-[0.98] md:px-3"
+                    className={`order-4 flex h-11 items-center justify-center gap-2 rounded-xl px-2.5 text-sm font-medium text-dispatch-ink transition-colors duration-200 hover:bg-dispatch-map hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color active:scale-[0.98] md:px-3 ${isMarketplaceLanding ? "md:border md:border-dispatch-line md:px-5" : ""}`}
                     onClick={handleModalToggle}
                     type="button"
                   >
                     <FiUser aria-hidden className="h-5 w-5 shrink-0" />
-                    <span className="whitespace-nowrap text-sm font-medium">
+                    <span
+                      className={`whitespace-nowrap text-sm font-medium ${isMarketplaceLanding ? "hidden sm:inline" : ""}`}
+                    >
                       {t("login_label")}
                     </span>
                   </button>
@@ -527,7 +562,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   </button>
                 )}
                 {!isSearchFocused && (
-                  <div className="relative order-3 hidden items-center gap-1 sm:flex sm:gap-2">
+                  <div
+                    className={`relative items-center gap-1 sm:gap-2 ${isMarketplaceLanding ? "order-1 flex" : "order-3 hidden sm:flex"}`}
+                  >
                     <button
                       type="button"
                       onClick={toggleTheme}
@@ -535,9 +572,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       className={iconButtonClassName}
                     >
                       {theme === "dark" ? (
-                        <FiMoon aria-hidden className="h-4 w-4" />
-                      ) : (
                         <FiSun aria-hidden className="h-4 w-4" />
+                      ) : (
+                        <FiMoon aria-hidden className="h-4 w-4" />
                       )}
                     </button>
                     <button
@@ -545,9 +582,14 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       onClick={(e) => languageMenuRef.current?.toggle(e)}
                       aria-label={currentLanguageName}
                       title={currentLanguageName}
-                      className={iconButtonClassName}
+                      className={`${iconButtonClassName} ${isMarketplaceLanding ? "md:w-auto md:gap-2 md:px-3" : ""}`}
                     >
                       <FontAwesomeIcon icon={faGlobe} className="text-base" />
+                      {isMarketplaceLanding && (
+                        <span className="hidden text-xs font-semibold uppercase md:inline">
+                          {currentLocale}
+                        </span>
+                      )}
                     </button>
                     <Menu
                       model={model}
@@ -565,7 +607,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     />
                   </div>
                 )}
-                {!authToken && !isSearchFocused && (
+                {!authToken && !isSearchFocused && !isMarketplaceLanding && (
                   <div className="order-1 hidden md:block">
                     <VendorModeToggle compact />
                   </div>
@@ -620,9 +662,9 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                         }
                       }}
                     >
-                      <CartSvg color="black" width={20} height={20} />
+                      <CartSvg color="currentColor" width={20} height={20} />
                       {cartCount > 0 && (
-                        <div className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary-color px-1 text-[10px] font-semibold text-white shadow-sm">
+                        <div className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary-color px-1 text-xs font-semibold text-white shadow-sm">
                           {cartCount}
                         </div>
                       )}
@@ -683,24 +725,25 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
               />
             </div>
 
-            {!isSearchFocused && !authToken && (
+            {!isSearchFocused && !authToken && !isMarketplaceLanding && (
               <div className="mt-2 flex justify-center md:hidden">
                 <VendorModeToggle compact />
               </div>
             )}
 
             {/* Search Results */}
-            <div className="flex items-center justify-center">
-              <div className="w-full md:w-7/12 pr-5">
-                <AnimatePresence>
-                  {isSearchFocused && (
-                    <motion.div
-                      key="search-results"
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className="
+            {!isMarketplaceLanding && (
+              <div className="flex items-center justify-center">
+                <div className="w-full md:w-7/12 pr-5">
+                  <AnimatePresence>
+                    {isSearchFocused && (
+                      <motion.div
+                        key="search-results"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="
                       w-full h-[10%] mt-2 max-h-[60vh] 
                       bg-white dark:bg-gray-800 
                       overflow-y-auto 
@@ -708,67 +751,70 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700
                       rounded-md
                     "
-                    >
-                      {renderSearchResults()}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            {!isSearchFocused && userAddress?.deliveryAddress && (
-              <div className="my-1 flex items-center justify-between gap-3 lg:hidden">
-                <button
-                  type="button"
-                  className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-dispatch-map focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color"
-                  onClick={onHandleAddressModelVisibility}
-                  title={userAddress?.deliveryAddress || ""}
-                >
-                  <div className="flex h-9 w-8 shrink-0 items-center justify-center text-primary-dark">
-                    <LocationSvg width={20} height={20} />
-                  </div>
-                  <p
-                    className="min-w-0 truncate text-sm text-primary-color"
-                    title={userAddress?.deliveryAddress || ""}
-                  >
-                    {userAddress?.deliveryAddress}
-                  </p>
-                  <div className="flex shrink-0 items-center">
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      className="text-xs text-primary-color"
-                    />
-                  </div>
-                </button>
-
-                {authToken && (
-                  <button
-                    type="button"
-                    className="flex max-w-[44%] shrink-0 items-center gap-2 rounded-lg border border-dispatch-line bg-dispatch-surface px-1 py-1 transition-colors duration-200 hover:border-primary-color hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color md:hidden"
-                    onClick={(event) => menuRef.current?.toggle(event)}
-                    aria-controls="popup_menu_right"
-                    aria-haspopup
-                    title={userName}
-                  >
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-color text-sm font-semibold uppercase text-white select-none">
-                      {profile?.name
-                        ?.trim()
-                        .split(" ")
-                        .map((n) => n[0])
-                        .slice(0, 2)
-                        .join("") || userName.charAt(0)}
-                    </div>
-                    <span className="min-w-0 truncate text-sm text-gray-800 dark:text-white">
-                      {userName}
-                    </span>
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      className="shrink-0 text-xs text-primary-color"
-                    />
-                  </button>
-                )}
+                      >
+                        {renderSearchResults()}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             )}
+
+            {!isMarketplaceLanding &&
+              !isSearchFocused &&
+              userAddress?.deliveryAddress && (
+                <div className="my-1 flex items-center justify-between gap-3 lg:hidden">
+                  <button
+                    type="button"
+                    className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-dispatch-map focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color"
+                    onClick={onHandleAddressModelVisibility}
+                    title={userAddress?.deliveryAddress || ""}
+                  >
+                    <div className="flex h-9 w-8 shrink-0 items-center justify-center text-primary-dark">
+                      <LocationSvg width={20} height={20} />
+                    </div>
+                    <p
+                      className="min-w-0 truncate text-sm text-primary-color"
+                      title={userAddress?.deliveryAddress || ""}
+                    >
+                      {userAddress?.deliveryAddress}
+                    </p>
+                    <div className="flex shrink-0 items-center">
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        className="text-xs text-primary-color"
+                      />
+                    </div>
+                  </button>
+
+                  {authToken && (
+                    <button
+                      type="button"
+                      className="flex max-w-[44%] shrink-0 items-center gap-2 rounded-lg border border-dispatch-line bg-dispatch-surface px-1 py-1 transition-colors duration-200 hover:border-primary-color hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color md:hidden"
+                      onClick={(event) => menuRef.current?.toggle(event)}
+                      aria-controls="popup_menu_right"
+                      aria-haspopup
+                      title={userName}
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-color text-sm font-semibold uppercase text-white select-none">
+                        {profile?.name
+                          ?.trim()
+                          .split(" ")
+                          .map((n) => n[0])
+                          .slice(0, 2)
+                          .join("") || userName.charAt(0)}
+                      </div>
+                      <span className="min-w-0 truncate text-sm text-gray-800 dark:text-white">
+                        {userName}
+                      </span>
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        className="shrink-0 text-xs text-primary-color"
+                      />
+                    </button>
+                  )}
+                </div>
+              )}
           </PaddingContainer>
         </div>
       </nav>

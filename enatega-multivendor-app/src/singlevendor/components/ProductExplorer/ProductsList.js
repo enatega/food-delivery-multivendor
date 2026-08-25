@@ -1,5 +1,5 @@
-import React, { memo, useState, useMemo, useContext, useRef } from 'react'
-import { View, StyleSheet, Modal, ActivityIndicator } from 'react-native'
+import React, { useState, useMemo, useContext, useRef } from 'react'
+import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
@@ -47,7 +47,7 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
     return items.filter((i) => i.title?.toLowerCase().includes(q))
   }, [query, items])
 
-  const onEndReached = async () => {
+  const onEndReached = async() => {
     if (isSearched.current) {
       isSearched.current = false
       return
@@ -72,7 +72,7 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
     }
   }
 
-  const debouncedSearch = useDebounce(async (searchText) => {
+  const debouncedSearch = useDebounce(async(searchText) => {
     console.log('debounced search:', searchText, categoryId)
     const { data } = await refetch({
       categoryId,
@@ -85,7 +85,7 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
     setListData(data?.getCategoryItemsSingleVendor?.items ?? [])
   }, 600)
 
-  const onSearchChange = async (text) => {
+  const onSearchChange = async(text) => {
     setQuery(text)
 
     if (!isPaginated) return
@@ -114,23 +114,18 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
             isSearched.current = false
           }
         }}
-        style={{ paddingHorizontal: 10 }}
+        style={{ paddingHorizontal: 4 }}
         data={dataSource}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ProductCard
-            product={item}
+            product={{ ...item, categoryId: item?.categoryId || categoryId }}
             onCardPress={onProductPress}
-            containerStyles={{
-              width: '94%',
-              marginBottom: 10,
-              marginLeft: 6,
-              marginRight: 6
-            }}
+            layout='grid'
           />
         )}
         numColumns={2}
-        estimatedItemSize={190}
+        estimatedItemSize={236}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.4}
         showsVerticalScrollIndicator={false}
