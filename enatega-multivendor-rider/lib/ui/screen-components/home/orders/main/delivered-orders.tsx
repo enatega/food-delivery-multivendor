@@ -31,6 +31,8 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
     errorAssigned,
     assignedOrders,
     refetchAssigned,
+    loadMoreAssigned,
+    hasMoreAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
 
@@ -62,6 +64,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         paymentStatus={item.paymentStatus}
         acceptedAt={item.acceptedAt}
         user={item.user}
+        eta={item.eta}
       />
     ),
     [route.key],
@@ -107,41 +110,20 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
       className="pt-14 flex-1 pb-16"
       style={[style.container, { backgroundColor: appTheme.screenBackground }]}
     >
-      {orders?.length > 0 ? (
-        <FlashList
-          data={orders}
-          estimatedItemSize={ORDER_CARD_ESTIMATED_HEIGHT}
-          keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
-          refreshing={networkStatusAssigned === NetworkStatus.loading}
-          onRefresh={refetchAssigned}
-          renderItem={renderItem}
-          ListFooterComponent={<View style={{ height: 200 }} />}
-          ListEmptyComponent={renderListEmptyComponent}
-        />
-      ) : (
-        <View
-          style={{
-            minHeight:
-              height > 670 ? height - height * 0.5 : height - height * 0.6,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
-
-          {orders?.length === 0 ? (
-            <Text
-              className="font-[Inter] text-[18px] text-base font-[500]"
-              style={{ color: appTheme.fontSecondColor }}
-            >
-              {t(NO_ORDER_PROMPT[route.key])}
-            </Text>
-          ) : (
-            <Text>{t("Pull down to refresh")}</Text>
-          )}
-        </View>
-      )}
+      <FlashList
+        data={orders}
+        estimatedItemSize={ORDER_CARD_ESTIMATED_HEIGHT}
+        keyExtractor={keyExtractor}
+        showsVerticalScrollIndicator={false}
+        alwaysBounceVertical
+        refreshing={networkStatusAssigned === NetworkStatus.refetch}
+        onRefresh={refetchAssigned}
+        onEndReached={hasMoreAssigned ? loadMoreAssigned : undefined}
+        onEndReachedThreshold={0.5}
+        renderItem={renderItem}
+        ListFooterComponent={<View style={{ height: 200 }} />}
+        ListEmptyComponent={renderListEmptyComponent}
+      />
     </View>
   );
 }

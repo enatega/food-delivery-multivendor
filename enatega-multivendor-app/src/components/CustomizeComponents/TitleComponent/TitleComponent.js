@@ -5,19 +5,20 @@ import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import { useTranslation } from 'react-i18next'
+import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
 
 function TitleComponent(props) {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
-
+  const { tokens } = useMultivendorTheme()
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue], ...tokens }
 
   return (
     <View style={styles(currentTheme).mainContainer}>
-      <View>
+      <View style={styles(currentTheme).textContainer}>
         <TextDefault
           numberOfLines={1}
-          textColor={currentTheme.fontMainColor}
+          textColor={currentTheme.colors.textPrimary}
           H6
           bolder
           isRTL>
@@ -25,23 +26,23 @@ function TitleComponent(props) {
         </TextDefault>
         <TextDefault
           numberOfLines={1}
-          textColor={currentTheme.fontSecondColor}
+          textColor={currentTheme.colors.textMuted}
           small
           isRTL
         >
           {props?.subTitle}
         </TextDefault>
       </View>
-      <View style={styles(currentTheme).rightContainer}>
+      {!!props?.status && <View style={[styles(currentTheme).rightContainer, props?.error && styles(currentTheme).errorContainer]}>
         <TextDefault
-          textColor={
-            currentTheme.color2
-          }
-          H6
+          textColor={props?.error ? currentTheme.colors.danger : currentTheme.colors.textSecondary}
+          small
+          bold
+          numberOfLines={1}
           center>
           {props?.status}
         </TextDefault>
-      </View>
+      </View>}
     </View>
   )
 }

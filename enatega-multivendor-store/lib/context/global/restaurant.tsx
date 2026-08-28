@@ -19,11 +19,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
 // API
-import { GET_ORDERS } from "@/lib/apollo/queries/orders";
+import {
+  GET_ORDERS,
+  GET_ORDERS_SINGLE_VENDOR,
+} from "@/lib/apollo/queries/orders";
 import { SUBSCRIBE_PLACE_ORDER } from "@/lib/apollo/subscriptions";
 import { getStoreId } from "@/lib/services";
 import { IRestaurantProviderProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 interface Printer {
   name?: string;
@@ -42,6 +46,8 @@ interface IRestaurantContext {
   data?: RestaurantOrdersData;
   subscribeToMoreOrders: (force?: boolean) => Promise<void>;
   refetch: () => Promise<ApolloQueryResult<RestaurantOrdersData>>;
+  loadMoreOrders: () => Promise<void>;
+  hasMoreOrders: boolean;
   networkStatus: NetworkStatus;
   printer: Printer | null;
   setPrinter: Dispatch<SetStateAction<Printer | null>>;
@@ -60,6 +66,8 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   const unsubscribeRef = useRef<null | (() => void)>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const subscribedRestaurantRef = useRef<string | null>(null);
+  const [hasMoreOrders, setHasMoreOrders] = useState(true);
+  const { isSingleVendor, storeIdKey } = useStoreMode();
 
   useEffect(() => {
     (async () => {
@@ -76,10 +84,30 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   // subscription (subscribePlaceOrder + per-order subscriptionOrder). The
   // initial fetch loads the list; realtime keeps it current. Pull-to-refresh
   // still calls refetch() manually.
-  const { loading, error, data, subscribeToMore, refetch, networkStatus } =
-    useQuery<RestaurantOrdersData>(GET_ORDERS, {
-      fetchPolicy: "cache-and-network",
+  const { loading, error, data, subscribeToMore, refetch, fetchMore, networkStatus } =
+    useQuery<RestaurantOrdersData>(
+      isSingleVendor ? GET_ORDERS_SINGLE_VENDOR : GET_ORDERS,
+      {
+        fetchPolicy: "cache-and-network",
+        variables: isSingleVendor ? { offset: 0, limit: 50 } : undefined,
+      },
+    );
+
+  const loadMoreOrders = useCallback(async () => {
+    if (!isSingleVendor || loading || !hasMoreOrders) return;
+    const existing = data?.restaurantOrders ?? [];
+    const { data: nextPage } = await fetchMore({
+      variables: {offset: existing.length, limit: 50},
+      updateQuery: (previous, {fetchMoreResult}) => {
+        const incoming = fetchMoreResult?.restaurantOrders ?? [];
+        const byId = new Map(
+          [...(previous.restaurantOrders ?? []), ...incoming].map(order => [order._id, order]),
+        );
+        return {restaurantOrders: [...byId.values()]};
+      },
     });
+    setHasMoreOrders((nextPage?.restaurantOrders?.length ?? 0) === 50);
+  }, [data?.restaurantOrders, fetchMore, hasMoreOrders, isSingleVendor, loading]);
 
   useEffect(() => {
     async function GetToken() {
@@ -115,7 +143,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   const subscribeToMoreOrders = useCallback(
     async (force = false) => {
       try {
-        const restaurant = await getStoreId();
+        const restaurant = await getStoreId(storeIdKey);
         if (!restaurant) {
           return;
         }
@@ -162,7 +190,10 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
                 };
               }
               const updatedOrders = [...restaurantOrders];
-              updatedOrders[orderIndex] = order;
+              updatedOrders[orderIndex] = {
+                ...restaurantOrders[orderIndex],
+                ...order,
+              };
               return {
                 restaurantOrders: updatedOrders,
               };
@@ -183,7 +214,13 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
         cleanupSubscription();
       }
     },
-    [cleanupSubscription, clearRetryTimer, refetch, subscribeToMore],
+    [
+      cleanupSubscription,
+      clearRetryTimer,
+      refetch,
+      storeIdKey,
+      subscribeToMore,
+    ],
   );
 
   useEffect(() => {
@@ -197,6 +234,8 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
   const value = useMemo<IRestaurantContext>(
     () => ({
       loading,
+      loadMoreOrders,
+      hasMoreOrders,
       error,
       data,
       subscribeToMoreOrders,
@@ -209,7 +248,9 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
     [
       data,
       error,
+      hasMoreOrders,
       loading,
+      loadMoreOrders,
       networkStatus,
       notificationToken,
       printer,

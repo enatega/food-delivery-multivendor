@@ -28,7 +28,7 @@ module.exports = () => {
   return {
     name: 'Enatega Multi',
     scheme: 'enategamultivendor',
-    version: '1.1.31',
+    version: '1.1.39',
     description:
       "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     slug: 'enategamultivendor',
@@ -62,17 +62,25 @@ module.exports = () => {
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
       bundleIdentifier: 'com.enatega.multivendor',
+      buildNumber: '141',
       icon: './assets/icon.png',
       googleServicesFile: './GoogleService-Info.plist',
       infoPlist: {
         NSSupportsLiveActivities: true,
+        NSCameraUsageDescription:
+          'Allow $(PRODUCT_NAME) to use your camera to take photos you choose to share in order chats.',
         NSLocationWhenInUseUsageDescription:
           'Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.',
         UIBackgroundModes: ['remote-notification'],
-        NSUserTrackingUsageDescription:
-          'Allow this app to collect app-related data that can be used for tracking you or your device.',
         CFBundleURLTypes: urlTypes,
         ITSAppUsesNonExemptEncryption: false
+      },
+      privacyManifests: {
+        // Enatega uses first-party product analytics and diagnostics only. It
+        // does not link app data with third-party data for advertising, share
+        // data with brokers, or access IDFA.
+        NSPrivacyTracking: false,
+        NSPrivacyTrackingDomains: []
       },
       config: {
         ...(iosGoogleMapsApiKey ? { googleMapsApiKey: iosGoogleMapsApiKey } : {})
@@ -88,7 +96,7 @@ module.exports = () => {
       androidCollapsedTitle: 'Enatega Multivendor'
     },
     android: {
-      versionCode: 131,
+      versionCode: 140,
       package: 'com.enatega.multivendor',
       userInterfaceStyle: 'automatic',
       // Disable ADB/cloud backups so the AsyncStorage DB (JWT) can't be pulled
@@ -158,13 +166,6 @@ module.exports = () => {
         }
       ],
       [
-        'expo-tracking-transparency',
-        {
-          userTrackingPermission:
-            'Allow this app to collect app-related data that can be used for tracking you or your device.'
-        }
-      ],
-      [
         'expo-updates',
         {
           username: 'ninjas_code'
@@ -183,7 +184,10 @@ module.exports = () => {
         'expo-build-properties',
         {
           ios: {
-            useFrameworks: 'static'
+            useFrameworks: 'static',
+            // Merge pod privacy manifests into the app manifest so the archive
+            // Apple reviews reflects every native dependency declaration.
+            privacyManifestAggregationEnabled: true
           }
         }
       ],
@@ -201,6 +205,12 @@ module.exports = () => {
       './plugins/withFmtConstevalFix'
     ],
     extra: {
+      singleVendorCustomerDemoEmail:
+        process.env.EXPO_PUBLIC_SINGLE_VENDOR_CUSTOMER_DEMO_EMAIL ??
+        (process.env.NODE_ENV !== 'production' ? 'customer@fresh.com' : ''),
+      singleVendorCustomerDemoPassword:
+        process.env.EXPO_PUBLIC_SINGLE_VENDOR_CUSTOMER_DEMO_PASSWORD ??
+        (process.env.NODE_ENV !== 'production' ? 'Customer@12345' : ''),
       liveActivity: {
         appGroupId: 'group.com.enatega.multivendor.shared',
         appScheme: 'enategamultivendor',

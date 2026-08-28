@@ -15,9 +15,12 @@ import * as AppleAuthentication from 'expo-apple-authentication'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
+import { useAppMode } from '../../mode/AppModeContext'
+import { getModeHomeRoute } from '../../mode/navigation'
+import { APP_MODES } from '../../mode/constants'
+import { LOGIN_SINGLE_VENDOR } from '../../singlevendor/apollo/mutations'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import {
   logStep,
@@ -32,10 +35,12 @@ const LOGIN = gql`
 `
 
 export const useCreateAccount = () => {
-  const Analytics = analytics()
   const navigation = useNavigation()
+  const { mode } = useAppMode()
+  const loginDocument =
+    mode === APP_MODES.SINGLE ? LOGIN_SINGLE_VENDOR : LOGIN
   const { t, i18n } = useTranslation()
-  const [mutate] = useMutation(LOGIN, { onCompleted, onError })
+  const [mutate] = useMutation(loginDocument, { onCompleted, onError })
   const [enableApple, setEnableApple] = useState(false)
   const [loginButton, loginButtonSetter] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -46,6 +51,10 @@ export const useCreateAccount = () => {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const statusBarBackgroundColor =
+    mode === APP_MODES.SINGLE
+      ? currentTheme.themeBackground
+      : currentTheme.main
   const socialLoginMessages = {
     missingToken:
       'Your social sign-in did not return a valid token. Please try again.',
@@ -87,7 +96,7 @@ export const useCreateAccount = () => {
     logStep('configure: GoogleSignin.configure() done')
   }, [EXPO_CLIENT_ID, ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE])
 
-  const signIn = async () => {
+  const signIn = async() => {
     logStep('signIn: tapped')
     try {
       if (!EXPO_CLIENT_ID || !ANDROID_CLIENT_ID_GOOGLE) {
@@ -110,9 +119,10 @@ export const useCreateAccount = () => {
       logStep('signIn: GoogleSignin.signIn() returned', describeGoogleUser(userInfo))
 
       const idToken = userInfo.idToken ?? userInfo?.data?.idToken
+      const googleUser = userInfo.user ?? userInfo?.data?.user
       logStep('signIn: extracted idToken', { idToken: redactToken(idToken) })
 
-      if (!idToken) {
+      if (!idToken || !googleUser?.email) {
         logStep('signIn: aborted — no idToken in Google response')
         FlashMessage({ message: socialLoginMessages.missingToken })
         setLoading(false)
@@ -122,15 +132,15 @@ export const useCreateAccount = () => {
 
       const userData = {
         phone: '',
-        email: userInfo.user.email,
+        email: googleUser.email,
         idToken,
         password: '',
-        name: userInfo.user.name,
-        picture: userInfo.user.photo || '',
+        name: googleUser.name,
+        picture: googleUser.photo || '',
         type: 'google'
       }
 
-      setGoogleUser(userInfo.user.name)
+      setGoogleUser(googleUser.name)
       logStep('signIn: handing off to mutateLogin', describeLoginPayload(userData))
       await mutateLogin(userData)
     } catch (error) {
@@ -159,15 +169,16 @@ export const useCreateAccount = () => {
     navigation.navigate('Register')
   }
 
-  const navigateToPhone = () => {
+  const navigateToPhone = (name = '') => {
     navigation.navigate('PhoneNumber', {
-      name: googleUser,
+      name: name || googleUser,
       phone: ''
     })
   }
 
   const navigateToMain = () => {
-    navigation.navigate('Main', { screen: 'Discovery' })
+    const route = getModeHomeRoute(mode)
+    navigation.navigate(route.name, route.params)
   }
 
   async function mutateLogin(user) {
@@ -253,15 +264,25 @@ export const useCreateAccount = () => {
 
     try {
       const needsPhone = data?.login?.phone === ''
-      if (!needsPhone) navigateToMain()
+      const needsName =
+        loginButton === 'Apple' &&
+        !data?.login?.name?.trim()
 
       await setTokenAsync(data.login.token)
       FlashMessage({ message: 'Successfully logged in' })
 
-      if (needsPhone) {
+      if (needsName) {
+        logStep('onCompleted: Apple account has no persisted name → request name')
+        navigation.navigate(mode === APP_MODES.SINGLE ? 'EditNameSingleVendor' : 'EditName', {
+          name: '',
+          onboarding: true,
+          needsPhone
+        })
+      } else if (needsPhone) {
         logStep('onCompleted: no phone on account → navigate to PhoneNumber')
-        navigateToPhone()
+        navigateToPhone(data?.login?.name)
       } else {
+        navigateToMain()
         logStep('onCompleted: navigate to Main')
       }
     } finally {
@@ -314,7 +335,7 @@ export const useCreateAccount = () => {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.main)
+      StatusBar.setBackgroundColor(statusBarBackgroundColor)
     }
     StatusBar.setBarStyle(
       themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'
@@ -338,6 +359,7 @@ export const useCreateAccount = () => {
     themeContext,
     mutateLogin,
     currentTheme,
+    statusBarBackgroundColor,
     navigateToLogin,
     navigateToRegister,
     openTerms,

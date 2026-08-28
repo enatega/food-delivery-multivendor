@@ -20,6 +20,7 @@ export default function useAcceptOrder() {
             _id,
             orderStatus: "ACCEPTED",
             preparationTime,
+            eta: null,
           },
         },
         update: (cache) => {

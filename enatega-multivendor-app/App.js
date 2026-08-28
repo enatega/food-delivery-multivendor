@@ -6,7 +6,7 @@ import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, AppState, BackHandler, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import { ActivityIndicator, Alert, AppState, BackHandler, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
 import * as NavigationBar from 'expo-navigation-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import FlashMessage from 'react-native-flash-message'
@@ -44,6 +44,18 @@ import {
 } from './src/services/publicAcccessService'
 import LiveActivityService from './src/utils/liveActivityService'
 import { registerLiveActivityForegroundHandler } from './src/utils/liveActivityMessaging'
+import {
+  AppModeProvider,
+  useAppMode
+} from './src/mode/AppModeContext'
+import { APP_MODES } from './src/mode/constants'
+import SingleVendorAppContainer from './src/singlevendor/routes/SingleVendorAppContainer'
+import ModeNotificationRegistration from './src/mode/ModeNotificationRegistration'
+import {
+  inferNotificationMode,
+  savePendingOrderNavigation
+} from './src/mode/orderOrigin'
+import { getGoogleAuthConfigurationErrors } from './src/utils/googleAuthConfig'
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -55,25 +67,59 @@ Notifications.setNotificationHandler({
   }
 })
 
-export default function App() {
+function ModeAwareApp() {
   const reviewModalRef = useRef()
   const [appIsReady, setAppIsReady] = useState(false)
-  const [location, setLocation] = useState(null)
+  const [isThemeReady, setIsThemeReady] = useState(false)
   const [orderId, setOrderId] = useState()
   const [isUpdating, setIsUpdating] = useState(false)
   const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false)
   const [clarityInitialized, setClarityInitialized] = useState(false)
-  const { CLARITY_ENABLED, GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars()
+  const { mode, isModeReady, switchMode } = useAppMode()
+  const {
+    CLARITY_ENABLED,
+    GRAPHQL_URL,
+    WS_GRAPHQL_URL,
+    PUBLIC_ACCESS_REQUIRED,
+    EXPO_CLIENT_ID,
+    ANDROID_CLIENT_ID_GOOGLE,
+    IOS_CLIENT_ID_GOOGLE
+  } = useEnvVars()
+
+  useEffect(() => {
+    const invalidFields = getGoogleAuthConfigurationErrors({
+      webClientId: EXPO_CLIENT_ID,
+      androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+      iosClientId: IOS_CLIENT_ID_GOOGLE
+    })
+    if (invalidFields.length) {
+      console.warn('[GoogleAuth] Invalid or missing client ID fields:', invalidFields.join(', '))
+    }
+  }, [EXPO_CLIENT_ID, ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE])
   const client = useMemo(
-    () => setupApolloClient({ GRAPHQL_URL, WS_GRAPHQL_URL }),
-    [GRAPHQL_URL, WS_GRAPHQL_URL]
+    () => setupApolloClient({
+      GRAPHQL_URL,
+      WS_GRAPHQL_URL,
+      mode,
+      publicAccessRequired: PUBLIC_ACCESS_REQUIRED
+    }),
+    [
+      GRAPHQL_URL,
+      mode,
+      PUBLIC_ACCESS_REQUIRED,
+      WS_GRAPHQL_URL
+    ]
   )
 
   useEffect(() => {
-    LiveActivityService.configure(client)
+    LiveActivityService.configure(client, mode)
     const unsubscribe = registerLiveActivityForegroundHandler()
     LiveActivityService.cleanAppGroupImages(24).catch(() => {})
     return unsubscribe
+  }, [client, mode])
+
+  useEffect(() => () => {
+    void client.dispose?.()
   }, [client])
 
   // Fetch/refresh the public (MetricsGeneral) token up front and keep it fresh
@@ -81,7 +127,7 @@ export default function App() {
   // expired. Also refresh when the app returns to the foreground, since RN
   // suspends timers while backgrounded.
   useEffect(() => {
-    if (!GRAPHQL_URL) return undefined
+    if (!GRAPHQL_URL || !PUBLIC_ACCESS_REQUIRED) return undefined
 
     initializePublicAccessToken(GRAPHQL_URL)
 
@@ -95,23 +141,16 @@ export default function App() {
       subscription.remove()
       stopPublicAccessTokenRefresh()
     }
-  }, [GRAPHQL_URL])
+  }, [GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED])
 
   // Screen keep-awake is now scoped to the active order-tracking screen
   // (see OrderDetail) instead of being on app-wide, which drained battery
   // on every screen (PERF-011).
 
-  // Use system theme
+  // Use the system theme only as the first-install default. A manually selected
+  // theme is restored from storage before the splash screen is dismissed.
   const systemTheme = useColorScheme()
   const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
-  useEffect(() => {
-    try {
-      themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
-    } catch (error) {
-      // Error retrieving data
-      console.log('Theme Error : ', error.message)
-    }
-  }, [systemTheme])
 
   // Match the Android system navigation bar to the bottom tab bar
   // (currentTheme.cardBackground) for both light and dark themes, so the two
@@ -128,12 +167,22 @@ export default function App() {
   // For Fonts, etc
   useEffect(() => {
     const loadAppData = async () => {
+      try {
+        const storedTheme = await AsyncStorage.getItem('theme')
+        if (storedTheme === 'Dark' || storedTheme === 'Pink') {
+          themeSetter({ type: storedTheme })
+        }
+      } catch (error) {
+        console.warn('Unable to restore the saved theme:', error?.message)
+      } finally {
+        setIsThemeReady(true)
+      }
+
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
         MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
       })
-      await getActiveLocation()
       setAppIsReady(true)
     }
 
@@ -222,12 +271,44 @@ export default function App() {
       }
     })
 
-    const responseSub = Notifications.addNotificationResponseReceivedListener((response) => {
-      if (response?.notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
-        const id = response?.notification?.request?.content?.data?._id
+    const responseSub = Notifications.addNotificationResponseReceivedListener(async (response) => {
+      const data = response?.notification?.request?.content?.data
+      if (data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        const id = data?._id
         if (id) {
           setOrderId(id)
           reviewModalRef?.current?.open()
+        }
+        return
+      }
+
+      if (data?.type === 'order') {
+        const targetMode = await inferNotificationMode(data)
+        const notificationOrderId = data?._id || data?.orderId
+        if (targetMode && targetMode !== mode && notificationOrderId) {
+          Alert.alert(
+            'Switch delivery mode?',
+            'This order belongs to your other delivery service.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              {
+                text: 'Switch and track',
+                onPress: async () => {
+                  await savePendingOrderNavigation(
+                    notificationOrderId,
+                    targetMode
+                  )
+                  const switched = await switchMode(targetMode)
+                  if (!switched) {
+                    Alert.alert(
+                      'Unable to switch',
+                      'Finish the payment or order request in progress, then try again.'
+                    )
+                  }
+                }
+              }
+            ]
+          )
         }
       }
     })
@@ -235,20 +316,7 @@ export default function App() {
       notifSub.remove()
       responseSub.remove()
     }
-  }, [])
-
-  // Handlers
-  // get active location
-  async function getActiveLocation() {
-    try {
-      const locationStr = await AsyncStorage.getItem('location')
-      if (locationStr) {
-        setLocation(JSON.parse(locationStr))
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  }, [mode, switchMode])
 
   // set modal close
   const onOverlayPress = () => {
@@ -260,7 +328,7 @@ export default function App() {
     navigationService.navigate('CreateAccount')
   }
 
-  if (isUpdating) {
+  if (!isModeReady || isUpdating) {
     return (
       <View style={[styles.flex, styles.mainContainer, { backgroundColor: Theme[theme].startColor }]}>
         <TextDefault textColor={Theme[theme].white} bold>
@@ -274,24 +342,31 @@ export default function App() {
   return (
     <ErrorBoundary>
       <GestureHandlerRootView style={styles.flex}>
-        <AnimatedSplashScreen ready={appIsReady}>
-          <ApolloProvider client={client}>
+        <AnimatedSplashScreen
+          ready={appIsReady && isModeReady}
+          themeReady={isThemeReady}
+          themeMode={theme}
+        >
+          <ApolloProvider client={client} key={mode}>
             <ThemeContext.Provider
               value={{ ThemeValue: theme, dispatch: themeSetter }}
             >
               <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
-              <ConfigurationProvider>
-                <LocationProvider>
-                  <SentryInit />
-                  <AuthProvider>
+              <AuthProvider key={`auth-${mode}`}>
+                <ConfigurationProvider key={`configuration-${mode}`}>
+                  <LocationProvider>
+                    <SentryInit />
                     <UserProvider>
+                      <ModeNotificationRegistration />
                       <OrdersProvider
                         onOrderDelivered={(order) => {
                           setOrderId(order._id)
                           reviewModalRef?.current?.open()
                         }}
                       >
-                        <AppContainer />
+                        {mode === APP_MODES.SINGLE
+                          ? <SingleVendorAppContainer />
+                          : <AppContainer />}
                         <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
                         <SessionExpiredModal
                           visible={sessionExpiredVisible}
@@ -299,15 +374,23 @@ export default function App() {
                         />
                       </OrdersProvider>
                     </UserProvider>
-                  </AuthProvider>
-                </LocationProvider>
-              </ConfigurationProvider>
+                  </LocationProvider>
+                </ConfigurationProvider>
+              </AuthProvider>
               <FlashMessage MessageComponent={MessageComponent} />
             </ThemeContext.Provider>
           </ApolloProvider>
         </AnimatedSplashScreen>
       </GestureHandlerRootView>
     </ErrorBoundary>
+  )
+}
+
+export default function App() {
+  return (
+    <AppModeProvider>
+      <ModeAwareApp />
+    </AppModeProvider>
   )
 }
 

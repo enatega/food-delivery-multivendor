@@ -6,8 +6,8 @@ import ConfigurationContext from '../../../context/Configuration'
 import { theme } from '../../../utils/themeColors'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
-import { alignment } from '../../../utils/alignment'
 import { useTranslation } from 'react-i18next'
+import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
 
 function CheckComponent(props) {
   const { i18n } = useTranslation()
@@ -16,13 +16,15 @@ function CheckComponent(props) {
   )
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue]}
+  const { tokens } = useMultivendorTheme()
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue], ...tokens }
 
   function onPress(option) {
-    const tempOptions = options
-    const index = tempOptions.findIndex(opt => opt._id === option._id)
-    tempOptions[index].checked = !tempOptions[index].checked
-    setOptions(tempOptions)
+    setOptions((currentOptions) => currentOptions.map((currentOption) =>
+      currentOption._id === option._id
+        ? { ...currentOption, checked: !currentOption.checked }
+        : currentOption
+    ))
     props?.onPress(option)
   }
 
@@ -41,7 +43,7 @@ function CheckComponent(props) {
             />
             <TextDefault
               numberOfLines={1}
-              textColor={currentTheme.gray900}
+              textColor={currentTheme.colors.textPrimary}
               // style={[alignment.MLsmall, alignment.PRsmall, alignment.MRlarge]}
               style={styles(currentTheme).title}
               H6
@@ -51,7 +53,7 @@ function CheckComponent(props) {
           </View>
           <View style={styles(currentTheme).rightContainer}>
             <TextDefault
-              textColor={currentTheme.gray900}
+              textColor={currentTheme.colors.textSecondary}
               H6
               bolder>{`${configuration.currencySymbol}${option.price}`}</TextDefault>
           </View>

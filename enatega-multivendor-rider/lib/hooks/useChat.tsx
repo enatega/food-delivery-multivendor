@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQuery } from "@apollo/client";
 import { useLocalSearchParams } from "expo-router";
 import { useContext, useEffect, useState } from "react";
@@ -8,10 +9,18 @@ import * as ImagePicker from "expo-image-picker";
 import UserContext from "../context/global/user.context";
 
 // API
-import { SEND_CHAT_MESSAGE } from "@/lib/apollo/mutations/chat.mutation";
+import {
+  SEND_CHAT_MESSAGE,
+  SINGLE_VENDOR_SEND_CHAT_MESSAGE,
+} from "@/lib/apollo/mutations/chat.mutation";
 import { UPLOAD_IMAGE_TO_S3 } from "@/lib/apollo/mutations/rider.mutation";
-import { CHAT } from "@/lib/apollo/queries";
-import { SUBSCRIPTION_NEW_MESSAGE } from "@/lib/apollo/subscriptions";
+import { CHAT, SINGLE_VENDOR_CHAT } from "@/lib/apollo/queries/chat.query";
+import {
+  SINGLE_VENDOR_SUBSCRIPTION_NEW_MESSAGE,
+  SUBSCRIPTION_NEW_MESSAGE,
+} from "@/lib/apollo/subscriptions";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
 
 // Interface
 
@@ -19,18 +28,24 @@ export const useChatScreen = () => {
   const { id: orderId } = useLocalSearchParams<{ id: string }>();
 
   const { dataProfile } = useContext(UserContext);
+  const { mode } = useRiderMode();
+  const isSingleVendor = mode === RIDER_SERVER_MODES.SINGLE;
 
   // States
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState<any[]>([]);
 
   const normalizeMessages = (incomingMessages: any[] = []) => {
     const uniqueMessages = new Map<string, any>();
 
     incomingMessages.forEach((message: any, index: number) => {
       const normalizedMessage = {
-        _id: String(message?.id ?? message?._id ?? `${message?.createdAt ?? Date.now()}-${index}`),
+        _id: String(
+          message?.id ??
+            message?._id ??
+            `${message?.createdAt ?? Date.now()}-${index}`,
+        ),
         text: message?.message ?? message?.text ?? "",
         image: message?.image || undefined,
         createdAt: new Date(message?.createdAt ?? Date.now()),
@@ -51,16 +66,19 @@ export const useChatScreen = () => {
 
   // API
   const { subscribeToMore: subscribeToMessages, data: chatData } = useQuery(
-    CHAT,
+    isSingleVendor ? SINGLE_VENDOR_CHAT : CHAT,
     {
       variables: { order: orderId },
       fetchPolicy: "network-only",
       //, onError,
     },
   );
-  const [send] = useMutation(SEND_CHAT_MESSAGE, {
-    onCompleted /* , onError */,
-  });
+  const [send] = useMutation(
+    isSingleVendor ? SINGLE_VENDOR_SEND_CHAT_MESSAGE : SEND_CHAT_MESSAGE,
+    {
+      onCompleted /* , onError */,
+    },
+  );
   const [uploadImage] = useMutation(UPLOAD_IMAGE_TO_S3);
   const [uploading, setUploading] = useState(false);
 
@@ -145,8 +163,7 @@ export const useChatScreen = () => {
 
   // Pick from gallery -> upload to S3 -> send the returned URL.
   const pickImage = async () => {
-    const { status } =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
         "Permission Required",
@@ -180,7 +197,9 @@ export const useChatScreen = () => {
   // Use Effect
   useEffect(() => {
     const unsubscribe = subscribeToMessages({
-      document: SUBSCRIPTION_NEW_MESSAGE,
+      document: isSingleVendor
+        ? SINGLE_VENDOR_SUBSCRIPTION_NEW_MESSAGE
+        : SUBSCRIPTION_NEW_MESSAGE,
       variables: { order: orderId },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
@@ -193,7 +212,7 @@ export const useChatScreen = () => {
       },
     });
     return unsubscribe;
-  }, [orderId, subscribeToMessages]);
+  }, [isSingleVendor, orderId, subscribeToMessages]);
 
   useEffect(() => {
     if (chatData) {
@@ -206,6 +225,7 @@ export const useChatScreen = () => {
     onSend,
     pickImage,
     uploading,
+    supportsImageMessages: !isSingleVendor,
     image,
     setImage,
     inputMessage,

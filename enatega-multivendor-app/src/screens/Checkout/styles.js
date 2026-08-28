@@ -1,7 +1,6 @@
-import { verticalScale, scale } from '../../utils/scaling'
+import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
-import { fontStyles } from '../../utils/fontStyles'
 
 const styles = (props = null) =>
   StyleSheet.create({
@@ -28,12 +27,40 @@ const styles = (props = null) =>
     },
     screenBackground: {
       flex: 1,
-      backgroundColor: props != null ? props?.themeBackground : '#FFF'
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#FFF'
     },
     mainContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props?.themeBackground : 'transparent'
-      //...alignment.PTsmall
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'transparent'
+      // ...alignment.PTsmall
+    },
+    headerBackButton: {
+      width: scale(40),
+      height: scale(40),
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    checkoutContent: {
+      paddingHorizontal: scale(8),
+      paddingTop: scale(8),
+      paddingBottom: scale(112)
+    },
+    mapCard: {
+      borderRadius: scale(16),
+      overflow: 'hidden',
+      backgroundColor: props?.colors?.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle
+    },
+    detailsSection: {
+      marginTop: scale(12)
+    },
+    addressRow: {
+      minHeight: scale(60),
+      justifyContent: 'center'
+    },
+    sectionInset: {
+      paddingHorizontal: 0
     },
     paymentSecInner: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -48,19 +75,20 @@ const styles = (props = null) =>
       marginBottom: scale(12)
     },
     termsContainer: {
-      ...alignment.PLmedium,
-      ...alignment.PRmedium
+      paddingHorizontal: 0,
+      marginTop: scale(6),
+      marginBottom: scale(20)
     },
     tipSec: {
-      ...alignment.MLmedium,
-      ...alignment.MRmedium,
-      marginVertical: scale(22)
+      marginTop: props?.spacing?.lg ?? scale(16),
+      marginBottom: scale(8),
+      paddingHorizontal: 0
     },
     tipRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: scale(8)
+      marginBottom: scale(10)
     },
     itemContainer: {
       width: '100%',
@@ -68,13 +96,10 @@ const styles = (props = null) =>
     },
     priceContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props?.themeBackground : 'transparent',
-      borderRadius: scale(20),
-      borderBottomColor:
-        props !== null ? props?.lightHorizontalLine : 'transparent',
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
-      marginVertical: scale(13)
+      backgroundColor: 'transparent',
+      paddingHorizontal: 0,
+      marginTop: props?.spacing?.lg ?? scale(16),
+      marginBottom: scale(8)
     },
     modal: {
       backgroundColor: props != null ? props?.cardBackground : '#FFF',
@@ -112,17 +137,19 @@ const styles = (props = null) =>
       textAlign: 'right'
     },
     horizontalLine: {
-      borderWidth: 0.5,
-      borderColor: props !== null ? props?.iconBackground : 'white'
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)'
     },
     horizontalLine2: {
-      marginVertical: scale(11)
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)',
+      marginVertical: props?.spacing?.md ?? scale(12)
     },
     deliveryTime: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      margin: scale(5),
-      ...alignment.PLxSmall
+      minHeight: scale(60),
+      paddingHorizontal: scale(10)
     },
 
     suggestedItems: {
@@ -168,17 +195,19 @@ const styles = (props = null) =>
     },
 
     buttonContainer: {
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
-      ...alignment.PBlarge
+      paddingHorizontal: scale(8),
+      paddingTop: scale(10),
+      backgroundColor: props?.colors?.surface,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colors?.borderSubtle
     },
     changeBtn: {
-      backgroundColor: props !== null ? props?.main : 'gray',
+      backgroundColor: props?.colors?.accent ?? props?.main ?? 'gray',
       justifyContent: 'center',
       alignItems: 'center',
       width: scale(80),
       height: scale(30),
-      borderRadius: 40
+      borderRadius: scale(13)
     },
     changeBtnInner: {
       display: 'flex',
@@ -187,12 +216,12 @@ const styles = (props = null) =>
       gap: 5
     },
     button: {
-      backgroundColor: props !== null ? props?.main : 'gray',
+      backgroundColor: props?.colors?.accent ?? props?.main ?? 'gray',
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      height: scale(50),
-      borderRadius: 40
+      height: scale(52),
+      borderRadius: scale(14)
     },
     buttonDisabled: {
       backgroundColor: props !== null ? props?.white : 'white',
@@ -224,11 +253,6 @@ const styles = (props = null) =>
       flex: 1,
       justifyContent: 'center',
       alignContent: 'center'
-    },
-    imageContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...alignment.MBlarge
     },
     image: {
       width: scale(100),
@@ -282,31 +306,46 @@ const styles = (props = null) =>
     buttonInline: {
       width: '100%',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      justifyContent: 'space-between'
-      // gap:scale(8),
+      gap: scale(8)
     },
     labelButton: {
-      borderRadius: scale(40),
-      width: '23%',
-      borderWidth: 1,
-      borderColor: props !== null ? props?.iconBackground : 'transparent',
-      backgroundColor: props !== null ? props?.color5 : 'transparent',
+      flex: 1,
+      borderRadius: scale(12),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? 'transparent',
+      backgroundColor: props?.colors?.surfaceSubtle ?? 'transparent',
       justifyContent: 'center',
-      height: scale(37)
+      height: scale(42)
     },
     activeLabel: {
-      borderRadius: scale(40),
-      backgroundColor: props !== null ? props?.main : 'transparent',
-      width: '23%',
+      flex: 1,
+      borderRadius: scale(12),
+      backgroundColor: props?.colors?.accentSubtle ?? props?.main ?? 'transparent',
       justifyContent: 'center',
-      borderColor: props !== null ? props?.main : 'transparent',
-      height: scale(37)
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.accent ?? props?.main ?? 'transparent',
+      height: scale(42)
     },
     headerContainer: {
       backgroundColor: props !== null ? props?.themeBackground : '#6FCF97'
     },
     mapView: {
-      height: scale(119)
+      height: scale(132)
+    },
+    mapLabel: {
+      position: 'absolute',
+      left: scale(9),
+      bottom: scale(9),
+      maxWidth: '72%',
+      minHeight: scale(32),
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: scale(6),
+      paddingHorizontal: scale(10),
+      backgroundColor: props?.colors?.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle,
+      borderRadius: scale(11)
     },
     mapUnavailable: {
       alignItems: 'center',
@@ -329,21 +368,39 @@ const styles = (props = null) =>
       transform: [{ translateX: -25 }, { translateY: -25 }]
     },
     voucherSec: {
-      ...alignment.PLmedium,
-      ...alignment.PRmedium
+      paddingHorizontal: 0,
+      marginTop: props?.spacing?.lg ?? scale(16)
     },
     voucherSecInner: {
       display: 'flex',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: scale(5),
-      marginTop: scale(10),
-      marginBottom: scale(10)
+      minHeight: scale(44),
+      marginVertical: 0
     },
     paymentSec: {
-      ...alignment.PLmedium,
-      ...alignment.PRmedium,
-      marginTop: scale(13)
+      paddingHorizontal: 0,
+      marginTop: props?.spacing?.lg ?? scale(16)
+    },
+    checkoutSkeleton: {
+      paddingHorizontal: scale(8),
+      paddingTop: scale(10),
+      gap: scale(14)
+    },
+    skeletonSection: {
+      gap: scale(10),
+      paddingVertical: scale(8)
+    },
+    skeletonPills: {
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    skeletonBillRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minHeight: scale(28)
     },
 
     imageContainer: {
@@ -372,7 +429,20 @@ const styles = (props = null) =>
     billsec: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      minHeight: scale(38)
+    },
+    summaryDivider: {
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: props?.colors?.borderSubtle,
+      marginTop: scale(5),
+      marginBottom: scale(7)
+    },
+    totalRow: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minHeight: scale(44)
     },
     changeAddressContainer: {
       display: 'flex',
@@ -419,15 +489,15 @@ const styles = (props = null) =>
     },
     modalInput: {
       height: scale(40),
-      borderWidth: 1,
-      borderColor: props != null ? props?.verticalLine : '#B8B8B8',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? '#B8B8B8',
       padding: 10,
       borderRadius: 6,
       color: props !== null ? props?.newFontcolor : '#f9f9f9',
       textAlign: props?.isRTL ? 'right' : 'left'
     },
     labelContainer: {
-      width: '80%',
+      width: '80%'
     },
     iconContainer: {
       flex: 1,
@@ -439,7 +509,7 @@ const styles = (props = null) =>
       height: scale(24),
       borderRadius: scale(24),
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     pickupButton: {
       backgroundColor: props !== null ? props?.color3 : 'transparent',
@@ -448,8 +518,8 @@ const styles = (props = null) =>
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       height: scale(40),
       borderRadius: 40,
-      borderWidth: 1,
-      borderColor: props !== null ? props?.iconColor : '#717171',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderStandard ?? '#717171',
       width: '70%',
       alignSelf: 'center'
     }

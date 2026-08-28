@@ -16,7 +16,10 @@ import {
 } from "@/lib/utils/interfaces";
 
 // API
-import { STORE_PROFILE } from "@/lib/apollo/queries";
+import {
+  STORE_PROFILE,
+  STORE_PROFILE_SINGLE_VENDOR,
+} from "@/lib/apollo/queries";
 import {
   IStoreEarnings,
   IStoreEarningsArray,
@@ -24,7 +27,7 @@ import {
 
 // Services
 import { getStoreId, storageEmitter } from "@/lib/services";
-import { STORE_ID } from "@/lib/utils/constants";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
@@ -45,13 +48,14 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   const [storeOrdersEarnings, setStoreOrderEarnings] = useState<
     IStoreEarningsArray[] | null
   >(null);
+  const { isSingleVendor, storeIdKey } = useStoreMode();
 
   const {
     loading: loadingProfile,
     error: errorProfile,
     data: dataProfile,
     refetch: refetchProfile,
-  } = useQuery(STORE_PROFILE, {
+  } = useQuery(isSingleVendor ? STORE_PROFILE_SINGLE_VENDOR : STORE_PROFILE, {
     fetchPolicy: "cache-and-network",
     variables: {
       restaurantId: userId,
@@ -62,16 +66,16 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   >;
 
   const getUserId = useCallback(async () => {
-    const id = await getStoreId();
+    const id = await getStoreId(storeIdKey);
     if (id) {
       setUserId(id);
     }
-  }, []);
+  }, [storeIdKey]);
 
   useEffect(() => {
     const listener = storageEmitter.addListener(
-      STORE_ID,
-      (data: { value?: string }) => {
+      storeIdKey,
+      (data: { value: string | null }) => {
         setUserId(data?.value ?? "");
       },
     );
@@ -83,13 +87,30 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         listener.removeListener();
       }
     };
-  }, [getUserId]);
+  }, [getUserId, storeIdKey]);
 
   useEffect(() => {
     if (userId) {
       refetchProfile({ restaurantId: userId });
     }
   }, [refetchProfile, userId]);
+
+  const normalizedProfile = useMemo(() => {
+    const profile = dataProfile?.restaurant;
+    if (!profile) return null;
+    if (!isSingleVendor) return profile;
+
+    const details = profile.bussinessDetails;
+    return {
+      ...profile,
+      hasBusinessDetails: Boolean(
+        details?.bankName ||
+          details?.accountNumber ||
+          details?.accountName ||
+          details?.accountCode,
+      ),
+    };
+  }, [dataProfile?.restaurant, isSingleVendor]);
 
   const value = useMemo<IUserContextProps>(
     () => ({
@@ -98,15 +119,15 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       userId,
       loadingProfile,
       errorProfile,
-      dataProfile: dataProfile?.restaurant ?? null,
+      dataProfile: normalizedProfile,
       requestForegroundPermissionsAsync,
       setStoreOrderEarnings,
       storeOrdersEarnings,
       refetchProfile,
     }),
     [
-      dataProfile?.restaurant,
       errorProfile,
+      normalizedProfile,
       loadingProfile,
       modalVisible,
       refetchProfile,

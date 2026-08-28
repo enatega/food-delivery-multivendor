@@ -38,6 +38,7 @@ export default function ChatMain() {
     messages,
     onSend,
     pickImage,
+    supportsImageMessages,
     uploading,
     inputMessage,
     setInputMessage,
@@ -110,17 +111,12 @@ export default function ChatMain() {
         containerStyle={[
           styles.actionButton,
           {
-            backgroundColor:
-              currentTheme === "dark" ? "#1F2937" : "#F3F4F6",
+            backgroundColor: currentTheme === "dark" ? "#1F2937" : "#F3F4F6",
             borderColor: appTheme.borderLineColor,
           },
         ]}
         icon={() => (
-          <Ionicons
-            name="image-outline"
-            size={24}
-            color={appTheme.primary}
-          />
+          <Ionicons name="image-outline" size={24} color={appTheme.primary} />
         )}
         onPressActionButton={pickImage}
       />
@@ -268,7 +264,7 @@ export default function ChatMain() {
         alwaysShowSend
         renderBubble={renderBubble}
         renderInputToolbar={renderInputToolbar}
-        renderActions={renderActions}
+        renderActions={supportsImageMessages ? renderActions : undefined}
         renderMessageImage={renderMessageImage}
         renderChatFooter={renderChatFooter}
         renderSend={renderSend}
@@ -298,7 +294,8 @@ export default function ChatMain() {
           paddingBottom: 12,
         }}
         listViewProps={{
-          keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag",
+          keyboardDismissMode:
+            Platform.OS === "ios" ? "interactive" : "on-drag",
           maintainVisibleContentPosition: {
             minIndexForVisible: 0,
           },

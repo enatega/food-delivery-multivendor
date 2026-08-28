@@ -18,7 +18,6 @@ import {
 } from 'react-native'
 
 import gql from 'graphql-tag'
-import { scale, verticalScale } from '../../utils/scaling'
 import { FavouriteRestaurant } from '../../apollo/queries'
 import ChangePassword from './ChangePassword'
 import { theme } from '../../utils/themeColors'
@@ -29,7 +28,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import analytics from '../../utils/analytics'
-import { Entypo } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 
 import { useTranslation } from 'react-i18next'
 import Spinner from '../../components/Spinner/Spinner'
@@ -40,12 +39,11 @@ import ButtonContainer from '../../components/Profile/ButtonContainer/ButtonCont
 import OrderAgainCard from '../../components/Profile/OrderAgainCard/OrderAgainCard'
 import OrdersContext from '../../context/Orders'
 import useHomeRestaurants from '../../ui/hooks/useRestaurantOrderInfo'
-import { I18nManager } from 'react-native'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
-
+import { Divider, SectionHeader, useMultivendorTheme } from '../../ui/designSystem'
 
 const RESTAURANTS = gql`
   ${FavouriteRestaurant}
@@ -60,11 +58,10 @@ function Profile(props) {
   const [showPass, setShowPass] = useState(false)
   const { location } = useContext(LocationContext)
 
- 
-
   const { profile } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
-  const currentTheme = { isRTL: i18n.dir() === "rtl", ...theme[themeContext.ThemeValue] }
+  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  const { tokens } = useMultivendorTheme()
   const { orders } = useContext(OrdersContext)
 
   const activeOrders = useMemo(() => {
@@ -72,7 +69,7 @@ function Profile(props) {
     return orders.filter((o) => orderStatusActive.includes(o.orderStatus))
   }, [orders])
 
-  const { data, loading, error, refetch } = useQuery(RESTAURANTS, {
+  const { data, loading, refetch } = useQuery(RESTAURANTS, {
     variables: {
       longitude: location?.longitude || null,
       latitude: location?.latitude || null
@@ -89,12 +86,12 @@ function Profile(props) {
     useCallback(() => {
       // Only refetch if we're coming back from a screen that might have updated data
       const timeoutId = setTimeout(() => {
-        refetch();
-      }, 100); // Small delay to prevent immediate refetch
-      
-      return () => clearTimeout(timeoutId);
+        refetch()
+      }, 100) // Small delay to prevent immediate refetch
+
+      return () => clearTimeout(timeoutId)
     }, [refetch])
-  );
+  )
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -134,7 +131,7 @@ function Profile(props) {
     })
   }, [props?.navigation, showPass, toggleView, themeContext.ThemeValue])
 
-  const { isConnected:connect,setIsConnected :setConnect} = useNetworkStatus();
+  const { isConnected: connect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[refetch]} />
   return (
     <SafeAreaView
@@ -159,12 +156,8 @@ function Profile(props) {
           >
             <TextDefault
               bolder
-              style={[
-                { fontSize: scale(30), lineHeight: scale(38) },
-                styles().padding,
-                alignment.PTlarge,
-                alignment.PBmedium
-              ]}
+              textColor={tokens.colors.textPrimary}
+              style={styles(tokens).greeting}
               isRTL
             >
               {`${t('Hi')}${profile?.name ? ` ${profile.name}` : ''}!`}
@@ -172,82 +165,49 @@ function Profile(props) {
             <View style={styles(currentTheme).mainContainer}>
               <TouchableOpacity
                 activeOpacity={0.8}
-                style={[
-                  styles(currentTheme).nameView,
-                  styles(currentTheme).flexRow,
-                  styles().padding
-                ]}
+                style={styles(tokens).activeOrderRow}
                 onPress={() => navigation.navigate('MyOrders')}
               >
-                <View
-                  style={{
-                    alignItems: 'center'
-                  }}
+                <View style={styles(tokens).activeOrderDot} />
+                <TextDefault
+                  bold
+                  textColor={tokens.colors.textSecondary}
+                  style={styles(tokens).activeOrderText}
+                  isRTL
                 >
-                  <View
-                    style={{
-                      flex: 1
-                    }}
-                  >
-                    <TextDefault
-                      H5
-                      bold
-                      textColor={currentTheme.fontThirdColor}
-                      isRTL
-                    >
-                      {activeOrders?.length} {t('ActiveOrder')}
-                    </TextDefault>
-                  </View>
-                </View>
+                  {activeOrders?.length} {t('ActiveOrder')}
+                </TextDefault>
+                <Ionicons
+                  name={currentTheme.isRTL ? 'chevron-back' : 'chevron-forward'}
+                  size={18}
+                  color={tokens.colors.textMuted}
+                />
               </TouchableOpacity>
 
-              <View style={styles(currentTheme).line} />
-
               {/* favourite section */}
-              {loading ? (
+              {loading
+                ? (
                 <Spinner
                   size={'small'}
                   backColor={currentTheme.themeBackground}
                   spinnerColor={currentTheme.main}
                 />
-              ) : (
-                data?.userFavourite?.length >= 1 && (
+                  )
+                : (
+                    data?.userFavourite?.length >= 1 && (
                   <View style={styles().padding}>
-                    <View
-                      style={[
-                        styles(currentTheme).flexRow,
-                        styles(currentTheme).favView
-                      ]}
-                    >
-                      <View>
-                        <TextDefault
-                          H2
-                          bolder
-                          textColor={currentTheme.fontThirdColor}
-                        >
-                          {t('YourFavourites')}
-                        </TextDefault>
-                      </View>
-                      <View>
-                        <TouchableOpacity
-                          style={styles(currentTheme).seeAll}
-                          onPress={() => navigation.navigate('Favourite')}
-                        >
-                          <TextDefault
-                            H5
-                            bolder
-                            textColor={currentTheme.newButtonText}
-                          >
-                            {t('SeeAll')}
-                          </TextDefault>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
+                    <SectionHeader
+                      style={styles(tokens).flushSectionHeader}
+                      title={t('YourFavourites')}
+                      action={<TouchableOpacity onPress={() => navigation.navigate('Favourite')} style={styles(tokens).quietAction}>
+                        <TextDefault bolder textColor={tokens.colors.accent}>{t('SeeAll')}</TextDefault>
+                      </TouchableOpacity>}
+                    />
 
                     <FlatList
                       style={styles().offerScroll}
                       contentContainerStyle={{
-                        flexGrow: 1,
+                        alignItems: 'flex-start',
                         ...alignment.MTsmall
                       }}
                       showsVerticalScrollIndicator={false}
@@ -256,12 +216,7 @@ function Profile(props) {
                       data={sortRestaurantsByOpenStatus(data?.userFavourite || [])}
                       keyExtractor={(item) => item._id}
                       renderItem={({ item }) => {
-
-                        
-                        const averageRating = item?.reviewData?.ratings
-                        const numberOfReviews = item?.reviewData?.total
-
-                        const restaurantOpen = isOpen(item);
+                        const restaurantOpen = isOpen(item)
                         return (
                           <NewRestaurantCard
                             {...item}
@@ -269,28 +224,20 @@ function Profile(props) {
                             reviewCount={item.reviewCount}
                             isCategories
                             isOpen={restaurantOpen}
-                            isAvailable={item.isAvailable || true}
-                            
+                            isAvailable={item.isAvailable ?? true}
+                            compact
                           />
                         )
                       }}
-                      inverted={currentTheme?.isRTL ? true : false}
+                      inverted={!!currentTheme?.isRTL}
 
                     />
                   </View>
-                )
-              )}
+                    )
+                  )}
 
-              <View style={[styles().quickLinkView]}>
-                <TextDefault
-                  H2
-                  bolder
-                  textColor={currentTheme.fontThirdColor}
-                  style={styles().padding}
-                  isRTL
-                >
-                  {t('QuickLinks')}
-                </TextDefault>
+              <View style={styles().quickLinkView}>
+                <SectionHeader title={t('QuickLinks')} />
 
                 <ButtonContainer
                   icon={'people-outline'}
@@ -299,7 +246,7 @@ function Profile(props) {
                   title={t('CustomerSupport')}
                   currentTheme={currentTheme}
                 />
-                <View style={styles(currentTheme).line} />
+                <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
                 <ButtonContainer
                   icon={'help-circle-outline'}
                   iconType={'Ionicons'}
@@ -307,7 +254,7 @@ function Profile(props) {
                   title={t('titleFAQ')}
                   currentTheme={currentTheme}
                 />
-                <View style={styles(currentTheme).line} />
+                <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
                 <ButtonContainer
                   icon={'file-tray-stacked-outline'}
                   iconType={'Ionicons'}
@@ -315,36 +262,22 @@ function Profile(props) {
                   title={t('OrderHistory')}
                   currentTheme={currentTheme}
                 />
-                <View style={styles(currentTheme).line} />
+                <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
               </View>
 
               {/* order again */}
-              {orderLoading ? (
+              {orderLoading
+                ? (
                 <Spinner
                   size={'small'}
                   backColor={currentTheme.themeBackground}
                   spinnerColor={currentTheme.main}
                 />
-              ) : (
-                recentOrderRestaurantsData?.length >= 1 && (
+                  )
+                : (
+                    recentOrderRestaurantsData?.length >= 1 && (
                   <View style={styles().padding}>
-                    <View
-                      style={[
-                        styles(currentTheme).flexRow,
-                        styles(currentTheme).orderAgainView
-                      ]}
-                    >
-                      <View>
-                        <TextDefault
-                          H2
-                          bolder
-                            textColor={currentTheme.fontThirdColor}
-                            isRTL
-                        >
-                          {t('OrderAgain')}
-                        </TextDefault>
-                      </View>
-                    </View>
+                    <SectionHeader style={styles(tokens).flushSectionHeader} title={t('OrderAgain')} />
 
                     <FlatList
                       // style={styles().offerScroll}
@@ -360,22 +293,14 @@ function Profile(props) {
                       renderItem={({ item }) => {
                         return <OrderAgainCard {...item} />
                       }}
-                      inverted={currentTheme?.isRTL ? true : false}
+                      inverted={!!currentTheme?.isRTL}
                     />
                   </View>
-                )
-              )}
+                    )
+                  )}
 
               <View style={styles().settingView}>
-                <TextDefault
-                  H2
-                  bolder
-                  textColor={currentTheme.fontThirdColor}
-                  style={styles().padding}
-                  isRTL
-                >
-                  {t('titleSettings')}
-                </TextDefault>
+                <SectionHeader title={t('titleSettings')} />
 
                 <ButtonContainer
                   icon={'account-outline'}
@@ -384,7 +309,7 @@ function Profile(props) {
                   title={t('Account')}
                   currentTheme={currentTheme}
                 />
-                <View style={styles(currentTheme).line} />
+                <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
                 <ButtonContainer
                   icon={'location-outline'}
                   iconType={'Ionicons'}

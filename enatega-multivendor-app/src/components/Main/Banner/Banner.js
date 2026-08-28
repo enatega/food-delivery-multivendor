@@ -13,8 +13,10 @@ import { getCachedMediaUri, useCachedMediaUri } from '../../../utils/mediaCache'
 
 // Helper function to get media type from URL
 const getMediaTypeFromUrl = (url) => {
-  const extension = url?.split('.').pop().toLowerCase()
-  const videoExtensions = ['mp4']
+  if (!url || typeof url !== 'string') return 'image'
+  const path = url.split(/[?#]/, 1)[0]
+  const extension = path.split('.').pop()?.toLowerCase()
+  const videoExtensions = ['mp4', 'm4v', 'mov', 'webm']
   return videoExtensions.includes(extension) ? 'video' : 'image'
 }
 
@@ -184,28 +186,30 @@ const Banner = ({ banners }) => {
   if (!bannersData || bannersData.length === 0) return null
 
   return (
-    <SwiperFlatList
-      autoplay
-      autoplayDelay={3}
-      autoplayLoop
-      initialNumToRender={PRIORITY_BANNER_COUNT}
-      maxToRenderPerBatch={PRIORITY_BANNER_COUNT}
-      updateCellsBatchingPeriod={16}
-      removeClippedSubviews
-      windowSize={3}
-      showPagination
-      data={bannersData}
-      keyExtractor={(item, index) => item?._id || item?.file || String(index)}
-      snapToInterval={width} // Ensures only one image is visible at a time
-      snapToAlignment='center'
-      paginationStyle={slideStyles.pagination}
-      paginationActiveColor={currentTheme.main}
-      paginationDefaultColor={currentTheme.hex}
-      paginationStyleItemActive={slideStyles.paginationItem}
-      paginationStyleItemInactive={slideStyles.paginationItem}
-      onChangeIndex={onChangeIndex}
-      renderItem={renderItem}
-    />
+    <View style={slideStyles.wrapper}>
+      <SwiperFlatList
+        autoplay
+        autoplayDelay={3}
+        autoplayLoop
+        initialNumToRender={PRIORITY_BANNER_COUNT}
+        maxToRenderPerBatch={PRIORITY_BANNER_COUNT}
+        updateCellsBatchingPeriod={16}
+        removeClippedSubviews
+        windowSize={3}
+        showPagination
+        data={bannersData}
+        keyExtractor={(item, index) => item?._id || item?.file || String(index)}
+        snapToInterval={width} // Ensures only one image is visible at a time
+        snapToAlignment='center'
+        paginationStyle={slideStyles.pagination}
+        paginationActiveColor={currentTheme.main}
+        paginationDefaultColor={currentTheme.hex}
+        paginationStyleItemActive={slideStyles.paginationItem}
+        paginationStyleItemInactive={slideStyles.paginationItem}
+        onChangeIndex={onChangeIndex}
+        renderItem={renderItem}
+      />
+    </View>
   )
 }
 

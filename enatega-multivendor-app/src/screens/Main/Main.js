@@ -42,6 +42,7 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import ModalDropdown from '../../components/Picker/ModalDropdown'
 import { useRestaurantQueries } from '../../ui/hooks/useRestaurantQueries'
 import HorizontalFlashList from '../../components/Lists/HorizontalFlashList'
+import { PrimaryButton, SectionHeader, StateView, useMultivendorTheme } from '../../ui/designSystem'
 
 const RESTAURANTS = gql`
   ${restaurantListPreview}
@@ -77,12 +78,12 @@ function Main(props) {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const { tokens } = useMultivendorTheme()
   const { getCurrentLocation } = useLocation()
   const { getAddress } = useGeocoding()
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
 
   const locationData = location
-  const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const [citiesModalVisible, setCitiesModalVisible] = useState(false)
   const restaurantVariables = useMemo(() => ({
     longitude: location?.longitude || null,
@@ -158,21 +159,13 @@ function Main(props) {
 
   // "Top grocery picks" is derived from the single most-ordered fetch above
   // (grocery subset) instead of a second grocery-filtered network request.
-  const mostOrderedGroceryStores = useMemo(
-    () => (mostOrderedRestaurantsVar || []).filter(
-      (item) => item?.shopType?.toLowerCase() === 'grocery'
-    ),
-    [mostOrderedRestaurantsVar]
-  )
+  const mostOrderedGroceryStores = orderData?.mostOrderedGroceryStores
   const mostOrderedGroceryLoading = orderLoading
   const mostOrderedGroceryError = orderError
 
   const { restaurantData: nearByGroceryStores, loading: nearByGroceryStoresLoading, error: nearByGroceryStoresError } = useRestaurantQueries('grocery', location, 'grocery')
   const { restaurantData: restaurantorders, loading: restaurantordersLoading, error: restaurantordersError } = useRestaurantQueries('restaurant', location, 'restaurant')
 
-  const handleActiveOrdersChange = (activeOrdersExist) => {
-    setHasActiveOrders(activeOrdersExist)
-  }
   const handleRefresh = async () => {
     setIsRefreshing(true)
     const { data: newBanners } = await refetchBanners()
@@ -495,7 +488,8 @@ function Main(props) {
                   {loading || isAutoRetrying || restaurantordersLoading || orderLoading || hasDiscoveryContent ? (
                     <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}>
                       <Banner banners={banners?.banners} />
-                      <View style={{ gap: 12 }}>
+                      <ActiveOrders />
+                      <View style={styles(tokens).discoverySections}>
                         <View>{isLoggedIn && sortedRecentOrderRestaurants?.length > 0 && <>{orderLoading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard orders={sortedRecentOrderRestaurants} loading={orderLoading} error={orderError} title={'Order it again'} queryType='orderAgain' />}</>}</View>
 
                         <View>
@@ -509,97 +503,78 @@ function Main(props) {
                           />
                         </View>
 
-                        <View style={{ paddingHorizontal: 12, paddingTop: 4, gap: scale(8) }}>
-                          <TextDefault bolder H4 isRTL>
-                            {t('ShopTypes')}
-                          </TextDefault>
+                        <View style={styles(tokens).collectionSection}>
+                          <SectionHeader style={styles(tokens).collectionHeading} title={t('ShopTypes')} />
                           <HorizontalFlashList
                             data={allShopTypes?.fetchAllShopTypes?.data ?? []}
                             renderItem={renderShopTypeItem}
                             keyExtractor={keyExtractorRestaurant}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5
+                              paddingStart: tokens.spacing.md
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={120}
-                            itemSpacing={8}
+                            estimatedItemSize={96}
+                            itemSpacing={tokens.spacing.lg}
                           />
-                        </View                                         >
+                        </View>
 
-                        <View style={{ paddingHorizontal: 12, paddingTop: 2, gap: scale(8) }}>
-                          <TextDefault bolder H4 isRTL>
-                            {t('I feel like eating...')}
-                          </TextDefault>
+                        <View style={styles(tokens).collectionSection}>
+                          <SectionHeader style={styles(tokens).collectionHeading} title={t('I feel like eating...')} />
                           <HorizontalFlashList
                             data={restaurantCuisines ?? []}
                             renderItem={renderRestaurantCuisineItem}
                             keyExtractor={keyExtractorRestaurant}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5
+                              paddingStart: tokens.spacing.md
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={140}
-                            itemSpacing={8}
+                            estimatedItemSize={96}
+                            itemSpacing={tokens.spacing.lg}
                           />
                         </View>
                         <View>{loading || isRefreshing ? <MainLoadingUI /> : <MainRestaurantCard shopType='restaurant' orders={sortedRestaurantOrders} loading={orderLoading} error={orderError} title={t('Restaurants near you')} queryType='restaurant' icon='restaurant' />}</View>
-                        <View style={{ padding: 15, gap: scale(8) }}>
-                          <TextDefault bolder H4 isRTL>
-                            {t('Fresh finds await...')}
-                          </TextDefault>
+                        <View style={styles(tokens).collectionSection}>
+                          <SectionHeader style={styles(tokens).collectionHeading} title={t('Fresh finds await...')} />
                           <HorizontalFlashList
                             data={groceryCuisines ?? []}
                             renderItem={renderGroceryCuisineItem}
                             keyExtractor={keyExtractorGrocery}
                             contentContainerStyle={{
                               flexGrow: 1,
-                              paddingBottom: 5
+                              paddingStart: tokens.spacing.md
                             }}
                             inverted={currentTheme?.isRTL ? true : false}
-                            estimatedItemSize={140}
-                            itemSpacing={8}
+                            estimatedItemSize={96}
+                            itemSpacing={tokens.spacing.lg}
                           />
                         </View>
                         {/* <View>{loading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortRestaurantsByOpenStatus(nearByGroceryStores || [])} loading={nearByGroceryStoresLoading} error={nearByGroceryStoresError} title={t('Grocery List')} queryType='grocery' icon='grocery' selectedType='grocery' />}</View> */}
 
                         <View>{orderLoading ? <MainLoadingUI /> : <MainRestaurantCard shopType='grocery' orders={sortedMostOrderedGrocery} loading={mostOrderedGroceryLoading} error={mostOrderedGroceryError} title={t('Top grocery picks')} queryType='topPicks' icon='store' selectedType='grocery' />}</View>
                       </View>
-                      <View style={styles(currentTheme, hasActiveOrders).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
+                      <View style={styles(currentTheme).topBrandsMargin}>{orderLoading ? <TopBrandsLoadingUI /> : <TopBrands />}</View>
                     </ScrollView>
                   ) : !location ? (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
                       <Spinner backColor='transparent' />
                     </View>
                   ) : (
-                    <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
-                      <TextDefault bold H4 style={{ textAlign: 'center', marginBottom: 4 }}>
-                        {isCustomerDemoMode
-                          ? t('No restaurants are available for the selected demo zone right now.')
-                          : t('We are currently not available in your location.')}
-                      </TextDefault>
-                      <TextDefault style={{ textAlign: 'center', marginBottom: 10 }}>
-                        {isCustomerDemoMode
-                          ? t('Please verify the configured demo zone contains active restaurants.')
-                          : t('Please check back later or try a different location.')}
-                      </TextDefault>
-
-                    
-
-                      <TouchableOpacity activeOpacity={0.7} onPress={() => setCitiesModalVisible(true)} style={[styles(currentTheme).button, { opacity: 1 }]}>
-                        <TextDefault textColor={currentTheme.color4} style={{ paddingHorizontal: 10 }} bold H7>
-                          {t('Select different location')}
-                        </TextDefault>
-                      </TouchableOpacity>
-                    </View>
+                    <StateView
+                      title={isCustomerDemoMode
+                        ? t('No restaurants are available for the selected demo zone right now.')
+                        : t('We are currently not available in your location.')}
+                      description={isCustomerDemoMode
+                        ? t('Please verify the configured demo zone contains active restaurants.')
+                        : t('Please check back later or try a different location.')}
+                      action={<PrimaryButton label={t('Select different location')} onPress={() => setCitiesModalVisible(true)} />}
+                    />
                   )}
                 </View>
                 <ForceUpdate />
               </View>
             </View>
-            <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
-
             <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
             <ModalDropdown theme={currentTheme} visible={citiesModalVisible} onItemPress={handleMarkerPress} onClose={() => setCitiesModalVisible(false)} />
           </View>

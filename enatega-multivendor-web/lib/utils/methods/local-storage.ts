@@ -1,6 +1,8 @@
+import { modeStorage } from "@/lib/mode/storage";
+
 const saveToLocalStorage = (key: string, data: string) => {
     try {
-      localStorage.setItem(key, data);
+      modeStorage.set(key, data);
       return key;
     } catch (err) {
       return '';
@@ -9,7 +11,7 @@ const saveToLocalStorage = (key: string, data: string) => {
   
   const getFromLocalStorage = (key: string) => {
     try {
-      return localStorage.getItem(key);
+      return modeStorage.get(key);
     } catch (err) {
       return '';
     }
@@ -17,7 +19,7 @@ const saveToLocalStorage = (key: string, data: string) => {
   
   const deleteFromLocalStorage = (key: string) => {
     try {
-      localStorage.removeItem(key);
+      modeStorage.remove(key);
       return key;
     } catch (err) {
       return '';

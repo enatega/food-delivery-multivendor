@@ -16,50 +16,34 @@ import {
 } from "@apollo/client/utilities";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { Platform } from "react-native";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
-import { Subscription } from "zen-observable-ts";
+import { Platform } from "react-native";
 import { SubscriptionClient } from "subscriptions-transport-ws";
-import useEnvVars from "../../environment";
-import { RIDER_ID, RIDER_TOKEN } from "../utils/constants";
-import { getSecureItem, removeSecureItem } from "../services/secure-storage";
-import { IRestaurantLocation } from "../utils/interfaces";
-import { calculateDistance } from "../utils/methods/custom-functions";
-import PublicAccessTokenService from "../services/public-access-token.service";
+import { Subscription } from "zen-observable-ts";
+
+import { RiderEnvironment } from "@/environment";
+import PublicAccessTokenService, {
+  RIDER_PUBLIC_ACCESS_USER_AGENT,
+} from "@/lib/services/public-access-token.service";
+import { getSecureItem, removeSecureItem } from "@/lib/services/secure-storage";
+import { IRestaurantLocation } from "@/lib/utils/interfaces";
+import { calculateDistance } from "@/lib/utils/methods/custom-functions";
+
+interface SetupApolloOptions {
+  environment: RiderEnvironment;
+  riderIdKey: string;
+  tokenKey: string;
+}
+
+export interface ApolloRuntime {
+  client: ApolloClient<NormalizedCacheObject>;
+  dispose: () => void;
+}
 
 let isAuthRedirecting = false;
 
-async function handleInvalidSession(): Promise<void> {
-  if (isAuthRedirecting) return;
-  isAuthRedirecting = true;
-
-  try {
-    await Promise.all([
-      removeSecureItem(RIDER_TOKEN),
-      AsyncStorage.removeItem(RIDER_ID),
-    ]);
-    router.replace("/login");
-  } finally {
-    setTimeout(() => {
-      isAuthRedirecting = false;
-    }, 1000);
-  }
-}
-
-// The whole app must share a single client (one cache, one WS connection),
-// so the client is created once and reused on subsequent calls.
-let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
-
-const setupApollo = () => {
-  // useEnvVars uses useContext, so it must run on every render to keep hook
-  // order stable — only the client construction below is skipped when cached.
-  const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars();
-
-  if (apolloClient) {
-    return apolloClient;
-  }
-
-  const cache = new InMemoryCache({
+function createCache() {
+  return new InMemoryCache({
     typePolicies: {
       Query: {
         fields: {
@@ -87,10 +71,6 @@ const setupApollo = () => {
           },
         },
       },
-      // Some legacy order items come back without an `image` field (undefined
-      // rather than null). A `read` policy marks the field optional, which
-      // silences the "Missing field 'image'" cache warnings and normalizes the
-      // absent value to null.
       Item: {
         fields: {
           image: {
@@ -109,25 +89,47 @@ const setupApollo = () => {
               if (
                 !restaurantLocation?.coordinates[0] ||
                 !restaurantLocation?.coordinates[1]
-              )
+              ) {
                 return;
-              const distance = calculateDistance(
+              }
+              return calculateDistance(
                 restaurantLocation.coordinates[0][0][0],
                 restaurantLocation.coordinates[0][0][1],
                 variables?.latitude,
                 variables?.longitude,
               );
-              return distance;
             },
           },
         },
       },
     },
   });
+}
 
-  const httpLink = createHttpLink({
-    uri: GRAPHQL_URL,
-  });
+export default function setupApollo({
+  environment,
+  riderIdKey,
+  tokenKey,
+}: SetupApolloOptions): ApolloRuntime {
+  const { GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED, WS_GRAPHQL_URL } = environment;
+  const cache = createCache();
+  const httpLink = createHttpLink({ uri: GRAPHQL_URL });
+
+  const handleInvalidSession = async () => {
+    if (isAuthRedirecting) return;
+    isAuthRedirecting = true;
+    try {
+      await Promise.all([
+        removeSecureItem(tokenKey),
+        removeSecureItem(riderIdKey),
+      ]);
+      router.replace("/login");
+    } finally {
+      setTimeout(() => {
+        isAuthRedirecting = false;
+      }, 1000);
+    }
+  };
 
   const wsClient = new SubscriptionClient(
     WS_GRAPHQL_URL,
@@ -135,21 +137,28 @@ const setupApollo = () => {
       reconnect: true,
       lazy: true,
       connectionParams: async () => {
-        const token = await getSecureItem(RIDER_TOKEN);
-        const nonce = PublicAccessTokenService.getNonce();
-        let publicToken: string | null = null;
+        const token = await getSecureItem(tokenKey);
+        const locale = (await AsyncStorage.getItem("lang")) || "en";
+        const headers: Record<string, string> = {
+          authorization: token ? `Bearer ${token}` : "",
+          "x-platform": Platform.OS,
+          "accept-language": locale,
+          "user-agent": RIDER_PUBLIC_ACCESS_USER_AGENT,
+        };
 
-        try {
-          publicToken = await PublicAccessTokenService.getToken(client);
-        } catch {
-          publicToken = null;
+        if (PUBLIC_ACCESS_REQUIRED) {
+          const nonce = PublicAccessTokenService.getNonce();
+          let publicToken: string | null = null;
+          try {
+            publicToken = await PublicAccessTokenService.getToken(client);
+          } catch {
+            publicToken = null;
+          }
+          headers["bop-auth"] = publicToken ? `Bearer ${publicToken}` : "";
+          headers.nonce = nonce || "";
         }
 
-        return {
-          authorization: token ? `Bearer ${token}` : "",
-          "bop-auth": publicToken ? `Bearer ${publicToken}` : "",
-          nonce: nonce || "",
-        };
+        return headers;
       },
       connectionCallback: (error) => {
         if (error && __DEV__) {
@@ -157,47 +166,36 @@ const setupApollo = () => {
         }
       },
     },
-    WebSocket
+    WebSocket,
   );
 
-  const wsLink = new WebSocketLink(wsClient);
-
   const request = async (operation: Operation) => {
-    const skipPublicAuth =
-      operation.getContext().headers?.["x-skip-public-auth"];
-    const token = await getSecureItem(RIDER_TOKEN);
-    const nonce = PublicAccessTokenService.getNonce();
-
-    // Get platform-specific information for fingerprinting
-    const platform = Platform.OS;
+    const token = await getSecureItem(tokenKey);
     const locale = (await AsyncStorage.getItem("lang")) || "en";
-
-    // Build headers object
     const headers: Record<string, string> = {
       authorization: token ? `Bearer ${token}` : "",
-      nonce: nonce || "",
-      "x-platform": platform,
+      "x-platform": Platform.OS,
       "accept-language": locale,
-      "user-agent": `Yalla-Rider-App/${platform}`,
+      "user-agent": RIDER_PUBLIC_ACCESS_USER_AGENT,
       ...operation.getContext().headers,
     };
 
-    if (!skipPublicAuth) {
+    const skipPublicAuth =
+      operation.getContext().headers?.["x-skip-public-auth"];
+    if (PUBLIC_ACCESS_REQUIRED && !skipPublicAuth) {
       const publicToken = await PublicAccessTokenService.getToken(client);
-      headers["bop-auth"] = `Bearer ${publicToken}`;
+      headers["bop-auth"] = publicToken ? `Bearer ${publicToken}` : "";
+      headers.nonce = PublicAccessTokenService.getNonce() || "";
     }
 
-    operation.setContext({
-      headers,
-    });
+    operation.setContext({ headers });
   };
 
   const requestLink = new ApolloLink(
     (operation, forward) =>
       new Observable((observer) => {
-        let handle: Subscription;
-        Promise.resolve(operation)
-          .then((oper) => request(oper))
+        let handle: Subscription | undefined;
+        void request(operation)
           .then(() => {
             handle = forward(operation).subscribe({
               next: observer.next.bind(observer),
@@ -207,52 +205,43 @@ const setupApollo = () => {
           })
           .catch(observer.error.bind(observer));
 
-        return () => {
-          if (handle) handle.unsubscribe();
-        };
+        return () => handle?.unsubscribe();
       }),
   );
 
-  const errorLink = onError(({ graphQLErrors, networkError }) => {
-    const hasInvalidSession = (graphQLErrors || []).some(
-      (graphQLError) =>
-        graphQLError?.extensions?.code === "TOKEN_EXPIRED" ||
-        graphQLError?.extensions?.code === "INVALID_TOKEN",
+  const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
+    const hasInvalidSession = (graphQLErrors || []).some((error) => {
+      const code = error?.extensions?.code;
+      const message = error.message.toLowerCase();
+      const isPublicAuthError =
+        PUBLIC_ACCESS_REQUIRED &&
+        (message.includes("fingerprint") ||
+          message.includes("public token") ||
+          message.includes("bop-auth") ||
+          message.includes("nonce"));
+      return (
+        !isPublicAuthError &&
+        (code === "TOKEN_EXPIRED" ||
+          code === "INVALID_TOKEN" ||
+          message.includes("unauthenticated") ||
+          message.includes("unauthorized"))
+      );
+    });
+
+    const hadUserAuthorization = Boolean(
+      operation.getContext().headers?.authorization,
     );
 
-    if (hasInvalidSession) {
+    if (hasInvalidSession && hadUserAuthorization) {
       void handleInvalidSession();
-      return;
-    }
-
-    if (graphQLErrors) {
-      graphQLErrors.forEach(({ message }) => {
-        // IMPORTANT: Only remove user token for actual user auth failures
-        // Do NOT remove token for public auth failures (bop-auth related)
-        const isPublicAuthError =
-          message.toLowerCase().includes("fingerprint mismatch") ||
-          message.toLowerCase().includes("token expired") ||
-          message.toLowerCase().includes("invalid token") ||
-          message.toLowerCase().includes("token missing");
-
-        // Only remove rider token if it's a user auth error (not public auth error)
-        if (
-          !isPublicAuthError &&
-          (message.toLowerCase().includes("unauthenticate") ||
-           message.toLowerCase().includes("unauthorize"))
-        ) {
-          removeSecureItem(RIDER_TOKEN)
-            .then(() => {})
-            .catch(() => {});
-        }
-      });
-    }
-    if (networkError && __DEV__) {
+    } else if (networkError && __DEV__) {
       console.warn("Network error while processing GraphQL request");
     }
   });
 
+  const wsLink = new WebSocketLink(wsClient);
   const client = new ApolloClient({
+    cache,
     link: ApolloLink.from([
       errorLink,
       requestLink,
@@ -270,15 +259,16 @@ const setupApollo = () => {
           );
         },
         wsLink,
-        httpLink
+        httpLink,
       ),
     ]),
-    cache,
-    resolvers: {},
   });
 
-  apolloClient = client;
-  return client;
-};
-
-export default setupApollo;
+  return {
+    client,
+    dispose: () => {
+      wsClient.close(false, true);
+      client.stop();
+    },
+  };
+}

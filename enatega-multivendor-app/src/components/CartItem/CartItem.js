@@ -16,16 +16,19 @@ import Animated, {
   withSpring
 } from 'react-native-reanimated'
 import CachedImage from '../CachedImage'
+import { useMultivendorTheme } from '../../ui/designSystem'
 
 const CartItem = (props) => {
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
   const navigation = useNavigation()
-  
+
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -80,25 +83,18 @@ const CartItem = (props) => {
 
   return (
     <View style={styles(currentTheme).itemContainer}>
-      <View
-        style={{
-          flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          gap: scale(7)
-        }}
-      >
-        <View style={styles().suggestItemImgContainer}>
+      <View style={styles(currentTheme).itemDetails}>
+        <View style={styles(currentTheme).suggestItemImgContainer}>
           <CachedImage
             source={{ uri: imageUrl }}
-            style={styles().suggestItemImg}
+            style={styles(currentTheme).suggestItemImg}
             resizeMode='contain'
           />
         </View>
-        <View>
+        <View style={styles(currentTheme).itemCopy}>
           <TextDefault
             numberOfLines={1}
-            textColor={currentTheme.fontFourthColor}
+            textColor={currentTheme.colors.textPrimary}
             bolder
             H5
             isRTL
@@ -109,19 +105,16 @@ const CartItem = (props) => {
           </TextDefault>
 
           {props?.itemAddons?.length > 0 && (
-            <View style={styles().additionalItem}>
+            <View style={styles(currentTheme).additionalItem}>
               <View>
                 <TouchableOpacity
                   onPress={toggleDropdown}
                   activeOpacity={1}
-                  style={{
-                    flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
-                    alignItems: 'center'
-                  }}
+                  style={styles(currentTheme).addonToggle}
                 >
                   <TextDefault
                     style={{ marginRight: scale(5) }}
-                    textColor={currentTheme.secondaryText}
+                    textColor={currentTheme.colors.textSecondary}
                     Normal
                     isRTL
                   >
@@ -131,15 +124,15 @@ const CartItem = (props) => {
                   <Feather
                     name={isDropdownOpen ? 'chevron-up' : 'chevron-down'}
                     size={20}
-                    color={currentTheme.iconColorDark}
+                    color={currentTheme.colors.iconMuted}
                   />
                 </TouchableOpacity>
                 {isDropdownOpen && (
-                  <View style={styles().itemsDropdown}>
+                  <View style={styles(currentTheme).itemsDropdown}>
                     {props?.optionsTitle?.map((item, index) => (
                       <TextDefault
                         key={index}
-                        textColor={currentTheme.secondaryText}
+                        textColor={currentTheme.colors.textSecondary}
                         Normal
                         isRTL
                       >
@@ -152,17 +145,10 @@ const CartItem = (props) => {
             </View>
           )}
 
-          <View
-            style={{
-              flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
-              gap: scale(8),
-              alignItems: 'center',
-              marginTop: scale(4)
-            }}
-          >
+          <View style={styles(currentTheme).priceRow}>
             <TextDefault
               numberOfLines={1}
-              textColor={currentTheme.fontFourthColor}
+              textColor={currentTheme.colors.textPrimary}
               bolder
               Normal
               isRTL
@@ -170,10 +156,10 @@ const CartItem = (props) => {
               {configuration.currencySymbol}
               {parseFloat(props?.dealPrice).toFixed(2)}
             </TextDefault>
-            <View style={styles().divider} />
+            <View style={styles(currentTheme).divider} />
             <TouchableOpacity onPress={navigateToItemDetail}>
               <TextDefault
-                textColor={currentTheme.fontFourthColor}
+                textColor={currentTheme.colors.accent}
                 bolder
                 Normal
                 isRTL
@@ -197,13 +183,13 @@ const CartItem = (props) => {
             <EvilIcons
               name='trash'
               size={scale(25)}
-              color={currentTheme.color4}
+              color={currentTheme.colors.textPrimary}
             />
           ) : (
             <AntDesign
               name='minus'
               size={scale(18)}
-              color={currentTheme.color4}
+              color={currentTheme.colors.textPrimary}
             />
           )}
         </TouchableOpacity>
@@ -211,7 +197,7 @@ const CartItem = (props) => {
         <Animated.View
           style={[styles(currentTheme).actionContainerView, animatedStyle]}
         >
-          <TextDefault H5 bold textColor={currentTheme.black} isRTL>
+          <TextDefault H5 bold textColor={currentTheme.colors.textPrimary} isRTL>
             {props?.quantity}
           </TextDefault>
         </Animated.View>
@@ -224,7 +210,7 @@ const CartItem = (props) => {
           ]}
           onPress={props?.addQuantity}
         >
-          <AntDesign name='plus' size={scale(18)} color={currentTheme.white} />
+          <AntDesign name='plus' size={scale(18)} color={currentTheme.colors.textOnAccent} />
         </TouchableOpacity>
       </View>
     </View>

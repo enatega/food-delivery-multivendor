@@ -479,6 +479,25 @@ export const order = `query Order($id:String!){
 }
 `
 
+const orderEtaFields = `
+  eta {
+    phase source readyAt baseArrivalAt estimatedArrivalAt
+    windowStartAt windowEndAt durationSeconds distanceMeters
+    encodedPolyline calculatedAt lastLocationAt version
+  }
+`
+
+export const orderTracking = `query OrderTracking($id:ID!){
+  orderTracking(id:$id){
+    orderId
+    status
+    riderLocation {
+      latitude longitude accuracy heading speed recordedAt
+    }
+    ${orderEtaFields}
+  }
+}`
+
 export const myOrders = `query Orders($offset:Int){
   orders(offset:$offset){
     _id
@@ -562,6 +581,7 @@ export const myOrders = `query Orders($offset:Int){
     assignedAt
     instructions
     discountAmount
+    ${orderEtaFields}
   }
 }
 `
@@ -653,6 +673,7 @@ const ordersFieldsBody = `
     assignedAt
     instructions
     discountAmount
+    ${orderEtaFields}
 `
 
 export const getUsersActiveOrders = `query GetUsersActiveOrders($page:Int!,$limit:Int!,$offset:Int!){
@@ -676,12 +697,10 @@ export const getConfiguration = `query Configuration{
     customerAppSentryUrl 
     termsAndConditions 
     privacyPolicy
-    testOtp 
     skipMobileVerification
     skipEmailVerification
     costType
     publishableKey
-    secretKey
     enableCustomerDemoMode
     customerDemoZoneId
   }
@@ -1090,6 +1109,7 @@ export const orderFragment = `fragment NewOrder on Order {
   deliveredAt
   cancelledAt
   assignedAt
+  ${orderEtaFields}
 }`
 
 // TODO: Check why the url is null
@@ -1310,7 +1330,7 @@ export const FetchAllShopTypes = gql`
 // export const RestaurantCuisines = `query NearByRestaurantsCuisines {
 //     nearByRestaurantsCuisines(
 //        latitude: $latitude
-//     longitude:$longitude 
+//     longitude:$longitude
 //     shopType: $shopType
 //     ) {
 //         _id
@@ -1320,7 +1340,6 @@ export const FetchAllShopTypes = gql`
 //         shopType
 //     }
 // }`
-
 
 export const RestaurantCuisines = `
 query NearByRestaurantsCuisines(
@@ -1340,4 +1359,4 @@ query NearByRestaurantsCuisines(
     shopType
   }
 }
-`;
+`

@@ -1,73 +1,70 @@
-import React, { useContext } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { Pressable, View } from 'react-native'
 import styles from './styles.js'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext.js'
-import { theme } from '../../../utils/themeColors.js'
 import TextDefault from '../../Text/TextDefault/TextDefault.js'
-import { EvilIcons } from '@expo/vector-icons'
-import { scale } from '../../../utils/scaling.js'
+import { Ionicons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import { useMultivendorTheme } from '../../../ui/designSystem'
 
 const ButtonContainer = (props) => {
   const { t, i18n } = useTranslation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {isRTL : i18n.dir() == 'rtl', ...theme[themeContext.ThemeValue]}
+  const { tokens } = useMultivendorTheme()
+  const themedStyles = styles(tokens, i18n.dir() === 'rtl')
   const isDisabled = props?.onPress === 'null'
   const isVerifyDisabled = props?.status === 'null'
-  const statusColor = props?.status === 'verified' ? `${currentTheme.linkColor}` : `${currentTheme.red600}`
+  const statusColor = props?.status === 'verified'
+    ? tokens.colors.info
+    : tokens.colors.danger
+  const hasDetail = Boolean(props?.detail)
 
   return (
     <>
-      <View style={[styles().padding]}>
-        <TouchableOpacity
+      <Pressable
+          accessibilityRole={isDisabled ? undefined : 'button'}
           activeOpacity={isDisabled ? 1 : 0.7}
-          style={[styles(currentTheme).linkContainer, styles(currentTheme).flexRow]}
+          style={({ pressed }) => [
+            themedStyles.row,
+            pressed && !isDisabled && themedStyles.pressed
+          ]}
           onPress={isDisabled ? null : props?.onPress}
         >
-          <View style={styles(currentTheme).mainLeftContainer}>
+          <View style={themedStyles.content}>
             <TextDefault
-              style={styles().drawerContainer}
-              textColor={currentTheme.fontMainColor}
-              small
-              H5
-              bolder
+              textColor={hasDetail ? tokens.colors.textMuted : tokens.colors.textPrimary}
+              style={hasDetail ? themedStyles.label : themedStyles.standaloneTitle}
             >
               {props?.title}
             </TextDefault>
-          </View>
-
-          <View style={styles(currentTheme).leftContainer}>
-            <View>
+            {hasDetail && (
               <TextDefault
-                style={styles().drawerContainer}
-                textColor={currentTheme.fontMainColor}
-                small
-                H5
-                bolder
+                numberOfLines={1}
+                textColor={tokens.colors.textPrimary}
+                style={themedStyles.detail}
               >
                 {props?.detail}
               </TextDefault>
-              {!isVerifyDisabled && (
-                <View style={styles(currentTheme).verifyView}>
-                  <TextDefault
-                    textColor={statusColor}
-                    small
-                  >
-                    {t(props?.status)}
-                  </TextDefault>
-                </View>
-              )}
-            </View>
-            {!isDisabled && (
-              <EvilIcons
-                name={currentTheme.isRTL ? 'chevron-left' : 'chevron-right'}
-                size={scale(30)}
-                color={currentTheme.darkBgFont}
-              />
+            )}
+            {!isVerifyDisabled && (
+              <View style={themedStyles.verifyView}>
+                <Ionicons
+                  name={props?.status === 'verified' ? 'checkmark-circle-outline' : 'alert-circle-outline'}
+                  size={14}
+                  color={statusColor}
+                />
+                <TextDefault textColor={statusColor} style={themedStyles.status}>
+                  {t(props?.status)}
+                </TextDefault>
+              </View>
             )}
           </View>
-        </TouchableOpacity>
-      </View>
+          {!isDisabled && (
+            <Ionicons
+              name={i18n.dir() === 'rtl' ? 'chevron-back' : 'chevron-forward'}
+              size={18}
+              color={tokens.colors.textMuted}
+            />
+          )}
+        </Pressable>
     </>
   )
 }

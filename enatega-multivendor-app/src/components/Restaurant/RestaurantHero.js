@@ -13,6 +13,7 @@ import FavoriteButton from '../FavButton/FavouriteButton'
 import Bicycle from '../../assets/SVG/Bicycle'
 import ShimmerImage from '../ShimmerImage/ShimmerImage'
 import { resolveLogoImage, resolveRestaurantImage } from '../../utils/resolveImageUrl'
+import { useMultivendorTheme } from '../../ui/designSystem'
 
 const HERO_IMAGE_HEIGHT = scale(250)
 const HERO_CARD_OFFSET = scale(34)
@@ -22,12 +23,14 @@ function RestaurantHero({ aboutObject, displayedDeliveryMinutes, scrollY, fadeDi
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const { t, i18n } = useTranslation()
+  const { tokens } = useMultivendorTheme()
   const currentTheme = useMemo(
     () => ({
       isRTL: i18n.dir() === 'rtl',
-      ...theme[themeContext.ThemeValue]
+      ...theme[themeContext.ThemeValue],
+      ...tokens
     }),
-    [i18n, themeContext.ThemeValue]
+    [i18n, themeContext.ThemeValue, tokens]
   )
 
   const currentDayShort = useMemo(() => new Date().toLocaleString('en-US', { weekday: 'short' }).toUpperCase(), [])
@@ -62,14 +65,14 @@ function RestaurantHero({ aboutObject, displayedDeliveryMinutes, scrollY, fadeDi
               imageUrl={logoImageUrl}
               defaultSource={require('../../assets/images/defaultLogo.png')}
             />
-            <TextDefault numberOfLines={2} H3 bolder textColor={currentTheme.fontThirdColor} style={styles(currentTheme).titleText}>
+            <TextDefault numberOfLines={2} H3 bolder textColor={currentTheme.colors.textPrimary} style={styles(currentTheme).titleText}>
               {aboutObject?.restaurantName}
             </TextDefault>
           </View>
           <FavoriteButton iconSize={scale(24)} restaurantId={aboutObject?.restaurantId} />
         </View>
 
-        <TextDefault textColor={currentTheme.fontThirdColor} H5 bold isRTL>
+        <TextDefault textColor={currentTheme.colors.textMuted} style={styles(currentTheme).cuisineText} isRTL>
           {aboutObject?.restaurantCuisines?.join(', ')}
         </TextDefault>
 
@@ -84,11 +87,11 @@ function RestaurantHero({ aboutObject, displayedDeliveryMinutes, scrollY, fadeDi
               })
             }}
           >
-            <FontAwesome5 name='smile' size={scale(20)} color={currentTheme.newIconColor} />
-            <TextDefault textColor={currentTheme.fontNewColor} bold H5 isRTL>
+            <FontAwesome5 name='smile' size={scale(18)} color={currentTheme.colors.textSecondary} />
+            <TextDefault textColor={currentTheme.colors.textSecondary} bold isRTL>
               {aboutObject?.average}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontNewColor} bold H5 isRTL>
+            <TextDefault textColor={currentTheme.colors.textSecondary} isRTL>
               {aboutObject?.reviewsCount ?? 0} review(s)
             </TextDefault>
           </TouchableOpacity>
@@ -103,7 +106,7 @@ function RestaurantHero({ aboutObject, displayedDeliveryMinutes, scrollY, fadeDi
               })
             }}
           >
-            <TextDefault bolder textColor={currentTheme.main}>
+            <TextDefault bolder textColor={currentTheme.colors.accent}>
               {t('seeReviews')}
             </TextDefault>
           </TouchableOpacity>
@@ -111,37 +114,46 @@ function RestaurantHero({ aboutObject, displayedDeliveryMinutes, scrollY, fadeDi
 
         <View style={styles(currentTheme).spacedRow}>
           <View style={styles(currentTheme).ratingBox}>
-            <MaterialCommunityIcons name='timer-outline' size={scale(20)} color={currentTheme.newIconColor} />
+            <MaterialCommunityIcons name='timer-outline' size={scale(18)} color={currentTheme.colors.textSecondary} />
             {todayOpeningTimes && (
               <View style={styles(currentTheme).timingRow}>
-                <TextDefault textColor={currentTheme.fontThirdColor} bold isRTL>
+                <TextDefault textColor={currentTheme.colors.textSecondary} bold isRTL>
                   {t(todayOpeningTimes?.day)}{' '}
                 </TextDefault>
-                {todayOpeningTimes?.times?.length < 1 ? (
+                {todayOpeningTimes?.times?.length < 1
+                  ? (
                   <TextDefault small bold center isRTL>
                     {t('ClosedAllDay')}
                   </TextDefault>
-                ) : (
-                  todayOpeningTimes?.times?.map((timing, index) => (
-                    <TextDefault key={index} textColor={currentTheme.fontThirdColor} bold isRTL>
+                    )
+                  : (
+                      todayOpeningTimes?.times?.map((timing, index) => (
+                    <TextDefault key={index} textColor={currentTheme.colors.textSecondary} bold isRTL>
                       {timing.startTime[0]}:{timing.startTime[1]} - {timing.endTime[0]}:{timing.endTime[1]}
                     </TextDefault>
-                  ))
-                )}
+                      ))
+                    )}
               </View>
             )}
           </View>
 
-          <View style={styles(currentTheme).actionButton}>
-            <TextDefault bolder textColor={currentTheme.main}>
+          <View style={[styles(currentTheme).actionButton, styles(currentTheme).statusButton]}>
+            <View style={[
+              styles(currentTheme).statusDot,
+              !aboutObject?.IsOpen && styles(currentTheme).closedStatusDot
+            ]} />
+            <TextDefault
+              bolder
+              textColor={aboutObject?.IsOpen ? currentTheme.colors.accent : currentTheme.colors.danger}
+            >
               {!aboutObject?.IsOpen ? t('Closed') : t('Open')}
             </TextDefault>
           </View>
         </View>
 
         <View style={[styles(currentTheme).ratingBox, styles(currentTheme).deliveryRow]}>
-          <Bicycle size={20} color={currentTheme.newFontcolor} />
-          <TextDefault textColor={currentTheme.fontNewColor} bold H5 isRTL>
+          <Bicycle size={20} color={currentTheme.colors.textSecondary} />
+          <TextDefault textColor={currentTheme.colors.textSecondary} bold isRTL>
             {displayedDeliveryMinutes} {t('Min')}
           </TextDefault>
         </View>
@@ -153,8 +165,8 @@ function RestaurantHero({ aboutObject, displayedDeliveryMinutes, scrollY, fadeDi
 const styles = (props) =>
   StyleSheet.create({
     container: {
-      backgroundColor: props.themeBackground,
-      paddingBottom: scale(18)
+      backgroundColor: props.colors.canvas,
+      paddingBottom: scale(22)
     },
     heroImage: {
       width: '100%',
@@ -162,20 +174,22 @@ const styles = (props) =>
     },
     card: {
       marginTop: -HERO_CARD_OFFSET,
-      marginHorizontal: props.themeBackground === '#fff' ? 0 : scale(14),
-      paddingTop: scale(16),
+      marginHorizontal: scale(12),
+      paddingTop: scale(14),
       paddingBottom: scale(14),
-      borderRadius: scale(22),
-      backgroundColor: props.themeBackground,
-      ...alignment.PLmedium,
-      ...alignment.PRmedium
+      borderRadius: scale(18),
+      backgroundColor: props.colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props.colors.borderSubtle,
+      ...alignment.PLsmall,
+      ...alignment.PRsmall
     },
     titleRow: {
       flexDirection: props.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      minHeight: scale(60),
-      marginBottom: scale(10)
+      minHeight: scale(56),
+      marginBottom: scale(8)
     },
     titleContainer: {
       flex: 1,
@@ -191,16 +205,22 @@ const styles = (props) =>
       marginRight: scale(10)
     },
     logo: {
-      width: scale(60),
-      height: scale(60),
-      borderRadius: 12
+      width: scale(54),
+      height: scale(54),
+      borderRadius: scale(12),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props.colors.borderSubtle
+    },
+    cuisineText: {
+      ...props.typeScale.body,
+      marginTop: scale(3)
     },
     spacedRow: {
       flexDirection: props.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      gap: scale(12),
-      marginTop: scale(10)
+      gap: scale(10),
+      marginTop: scale(12)
     },
     timingRow: {
       flexDirection: props.isRTL ? 'row-reverse' : 'row',
@@ -212,16 +232,31 @@ const styles = (props) =>
     ratingBox: {
       flex: 1,
       flexDirection: props.isRTL ? 'row-reverse' : 'row',
-      gap: scale(10),
+      gap: scale(8),
       alignItems: 'center'
     },
     actionButton: {
-      borderRadius: 8,
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(10),
-      backgroundColor: props.newButtonBackground,
+      borderRadius: scale(999),
+      paddingHorizontal: scale(12),
+      paddingVertical: scale(7),
+      backgroundColor: props.colors.accentSubtle,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props.colors.borderSubtle,
       justifyContent: 'center',
       alignItems: 'center'
+    },
+    statusButton: {
+      flexDirection: props.isRTL ? 'row-reverse' : 'row',
+      gap: scale(6)
+    },
+    statusDot: {
+      width: scale(6),
+      height: scale(6),
+      borderRadius: scale(999),
+      backgroundColor: props.colors.accent
+    },
+    closedStatusDot: {
+      backgroundColor: props.colors.danger
     },
     deliveryRow: {
       marginTop: scale(12)

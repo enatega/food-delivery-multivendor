@@ -9,9 +9,11 @@ import { Alert, Platform } from "react-native";
 import { SAVE_TOKEN } from "@/lib/apollo/mutations/notification.mutation";
 import { GET_RESTAURANT_BY_ID } from "@/lib/apollo/queries/store.query";
 import { getStoreId } from "@/lib/services";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 export default function useNotification() {
   const [storeLookupComplete, setStoreLookupComplete] = useState(false);
+  const { mode, storeIdKey } = useStoreMode();
   const [getStore, { data }] = useLazyQuery(GET_RESTAURANT_BY_ID, {
     fetchPolicy: "cache-and-network",
     // variables: { id: userId },
@@ -21,7 +23,7 @@ export default function useNotification() {
   // Handler
   const onGetStoreData = async () => {
     try {
-      const userId = await getStoreId();
+      const userId = await getStoreId(storeIdKey);
       if (!userId) return;
       await getStore({
         variables: { id: userId },
@@ -85,14 +87,15 @@ export default function useNotification() {
       ) {
         const { _id } = response.notification.request.content.data;
         if (typeof _id !== "string") return;
+        const handledNotificationKey = `@enatega/store/${mode.toLowerCase()}/last-notification`;
         const lastNotificationHandledId = await AsyncStorage.getItem(
-          "@lastNotificationHandledId",
+          handledNotificationKey,
         );
         if (lastNotificationHandledId === _id) return;
-        await AsyncStorage.setItem("@lastNotificationHandledId", _id);
+        await AsyncStorage.setItem(handledNotificationKey, _id);
       }
     },
-    [],
+    [mode],
   );
 
   // Use Effect
@@ -107,7 +110,7 @@ export default function useNotification() {
     registerForPushNotification();
     registerForPushNotificationsAsync();
     onGetStoreData();
-  }, []);
+  }, [storeIdKey]);
 
   return {
     getPermission: Notifications.getPermissionsAsync,

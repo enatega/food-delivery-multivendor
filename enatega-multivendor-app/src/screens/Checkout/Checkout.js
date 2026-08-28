@@ -3,9 +3,8 @@ import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } 
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, TextInput, Dimensions } from 'react-native'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { useSafeAreaInsets, initialWindowMetrics } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AntDesign, EvilIcons, Feather, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { Modalize } from 'react-native-modalize'
 import { getTipping } from '../../apollo/queries'
 import { applyCoupon, placeOrder } from '../../apollo/mutations'
@@ -27,7 +26,6 @@ import { useFocusEffect, StackActions } from '@react-navigation/native'
 import { textStyles } from '../../utils/textStyles'
 import { calculateAmount, calculateDistance } from '../../utils/customFunctions'
 import analytics from '../../utils/analytics'
-import { HeaderBackButton } from '@react-navigation/elements'
 import navigationService from '../../routes/navigationService'
 import { useTranslation } from 'react-i18next'
 import styles from './styles'
@@ -44,9 +42,14 @@ import { WrongAddressModal } from '../../components/Checkout/WrongAddressModal'
 import { calculateOrderPricing } from '../../utils/orderPricing'
 import { populateCart } from '../../utils/populateCart'
 import LiveActivityService from '../../utils/liveActivityService'
+import { APP_MODES } from '../../mode/constants'
+import { recordOrderOrigin } from '../../mode/orderOrigin'
+import { useModeSensitiveOperation } from '../../mode/AppModeContext'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import useMultivendorTheme from '../../ui/designSystem/useMultivendorTheme'
+import { SkeletonBlock } from '../../ui/designSystem'
 
 // Constants
 const PLACEORDER = gql`
@@ -84,9 +87,11 @@ function Checkout(props) {
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
   const { t, i18n } = useTranslation()
+  const { tokens } = useMultivendorTheme()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
   const voucherModalRef = useRef(null)
   const tipModalRef = useRef(null)
@@ -102,8 +107,8 @@ function Checkout(props) {
   const [paymentMode, setPaymentMode] = useState('COD')
 
   const { loading, data } = useRestaurant(cartRestaurant)
-  console.log('data?.restaurant?._id', data?.restaurant?._id)
   const [loadingOrder, setLoadingOrder] = useState(false)
+  useModeSensitiveOperation(loadingOrder)
   const restaurantCoordinates = data?.restaurant?.location?.coordinates
   const latOrigin = Number(restaurantCoordinates?.[1])
   const lonOrigin = Number(restaurantCoordinates?.[0])
@@ -228,8 +233,6 @@ function Checkout(props) {
   }), [cart, coupon?.discount, deliveryCharges, isPickup, restaurant?.tax, selectedTip, tip])
   const inset = useSafeAreaInsets()
 
-  const insets = initialWindowMetrics?.insets || { top: 0, bottom: 0, left: 0, right: 0 }
-
   function onTipping() {
     if (isNaN(tipAmount)) FlashMessage({ message: t('invalidAmount') })
     else if (Number(tipAmount) <= 0) {
@@ -285,53 +288,34 @@ function Checkout(props) {
 
   useEffect(() => {
     props?.navigation.setOptions({
-      headerTitle: () => (
-        <View style={{ alignItems: 'center', gap: scale(2) }}>
-          <TextDefault
-            style={{
-              color: currentTheme.newFontcolor,
-              ...textStyles.H4,
-              ...textStyles.Bolder
-            }}
-          >
-            {t('titleCheckout')}
-          </TextDefault>
-          <TextDefault numberOfLines={1} style={{ color: currentTheme.newFontcolor, ...textStyles.H5 }}>
-            {data && data?.restaurant.name && data?.restaurant.address && (
-              <>
-                {data?.restaurant.name} {' - '}
-                {data.restaurant.address}
-              </>
-            )}
-          </TextDefault>
-        </View>
-      ),
+      headerTitle: t('titleCheckout'),
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.newFontcolor,
+        color: currentTheme.colors.textPrimary,
         ...textStyles.H4,
         ...textStyles.Bolder
       },
 
       headerStyle: {
-        backgroundColor: currentTheme.newheaderBG
+        backgroundColor: currentTheme.colors.canvas
       },
+      headerShadowVisible: false,
       headerLeft: () => (
-        <HeaderBackButton
-          truncatedLabel=''
-          backImage={() => (
-            <View style={{ ...alignment.PLxSmall, width: scale(30) }}>
-              <AntDesign name='arrowleft' size={22} color={currentTheme.fontFourthColor} />
-            </View>
-          )}
-          onPress={() => {
-            navigationService.goBack()
-          }}
-        />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => navigationService.goBack()}
+          style={styles(currentTheme).headerBackButton}
+        >
+          <AntDesign
+            name={currentTheme.isRTL ? 'arrowright' : 'arrowleft'}
+            size={scale(22)}
+            color={currentTheme.colors.textPrimary}
+          />
+        </TouchableOpacity>
       )
     })
-  }, [props?.navigation, data])
+  }, [props?.navigation, currentTheme, t])
 
   useEffect(() => {
     if (!data) return
@@ -380,6 +364,7 @@ function Checkout(props) {
 
   function onCompleted(data) {
     const placedOrder = data?.placeOrder
+    void recordOrderOrigin(placedOrder, APP_MODES.MULTI)
     setOrderConfirmedTime(new Date())
     reFetchOrders()
     Analytics.track(Analytics.events.ORDER_PLACED, {
@@ -637,34 +622,31 @@ function Checkout(props) {
 
   function loadginScreen() {
     return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
-
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height60} />
-          <PlaceholderLine />
-        </Placeholder>
-
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height100} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height100} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
+      <View style={[styles(currentTheme).screenBackground, styles(currentTheme).checkoutSkeleton]}>
+        <SkeletonBlock height={scale(132)} borderRadius={scale(16)} />
+        <SkeletonBlock height={scale(48)} borderRadius={scale(24)} />
+        <View style={styles(currentTheme).skeletonSection}>
+          <SkeletonBlock width='58%' height={scale(17)} borderRadius={scale(7)} />
+          <SkeletonBlock width='82%' height={scale(12)} borderRadius={scale(6)} />
+        </View>
+        <View style={styles(currentTheme).skeletonSection}>
+          <SkeletonBlock width='32%' height={scale(20)} borderRadius={scale(7)} />
+          <SkeletonBlock height={scale(44)} borderRadius={scale(10)} />
+        </View>
+        <View style={styles(currentTheme).skeletonPills}>
+          {[0, 1, 2, 3].map((item) => (
+            <SkeletonBlock key={item} width='23%' height={scale(38)} borderRadius={scale(19)} />
+          ))}
+        </View>
+        <View style={styles(currentTheme).skeletonSection}>
+          <SkeletonBlock width='44%' height={scale(20)} borderRadius={scale(7)} />
+          {[0, 1, 2, 3].map((item) => (
+            <View key={item} style={styles(currentTheme).skeletonBillRow}>
+              <SkeletonBlock width='35%' height={scale(12)} borderRadius={scale(6)} />
+              <SkeletonBlock width='18%' height={scale(12)} borderRadius={scale(6)} />
+            </View>
+          ))}
+        </View>
       </View>
     )
   }
@@ -678,11 +660,15 @@ function Checkout(props) {
       <View style={styles(currentTheme).mainContainer}>
         {!!cart.length && (
           <>
-            <ScrollView showsVerticalScrollIndicator={false} style={[styles().flex]}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={styles().flex}
+              contentContainerStyle={styles(currentTheme).checkoutContent}
+            >
               <View>
-                <View style={[styles(currentTheme).headerContainer]}>
+                <View style={styles(currentTheme).mapCard}>
                   {initialRegion ? (
-                    <View style={styles().mapView}>
+                    <View style={styles(currentTheme).mapView}>
                       <MapView
                         style={styles().flex}
                         scrollEnabled={false}
@@ -699,21 +685,37 @@ function Checkout(props) {
                       <View style={styles().marker}>
                         <RestaurantMarker />
                       </View>
+                      {!!restaurant?.name && (
+                        <View style={styles(currentTheme).mapLabel}>
+                          <MaterialCommunityIcons
+                            name='storefront-outline'
+                            size={scale(16)}
+                            color={currentTheme.colors.accent}
+                          />
+                          <TextDefault
+                            numberOfLines={1}
+                            small
+                            bold
+                            textColor={currentTheme.colors.textPrimary}
+                          >
+                            {restaurant.name}
+                          </TextDefault>
+                        </View>
+                      )}
                     </View>
                   ) : (
-                    <View style={[styles().mapView, styles(currentTheme).mapUnavailable]}>
+                    <View style={[styles(currentTheme).mapView, styles(currentTheme).mapUnavailable]}>
                       <MaterialCommunityIcons name='map-marker-off-outline' size={scale(28)} color={currentTheme.secondaryText} />
                       <TextDefault H5 bold center textColor={currentTheme.secondaryText}>
                         {t('mapPreviewUnavailable')}
                       </TextDefault>
                     </View>
                   )}
-                  <View style={[styles(currentTheme).horizontalLine, styles().width100]} />
                 </View>
                 <FulfillmentMode theme={currentTheme} setIsPickup={setIsPickup} isPickup={isPickup} t={t} />
-                <View style={[styles(currentTheme).headerContainer]}>
+                <View style={styles(currentTheme).detailsSection}>
                   {!isPickup && (
-                    <View style={alignment.PLsmall}>
+                    <View style={styles(currentTheme).addressRow}>
                       <Location locationIcon={currentTheme.newIconColor} locationLabel={currentTheme.newFontcolor} location={currentTheme.newFontcolor} navigation={props?.navigation} addresses={profile?.addresses} forwardIcon={true} screenName={'checkout'} />
                     </View>
                   )}
@@ -751,14 +753,14 @@ function Checkout(props) {
                     </View>
                   </TouchableOpacity>
                 </View>
-                <View>
+                <View style={styles(currentTheme).sectionInset}>
                   <Instructions theme={currentTheme} title={'Instruction for the restaurant'} message={instructions} />
                 </View>
 
                 {isLoggedIn && profile && (
                   <>
-                    <View style={styles().paymentSec}>
-                      <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor} isRTL>
+                    <View style={styles(currentTheme).paymentSec}>
+                      <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.colors.textPrimary} isRTL>
                         {t('titlePayment')}
                       </TextDefault>
                       <View>
@@ -796,13 +798,11 @@ function Checkout(props) {
                     </View>
                   </>
                 )}
-                <View style={[styles(currentTheme).horizontalLine2, { width: '92%', alignSelf: 'center' }]} />
-
-                <View style={styles().voucherSec}>
+                <View style={styles(currentTheme).voucherSec}>
                   {!coupon ? (
                     <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).voucherSecInner} onPress={() => onModalOpen(voucherModalRef)}>
-                      <MaterialCommunityIcons name='ticket-confirmation-outline' size={24} color={currentTheme.lightBlue} />
-                      <TextDefault H4 bolder textColor={currentTheme.lightBlue} center>
+                      <MaterialCommunityIcons name='ticket-confirmation-outline' size={24} color={currentTheme.colors.accent} />
+                      <TextDefault H4 bolder textColor={currentTheme.colors.accent} center>
                         {t('applyVoucher')}
                       </TextDefault>
                     </TouchableOpacity>
@@ -850,12 +850,12 @@ function Checkout(props) {
                   )}
                 </View>
                 {!isPickup && (
-                  <View style={styles().tipSec}>
+                  <View style={styles(currentTheme).tipSec}>
                     <View style={[styles(currentTheme).tipRow]}>
                       <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
                         {t('AddTip')}
                       </TextDefault>
-                      <TextDefault numberOfLines={1} normal bolder uppercase textItalic textColor={currentTheme.fontNewColor}>
+                      <TextDefault numberOfLines={1} normal bolder uppercase textColor={currentTheme.colors.textSecondary}>
                         {t('optional')}
                       </TextDefault>
                     </View>
@@ -872,13 +872,13 @@ function Checkout(props) {
                               setSelectedTip((prevState) => (prevState === label ? null : label))
                             }}
                           >
-                            <TextDefault textColor={selectedTip === label ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
+                            <TextDefault textColor={selectedTip === label ? currentTheme.colors.accent : currentTheme.colors.textPrimary} normal bolder center>
                               {configuration.currencySymbol} {label}
                             </TextDefault>
                           </TouchableOpacity>
                         ))}
                         <TouchableOpacity activeOpacity={0.7} style={tip ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton} onPress={() => onModalOpen(tipModalRef)}>
-                          <TextDefault textColor={tip ? currentTheme.black : currentTheme.fontFourthColor} normal bolder center>
+                          <TextDefault textColor={tip ? currentTheme.colors.accent : currentTheme.colors.textPrimary} normal bolder center>
                             {t('Other')}
                           </TextDefault>
                         </TouchableOpacity>
@@ -900,8 +900,6 @@ function Checkout(props) {
                       {calculatePrice(0, false)}
                     </TextDefault>
                   </View>
-                  <View style={styles(currentTheme).horizontalLine2} />
-
                   {!isPickup && (
                     <>
                       <View style={styles(currentTheme).billsec}>
@@ -913,7 +911,6 @@ function Checkout(props) {
                           {deliveryCharges.toFixed(2)}
                         </TextDefault>
                       </View>
-                      <View style={styles(currentTheme).horizontalLine2} />
                     </>
                   )}
 
@@ -929,7 +926,6 @@ function Checkout(props) {
 
                   {!isPickup && (
                     <>
-                      <View style={styles(currentTheme).horizontalLine2} />
                       <View style={styles(currentTheme).billsec}>
                         <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           {t('tip')}
@@ -944,7 +940,6 @@ function Checkout(props) {
 
                   {coupon && (
                     <View>
-                      <View style={styles(currentTheme).horizontalLine2} />
                       <View style={styles(currentTheme).billsec}>
                         <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           {t('voucherDiscount')}
@@ -956,8 +951,8 @@ function Checkout(props) {
                       </View>
                     </View>
                   )}
-                  <View style={styles(currentTheme).horizontalLine2} />
-                  <View style={styles(currentTheme).billsec}>
+                  <View style={styles(currentTheme).summaryDivider} />
+                  <View style={styles(currentTheme).totalRow}>
                     <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} H4 bolder>
                       {t('total')}
                     </TextDefault>
@@ -979,7 +974,15 @@ function Checkout(props) {
               </View>
             </ScrollView>
             {!isModalOpen && (
-              <View style={[styles(currentTheme).buttonContainer, Platform.OS === 'android' && {paddingBottom: insets.bottom + 10}]}>
+              <View
+                style={[
+                  styles(currentTheme).buttonContainer,
+                  {
+                    marginBottom: -inset.bottom,
+                    paddingBottom: inset.bottom + scale(8)
+                  }
+                ]}
+              >
                 <TouchableOpacity
                   disabled={loadingOrder}
                   activeOpacity={0.7}
@@ -992,7 +995,7 @@ function Checkout(props) {
                   style={[styles(currentTheme).button, { opacity: loadingOrder ? 0.5 : 1 }]}
                 >
                   {!loadingOrder && (
-                    <TextDefault textColor={currentTheme.color4} style={styles().checkoutBtn} bold H4>
+                    <TextDefault textColor={currentTheme.colors.textOnAccent} style={styles().checkoutBtn} bold H4>
                       {t('placeOrder')}
                     </TextDefault>
                   )}

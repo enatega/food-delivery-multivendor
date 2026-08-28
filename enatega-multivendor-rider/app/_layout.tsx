@@ -37,77 +37,60 @@ import { useEffect, useState } from "react";
 
 import "../global.css";
 import PublicAccessTokenService from "@/lib/services/public-access-token.service";
+import {
+  RiderModeProvider,
+  useRiderMode,
+} from "@/lib/context/global/rider-mode.context";
+import getEnvVars from "@/environment";
+import { useMemo } from "react";
 
 initSentry();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen?.preventAutoHideAsync();
 
-function RootLayout() {
-  // Hooks
-  const [loaded] = useFonts({
-    Inter: require("../lib/assets/fonts/Inter.ttf"),
-  });
+function ModeAwareApp({ fontsLoaded }: { fontsLoaded: boolean }) {
+  const { mode, modeReady, riderIdKey, tokenKey } = useRiderMode();
   const [isPublicTokenReady, setIsPublicTokenReady] = useState(false);
-  const client = setupApollo();
-
-  // Permissions
-  async function grantCameraAndGalleryPermissions() {
-    await requestMediaLibraryPermissionsAsync();
-  }
-
-  // Use Effect
-  // Note: the native splash is handed off to <AnimatedSplashScreen>, which calls
-  // SplashScreen.hideAsync() itself once the JS animated splash has painted — so
-  // we no longer hide it here (that caused a flash at the native -> JS handoff).
+  const environment = useMemo(() => getEnvVars(mode), [mode]);
+  const runtime = useMemo(
+    () => setupApollo({ environment, riderIdKey, tokenKey }),
+    [environment, riderIdKey, tokenKey],
+  );
+  const { client } = runtime;
 
   useEffect(() => {
-    PublicAccessTokenService.initialize(client)
-      .then(() => {
-        setIsPublicTokenReady(true);
-      })
+    setIsPublicTokenReady(false);
+    if (!modeReady) return;
+
+    if (!environment.PUBLIC_ACCESS_REQUIRED) {
+      PublicAccessTokenService.pause();
+      setIsPublicTokenReady(true);
+      return;
+    }
+
+    PublicAccessTokenService.initialize(client, `${mode}:${environment.GRAPHQL_URL}`)
+      .then(() => setIsPublicTokenReady(true))
       .catch((error) => {
-        console.log("Public auth initialization failed:", error);
+        if (__DEV__) {
+          console.log("Public auth initialization failed:", error);
+        }
         setIsPublicTokenReady(true);
       });
-  }, [client]);
+
+    return () => PublicAccessTokenService.pause();
+  }, [client, environment.GRAPHQL_URL, environment.PUBLIC_ACCESS_REQUIRED, mode, modeReady]);
 
   useEffect(() => {
-    grantCameraAndGalleryPermissions();
-  }, []);
+    return () => runtime.dispose();
+  }, [runtime]);
 
-  useEffect(() => {
-    const previousHandler = ErrorUtils.getGlobalHandler?.();
-
-    ErrorUtils.setGlobalHandler((error, isFatal) => {
-      if (__DEV__) {
-        console.log("Global Error Caught:", { error, isFatal });
-      }
-      Sentry.captureException(error);
-
-      if (previousHandler) {
-        previousHandler(error, isFatal);
-      }
-    });
-
-    return () => {
-      if (previousHandler) {
-        ErrorUtils.setGlobalHandler(previousHandler);
-      }
-    };
-  }, []);
-
-  // Render the animated splash immediately and let it play the intro/idle loop
-  // while fonts + the public access token load. Once everything is ready the
-  // splash plays its outro; the provider tree is only mounted once ready so
-  // Apollo requests never fire before the public access token exists.
-  const appReady = loaded && isPublicTokenReady;
+  const appReady = fontsLoaded && modeReady && isPublicTokenReady;
 
   return (
     <AnimatedSplashScreen ready={appReady}>
       {appReady ? (
-        <AppThemeProvidor>
-        <ApolloProvider client={client}>
+        <ApolloProvider client={client} key={mode}>
           <AuthProvider client={client}>
             <UserProvider>
               <InternetProvider>
@@ -127,9 +110,41 @@ function RootLayout() {
             </UserProvider>
           </AuthProvider>
         </ApolloProvider>
-      </AppThemeProvidor>
       ) : null}
     </AnimatedSplashScreen>
+  );
+}
+
+function RootLayout() {
+  const [loaded] = useFonts({
+    Inter: require("../lib/assets/fonts/Inter.ttf"),
+  });
+
+  useEffect(() => {
+    void requestMediaLibraryPermissionsAsync();
+  }, []);
+
+  useEffect(() => {
+    const previousHandler = ErrorUtils.getGlobalHandler?.();
+    ErrorUtils.setGlobalHandler((error, isFatal) => {
+      if (__DEV__) {
+        console.log("Global Error Caught:", { error, isFatal });
+      }
+      Sentry.captureException(error);
+      previousHandler?.(error, isFatal);
+    });
+
+    return () => {
+      if (previousHandler) ErrorUtils.setGlobalHandler(previousHandler);
+    };
+  }, []);
+
+  return (
+    <RiderModeProvider>
+      <AppThemeProvidor>
+        <ModeAwareApp fontsLoaded={loaded} />
+      </AppThemeProvidor>
+    </RiderModeProvider>
   );
 }
 

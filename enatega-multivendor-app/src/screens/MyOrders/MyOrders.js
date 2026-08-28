@@ -30,12 +30,21 @@ function MyOrders(props) {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const [selectedTab, setSelectedTab] = useState('current')
   const inset = useSafeAreaInsets()
-  const openReviewModal = () => {
-    reviewModalRef.current.open()
-  }
   const closeReviewModal = () => {
-    reviewModalRef.current.close()
+    reviewModalRef.current?.close()
   }
+  const handleReviewClosed = () => {
+    setReviewInfo(null)
+  }
+
+  useEffect(() => {
+    if (!reviewInfo?.order?._id) return
+
+    // Open only after the selected order and rating have reached the modal.
+    // Opening it in the same tick as setReviewInfo caused Modalize to lay out
+    // first with empty content and then resize, which appeared as flickering.
+    reviewModalRef.current?.open()
+  }, [reviewInfo])
 
   useEffect(() => {
     async function Track() {
@@ -99,14 +108,13 @@ function MyOrders(props) {
 
   const onPressReview = (order, selectedRating) => {
     setReviewInfo({ order, selectedRating })
-    openReviewModal()
   }
 
   const handleReviewSubmitted = () => {
     props?.navigation?.navigate('Discovery')
   }
 
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+  const { isConnected: connect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[reFetchOrders]} />
   return (
     <>
@@ -132,14 +140,17 @@ function MyOrders(props) {
           }}
         />
       </View>
-      <ReviewModal
-        ref={reviewModalRef}
-        onOverlayPress={closeReviewModal}
-        onSubmitted={handleReviewSubmitted}
-        theme={currentTheme}
-        orderId={reviewInfo?.order._id}
-        rating={reviewInfo?.selectedRating}
-      />
+      {!!reviewInfo?.order?._id && (
+        <ReviewModal
+          ref={reviewModalRef}
+          onOverlayPress={closeReviewModal}
+          onClosed={handleReviewClosed}
+          onSubmitted={handleReviewSubmitted}
+          theme={currentTheme}
+          orderId={reviewInfo.order._id}
+          rating={reviewInfo.selectedRating ?? 0}
+        />
+      )}
     </>
   )
 }

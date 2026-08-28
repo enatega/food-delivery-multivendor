@@ -18,7 +18,7 @@ import {
 import { ToastContext } from "@/lib/context/global/toast.context";
 
 export const GoogleMapsContext = createContext<IGoogleMapsContext>(
-  {} as IGoogleMapsContext
+  {} as IGoogleMapsContext,
 );
 
 export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
@@ -28,7 +28,7 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
 }) => {
   const { showToast } = useContext(ToastContext);
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: apiKey,
     libraries: libraries,
@@ -52,7 +52,7 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
 
     const unloadGoogleMapsScript = () => {
       const script = document.querySelector(
-        'script[src^="https://maps.googleapis.com/maps/api/js"]'
+        'script[src^="https://maps.googleapis.com/maps/api/js"]',
       );
       if (script) {
         document.head.removeChild(script);
@@ -77,6 +77,7 @@ export const GoogleMapsProvider: React.FC<IGoogleMapsProviderProps> = ({
 
   const value: IGoogleMapsContext = {
     isLoaded,
+    loadError,
   };
 
   return (

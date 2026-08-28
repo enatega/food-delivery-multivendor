@@ -124,6 +124,13 @@
   "toppicks": "Marketin ən yaxşı seçimləri",
   "app_version": "1.0.0",
   "shop-types": "Mağaza Növləri",
+  "categories_label": "Kateqoriyalar",
+  "all_categories_label": "Bütün kateqoriyalar",
+  "tab_deals": "Endirimlər",
+  "tab_browse": "Baxış",
+  "order_details_minimum_order_fee_label": "Aşağı sifariş haqqı",
+  "order_details_priority_delivery_fee_label": "Prioritet çatdırılma haqqı",
+  "order_details_credits_applied_label": "İstifadə olunan kredit",
   "no_items_found": "Heç bir element tapılmadı",
   "something_went_wrong": "Nə isə səhv oldu",
   "for_rest": "Restoranlar üçün",
@@ -181,6 +188,8 @@
   "tab_discovery": "Kəşf et",
   "tab_restaurants": "Restoranlar",
   "tab_store": "Mağaza",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "Sizin yaxınlığınızda",
   "generic_listing_heading": "Sizin yaxınlığınızda olan restoranlar",
   "generic_listing_cuisine_section": "Mətbəxlər",
@@ -916,5 +925,88 @@
   "show_more_orders": "Daha çox sifariş göstər",
   "your_email": "your@email.com",
   "Select_your_address_prompt": "Ünvanınızı seçin.",
-  "Our-brands": "Brendlərimiz"
+  "Our-brands": "Brendlərimiz",
+  "Landing": {
+    "hero": {
+      "eyebrow": "Bir tətbiq. Gündəlik imkanlar.",
+      "title": "Ehtiyacınız olan hər şey,",
+      "accent": "| Gözəl çatdırıldı.",
+      "body": "Qida, ərzaq və gündəlik vaciblər, bir sadə təcrübədə bir araya gətirildi."
+    },
+    "categories": {
+      "label": "Çatdırılma kateqoriyaları",
+      "food": "Qida",
+      "groceries": "Groceries",
+      "essentials": "Vacibləri",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Həmin şəhəri tapmaq.",
+      "ready": "Şəhər seçildi. Hazır olduğunuz zaman elementləri göstərin.",
+      "cityError": "Həmin şəhəri tapa bilmədik. Başqa təklif seçin.",
+      "locating": "Finding your current location.",
+      "locationError": "We could not access your location. Search for a city instead."
+    },
+    "journey": {
+      "eyebrow": "How Enatega moves",
+      "title": "From your city,",
+      "accent": "to your doorstep.",
+      "bagAlt": "Enatega delivery bag",
+      "stages": {
+        "choose": {
+          "title": "Choose",
+          "body": "Food, groceries or essentials."
+        },
+        "moving": {
+          "title": "Moving",
+          "body": "One clear journey across your city."
+        },
+        "arrived": {
+          "title": "Arrived",
+          "body": "Ehtiyacınız olan yerə çatdırılır."
+        }
+      }
+    },
+    "cta": {
+      "label": "Enatega ilə iş",
+      "business": {
+        "eyebrow": "Bizneslər üçün",
+        "title": "Enatega ilə böyüyün.",
+        "body": "Mağazanızı daha çox müştəriyə yaxınlaşdırın.",
+        "action": "Tərəfdaş olun"
+      },
+      "rider": {
+        "eyebrow": "Atlılar üçün",
+        "title": "Enatega ilə gəzintiyə çıxın.",
+        "body": "Cədvəliniz üzrə çatdırın.",
+        "action": "Atlı olun"
+      }
+    },
+    "footer": {
+      "rights": "| Bütün hüquqlar qorunur."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

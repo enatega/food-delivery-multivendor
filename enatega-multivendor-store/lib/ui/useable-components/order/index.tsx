@@ -1,9 +1,17 @@
 import { useSubscription } from "@apollo/client";
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
-import { SUBSCRIPTION_ORDER } from "@/lib/apollo/subscriptions";
+import {
+  SUBSCRIPTION_ORDER,
+  SUBSCRIPTION_ORDER_MULTI_VENDOR,
+} from "@/lib/apollo/subscriptions";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 import { MAX_TIME } from "@/lib/utils/constants";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
-import { orderSubTotal } from "@/lib/utils/methods";
+import { formatAmount, orderSubTotal } from "@/lib/utils/methods";
+import {
+  formatTimestampTime,
+  parseTimestamp,
+} from "@/lib/utils/methods/date-time";
 import { getIsAcceptButtonVisible } from "@/lib/utils/methods/gloabl";
 import { ORDER_TYPE } from "@/lib/utils/types";
 import { memo, useContext, useEffect, useRef, useState } from "react";
@@ -49,14 +57,18 @@ const Order = ({
   const { t } = useTranslation();
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
+  const { isSingleVendor } = useStoreMode();
 
   // Keep this order's status live in real time. The subscription result is
   // written into the normalized cache (keyed by _id), so orderStatus/isPickedUp
   // update here without waiting for a refetch or the 60s poll.
-  useSubscription(SUBSCRIPTION_ORDER, {
+  useSubscription(
+    isSingleVendor ? SUBSCRIPTION_ORDER : SUBSCRIPTION_ORDER_MULTI_VENDOR,
+    {
     variables: { id: order?._id },
     skip: !order?._id,
-  });
+    },
+  );
 
   // Ref
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -80,9 +92,15 @@ const Order = ({
   );
 
   // Preparation Time
-  const prep = new Date(order.preparationTime ?? "2023-08-16T08:00:00.000Z");
-  const diffTime = prep.getTime() - timeNow.getTime();
+  const prep = parseTimestamp(order.preparationTime);
+  const diffTime = prep ? prep.getTime() - timeNow.getTime() : 0;
   const totalPrep = diffTime > 0 ? diffTime / 1000 : 0;
+  const etaWindowStart = formatTimestampTime(order.eta?.windowStartAt);
+  const etaWindowEnd = formatTimestampTime(order.eta?.windowEndAt);
+  const etaWindow =
+    etaWindowStart && etaWindowEnd
+      ? `${etaWindowStart}–${etaWindowEnd}`
+      : null;
 
   const decision = !isAcceptButtonVisible
     ? acceptanceTime
@@ -330,7 +348,7 @@ const Order = ({
                                     fontWeight: "600",
                                   }}
                                 >
-                                  {`${configuration?.currencySymbol}${variation.price}`}
+                                  {`${configuration?.currencySymbol}${formatAmount(variation.price)}`}
                                 </Text>
                               </View>
                             </View>
@@ -358,7 +376,7 @@ const Order = ({
                                       fontSize: 12,
                                     }}
                                   >
-                                    {`(+${configuration?.currencySymbol}${option?.price})`}
+                                    {`(+${configuration?.currencySymbol}${formatAmount(option?.price)})`}
                                   </Text>
                                 </View>
                               ))}
@@ -375,7 +393,7 @@ const Order = ({
                   <Text
                     style={{ color: appTheme.fontMainColor, fontWeight: "600" }}
                   >
-                    {`${configuration?.currencySymbol}${itemTotal.toFixed(2)}`}
+                    {`${configuration?.currencySymbol}${formatAmount(itemTotal)}`}
                   </Text>
                 </View>
               </View>
@@ -408,7 +426,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {orderSubTotal(order)}
+            {formatAmount(orderSubTotal(order))}
           </Text>
         </View>
 
@@ -431,7 +449,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.tipping}
+            {formatAmount(order?.tipping)}
           </Text>
         </View>
 
@@ -454,7 +472,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.taxationAmount}
+            {formatAmount(order?.taxationAmount)}
           </Text>
         </View>
 
@@ -478,7 +496,7 @@ const Order = ({
               }}
             >
               {configuration?.currencySymbol}
-              {order?.discountAmount}
+              {formatAmount(order?.discountAmount)}
             </Text>
           </View>
         )}
@@ -503,7 +521,7 @@ const Order = ({
               }}
             >
               {configuration?.currencySymbol}
-              {order?.deliveryCharges}
+              {formatAmount(order?.deliveryCharges)}
             </Text>
           </View>
         )}
@@ -527,7 +545,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.orderAmount}
+            {formatAmount(order?.orderAmount)}
           </Text>
         </View>
 
@@ -628,6 +646,17 @@ const Order = ({
                   </Text>
 
                   <CountdownTimer duration={totalPrep} />
+                  {etaWindow && (
+                    <Text
+                      style={{
+                        color: appTheme.fontSecondColor,
+                        fontSize: 12,
+                        marginTop: 2,
+                      }}
+                    >
+                      Estimated delivery {etaWindow}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>

@@ -54,12 +54,15 @@ import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 // Google API
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import {
+  getAccessToken,
   hasValidAuthToken,
   invalidateClientSession,
   setAuthTokens,
 } from "@/lib/utils/methods/auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
+import { useAppMode } from "@/lib/mode";
+import { SINGLE_VENDOR_EMAIL_EXISTS, SINGLE_VENDOR_LOGIN, SINGLE_VENDOR_PHONE_EXISTS } from "@/lib/api/graphql/single-vendor";
 
 const AuthContext = createContext({} as IAuthContextProps);
 const SOCIAL_AUTH_MESSAGES = {
@@ -72,6 +75,7 @@ const SOCIAL_AUTH_MESSAGES = {
 };
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
+  const { isSingleVendor } = useAppMode();
   // States
   const [activePanel, setActivePanel] = useState(0);
   const [authToken, setAuthToken] = useState("");
@@ -97,15 +101,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [checkEmailExistsMutation] = useMutation<
     IEmailExistsResponse,
     undefined | { email: string }
-  >(EMAIL_EXISTS);
+  >(isSingleVendor ? SINGLE_VENDOR_EMAIL_EXISTS : EMAIL_EXISTS);
   const [checkPhoneExistsMutation] = useMutation<
     IPhoneExistsResponse,
     undefined | { phone: string }
-  >(PHONE_EXISTS);
+  >(isSingleVendor ? SINGLE_VENDOR_PHONE_EXISTS : PHONE_EXISTS);
   const [mutateLogin] = useMutation<
     ILoginProfileResponse,
     undefined | IUserLoginArguments
-  >(LOGIN, { onCompleted: onLoginCompleted, onError: onLoginError });
+  >(isSingleVendor ? SINGLE_VENDOR_LOGIN : LOGIN, { onCompleted: onLoginCompleted, onError: onLoginError });
   const [sendOtpToPhone] =
     useMutation<ISendOtpToPhoneResponse>(SENT_OTP_TO_PHONE);
   const [sendOtpToEmail] =
@@ -564,7 +568,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return; // ⛔ Prevent SSR execution
 
     if (hasValidAuthToken()) {
-      const token = localStorage.getItem("token");
+      const token = getAccessToken();
       if (token) {
         setAuthToken(token);
       }

@@ -9,24 +9,30 @@
     "eject": "expo eject",
     "format": "prettier --write '**/*.js'",
     "lint:fix": "eslint . --ext .js --fix",
+    "check:single-vendor-imports": "node scripts/check-single-vendor-imports.js",
+    "check:single-vendor-schema": "node scripts/check-single-vendor-schema.js",
     "check:order-pricing": "node scripts/check-order-pricing.js",
+    "check:ios-privacy": "node scripts/check-ios-privacy.js",
+    "check:multivendor-design": "node scripts/check-multivendor-design.js",
+    "update:multivendor-design-baseline": "node scripts/check-multivendor-design.js --update-baseline",
     "postinstall": "patch-package",
+    "eas-build-post-install": "npm run check:ios-privacy",
     "build:staging": "eas build --profile staging -p all",
     "build:staging:android": "eas build --profile staging -p android",
     "build:staging:ios": "eas build --profile staging -p ios",
     "build:development": "eas build --profile development -p all",
     "build:development:android": "eas build --profile development -p android",
     "build:development:ios": "eas build --profile development -p ios",
-    "build:production": "eas build --profile production -p all",
+    "build:production": "npm run check:ios-privacy && eas build --profile production -p all --clear-cache",
     "build:production:android": "eas build --profile production -p android",
-    "build:production:ios": "eas build --profile production -p ios",
+    "build:production:ios": "npm run check:ios-privacy && eas build --profile production -p ios --clear-cache",
     "submit:production": "eas submit --profile production -p all",
     "submit:production:android": "eas submit --profile production -p android",
     "submit:production:ios": "eas submit --profile production -p ios",
     "publish:staging": "ENVIRONMENT=staging expo publish --release-channel staging",
     "publish:production": "ENVIRONMENT=production expo publish --release-channel production",
     "apkBuild": "eas build --profile staging --platform android",
-    "iosTestFlight": "eas build --profile production --platform ios"
+    "iosTestFlight": "npm run check:ios-privacy && eas build --profile production --platform ios --clear-cache"
   },
   "husky": {
     "hooks": {
@@ -59,6 +65,7 @@
     "@react-navigation/stack": "^6.0.11",
     "@sentry/react-native": "~6.14.0",
     "@shopify/flash-list": "^2.3.1",
+    "@stripe/stripe-react-native": "^0.45.0",
     "@twotalltotems/react-native-otp-input": "^1.3.11",
     "activity-controller": "git+https://github.com/enatega/activity-controller.git#72b42897aa97ce4e000ecec95d610efa46f54979",
     "axios": "^1.6.8",
@@ -86,7 +93,6 @@
     "expo-secure-store": "~14.2.4",
     "expo-splash-screen": "~0.30.10",
     "expo-system-ui": "~5.0.10",
-    "expo-tracking-transparency": "~5.2.4",
     "expo-updates": "~0.28.17",
     "expo-video": "^2.2.2",
     "expo-web-browser": "~14.2.0",
@@ -112,6 +118,7 @@
     "react-native-material-textfield": "^0.16.1",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-modalize": "^2.0.13",
+    "react-native-pager-view": "^6.7.1",
     "react-native-paper": "^5.8.0",
     "react-native-phone-number-input": "^2.1.0",
     "react-native-reanimated": "~3.17.4",
@@ -123,10 +130,12 @@
     "react-navigation-collapsible": "^6.3.0",
     "rn-placeholder": "^3.0.1",
     "subscriptions-transport-ws": "^0.11.0",
-    "uuid": "^11.0.2"
+    "uuid": "^11.0.2",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@expo/metro-config": "~0.20.0",
+    "@types/react": "~19.0.10",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-preset-expo": "~13.0.0",
     "babel-preset-react-native": "^4.0.1",
@@ -144,7 +153,8 @@
     "metro-react-native-babel-preset": "^0.77.0",
     "prettier": "^3.2.4",
     "prettier-config-standard": "^7.0.0",
-    "react-test-renderer": "^18.2.0"
+    "react-test-renderer": "^18.2.0",
+    "typescript": "~5.8.3"
   },
   "private": true
 }

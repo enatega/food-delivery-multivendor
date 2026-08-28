@@ -136,6 +136,13 @@
   "no_items_found": "موردی یافت نشد",
   "something_went_wrong": "مشکلی پیش آمد",
   "shop-types": "انواع فروشگاه‌ها",
+  "categories_label": "دسته‌بندی‌ها",
+  "all_categories_label": "همه دسته‌بندی‌ها",
+  "tab_deals": "پیشنهادها",
+  "tab_browse": "مرور",
+  "order_details_minimum_order_fee_label": "هزینه سفارش کم",
+  "order_details_priority_delivery_fee_label": "هزینه تحویل اولویت‌دار",
+  "order_details_credits_applied_label": "اعتبار استفاده‌شده",
   "for_rest": "برای رستوران‌ها",
   "for_riders": "برای پیک‌ها",
   "reviews": "نظرات",
@@ -191,6 +198,8 @@
   "tab_discovery": "کشف",
   "tab_restaurants": "رستوران‌ها",
   "tab_store": "فروشگاه",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "نزدیک شما",
   "generic_listing_heading": "رستوران‌های نزدیک شما",
   "generic_listing_cuisine_section": "غذاها",
@@ -919,5 +928,88 @@
   "show_more_orders": "نمایش سفارشات بیشتر",
   "your_email": "your@email.com",
   "Select_your_address_prompt": "آدرس خود را انتخاب کنید.",
-  "Our-brands": "برندهای ما"
+  "Our-brands": "برندهای ما",
+  "Landing": {
+    "hero": {
+      "eyebrow": "یک برنامه. امکانات روزمره.",
+      "title": "هر آنچه نیاز دارید،",
+      "accent": "به زیبایی تحویل داده می‌شود.",
+      "body": "غذا، خواربار و مایحتاج روزمره، در یک تجربه ساده گرد هم آمده‌اند."
+    },
+    "categories": {
+      "label": "دسته‌بندی‌های تحویل",
+      "food": "غذا",
+      "groceries": "خواربار",
+      "essentials": "مایحتاج ضروری",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "پیدا کردن آن شهر.",
+      "ready": "شهر انتخاب شده. وقتی آماده بودید، اقلام را نشان دهید.",
+      "cityError": "ما نتوانستیم آن شهر را پیدا کنیم. پیشنهاد دیگری را انتخاب کنید.",
+      "locating": "یافتن مکان فعلی شما.",
+      "locationError": "ما نتوانستیم به مکان شما دسترسی پیدا کنیم. در عوض یک شهر را جستجو کنید."
+    },
+    "journey": {
+      "eyebrow": "نحوه جابجایی Enatega",
+      "title": "از شهر شما،",
+      "accent": "تا درب منزل شما.",
+      "bagAlt": "کیف تحویل Enatega",
+      "stages": {
+        "choose": {
+          "title": "انتخاب کنید",
+          "body": "غذا، خواربار یا ملزومات ضروری."
+        },
+        "moving": {
+          "title": "جابجایی",
+          "body": "یک سفر آسان در سطح شهر شما."
+        },
+        "arrived": {
+          "title": "رسید",
+          "body": "تحویل در محل مورد نیاز شما."
+        }
+      }
+    },
+    "cta": {
+      "label": "با Enatega همکاری کنید",
+      "business": {
+        "eyebrow": "برای کسب و کارها",
+        "title": "با Enatega رشد کنید.",
+        "body": "فروشگاه خود را به مشتریان بیشتری نزدیک کنید.",
+        "action": "شریک شوید"
+      },
+      "rider": {
+        "eyebrow": "برای مسافران",
+        "title": "با Enatega سفر کنید.",
+        "body": "طبق برنامه خود تحویل دهید.",
+        "action": "مسافر شوید"
+      }
+    },
+    "footer": {
+      "rights": "تمامی حقوق محفوظ است."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

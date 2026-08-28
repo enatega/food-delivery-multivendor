@@ -40,22 +40,6 @@ export default function OtherDetailsSection() {
           </Text>
         </View>
       </View>
-      {/* Todo: can show the password after decryption or after the backend will send normal password */}
-      {/* <View
-        className="flex flex-col gap-3 item-start justify-between w-full h-20 p-4 rounded-md"
-        style={{
-          backgroundColor: appTheme.themeBackground,
-          borderWidth: 1,
-          borderColor: appTheme.borderLineColor,
-        }}
-      >
-        <Text style={{ color: appTheme.fontSecondColor }}>{t("Password")}</Text>
-        <View className="flex-1 h-12 text-base text-black">
-          <Text className="h-12" style={{ color: appTheme.fontSecondColor }}>
-            {dataProfile?.password ?? "Password@123"}
-          </Text>
-        </View>
-      </View> */}
       <View
         className="flex flex-col gap-3 item-start justify-between w-full h-20 p-4 rounded-md"
         style={{

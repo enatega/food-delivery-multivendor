@@ -1,4 +1,4 @@
-import { ApolloError, useMutation } from "@apollo/client";
+import { ApolloError, useApolloClient, useMutation } from "@apollo/client";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -9,14 +9,20 @@ import { STORE_LOGIN } from "../apollo/mutations/login.mutation";
 import { AuthContext } from "../context/global/auth.context";
 import { setItem } from "../services";
 import { FlashMessageComponent } from "../ui/useable-components";
-import { ROUTES, STORE_ID } from "../utils/constants";
+import { ROUTES } from "../utils/constants";
 import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
+import PublicAccessTokenService from "@/lib/services/public-access-token.service";
+import * as SecureStore from "expo-secure-store";
+import { removeItem } from "../services";
 
 const useLogin = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const client = useApolloClient();
 
   // Context
   const { setTokenAsync } = useContext(AuthContext);
+  const { environment, storeIdKey, tokenKey } = useStoreMode();
 
   // API
   const [login] = useMutation(STORE_LOGIN, {
@@ -65,7 +71,7 @@ const useLogin = () => {
     setIsLoading(false);
 
     if (restaurantLogin) {
-      await setItem(STORE_ID, restaurantLogin.restaurantId);
+      await setItem(storeIdKey, restaurantLogin.restaurantId);
       await setTokenAsync(restaurantLogin?.token);
       router.replace(ROUTES.home);
     }
@@ -85,6 +91,21 @@ const useLogin = () => {
       // Validate inputs
       if (!username || !password) {
         throw new Error("Username and password are required");
+      }
+
+      // A login screen must always begin from a clean session for the active
+      // backend. This also removes stale mode-scoped credentials left by an
+      // interrupted logout or an older app build.
+      await Promise.all([
+        SecureStore.deleteItemAsync(tokenKey),
+        removeItem(storeIdKey),
+      ]);
+
+      // Public proof is bound to the backend and request fingerprint. Always
+      // mint a fresh proof before login so a proof persisted by another mode,
+      // app version, or server deployment can never poison future attempts.
+      if (environment.PUBLIC_ACCESS_REQUIRED) {
+        await PublicAccessTokenService.reset(client);
       }
 
       // Get notification permissions

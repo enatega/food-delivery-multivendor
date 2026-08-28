@@ -20,6 +20,8 @@ import { useApptheme } from "@/lib/context/global/theme.context";
 import { WalletIcon } from "@/lib/ui/useable-components/svg";
 import { FlashList } from "@shopify/flash-list";
 import { useTranslation } from "react-i18next";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { isNewOrderForMode } from "@/lib/utils/order-state";
 
 const { height } = Dimensions.get("window");
 // Approximate rendered height (px) of an Order card (incl. "Assign me" button),
@@ -33,6 +35,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const { mode } = useRiderMode();
   const {
     errorAssigned,
     assignedOrders,
@@ -48,12 +51,9 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     if (errorAssigned || !assignedOrders) return [];
     if (!dataProfile?.available) return [];
     return (
-      assignedOrders.filter(
-        (o: IOrder) =>
-          o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
-      ) ?? []
+      assignedOrders.filter((o: IOrder) => isNewOrderForMode(o, mode)) ?? []
     );
-  }, [assignedOrders, dataProfile?.available, errorAssigned]);
+  }, [assignedOrders, dataProfile?.available, errorAssigned, mode]);
 
   const keyExtractor = useCallback((item: IOrder) => item._id, []);
 
@@ -71,6 +71,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
         acceptedAt={item.acceptedAt}
         orderId={item.orderId}
         user={item.user}
+        eta={item.eta}
       />
     ),
     [route.key],
@@ -86,11 +87,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
           alignItems: "center",
         }}
       >
-        <WalletIcon
-          height={100}
-          width={100}
-          color={appTheme.fontMainColor}
-        />
+        <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
         {orders?.length === 0 ? (
           <Text
             className="font-[Inter] text-[18px] text-base font-[500]"
@@ -105,7 +102,13 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
         )}
       </View>
     ),
-    [appTheme.fontMainColor, appTheme.fontSecondColor, orders?.length, route.key, t],
+    [
+      appTheme.fontMainColor,
+      appTheme.fontSecondColor,
+      orders?.length,
+      route.key,
+      t,
+    ],
   );
 
   // Calculate the marginBottom dynamically
@@ -117,42 +120,17 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
       className="pt-14 flex-1 pb-16"
       style={[style.container, { backgroundColor: appTheme.screenBackground }]}
     >
-      {orders?.length > 0 ? (
-        <FlashList
-          data={orders}
-          estimatedItemSize={ORDER_CARD_ESTIMATED_HEIGHT}
-          keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
-          refreshing={networkStatusAssigned === NetworkStatus.loading}
-          onRefresh={refetchAssigned}
-          renderItem={renderItem}
-          ListEmptyComponent={renderListEmptyComponent}
-        />
-      ) : (
-        <View
-          style={{
-            minHeight:
-              height > 670 ? height - height * 0.5 : height - height * 0.6,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
-
-          {orders?.length === 0 ? (
-            <Text
-              className="font-[Inter] text-[18px] text-base font-[500]"
-              style={{ color: appTheme.fontSecondColor }}
-            >
-              {t(NO_ORDER_PROMPT[route.key])}
-            </Text>
-          ) : (
-            <Text style={{ color: appTheme.fontSecondColor }}>
-              {t("Pull down to refresh")}
-            </Text>
-          )}
-        </View>
-      )}
+      <FlashList
+        data={orders}
+        estimatedItemSize={ORDER_CARD_ESTIMATED_HEIGHT}
+        keyExtractor={keyExtractor}
+        showsVerticalScrollIndicator={false}
+        alwaysBounceVertical
+        refreshing={networkStatusAssigned === NetworkStatus.refetch}
+        onRefresh={refetchAssigned}
+        renderItem={renderItem}
+        ListEmptyComponent={renderListEmptyComponent}
+      />
     </View>
   );
 }

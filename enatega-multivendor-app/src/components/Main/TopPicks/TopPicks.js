@@ -24,7 +24,6 @@ function TopPicks(props) {
         {t('mostOrderedNow')}
       </TextDefault>
       <FlatList
-        style={styles().offerScroll}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         horizontal={true}

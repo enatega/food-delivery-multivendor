@@ -14,6 +14,10 @@ import { GET_CONFIGURATION } from "@/lib/api/graphql";
 
 // Hooks
 import { useQuery } from "@apollo/client";
+import { useContext } from "react";
+import { AuthContext } from "@/lib/context/global/auth.context";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
 
 export const ConfigurationContext = React.createContext<
   IConfiguration | undefined
@@ -27,6 +31,9 @@ export const ConfigurationContext = React.createContext<
 export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   children,
 }) => {
+  const { isAuthReady, token } = useContext(AuthContext);
+  const { mode } = useRiderMode();
+  const requiresAuthentication = mode === RIDER_SERVER_MODES.SINGLE;
   const [configuration, setConfiguration] = useState<
     IConfiguration | undefined
   >();
@@ -36,6 +43,9 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   // 300 ms debounce delayed the first render — currency symbol showed blank).
   const { loading, error, data } = useQuery<{ configuration: IConfiguration }>(
     GET_CONFIGURATION,
+    {
+      skip: !isAuthReady || (requiresAuthentication && !token),
+    },
   );
 
   // Use Effect

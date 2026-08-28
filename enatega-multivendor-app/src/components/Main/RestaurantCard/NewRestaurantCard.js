@@ -23,6 +23,7 @@ import { useCachedMediaUri } from '../../../utils/mediaCache'
 import { resolveRestaurantImage } from '../../../utils/resolveImageUrl'
 import { RESTAURANT } from '../../../ui/hooks/useRestaurant'
 import ShimmerImage from '../../ShimmerImage/ShimmerImage'
+import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -47,6 +48,8 @@ function NewRestaurantCard(props) {
     }),
     [i18n.language, themeContext.ThemeValue]
   )
+  const { tokens } = useMultivendorTheme()
+  const cardTheme = useMemo(() => ({ ...currentTheme, ...tokens }), [currentTheme, tokens])
 
   const { profile } = useContext(UserContext)
   const heart = profile ? profile.favourite.includes(props?._id) : false
@@ -129,19 +132,20 @@ function NewRestaurantCard(props) {
   }
   return (
     <View style={[
-      styles(currentTheme).offerContainer, 
-      props?.fullWidth && { width: '100%' },
+      styles(cardTheme).offerContainer,
+      props?.compact && styles(cardTheme).compactOfferContainer,
+      props?.fullWidth && { width: '100%', marginLeft: 0, marginRight: 0 },
       { position: 'relative' }
     ]}>
-      <Ripple 
-        rippleColor={'#F5F5F5'} 
+      <Ripple
+        rippleColor={'#F5F5F5'}
         style={[
-          styles(currentTheme).cardSurface,
+          styles(cardTheme).cardSurface,
           Platform.OS === 'android' && {
             overflow: 'hidden'
           }
-        ]} 
-        activeOpacity={0.8} 
+        ]}
+        activeOpacity={0.8}
         onPressIn={prefetchRestaurant}
         onPress={handleRestaurantClick}
         rippleContainerBorderRadius={22}
@@ -149,35 +153,41 @@ function NewRestaurantCard(props) {
         rippleSize={Platform.OS === 'android' ? 150 : 200}
         disabled={false}
       >
-        <View style={styles(currentTheme).cardBody}>
-          <View style={styles().imageContainer}>
+        <View style={styles(cardTheme).cardBody}>
+          <View style={[
+            styles().imageContainer,
+            props?.compact && styles().compactImageContainer
+          ]}>
             <ShimmerImage
               imageUrl={imageUri}
               resizeMode='cover'
               defaultSource={require('../../../assets/images/food_placeholder.png')}
               style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]}
             />
-            <View style={styles(currentTheme).badgeRow}>
-              <View style={styles(currentTheme).typeBadge}>
+            <View style={styles(cardTheme).badgeRow}>
+              <View style={styles(cardTheme).typeBadge}>
                 <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.fontFourthColor} small bolder>
                   {shopLabel}
                 </TextDefault>
               </View>
             </View>
             {isRestaurantClosed && (
-              <View style={styles(currentTheme).closedOverlay}>
+              <View style={styles(cardTheme).closedOverlay}>
                 <TextDefault H4 textColor={currentTheme.white} bold>
                   Closed
                 </TextDefault>
               </View>
             )}
           </View>
-          <View style={styles().descriptionContainer}>
-            <View style={styles(currentTheme).titleRow}>
-              <TextDefault H4 numberOfLines={1} textColor={currentTheme.fontFourthColor} bolder style={styles(currentTheme).titleText}>
+          <View style={[
+            styles().descriptionContainer,
+            props?.compact && styles().compactDescriptionContainer
+          ]}>
+            <View style={styles(cardTheme).titleRow}>
+              <TextDefault H4 numberOfLines={1} textColor={tokens.colors.textPrimary} bolder style={styles(cardTheme).titleText}>
                 {props?.name}
               </TextDefault>
-              <View style={styles(currentTheme).ratingBadge}>
+              <View style={styles(cardTheme).ratingBadge}>
                 <FontAwesome5 name='star' size={12} color={currentTheme.orange} />
                 <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.fontFourthColor} small bolder>
                   {props?.reviewAverage}
@@ -185,32 +195,32 @@ function NewRestaurantCard(props) {
               </View>
             </View>
             <TextDefault
-              textColor={currentTheme.gray600}
+              textColor={tokens.colors.textMuted}
               numberOfLines={1}
               Normal
               style={[
-                styles(currentTheme).offerCategoty,
-                styles(currentTheme).categoryText
+                styles(cardTheme).offerCategoty,
+                styles(cardTheme).categoryText
               ]}
             >
               {categoryLabel}
             </TextDefault>
             <View style={styles().border} />
-            <View style={styles(currentTheme).metaRow}>
-              <View style={styles(currentTheme).metaPill}>
+            <View style={styles(cardTheme).metaRow}>
+              <View style={styles(cardTheme).metaPill}>
                 <AntDesign name='clockcircleo' size={13} color={currentTheme.editProfileButton} />
                 <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.editProfileButton} numberOfLines={1} small bolder>
                   {props?.deliveryTime + ' '}
                   {t('min')}
                 </TextDefault>
               </View>
-              <View style={styles(currentTheme).metaPill}>
+              <View style={styles(cardTheme).metaPill}>
                 <Bicycle color={currentTheme.newFontcolor} />
                 <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.newFontcolor} numberOfLines={1} small bolder>
                   {configuration.currencySymbol} {configuration.deliveryRate}
                 </TextDefault>
               </View>
-              <View style={styles(currentTheme).metaPill}>
+              <View style={styles(cardTheme).metaPill}>
                 <FontAwesome5 name='star' size={12} color={currentTheme.orange} />
                 <TextDefault textColor={isDarkMode ? currentTheme.white : currentTheme.newFontcolor} numberOfLines={1} small bolder>
                   {props?.reviewCount}
@@ -220,13 +230,13 @@ function NewRestaurantCard(props) {
           </View>
         </View>
       </Ripple>
-      
-      <TouchableOpacity 
-        activeOpacity={0.7} 
-        disabled={loadingMutation} 
+
+      <TouchableOpacity
+        activeOpacity={0.7}
+        disabled={loadingMutation}
         onPress={handleAddToFavorites}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        style={{ 
+        style={{
           position: 'absolute',
           top: 10,
           ...(currentTheme?.isRTL ? { left: 10 } : { right: 10 }),
@@ -238,7 +248,7 @@ function NewRestaurantCard(props) {
           elevation: 1000
         }}
       >
-        <View style={styles(currentTheme).favouriteOverlay}>
+        <View style={styles(cardTheme).favouriteOverlay}>
           {loadingMutation ? <Spinner size={'small'} backColor={'transparent'} spinnerColor={currentTheme.iconColorDark} /> : <AntDesign name={heart ? 'heart' : 'hearto'} size={scale(15)} color={currentTheme.iconColor} />}
         </View>
       </TouchableOpacity>

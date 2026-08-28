@@ -1,11 +1,8 @@
 import React, { useCallback, useState } from 'react'
-import { View } from 'react-native'
-// import { TouchableOpacity } from 'react-native-gesture-handler'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import ShimmerImage from '../../ShimmerImage/ShimmerImage'
 import {
   MaterialCommunityIcons,
-  FontAwesome5,
   Ionicons,
   SimpleLineIcons
 } from '@expo/vector-icons'
@@ -19,6 +16,7 @@ import FavoriteButton from '../../FavButton/FavouriteButton'
 import { scale } from '../../../utils/scaling'
 import styles from './styles'
 import CachedImage from '../../CachedImage'
+import { resolveLogoImage, resolveRestaurantImage } from '../../../utils/resolveImageUrl'
 
 function RestaurantDetailHeader({
   restaurant,
@@ -50,15 +48,32 @@ function RestaurantDetailHeader({
     })
   }, [navigation, restaurant])
 
-  const isOpen = restaurant?.isAvailable
+  const isOpen = restaurant?.isOpen ?? restaurant?.isAvailable
+  const cuisineText = restaurant?.cuisines?.join(', ') ?? ''
+  const heroImage = resolveRestaurantImage(restaurant)
+  const logoImage = resolveLogoImage(restaurant)
 
   return (
     <View style={styles(currentTheme).mainContainer}>
       <View style={styles(currentTheme).imageContainer}>
-        <ShimmerImage
-          imageUrl={restaurant?.image}
-          style={styles(currentTheme).mainRestaurantImg}
-        />
+        {heroImage
+          ? (
+            <ShimmerImage
+              imageUrl={heroImage}
+              style={styles(currentTheme).mainRestaurantImg}
+              resizeMode='cover'
+              defaultSource={require('../../../assets/images/food_placeholder.png')}
+            />
+            )
+          : (
+            <View style={styles(currentTheme).heroFallback}>
+              <Ionicons
+                name='storefront-outline'
+                size={scale(42)}
+                color={currentTheme.colors.textMuted}
+              />
+            </View>
+            )}
 
         {/* Header icons overlay */}
         <View style={styles(currentTheme).headerIconsContainer}>
@@ -110,7 +125,7 @@ function RestaurantDetailHeader({
               ellipsizeMode='tail'
               adjustsFontSizeToFit
               minimumFontScale={0.8}
-              textColor={currentTheme.fontMainColor}
+              textColor={currentTheme.white}
               style={styles(currentTheme).detailLabel}
             >
               {t('deliveryCharges')}
@@ -120,7 +135,7 @@ function RestaurantDetailHeader({
               ellipsizeMode='tail'
               adjustsFontSizeToFit
               minimumFontScale={0.8}
-              textColor={currentTheme.fontMainColor}
+              textColor={currentTheme.white}
               bold
             >
               {configuration.currencySymbol}{configuration?.deliveryRate}
@@ -134,7 +149,7 @@ function RestaurantDetailHeader({
               ellipsizeMode='tail'
               adjustsFontSizeToFit
               minimumFontScale={0.8}
-              textColor={currentTheme.fontMainColor}
+              textColor={currentTheme.white}
               style={styles(currentTheme).detailLabel}
             >
               {t('minimumOrder')}
@@ -144,7 +159,7 @@ function RestaurantDetailHeader({
               ellipsizeMode='tail'
               adjustsFontSizeToFit
               minimumFontScale={0.8}
-              textColor={currentTheme.fontMainColor}
+              textColor={currentTheme.white}
               bold
             >
               {configuration.currencySymbol}{restaurant?.minimumOrder}
@@ -160,8 +175,8 @@ function RestaurantDetailHeader({
             <CachedImage
               resizeMode='cover'
               source={
-                restaurant?.logo
-                  ? { uri: restaurant.logo }
+                logoImage
+                  ? { uri: logoImage }
                   : require('../../../assets/images/defaultLogo.png')
               }
               style={styles(currentTheme).restaurantImg}
@@ -170,25 +185,27 @@ function RestaurantDetailHeader({
               numberOfLines={1}
               H3
               bolder
-              textColor={currentTheme.fontThirdColor}
+              textColor={currentTheme.colors.textPrimary}
               style={{ flex: 1, flexShrink: 1 }}
             >
-              {restaurant?.name?.substring(0, 25) + '...'}
+              {restaurant?.name}
             </TextDefault>
           </View>
           <FavoriteButton iconSize={scale(24)} restaurantId={restaurant?._id} />
         </View>
 
-        <View style={[styles(currentTheme).cuisineContainer, { paddingRight: scale(14) }]}>
-          <TextDefault textColor={currentTheme.fontThirdColor} H5 bold>
-            {toggle
-              ? restaurant?.cuisines?.join(', ')
-              : restaurant?.cuisines?.join(', ').substring(0, 40) + '...'}
+        <View style={styles(currentTheme).cuisineContainer}>
+          <TextDefault
+            textColor={currentTheme.colors.textMuted}
+            style={styles(currentTheme).cuisineText}
+            numberOfLines={toggle ? undefined : 2}
+          >
+            {cuisineText}
           </TextDefault>
           {restaurant?.cuisines?.toString()?.length > 40 && (
             <IconButton
               icon={toggle ? 'arrow-up' : 'arrow-down'}
-              iconColor='gray'
+              iconColor={currentTheme.colors.textMuted}
               style={{ width: 25 }}
               onPress={() => setToggle((prev) => !prev)}
             />
@@ -200,22 +217,24 @@ function RestaurantDetailHeader({
             <MaterialCommunityIcons
               name='star-outline'
               size={scale(20)}
-              color={currentTheme.newIconColor}
+              color={currentTheme.colors.textSecondary}
             />
-            {restaurant?.reviewData?.total > 0 ? (
+            {restaurant?.reviewData?.total > 0
+              ? (
               <>
-                <TextDefault textColor={currentTheme.fontNewColor} bold H5>
+                <TextDefault textColor={currentTheme.colors.textSecondary} bold>
                   {restaurant?.reviewData?.ratings}
                 </TextDefault>
-                <TextDefault textColor={currentTheme.fontNewColor} H5>
+                <TextDefault textColor={currentTheme.colors.textSecondary}>
                   ({restaurant?.reviewData?.total} {t('reviews')})
                 </TextDefault>
               </>
-            ) : (
-              <TextDefault textColor={currentTheme.fontNewColor} bold H5>
+                )
+              : (
+              <TextDefault textColor={currentTheme.colors.textSecondary} bold>
                 {t('noReviewsYet', 'No reviews yet')}
               </TextDefault>
-            )}
+                )}
           </View>
 
           {restaurant?.reviewData?.total > 0 && (
@@ -224,7 +243,7 @@ function RestaurantDetailHeader({
               activeOpacity={0.8}
               onPress={handleNavigateToReviews}
             >
-              <TextDefault bolder textColor={currentTheme.main}>
+              <TextDefault bolder textColor={currentTheme.colors.accent}>
                 {t('seeReviews')}
               </TextDefault>
             </TouchableOpacity>
@@ -236,7 +255,7 @@ function RestaurantDetailHeader({
             <MaterialCommunityIcons
               name='timer-outline'
               size={scale(21)}
-              color={currentTheme.newIconColor}
+              color={currentTheme.colors.textSecondary}
             />
             {todayOpeningTimes && (
               <View style={styles(currentTheme).timingRow}>
@@ -245,13 +264,14 @@ function RestaurantDetailHeader({
                   ellipsizeMode='tail'
                   adjustsFontSizeToFit
                   minimumFontScale={0.78}
-                  textColor={currentTheme.fontThirdColor}
+                  textColor={currentTheme.colors.textSecondary}
                   bold
                   style={styles(currentTheme).timingLabel}
                 >
                   {t(todayOpeningTimes?.day)}{' '}
                 </TextDefault>
-                {todayOpeningTimes?.times?.length < 1 ? (
+                {todayOpeningTimes?.times?.length < 1
+                  ? (
                   <TextDefault
                     small
                     bold
@@ -264,13 +284,14 @@ function RestaurantDetailHeader({
                   >
                     {t('ClosedAllDay')}
                   </TextDefault>
-                ) : (
+                    )
+                  : (
                   <TextDefault
                     numberOfLines={1}
                     ellipsizeMode='tail'
                     adjustsFontSizeToFit
                     minimumFontScale={0.7}
-                    textColor={currentTheme.fontThirdColor}
+                    textColor={currentTheme.colors.textSecondary}
                     bold
                     style={styles(currentTheme).timingValue}
                   >
@@ -281,7 +302,7 @@ function RestaurantDetailHeader({
                       )
                       .join('  ')}
                   </TextDefault>
-                )}
+                    )}
               </View>
             )}
           </View>
@@ -295,7 +316,7 @@ function RestaurantDetailHeader({
               ellipsizeMode='tail'
               adjustsFontSizeToFit
               minimumFontScale={0.8}
-              textColor={currentTheme.main}
+              textColor={isOpen ? currentTheme.colors.accent : currentTheme.colors.danger}
             >
               {!isOpen ? t('Closed') : t('Open')}
             </TextDefault>
@@ -307,11 +328,11 @@ function RestaurantDetailHeader({
             <MaterialCommunityIcons
               name='bike-fast'
               size={scale(18)}
-              color={currentTheme.newIconColor}
+              color={currentTheme.colors.textSecondary}
             />
           </View>
           <TextDefault
-            textColor={currentTheme.fontNewColor}
+            textColor={currentTheme.colors.textSecondary}
             bold
             H5
             style={styles(currentTheme).deliveryText}

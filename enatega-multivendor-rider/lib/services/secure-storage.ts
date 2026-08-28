@@ -18,7 +18,6 @@ const getSecureStore = (): SecureStoreModule | null => {
   try {
     secureStoreModule = require("expo-secure-store") as SecureStoreModule;
   } catch {
-    console.log("expo-secure-store unavailable, falling back to AsyncStorage");
     secureStoreModule = null;
   }
 
@@ -58,7 +57,7 @@ export const getSecureItem = async (
     await AsyncStorage.removeItem(legacyKey);
   }
 
-  return legacyValue;
+  return __DEV__ ? legacyValue : null;
 };
 
 export const setSecureItem = async (
@@ -77,6 +76,9 @@ export const setSecureItem = async (
     return;
   }
 
+  if (!__DEV__) {
+    throw new Error("Secure storage is unavailable; refusing to persist credentials.");
+  }
   await AsyncStorage.setItem(legacyKey, value);
 };
 

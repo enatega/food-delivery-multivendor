@@ -1,12 +1,9 @@
 import { verticalScale, scale } from '../../utils/scaling'
 import { Dimensions, StyleSheet } from 'react-native'
-const windowWidth = Dimensions.get('window').width
 import { alignment } from '../../utils/alignment'
+const windowWidth = Dimensions.get('window').width
 
-const SCREEN_HEIGHT = Dimensions.get('screen').height
-const MODAL_HEIGHT = Math.floor(SCREEN_HEIGHT / 4)
-
-const styles = (props = null, hasActiveOrders = false) =>
+const styles = (props = null) =>
   StyleSheet.create({
     flex: {
       // flex: 1
@@ -41,6 +38,17 @@ const styles = (props = null, hasActiveOrders = false) =>
       width: '100%',
       height: '100%',
       alignSelf: 'center'
+    },
+    discoverySections: {
+      gap: 0
+    },
+    collectionSection: {
+      marginTop: scale(20),
+      marginBottom: scale(10)
+    },
+    collectionHeading: {
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      marginBottom: scale(15)
     },
     searchbar: {
       backgroundColor: props != null ? props?.main : 'black',
@@ -157,8 +165,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       padding: scale(15),
       marginTop: scale(30),
       borderColor: props !== null ? props?.gray200 : '#E5E7EB',
-      borderWidth: scale(1),
-      borderRadius: scale(10)
+      borderWidth: scale(1)
     },
     searchList: {
       marginBottom: 70
@@ -192,8 +199,7 @@ const styles = (props = null, hasActiveOrders = false) =>
       paddingLeft: scale(38)
     },
     topBrandsMargin: {
-      marginBottom: hasActiveOrders ? scale(84) : scale(8),
-      ...alignment.MTsmall
+      marginBottom: scale(8)
     },
     buttonContainer: {
       ...alignment.PLmedium,

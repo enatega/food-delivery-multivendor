@@ -1,48 +1,43 @@
-import { View, ScrollView, Dimensions } from 'react-native'
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../utils/scaling'
 import { alignment } from '../../utils/alignment'
 import styles from './styles'
-import React, { useContext, useEffect, useState, useRef, useCallback } from 'react'
+import React, { useContext, useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import Spinner from '../../components/Spinner/Spinner'
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT } from 'react-native-maps'
 import ConfigurationContext from '../../context/Configuration'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 // import analytics from '../../utils/analytics'
 import Detail from '../../components/OrderDetail/Detail/Detail'
-import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 import CustomerMarker from '../../assets/SVG/customer-marker'
-import TrackingRider from '../../components/OrderDetail/TrackingRider/TrackingRider'
+import RiderMarker from '../../assets/SVG/rider-marker'
 import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
 import darkMapStyle from '../../utils/DarkMapStyles'
 import { useTranslation } from 'react-i18next'
-import { HelpButton } from '../../components/Header/HeaderIcons/HeaderIcons'
-
-import { ProgressBar, checkStatus } from '../../components/Main/ActiveOrders/ProgressBar'
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { PriceRow } from '../../components/OrderDetail/PriceRow'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
 import { CancelModal } from '../../components/OrderDetail/CancelModal'
 import Button from '../../components/Button/Button'
-import { gql, useMutation, useSubscription } from '@apollo/client'
+import { gql, useMutation, useQuery, useSubscription } from '@apollo/client'
 import { cancelOrder as cancelOrderMutation } from '../../apollo/mutations'
-import { subscriptionOrder, subscriptionNewMessage } from '../../apollo/subscriptions'
+import { subscriptionOrder, subscriptionNewMessage, subscriptionOrderTracking } from '../../apollo/subscriptions'
+import { orderTracking } from '../../apollo/queries'
 import { useUserContext } from '../../context/User'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import { calulateRemainingTime } from '../../utils/customFunctions'
 import { Instructions } from '../../components/Checkout/Instructions'
-
-import MapViewDirections from 'react-native-maps-directions'
-import useEnvVars from '../../../environment'
-import LottieView from 'lottie-react-native'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import Taxes from './Taxes'
-const { height: HEIGHT, width: WIDTH } = Dimensions.get('screen')
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import { useMultivendorTheme } from '../../ui/designSystem'
+import OrderStatusTimeline from '../../components/OrderDetail/OrderStatusTimeline'
+import { decodePolyline, trimPolylineToRider } from '../../utils/polyline'
 
 const CANCEL_ORDER = gql`
   ${cancelOrderMutation}
@@ -53,6 +48,12 @@ const SUBSCRIPTION_ORDER = gql`
 
 const SUBSCRIPTION_NEW_MESSAGE = gql`
   ${subscriptionNewMessage}
+`
+const ORDER_TRACKING = gql`
+  ${orderTracking}
+`
+const SUBSCRIPTION_ORDER_TRACKING = gql`
+  ${subscriptionOrderTracking}
 `
 
 const ORDER_STATUS_RANK = {
@@ -86,10 +87,45 @@ function mergeOrderState(current, incoming) {
   }
 }
 
+const formatClockTime = (value) => {
+  if (!value) return ''
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+}
+
+const getStatusMessage = (order, eta, riderLocation, now) => {
+  switch (order?.orderStatus) {
+    case ORDER_STATUS_ENUM.PENDING:
+      return 'Waiting for the store to confirm your order.'
+    case ORDER_STATUS_ENUM.ACCEPTED:
+      return eta?.readyAt && now > new Date(eta.readyAt).getTime()
+        ? 'Preparation is taking a little longer.'
+        : `Your order is being prepared${eta?.readyAt ? ` — expected ready by ${formatClockTime(eta.readyAt)}` : '.'}`
+    case ORDER_STATUS_ENUM.ASSIGNED:
+      return eta?.readyAt && now > new Date(eta.readyAt).getTime()
+        ? 'Your rider is collecting the order. Preparation is taking a little longer.'
+        : 'Your order is being prepared and a rider has been assigned.'
+    case ORDER_STATUS_ENUM.PICKED: {
+      const locationAge = riderLocation?.recordedAt
+        ? now - new Date(riderLocation.recordedAt).getTime()
+        : Infinity
+      return locationAge > 90 * 1000
+        ? `Rider location temporarily unavailable${riderLocation?.recordedAt ? ` — last updated ${formatClockTime(riderLocation.recordedAt)}` : '.'}`
+        : 'Your order is on the way.'
+    }
+    case ORDER_STATUS_ENUM.DELIVERED:
+    case ORDER_STATUS_ENUM.COMPLETED:
+      return 'Your order has been delivered.'
+    default:
+      return 'This order is no longer active.'
+  }
+}
+
 function OrderDetail(props) {
   // console.log("propsdata",props?.route.params)
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
-  //const Analytics = analytics()
+  // const Analytics = analytics()
   const { t, i18n } = useTranslation()
   const id = props?.route.params
     ? props?.route.params?._id || props?.route.params?.id
@@ -99,14 +135,15 @@ function OrderDetail(props) {
   const { loadingOrders, errorOrders, orders, reFetchOrders } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
   const navigation = useNavigation()
-  const { GOOGLE_MAPS_KEY } = useEnvVars()
   const mapView = useRef(null)
-  const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
+  const { isConnected: connect } = useNetworkStatus()
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
     onCompleted: (data) => {
@@ -194,6 +231,60 @@ function OrderDetail(props) {
   )
 
   order = mergeOrderState(order, screenOrder)
+  const [isTrackingFocused, setIsTrackingFocused] = useState(false)
+  const [tracking, setTracking] = useState(null)
+  const [now, setNow] = useState(Date.now())
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsTrackingFocused(true)
+      return () => setIsTrackingFocused(false)
+    }, [])
+  )
+
+  const trackingEnabled =
+    isTrackingFocused && order?.orderStatus === ORDER_STATUS_ENUM.PICKED && Boolean(id)
+  const { data: initialTrackingData } = useQuery(ORDER_TRACKING, {
+    variables: { id },
+    skip: !trackingEnabled,
+    fetchPolicy: 'network-only'
+  })
+
+  useEffect(() => {
+    if (initialTrackingData?.orderTracking) {
+      setTracking(initialTrackingData.orderTracking)
+    }
+  }, [initialTrackingData])
+
+  useSubscription(SUBSCRIPTION_ORDER_TRACKING, {
+    variables: { id },
+    skip: !trackingEnabled,
+    onSubscriptionData: ({ subscriptionData }) => {
+      const update = subscriptionData?.data?.subscriptionOrderTracking
+      if (update) setTracking(update)
+    }
+  })
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const eta = tracking?.eta || order?.eta
+  const riderLocation = tracking?.riderLocation || null
+  const routeCoordinates = useMemo(() => {
+    const decoded = decodePolyline(eta?.encodedPolyline)
+    return trimPolylineToRider(decoded, riderLocation)
+  }, [eta?.encodedPolyline, riderLocation])
+
+  useEffect(() => {
+    if (!mapView.current || routeCoordinates.length < 2) return
+    mapView.current.fitToCoordinates(routeCoordinates, {
+      edgePadding: { top: 48, right: 36, bottom: 48, left: 36 },
+      animated: true
+    })
+  }, [routeCoordinates])
+
   const openedCourierChatRef = useRef(false)
 
   useEffect(() => {
@@ -225,12 +316,60 @@ function OrderDetail(props) {
 
   useEffect(() => {
     props?.navigation.setOptions({
-      headerRight: () => HelpButton({ iconBackground: currentTheme.main, navigation, t }),
-      headerTitle: `${order ? order?.deliveryAddress?.deliveryAddress?.substr(0, 15) : ''}...`,
-      headerTitleStyle: { color: currentTheme.newFontcolor },
-      headerStyle: { backgroundColor: currentTheme.newheaderBG }
+      headerLeft: () => (
+        <TouchableOpacity
+          accessibilityRole='button'
+          accessibilityLabel={t('back')}
+          activeOpacity={0.65}
+          hitSlop={10}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons
+            name={currentTheme.isRTL ? 'arrow-forward' : 'arrow-back'}
+            size={scale(23)}
+            color={currentTheme.colors.textPrimary}
+          />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity
+          accessibilityRole='button'
+          accessibilityLabel={t('help')}
+          activeOpacity={0.65}
+          hitSlop={10}
+          onPress={() => navigation.navigate('Help')}
+        >
+          <Ionicons
+            name='information-circle-outline'
+            size={scale(24)}
+            color={currentTheme.colors.textPrimary}
+          />
+        </TouchableOpacity>
+      ),
+      headerTitle: t('trackOrder'),
+      headerTitleAlign: 'center',
+      headerTitleStyle: {
+        color: currentTheme.colors.textPrimary,
+        fontSize: scale(16),
+        fontWeight: '600'
+      },
+      headerLeftContainerStyle: {
+        paddingLeft: scale(14)
+      },
+      headerRightContainerStyle: {
+        paddingRight: scale(14)
+      },
+      headerTitleContainerStyle: {
+        marginHorizontal: scale(52)
+      },
+      headerStyle: {
+        backgroundColor: currentTheme.colors.canvas,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: currentTheme.colors.borderSubtle
+      },
+      headerShadowVisible: false
     })
-  }, [orders])
+  }, [currentTheme, navigation, order, props?.navigation, t])
 
   // Keep the screen awake only while the order is in active transit so a user
   // tracking a delivery doesn't have the screen sleep. Replaces the app-wide
@@ -250,27 +389,6 @@ function OrderDetail(props) {
       deactivateKeepAwake('order-tracking')
     }
   }, [order?.orderStatus])
-
-  const [remainingTimeState, setRemainingTimeState] = useState(0)
-
-  useEffect(() => {
-    if (order && ![ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
-      const initialTime = calulateRemainingTime(order)
-      setRemainingTimeState(initialTime)
-
-
-      const intervalId = setInterval(() => {
-        const updatedTime = calulateRemainingTime(order)
-        setRemainingTimeState(updatedTime)
-
-        if (updatedTime <= 0 || [ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order.orderStatus)) {
-          clearInterval(intervalId)
-        }
-      }, 5000)
-
-      return () => clearInterval(intervalId)
-    }
-  }, [order])
 
   // Only show the full-screen spinner on the initial load, before we have any
   // order to display. On a status-change refetch (loadingOrders flips true
@@ -295,7 +413,7 @@ function OrderDetail(props) {
     return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
 
-  const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges, discountAmount } = order
+  const { restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges, discountAmount } = order
 
   const subTotal = total - tip - tax - deliveryCharges
 
@@ -305,20 +423,17 @@ function OrderDetail(props) {
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles(currentTheme).screen}>
       <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          backgroundColor: currentTheme.themeBackground,
-          paddingBottom: scale(150)
-        }}
+        contentContainerStyle={styles(currentTheme).scrollContent}
         showsVerticalScrollIndicator={false}
         overScrollMode='never'
       >
         {order?.rider && order?.orderStatus === ORDER_STATUS_ENUM.PICKED && (
-          <MapView
+          <View style={styles(currentTheme).mapCard}>
+            <MapView
             ref={(c) => (mapView.current = c)}
-            style={{ flex: 1, height: HEIGHT * 0.6 }}
+            style={styles(currentTheme).map}
             showsUserLocation={false}
             initialRegion={{
               latitude: +deliveryAddress?.location?.coordinates[1],
@@ -339,146 +454,75 @@ function OrderDetail(props) {
           >
             <Marker
               coordinate={{
-                longitude: +restaurant?.location?.coordinates[0],
-                latitude: +restaurant?.location?.coordinates[1]
-              }}
-            >
-              <RestaurantMarker />
-            </Marker>
-            <Marker
-              coordinate={{
                 latitude: +deliveryAddress?.location?.coordinates[1],
                 longitude: +deliveryAddress?.location?.coordinates[0]
               }}
             >
               <CustomerMarker />
             </Marker>
-            <MapViewDirections
-              origin={{
-                longitude: +restaurant?.location?.coordinates[0],
-                latitude: +restaurant?.location?.coordinates[1]
-              }}
-              destination={{
-                latitude: +deliveryAddress?.location?.coordinates[1],
-                longitude: +deliveryAddress?.location?.coordinates[0]
-              }}
-              apikey={GOOGLE_MAPS_KEY}
-              strokeWidth={6}
-              strokeColor={currentTheme.main}
-              optimizeWaypoints={true}
-              onReady={(result) => {
-                //result.distance} km
-                //Duration: ${result.duration} min.
-
-                mapView?.current?.fitToCoordinates(result.coordinates, {
-                  edgePadding: {
-                    right: WIDTH / 20,
-                    bottom: HEIGHT / 20,
-                    left: WIDTH / 20,
-                    top: HEIGHT / 20
-                  }
-                })
-              }}
-              onError={(error) => {
-                console.log('onerror', error)
-              }}
-            />
-            {order?.rider && <TrackingRider id={order?.rider?._id} />}
-          </MapView>
+            {routeCoordinates.length > 1 && (
+              <Polyline
+                coordinates={routeCoordinates}
+                strokeWidth={5}
+                strokeColor={currentTheme.colors.accent}
+              />
+            )}
+            {riderLocation && (
+              <Marker
+                coordinate={{
+                  latitude: riderLocation.latitude,
+                  longitude: riderLocation.longitude
+                }}
+              >
+                <RiderMarker />
+              </Marker>
+            )}
+            </MapView>
+          </View>
         )}
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            ...alignment.Pmedium
-          }}
-        >
-          <OrderStatusImage status={order?.orderStatus} />
-          {order?.orderStatus !== ORDER_STATUS_ENUM.DELIVERED && (
-            <View
-              style={{
-                ...alignment.MTxSmall,
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              {![ORDER_STATUS_ENUM.PENDING, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order?.orderStatus) && (
-                <>
-                  <TextDefault style={{ ...alignment.MTxSmall }} textColor={currentTheme.gray500} H5>
-                    {t('estimatedDeliveryTime')}
-                  </TextDefault>
-                  <TextDefault style={{ ...alignment.MTxSmall }} Regular textColor={currentTheme.gray900} H1 bolder>
-                    {remainingTimeState}-{remainingTimeState + 5} {t('mins')}
-                  </TextDefault>
-                  <ProgressBar configuration={configuration} currentTheme={currentTheme} item={order} navigation={navigation} isPicked={order?.isPickedUp} />
-                </>
-              )}
-              <TextDefault H5 style={{ ...alignment.Mmedium }} textColor={currentTheme.gray600} bold center>
-                {' '}
-                {t(checkStatus(order?.orderStatus)?.statusText)}
+        <View style={styles(currentTheme).statusSection}>
+          <TextDefault
+            H4
+            bold
+            textColor={currentTheme.colors.textPrimary}
+            style={styles(currentTheme).statusHeading}
+          >
+            {getStatusMessage(order, eta, riderLocation, now)}
+          </TextDefault>
+          {![ORDER_STATUS_ENUM.PENDING, ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.COMPLETED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order?.orderStatus) && (
+            <View style={styles(currentTheme).estimateRow}>
+              <TextDefault textColor={currentTheme.colors.textSecondary}>
+                {t('estimatedDeliveryTime')}
+              </TextDefault>
+              <TextDefault H4 bolder textColor={currentTheme.colors.accent}>
+                {eta?.windowStartAt && eta?.windowEndAt
+                  ? `${formatClockTime(eta.windowStartAt)}–${formatClockTime(eta.windowEndAt)}`
+                  : t('calculating', { defaultValue: 'Calculating…' })}
               </TextDefault>
             </View>
           )}
+          <OrderStatusTimeline
+            currentStatus={order?.orderStatus}
+            isPickup={order?.isPickedUp}
+            theme={currentTheme}
+          />
         </View>
-        <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
+        <View style={styles(currentTheme).contentInset}>
+          <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
+        </View>
         <Detail navigation={props?.navigation} currencySymbol={configuration.currencySymbol} items={items} from={restaurant?.name} orderNo={order?.orderId} deliveryAddress={deliveryAddress?.deliveryAddress} subTotal={subTotal} tip={tip} tax={tax} deliveryCharges={deliveryCharges} total={total} theme={currentTheme} id={id} rider={order?.rider} orderStatus={order?.orderStatus} hasUnread={hasUnreadMessage} onChatOpen={() => setHasUnreadMessage(false)} />
         <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol} tip={tip} discountAmount={discountAmount} />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
-        {/* Tip is not showing on the tracking page
-        {tip > 0 && (
-  <PriceRow 
-    theme={currentTheme} 
-    title={t('tip')}   // uses translation
-    currency={configuration.currencySymbol} 
-    price={tip.toFixed(2)} 
-  />
-)} */}
-
         <PriceRow theme={currentTheme} title={t('total')} currency={configuration.currencySymbol} price={total.toFixed(2)} />
 
-        <View style={{ margin: scale(20) }}>
-          <Button disabled={isOrderCancelable ? false : true} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
-        </View>
+        {isOrderCancelable && <View style={styles(currentTheme).cancelWrap}>
+          <Button disabled={!isOrderCancelable} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
+        </View>}
 
       </View>
       <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle} cancelOrder={cancelOrder} loading={loadingCancel} orderStatus={order?.orderStatus} />
     </View>
-  )
-}
-
-export const OrderStatusImage = ({ status }) => {
-  let imagePath = null
-  switch (status) {
-    case ORDER_STATUS_ENUM.PENDING:
-      imagePath = require('../../assets/SVG/order-placed.json')
-      break
-    case ORDER_STATUS_ENUM.ACCEPTED:
-      imagePath = require('../../assets/SVG/order-tracking-preparing.json')
-      break
-    case ORDER_STATUS_ENUM.ASSIGNED:
-      imagePath = require('../../assets/SVG/food-picked.json')
-      break
-    case ORDER_STATUS_ENUM.COMPLETED:
-      imagePath = require('../../assets/SVG/place-order.json')
-      break
-    case ORDER_STATUS_ENUM.DELIVERED:
-      imagePath = require('../../assets/SVG/place-order.json')
-      break
-  }
-
-  if (!imagePath) return null
-
-  return (
-    <LottieView
-      style={{
-        width: 250,
-        height: 250
-      }}
-      source={imagePath}
-      autoPlay
-      loop
-    />
   )
 }
 

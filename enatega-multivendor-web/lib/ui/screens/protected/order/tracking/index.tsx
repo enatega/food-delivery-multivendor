@@ -8,19 +8,18 @@ import TrackingHelpCard from "../../../../screen-components/protected/order-trac
 import TrackingStatusCard from "@/lib/ui/screen-components/protected/order-tracking/components/tracking-status-card";
 import TrackingOrderDetailsDummy from "../../../../screen-components/protected/order-tracking/components/tracking-order-details-dummy";
 
-// Services
-import useLocation from "@/lib/ui/screen-components/protected/order-tracking/services/useLocation";
 import useTracking from "@/lib/ui/screen-components/protected/order-tracking/services/useTracking";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_REVIEW_ORDER, GET_USER_PROFILE } from "@/lib/api/graphql";
 import useReviews from "@/lib/hooks/useReviews";
 import { IReview } from "@/lib/utils/interfaces";
 import useToast from "@/lib/hooks/useToast";
 import { RatingModal } from "@/lib/ui/screen-components/protected/profile";
-import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import ReactConfetti from "react-confetti";
 import ChatRider from "@/lib/ui/screen-components/protected/order-tracking/components/ChatRider";
+import { GoogleMapsContext } from "@/lib/context/global/google-maps.context";
+import { isLiveDeliveryTrackingStatus } from "@/lib/ui/screen-components/protected/order-tracking/services/tracking-status";
 
 interface IOrderTrackingScreenProps {
   orderId: string;
@@ -32,27 +31,16 @@ export default function OrderTrackingScreen({
   //states
   const [showRatingModal, setShowRatingModal] = useState<boolean>(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [showChat, setShowChat] = useState(false)
+  const [showChat, setShowChat] = useState(false);
 
   //Queries and Mutations
-  const {
-    isLoaded,
-    origin,
-    destination,
-    directions,
-    setDirections,
-    directionsCallback,
-    store_user_location_cache_key,
-    isCheckingCache,
-    setIsCheckingCache,
-  } = useLocation();
+  const { isLoaded } = useContext(GoogleMapsContext);
   const {
     orderTrackingDetails,
     isOrderTrackingDetailsLoading,
     subscriptionData,
+    trackingData,
   } = useTracking({ orderId: orderId });
-
-
 
   const { showToast } = useToast();
 
@@ -73,7 +61,6 @@ export default function OrderTrackingScreen({
       duration: 3000,
     });
 
-
     // Add a small delay before navigation
     // Use window.location for a hard redirect
     setTimeout(() => {
@@ -89,31 +76,40 @@ export default function OrderTrackingScreen({
       duration: 3000,
     });
   }
-  // Merge subscription data with order tracking details
-  let mergedOrderDetails =
-    orderTrackingDetails && subscriptionData ?
-      {
-        ...orderTrackingDetails,
-        orderStatus:
-          subscriptionData.orderStatus || orderTrackingDetails.orderStatus,
-        rider: subscriptionData.rider || orderTrackingDetails.rider,
-        completionTime:
-          subscriptionData.completionTime ||
-          orderTrackingDetails.completionTime,
-      }
-      : orderTrackingDetails;
+  const mergedOrderDetails =
+    orderTrackingDetails && subscriptionData
+      ? {
+          ...orderTrackingDetails,
+          ...subscriptionData,
+          rider: subscriptionData.rider || orderTrackingDetails.rider,
+          eta:
+            trackingData?.eta ||
+            subscriptionData.eta ||
+            orderTrackingDetails.eta,
+        }
+      : orderTrackingDetails
+        ? {
+            ...orderTrackingDetails,
+            eta: trackingData?.eta || orderTrackingDetails.eta,
+          }
+        : orderTrackingDetails;
 
-  if (mergedOrderDetails?.orderStatus === "PICKUP") {
-    mergedOrderDetails = {
-      ...mergedOrderDetails,
-      orderStatus: "PICKED",
-    };
-  }
+  const destination = useMemo(() => {
+    const coordinates =
+      mergedOrderDetails?.deliveryAddress?.location?.coordinates;
+    const lat = Number(coordinates?.[1]);
+    const lng = Number(coordinates?.[0]);
+    return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+  }, [mergedOrderDetails?.deliveryAddress?.location?.coordinates]);
+  const showLiveMap =
+    !mergedOrderDetails?.isPickedUp &&
+    isLiveDeliveryTrackingStatus(mergedOrderDetails?.orderStatus) &&
+    Boolean(destination);
 
   // Get restaurant ID for reviews query
   const restaurantId = useMemo(
     () => mergedOrderDetails?.restaurant?._id,
-    [mergedOrderDetails?.restaurant?._id]
+    [mergedOrderDetails?.restaurant?._id],
   );
 
   // Fetch reviews data for the specified restaurant
@@ -131,7 +127,7 @@ export default function OrderTrackingScreen({
     return reviewsData.reviewsByRestaurant.reviews.some(
       (review: IReview) =>
         review?.order?.user?.email === profile.profile.email &&
-        review?.order?._id === orderId
+        review?.order?._id === orderId,
     );
   }, [
     reviewsData?.reviewsByRestaurant?.reviews,
@@ -139,34 +135,15 @@ export default function OrderTrackingScreen({
     orderId,
   ]);
 
-  // Handlers
-  const onInitDirectionCacheSet = () => {
-    try {
-      const stored_direction = onUseLocalStorage(
-        "get",
-        store_user_location_cache_key
-      );
-      if (stored_direction) {
-        setDirections(JSON.parse(stored_direction));
-      }
-      setIsCheckingCache(false); // done checking
-    } catch (err) {
-      setIsCheckingCache(false);
-    } finally {
-      setIsCheckingCache(false);
-    }
-  };
-
   // handle submit rating
   const handleSubmitRating = async (
     orderId: string | undefined,
     ratingValue: number,
     comment?: string,
-    aspects: string[] = []
+    aspects: string[] = [],
   ) => {
     const reviewDescription = comment?.trim() || undefined;
-    const reviewComments =
-      aspects?.filter(Boolean).join(", ") || undefined;
+    const reviewComments = aspects?.filter(Boolean).join(", ") || undefined;
 
     // Here you would  call an API to save the rating
     try {
@@ -190,8 +167,8 @@ export default function OrderTrackingScreen({
 
   // useEffect to handle order status changes
   useEffect(() => {
-    if (mergedOrderDetails?.orderStatus == 'PICKED') {
-      setShowChat(true)
+    if (mergedOrderDetails?.orderStatus == "PICKED") {
+      setShowChat(true);
     }
 
     if (mergedOrderDetails?.orderStatus == "DELIVERED") {
@@ -216,10 +193,6 @@ export default function OrderTrackingScreen({
       refetch();
     }
   }, [mergedOrderDetails?.restaurant?._id, isOrderTrackingDetailsLoading]);
-
-  useEffect(() => {
-    onInitDirectionCacheSet();
-  }, [store_user_location_cache_key]);
 
   return (
     <>
@@ -258,16 +231,14 @@ export default function OrderTrackingScreen({
       <div className="w-screen h-full flex flex-col pb-20 dark:bg-gray-900 dark:text-gray-100">
         <div className="scrollable-container flex-1">
           {/* Google Map for Tracking */}
-          <GoogleMapTrackingComponent
-            isLoaded={isLoaded}
-            origin={origin}
-            destination={destination}
-            directions={directions}
-            isCheckingCache={isCheckingCache}
-            directionsCallback={directionsCallback}
-            orderStatus={mergedOrderDetails?.orderStatus || "PENDING"}
-            riderId={mergedOrderDetails?.rider?._id}
-          />
+          {showLiveMap && destination && (
+            <GoogleMapTrackingComponent
+              isLoaded={isLoaded}
+              destination={destination}
+              eta={mergedOrderDetails?.eta}
+              riderLocation={trackingData?.riderLocation}
+            />
+          )}
 
           {/* Main Content with increased gap from map */}
           <div className="mt-8 md:mt-10">
@@ -278,27 +249,31 @@ export default function OrderTrackingScreen({
                 {!isOrderTrackingDetailsLoading && mergedOrderDetails && (
                   <TrackingStatusCard
                     orderTrackingDetails={mergedOrderDetails}
+                    trackingData={trackingData}
                   />
                 )}
 
                 {/* Help Card - positioned on the left */}
                 <div className="md:ml-0 w-full md:w-auto md:flex-none">
                   <TrackingHelpCard />
-                  {showChat &&
-                    <ChatRider orderId={orderId} customerId={profile?.profile._id} />
-
-                  }
+                  {showChat && (
+                    <ChatRider
+                      orderId={orderId}
+                      customerId={profile?.profile?._id}
+                    />
+                  )}
                 </div>
               </div>
 
               {/* Order Details - Full width to match status card */}
               <div className="flex justify-center md:justify-start">
-                {isOrderTrackingDetailsLoading ?
+                {isOrderTrackingDetailsLoading ? (
                   <TrackingOrderDetailsDummy />
-                  : <TrackingOrderDetails
+                ) : (
+                  <TrackingOrderDetails
                     orderTrackingDetails={mergedOrderDetails}
                   />
-                }
+                )}
               </div>
             </PaddingContainer>
           </div>

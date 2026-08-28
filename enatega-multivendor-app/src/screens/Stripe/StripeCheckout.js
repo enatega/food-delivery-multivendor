@@ -8,6 +8,8 @@ import { useApolloClient } from '@apollo/client'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
 import LiveActivityService from '../../utils/liveActivityService'
+import { getToken } from '../../utils/secureToken'
+import { APP_MODES } from '../../mode/constants'
 
 import { useTranslation } from 'react-i18next'
 
@@ -32,6 +34,7 @@ function StripeCheckout(props) {
   const [loading, loadingSetter] = useState(true)
   const [isConfirmingOrder, setIsConfirmingOrder] = useState(false)
   const [confirmationTimedOut, setConfirmationTimedOut] = useState(false)
+  const [accessToken, setAccessToken] = useState(null)
   const { clearCart } = useContext(UserContext)
   const client = useApolloClient()
   const { _id } = props?.route.params
@@ -50,6 +53,14 @@ function StripeCheckout(props) {
   ])
 
   useEffect(() => {
+    let mounted = true
+    getToken(APP_MODES.MULTI).then(token => {
+      if (mounted) setAccessToken(token || '')
+    })
+    return () => { mounted = false }
+  }, [])
+
+  useEffect(() => {
     try {
       backendHost.current = new URL(SERVER_REST_URL).hostname.toLowerCase()
     } catch {
@@ -64,10 +75,6 @@ function StripeCheckout(props) {
     })
   }, [props?.navigation])
 
-  function onClose(flag) {
-    // showMessage here
-    props?.navigation.goBack()
-  }
   useEffect(() => {
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_STRIPE)
@@ -138,6 +145,18 @@ function StripeCheckout(props) {
     }
   }
 
+  if (accessToken === null) {
+    return <ActivityIndicator style={{ flex: 1 }} />
+  }
+
+  if (!accessToken) {
+    return (
+      <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', padding: 24 }}>
+        <Text>Your session has expired. Please sign in and try again.</Text>
+      </View>
+    )
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <WebView
@@ -159,7 +178,8 @@ function StripeCheckout(props) {
           loadingSetter(false)
         }}
         source={{
-          uri: `${SERVER_REST_URL}stripe/create-checkout-session?id=${_id}`
+          uri: `${SERVER_REST_URL}stripe/create-checkout-session?id=${_id}`,
+          headers: { Authorization: `Bearer ${accessToken}` }
         }}
         scalesPageToFit={true}
         onNavigationStateChange={(data) => {
@@ -167,7 +187,8 @@ function StripeCheckout(props) {
         }}
       />
       {loading ? <ActivityIndicator style={{ position: 'absolute', bottom: '50%', left: '50%' }} /> : null}
-      {isConfirmingOrder ? (
+      {isConfirmingOrder
+        ? (
         <View style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, backgroundColor: '#fff' }}>
           <ActivityIndicator size="large" />
           <Text style={{ marginTop: 20, fontSize: 22, fontWeight: '600', textAlign: 'center', color: '#111827' }}>
@@ -178,7 +199,8 @@ function StripeCheckout(props) {
               ? "Your payment was submitted successfully. We're still waiting for the backend to confirm the order, so it may appear shortly in My Orders."
               : "Your card payment was submitted. We're waiting for backend confirmation before opening your order tracking screen."}
           </Text>
-          {confirmationTimedOut ? (
+          {confirmationTimedOut
+            ? (
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
@@ -190,9 +212,11 @@ function StripeCheckout(props) {
             >
               <Text style={{ color: '#fff', fontWeight: '600' }}>Go to home</Text>
             </TouchableOpacity>
-          ) : null}
+              )
+            : null}
         </View>
-      ) : null}
+          )
+        : null}
     </View>
   )
 }

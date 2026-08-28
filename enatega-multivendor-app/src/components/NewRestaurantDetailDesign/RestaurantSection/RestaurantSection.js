@@ -41,7 +41,7 @@ const SkeletonPlaceholder = ({ style, currentTheme }) => {
     <Animated.View
       style={[
         {
-          backgroundColor: currentTheme?.gray || '#B8B8B8',
+          backgroundColor: currentTheme?.colors?.skeleton || currentTheme?.gray || '#B8B8B8',
           borderRadius: 4,
           opacity: animatedOpacity
         },
@@ -236,8 +236,8 @@ const RestaurantSections = ({
     } else {
       // Navigate directly if restaurant is open
       navigation.navigate('CategoryPage', {
-        category: category,
-        restaurantId: restaurantId,
+        category,
+        restaurantId,
         restaurantName: restaurant?.name,
         deliveryTime: restaurant?.deliveryTime || '15-20'
       })
@@ -260,7 +260,7 @@ const RestaurantSections = ({
     const content = (
       <TouchableOpacity style={styles(currentTheme).popularItemCard} onPress={() => handleItemClick(item)}>
         <TouchableOpacity style={styles(currentTheme).plusButton} onPress={() => handleItemClick(item)}>
-          <Ionicons name='add' size={scale(16)} color={currentTheme.fontWhite} />
+          <Ionicons name='add' size={scale(17)} color={currentTheme.colors.accent} />
         </TouchableOpacity>
 
         <View style={styles(currentTheme).popularItemImageWrap}>
@@ -323,13 +323,15 @@ const RestaurantSections = ({
   return (
     <View style={styles(currentTheme).container}>
       {/* Popular Section */}
-      {popularItems.loading ? (
+      {popularItems.loading
+        ? (
         <PopularItemsSkeleton currentTheme={currentTheme} />
-      ) : (
-        popularItems.data?.length > 0 && (
+          )
+        : (
+            popularItems.data?.length > 0 && (
           <View style={styles(currentTheme).section}>
             <View style={styles(currentTheme).sectionHeader}>
-              <TextDefault H4 bolder textColor={currentTheme.fontMainColor}>
+              <TextDefault H4 bolder textColor={currentTheme.colors.textPrimary}>
                 Popular
               </TextDefault>
             </View>
@@ -344,15 +346,17 @@ const RestaurantSections = ({
               ItemSeparatorComponent={() => <View style={{ width: CARD_SPACING }} />}
             />
           </View>
-        )
-      )}
+            )
+          )}
 
       {/* Categories Section */}
-      {categories.loading ? (
+      {categories.loading
+        ? (
         <CategoriesSkeleton currentTheme={currentTheme} />
-      ) : (
+          )
+        : (
         <View style={styles(currentTheme).section}>
-          <TextDefault H4 bolder textColor={currentTheme.fontMainColor} style={{ marginBottom: scale(15) }}>
+          <TextDefault H4 bolder textColor={currentTheme.colors.textPrimary} style={{ marginBottom: scale(12) }}>
             Find what you want
           </TextDefault>
 
@@ -366,7 +370,7 @@ const RestaurantSections = ({
             })}
           </View>
         </View>
-      )}
+          )}
     </View>
   )
 }

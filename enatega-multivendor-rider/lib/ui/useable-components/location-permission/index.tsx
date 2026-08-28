@@ -2,7 +2,7 @@ import { useLocationContext } from "@/lib/context/global/location.context";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { ILocationPermissionComponentProps } from "@/lib/utils/interfaces";
 import * as Location from "expo-location";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
@@ -21,13 +21,20 @@ export default function LocationPermissionComponent({
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { setLocationPermission } = useLocationContext();
+  const {
+    setLocationPermission,
+    isBackgroundLocationDisclosureVisible,
+    requestBackgroundLocationPermission,
+    dismissBackgroundLocationDisclosure,
+  } = useLocationContext();
 
   // States
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [isBackgroundPermissionLoading, setBackgroundPermissionLoading] =
+    useState(false);
 
-  const getLocationPermission = async () => {
+  const getLocationPermission = useCallback(async () => {
     setLoading(true);
     const { status } = await Location.getForegroundPermissionsAsync();
     setLoading(false);
@@ -37,7 +44,7 @@ export default function LocationPermissionComponent({
     } else {
       setIsModalVisible(true);
     }
-  };
+  }, [setLocationPermission]);
 
   const LocationAlert = async () => {
     Alert.alert(
@@ -83,9 +90,23 @@ export default function LocationPermissionComponent({
     }
   };
 
+  const allowBackgroundLocation = async () => {
+    setBackgroundPermissionLoading(true);
+    try {
+      await requestBackgroundLocationPermission();
+    } catch (error) {
+      if (__DEV__) {
+        console.log("Unable to request background location permission", error);
+      }
+      Alert.alert(t("Location access"), t("Please check for permissions"));
+    } finally {
+      setBackgroundPermissionLoading(false);
+    }
+  };
+
   useEffect(() => {
     getLocationPermission();
-  }, []);
+  }, [getLocationPermission]);
 
   // Re-check permission when the app returns to the foreground (e.g. after the
   // user grants access in Settings). Checking synchronously right after opening
@@ -99,6 +120,9 @@ export default function LocationPermissionComponent({
         if (status === "granted") {
           setLocationPermission(true);
           setIsModalVisible(false);
+        } else {
+          setLocationPermission(false);
+          setIsModalVisible(true);
         }
       },
     );
@@ -128,14 +152,14 @@ export default function LocationPermissionComponent({
                 className="font-[Inter] font-semibold text-[20px] leading-[28px] tracking-[0px] text-center"
                 style={{ color: appTheme.fontMainColor }}
               >
-                {t("Enable Location For Better Experience")}
+                {t("Location access for deliveries")}
               </Text>
               <Text
                 className="font-[Inter] font-[400] text-[14px] leading-[28px] tracking-[0px] text-center"
                 style={{ color: appTheme.fontSecondColor }}
               >
                 {t(
-                  "We need your location to find nearby restaurants, ensure accurate delivery, and provide the best service possible",
+                  "Enatega Multivendor Rider uses your precise location while you use the app to show your current position and support pickup and delivery navigation.",
                 )}
               </Text>
             </View>
@@ -157,6 +181,70 @@ export default function LocationPermissionComponent({
                   Continue
                 </Text>
               )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={isBackgroundLocationDisclosureVisible}
+        backdropOpacity={0.65}
+        onBackdropPress={dismissBackgroundLocationDisclosure}
+        onBackButtonPress={dismissBackgroundLocationDisclosure}
+      >
+        <View className="w-full items-center">
+          <View
+            className="w-[95%] p-5 rounded-[16px]"
+            style={{
+              backgroundColor: appTheme.themeBackground,
+              borderColor: appTheme.borderLineColor,
+              borderWidth: 1,
+            }}
+          >
+            <Text
+              className="font-[Inter] font-semibold text-[20px] leading-[28px] text-center"
+              style={{ color: appTheme.fontMainColor }}
+            >
+              {t("Allow background location for live delivery tracking")}
+            </Text>
+            <Text
+              className="font-[Inter] font-[400] text-[14px] leading-[22px] text-center mt-3"
+              style={{ color: appTheme.fontSecondColor }}
+            >
+              {t(
+                "Enatega Multivendor Rider collects and transmits your precise location to the delivery server to enable live delivery tracking for customers and dispatchers during an active delivery, even when the app is not in use. Location sharing starts only after you accept a delivery and stops when the delivery ends or you log out.",
+              )}
+            </Text>
+
+            <TouchableOpacity
+              className="h-11 rounded-3xl py-2.5 mt-5 w-full"
+              style={{ backgroundColor: appTheme.primary }}
+              disabled={isBackgroundPermissionLoading}
+              onPress={allowBackgroundLocation}
+            >
+              {isBackgroundPermissionLoading ? (
+                <SpinnerComponent />
+              ) : (
+                <Text
+                  className="text-center text-[14px] font-medium"
+                  style={{ color: appTheme.black }}
+                >
+                  {t("Allow delivery tracking")}
+                </Text>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="h-11 py-2.5 mt-2 w-full"
+              disabled={isBackgroundPermissionLoading}
+              onPress={dismissBackgroundLocationDisclosure}
+            >
+              <Text
+                className="text-center text-[14px] font-medium"
+                style={{ color: appTheme.fontMainColor }}
+              >
+                {t("Not now")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

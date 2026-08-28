@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Text, View } from 'react-native'
 import { scale } from '../../utils/scaling'
 import styles from './styles'
@@ -8,13 +8,17 @@ import TextDefault from '../Text/TextDefault/TextDefault'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { formatNumber } from '../../utils/formatNumber'
-import { LinearGradient } from 'expo-linear-gradient'
 import { RectButton } from 'react-native-gesture-handler'
 import ShimmerImage from '../ShimmerImage/ShimmerImage'
+import { useMultivendorTheme } from '../../ui/designSystem'
 
 const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
   const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const { tokens } = useMultivendorTheme()
+  const currentTheme = useMemo(
+    () => ({ ...theme[themeContext.ThemeValue], ...tokens }),
+    [themeContext.ThemeValue, tokens]
+  )
   const configuration = useContext(ConfigurationContext)
 
   const handleAddToCart = () => {
@@ -28,11 +32,15 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
   const imageUrl = item?.image && item?.image?.trim() !== '' ? item?.image : IMAGE_LINK
 
   return (
-    <RectButton onPress={handleAddToCart} rippleColor={currentTheme.rippleColor}>
-      <LinearGradient style={styles(currentTheme).card} colors={[currentTheme.gray100, currentTheme.white]}>
+    <RectButton
+      onPress={handleAddToCart}
+      rippleColor={currentTheme.rippleColor}
+      style={styles(currentTheme).button}
+    >
+      <View style={styles(currentTheme).card}>
         {tagCart(item?._id)}
         <TextDefault
-          textColor={currentTheme.gray600}
+          textColor={currentTheme.colors.textPrimary}
           style={{
             fontSize: scale(12),
             fontWeight: '600',
@@ -50,11 +58,11 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
             defaultSource={require('../../assets/images/food_placeholder.png')}
           />
           <View style={styles().popularMenuPrice}>
-            <Text style={{ color: '#1C1C1E', fontSize: scale(12) }}>{`${configuration.currencySymbol}${formatNumber(item?.variations[0].price)}`}</Text>
+            <Text style={styles(currentTheme).priceText}>{`${configuration.currencySymbol}${formatNumber(item?.variations[0].price)}`}</Text>
             {item?.variations[0]?.discounted > 0 && (
               <Text
                 style={{
-                  color: '#9CA3AF',
+                  color: currentTheme.colors.textMuted,
                   fontSize: scale(12),
                   textDecorationLine: 'line-through'
                 }}
@@ -64,7 +72,7 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
             )}
           </View>
         </View>
-      </LinearGradient>
+      </View>
     </RectButton>
   )
 }

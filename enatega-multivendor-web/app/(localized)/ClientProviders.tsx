@@ -15,12 +15,15 @@ import { UserAddressProvider } from "@/lib/context/address/address.context";
 import { SearchUIProvider } from "@/lib/context/search/search.context";
 import NotificationInitializer from "../NotificationInitialzer";
 import FirebaseForegroundHandler from "@/lib/config/FirebaseForegroundHandler";
+import { AppModeProvider, useAppMode } from "@/lib/mode";
+import ModeRouteGuard from "@/lib/mode/ModeRouteGuard";
 
-export default function ClientProviders({
+function ModeProviders({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { mode } = useAppMode();
   const client = useSetupApollo();
   const hasRegistered = useRef(false);
   const primeReactConfig = useMemo(() => ({ ripple: true }), []);
@@ -49,7 +52,7 @@ export default function ClientProviders({
 
   return (
     <PrimeReactProvider value={primeReactConfig}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={client} key={mode}>
         <ConfigurationProvider>
           <ToastProvider>
             <AuthProvider>
@@ -60,7 +63,7 @@ export default function ClientProviders({
                       <AppLayout>
                         <NotificationInitializer />
                         <FirebaseForegroundHandler />
-                        {children}
+                        <ModeRouteGuard>{children}</ModeRouteGuard>
                       </AppLayout>
                     </SearchUIProvider>
                   </UserAddressProvider>
@@ -71,5 +74,21 @@ export default function ClientProviders({
         </ConfigurationProvider>
       </ApolloProvider>
     </PrimeReactProvider>
+  );
+}
+
+function ReadyModeProviders({ children }: { children: React.ReactNode }) {
+  const { mode, isModeReady } = useAppMode();
+  if (!isModeReady) {
+    return <div className="min-h-screen bg-white dark:bg-gray-900" aria-busy="true" />;
+  }
+  return <ModeProviders key={mode}>{children}</ModeProviders>;
+}
+
+export default function ClientProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <AppModeProvider>
+      <ReadyModeProviders>{children}</ReadyModeProviders>
+    </AppModeProvider>
   );
 }

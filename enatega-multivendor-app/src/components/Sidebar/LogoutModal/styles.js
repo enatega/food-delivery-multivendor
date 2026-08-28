@@ -62,7 +62,7 @@ const styles = (props = null) => {
       borderWidth: 1,
     },
     btnCancel: {
-      borderColor: props !== null ? props.linkColor : '#0EA5E9'
+      borderColor: props !== null ? props.linkColor : '#397A20'
     },
     btnLogout: {
       borderColor: props !== null ? props.red600 : '#DC2626'

@@ -51,7 +51,7 @@ export const invalidateUserSession = async (payload = {}) => {
 
   sessionInvalidationPromise = (async () => {
     try {
-      await deleteToken()
+      await deleteToken(payload.mode)
 
       const listeners = Array.from(sessionListeners)
       await Promise.allSettled(

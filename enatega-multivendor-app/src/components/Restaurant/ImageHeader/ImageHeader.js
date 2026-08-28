@@ -13,6 +13,7 @@ import { scale } from '../../../utils/scaling'
 import { textStyles } from '../../../utils/textStyles'
 import styles from './styles'
 import { resolveLogoImage } from '../../../utils/resolveImageUrl'
+import { useMultivendorTheme } from '../../../ui/designSystem'
 
 const AnimatedText = Animated.createAnimatedComponent(Text)
 
@@ -90,7 +91,12 @@ function CategoryTabsBase({ categories, activeCategoryIndex, onPressCategory, cu
                 onPress={() => onPressCategory(item.categoryIndex)}
                 style={styles(currentTheme).headerContainer}
               >
-                <TextDefault style={isActive ? textStyles.Bolder : textStyles.H5} textColor={isActive ? currentTheme.newButtonText : currentTheme.gray500} center H5>
+                <TextDefault
+                  style={isActive ? textStyles.Bolder : textStyles.H5}
+                  textColor={isActive ? currentTheme.colors.accent : currentTheme.colors.textSecondary}
+                  center
+                  H5
+                >
                   {t(item.title)}
                 </TextDefault>
               </RectButton>
@@ -150,19 +156,27 @@ function HeaderContent({
   const navigation = useNavigation()
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
   const currentTheme = useMemo(
     () => ({
       isRTL: i18n.dir() === 'rtl',
-      ...theme[themeContext.ThemeValue]
+      ...theme[themeContext.ThemeValue],
+      ...tokens
     }),
-    [i18n, themeContext.ThemeValue]
+    [i18n, themeContext.ThemeValue, tokens]
   )
 
   const topBarHeight = insetTop + scale(52)
   const headerHeight = topBarHeight + (showCategories && !searchOpen && categories.length > 0 ? CATEGORY_RAIL_HEIGHT : 0)
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
-    borderBottomColor: searchOpen ? currentTheme.newBorderColor : interpolateColor(scrollY.value, [0, collapseDistance * 0.3], ['rgba(0,0,0,0)', currentTheme.newBorderColor])
+    borderBottomColor: searchOpen
+      ? currentTheme.colors.borderSubtle
+      : interpolateColor(
+        scrollY.value,
+        [0, collapseDistance * 0.3],
+        ['rgba(0,0,0,0)', currentTheme.colors.borderSubtle]
+      )
   }))
 
   const backgroundAnimatedStyle = useAnimatedStyle(() => ({
@@ -190,15 +204,17 @@ function HeaderContent({
             searchOpen && styles(currentTheme).leadingAreaSearch
           ]}
         >
-          {searchOpen ? (
+          {searchOpen
+            ? (
             <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={searchPopupHandler}>
               <Entypo name='cross' color={currentTheme.newIconColor} size={scale(22)} />
             </TouchableOpacity>
-          ) : (
+              )
+            : (
             <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={() => navigation.goBack()}>
               <Ionicons name='arrow-back' color={currentTheme.newIconColor} size={scale(22)} />
             </TouchableOpacity>
-          )}
+              )}
         </View>
 
         <View
@@ -207,13 +223,15 @@ function HeaderContent({
             searchOpen && styles(currentTheme).centerAreaSearch
           ]}
         >
-          {searchOpen ? (
+          {searchOpen
+            ? (
             <Search setSearch={setSearch} search={search} newheaderColor={currentTheme.backgroundColor} cartContainer={currentTheme.gray500} placeHolder={t('searchItems')} />
-          ) : (
+              )
+            : (
             <AnimatedText numberOfLines={1} style={[styles(currentTheme).headerTitle, titleAnimatedStyle]}>
               {t('delivery')} {displayedDeliveryMinutes} {t('Min')}
             </AnimatedText>
-          )}
+              )}
         </View>
 
         <View
@@ -298,12 +316,14 @@ function ImageHeader(props) {
 export const CategoryTabsRow = memo(function CategoryTabsRow({ categories, activeCategoryIndex, onPressCategory }) {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
   const currentTheme = useMemo(
     () => ({
       isRTL: i18n.dir() === 'rtl',
-      ...theme[themeContext.ThemeValue]
+      ...theme[themeContext.ThemeValue],
+      ...tokens
     }),
-    [i18n, themeContext.ThemeValue]
+    [i18n, themeContext.ThemeValue, tokens]
   )
 
   return <CategoryTabsBase categories={categories} activeCategoryIndex={activeCategoryIndex} onPressCategory={onPressCategory} currentTheme={currentTheme} t={t} />

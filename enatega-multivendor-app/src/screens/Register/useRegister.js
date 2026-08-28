@@ -11,6 +11,9 @@ import { phoneExist } from '../../apollo/mutations'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { Alert } from 'react-native'
 import { useCountryFromIP } from '../../utils/useCountryFromIP'
+import { useAppMode } from '../../mode/AppModeContext'
+import { APP_MODES } from '../../mode/constants'
+import { PHONE_EXIST_SINGLE_VENDOR } from '../../singlevendor/apollo/mutations'
 
 const PHONE = gql`
   ${phoneExist}
@@ -18,6 +21,7 @@ const PHONE = gql`
 
 const useRegister = () => {
   const navigation = useNavigation()
+  const { mode } = useAppMode()
   const { t, i18n } = useTranslation()
   const route = useRoute()
   const [firstname, setFirstname] = useState('')
@@ -43,8 +47,10 @@ const useRegister = () => {
     refetch
   } = useCountryFromIP()
 
+  const phoneExistDocument =
+    mode === APP_MODES.SINGLE ? PHONE_EXIST_SINGLE_VENDOR : PHONE
 
-  const [phoneExist, { loading }] = useMutation(PHONE, {
+  const [phoneExist, { loading }] = useMutation(phoneExistDocument, {
     onCompleted,
     onError
   })

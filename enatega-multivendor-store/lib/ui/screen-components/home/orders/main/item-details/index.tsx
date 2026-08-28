@@ -10,6 +10,7 @@ import { ConfigurationContext } from "@/lib/context/global/configuration.context
 import { Text, View } from "react-native";
 
 import { IOrder, Item } from "@/lib/utils/interfaces/order.interface";
+import { formatAmount } from "@/lib/utils/methods";
 
 interface ItemDetailsProps {
   orderData: IOrder;
@@ -21,13 +22,13 @@ const ItemDetails = ({ orderData: order }: ItemDetailsProps) => {
   const { t } = useTranslation();
   const configuration = useContext(ConfigurationContext);
 
-  if (!order) return null;
-
   const itemAmount = useMemo(() => {
     return order?.items?.reduce((sum: number, item: Item) => {
       return sum + (item.variation?.price ?? 0) * (item.quantity ?? 0);
     }, 0);
   }, [order?.items]);
+
+  if (!order) return null;
 
   return (
     <View className="pb-4">
@@ -86,7 +87,7 @@ const ItemDetails = ({ orderData: order }: ItemDetailsProps) => {
                   style={{ color: appTheme.fontMainColor }}
                 >
                   {configuration?.currencySymbol}
-                  {item.variation?.price}
+                  {formatAmount(item.variation?.price)}
                 </Text>
               </View>
             </View>
@@ -114,7 +115,7 @@ const ItemDetails = ({ orderData: order }: ItemDetailsProps) => {
             style={{ color: appTheme.fontMainColor }}
           >
             {configuration?.currencySymbol}
-            {itemAmount}
+            {formatAmount(itemAmount)}
           </Text>
         </View>
       </View>

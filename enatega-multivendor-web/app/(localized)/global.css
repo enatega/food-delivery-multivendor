@@ -21,9 +21,34 @@
   --primary-focus: rgba(117, 208, 75, 0.32);
   --primary-disabled: #b9e8a3;
   --secondary-color: #75d04b;
+  --dispatch-ground: #ffffff;
+  --dispatch-header: #ffffff;
+  --dispatch-header-line: #e8e9e4;
+  --dispatch-surface: #ffffff;
+  --dispatch-map: #f8f7f3;
+  --dispatch-ink: #151914;
+  --dispatch-muted: #62685f;
+  --dispatch-line: #e8e9e4;
+  --skeleton-base: #dbeafe;
+  --skeleton-highlight: #eff6ff;
+  --skeleton-line: #bfdbfe;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+}
+
+.dark {
+  --dispatch-ground: #111410;
+  --dispatch-header: #0d1117;
+  --dispatch-header-line: #29313d;
+  --dispatch-surface: #181c17;
+  --dispatch-map: #20251f;
+  --dispatch-ink: #f7f8f3;
+  --dispatch-muted: #b6bcb2;
+  --dispatch-line: #343a32;
+  --skeleton-base: #1e293b;
+  --skeleton-highlight: #334155;
+  --skeleton-line: #475569;
 }
 
 html,
@@ -46,13 +71,102 @@ body,
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  color: var(--dispatch-ink);
+  background: var(--dispatch-ground);
+  font-family: var(--font-interface), ui-sans-serif, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+/* Loading states use an informational blue family, independent of content surfaces. */
+.skeleton-surface,
+.p-skeleton {
+  background-color: var(--skeleton-base) !important;
+}
+
+.skeleton-line {
+  background-color: var(--skeleton-line) !important;
+}
+
+.skeleton-ring {
+  border-color: var(--skeleton-line) !important;
+  --tw-ring-color: var(--skeleton-line) !important;
+}
+
+.p-skeleton::after {
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--skeleton-highlight) 78%, transparent),
+    transparent
+  ) !important;
+}
+
+.font-display {
+  font-family: "Barlow Condensed", var(--font-interface), ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+.font-editorial {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+html:has(.quiet-orbit-page) {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+body:has(.quiet-orbit-page) {
+  background: #ffffff;
+  height: auto;
+  min-height: 100svh;
+  overflow: visible !important;
+  overflow-x: clip !important;
+  overscroll-behavior-y: none;
+}
+
+.dark body:has(.quiet-orbit-page) {
+  background: #111410;
+}
+
+.quiet-orbit-page {
+  --dispatch-ground: #ffffff;
+  --dispatch-surface: #ffffff;
+  --dispatch-map: #f7f8f6;
+  --dispatch-line: #e8e9e4;
+  --quiet-plinth: #e5ecda;
+  --quiet-inactive-opacity: 0.48;
+  scrollbar-color: var(--primary-dark) var(--dispatch-ground);
+}
+
+.dark .quiet-orbit-page {
+  --dispatch-ground: #111410;
+  --dispatch-surface: #181c17;
+  --dispatch-map: #20251f;
+  --dispatch-ink: #f7f8f3;
+  --dispatch-muted: #b6bcb2;
+  --dispatch-line: #343a32;
+  --quiet-plinth: #293126;
+  --quiet-inactive-opacity: 0.68;
+}
+
+.quiet-search input {
+  caret-color: var(--primary-dark);
+}
+
+::selection {
+  color: var(--dispatch-ink);
+  background: var(--primary-disabled);
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary-focus);
+  outline-offset: 3px;
+}
+
+a {
+  text-underline-offset: 0.2em;
 }
 
 .p-sidebar-left {
@@ -72,7 +186,7 @@ body {
 
 .layout-top-bar {
   z-index: 997;
-  position: absolute;
+  position: relative;
 }
 
 /* Add this to your global CSS or scoped module */
@@ -83,15 +197,15 @@ body {
   border-top: none !important;
 }
 
-
 .layout-top-container {
   position: sticky;
-  /* height: 64px; */
   z-index: 997;
   left: 0;
   top: 0;
   width: 100%;
-  border-bottom: 0.2px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--dispatch-header-line);
+  background: color-mix(in srgb, var(--dispatch-header) 96%, transparent);
+  backdrop-filter: blur(16px);
 }
 
 .layout-main-container {
@@ -120,42 +234,42 @@ body {
 
 .heading-1 {
   font-size: 30px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 40px;
 }
 .heading-2 {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 40px;
 }
 
 .heading-3 {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 36px;
 }
 
 .heading-4 {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 32px;
 }
 
 .heading-5 {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 28px;
 }
 
 .heading-6 {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 24px;
 }
 
 .heading-7 {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 20px;
 }
 
@@ -171,7 +285,7 @@ body {
   font-size: 15px;
   line-height: 20px;
   letter-spacing: 3%;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .card-h2 {
@@ -192,19 +306,13 @@ body {
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px; /* Added height for horizontal scrollbars */
-  background: rgba(
-    255,
-    255,
-    255,
-    0.8
-  ); /* Light gray background for better visibility */
+  background: var(--dispatch-ground);
 }
 ::-webkit-scrollbar-thumb {
-  background: #d3d3d3; /* A more lighter gray color for the scrollbar thumb */
+  background: var(--dispatch-line);
   border-radius: 7px;
+  border: 2px solid var(--dispatch-ground);
 }
-
-
 
 /* Global Dialog Styling Auth Dialog */
 :root {
@@ -280,8 +388,6 @@ body {
     font-size: 1rem;
   }
 }
-
-
 
 /* Dropdown */
 
@@ -543,8 +649,6 @@ body {
   padding: 0;
 }
 
-
-
 /* Auto Complet */
 .p-autocomplete {
   padding: 0;
@@ -685,21 +789,20 @@ Discovery Caurousal
 /* Responsive Image Styling */
 .carousel-banner {
   width: 100%;
-  height: 340px; /* Default height */
+  height: 260px;
   object-fit: cover;
-  border-radius: 12px;
 }
 
 /* Adjust image height for smaller screens */
 @media (max-width: 1024px) {
   .carousel-banner {
-    height: 300px;
+    height: 240px;
   }
 }
 
 @media (max-width: 768px) {
   .carousel-banner {
-    height: 250px;
+    height: 220px;
   }
 }
 
@@ -716,18 +819,17 @@ Discovery Caurousal
 
 .discovery-carousel .p-carousel-prev,
 .discovery-carousel .p-carousel-next {
-  background: #f9fafb;
-  color: #0f172a;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
+  background: var(--dispatch-surface);
+  color: var(--dispatch-ink);
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--dispatch-line);
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
-  box-shadow:
-    0px 4px 6px -2px rgba(0, 0, 0, 0.5),
-    0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 22px rgba(21, 25, 20, 0.1);
   position: absolute;
 }
 
@@ -754,6 +856,15 @@ Discovery Caurousal
   max-width: var(--slider-card-column-width) !important;
 }
 
+.cuisine-card-carousel.low-count-carousel .p-carousel-items-container {
+  justify-content: flex-start !important;
+}
+
+.cuisine-card-carousel.low-count-carousel .p-carousel-item {
+  flex: 0 0 var(--cuisine-card-column-width) !important;
+  max-width: var(--cuisine-card-column-width) !important;
+}
+
 /* Remove button on smaller screens */
 @media (max-width: 768px) {
   .discovery-carousel .p-carousel-prev,
@@ -764,18 +875,43 @@ Discovery Caurousal
 
 /* Reduce height for carousel items on smaller screens */
 .discovery-carousel .p-carousel-items .p-carousel-item {
-  height: 100px !important;
+  display: flex;
+  height: auto !important;
+}
+
+.discovery-carousel .p-carousel-items .p-carousel-item > * {
+  width: 100%;
+}
+
+/* Product rows share the discovery carousel controls, but product cards need
+   their natural content height instead of the compact cuisine-card height. */
+.single-vendor-product-carousel .p-carousel-items .p-carousel-item {
+  display: flex;
+  height: auto !important;
+}
+
+.single-vendor-product-carousel .p-carousel-items .p-carousel-item > div {
+  width: 100%;
+}
+
+.single-vendor-product-carousel.low-count-carousel .p-carousel-items-container {
+  justify-content: flex-start !important;
+}
+
+.single-vendor-product-carousel.low-count-carousel .p-carousel-item {
+  flex: 0 0 var(--single-product-column-width) !important;
+  max-width: var(--single-product-column-width) !important;
 }
 
 @media (max-width: 768px) {
-  .discovery-carousel .p-carousel-items .p-carousel-item {
-    height: 80px !important;
+  .single-vendor-product-carousel .p-carousel-items .p-carousel-item {
+    height: auto !important;
   }
 }
 
 @media (max-width: 480px) {
-  .discovery-carousel .p-carousel-items .p-carousel-item {
-    height: 60px !important;
+  .single-vendor-product-carousel .p-carousel-items .p-carousel-item {
+    height: auto !important;
   }
 }
 
@@ -905,11 +1041,12 @@ Discovery Caurousal
   display: none !important;
 }
 
-.rce-mbox-right-notch , .rce-mbox-left-notch{
+.rce-mbox-right-notch,
+.rce-mbox-left-notch {
   display: none;
 }
 
-.p-dialog-content{
+.p-dialog-content {
   padding-left: 0;
   padding-right: 0;
 }
@@ -922,26 +1059,25 @@ Discovery Caurousal
   text-align: right;
 }
 
- .message-left .rce-mbox-text {
+.message-left .rce-mbox-text {
   background-color: var(--primary-color); /* Light green for current user */
   border-radius: 3px;
   padding: 5px;
-  color:white;
-  width:fit-content
+  color: white;
+  width: fit-content;
 }
 
 .message-right {
   /* background-color: #f1f1f1;; Light green for current user */
   border-radius: 10px;
-  padding: 4px;  
-
+  padding: 4px;
 }
 
 /* 🔹 Dark mode Dropdown wrapper (the white container around filter) */
 .dark .p-dropdown-panel {
   background-color: #1f2937 !important; /* gray-800 */
-  color: #f9fafb !important;           /* gray-100 */
-  border-color: #4b5563 !important;    /* gray-600 */
+  color: #f9fafb !important; /* gray-100 */
+  border-color: #4b5563 !important; /* gray-600 */
 }
 
 /* 🔹 The header above items (where filter input lives) */
@@ -964,18 +1100,17 @@ Discovery Caurousal
   color: #f9fafb !important;
 }
 
-
 .dark .p-dropdown-panel .p-dropdown-filter {
   background-color: #1f2937; /* gray-800 */
-  color: #f9fafb;           /* gray-100 */
+  color: #f9fafb; /* gray-100 */
   border: 1px solid #4b5563;
 }
 
 /* 🔹 Selected option text box (closed dropdown) */
 .dark .p-dropdown .p-dropdown-label {
   background-color: #1f2937 !important; /* gray-800 */
-  color: #f9fafb !important;            /* gray-100 */
-  border-color: #4b5563 !important;     /* gray-600 */
+  color: #f9fafb !important; /* gray-100 */
+  border-color: #4b5563 !important; /* gray-600 */
 }
 
 /* 🔹 Placeholder text */
@@ -983,12 +1118,11 @@ Discovery Caurousal
   color: #9ca3af !important; /* gray-400 */
 }
 
-
 /* 🔹 Input field (already partly handled by Tailwind) */
 .dark .p-autocomplete-input {
   background-color: #1f2937 !important; /* gray-800 */
-  color: #f9fafb !important;           /* gray-100 */
-  border-color: #4b5563 !important;    /* gray-600 */
+  color: #f9fafb !important; /* gray-100 */
+  border-color: #4b5563 !important; /* gray-600 */
 }
 
 /* 🔹 Suggestion panel (the floating dropdown) */
@@ -1020,15 +1154,14 @@ input:-webkit-autofill:active {
 }
 
 /* === Dark mode autofill === */
- input:-webkit-autofill,
- input:-webkit-autofill:hover,
- input:-webkit-autofill:focus,
- input:-webkit-autofill:active {
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
   /* -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; gray-700 bg */
   -webkit-text-fill-color: #000000 !important; /* gray-100 text */
   caret-color: #000000 !important; /* keeps cursor visible */
 }
-
 
 /* === Dark mode autofill === */
 .dark input:-webkit-autofill,
@@ -1040,7 +1173,7 @@ input:-webkit-autofill:active {
   caret-color: #f3f4f6 !important; /* keeps cursor visible */
 }
 
-[dir = "rtl"] .p-icon-field-right > .p-input-icon:last-of-type {
+[dir="rtl"] .p-icon-field-right > .p-input-icon:last-of-type {
   left: 0;
   right: auto;
 }

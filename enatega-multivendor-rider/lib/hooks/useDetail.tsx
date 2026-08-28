@@ -12,6 +12,7 @@ import {
 import { GraphQLFormattedError } from "graphql";
 import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
+import { parseTimestamp } from "@/lib/utils/methods/date-time";
 import { GET_CONFIGURATION } from "../api/graphql/query/configuration";
 import {
   ASSIGN_ORDER,
@@ -21,14 +22,26 @@ import { RIDER_EARNINGS_GRAPH } from "../apollo/queries/earnings.query";
 import {
   RIDER_ORDERS,
   RIDER_PROFILE,
+  SINGLE_VENDOR_RIDER_ORDERS,
 } from "../apollo/queries/rider.query";
 import UserContext from "../context/global/user.context";
+import { useRiderMode } from "../context/global/rider-mode.context";
+import { RIDER_SERVER_MODES } from "../mode/rider-mode";
 import { FlashMessageComponent } from "../ui/useable-components";
 import { IOrder } from "../utils/interfaces/order.interface";
+
+interface RiderOrdersCacheData {
+  riderOrders: IOrder[];
+}
 
 const useDetails = (orderData: IOrder) => {
   // Hooks
   const { t } = useTranslation();
+  const { mode } = useRiderMode();
+  const riderOrdersQuery =
+    mode === RIDER_SERVER_MODES.SINGLE
+      ? SINGLE_VENDOR_RIDER_ORDERS
+      : RIDER_ORDERS;
   const { assignedOrders, loadingAssigned, userId } = useContext(UserContext);
   const [order, setOrder] = useState<IOrder>(orderData);
 
@@ -43,10 +56,11 @@ const useDetails = (orderData: IOrder) => {
   // Derive the prep/now second-of-day values once per order instead of building
   // six `new Date()` objects on every render.
   const { preparationSeconds, currentSeconds } = useMemo(() => {
+    const preparationDate = parseTimestamp(order?.preparationTime);
     const preparationTime = {
-      hours: new Date(order?.preparationTime).getHours(),
-      minutes: new Date(order?.preparationTime).getMinutes(),
-      seconds: new Date(order?.preparationTime).getSeconds(),
+      hours: preparationDate?.getHours() ?? 0,
+      minutes: preparationDate?.getMinutes() ?? 0,
+      seconds: preparationDate?.getSeconds() ?? 0,
     };
     const currentTime = {
       hours: new Date().getHours(),
@@ -80,7 +94,7 @@ const useDetails = (orderData: IOrder) => {
   const [mutateAssignOrder, { loading: loadingAssignOrder }] = useMutation(
     ASSIGN_ORDER,
     {
-      refetchQueries: [{ query: RIDER_ORDERS }],
+      refetchQueries: [{ query: riderOrdersQuery }],
       onCompleted,
       onError,
       update,
@@ -134,7 +148,9 @@ const useDetails = (orderData: IOrder) => {
       message = graphQLErrors.map((o) => o.message).join(", ");
     }
     if (networkError) {
-      message = t("Unable to connect. Please check your internet and try again.");
+      message = t(
+        "Unable to connect. Please check your internet and try again.",
+      );
     }
 
     // Make failures visible to the rider. Critical connectivity/server failures
@@ -152,7 +168,9 @@ const useDetails = (orderData: IOrder) => {
 
   async function update(cache: ApolloCache<any>, { data }: FetchResult<any>) {
     if (data?.assignOrder) {
-      const existingData = cache.readQuery({ query: RIDER_ORDERS });
+      const existingData = cache.readQuery<RiderOrdersCacheData>({
+        query: riderOrdersQuery,
+      });
       if (existingData) {
         const index = existingData.riderOrders.findIndex(
           (o: IOrder) => o._id === data.assignOrder._id,
@@ -162,14 +180,16 @@ const useDetails = (orderData: IOrder) => {
           existingData.riderOrders[index].orderStatus =
             data.assignOrder.orderStatus;
           cache.writeQuery({
-            query: RIDER_ORDERS,
+            query: riderOrdersQuery,
             data: { riderOrders: [...existingData.riderOrders] },
           });
         }
       }
     }
     if (data?.updateOrderStatusRider) {
-      const existingData = cache.readQuery({ query: RIDER_ORDERS });
+      const existingData = cache.readQuery<RiderOrdersCacheData>({
+        query: riderOrdersQuery,
+      });
       if (existingData) {
         const index = existingData.riderOrders.findIndex(
           (o: IOrder) => o._id === data.updateOrderStatusRider._id,
@@ -178,7 +198,7 @@ const useDetails = (orderData: IOrder) => {
           existingData.riderOrders[index].orderStatus =
             data.updateOrderStatusRider.orderStatus;
           cache.writeQuery({
-            query: RIDER_ORDERS,
+            query: riderOrdersQuery,
             data: { riderOrders: [...existingData.riderOrders] },
           });
         }

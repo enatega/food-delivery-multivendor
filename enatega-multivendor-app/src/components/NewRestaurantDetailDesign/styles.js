@@ -1,13 +1,12 @@
-import { StyleSheet, Platform, StatusBar } from 'react-native';
-import { scale } from '../../utils/scaling';
-import { verticalScale } from '../../utils/scaling';
-import { alignment } from '../../utils/alignment';
-import { textStyles } from '../../utils/textStyles';
+import { StyleSheet } from 'react-native'
+import { scale, verticalScale } from '../../utils/scaling'
+import { alignment } from '../../utils/alignment'
+import { textStyles } from '../../utils/textStyles'
 
 const styles = (props = null) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: props?.themeBackground
+    backgroundColor: props?.colors?.canvas ?? props?.themeBackground
   },
   headerContainer: {
     position: 'absolute',
@@ -15,7 +14,7 @@ const styles = (props = null) => StyleSheet.create({
     left: 0,
     right: 0,
     overflow: 'hidden',
-    backgroundColor: props?.cardBackground
+    backgroundColor: props?.colors?.canvas ?? props?.cardBackground
   },
   iconButton: {
     width: scale(40),
@@ -31,7 +30,7 @@ const styles = (props = null) => StyleSheet.create({
     marginHorizontal: scale(10),
     backgroundColor: props?.searchBarColor,
     borderRadius: scale(25),
-    display:'flex',
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: scale(15),
@@ -49,7 +48,7 @@ const styles = (props = null) => StyleSheet.create({
     flex: 1
   },
   scrollView: {
-    flex: 1,
+    flex: 1
   },
   contentContainer: {
     flexGrow: 1,
@@ -58,17 +57,19 @@ const styles = (props = null) => StyleSheet.create({
   buttonContainer: {
     width: '100%',
     height: '10%',
-    backgroundColor: props !== null ? props.themeBackground : 'black',
+    backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 12,
-    shadowColor: props !== null ? props.shadowColor : 'black',
+    elevation: props?.isDark ? 0 : 3,
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: -verticalScale(3)
+      height: -verticalScale(2)
     },
-    shadowOpacity: 0.5,
-    shadowRadius: verticalScale(2)
+    shadowOpacity: props?.isDark ? 0 : 0.12,
+    shadowRadius: scale(8),
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.18)'
   },
   button: {
     justifyContent: 'space-between',
@@ -105,6 +106,6 @@ const styles = (props = null) => StyleSheet.create({
     backgroundColor: 'transparent',
     color: props != null ? props.white : 'white'
   }
-});
+})
 
-export default styles;
+export default styles

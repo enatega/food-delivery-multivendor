@@ -5,6 +5,8 @@ export const en = {
   Home: "Home",
   Earnings: "Earnings",
   Profile: "Profile",
+  "Multi Vendor": "Multi Vendor",
+  "Single Vendor": "Single Vendor",
 
   // FAQs
   faq1: "How do I place an order?",
@@ -255,7 +257,7 @@ export const en = {
   Comment: "Comment",
   Decline: "Decline",
   Accept: "Accept",
-  "AcceptAndPrint": "Accept and Print",
+  AcceptAndPrint: "Accept and Print",
   "Time Left": "Time Left",
   "Hand Order to Rider": "Hand Order to Rider",
   "Something went wrong Please refresh": "Something went wrong Please refresh",
@@ -280,6 +282,6 @@ export const en = {
   "Set Preparation Time": "Set Preparation Time",
   "Show Details": "Show Details",
   "Hide Details": "Hide Details",
-  "Tax": "Tax",
-  discountAmount: "Discount Amount"
+  Tax: "Tax",
+  discountAmount: "Discount Amount",
 };

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext, useLayoutEffect, useRef, useCallback, useMemo } from 'react'
-import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert } from 'react-native'
+import { View, ScrollView, TouchableOpacity, StatusBar, Platform, Alert, StyleSheet } from 'react-native'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { AntDesign } from '@expo/vector-icons'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import CartItem from '../../components/CartItem/CartItem'
 import { getTipping } from '../../apollo/queries'
 import { scale } from '../../utils/scaling'
@@ -32,6 +31,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import { populateCart } from '../../utils/populateCart'
+import { PrimaryButton, SkeletonBlock, StateView, useMultivendorTheme } from '../../ui/designSystem'
 
 // Constants
 const TIPPING = gql`
@@ -45,9 +45,11 @@ function Cart(props) {
   const { isLoggedIn, profile, restaurant: cartRestaurant, cart, addQuantity, removeQuantity, instructions, setInstructions } = useContext(UserContext)
   const themeContext = useContext(ThemeContext)
   const { t, i18n } = useTranslation()
+  const { tokens } = useMultivendorTheme()
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
   const [loadingData, setLoadingData] = useState(true)
   const [minimumOrder, setMinimumOrder] = useState('')
@@ -115,7 +117,7 @@ function Cart(props) {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.newFontcolor,
+        color: tokens.colors.textPrimary,
         ...textStyles.H4,
         ...textStyles.Bolder
       },
@@ -124,8 +126,11 @@ function Cart(props) {
         paddingRight: scale(25)
       },
       headerStyle: {
-        backgroundColor: currentTheme.newheaderBG
+        backgroundColor: tokens.colors.canvas,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: tokens.colors.borderSubtle
       },
+      headerShadowVisible: false,
       headerLeft: () => (
         <HeaderBackButton
           truncatedLabel=''
@@ -136,7 +141,7 @@ function Cart(props) {
                 alignItems: 'center'
               }}
             >
-              <AntDesign name='arrowleft' size={22} color={currentTheme.newIconColor} />
+              <AntDesign name='arrowleft' size={22} color={tokens.colors.textPrimary} />
             </View>
           )}
           onPress={() => {
@@ -145,7 +150,7 @@ function Cart(props) {
         />
       )
     })
-  }, [props?.navigation])
+  }, [props?.navigation, t, tokens.colors.borderSubtle, tokens.colors.canvas, tokens.colors.textPrimary])
 
   useLayoutEffect(() => {
     if (!data) return
@@ -211,65 +216,39 @@ function Cart(props) {
 
   function emptyCart() {
     return (
-      <View style={styles().subContainerImage}>
-        <View style={styles().imageContainer}>
-          <EmptyCart width={scale(200)} height={scale(200)} />
-        </View>
-        <View style={styles().descriptionEmpty}>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder center>
-            {t('hungry')}?
-          </TextDefault>
-          <TextDefault textColor={currentTheme.fontSecondColor} bold center>
-            {t('emptyCart')}
-          </TextDefault>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles(currentTheme).emptyButton}
+      <StateView
+        visual={<EmptyCart width={scale(156)} height={scale(156)} />}
+        title={`${t('hungry')}?`}
+        description={t('emptyCart')}
+        action={<PrimaryButton
+          label={t('emptyCartBtn')}
           onPress={() =>
             props?.navigation.navigate({
               name: 'Main',
               merge: true
             })
           }
-        >
-          <TextDefault textColor={currentTheme.buttonText} bolder B700 center uppercase>
-            {t('emptyCartBtn')}
-          </TextDefault>
-        </TouchableOpacity>
-      </View>
+        />}
+      />
     )
   }
   function loadginScreen() {
     return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
-
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height60} />
-          <PlaceholderLine />
-        </Placeholder>
-
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height100} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height100} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-          <View style={[styles(currentTheme).horizontalLine, styles().width100, styles().mB10]} />
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </Placeholder>
+      <View style={styles(currentTheme).cartSkeleton}>
+        <SkeletonBlock width='64%' height={18} />
+        <SkeletonBlock width='100%' height={64} borderRadius={tokens.radii.lg} />
+        <SkeletonBlock width='28%' height={20} style={{ marginTop: tokens.spacing.sm }} />
+        {[0, 1].map((item) => (
+          <View key={item} style={styles(currentTheme).cartSkeletonRow}>
+            <SkeletonBlock width={64} height={64} borderRadius={tokens.radii.md} />
+            <View style={styles(currentTheme).cartSkeletonLines}>
+              <SkeletonBlock width='72%' height={14} />
+              <SkeletonBlock width='48%' height={11} />
+              <SkeletonBlock width='36%' height={14} />
+            </View>
+            <SkeletonBlock width={104} height={40} borderRadius={tokens.radii.round} />
+          </View>
+        ))}
       </View>
     )
   }
@@ -290,25 +269,13 @@ function Cart(props) {
           emptyCart()
         ) : (
           <>
-            <ScrollView showsVerticalScrollIndicator={false} style={[styles().flex, styles().cartItems]}>
-              <View
-                style={{
-                  ...alignment.PLsmall,
-                  ...alignment.PRsmall,
-                  marginTop: 10
-                }}
-              >
+            <ScrollView showsVerticalScrollIndicator={false} style={styles().flex} contentContainerStyle={styles(currentTheme).cartContent}>
+              <View>
                 <SpecialInstructions instructions={instructions} onSubmitInstructions={setInstructions} theme={currentTheme} t={t} />
               </View>
-              <View
-                style={{
-                  ...alignment.PLsmall,
-                  ...alignment.PRsmall,
-                  marginTop: 10
-                }}
-              >
+              <View>
                 <View style={[styles(currentTheme).dealContainer, styles().mB10]}>
-                  <TextDefault textColor={currentTheme.gray500} style={styles().totalOrder} H5 bolder isRTL>
+                  <TextDefault textColor={tokens.colors.textPrimary} style={styles().totalOrder} H5 bolder isRTL>
                     {t('yourOrder')} ({cartLength})
                   </TextDefault>
                   {populatedCart.map((food, index) => {
@@ -337,7 +304,7 @@ function Cart(props) {
                 </View>
               </View>
               {foods[0] && (
-                <View style={styles().suggestedItems}>
+              <View style={styles(currentTheme).suggestedItems}>
                   <WouldYouLikeToAddThese itemId={foods[0]._id} restaurantId={restaurant?._id} />
                 </View>
               )}
@@ -355,23 +322,23 @@ function Cart(props) {
                 </View>
               </View>
             )}
-            <View style={styles().totalBillContainer}>
-              <View style={styles(currentTheme).buttonContainer}>
+            <View style={styles(tokens).totalBillContainer}>
+              <View style={styles({ ...currentTheme, ...tokens }).buttonContainer}>
                 <View style={styles().cartAmount}>
                   <Animated.View style={[animatedStyle]}>
-                    <TextDefault textColor={currentTheme.black} style={styles().totalBill} bolder H2 isRTL>
+                    <TextDefault textColor={tokens.colors.textPrimary} style={styles().totalBill} bolder H2 isRTL>
                       {configuration.currencySymbol}
                       {calculateTotal()}
                     </TextDefault>
                   </Animated.View>
 
-                  <TextDefault textColor={currentTheme.black} style={styles().totalBill} bolder Smaller isRTL>
+                  <TextDefault textColor={tokens.colors.textMuted} style={styles().totalBill} bolder Smaller isRTL>
                     {t('exclusiveVAt')}
                   </TextDefault>
                 </View>
                 {isLoggedIn && profile ? (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
+                  <PrimaryButton
+                    label={t('checkoutBtn')}
                     disabled={isBelowMinimumOrder}
                     onPress={() => {
                       if (isBelowMinimumOrder) {
@@ -382,24 +349,16 @@ function Cart(props) {
                       }
                       navigation.navigate('Checkout')
                     }}
-                    style={[styles(currentTheme).button, isBelowMinimumOrder && styles(currentTheme).buttonDisabled]}
-                  >
-                    <TextDefault textColor={currentTheme.white} style={styles().checkoutBtn} bold H5 isRTL>
-                      {t('checkoutBtn')}
-                    </TextDefault>
-                  </TouchableOpacity>
+                    style={styles(tokens).checkoutAction}
+                  />
                 ) : (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
+                  <PrimaryButton
+                    label={t('loginOrSignUp')}
                     onPress={() => {
                       props?.navigation.navigate({ name: 'CreateAccount' })
                     }}
-                    style={styles(currentTheme).button}
-                  >
-                    <TextDefault textColor={currentTheme.white} style={{ width: '100%', textAlign: 'center' }} H5 bolder center isRTL>
-                      {t('loginOrSignUp')}
-                    </TextDefault>
-                  </TouchableOpacity>
+                    style={styles(tokens).checkoutAction}
+                  />
                 )}
               </View>
             </View>

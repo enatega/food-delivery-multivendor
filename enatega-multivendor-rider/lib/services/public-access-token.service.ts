@@ -23,6 +23,8 @@ const METRICS_GENERAL = gql`
   }
 `;
 
+export const RIDER_PUBLIC_ACCESS_USER_AGENT = `Enatega-Rider-App/${Platform.OS}`;
+
 class PublicAccessTokenService {
   private static instance: PublicAccessTokenService;
   private nonce: string | null = null;
@@ -30,6 +32,8 @@ class PublicAccessTokenService {
   private expiry: number | null = null;
   private refreshPromise: Promise<void> | null = null;
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
+  private scope = "legacy";
+  private scopeGeneration = 0;
 
   private constructor() {}
 
@@ -44,12 +48,27 @@ class PublicAccessTokenService {
 
   async initialize(
     apolloClient: ApolloClient<NormalizedCacheObject>,
+    scope: string,
   ): Promise<void> {
-    await this.loadFromStorage();
+    if (this.scope !== scope) {
+      this.pause();
+      this.scopeGeneration += 1;
+      this.refreshPromise = null;
+      this.nonce = null;
+      this.token = null;
+      this.expiry = null;
+      this.scope = scope;
+    }
+    const generation = this.scopeGeneration;
+    const stored = await this.loadFromStorage(scope);
+    if (generation !== this.scopeGeneration || scope !== this.scope) return;
+    this.nonce = stored.nonce;
+    this.token = stored.token;
+    this.expiry = stored.expiry;
 
     if (!this.nonce) {
       this.nonce = await this.generateNonce();
-      await setSecureItem(PUBLIC_ACCESS_NONCE, this.nonce);
+      await setSecureItem(this.key(PUBLIC_ACCESS_NONCE), this.nonce);
     }
 
     if (!this.token || this.isExpired()) {
@@ -59,47 +78,44 @@ class PublicAccessTokenService {
     }
   }
 
-  private async loadFromStorage(): Promise<void> {
-    try {
-      const [nonce, token, expiry] = await Promise.all([
-        getSecureItem(PUBLIC_ACCESS_NONCE),
-        getSecureItem(PUBLIC_ACCESS_TOKEN),
-        getSecureItem(PUBLIC_ACCESS_EXPIRY),
-      ]);
-
-      this.nonce = nonce;
-      this.token = token;
-      this.expiry = expiry ? parseInt(expiry, 10) : null;
-    } catch {
-      this.nonce = null;
-      this.token = null;
-      this.expiry = null;
-    }
+  private key(base: string): string {
+    return this.scopedKey(base, this.scope);
   }
 
-  private getSecureRandomHex(byteCount: number): string {
+  private scopedKey(base: string, scope: string): string {
+    const safeScope = scope.replace(/[^A-Za-z0-9._-]/g, "_");
+    return `${base}.${safeScope}`;
+  }
+
+  private async loadFromStorage(scope: string): Promise<{
+    nonce: string | null;
+    token: string | null;
+    expiry: number | null;
+  }> {
     try {
-      const cryptoObj = (
-        globalThis as {
-          crypto?: { getRandomValues?: (array: Uint8Array) => Uint8Array };
-        }
-      ).crypto;
-      if (typeof cryptoObj?.getRandomValues === "function") {
-        const bytes = new Uint8Array(byteCount);
-        cryptoObj.getRandomValues(bytes);
-        return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join(
-          "",
-        );
-      }
+      const [nonce, token, expiry] = await Promise.all([
+        getSecureItem(this.scopedKey(PUBLIC_ACCESS_NONCE, scope)),
+        getSecureItem(this.scopedKey(PUBLIC_ACCESS_TOKEN, scope)),
+        getSecureItem(this.scopedKey(PUBLIC_ACCESS_EXPIRY, scope)),
+      ]);
+
+      return {
+        nonce,
+        token,
+        expiry: expiry ? parseInt(expiry, 10) : null,
+      };
     } catch {
-      // Secure RNG unavailable — fall back below.
+      return { nonce: null, token: null, expiry: null };
     }
-    return Math.random().toString(36).substring(2, 15);
   }
 
   private async generateNonce(): Promise<string> {
     const deviceId = Device.osBuildId || Device.osInternalBuildId || "unknown";
-    const random = this.getSecureRandomHex(16);
+    const bytes = new Uint8Array(16);
+    globalThis.crypto.getRandomValues(bytes);
+    const random = Array.from(bytes, (byte) =>
+      byte.toString(16).padStart(2, "0"),
+    ).join("");
     const timestamp = Date.now().toString(36);
     return `${deviceId}-${timestamp}-${random}`;
   }
@@ -123,10 +139,12 @@ class PublicAccessTokenService {
       timeUntilExpiry - PublicAccessTokenService.REFRESH_BUFFER_MS,
       1000,
     );
+    const generation = this.scopeGeneration;
+    const scope = this.scope;
 
     this.refreshTimer = setTimeout(async () => {
+      if (generation !== this.scopeGeneration || scope !== this.scope) return;
       await this.refreshToken(apolloClient);
-      this.scheduleRefresh(apolloClient);
     }, refreshTime);
   }
 
@@ -137,8 +155,11 @@ class PublicAccessTokenService {
       return this.refreshPromise;
     }
 
-    this.refreshPromise = (async () => {
+    const generation = this.scopeGeneration;
+    const scope = this.scope;
+    const refreshPromise = (async () => {
       const nonce = this.nonce ?? (await this.generateNonce());
+      if (generation !== this.scopeGeneration || scope !== this.scope) return;
       this.nonce = nonce;
 
       try {
@@ -150,7 +171,7 @@ class PublicAccessTokenService {
               nonce,
               "x-platform": Platform.OS,
               "accept-language": locale,
-              "user-agent": `Yalla-Rider-App/${Platform.OS}`,
+              "user-agent": RIDER_PUBLIC_ACCESS_USER_AGENT,
               "x-skip-public-auth": "true",
             },
           },
@@ -161,22 +182,33 @@ class PublicAccessTokenService {
           throw new Error("No data returned from metricsGeneral");
         }
 
-        this.token = data.metricsGeneral.experience;
+        if (generation !== this.scopeGeneration || scope !== this.scope) return;
+
+        const token = data.metricsGeneral.experience as string;
+        this.token = token;
         this.expiry = new Date(data.metricsGeneral.hehe).getTime();
 
         await Promise.all([
-          setSecureItem(PUBLIC_ACCESS_NONCE, nonce),
-          setSecureItem(PUBLIC_ACCESS_TOKEN, this.token),
-          setSecureItem(PUBLIC_ACCESS_EXPIRY, this.expiry.toString()),
+          setSecureItem(this.scopedKey(PUBLIC_ACCESS_NONCE, scope), nonce),
+          setSecureItem(this.scopedKey(PUBLIC_ACCESS_TOKEN, scope), token),
+          setSecureItem(
+            this.scopedKey(PUBLIC_ACCESS_EXPIRY, scope),
+            this.expiry.toString(),
+          ),
         ]);
 
-        this.scheduleRefresh(apolloClient);
+        if (generation === this.scopeGeneration && scope === this.scope) {
+          this.scheduleRefresh(apolloClient);
+        }
       } finally {
-        this.refreshPromise = null;
+        if (this.refreshPromise === refreshPromise) {
+          this.refreshPromise = null;
+        }
       }
     })();
 
-    return this.refreshPromise;
+    this.refreshPromise = refreshPromise;
+    return refreshPromise;
   }
 
   async getToken(
@@ -193,20 +225,24 @@ class PublicAccessTokenService {
     return this.nonce;
   }
 
-  async clearTokens(): Promise<void> {
+  pause(): void {
     if (this.refreshTimer) {
       clearTimeout(this.refreshTimer);
       this.refreshTimer = null;
     }
+  }
+
+  async clearTokens(): Promise<void> {
+    this.pause();
 
     this.nonce = null;
     this.token = null;
     this.expiry = null;
 
     await Promise.all([
-      removeSecureItem(PUBLIC_ACCESS_NONCE),
-      removeSecureItem(PUBLIC_ACCESS_TOKEN),
-      removeSecureItem(PUBLIC_ACCESS_EXPIRY),
+      removeSecureItem(this.key(PUBLIC_ACCESS_NONCE)),
+      removeSecureItem(this.key(PUBLIC_ACCESS_TOKEN)),
+      removeSecureItem(this.key(PUBLIC_ACCESS_EXPIRY)),
     ]);
   }
 }

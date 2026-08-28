@@ -45,9 +45,11 @@ export const removeItem = async (key: string) => {
   storageEmitter.emit(key, { key, value: null });
 };
 
-export const getStoreId = async () => {
-  const secureStoreId = await SecureStore.getItemAsync(STORE_ID);
+export const getStoreId = async (storeIdKey: string = STORE_ID) => {
+  const secureStoreId = await SecureStore.getItemAsync(storeIdKey);
   if (secureStoreId) return secureStoreId;
+
+  if (storeIdKey !== STORE_ID) return null;
 
   const legacyStoreId = await AsyncStorage.getItem(STORE_ID);
   if (!legacyStoreId) return null;

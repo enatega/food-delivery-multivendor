@@ -1,14 +1,16 @@
 import { IGlobalComponentProps } from "./global.interface";
 
-export interface ICuisinesSliderCardComponentProps<T>
-  extends IGlobalComponentProps {
+export interface ICuisinesSliderCardComponentProps<
+  T,
+> extends IGlobalComponentProps {
   title: string;
   data: T[];
   last?: boolean;
   showLogo?: boolean;
   cuisines?: boolean;
-  heading? : string;
+  heading?: string;
   shopTypes?: boolean;
+  itemHref?: (item: T) => string;
 }
 
 export interface ICuisinesSliderCardItemProps {
@@ -26,10 +28,11 @@ export interface ICuisinesCardProps {
   cuisines?: boolean;
   showLogo?: boolean;
   shoptype?: boolean;
+  href?: string;
 }
 
 export type CuisinesSliderCardComponent = <
   T extends ICuisinesSliderCardItemProps,
 >(
-  props: ICuisinesSliderCardComponentProps<T>
+  props: ICuisinesSliderCardComponentProps<T>,
 ) => React.ReactNode;

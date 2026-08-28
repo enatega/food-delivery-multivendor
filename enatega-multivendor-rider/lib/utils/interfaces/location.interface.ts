@@ -15,6 +15,9 @@ export interface ILocationContextProps {
   location: ICoodinates;
   locationPermission: boolean;
   setLocationPermission: Dispatch<SetStateAction<boolean>>;
+  isBackgroundLocationDisclosureVisible: boolean;
+  requestBackgroundLocationPermission: () => Promise<boolean>;
+  dismissBackgroundLocationDisclosure: () => void;
 }
 
 export interface ILocationProviderProps extends IGlobalProviderProps {}

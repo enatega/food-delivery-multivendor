@@ -1,14 +1,32 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IOrderTrackingDetail } from "@/lib/utils/interfaces/order-tracking-detail.interface";
+import type { IOrderTracking } from "@/lib/utils/interfaces/orders.interface";
 import { useTranslations } from "next-intl";
+import {
+  formatEtaTime,
+  formatEtaWindow,
+  isTrackingLocationStale,
+  parseBackendDate,
+} from "@/lib/utils/methods/order-eta";
 
 interface TrackingStatusCardProps {
   orderTrackingDetails: IOrderTrackingDetail;
+  trackingData?: IOrderTracking | null;
 }
 
-function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
+function TrackingStatusCard({
+  orderTrackingDetails,
+  trackingData,
+}: TrackingStatusCardProps) {
   const t = useTranslations();
+  const [now, setNow] = useState(Date.now());
+  const eta = trackingData?.eta || orderTrackingDetails.eta;
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
   // Helper to determine the step status
   const getStepStatus = (stepIndex: number) => {
     const STATUS_ORDER = [
@@ -16,6 +34,7 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
       "ACCEPTED",
       "ASSIGNED",
       "PICKED",
+      "ON_ROUTE",
       "DELIVERED",
     ];
     const currentStatus = orderTrackingDetails?.orderStatus || "PENDING";
@@ -42,134 +61,67 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
     }
   };
 
-  // Get dynamic estimated delivery time
-  const getEstimatedDeliveryTime = () => {
-    const d = orderTrackingDetails;
-    if (!d?.createdAt) return "20 - 30 min";
-
-    let prep = d.selectedPrepTime || 20;
-    if (!d.selectedPrepTime && d.preparationTime && d.acceptedAt) {
-      const diff =
-        new Date(d.preparationTime).getTime() -
-        new Date(d.acceptedAt).getTime();
-      prep = Math.round(diff / 60000);
-    }
-    const deliveryBuffer = 10; // add extra 10 min for delivery after prep
-
-    const formatTime = (ts: string | number | Date) =>
-      new Date(ts).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-
-    const getRangeFrom = (base: Date | string | number) => {
-      const min = new Date(base);
-      min.setMinutes(min.getMinutes() + Math.max(5, prep - 10));
-
-      const max = new Date(base);
-      max.setMinutes(max.getMinutes() + prep + deliveryBuffer);
-
-      return `${formatTime(min)} - ${formatTime(max)}`;
-    };
-
-    switch (d.orderStatus) {
-      case "PENDING":
-        return `${Math.max(5, prep - 10)} - ${prep} min`;
-
-      case "ACCEPTED":
-        return getRangeFrom(d.acceptedAt ?? d.createdAt);
-
-      case "ASSIGNED":
-        if (d.assignedAt) return getRangeFrom(d.assignedAt);
-        return `${Math.max(5, prep - 10)} - ${prep} min`;
-
-      case "PICKED":
-        return d.pickedAt ? formatTime(d.pickedAt) : "10 - 15 min";
-
-      case "DELIVERED":
-      case "COMPLETED":
-        return d.deliveredAt ? formatTime(d.deliveredAt) : "Delivered";
-
-      case "CANCELLED":
-        return d.cancelledAt ? formatTime(d.cancelledAt) : "Cancelled";
-
-      default:
-        return "20 - 30 min";
-    }
-  };
-
-
-
-
-  const StoreType = localStorage.getItem("currentShopType") || "store";
-
-  const isRestaurant = StoreType.toLowerCase() === "restaurant";
+  const etaWindow = formatEtaWindow(eta);
+  const showEta =
+    !orderTrackingDetails.isPickedUp &&
+    ["ACCEPTED", "ASSIGNED", "PICKED", "ON_ROUTE"].includes(
+      orderTrackingDetails.orderStatus,
+    ) &&
+    Boolean(etaWindow);
+  const isRestaurant =
+    orderTrackingDetails.restaurant?.shopType?.toLowerCase() !== "grocery";
 
   const getStatusMessage = () => {
     const status = orderTrackingDetails?.orderStatus;
-    const now = new Date();
+    const nowDate = new Date(now);
 
     switch (status) {
       case "PENDING":
         return isRestaurant ? t("PendingRestaurant") : t("PendingStore");
 
       case "ACCEPTED": {
-        if (orderTrackingDetails.preparationTime) {
-          const prepTime = new Date(orderTrackingDetails.preparationTime);
-          if (prepTime > now) {
+        const readyAt = parseBackendDate(eta?.readyAt);
+        if (readyAt) {
+          if (readyAt > nowDate) {
             const minLeft = Math.ceil(
-              (prepTime.getTime() - now.getTime()) / 60000
+              (readyAt.getTime() - nowDate.getTime()) / 60000,
             );
-            const riderMessage = orderTrackingDetails.isPickedUp
-              ? ""
-              : t.raw("Assigned");
             return isRestaurant
-              ? t("AcceptedRestaurantPrep", { min: minLeft, riderMessage })
-              : t("AcceptedStorePrep", { min: minLeft, riderMessage });
+              ? t("AcceptedRestaurantPrep", { min: minLeft, riderMessage: "" })
+              : t("AcceptedStorePrep", { min: minLeft, riderMessage: "" });
           }
+          return "Preparation is taking a little longer.";
         }
-
-        if (orderTrackingDetails.acceptedAt) {
-          const acceptedTime = new Date(orderTrackingDetails.acceptedAt);
-          const timeElapsed = Math.floor(
-            (now.getTime() - acceptedTime.getTime()) / 60000
-          );
-          const riderMessage = orderTrackingDetails.isPickedUp
-            ? ""
-            : t.raw("Assigned");
-          return isRestaurant
-            ? timeElapsed <= 0 ? t("AcceptedRestaurantJustnow", { riderMessage }) : t("AcceptedRestaurantElapsed", { min: timeElapsed, riderMessage })
-            : timeElapsed <= 0 ? t("AcceptedStoreJustnow", { riderMessage }) : t("AcceptedStoreElapsed", { min: timeElapsed, riderMessage });
-        }
-
-        const riderMessage = orderTrackingDetails.isPickedUp
-          ? ""
-          : t("Assigned");
         return isRestaurant
-          ? t("AcceptedRestaurantSimple", { riderMessage })
-          : t("AcceptedStoreSimple", { riderMessage });
+          ? t("AcceptedRestaurantSimple", { riderMessage: "" })
+          : t("AcceptedStoreSimple", { riderMessage: "" });
       }
       case "ASSIGNED": {
+        const readyAt = parseBackendDate(eta?.readyAt);
+        if (readyAt && readyAt.getTime() <= now) {
+          return "Preparation is taking a little longer. Your rider is assigned.";
+        }
         return t("Assigned");
       }
       case "PICKED": {
-        if (orderTrackingDetails.pickedAt) {
-          const pickedTime = new Date(orderTrackingDetails.pickedAt);
-          const timeElapsed = Math.floor(
-            (now.getTime() - pickedTime.getTime()) / 60000
+        if (isTrackingLocationStale(trackingData?.riderLocation, eta, now)) {
+          const updatedAt = formatEtaTime(
+            trackingData?.riderLocation?.recordedAt || eta?.lastLocationAt,
           );
-          if (timeElapsed <= 0) {
-            return t("PickedElapsedJustNow");
-          } else {
-            return t("PickedElapsed", { min: timeElapsed });
-          }
+          return updatedAt
+            ? `Rider location temporarily unavailable — last updated ${updatedAt}.`
+            : "Rider location temporarily unavailable.";
         }
         return t("Picked");
       }
+      case "ON_ROUTE": {
+        return t("Picked");
+      }
       case "DELIVERED": {
-        if (orderTrackingDetails.deliveredAt) {
-          const deliveredTime = new Date(orderTrackingDetails.deliveredAt);
+        const deliveredTime = parseBackendDate(
+          orderTrackingDetails.deliveredAt,
+        );
+        if (deliveredTime) {
           const deliveredString = deliveredTime.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -192,21 +144,33 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
         return t("Processing");
     }
   };
+  const currentStatusLabel = orderTrackingDetails.orderStatus
+    .toLowerCase()
+    .replaceAll("_", " ")
+    .replace(/^\w/, (character) => character.toUpperCase());
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 w-full max-w-2xl">
       <div className="flex justify-between items-center mb-3">
-        <h3 className="text-sm sm:text-base font-semibold dark:text-white">
-          {orderTrackingDetails.orderStatus === "DELIVERED"
-            ? "Delivered"
-            : t("estimated_Delivery_time")}
-        </h3>
-
-        {orderTrackingDetails.orderStatus === "CANCELLED" && (
-          <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full text-xs">
-            {t("order_status_cancelled_label")}
-          </span>
+        {showEta ? (
+          <h3 className="text-sm sm:text-base font-semibold dark:text-white">
+            {t("estimated_Delivery_time")}
+          </h3>
+        ) : (
+          <span />
         )}
+
+        <span
+          className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+            orderTrackingDetails.orderStatus === "CANCELLED"
+              ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+              : "bg-primary-light text-secondary-color dark:bg-[#2E3B23] dark:text-primary-color"
+          }`}
+        >
+          {orderTrackingDetails.orderStatus === "CANCELLED"
+            ? t("order_status_cancelled_label")
+            : currentStatusLabel}
+        </span>
       </div>
 
       {/* Status indicator with icon */}
@@ -273,21 +237,21 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
           )}
           {(orderTrackingDetails.orderStatus === "DELIVERED" ||
             orderTrackingDetails.orderStatus === "COMPLETED") && (
-              <div className="w-8 h-8 flex items-center justify-center bg-primary-color dark:bg-primary-light rounded-full">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-white"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            )}
+            <div className="w-8 h-8 flex items-center justify-center bg-primary-color dark:bg-primary-light rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-white"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          )}
           {orderTrackingDetails.orderStatus === "CANCELLED" && (
             <div className="w-8 h-8 flex items-center justify-center bg-red-100 dark:bg-red-900 rounded-full">
               <svg
@@ -305,14 +269,19 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
             </div>
           )}
         </div>
-        <div className="text-xl sm:text-2xl font-bold dark:text-white">
-          {getEstimatedDeliveryTime()}
-        </div>
+        {showEta && (
+          <div className="text-xl sm:text-2xl font-bold dark:text-white">
+            {etaWindow}
+          </div>
+        )}
       </div>
 
       {/* Segmented Progress Bars */}
-      <div className="grid grid-cols-5 gap-2 mb-4">
-        {[0, 1, 2, 3, 4].map((index) => {
+      <div
+        className="mb-4 grid grid-cols-6 gap-2"
+        aria-label={`Delivery progress: ${currentStatusLabel}`}
+      >
+        {[0, 1, 2, 3, 4, 5].map((index) => {
           const status = getStepStatus(index);
           return (
             <div
@@ -320,12 +289,13 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
               className="h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden"
             >
               <div
-                className={`h-full rounded-full transition-all duration-500 ${status === "completed"
-                  ? "bg-primary-color"
-                  : status === "active"
-                    ? "bg-primary-color animate-pulse"
-                    : "bg-gray-200 dark:bg-gray-700"
-                  }`}
+                className={`h-full rounded-full transition-all duration-500 ${
+                  status === "completed"
+                    ? "bg-primary-color"
+                    : status === "active"
+                      ? "bg-primary-color animate-pulse"
+                      : "bg-gray-200 dark:bg-gray-700"
+                }`}
                 style={{
                   width:
                     status === "completed"

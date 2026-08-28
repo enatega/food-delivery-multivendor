@@ -29,6 +29,18 @@ export interface IActiveOrders {
   deliveryCharges?: number;
   tipping?: number;
   taxationAmount?: number;
+  completionTime?: string;
+  preparationTime?: string;
+  eta?: {
+    phase?: string;
+    source?: string;
+    readyAt?: string;
+    estimatedArrivalAt?: string;
+    windowStartAt?: string;
+    windowEndAt?: string;
+    calculatedAt?: string;
+    lastLocationAt?: string;
+  };
   restaurant?: {
     _id: string;
     name: string;

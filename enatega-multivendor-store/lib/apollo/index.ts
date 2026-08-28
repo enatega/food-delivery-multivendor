@@ -1,7 +1,6 @@
 import {
   ApolloClient,
   ApolloLink,
-  concat,
   createHttpLink,
   InMemoryCache,
   NormalizedCacheObject,
@@ -12,23 +11,51 @@ import {
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
-import getEnvVars from "@/environment";
+import { StoreEnvironment } from "@/environment";
 import * as SecureStore from "expo-secure-store";
 import { onError } from "@apollo/client/link/error";
 import { router } from "expo-router";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
-import { STORE_TOKEN } from "../utils/constants";
-import PublicAccessTokenService from "../services/public-access-token.service";
+import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import PublicAccessTokenService, {
+  STORE_PUBLIC_ACCESS_USER_AGENT,
+} from "../services/public-access-token.service";
 
 let isAuthRedirecting = false;
 
-async function handleInvalidSession(): Promise<void> {
+const isExpiredJwt = (token: string | null): boolean => {
+  if (!token) return false;
+  try {
+    const payload = JSON.parse(globalThis.atob(token.split(".")[1]));
+    return (
+      typeof payload.exp === "number" &&
+      payload.exp * 1000 <= Date.now() + 15000
+    );
+  } catch {
+    return true;
+  }
+};
+
+interface ApolloSetupOptions {
+  environment: StoreEnvironment;
+  tokenKey: string;
+  storeIdKey: string;
+}
+
+async function handleInvalidSession(
+  tokenKey: string,
+  storeIdKey: string,
+): Promise<void> {
   if (isAuthRedirecting) return;
   isAuthRedirecting = true;
 
   try {
-    await SecureStore.deleteItemAsync(STORE_TOKEN);
+    await Promise.all([
+      SecureStore.deleteItemAsync(tokenKey),
+      SecureStore.deleteItemAsync(storeIdKey),
+    ]);
     router.replace("/(un-protected)/login");
   } finally {
     setTimeout(() => {
@@ -37,8 +64,12 @@ async function handleInvalidSession(): Promise<void> {
   }
 }
 
-const setupApollo = () => {
-  const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars();
+const setupApollo = ({
+  environment,
+  tokenKey,
+  storeIdKey,
+}: ApolloSetupOptions) => {
+  const { GRAPHQL_URL, WS_GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED } = environment;
 
   const cache = new InMemoryCache(); // eslint-disable-next-line new-cap
   const httpLink = createHttpLink({
@@ -57,20 +88,37 @@ const setupApollo = () => {
       lazy: true,
       timeout: 30000,
       connectionParams: async () => {
-        const token = await SecureStore.getItemAsync(STORE_TOKEN);
-        const nonce = PublicAccessTokenService.getNonce();
-        let publicToken: string | null = null;
-        try {
-          publicToken = await PublicAccessTokenService.getToken(client);
-        } catch {
-          publicToken = null;
+        const token = await SecureStore.getItemAsync(tokenKey);
+        const locale = (await AsyncStorage.getItem("lang")) || "en";
+        if (isExpiredJwt(token)) {
+          await handleInvalidSession(tokenKey, storeIdKey);
+          return {
+            authorization: "",
+            "x-platform": Platform.OS,
+            "accept-language": locale,
+            "user-agent": STORE_PUBLIC_ACCESS_USER_AGENT,
+          };
         }
-        return {
+        const params: Record<string, string> = {
           authorization: token ? `Bearer ${token}` : "",
-          nonce: nonce || "",
-          "bop-auth": publicToken ? `Bearer ${publicToken}` : "",
-          "x-platform": "mobile",
+          "x-platform": Platform.OS,
+          "accept-language": locale,
+          "user-agent": STORE_PUBLIC_ACCESS_USER_AGENT,
         };
+
+        if (PUBLIC_ACCESS_REQUIRED) {
+          const nonce = PublicAccessTokenService.getNonce();
+          let publicToken: string | null = null;
+          try {
+            publicToken = await PublicAccessTokenService.getToken(client);
+          } catch {
+            publicToken = null;
+          }
+          params.nonce = nonce || "";
+          params["bop-auth"] = publicToken ? `Bearer ${publicToken}` : "";
+        }
+
+        return params;
       },
     },
   });
@@ -78,18 +126,25 @@ const setupApollo = () => {
   const request = async (operation: Operation) => {
     const skipPublicAuth =
       operation.getContext().headers?.["x-skip-public-auth"];
-    const token = await SecureStore.getItemAsync(STORE_TOKEN);
-    const nonce = PublicAccessTokenService.getNonce();
+    const token = await SecureStore.getItemAsync(tokenKey);
+    const locale = (await AsyncStorage.getItem("lang")) || "en";
+    if (isExpiredJwt(token)) {
+      await handleInvalidSession(tokenKey, storeIdKey);
+      throw new Error("Session expired");
+    }
 
     const headers: Record<string, string> = {
       authorization: token ? `Bearer ${token}` : "",
-      nonce: nonce || "",
-      "x-platform": "mobile",
+      "x-platform": Platform.OS,
+      "accept-language": locale,
+      "user-agent": STORE_PUBLIC_ACCESS_USER_AGENT,
       ...operation.getContext().headers,
     };
 
-    if (!skipPublicAuth) {
+    if (PUBLIC_ACCESS_REQUIRED && !skipPublicAuth) {
+      const nonce = PublicAccessTokenService.getNonce();
       const publicToken = await PublicAccessTokenService.getToken(client);
+      headers.nonce = nonce || "";
       headers["bop-auth"] = publicToken ? `Bearer ${publicToken}` : "";
     }
 
@@ -117,22 +172,75 @@ const setupApollo = () => {
       }),
   );
 
-  const errorLink = onError(({ graphQLErrors, networkError }) => {
-    const invalidCodes = ["TOKEN_EXPIRED", "INVALID_TOKEN", "UNAUTHENTICATED"];
-    const hasInvalidSession = (graphQLErrors || []).some(
-      (graphQLError) =>
-        typeof graphQLError?.extensions?.code === "string" &&
-        invalidCodes.includes(graphQLError.extensions.code),
-    );
-    const isUnauthorizedNetworkError =
-      networkError &&
-      "statusCode" in networkError &&
-      networkError.statusCode === 401;
+  const errorLink = onError(
+    ({ graphQLErrors, networkError, operation, forward }) => {
+      const invalidCodes = [
+        "TOKEN_EXPIRED",
+        "INVALID_TOKEN",
+        "UNAUTHENTICATED",
+      ];
+      const hasInvalidSession = (graphQLErrors || []).some(
+        (graphQLError) =>
+          typeof graphQLError?.extensions?.code === "string" &&
+          invalidCodes.includes(graphQLError.extensions.code),
+      );
+      const isUnauthorizedNetworkError =
+        networkError &&
+        "statusCode" in networkError &&
+        networkError.statusCode === 401;
 
-    if (hasInvalidSession || isUnauthorizedNetworkError) {
-      void handleInvalidSession();
-    }
-  });
+      const hadUserAuthorization = Boolean(
+        operation.getContext().headers?.authorization,
+      );
+      const skippedPublicAuth = Boolean(
+        operation.getContext().headers?.["x-skip-public-auth"],
+      );
+      const hasPublicProofFailure =
+        PUBLIC_ACCESS_REQUIRED &&
+        !hadUserAuthorization &&
+        !skippedPublicAuth &&
+        (hasInvalidSession ||
+          (graphQLErrors || []).some((error) => {
+            const message = error.message.toLowerCase();
+            return (
+              message.includes("public proof") ||
+              message.includes("fingerprint") ||
+              message.includes("invalid token") ||
+              message.includes("unauthorized")
+            );
+          }));
+
+      if (
+        hasPublicProofFailure &&
+        !operation.getContext().hasRetriedPublicProof
+      ) {
+        operation.setContext({ hasRetriedPublicProof: true });
+
+        return new Observable((observer) => {
+          let retrySubscription: Subscription | undefined;
+
+          void PublicAccessTokenService.reset(client)
+            .then(() => {
+              retrySubscription = forward(operation).subscribe({
+                next: observer.next.bind(observer),
+                error: observer.error.bind(observer),
+                complete: observer.complete.bind(observer),
+              });
+            })
+            .catch(observer.error.bind(observer));
+
+          return () => retrySubscription?.unsubscribe();
+        });
+      }
+
+      if (
+        hadUserAuthorization &&
+        (hasInvalidSession || isUnauthorizedNetworkError)
+      ) {
+        void handleInvalidSession(tokenKey, storeIdKey);
+      }
+    },
+  );
 
   // const terminatingLink = split(({ query }) => {
   //   const {
@@ -144,29 +252,53 @@ const setupApollo = () => {
   // }, wsLink);
   // Terminating Link
 
-  const terminatingLink = split(({ query }) => {
-    const definition = getMainDefinition(query) as
-      | DefinitionNode
-      | (FragmentDefinitionNode & {
-          kind: string;
-          operation?: string;
-        });
-    return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
-    );
-  }, wsLink);
-
-  const link = concat(
-    ApolloLink.from([errorLink, terminatingLink, requestLink]),
+  const terminatingLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query) as
+        | DefinitionNode
+        | (FragmentDefinitionNode & {
+            kind: string;
+            operation?: string;
+          });
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    },
+    wsLink,
     httpLink,
   );
+
+  const link = ApolloLink.from([errorLink, requestLink, terminatingLink]);
   const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
     link,
     cache,
   });
 
+  Object.assign(client, {
+    disposeModeClient: () => {
+      const subscriptionClient = (
+        wsLink as unknown as {
+          subscriptionClient: {
+            close: (isForced?: boolean, closedByUser?: boolean) => void;
+          };
+        }
+      ).subscriptionClient;
+      subscriptionClient.close(true, true);
+      client.stop();
+    },
+  });
+
   return client;
+};
+
+export const disposeApollo = (
+  client: ApolloClient<NormalizedCacheObject> & {
+    disposeModeClient?: () => void;
+  },
+) => {
+  client.disposeModeClient?.();
+  void client.clearStore();
 };
 
 export default setupApollo;

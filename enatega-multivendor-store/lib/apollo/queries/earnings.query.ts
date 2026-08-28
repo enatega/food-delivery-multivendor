@@ -51,13 +51,11 @@ export const STORE_GRAND_TOTAL_EARNINGS = gql`
       pagination: $pagination
       dateFilter: $dateFilter
     ) {
+      message
       data {
-        earnings {
-          grandTotalEarnings {
-            storeTotal
-          }
+        grandTotalEarnings {
+          storeTotal
         }
-        message
       }
     }
   }

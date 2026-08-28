@@ -22,6 +22,7 @@ import { isJwtTokenExpired } from '../utils/decode-jwt'
 import { invalidateUserSession } from '../utils/session'
 import { FlashMessage } from '../ui/FlashMessage/FlashMessage'
 import i18n from '../../i18next'
+import { APP_MODES } from '../mode/constants'
 
 const getNextFetchPolicy = (currentFetchPolicy, context) => {
   if (context?.reason === 'variables-changed') {
@@ -35,7 +36,12 @@ const getNextFetchPolicy = (currentFetchPolicy, context) => {
   return currentFetchPolicy
 }
 
-const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
+const setupApollo = ({
+  GRAPHQL_URL,
+  WS_GRAPHQL_URL,
+  mode = APP_MODES.MULTI,
+  publicAccessRequired = true
+}) => {
   const publicOperations = new Set(['ForgotPassword', 'VerifyOtp', 'ResetPassword'])
 
   const cache = new InMemoryCache({
@@ -96,7 +102,7 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       RestaurantPreview: {
         fields: {
           distanceWithCurrentLocation: {
-            read(_existing, {variables, field, readField}) {
+            read(_existing, { variables, field, readField }) {
               const restaurantLocation = readField('location')
               const distance = calculateDistance(restaurantLocation?.coordinates[0], restaurantLocation?.coordinates[1], variables.latitude, variables.longitude)
               return distance
@@ -114,39 +120,50 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
   const wsLink = new WebSocketLink({
     uri: WS_GRAPHQL_URL,
     options: {
+      // Mobile network transitions and backend restarts must not permanently
+      // disable order updates. The client is disposed on mode changes, so a
+      // reconnect can never leak a socket into the other backend.
       reconnect: true,
       lazy: true,
-      connectionParams: async () => {
-        const token = await getToken()
+      connectionParams: async() => {
+        const token = await getToken(mode)
         const hasExpiredUserToken = token && isJwtTokenExpired(token)
 
         if (hasExpiredUserToken) {
-          await invalidateUserSession({ reason: 'token_expired' })
+          await invalidateUserSession({ reason: 'token_expired', mode })
         }
 
         return {
-          authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : ''
+          authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : '',
+          'x-platform': Platform.OS,
+          'accept-language': i18n.language || 'en',
+          'user-agent': `EnategaApp/${Platform.OS}`
         }
       }
     }
   })
 
   const request = async operation => {
-    const publicToken = await getValidPublicToken(GRAPHQL_URL)
-    const nonce = await getOrCreateNonce()
+    const publicToken = publicAccessRequired
+      ? await getValidPublicToken(GRAPHQL_URL)
+      : null
+    const nonce = publicAccessRequired ? await getOrCreateNonce(GRAPHQL_URL) : null
     const isPublicOperation = publicOperations.has(operation.operationName)
-    const token = isPublicOperation ? null : await getToken()
+    const token = isPublicOperation ? null : await getToken(mode)
     const hasExpiredUserToken = token && isJwtTokenExpired(token)
 
     if (hasExpiredUserToken) {
-      await invalidateUserSession({ reason: 'token_expired' })
+      await invalidateUserSession({ reason: 'token_expired', mode })
     }
 
     operation.setContext({
+      hasUserToken: Boolean(token && !hasExpiredUserToken),
       headers: {
         authorization: token && !hasExpiredUserToken ? `Bearer ${token}` : '',
-        "bop-auth": publicToken ? `Bearer ${publicToken}` : '',
-        nonce: nonce,
+        ...(publicAccessRequired
+          ? { 'bop-auth': publicToken ? `Bearer ${publicToken}` : '' }
+          : {}),
+        ...(publicAccessRequired ? { nonce } : {}),
         'user-agent': `EnategaApp/${Platform.OS}`,
         'accept-language': 'en-US',
         'x-platform': Platform.OS
@@ -199,10 +216,15 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       networkError?.statusCode === 401 ||
       networkError?.response?.status === 401
 
-    if (hasInvalidSession || hasUnauthorizedNetworkError) {
-      void invalidateUserSession({
-        reason: hasUnauthorizedNetworkError ? 'network_unauthorized' : 'graphql_unauthenticated'
-      })
+    const hasUserToken = operation.getContext()?.hasUserToken === true
+
+    // Single-vendor has protected operations that can return 401 for guests.
+    // Only invalidate a session when this request actually carried a user JWT.
+    if (hasUserToken && (hasInvalidSession || hasUnauthorizedNetworkError)) {
+      invalidateUserSession({
+        reason: hasUnauthorizedNetworkError ? 'network_unauthorized' : 'graphql_unauthenticated',
+        mode
+      }).catch(() => {})
       return
     }
 
@@ -214,7 +236,7 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       isPublicTokenAuthMessage(graphQLError?.message)
     )
 
-    if (!isPublicTokenError) return
+    if (!publicAccessRequired || !isPublicTokenError) return
 
     const alreadyRetried = operation.getContext()?.publicTokenRetried
 
@@ -274,6 +296,15 @@ const setupApollo = ({ GRAPHQL_URL, WS_GRAPHQL_URL }) => {
       }
     }
   })
+
+  client.dispose = () => {
+    try {
+      wsLink.subscriptionClient?.close(true, true)
+    } catch (error) {
+      if (global.__DEV__) console.warn('Failed to close Apollo WebSocket', error)
+    }
+    return client.clearStore()
+  }
 
   return client
 }

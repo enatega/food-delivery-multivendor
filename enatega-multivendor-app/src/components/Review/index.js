@@ -24,15 +24,15 @@ const REVIEWORDER = gql`
   ${reviewOrder}
 `
 
-function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
-
+function Review({ onOverlayPress, onClosed, onSubmitted, theme, orderId, rating }, ref) {
   const { t } = useTranslation()
 
   const ratingRef = useRef()
   const contentRef = useRef(null)
   const [description, setDescription] = useState('')
+  const [selectedRating, setSelectedRating] = useState(rating || 0)
   const [mutate] = useMutation(REVIEWORDER, { variables: { order: orderId, description, rating: ratingRef.current }, onCompleted, onError })
- 
+
   function onCompleted() {
     setDescription('')
     ref?.current?.close()
@@ -42,37 +42,53 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
     console.log(JSON.stringify(error))
   }
   const client = useApolloClient()
-  const [showSection, setShowSection] = useState(false)
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [order, setOrder] = useState()
-  const isFeedbackVisible = showSection || rating > 0
-  const onSelectRating = (rating) => {
-    if (!showSection) { setShowSection(true) }
-    ratingRef.current = rating
+  const isFeedbackVisible = selectedRating > 0
+  const onSelectRating = (nextRating) => {
+    ratingRef.current = nextRating
+    setSelectedRating(nextRating)
   }
-  const fetchOrder = async() => {
-    const result = await client.query({ query: ORDER, variables: { id: orderId } })
-    setOrder(result?.data?.order)
-  }
+
+  useEffect(() => {
+    const nextRating = rating || 0
+    ratingRef.current = nextRating
+    setSelectedRating(nextRating)
+  }, [orderId, rating])
+
   useEffect(() => {
     if (!orderId) return
-    fetchOrder()
-  }, [orderId])
 
-  const onSubmit = async () => {
-    if (loading) return; 
-    setLoading(true); 
-  
+    let isActive = true
+    client.query({
+      query: ORDER,
+      variables: { id: orderId },
+      fetchPolicy: 'cache-first'
+    }).then((result) => {
+      if (isActive) setOrder(result?.data?.order)
+    }).catch((error) => {
+      if (isActive) console.error('Error loading review order:', error)
+    })
+
+    return () => {
+      isActive = false
+    }
+  }, [client, orderId])
+
+  const onSubmit = async() => {
+    if (loading) return
+    setLoading(true)
+
     try {
       await mutate({
         variables: { order: orderId, description, rating: ratingRef.current }
-      });
+      })
     } catch (error) {
-      console.error("Error submitting review:", error);
+      console.error('Error submitting review:', error)
     } finally {
-      setLoading(false); 
+      setLoading(false)
     }
-  };
+  }
   return (
     <Modalize
       snapPoint={SNAP_HEIGHT}
@@ -94,6 +110,7 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
         backgroundColor: theme.cardBackground
       }}
       onOverlayPress={onOverlayPress}
+      onClosed={onClosed}
     >
       <View style={styles.container(theme)}>
         <View style={styles.headingContainer(theme)}>
@@ -133,12 +150,12 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
               </View>
             </View>
             <View>
-              <CachedImage source={order?.restaurant?.image ? { uri: order?.restaurant?.image }: require('../../assets/images/food_placeholder.png') } style={styles.image}/>
+              <CachedImage source={order?.restaurant?.image ? { uri: order?.restaurant?.image } : require('../../assets/images/food_placeholder.png') } style={styles.image}/>
             </View>
           </View>
 
           <View style={styles.starRow}>
-            <StarRating numberOfStars={5} onSelect={onSelectRating} defaultRating={rating} theme={theme} />
+            <StarRating numberOfStars={5} onSelect={onSelectRating} selectedRating={selectedRating} theme={theme} />
           </View>
 
           {isFeedbackVisible && (
@@ -181,21 +198,16 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
   )
 }
 
-const StarRating = ({ numberOfStars = 5, onSelect, defaultRating=0, theme }) => {
+const StarRating = ({ numberOfStars = 5, onSelect, selectedRating = 0, theme }) => {
   const stars = Array.from({ length: numberOfStars }, (_, index) => index + 1)
-  const [selected, setSelected] = useState(defaultRating)
-  useEffect(()=>{
-    if(defaultRating) onSelect(defaultRating)
-  },[])
   const onPress = index => {
     onSelect(index)
-    setSelected(index)
   }
   return (
     <View style={styles.starContainer(theme)}>
       {stars.map(index => <TouchableWithoutFeedback key={`star-${index}`} onPress={() => onPress(index)}>
         <View style={{ flex: 1 }}>
-          <StarIcon isFilled={index <= selected}/>
+          <StarIcon isFilled={index <= selectedRating}/>
         </View>
       </TouchableWithoutFeedback>)}
     </View>

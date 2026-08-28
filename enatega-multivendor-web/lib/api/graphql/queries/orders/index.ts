@@ -89,6 +89,11 @@ export const ORDERS = gql`
       cancelledAt
       assignedAt
       instructions
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline calculatedAt lastLocationAt version
+      }
     }
   }
 `;
@@ -183,6 +188,11 @@ export const GET_USERS_PAST_ORDERS = gql`
       cancelledAt
       assignedAt
       instructions
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline calculatedAt lastLocationAt version
+      }
     }
   }
 `;
@@ -276,6 +286,11 @@ export const GET_USERS_ACTIVE_ORDERS = gql`
       cancelledAt
       assignedAt
       instructions  
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline calculatedAt lastLocationAt version
+      }
     }
   }
 `;

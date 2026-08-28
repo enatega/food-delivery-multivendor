@@ -28,7 +28,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
   const tabBarHeight = useBottomTabBarHeight();
-  const { loading, deliveredOrders, refetch, currentTab, setCurrentTab } =
+  const { loading, deliveredOrders, refetch, currentTab, setCurrentTab, loadMoreOrders, hasMoreOrders } =
     useOrders();
   useKeepAwake();
 
@@ -132,6 +132,8 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
             showsVerticalScrollIndicator={false}
             refreshing={refreshing}
             onRefresh={onRefresh}
+            onEndReached={hasMoreOrders ? loadMoreOrders : undefined}
+            onEndReachedThreshold={0.5}
             initialNumToRender={20} // render more items up front
             maxToRenderPerBatch={20} // reduce batching delays
             windowSize={5} // keep more items around viewport

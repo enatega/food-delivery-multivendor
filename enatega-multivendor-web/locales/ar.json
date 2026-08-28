@@ -127,6 +127,13 @@
   "no_items_found": "لم يتم العثور على عناصر",
   "something_went_wrong": "حدث خطأ ما",
   "shop-types": "أنواع المتاجر",
+  "categories_label": "الفئات",
+  "all_categories_label": "جميع الفئات",
+  "tab_deals": "العروض",
+  "tab_browse": "تصفح",
+  "order_details_minimum_order_fee_label": "رسوم الطلب المنخفض",
+  "order_details_priority_delivery_fee_label": "رسوم التوصيل ذي الأولوية",
+  "order_details_credits_applied_label": "الرصيد المستخدم",
   "for_riders": "للسائقين",
   "reviews": "التقييمات",
   "redirecting_in": "إعادة التوجيه خلال",
@@ -178,6 +185,8 @@
   "tab_discovery": "اكتشاف",
   "tab_restaurants": "المطاعم",
   "tab_store": "المتجر",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "بالقرب منك",
   "generic_listing_heading": "مطاعم بالقرب منك",
   "generic_listing_cuisine_section": "أنواع المطاعم",
@@ -920,5 +929,88 @@
   "show_more_orders": "عرض المزيد من الطلبات",
   "your_email": "بريدك الإلكتروني",
   "Select_your_address_prompt": "اختر عنوانك.",
-  "Our-brands": "علاماتنا التجارية"
+  "Our-brands": "علاماتنا التجارية",
+  "Landing": {
+    "hero": {
+      "eyebrow": "تطبيق واحد. الاحتمالات اليومية.",
+      "title": "كل ما تحتاجه،",
+      "accent": "تسليم جميل.",
+      "body": "يتم الجمع بين الطعام والبقالة والضروريات اليومية في تجربة واحدة بسيطة."
+    },
+    "categories": {
+      "label": "فئات التوصيل",
+      "food": "الطعام",
+      "groceries": "البقالة",
+      "essentials": "الأساسيات",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "العثور على تلك المدينة.",
+      "ready": "تم تحديد المدينة. اعرض العناصر عندما تكون مستعدًا.",
+      "cityError": "لم نتمكن من تحديد موقع تلك المدينة. اختر اقتراحًا آخر.",
+      "locating": "جارٍ العثور على موقعك الحالي.",
+      "locationError": "لم نتمكن من الوصول إلى موقعك. ابحث عن مدينة بدلاً من ذلك."
+    },
+    "journey": {
+      "eyebrow": "كيف تتحرك Enatega",
+      "title": "من مدينتك،",
+      "accent": "إلى عتبة بابك.",
+      "bagAlt": "حقيبة توصيل Enatega",
+      "stages": {
+        "choose": {
+          "title": "اختر",
+          "body": "الطعام أو البقالة أو الضروريات."
+        },
+        "moving": {
+          "title": "الانتقال",
+          "body": "رحلة واحدة واضحة عبر مدينتك."
+        },
+        "arrived": {
+          "title": "وصلت",
+          "body": "قم بتوصيل الطلبات أينما احتجت إليها."
+        }
+      }
+    },
+    "cta": {
+      "label": "العمل مع Enatega",
+      "business": {
+        "eyebrow": "للشركات",
+        "title": "النمو مع Enatega.",
+        "body": "اجعل متجرك أقرب إلى المزيد من العملاء.",
+        "action": "انضم كشريك"
+      },
+      "rider": {
+        "eyebrow": "للركاب",
+        "title": "اركب مع Enatega.",
+        "body": "قم بالتوصيل في الموعد المحدد لك.",
+        "action": "انضم كراكب"
+      }
+    },
+    "footer": {
+      "rights": "جميع الحقوق محفوظة."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

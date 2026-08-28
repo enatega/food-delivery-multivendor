@@ -6,16 +6,16 @@ import { textStyles } from '../../../utils/textStyles'
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
-      flex: 1,
+      flex: 1
     },
     mainContainer: {
-      backgroundColor:  props != null ? props.cardBackground : '#181818',
+      backgroundColor: props != null ? props.cardBackground : '#181818',
       width: '100%',
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
-      zIndex:2,
+      zIndex: 2,
       overflow: 'hidden'
     },
     container: {
@@ -28,11 +28,14 @@ const styles = (props = null) =>
     },
 
     touchArea: {
-      backgroundColor: 'transparent',
+      backgroundColor: props?.colors?.surfaceSubtle ?? 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
-      width: scale(40),
-      height: scale(40),
+      width: scale(36),
+      height: scale(36),
+      borderRadius: scale(999),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? 'transparent'
     },
     favouriteOverlay: {
       position: 'absolute',
@@ -56,7 +59,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       zIndex: 1,
       ...alignment.PLmedium,
-      ...alignment.PRmedium,
+      ...alignment.PRmedium
     },
     topRow: {
       width: '100%',
@@ -107,10 +110,10 @@ const styles = (props = null) =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'center',
-      gap: 12,
+      gap: 12
     },
     restaurantDetails: {
-      top: -scale(85),
+      top: -scale(85)
     },
     mainRestaurantImg: {
       height: scale(250),
@@ -134,26 +137,26 @@ const styles = (props = null) =>
       alignItems: 'center',
       borderRadius: scale(50),
       padding: scale(5),
-      marginVertical: scale(3),
+      marginVertical: scale(3)
     },
     subContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      minHeight: scale(60),
+      minHeight: scale(60)
     },
     titleContainer: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row', 
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: scale(10),
       flex: 1,
       marginRight: props?.isRTL ? 0 : scale(10),
-      marginLeft: props?.isRTL ? scale(10) : 0,
+      marginLeft: props?.isRTL ? scale(10) : 0
     },
     timingRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(5),
+      gap: scale(5)
     },
     timingRowMain: {
       flexDirection: 'row',
@@ -194,7 +197,7 @@ const styles = (props = null) =>
       gap: scale(10),
       alignItems: 'center',
       ...alignment.PLmedium,
-      ...alignment.PRmedium,
+      ...alignment.PRmedium
     },
     seeReviewsBtn: {
       backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
@@ -221,10 +224,12 @@ const styles = (props = null) =>
       paddingVertical: scale(6)
     },
     activeHeader: {
-      backgroundColor: props != null ? props.newButtonBackground : '#F3FFEE',
+      backgroundColor: props?.colors?.accentSubtle ?? props?.newButtonBackground ?? '#F3FFEE',
       borderRadius: scale(999),
       paddingHorizontal: scale(2),
       paddingVertical: scale(1),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? 'transparent'
     },
     heading: {
       fontWeight: 'bold'
@@ -241,9 +246,9 @@ const styles = (props = null) =>
       right: 0,
       height: scale(56),
       justifyContent: 'center',
-      backgroundColor: props != null ? props.themeBackground : 'white',
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'white',
       borderTopWidth: StyleSheet.hairlineWidth,
-      borderTopColor: props != null ? props.newBorderColor : '#E5E7EB'
+      borderTopColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)'
     },
     categoriesContent: {
       paddingHorizontal: scale(12),

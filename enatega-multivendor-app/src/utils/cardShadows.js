@@ -3,11 +3,11 @@ export const subtleCardShadow = {
   shadowColor: '#000',
   shadowOffset: {
     width: 0,
-    height: 1
+    height: 2
   },
-  shadowOpacity: 0.05,
-  shadowRadius: 4,
-  elevation: 1
+  shadowOpacity: 0.08,
+  shadowRadius: 6,
+  elevation: 2
 }
 
 // Even softer shadow for smaller elements like brand chips
@@ -17,8 +17,8 @@ export const subtleCardShadowSoft = {
     width: 0,
     height: 1
   },
-  shadowOpacity: 0.04,
-  shadowRadius: 3,
+  shadowOpacity: 0.06,
+  shadowRadius: 4,
   elevation: 1
 }
 
@@ -27,9 +27,9 @@ export const elevatedCardShadow = {
   shadowColor: '#000',
   shadowOffset: {
     width: 0,
-    height: 2
+    height: 3
   },
-  shadowOpacity: 0.06,
-  shadowRadius: 5,
-  elevation: 2
+  shadowOpacity: 0.11,
+  shadowRadius: 8,
+  elevation: 4
 }

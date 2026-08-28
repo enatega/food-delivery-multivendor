@@ -3,7 +3,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
 import Login from '../screens/Login/Login'
@@ -46,8 +45,12 @@ import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
 import ForgotPasswordOtp from '../screens/Otp/ForgotPassword/ForgetPasswordOtp'
 import PhoneNumber from '../screens/PhoneNumber/PhoneNumber'
-import { useApolloClient, gql } from '@apollo/client'
-import { myOrders } from '../apollo/queries'
+import { APP_MODES } from '../mode/constants'
+import {
+  consumePendingOrderNavigation,
+  inferNotificationMode
+} from '../mode/orderOrigin'
+import { getModeItem, setModeItem } from '../mode/storage'
 import Checkout from '../screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
@@ -59,12 +62,21 @@ import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
 import UserContext from '../context/User'
 import ConfigurationContext from '../context/Configuration'
-import { Easing } from 'react-native'
+import { ActivityIndicator, Easing, StyleSheet, View } from 'react-native'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
+import ModeProfileTab from '../components/VendorModeToggle/ModeProfileTab'
+import useMultivendorTheme from '../ui/designSystem/useMultivendorTheme'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
 const Tab = createBottomTabNavigator()
+const MultiVendorProfileTab = props => (
+  <ModeProfileTab
+    {...props}
+    AuthenticatedComponent={Profile}
+    GuestComponent={CreateAccount}
+  />
+)
 const linking = {
   prefixes: [
     Linking.createURL('/'),
@@ -130,7 +142,6 @@ function MainNavigator() {
         options={SLIDE_UP_RIGHT_ANIMATION}
       />
       <NavigationStack.Screen name='Account' component={Account} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen
         name='SearchScreen'
         getComponent={() => require('../screens/Search/SearchScreen').default}
@@ -221,6 +232,9 @@ function MainNavigator() {
       <NavigationStack.Screen name='Login' component={Login} />
       <NavigationStack.Screen name='Register' component={Register} />
       <NavigationStack.Screen name='PhoneNumber' component={PhoneNumber} />
+      {/* Registered outside the authenticated subset so Apple onboarding can
+          repair a missing first-authorization name immediately after login. */}
+      <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen name='ForgotPassword' component={ForgotPassword} />
       <NavigationStack.Screen name='SetYourPassword' component={SetYourPassword} />
       <NavigationStack.Screen name='EmailOtp' component={EmailOtp} />
@@ -259,7 +273,7 @@ function BottomTabNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
-  const { isLoggedIn } = useContext(UserContext)
+  const { tokens } = useMultivendorTheme()
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -268,13 +282,17 @@ function BottomTabNavigator() {
           return <BottomTabIcon name={route.name.toLowerCase()} size={size} color={color} />
         },
         tabBarStyle: {
-          backgroundColor: currentTheme.cardBackground
+          backgroundColor: currentTheme.cardBackground,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopColor: tokens.colors.borderSubtle,
+          elevation: 0,
+          shadowOpacity: 0
         },
         tabBarItemStyle: {
           flex: 1
         },
         tabBarLabelPosition: 'below-icon',
-        tabBarActiveTintColor: '#0EA5E9',
+        tabBarActiveTintColor: currentTheme.singleVendorBrandForeground,
         tabBarInactiveTintColor: currentTheme.fontNewColor,
         headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
       })}
@@ -346,7 +364,7 @@ function BottomTabNavigator() {
       />
       <Tab.Screen
         name='Profile'
-        component={isLoggedIn ? Profile : CreateAccount}
+        component={MultiVendorProfileTab}
         options={{
           tabBarLabel: t('titleProfile')
         }}
@@ -356,7 +374,6 @@ function BottomTabNavigator() {
 }
 
 function AppContainer() {
-  const client = useApolloClient()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { permissionState, setPermissionState, location, isLocationLoaded } = useContext(LocationContext)
@@ -383,21 +400,26 @@ function AppContainer() {
   const handleNotification = useCallback(
     async (response) => {
       const { _id } = response.notification.request.content.data
-      const lastNotificationHandledId = await AsyncStorage.getItem('@lastNotificationHandledId')
-      await client.query({
-        query: gql`
-          ${myOrders}
-        `,
-        fetchPolicy: 'network-only'
-      })
+      const notificationMode = await inferNotificationMode(
+        response.notification.request.content.data
+      )
+      if (notificationMode && notificationMode !== APP_MODES.MULTI) return
+      const lastNotificationHandledId = await getModeItem(
+        '@lastNotificationHandledId',
+        APP_MODES.MULTI
+      )
       const identifier = response.notification.request.identifier
       if (lastNotificationHandledId === identifier) return
-      await AsyncStorage.setItem('@lastNotificationHandledId', identifier)
+      await setModeItem(
+        '@lastNotificationHandledId',
+        identifier,
+        APP_MODES.MULTI
+      )
       navigationService.navigate('OrderDetail', {
         _id
       })
     },
-    [lastNotificationResponse]
+    []
   )
 
   // Handlers
@@ -424,11 +446,27 @@ function AppContainer() {
     }
   }, [lastNotificationResponse])
 
-  console.log('-------------')
-  console.log('-------------')
-  console.log({ permissionState, location })
+  useEffect(() => {
+    consumePendingOrderNavigation(APP_MODES.MULTI).then(pendingOrderId => {
+      if (!pendingOrderId) return
+      navigationService.navigate('OrderDetail', { _id: pendingOrderId })
+    })
+  }, [])
 
-  if (isLoadingPermission || !isConfigurationLoaded || !isLocationLoaded) return
+  if (isLoadingPermission || !isConfigurationLoaded || !isLocationLoaded) {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: currentTheme.themeBackground,
+          flex: 1,
+          justifyContent: 'center'
+        }}
+      >
+        <ActivityIndicator color={currentTheme.iconColorPink} size='large' />
+      </View>
+    )
+  }
   const shouldShowLocationStack = enableCustomerDemoMode
     ? !location
     : !permissionState?.granted || !location

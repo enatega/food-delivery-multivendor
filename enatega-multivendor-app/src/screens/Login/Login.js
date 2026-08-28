@@ -17,7 +17,7 @@ import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 
 function Login(props) {
-  const { setEmail, password, setPassword, emailError, passwordError, registeredEmail, loading, loginLoading, loginAction, currentTheme, showPassword, setShowPassword, checkEmailExist, emailRef, themeContext, handleSetEmail } = useLogin()
+  const { email, password, setPassword, emailError, passwordError, registeredEmail, loading, loginLoading, loginAction, currentTheme, showPassword, setShowPassword, checkEmailExist, emailRef, themeContext, handleSetEmail } = useLogin()
   const { t } = useTranslation()
   const headerHeight = useHeaderHeight()
   useLayoutEffect(() => {
@@ -70,9 +70,7 @@ function Login(props) {
                         placeholder={t('email')}
                         style={[styles(currentTheme).textField, emailError !== null ? styles(currentTheme).errorInput : {}]}
                         placeholderTextColor={currentTheme.fontSecondColor}
-                        // value={setEmail}
-                        // defaultValue='demo-customer@enatega.com'
-                        defaultValue=''
+                        value={email}
                         onChangeText={(e) => handleSetEmail(e.toLowerCase().trim())}
                       />
                       {emailError !== null && (

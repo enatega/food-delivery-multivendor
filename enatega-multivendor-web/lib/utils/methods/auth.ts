@@ -1,4 +1,6 @@
 import { clearMetricsData } from "./security";
+import { getStoredMode, modeStorage } from "@/lib/mode/storage";
+import type { AppMode } from "@/lib/mode/constants";
 
 const AUTH_KEYS = {
   TOKEN: 'token',
@@ -28,23 +30,23 @@ export function setAuthTokens(payload: {
   userType?: string;
   userId?: string;
   tokenExpiration?: string | number;
-}): void {
+}, mode: AppMode = getStoredMode()): void {
   if (typeof window === 'undefined') return;
-  if (payload.token) localStorage.setItem(AUTH_KEYS.TOKEN, payload.token);
-  if (payload.userType) localStorage.setItem(AUTH_KEYS.USER_TYPE, payload.userType);
-  if (payload.userId) localStorage.setItem(AUTH_KEYS.USER_ID, payload.userId);
+  if (payload.token) modeStorage.set(AUTH_KEYS.TOKEN, payload.token, mode);
+  if (payload.userType) modeStorage.set(AUTH_KEYS.USER_TYPE, payload.userType, mode);
+  if (payload.userId) modeStorage.set(AUTH_KEYS.USER_ID, payload.userId, mode);
   if (payload.tokenExpiration)
-    localStorage.setItem(AUTH_KEYS.TOKEN_EXPIRATION, String(payload.tokenExpiration));
+    modeStorage.set(AUTH_KEYS.TOKEN_EXPIRATION, String(payload.tokenExpiration), mode);
 }
 
-export function getAccessToken(): string {
+export function getAccessToken(mode: AppMode = getStoredMode()): string {
   if (typeof window === 'undefined') return '';
-  return localStorage.getItem(AUTH_KEYS.TOKEN) ?? '';
+  return modeStorage.get(AUTH_KEYS.TOKEN, mode) ?? '';
 }
 
-export function getTokenExpiration(): string {
+export function getTokenExpiration(mode: AppMode = getStoredMode()): string {
   if (typeof window === "undefined") return "";
-  return localStorage.getItem(AUTH_KEYS.TOKEN_EXPIRATION) ?? "";
+  return modeStorage.get(AUTH_KEYS.TOKEN_EXPIRATION, mode) ?? "";
 }
 
 export function isTokenExpired(tokenExpiration?: string | number | null): boolean {
@@ -66,28 +68,28 @@ export function isTokenExpired(tokenExpiration?: string | number | null): boolea
   return Date.now() >= parsedExpiration;
 }
 
-export function hasValidAuthToken(): boolean {
+export function hasValidAuthToken(mode: AppMode = getStoredMode()): boolean {
   if (typeof window === "undefined") return false;
 
-  const token = localStorage.getItem(AUTH_KEYS.TOKEN);
+  const token = modeStorage.get(AUTH_KEYS.TOKEN, mode);
   return Boolean(token);
 }
 
 
 
-export function clearAuthTokens(): void {
+export function clearAuthTokens(mode: AppMode = getStoredMode()): void {
   if (typeof window === 'undefined') return;
-  Object.values(AUTH_KEYS).forEach((key) => localStorage.removeItem(key));
+  Object.values(AUTH_KEYS).forEach((key) => modeStorage.remove(key, mode));
 }
 
-export function clearClientSessionStorage(): void {
+export function clearClientSessionStorage(mode: AppMode = getStoredMode()): void {
   if (typeof window === "undefined") return;
 
-  clearAuthTokens();
-  SESSION_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
-  clearMetricsData();
+  clearAuthTokens(mode);
+  SESSION_STORAGE_KEYS.forEach((key) => modeStorage.remove(key, mode));
+  clearMetricsData(mode);
 }
 
-export function invalidateClientSession(): void {
-  clearClientSessionStorage();
+export function invalidateClientSession(mode: AppMode = getStoredMode()): void {
+  clearClientSessionStorage(mode);
 }

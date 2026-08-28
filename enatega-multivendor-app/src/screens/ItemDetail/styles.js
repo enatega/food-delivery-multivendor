@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { alignment } from '../../utils/alignment'
 import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
@@ -8,7 +7,7 @@ const styles = (props = null) =>
       flex: 1
     },
     mainContainer: {
-      backgroundColor: props != null ? props?.themeBackground : '#fff'
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff'
     },
     scrollViewContainer: {
       width: '100%',
@@ -16,12 +15,36 @@ const styles = (props = null) =>
       backgroundColor: props != null ? props?.themeBackground : '#fff'
     },
     subContainer: {
-      width: '90%',
-      backgroundColor: props != null ? props?.themeBackground : '#fff',
-      alignSelf: 'center'
+      width: '100%',
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff',
+      paddingHorizontal: props?.spacing?.md ?? scale(12)
     },
     scrollViewStyle: {
-      backgroundColor: props != null ? props?.themeBackground : '#fff'
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff'
+    },
+    scrollContent: {
+      paddingBottom: scale(116)
+    },
+    productIntro: {
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      paddingTop: props?.spacing?.sm ?? scale(8),
+      paddingBottom: props?.spacing?.sm ?? scale(8)
+    },
+    productImage: {
+      width: '100%',
+      height: scale(226),
+      margin: 0,
+      borderRadius: props?.radii?.lg ?? scale(14),
+      overflow: 'hidden',
+      backgroundColor: props?.colors?.surfaceSubtle ?? '#202024'
+    },
+    imageFallback: {
+      width: '100%',
+      height: scale(190),
+      borderRadius: props?.radii?.lg ?? scale(14),
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: props?.colors?.surfaceSubtle ?? '#202024'
     },
     headerContainer: {
       position: 'absolute',
@@ -42,25 +65,34 @@ const styles = (props = null) =>
       minHeight: scale(32)
     },
     line: {
-      marginLeft: scale(10),
-      width: '95%',
+      width: '100%',
       height: StyleSheet.hairlineWidth,
-      ...alignment.MBsmall,
-      backgroundColor: props !== null ? props?.black : 'black'
+      marginVertical: props?.spacing?.lg ?? scale(16),
+      backgroundColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)'
+    },
+    optionSection: {
+      paddingVertical: props?.spacing?.sm ?? scale(8),
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.22)'
     },
     input: {
-      backgroundColor: props !== null ? props?.themeBackground : 'black',
-      borderRadius: scale(10),
-      height: scale(50),
-      paddingLeft: scale(10),
-      textAlignVertical: 'center',
-      borderWidth: 1,
-      borderColor: props != null ? props?.verticalLine : '#B8B8B8',
+      backgroundColor: props?.colors?.surfaceSubtle ?? props?.themeBackground ?? '#202024',
+      borderRadius: props?.radii?.lg ?? scale(14),
+      minHeight: scale(88),
+      paddingHorizontal: scale(12),
+      paddingVertical: scale(11),
+      color: props?.colors?.textPrimary ?? '#FAFAFA',
+      ...props?.typeScale?.body,
+      textAlignVertical: 'top',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? '#B8B8B8',
       textAlign: props?.isRTL ? 'right' : 'left'
     },
     inputContainer: {
-      alignSelf: 'center',
-      zIndex: scale(1)
+      width: '100%',
+      paddingTop: props?.spacing?.sm ?? scale(8),
+      paddingBottom: props?.spacing?.md ?? scale(12),
+      zIndex: 1
     },
     backBtnContainer: {
       borderRadius: scale(50),
@@ -68,11 +100,16 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     descriptionText: {
-      color: props != null ? props?.darkBgFont : 'white',
-      fontSize: 13,
-      paddingTop: scale(10),
-      maxWidth: '100%',
-      ...alignment.MRxSmall
+      color: props?.colors?.textSecondary ?? props?.darkBgFont ?? '#52525B',
+      ...props?.typeScale?.body,
+      paddingHorizontal: scale(2),
+      paddingBottom: props?.spacing?.sm ?? scale(8)
+    },
+    cartFooter: {
+      zIndex: 10,
+      backgroundColor: props?.colors?.surface ?? props?.themeBackground ?? '#18181B',
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.22)'
     }
   })
 export default styles

@@ -135,6 +135,13 @@
   "your_order_is_cancelled": "Тапсырысыңыздан бас тартылды",
   "Popular-stores": "Танымал дүкендер",
   "shop-types": "Дүкен түрлері",
+  "categories_label": "Санаттар",
+  "all_categories_label": "Барлық санаттар",
+  "tab_deals": "Ұсыныстар",
+  "tab_browse": "Шолу",
+  "order_details_minimum_order_fee_label": "Төмен тапсырыс ақысы",
+  "order_details_priority_delivery_fee_label": "Басым жеткізу ақысы",
+  "order_details_credits_applied_label": "Қолданылған кредит",
   "order_history": "Тапсырыс тарихы",
   "forbidden_403_code": "403",
   "forbidden_label": "Тыйым салынған",
@@ -186,6 +193,8 @@
   "tab_discovery": "Ашу",
   "tab_restaurants": "Мейрамханалар",
   "tab_store": "Дүкен",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "сізге жақын",
   "generic_listing_heading": "Сізге жақын мейрамханалар",
   "generic_listing_cuisine_section": "Тағамдар",
@@ -932,5 +941,88 @@
   "show_more_orders": "Қосымша тапсырыстарды көрсету",
   "your_email": "your@email.com",
   "Select_your_address_prompt": "Мекенжайыңызды таңдаңыз.",
-  "Our-brands": "Біздің брендтер"
+  "Our-brands": "Біздің брендтер",
+  "Landing": {
+    "hero": {
+      "eyebrow": "One app. Everyday possibilities.",
+      "title": "Everything you need,",
+      "accent": "beautifully delivered.",
+      "body": "Food, groceries and everyday essentials, brought together in one simple experience."
+    },
+    "categories": {
+      "label": "Delivery categories",
+      "food": "Food",
+      "groceries": "Groceries",
+      "essentials": "Essentials",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Finding that city.",
+      "ready": "City selected. Show items when you are ready.",
+      "cityError": "We could not locate that city. Choose another suggestion.",
+      "locating": "Ағымдағы орныңызды табу.",
+      "locationError": "Сіздің орналасқан жеріңізге кіре алмадық. Оның орнына қаланы іздеңіз."
+    },
+    "journey": {
+      "eyebrow": "Энатега қалай қозғалады",
+      "title": "Сіздің қалаңыздан,",
+      "accent": "сіздің есігіңізге дейін.",
+      "bagAlt": "Enatega жеткізу сөмкесі",
+      "stages": {
+        "choose": {
+          "title": "Таңдаңыз",
+          "body": "Азық-түлік, азық-түлік немесе маңызды заттар."
+        },
+        "moving": {
+          "title": "Жылжымалы",
+          "body": "Қала бойынша бір айқын саяхат."
+        },
+        "arrived": {
+          "title": "Келді",
+          "body": "Сізге қажет жерде жеткізілді."
+        }
+      }
+    },
+    "cta": {
+      "label": "Enatega компаниясымен жұмыс",
+      "business": {
+        "eyebrow": "Бизнеске арналған",
+        "title": "Enatega компаниясымен бірге өсу.",
+        "body": "| Дүкеніңізді көбірек клиенттерге жақындатыңыз.",
+        "action": "Серіктес бол"
+      },
+      "rider": {
+        "eyebrow": "Шабандоздар үшін",
+        "title": "Enatega-мен жүру.",
+        "body": "Кестеңіз бойынша жеткізу.",
+        "action": "Шабандоз бол"
+      }
+    },
+    "footer": {
+      "rights": "Барлық құқықтар қорғалған."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

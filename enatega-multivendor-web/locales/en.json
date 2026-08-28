@@ -1,6 +1,89 @@
 {
   "selectCity": "Select your country",
   "searchCity": "Search for a city...",
+  "Landing": {
+    "hero": {
+      "eyebrow": "One app. Everyday possibilities.",
+      "title": "Everything you need,",
+      "accent": "beautifully delivered.",
+      "body": "Food, groceries and everyday essentials, brought together in one simple experience."
+    },
+    "categories": {
+      "label": "Delivery categories",
+      "food": "Food",
+      "groceries": "Groceries",
+      "essentials": "Essentials",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Finding that city.",
+      "ready": "City selected. Show items when you are ready.",
+      "cityError": "We could not locate that city. Choose another suggestion.",
+      "locating": "Finding your current location.",
+      "locationError": "We could not access your location. Search for a city instead."
+    },
+    "journey": {
+      "eyebrow": "How Enatega moves",
+      "title": "From your city,",
+      "accent": "to your doorstep.",
+      "bagAlt": "Enatega delivery bag",
+      "stages": {
+        "choose": {
+          "title": "Choose",
+          "body": "Food, groceries or essentials."
+        },
+        "moving": {
+          "title": "Moving",
+          "body": "One clear journey across your city."
+        },
+        "arrived": {
+          "title": "Arrived",
+          "body": "Delivered where you need it."
+        }
+      }
+    },
+    "cta": {
+      "label": "Work with Enatega",
+      "business": {
+        "eyebrow": "For businesses",
+        "title": "Grow with Enatega.",
+        "body": "Bring your store closer to more customers.",
+        "action": "Become a partner"
+      },
+      "rider": {
+        "eyebrow": "For riders",
+        "title": "Ride with Enatega.",
+        "body": "Deliver on your schedule.",
+        "action": "Become a rider"
+      }
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  },
   "gifts": "GIFTS.",
   "PIZZA": "PIZZA.",
   "SearchBarPlaceholder": "Search in enatega",
@@ -135,6 +218,13 @@
   "your_order_is_cancelled": "Your order is Cancelled",
   "Popular-stores": "Popular stores",
   "shop-types": "Shop Types",
+  "categories_label": "Categories",
+  "all_categories_label": "All Categories",
+  "tab_deals": "Deals",
+  "tab_browse": "Browse",
+  "order_details_minimum_order_fee_label": "Low order fee",
+  "order_details_priority_delivery_fee_label": "Priority delivery fee",
+  "order_details_credits_applied_label": "Credits applied",
   "order_history": "Order History",
   "forbidden_403_code": "403",
   "forbidden_label": "Forbidden",
@@ -186,6 +276,8 @@
   "tab_discovery": "Discovery",
   "tab_restaurants": "Restaurants",
   "tab_store": "Store",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "near you",
   "generic_listing_heading": "Restaurants Near You",
   "generic_listing_cuisine_section": "Cuisines",

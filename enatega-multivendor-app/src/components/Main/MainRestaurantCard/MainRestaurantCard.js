@@ -1,75 +1,40 @@
-import React, { useContext, useCallback, useMemo } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import React, { useCallback, useMemo } from 'react'
+import { View } from 'react-native'
 import styles from './styles'
-import TextDefault from '../../Text/TextDefault/TextDefault'
-import { alignment } from '../../../utils/alignment'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
+import { SectionAction, SectionHeader, SkeletonBlock } from '../../../ui/designSystem'
 import { useTranslation } from 'react-i18next'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import MainLoadingUI from '../LoadingUI/MainLoadingUI'
 import { useNavigation } from '@react-navigation/native'
-import { MaterialIcons } from '@expo/vector-icons'
-import { scale } from '../../../utils/scaling'
 import { isOpen } from '../../../utils/customFunctions'
-import Ripple from 'react-native-material-ripple'
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
+import { scale } from '../../../utils/scaling'
 
-const ICONS = {
-  grocery: 'local-grocery-store',
-  restaurant: 'restaurant',
-  store: 'store',
-  trending: 'local-fire-department'
-}
-
-function PopularSectionSkeleton({ currentTheme, title, icon, t }) {
+function PopularSectionSkeleton({ currentTheme, title, t }) {
   return (
     <View style={styles().orderAgainSec}>
-      <View style={{ gap: scale(8) }}>
-        <View style={styles(currentTheme).header}>
-          <View style={styles(currentTheme).row}>
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.fontFourthColor}
-              bolder
-              H4
-            >
-              {t(title)}
-            </TextDefault>
-            {icon ? (
-              <MaterialIcons
-                name={ICONS[icon]}
-                size={24}
-                color={currentTheme.editProfileButton}
-              />
-            ) : null}
-          </View>
-          <View style={styles(currentTheme).seeAllBtn}>
-            <TextDefault H5 bolder textColor={currentTheme.main}>
-              {t('SeeAll')}
-            </TextDefault>
-          </View>
-        </View>
+      <View>
+        <SectionHeader
+          style={styles(currentTheme).sectionHeader}
+          title={t(title)}
+          action={<SectionAction label={t('SeeAll')} />}
+        />
 
         <View style={styles(currentTheme).skeletonRow}>
           {[0, 1].map((item) => (
-            <Placeholder
-              key={`popular-skeleton-${item}`}
-              Animation={(props) => (
-                <Fade
-                  {...props}
-                  style={styles(currentTheme).placeHolderFadeColor}
-                  duration={600}
-                />
-              )}
-              style={styles(currentTheme).popularSkeletonCard}
-            >
-              <PlaceholderLine style={styles().popularSkeletonImage} />
-              <PlaceholderLine width={65} />
-              <PlaceholderLine width={85} />
-              <PlaceholderLine width={95} />
-            </Placeholder>
+            <View key={`popular-skeleton-${item}`} style={styles(currentTheme).popularSkeletonCard}>
+              <SkeletonBlock height={scale(165)} borderRadius={scale(14)} />
+              <View style={{ padding: scale(10), gap: scale(9) }}>
+                <SkeletonBlock width='62%' height={scale(18)} borderRadius={scale(6)} />
+                <SkeletonBlock width='84%' height={scale(12)} borderRadius={scale(6)} />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <SkeletonBlock width='26%' height={scale(12)} borderRadius={scale(6)} />
+                  <SkeletonBlock width='26%' height={scale(12)} borderRadius={scale(6)} />
+                  <SkeletonBlock width='18%' height={scale(12)} borderRadius={scale(6)} />
+                </View>
+              </View>
+            </View>
           ))}
         </View>
       </View>
@@ -80,14 +45,8 @@ function PopularSectionSkeleton({ currentTheme, title, icon, t }) {
 function MainRestaurantCard(props) {
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = useMemo(
-    () => ({
-      isRTL: i18n.dir() === 'rtl',
-      ...theme[themeContext.ThemeValue]
-    }),
-    [i18n.language, themeContext.ThemeValue]
-  )
+  const { tokens } = useMultivendorTheme()
+  const isRTL = i18n.dir() === 'rtl'
 
   const orders = useMemo(() => props?.orders || [], [props?.orders])
 
@@ -100,7 +59,7 @@ function MainRestaurantCard(props) {
     if (props?.queryType === 'topPicks') {
       return (
         <PopularSectionSkeleton
-          currentTheme={currentTheme}
+          currentTheme={{ ...tokens, isRTL }}
           title={props?.title}
           icon={props?.icon}
           t={t}
@@ -115,52 +74,33 @@ function MainRestaurantCard(props) {
   if (props?.error || orders?.length <= 0) return <></>
   return (
     <View style={styles().orderAgainSec}>
-      <View style={{ gap: scale(8) }}>
-        <View style={styles(currentTheme).header}>
-          <View style={styles(currentTheme).row}>
-            <TextDefault
-              numberOfLines={1}
-              textColor={currentTheme.fontFourthColor}
-              bolder
-              H4
-            // style={styles().ItemTitle}
-            >
-              {t(props?.title)}
-            </TextDefault>
-            {props?.icon && (
-              <MaterialIcons
-                name={ICONS[props?.icon]}
-                size={24}
-                color={currentTheme.editProfileButton}
-              />
-            )}
-          </View>
-          <Ripple
-            style={styles(currentTheme).seeAllBtn}
-            activeOpacity={0.8}
+      <View>
+        <SectionHeader
+          style={styles(tokens).sectionHeader}
+          title={t(props?.title)}
+          action={<SectionAction
+            label={t('SeeAll')}
             onPress={() => {
               navigation.navigate('Menu', {
                 selectedType: props?.selectedType ?? 'restaurant',
                 queryType: props?.queryType ?? 'restaurant',
-                shopType: props?.shopType ?? 'restaurant',
+                shopType: props?.shopType ?? 'restaurant'
               })
             }}
-            rippleColor={'#F5F5F5'}
-            rippleDuration={300}
-          >
-            <TextDefault H5 bolder textColor={currentTheme.main}>
-              {t('SeeAll')}
-            </TextDefault>
-          </Ripple>
-        </View>
+          />}
+        />
         <HorizontalFlashList
-          style={styles().offerScroll}
-          estimatedItemSize={280}
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: scale(10), ...alignment.PRlarge }}
+          estimatedItemSize={224}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingStart: tokens.spacing.md,
+            paddingEnd: tokens.spacing.sm,
+            alignItems: 'flex-start'
+          }}
           data={orders}
           keyExtractor={(item) => item._id}
           renderItem={renderRestaurantItem}
-          inverted={currentTheme?.isRTL ? true : false}
+          inverted={isRTL}
         />
       </View>
     </View>

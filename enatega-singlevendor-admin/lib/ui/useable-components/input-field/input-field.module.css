@@ -1,0 +1,15 @@
+.input-field {
+  height: 2.8rem !important;
+  border-radius: 30px !important;
+  border: 1px solid #ccc !important;
+}
+
+.input-field:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.input-field:focus {
+  outline: none;
+  box-shadow: none;
+}

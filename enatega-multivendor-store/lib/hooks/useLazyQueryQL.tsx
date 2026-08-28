@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import { WatchQueryFetchPolicy } from "@apollo/client/core/watchQueryOptions";
 import { debounce } from "lodash";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { retryQuery } from "@/lib/utils/methods/gloabl";
 
 export const useLazyQueryQL = <
@@ -41,18 +41,28 @@ export const useLazyQueryQL = <
     onCompleted,
   });
 
-  const debouncedFetch = useCallback(
-    debounce(async (variables?: V) => {
-      return await retryQuery(() => fetch({ variables }), retry, retryDelayMs);
-    }, debounceMs),
+  const debouncedFetch = useMemo(
+    () =>
+      debounce(async (variables?: V) => {
+        return await retryQuery(
+          () => fetch({ variables }),
+          retry,
+          retryDelayMs,
+        );
+      }, debounceMs),
     [fetch, debounceMs, retry, retryDelayMs],
   );
 
-  const handleFetch = async (variables?: V) => {
-    if (enabled) {
-      await debouncedFetch(variables); // Ensure the async debounced fetch is awaited
-    }
-  };
+  useEffect(() => () => debouncedFetch.cancel(), [debouncedFetch]);
+
+  const handleFetch = useCallback(
+    async (variables?: V) => {
+      if (enabled) {
+        await debouncedFetch(variables);
+      }
+    },
+    [debouncedFetch, enabled],
+  );
 
   return {
     data,

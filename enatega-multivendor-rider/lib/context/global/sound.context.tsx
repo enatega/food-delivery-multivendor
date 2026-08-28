@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import {
+  useCallback,
   useContext,
   useEffect,
   useRef,
-  useState,
   createContext,
 } from "react";
-import { AudioPlayer, useAudioPlayer, AudioSource } from "expo-audio";
+import { useAudioPlayer, AudioSource } from "expo-audio";
 // Interface
 import {
   ISoundContext,
@@ -19,16 +19,8 @@ import { IOrder } from "@/lib/utils/interfaces/order.interface";
 const SoundContext = createContext<ISoundContext>({} as ISoundContext);
 
 export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
-  // State
-  const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  // Mirror isPlaying into a ref so the assignedOrders effect can read the
-  // current value without depending on it (depending on isPlaying caused a
-  // stop→setState→re-run→start oscillation on busy zones).
   const isPlayingRef = useRef(false);
-  useEffect(() => {
-    isPlayingRef.current = isPlaying;
-  }, [isPlaying]);
+  const isMountedRef = useRef(true);
 
   // Context/Hooks
   const { assignedOrders } = useUserContext();
@@ -37,37 +29,36 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   const player = useAudioPlayer(require("@/lib/assets/sound/beep3.mp3") as AudioSource);
 
   // Handlers
-  const playSound = async () => {
+  const playSound = useCallback(() => {
+    if (!isMountedRef.current || isPlayingRef.current) return;
+
     try {
-      await stopSound();
-      
-      // Configure audio session (iOS/Android settings)
-      // Note: expo-audio handles most audio session configuration automatically
-      
       player.loop = true;
       player.play();
-      setAudioPlayer(player);
-      setIsPlaying(true);
+      isPlayingRef.current = true;
     } catch (err) {
+      isPlayingRef.current = false;
       console.log("Error playing sound:", err);
     }
-  };
+  }, [player]);
 
-  const stopSound = async () => {
-    if (audioPlayer && isPlaying) {
-      try {
-        audioPlayer.pause();
-        setIsPlaying(false);
-      } catch (err) {
+  const stopSound = useCallback(() => {
+    if (!isMountedRef.current || !isPlayingRef.current) return;
+
+    isPlayingRef.current = false;
+    try {
+      player.pause();
+    } catch (err) {
+      if (!String(err).includes("already released")) {
         console.log("Error stopping sound:", err);
       }
     }
-  };
+  }, [player]);
 
   // Audio player event listeners
   useEffect(() => {
     const playingSubscription = player.addListener('playingChange', (isPlaying) => {
-      setIsPlaying(isPlaying);
+      isPlayingRef.current = isPlaying;
     });
 
     return () => {
@@ -91,31 +82,30 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
 
       const shouldPlaySound = !!new_order;
 
-      if (shouldPlaySound && !isPlayingRef.current) {
+      if (shouldPlaySound) {
         playSound();
-      } else if (!shouldPlaySound && isPlayingRef.current) {
+      } else {
         stopSound();
       }
     } else {
       stopSound();
     }
-
-    return () => {
-      if (isPlayingRef.current) {
-        stopSound();
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assignedOrders]);
+  }, [assignedOrders, playSound, stopSound]);
 
   // Cleanup on unmount
   useEffect(() => {
+    isMountedRef.current = true;
+
     return () => {
-      if (isPlaying) {
+      isMountedRef.current = false;
+      isPlayingRef.current = false;
+      try {
         player.pause();
+      } catch {
+        // expo-audio may release its shared object before React cleanup runs.
       }
     };
-  }, []);
+  }, [player]);
 
   return (
     <SoundContext.Provider value={{ playSound, stopSound }}>

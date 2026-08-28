@@ -6,6 +6,9 @@ export const ACCEPT_ORDER = gql`
       _id
       orderStatus
       preparationTime
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
     }
   }
 `;
@@ -15,6 +18,9 @@ export const CANCEL_ORDER = gql`
     cancelOrder(_id: $_id, reason: $reason) {
       _id
       orderStatus
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
     }
   }
 `;
@@ -30,6 +36,9 @@ export const PICK_UP_ORDER = gql`
     orderPickedUp(_id: $_id) {
       _id
       orderStatus
+      eta {
+        phase source readyAt estimatedArrivalAt windowStartAt windowEndAt calculatedAt lastLocationAt
+      }
     }
   }
 `;

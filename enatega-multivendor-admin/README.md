@@ -35,6 +35,10 @@ This module supports two setup styles:
 - Local backend: keep `.env.local` pointed at `http://localhost:8001/`
 - Hosted backend: replace the values in `.env.local` with a hosted `https://` API URL and matching `wss://` websocket URL
 
+## Admin application link
+
+Set `NEXT_PUBLIC_SINGLE_VENDOR_ADMIN_URL` in `.env.local` to the deployed Single-vendor Admin URL. The header link defaults to `https://enatega-singlevendor-admin.netlify.app/` when the variable is not configured.
+
 ## Google Maps
 
 - Set `GOOGLE_MAPS_API_KEY` in `.env.local` for the browser Google Maps SDK

@@ -1,62 +1,39 @@
-"use client";
+const CuisinePlaceholder = ({
+  showDescription,
+}: {
+  showDescription: boolean;
+}) => (
+  <div className="overflow-hidden rounded-xl bg-dispatch-surface">
+    <div
+      className={`skeleton-surface skeleton-ring animate-pulse ring-1 ${showDescription ? "mx-auto aspect-square max-w-28 rounded-full" : "aspect-[3/2] rounded-xl"}`}
+    />
+    <div className="px-1 pt-2">
+      <div className="skeleton-line h-4 w-3/4 animate-pulse rounded" />
+    </div>
+  </div>
+);
 
-import React from "react";
-import { Carousel } from "primereact/carousel";
-
-const responsiveOptions = [
-  { breakpoint: "1024px", numVisible: 4, numScroll: 1 },
-  { breakpoint: "768px", numVisible: 3, numScroll: 1 },
-  { breakpoint: "560px", numVisible: 2, numScroll: 1 },
-  { breakpoint: "425px", numVisible: 1, numScroll: 1 },
-];
-
-const CardSkeleton = () => {
+export default function CuisinesSliderSkeleton({
+  showDescription = false,
+}: {
+  showDescription?: boolean;
+}) {
   return (
-    <div className="max-w-[402px] max-h-[272px] md:w-[180px] lg:w-[180px] xl:w-[270px] 2xl:w-[380px] rounded-md shadow-md m-2 mb-6 animate-pulse">
-      {/* Image Skeleton */}
-      <div className="relative w-full h-[140px] bg-gray-300 rounded-t-md"></div>
-
-      {/* Content Skeleton */}
-      <div className="p-2 flex flex-col">
-        <div className="flex justify-between items-center border-b border-dashed pb-1">
-          <div className="w-[70%]">
-            <div className="h-4 bg-gray-300 mb-2 w-3/4 rounded"></div>
-            <div className="h-3 bg-gray-300 w-1/2 rounded"></div>
-          </div>
+    <section className="mt-5" aria-hidden="true">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="skeleton-line h-7 w-44 animate-pulse rounded" />
+        <div className="hidden gap-2 md:flex">
+          <div className="skeleton-surface h-9 w-9 animate-pulse rounded-full" />
+          <div className="skeleton-surface h-9 w-9 animate-pulse rounded-full" />
         </div>
       </div>
-    </div>
-  );
-};
-
-
-const CuisinesSliderSkeleton = () => {
-  const numVisible = 4;
-
-  return (
-    <div className="ml-8 mr-10 md:ml-12 md:mr-14 mb-20 mt-6">
-      <div className="flex justify-between mb-4">
-        <div className="bg-gray-300 h-8 w-1/3 mb-2 rounded"></div>
-        <div className="flex items-center justify-end gap-x-2">
-          <span className="text-gray-300 text-sm">See All</span>
-          <div className="gap-x-2 hidden md:flex">
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+      <div className="grid grid-cols-2 gap-3 min-[641px]:grid-cols-3 min-[1025px]:grid-cols-6 min-[1281px]:grid-cols-8 min-[1537px]:grid-cols-10">
+        {Array.from({ length: 10 }, (_, index) => (
+          <div key={index}>
+            <CuisinePlaceholder showDescription={showDescription} />
           </div>
-        </div>
+        ))}
       </div>
-
-      <Carousel
-        value={[1, 2, 3, 4]}
-        itemTemplate={() => <CardSkeleton />}
-        numVisible={numVisible}
-        numScroll={1}
-        responsiveOptions={responsiveOptions}
-        showIndicators={false}
-        showNavigators={false}
-      />
-    </div>
+    </section>
   );
-};
-
-export default CuisinesSliderSkeleton;
+}

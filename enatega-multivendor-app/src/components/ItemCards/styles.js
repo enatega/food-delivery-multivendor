@@ -11,6 +11,10 @@ const CARD_IMAGE_WIDTH = Math.max(scale(106), Math.min(scale(138), CARD_WIDTH - 
 const CARD_IMAGE_HEIGHT = Math.round(CARD_IMAGE_WIDTH * 0.87)
 const buildStyles = (props = null) =>
   StyleSheet.create({
+    button: {
+      borderRadius: props?.radii?.lg ?? scale(14),
+      overflow: 'hidden'
+    },
     popularItems: {
       flexDirection: 'column',
       justifyContent: 'center',
@@ -24,34 +28,34 @@ const buildStyles = (props = null) =>
     },
     card: {
       width: CARD_WIDTH,
-      minHeight: Math.max(scale(214), CARD_WIDTH * 1.34),
-      borderRadius: 8,
-      paddingTop: scale(17),
-      paddingLeft: scale(17),
-      paddingRight: scale(17),
-      paddingBottom: scale(9),
-      borderColor: '#E5E7EB',
-      borderWidth: 1,
+      minHeight: Math.max(scale(192), CARD_WIDTH * 1.18),
+      borderRadius: props?.radii?.lg ?? scale(14),
+      padding: scale(12),
+      backgroundColor: props?.colors?.surface ?? '#FFFFFF',
+      borderColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)',
+      borderWidth: StyleSheet.hairlineWidth,
       flexGrow: 1
     },
     image: {
       width: CARD_IMAGE_WIDTH,
       height: CARD_IMAGE_HEIGHT,
-      borderRadius: 8
+      borderRadius: props?.radii?.md ?? scale(10)
     },
     popularMenuPrice: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       gap: 8,
-      backgroundColor: '#fff',
+      backgroundColor: 'transparent',
       paddingTop: 5,
       paddingBottom: 5,
-      width: '92%',
-      borderRadius: 16,
-      borderColor: '#E5E7EB',
-      borderWidth: 1,
+      width: '100%',
       marginTop: 5
+    },
+    priceText: {
+      color: props?.colors?.textPrimary ?? '#18181B',
+      fontSize: scale(12),
+      fontWeight: '600'
     }
   })
 

@@ -14,6 +14,13 @@ import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import { useAppMode } from '../../mode/AppModeContext'
+import { getModeHomeRoute } from '../../mode/navigation'
+import { APP_MODES } from '../../mode/constants'
+import {
+  EMAIL_EXIST_SINGLE_VENDOR,
+  LOGIN_SINGLE_VENDOR
+} from '../../singlevendor/apollo/mutations'
 
 const LOGIN = gql`
   ${login}
@@ -22,14 +29,30 @@ const EMAIL = gql`
   ${emailExist}
 `
 
+const singleVendorDemoCredentials = {
+  email: Constants.expoConfig?.extra?.singleVendorCustomerDemoEmail ?? '',
+  password: Constants.expoConfig?.extra?.singleVendorCustomerDemoPassword ?? ''
+}
+
 export const useLogin = () => {
   const { t, i18n } = useTranslation()
   const Analytics = analytics()
 
   const navigation = useNavigation()
-  const [email, setEmail] = useState('')
-  const emailRef = useRef('')
-  const [password, setPassword] = useState('')
+  const { mode } = useAppMode()
+  const loginDocument =
+    mode === APP_MODES.SINGLE ? LOGIN_SINGLE_VENDOR : LOGIN
+  const emailExistDocument =
+    mode === APP_MODES.SINGLE ? EMAIL_EXIST_SINGLE_VENDOR : EMAIL
+  const initialEmail =
+    mode === APP_MODES.SINGLE ? singleVendorDemoCredentials.email : ''
+  const [email, setEmail] = useState(initialEmail)
+  const emailRef = useRef(initialEmail)
+  const [password, setPassword] = useState(
+    mode === APP_MODES.SINGLE
+      ? singleVendorDemoCredentials.password
+      : ''
+  )
   const [showPassword, setShowPassword] = useState(true)
   const [emailError, setEmailError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
@@ -38,12 +61,12 @@ export const useLogin = () => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
   const { setTokenAsync } = useContext(AuthContext)
 
-  const [EmailEixst, { loading }] = useMutation(EMAIL, {
+  const [EmailEixst, { loading }] = useMutation(emailExistDocument, {
     onCompleted,
     onError
   })
 
-  const [LoginMutation, { loading: loginLoading }] = useMutation(LOGIN, {
+  const [LoginMutation, { loading: loginLoading }] = useMutation(loginDocument, {
     onCompleted: onLoginCompleted,
     onError: onLoginError
   })
@@ -60,13 +83,18 @@ export const useLogin = () => {
   // Reset password when registeredEmail becomes true
   useEffect(() => {
     if (registeredEmail) {
-      if (emailRef.current === 'demo-customer@enatega.com') {
+      if (
+        mode === APP_MODES.SINGLE &&
+        emailRef.current === singleVendorDemoCredentials.email
+      ) {
+        setPassword(singleVendorDemoCredentials.password)
+      } else if (emailRef.current === 'demo-customer@enatega.com') {
         setPassword('123123')
       } else {
         setPassword('')
       }
     }
-  }, [registeredEmail])
+  }, [mode, registeredEmail])
   function validateCredentials() {
     let result = true
     setEmailError(null)
@@ -132,10 +160,7 @@ export const useLogin = () => {
         navigation.reset({
           index: 0,
           routes: [
-            {
-              name: 'Main',
-              params: { screen: 'Discovery' }
-            }
+            getModeHomeRoute(mode)
           ]
         })
       } catch (e) {
@@ -199,14 +224,14 @@ export const useLogin = () => {
 
   function onBackButtonPressAndroid() {
     navigation.navigate({
-      name: 'Main',
+      ...getModeHomeRoute(mode),
       merge: true
     })
     return true
   }
 
   return {
-    setEmail,
+    email,
     password,
     setPassword,
     showPassword,

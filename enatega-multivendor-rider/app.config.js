@@ -12,7 +12,7 @@ module.exports = {
     name: 'Enatega Multivendor Rider',
     description:
       "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    version: '1.1.87',
+    version: '1.1.93',
     slug: 'food-delivery-rider-multivendor',
     orientation: 'portrait',
     icon: './lib/assets/images/icon.png',
@@ -22,6 +22,16 @@ module.exports = {
     newArchEnabled: true,
     plugins: [
       'expo-router',
+      [
+        'expo-location',
+        {
+          locationAlwaysAndWhenInUsePermission:
+            'Enatega Multivendor Rider uses your precise location during active deliveries so customers and dispatchers can follow delivery progress even when the app is not in use.',
+          isIosBackgroundLocationEnabled: true,
+          isAndroidBackgroundLocationEnabled: true,
+          isAndroidForegroundServiceEnabled: true
+        }
+      ],
       [
         'expo-splash-screen',
         {
@@ -68,15 +78,16 @@ module.exports = {
       icon: './lib/assets/images/icon.png',
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
-          '$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!',
+          '$(PRODUCT_NAME) uses your precise location while you use the app to support pickup and delivery navigation.',
+        NSLocationAlwaysAndWhenInUseUsageDescription:
+          '$(PRODUCT_NAME) shares your precise location during active deliveries so customers and dispatchers can follow delivery progress even when the app is not in use.',
         UIBackgroundModes: ['location', 'fetch', 'remote-notification'],
         ITSAppUsesNonExemptEncryption: false
       }
     },
     android: {
-      versionCode: 87,
+      versionCode: 93,
       googleServicesFile: './google-services.json',
-      permissions: ['ACCESS_COARSE_LOCATION', 'ACCESS_FINE_LOCATION'],
       config: {
         googleMaps: {
           ...(androidGoogleMapsApiKey ? { apiKey: androidGoogleMapsApiKey } : {})

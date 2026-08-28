@@ -2,7 +2,7 @@
  * AnimatedSplash — Enatega animated splash screen (dark + light, all screen sizes)
  *
  * A 1:1 port of the approved splash video, rendered natively with Reanimated.
- * - Theme follows the system automatically (useColorScheme)
+ * - Theme follows the app's persisted theme preference
  * - Scales to any device size / aspect ratio (design frame: 540 x 1170)
  * - Plays intro, then holds a gentle idle loop until `ready` is true,
  *   then plays the green outro and calls `onFinish`
@@ -20,7 +20,7 @@
  */
 
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, useWindowDimensions, useColorScheme } from 'react-native'
+import { StyleSheet, useWindowDimensions } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Animated, {
   useSharedValue,
@@ -64,10 +64,14 @@ const INOUT_CUBIC = Easing.inOut(Easing.cubic)
 const BACK_OUT = Easing.out(Easing.back(1.6))
 const SINE_INOUT = Easing.inOut(Easing.sin)
 
-export default function AnimatedSplash({ ready = true, minDuration = 2400, onFinish }) {
+export default function AnimatedSplash({
+  ready = true,
+  minDuration = 2400,
+  onFinish,
+  themeMode = 'Pink'
+}) {
   const { width, height } = useWindowDimensions()
-  const scheme = useColorScheme()
-  const theme = THEMES[scheme === 'dark' ? 'dark' : 'light']
+  const theme = THEMES[themeMode === 'Dark' ? 'dark' : 'light']
 
   // Design frame is 540 x 1170; scale proportionally to the device
   const sf = Math.min(width / 540, height / 1170)
