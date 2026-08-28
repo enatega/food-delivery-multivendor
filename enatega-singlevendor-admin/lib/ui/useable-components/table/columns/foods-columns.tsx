@@ -6,12 +6,12 @@ import { normalizeManagedMediaUrl } from '@/lib/utils/media';
 import { IActionMenuProps, IFoodNew } from '@/lib/utils/interfaces';
 
 import ActionMenu from '../../action-menu';
-import { ApolloError, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
   UPDATE_FOOD_OUT_OF_STOCK,
   GET_ALL_FOODS_PAGINATED,
 } from '@/lib/api/graphql';
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import CustomInputSwitch from '../../custom-input-switch';
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
@@ -36,60 +36,74 @@ export const FOODS_TABLE_COLUMNS = ({
   } = useContext(RestaurantLayoutContext);
 
   // State
-  const [isFoodLoading, setIsFoodLoading] = useState<string>('');
-  const restaurantIdStored = localStorage.getItem('restaurantId');
+  const [pendingFoodId, setPendingFoodId] = useState<string>('');
+  const [optimisticStock, setOptimisticStock] = useState<
+    Record<string, boolean>
+  >({});
+  const pendingFoodIdsRef = useRef(new Set<string>());
+
   // API
   const [updateFoodOutOfStock] = useMutation(UPDATE_FOOD_OUT_OF_STOCK, {
+    awaitRefetchQueries: true,
     refetchQueries: [
       {
         query: GET_ALL_FOODS_PAGINATED,
         variables: {
-          restaurantId: restaurantIdStored,
+          restaurantId,
           page: currentPage,
           limit: pageSize,
         },
       },
     ],
-    onCompleted: () => {
-      showToast({
-        type: 'success',
-        title: t('Food Stock'),
-        message: t(`Food stock status has been changed`),
-      });
-      setIsFoodLoading('');
-    },
-    onError: ({ networkError, graphQLErrors }: ApolloError) => {
-      showToast({
-        type: 'error',
-        title: t('Food Stock'),
-        message:
-          networkError?.message ??
-          graphQLErrors[0]?.message ??
-          t('Food Stock status failed'),
-      });
-      setIsFoodLoading('');
-    },
   });
 
   // Handlers
-  const onUpdateFoodOutOfStock = async (foodId: string, categoryId: string) => {
-    try {
-      setIsFoodLoading(foodId);
+  const onUpdateFoodOutOfStock = async (
+    foodId: string,
+    categoryId: string,
+    currentStatus: boolean
+  ) => {
+    if (pendingFoodIdsRef.current.size > 0) return;
 
-      await updateFoodOutOfStock({
+    pendingFoodIdsRef.current.add(foodId);
+    setPendingFoodId(foodId);
+    setOptimisticStock((previous) => ({
+      ...previous,
+      [foodId]: !currentStatus,
+    }));
+
+    try {
+      const { data } = await updateFoodOutOfStock({
         variables: {
           id: foodId,
           categoryId,
           restaurant: restaurantId,
         },
       });
-    } catch (err) {
+
+      if (!data?.updateFoodOutOfStock) {
+        throw new Error(t('Food Stock status failed'));
+      }
+
+      showToast({
+        type: 'success',
+        title: t('Food Stock'),
+        message: t('Food stock status has been changed'),
+      });
+    } catch {
       showToast({
         type: 'error',
         title: t('Food Stock'),
         message: t('Food Stock status failed'),
       });
-      setIsFoodLoading('');
+    } finally {
+      pendingFoodIdsRef.current.delete(foodId);
+      setPendingFoodId((pendingId) => (pendingId === foodId ? '' : pendingId));
+      setOptimisticStock((previous) => {
+        const next = { ...previous };
+        delete next[foodId];
+        return next;
+      });
     }
   };
 
@@ -210,12 +224,20 @@ export const FOODS_TABLE_COLUMNS = ({
       headerName: t('Out of Stock'),
       propertyName: 'isOutOfStock',
       body: (item: IFoodNew) => {
+        const displayedStatus = optimisticStock[item._id] ?? item.isOutOfStock;
+        const isPending = pendingFoodId === item._id;
+
         return (
           <CustomInputSwitch
-            loading={isFoodLoading === item._id}
-            isActive={item.isOutOfStock}
+            loading={isPending}
+            disabled={pendingFoodId !== ''}
+            isActive={displayedStatus}
             onChange={() =>
-              onUpdateFoodOutOfStock(item._id, item.category?.code ?? '')
+              onUpdateFoodOutOfStock(
+                item._id,
+                item.category?.code ?? '',
+                displayedStatus
+              )
             }
           />
         );

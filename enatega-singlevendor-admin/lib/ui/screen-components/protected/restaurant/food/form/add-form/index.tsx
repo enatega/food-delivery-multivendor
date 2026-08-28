@@ -66,6 +66,7 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
   const [createFood, { loading: createFoodLoading }] = useMutation(
     CREATE_FOOD_SINGLE_VENDOR,
     {
+      awaitRefetchQueries: true,
       refetchQueries: [
         {
           query: GET_FOODS_BY_RESTAURANT_ID,
@@ -86,6 +87,7 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
   const [updateFood, { loading: updateFoodLoading }] = useMutation(
     UPDATE_FOOD_SINGLE_VENDOR,
     {
+      awaitRefetchQueries: true,
       refetchQueries: [
         {
           query: GET_FOODS_BY_RESTAURANT_ID,
@@ -251,7 +253,12 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
         // :white_check_mark: Clean nutritionFacts by removing __typename
         const cleanedNutritionFacts = values.nutritionFacts
           ? cleanTypename(values.nutritionFacts)
-          : undefined;
+              .map(({ name, quantity }) => ({
+                name: name.trim(),
+                quantity: quantity.trim(),
+              }))
+              .filter(({ name, quantity }) => name && quantity)
+          : [];
 
         const foodInput: IFoodInput = {
           food: {
@@ -267,8 +274,8 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
               values.subCategory ||
               undefined) as string,
             image: values.image || undefined,
-            isActive: true,
-            isOutOfStock: false,
+            isActive: values.isActive,
+            isOutOfStock: values.isOutOfStock,
             inventory: values.inventory ? Number(values.inventory) : undefined,
             UOM: values.uom || undefined,
             orderQuantity: {
@@ -351,7 +358,12 @@ const FoodForm = ({ position = 'right' }: IFoodAddFormComponentProps) => {
         // :white_check_mark: Clean nutritionFacts for create as well
         const cleanedNutritionFacts = values.nutritionFacts
           ? cleanTypename(values.nutritionFacts)
-          : undefined;
+              .map(({ name, quantity }) => ({
+                name: name.trim(),
+                quantity: quantity.trim(),
+              }))
+              .filter(({ name, quantity }) => name && quantity)
+          : [];
 
         const foodInput: IFoodInput = {
           food: {

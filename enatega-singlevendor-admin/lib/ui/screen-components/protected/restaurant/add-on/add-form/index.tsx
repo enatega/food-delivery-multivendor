@@ -119,6 +119,7 @@ export default function AddonAddForm({
   const [createAddons, { loading: mutationLoading }] = useMutation(
     addon ? EDIT_ADDON : CREATE_ADDONS,
     {
+      awaitRefetchQueries: true,
       refetchQueries: [
         {
           query: GET_ADDONS_BY_RESTAURANT_ID,

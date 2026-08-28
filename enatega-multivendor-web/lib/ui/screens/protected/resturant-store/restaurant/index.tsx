@@ -44,7 +44,9 @@ import { Dialog } from "primereact/dialog";
 import Loader from "@/app/(localized)/mapview/[slug]/components/Loader";
 import { motion } from "framer-motion";
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
-import Image, { FALLBACK_IMAGE_SRC } from '@/lib/ui/useable-components/safe-image';
+import Image, {
+  FALLBACK_IMAGE_SRC,
+} from "@/lib/ui/useable-components/safe-image";
 import { useTranslations } from "next-intl";
 
 export default function RestaurantDetailsScreen() {
@@ -62,7 +64,12 @@ export default function RestaurantDetailsScreen() {
 
   // Refs
   const categoryRefs = useRef<Record<string, HTMLElement | null>>({});
+  const categoryTabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const categoryScrollerRef = useRef<HTMLDivElement | null>(null);
+  const categoryNavigationRef = useRef<HTMLDivElement | null>(null);
   const selectedCategoryRef = useRef<string>("");
+  const categoryScrollTargetRef = useRef<string | null>(null);
+  const categoryScrollTimeoutRef = useRef<number | null>(null);
 
   // State
   const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
@@ -109,8 +116,12 @@ export default function RestaurantDetailsScreen() {
   }, [data?.restaurant, cart?.length, transformCartWithFoodInfo, updateCart]);
 
   // Filter food categories based on search term
-  const allDeals = data?.restaurant?.categories?.filter(
-    (cat: ICategory) => cat.foods.length,
+  const allDeals = useMemo(
+    () =>
+      data?.restaurant?.categories?.filter(
+        (cat: ICategory) => cat.foods.length,
+      ) || [],
+    [data?.restaurant?.categories],
   );
 
   // Check if restaurant is favorited when profile is loaded
@@ -131,8 +142,10 @@ export default function RestaurantDetailsScreen() {
     [isModalOpen],
   );
 
-  const popularDealsIds = popularSubCategoriesList?.popularItems?.map(
-    (item: any) => item.id,
+  const popularDealsIds = useMemo(
+    () =>
+      popularSubCategoriesList?.popularItems?.map((item: any) => item.id) || [],
+    [popularSubCategoriesList?.popularItems],
   );
   const normalizedFilter = filter.trim().toLowerCase();
 
@@ -145,10 +158,11 @@ export default function RestaurantDetailsScreen() {
           const categoryMatches = c.title
             .toLowerCase()
             .includes(normalizedFilter);
-          const foodsMatch = c.foods.some((food: IFood) =>
-            food.title.toLowerCase().includes(normalizedFilter) ||
-            (food.description &&
-              food.description.toLowerCase().includes(normalizedFilter)),
+          const foodsMatch = c.foods.some(
+            (food: IFood) =>
+              food.title.toLowerCase().includes(normalizedFilter) ||
+              (food.description &&
+                food.description.toLowerCase().includes(normalizedFilter)),
           );
 
           return categoryMatches || foodsMatch;
@@ -197,14 +211,16 @@ export default function RestaurantDetailsScreen() {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
-    if (deals.length > 0) {
-      const nextCategory = toSlug(deals[0]?.title);
-      setSelectedCategory(nextCategory); // first visible category selected by default
+    const availableCategories = deals.map((category) => toSlug(category.title));
+    const currentCategory = selectedCategoryRef.current;
+    const nextCategory = availableCategories.includes(currentCategory)
+      ? currentCategory
+      : availableCategories[0] || "";
+
+    if (nextCategory !== currentCategory) {
       selectedCategoryRef.current = nextCategory;
-      return;
+      setSelectedCategory(nextCategory);
     }
-    setSelectedCategory("");
-    selectedCategoryRef.current = "";
   }, [deals]);
 
   const [addFavorite, { loading: addFavoriteLoading }] = useMutation(
@@ -289,9 +305,6 @@ export default function RestaurantDetailsScreen() {
   };
 
   // States
-  const [visibleItems, setVisibleItems] = useState(10); // Default visible items
-  const [showAll, setShowAll] = useState(false);
-  const [headerHeight, setHeaderHeight] = useState("64px"); // Default for desktop
   const [showReviews, setShowReviews] = useState<boolean>(false);
   const [showMoreInfo, setShowMoreInfo] = useState<boolean>(false);
 
@@ -345,22 +358,42 @@ export default function RestaurantDetailsScreen() {
     setShowClearCartModal(false);
   };
 
+  const getCategoryNavigationOffset = useCallback(() => {
+    const navigation = categoryNavigationRef.current;
+    if (!navigation) return 120;
+
+    const stickyTop =
+      Number.parseFloat(window.getComputedStyle(navigation).top) || 0;
+    return stickyTop + navigation.offsetHeight + 16;
+  }, []);
+
   // Handlers
   const handleScroll = (id: string) => {
     setSelectedCategory(id);
     selectedCategoryRef.current = id;
-    const element = document.getElementById(id);
+    categoryScrollTargetRef.current = id;
+    const element = categoryRefs.current[id] || document.getElementById(id);
 
     if (element) {
-      const headerOffset = 120;
-      const elementPosition = element.offsetTop;
-      const offsetPosition = elementPosition - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
+      element.style.scrollMarginTop = `${getCategoryNavigationOffset()}px`;
+      element.scrollIntoView({
+        block: "start",
+        inline: "nearest",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
       });
+    } else {
+      categoryScrollTargetRef.current = null;
     }
+
+    if (categoryScrollTimeoutRef.current !== null) {
+      window.clearTimeout(categoryScrollTimeoutRef.current);
+    }
+    categoryScrollTimeoutRef.current = window.setTimeout(() => {
+      categoryScrollTargetRef.current = null;
+      categoryScrollTimeoutRef.current = null;
+    }, 800);
   };
 
   // Function to handle opening the food item modal
@@ -390,70 +423,97 @@ export default function RestaurantDetailsScreen() {
     setShowMoreInfo(true);
   };
 
-  // Function to show all categories
+  // Keep the active category in view when scroll-spy changes it.
   useEffect(() => {
-    // Adjust visible items based on screen width
-    const updateVisibleItems = () => {
-      const width = window.innerWidth;
-      if (width < 640) {
-        setVisibleItems(3); // Small screens
-      } else if (width < 1024) {
-        setVisibleItems(4); // Medium screens
-      } else {
-        setVisibleItems(5); // Large screens
-      }
-    };
+    const tab = categoryTabRefs.current[selectedCategory];
+    const scroller = categoryScrollerRef.current;
+    if (!tab || !scroller) return;
 
-    const updateHeight = () => {
-      if (window.innerWidth >= 1024)
-        setHeaderHeight("64px"); // lg (desktop)
-      else if (window.innerWidth >= 768)
-        setHeaderHeight("80px"); // md (tablet)
-      else if (window.innerWidth >= 640)
-        setHeaderHeight("100px"); // sm (larger phones)
-      else setHeaderHeight("120px"); // xs (small phones)
-    };
+    const tabBounds = tab.getBoundingClientRect();
+    const scrollerBounds = scroller.getBoundingClientRect();
+    const isOutsideScroller =
+      tabBounds.left < scrollerBounds.left ||
+      tabBounds.right > scrollerBounds.right;
 
-    updateHeight();
-    updateVisibleItems();
-    window.addEventListener("resize", updateHeight);
-    window.addEventListener("resize", updateVisibleItems);
+    if (!isOutsideScroller) return;
 
-    return () => {
-      window.removeEventListener("resize", updateVisibleItems);
-      window.removeEventListener("resize", updateHeight);
-    };
-  }, []);
+    scroller.scrollBy({
+      left:
+        tabBounds.left +
+        tabBounds.width / 2 -
+        (scrollerBounds.left + scrollerBounds.width / 2),
+      behavior: "smooth",
+    });
+  }, [selectedCategory]);
 
-  // Highlight categories on scroll observer
+  // Highlight the last category heading that has crossed the sticky menu.
   useEffect(() => {
+    let animationFrame: number | null = null;
+
     const handleScrollUpdate = () => {
-      const container = document.body;
-      if (!container) return;
+      if (animationFrame !== null) return;
 
-      let selected = "";
-      deals.forEach((category) => {
-        const element = document.getElementById(toSlug(category.title));
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
-            selected = toSlug(category.title);
+      animationFrame = window.requestAnimationFrame(() => {
+        animationFrame = null;
+        if (categoryScrollTargetRef.current) return;
+
+        const navigationOffset = getCategoryNavigationOffset();
+        const activationLine = navigationOffset + 24;
+        let selected = deals[0] ? toSlug(deals[0].title) : "";
+        let mostVisibleHeight = 0;
+
+        for (const category of deals) {
+          const slug = toSlug(category.title);
+          const element = categoryRefs.current[slug];
+          if (!element) continue;
+
+          const bounds = element.getBoundingClientRect();
+          const visibleHeight = Math.max(
+            0,
+            Math.min(bounds.bottom, window.innerHeight) -
+              Math.max(bounds.top, activationLine),
+          );
+
+          if (bounds.top <= activationLine && bounds.bottom > activationLine) {
+            selected = slug;
+            mostVisibleHeight = Number.POSITIVE_INFINITY;
+            continue;
+          }
+
+          if (
+            mostVisibleHeight !== Number.POSITIVE_INFINITY &&
+            visibleHeight > mostVisibleHeight
+          ) {
+            selected = slug;
+            mostVisibleHeight = visibleHeight;
           }
         }
-      });
 
-      if (selected && selected !== selectedCategoryRef.current) {
-        setSelectedCategory(selected);
-        selectedCategoryRef.current = selected;
-      }
+        if (selected && selected !== selectedCategoryRef.current) {
+          setSelectedCategory(selected);
+          selectedCategoryRef.current = selected;
+        }
+      });
     };
 
     window.addEventListener("scroll", handleScrollUpdate, { passive: true });
+    document.addEventListener("scroll", handleScrollUpdate, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("resize", handleScrollUpdate);
+    handleScrollUpdate();
 
     return () => {
       window.removeEventListener("scroll", handleScrollUpdate);
+      document.removeEventListener("scroll", handleScrollUpdate, true);
+      window.removeEventListener("resize", handleScrollUpdate);
+      if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
+      if (categoryScrollTimeoutRef.current !== null) {
+        window.clearTimeout(categoryScrollTimeoutRef.current);
+      }
     };
-  }, [deals]);
+  }, [deals, getCategoryNavigationOffset]);
 
   return (
     <>
@@ -534,7 +594,7 @@ export default function RestaurantDetailsScreen() {
                 alt={`${restaurantInfo.name} logo`}
                 width={50}
                 height={50}
-                className="w-12 h-12 mb-2 object-cover"
+                className="mb-2 h-12 w-12 rounded-lg object-cover"
               />
 
               <div className="text-white space-y-2">
@@ -623,79 +683,81 @@ export default function RestaurantDetailsScreen() {
 
       {/* Category Section */}
       <motion.div
+        ref={categoryNavigationRef}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="lg:top-[60px] top-[95px] sticky z-50 bg-white dark:bg-gray-900 shadow-[0_1px_1px_rgba(0,0,0,0.1)] dark:shadow-[0_1px_1px_rgba(255,255,255,0.05)]"
+        className="sticky top-[95px] z-50 bg-white shadow-[0_1px_1px_rgba(0,0,0,0.1)] dark:bg-gray-900 dark:shadow-[0_1px_1px_rgba(255,255,255,0.05)] lg:top-[72px]"
       >
-        <PaddingContainer height={headerHeight}>
-          <div className="p-3 h-full w-full flex flex-col gap-3">
-            {/* Search Input */}
-            <div className="w-full md:max-w-[420px] md:ml-auto">
-              <CustomIconTextField
-                value={filter}
-                className="w-full h-11 rounded-full pl-10 pr-4 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
-                iconProperties={{
-                  icon: faSearch,
-                  position: "left",
-                  style: { marginTop: 0 },
-                }}
-                placeholder={t("search_for_food_items_placeholder")}
-                type="text"
-                name="search"
-                showLabel={false}
-                isLoading={loading}
-                onChange={(e) => setFilter(e.target.value)}
-              />
-            </div>
+        <PaddingContainer>
+          <div className="w-full px-3 py-3">
+            <div className="flex w-full flex-col gap-3 md:flex-row md:items-center">
+              {/* Category List */}
+              <div className="order-2 min-w-0 flex-1 md:order-1">
+                <div
+                  ref={categoryScrollerRef}
+                  className="flex min-h-11 w-full items-center overflow-x-auto overflow-y-hidden py-1
+                    [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                >
+                  <ul className="flex w-max flex-nowrap items-center gap-3">
+                    {deals.map((category: ICategory) => {
+                      const categorySlug = toSlug(category.title);
+                      const isSelected = selectedCategory === categorySlug;
 
-            {/* Category List */}
-            <div className="relative w-full min-w-0">
-              <div
-                className="min-h-12 w-full overflow-x-auto overflow-y-hidden flex items-center py-1
-                  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-              >
-                <ul className="flex gap-3 items-center w-max flex-nowrap">
-                  {(showAll ? deals : deals.slice(0, visibleItems)).map(
-                    (category: ICategory, index: number) => {
-                      const _slug = toSlug(category.title);
                       return (
-                        <li key={index} className="shrink-0">
+                        <li
+                          key={category._id || categorySlug}
+                          className="shrink-0"
+                        >
                           <button
+                            ref={(element) => {
+                              categoryTabRefs.current[categorySlug] = element;
+                            }}
                             type="button"
+                            aria-pressed={isSelected}
                             className={`${
-                              selectedCategory === _slug
+                              isSelected
                                 ? "bg-primary-light text-primary-color dark:bg-[#2E3B23] dark:text-[#D2F29E]"
-                                : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"
-                            } rounded-full px-3 py-2 text-[10px] sm:text-[12px] md:text-sm font-medium whitespace-nowrap leading-none`}
-                            onClick={() => handleScroll(toSlug(category.title))}
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                            } min-h-9 whitespace-nowrap rounded-full px-3 py-2 text-xs font-medium leading-none transition-colors sm:text-sm`}
+                            onClick={() => handleScroll(categorySlug)}
                           >
                             {category.title}
                           </button>
                         </li>
                       );
-                    },
-                  )}
+                    })}
+                  </ul>
+                </div>
+              </div>
 
-                  {!showAll && deals.length > visibleItems && (
-                    <li className="shrink-0">
-                      <button
-                        type="button"
-                        className="bg-secondary-color hover:bg-primary-dark text-white dark:bg-primary-dark rounded-full px-4 py-2 font-medium text-[12px] sm:text-[14px] cursor-pointer leading-none"
-                        onClick={() => setShowAll(true)}
-                      >
-                        {t("more_button")}
-                      </button>
-                    </li>
-                  )}
-                </ul>
+              {/* Search Input */}
+              <div className="order-1 w-full shrink-0 md:order-2 md:w-[360px] md:-translate-y-0.5 lg:w-[420px]">
+                <CustomIconTextField
+                  value={filter}
+                  className="h-11 w-full rounded-full pe-4 ps-10 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
+                  iconProperties={{
+                    icon: faSearch,
+                    position: direction === "rtl" ? "right" : "left",
+                  }}
+                  placeholder={t("search_for_food_items_placeholder")}
+                  type="text"
+                  name="search"
+                  showLabel={false}
+                  isLoading={loading}
+                  onChange={(e) => setFilter(e.target.value)}
+                />
               </div>
             </div>
 
             {normalizedFilter && (
-              <div className="flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
+              <div className="mt-2 flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
                 <span>
-                  {deals.reduce((count, category) => count + category.foods.length, 0)} results
+                  {deals.reduce(
+                    (count, category) => count + category.foods.length,
+                    0,
+                  )}{" "}
+                  results
                 </span>
                 <button
                   type="button"
@@ -766,7 +828,7 @@ export default function RestaurantDetailsScreen() {
                         </p>
 
                         <div className="flex items-center gap-2">
-                                  <span className="text-secondary-color dark:text-primary-color text-base sm:text-lg font-semibold">
+                          <span className="text-secondary-color dark:text-primary-color text-base sm:text-lg font-semibold">
                             {CURRENCY_SYMBOL} {meal.variations[0].price}
                           </span>
                         </div>

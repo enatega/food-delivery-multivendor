@@ -20,8 +20,8 @@ export const FoodSchema = Yup.object().shape({
   nutritionFacts: Yup.array()
     .of(
       Yup.object().shape({
-        label: Yup.string().nullable(),
-        value: Yup.string().nullable(),
+        name: Yup.string().trim().nullable(),
+        quantity: Yup.string().trim().nullable(),
       })
     )
     .nullable(),

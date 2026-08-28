@@ -10,9 +10,7 @@ import { Form, Formik } from 'formik';
 import { Card } from 'primereact/card';
 
 // Interface
-import {
-  ISignInForm,
-} from '@/lib/utils/interfaces/forms';
+import { ISignInForm } from '@/lib/utils/interfaces/forms';
 
 // Component
 import CustomButton from '@/lib/ui/useable-components/button';
@@ -20,16 +18,17 @@ import CustomIconTextField from '@/lib/ui/useable-components/input-icon-field';
 import CustomPasswordTextField from '@/lib/ui/useable-components/password-input-field';
 
 // Constants
-import {
-  APP_NAME,
-  SignInErrors,
-} from '@/lib/utils/constants';
+import { APP_NAME, SignInErrors } from '@/lib/utils/constants';
 
 // Methods
 import { onErrorMessageMatcher } from '@/lib/utils/methods/error';
 
 // Icons
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faArrowUpRightFromSquare,
+  faEnvelope,
+} from '@fortawesome/free-solid-svg-icons';
 
 // GraphQL
 import { OWNER_LOGIN } from '@/lib/api/graphql';
@@ -48,6 +47,10 @@ const initialValues: ISignInForm = {
   email: process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? '',
   password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? '',
 };
+
+const singleVendorAdminUrl =
+  process.env.NEXT_PUBLIC_SINGLE_VENDOR_ADMIN_URL ??
+  'https://enatega-singlevendor-admin.netlify.app/';
 
 export default function LoginEmailPasswordMain() {
   // Context
@@ -126,7 +129,7 @@ export default function LoginEmailPasswordMain() {
   return (
     <div className="flex h-full w-screen items-center justify-center bg-white dark:bg-dark-950">
       <div className="w-full md:w-1/2 lg:w-[30%]">
-        <Card className='dark:bg-dark-900 border dark:border-dark-600'>
+        <Card className="dark:bg-dark-900 border dark:border-dark-600">
           <div className="flex flex-col gap-2 ">
             <div className="mb-2 flex flex-col items-center gap-y-[0.5rem] p-2">
               <span className="font-inter text-center text-3xl font-semibold dark:text-white">
@@ -136,6 +139,19 @@ export default function LoginEmailPasswordMain() {
                 Welcome back! Please enter your details.
               </span>
             </div>
+
+            <a
+              href={singleVendorAdminUrl}
+              className="mb-2 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-gray-200 px-3 text-sm font-medium text-gray-700 transition-colors hover:border-primary-color hover:bg-secondary-color hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:border-dark-600 dark:text-white dark:hover:border-primary-color dark:hover:bg-dark-600"
+              aria-label="Open Single Vendor Admin"
+              title="Open Single Vendor Admin"
+            >
+              <FontAwesomeIcon
+                icon={faArrowUpRightFromSquare}
+                className="h-3.5 w-3.5"
+              />
+              <span>Single Vendor Admin</span>
+            </a>
 
             <div>
               <Formik

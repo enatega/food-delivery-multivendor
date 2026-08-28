@@ -83,6 +83,7 @@ export default function OptionAddForm({
   const [createOption, { loading: mutationLoading }] = useMutation(
     option ? EDIT_OPTION : CREATE_OPTIONS,
     {
+      awaitRefetchQueries: true,
       refetchQueries: [
         {
           query: GET_OPTIONS_BY_RESTAURANT_ID,
