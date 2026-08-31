@@ -18,6 +18,7 @@ import { useMutation } from '@apollo/client';
 import { Form, Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { Sidebar } from 'primereact/sidebar';
+import { Dropdown } from 'primereact/dropdown';
 import { ChangeEvent, useContext } from 'react';
 
 export default function NotificationForm({
@@ -34,16 +35,17 @@ export default function NotificationForm({
   const initialValues = {
     title: '',
     body: '',
+    recipientType: 'CUSTOMER' as const,
   };
 
   //Mutation
   const [sendNotificationUser] = useMutation(SEND_NOTIFICATION_USER, {
     refetchQueries: [{ query: GET_NOTIFICATIONS }],
-    onCompleted: () => {
+    onCompleted: (data) => {
       showToast({
         title: t('New Notification'),
         type: 'success',
-        message: t('Notification has been sent successfully'),
+        message: data?.sendNotificationUser || t('Notification has been sent successfully'),
         duration: 2500,
       });
     },
@@ -69,15 +71,18 @@ export default function NotificationForm({
         validationSchema={NotificationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
-          await sendNotificationUser({
-            variables: {
-              notificationTitle: values.title,
-              notificationBody: values.body,
-            },
-          });
-
-          setSubmitting(false);
-          setVisible(false);
+          try {
+            await sendNotificationUser({
+              variables: {
+                notificationTitle: values.title.trim(),
+                notificationBody: values.body.trim(),
+                recipientType: values.recipientType,
+              },
+            });
+            setVisible(false);
+          } finally {
+            setSubmitting(false);
+          }
         }}
         validateOnChange={false}
       >
@@ -90,6 +95,22 @@ export default function NotificationForm({
                 </h2>
               </div>
               <div className="space-y-4">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="recipientType" className="text-sm font-medium">
+                    {t('Recipient Type')}
+                  </label>
+                  <Dropdown
+                    inputId="recipientType"
+                    value={values.recipientType}
+                    options={[
+                      { label: t('Customer'), value: 'CUSTOMER' },
+                      { label: t('Store'), value: 'STORE' },
+                      { label: t('Rider'), value: 'RIDER' },
+                    ]}
+                    onChange={(event) => setFieldValue('recipientType', event.value)}
+                    className="w-full border border-gray-300 dark:border-dark-600"
+                  />
+                </div>
                 <CustomTextField
                   value={values.title}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>

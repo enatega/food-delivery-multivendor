@@ -10,6 +10,7 @@ export const CREATE_BANNER = gql`
       file
       screen
       parameters
+      buttonText
     }
   }
 `;
@@ -24,6 +25,7 @@ export const EDIT_BANNER = gql`
       file
       screen
       parameters
+      buttonText
     }
   }
 `;

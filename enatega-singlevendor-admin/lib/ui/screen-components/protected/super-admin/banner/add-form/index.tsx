@@ -86,7 +86,7 @@ const BannersAddForm = ({
     screen: banner
       ? banner.action === 'Navigate Specific Page'
         ? {
-          label: getLabelByCode(SCREEN_NAMES, banner.screen),
+          label: getLabelByCode(screenNames, banner.screen),
           code: banner.screen,
         }
         : banner.action === 'Navigate Specific Restaurant'

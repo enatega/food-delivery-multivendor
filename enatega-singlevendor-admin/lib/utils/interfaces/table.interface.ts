@@ -45,6 +45,7 @@ export interface IDataTableProps<T> extends IGlobalComponentProps {
   scrollHeight?: string;
   sortField?: string;
   sortOrder?: SortOrder;
+  onSortChange?: (field: string, order: SortOrder) => void;
   minWidth?: string;
 }
 

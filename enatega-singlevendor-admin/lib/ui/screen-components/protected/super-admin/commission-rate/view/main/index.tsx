@@ -64,7 +64,8 @@ export default function CommissionRateMain() {
   // Handlers
   const handleSave = async (restaurantId: string) => {
     const restaurant = restaurants.find((r) => r._id === restaurantId);
-    if (!restaurant?.commissionRate) {
+    const commissionRate = Number(restaurant?.commissionRate);
+    if (!restaurant || !Number.isFinite(commissionRate) || commissionRate < 0 || commissionRate > 100) {
       return showToast({
         type: 'error',
         title: t('Commission Updated'),
@@ -73,21 +74,11 @@ export default function CommissionRateMain() {
     }
     if (restaurant) {
       setLoadingRestaurant(restaurantId);
-      if (restaurant?.commissionRate > 100) {
-        setLoadingRestaurant(null);
-        return showToast({
-          type: 'error',
-          title: t('Commission Updated'),
-          message: t(
-            'As commission rate is a %age value so it cannot exceed a max value of 100'
-          ),
-        });
-      }
       try {
         await updateCommissionMutation({
           variables: {
             id: restaurantId,
-            commissionRate: parseFloat(String(restaurant?.commissionRate)),
+            commissionRate,
           },
         });
         showToast({
@@ -123,9 +114,11 @@ export default function CommissionRateMain() {
           : restaurant
       )
     );
+    const originalRate = Number(data?.restaurants?.find((item) => item._id === restaurantId)?.commissionRate);
     setEditingRestaurantIds((prev) => {
       const newSet = new Set(prev);
-      newSet.add(restaurantId);
+      if (Number.isFinite(value) && value === originalRate) newSet.delete(restaurantId);
+      else newSet.add(restaurantId);
       return newSet;
     });
   };
@@ -201,7 +194,9 @@ export default function CommissionRateMain() {
           handleSave,
           handleCommissionRateChange,
           loadingRestaurant,
+          editingRestaurantIds,
         })}
+        className="commission-rate-table"
         loading={loading}
         header={
           <CommissionRateHeader

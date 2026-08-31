@@ -445,6 +445,7 @@ export const generateDummyNotifications = (count: number = 10) => {
       title: `notification_${i + 1}`,
       createdAt: new Date().toDateString(),
       body: `notification_${i + 1}`,
+      recipientType: 'CUSTOMER',
     });
   }
   return notifications;

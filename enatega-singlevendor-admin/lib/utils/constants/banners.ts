@@ -34,12 +34,4 @@ export const SINGLE_VENDOR_SCREEN_NAMES = [
     label: 'Category',
     code: 'Category',
   },
-  {
-    label: 'Subscription',
-    code: 'Subscription',
-  },
-  {
-    label: 'Info',
-    code: 'Info',
-  },
 ];

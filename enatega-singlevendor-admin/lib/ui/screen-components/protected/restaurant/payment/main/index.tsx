@@ -56,9 +56,14 @@ export default function PaymentMain() {
           Authorization: `Bearer ${getAccessToken()}`,
         },
       });
-      const data = await response.json();
+      const contentType = response.headers.get('content-type') || '';
+      const data = contentType.includes('application/json')
+        ? await response.json()
+        : { message: await response.text() };
       if (!response.ok || !isAllowedStripeRedirect(data.url)) {
-        throw new Error('Invalid Stripe onboarding response');
+        throw new Error(
+          data?.message || data?.error || 'Invalid Stripe onboarding response'
+        );
       }
       window.location.href = data.url;
     } catch (error) {
@@ -66,7 +71,10 @@ export default function PaymentMain() {
       showToast({
         type: 'error',
         title: t('Stripe Payment'),
-        message: t('Error connecting to Stripe'),
+        message:
+          error instanceof Error && error.message
+            ? error.message
+            : t('Error connecting to Stripe'),
       });
     } finally {
       setSubmittingMethod(null);

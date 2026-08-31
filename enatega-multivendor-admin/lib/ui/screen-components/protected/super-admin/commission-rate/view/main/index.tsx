@@ -19,7 +19,7 @@ import { IQueryResult, ICommissionRateRestaurantResponse, IPaginationCommissionR
 import { useMutation } from '@apollo/client';
 
 // React hooks
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useDeferredValue, useEffect, useState } from 'react';
 
 // Table column definitions
 import { COMMISSION_RATE_ACTIONS } from '@/lib/utils/constants';
@@ -35,6 +35,7 @@ interface CommissionRateData {
     totalPages: number;
     nextPage: boolean;
     prevPage: boolean;
+    totalCount: number;
   };
 }
 
@@ -57,6 +58,9 @@ export default function CommissionRateMain() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sortField, setSortField] = useState<'name' | 'commissionRate'>('name');
+  const [sortOrder, setSortOrder] = useState<1 | -1>(1);
+  const deferredSearchTerm = useDeferredValue(searchTerm);
 
   // Context
   const { showToast } = useContext(ToastContext);
@@ -64,7 +68,13 @@ export default function CommissionRateMain() {
   // Query
   const { data, error, refetch, loading } = useQueryGQL(
     GET_COMMISSION_RATES_PAGINATED,
-    { page: currentPage, limit: rowsPerPage },
+    {
+      page: currentPage,
+      limit: rowsPerPage,
+      search: deferredSearchTerm || undefined,
+      sortBy: sortField === 'commissionRate' ? 'COMMISSION_RATE' : 'NAME',
+      sortOrder: sortOrder === -1 ? 'DESC' : 'ASC',
+    },
     {
       fetchPolicy: 'cache-and-network',
     }
@@ -76,7 +86,8 @@ export default function CommissionRateMain() {
   // Handlers
   const handleSave = async (restaurantId: string) => {
     const restaurant = restaurants?.find((r) => r._id === restaurantId);
-    if (!restaurant?.commissionRate) {
+    const commissionRate = Number(restaurant?.commissionRate);
+    if (!restaurant || !Number.isFinite(commissionRate) || commissionRate < 0 || commissionRate > 100) {
       return showToast({
         type: 'error',
         title: t('Commission Updated'),
@@ -85,21 +96,11 @@ export default function CommissionRateMain() {
     }
     if (restaurant) {
       setLoadingRestaurant(restaurantId);
-      if (restaurant?.commissionRate > 100) {
-        setLoadingRestaurant(null);
-        return showToast({
-          type: 'error',
-          title: t('Commission Updated'),
-          message: t(
-            'As commission rate is a %age value so it cannot exceed a max value of 100'
-          ),
-        });
-      }
       try {
         await updateCommissionMutation({
           variables: {
             id: restaurantId,
-            commissionRate: parseFloat(String(restaurant?.commissionRate)),
+            commissionRate,
           },
         });
         showToast({
@@ -137,9 +138,11 @@ export default function CommissionRateMain() {
         )
         : null
     );
+    const originalRate = Number(data?.commissionRate?.restaurant?.find((item) => item._id === restaurantId)?.commissionRate);
     setEditingRestaurantIds((prev) => {
       const newSet = new Set(prev);
-      newSet.add(restaurantId);
+      if (Number.isFinite(value) && value === originalRate) newSet.delete(restaurantId);
+      else newSet.add(restaurantId);
       return newSet;
     });
   };
@@ -210,20 +213,33 @@ export default function CommissionRateMain() {
           handleSave,
           handleCommissionRateChange,
           loadingRestaurant,
+          editingRestaurantIds,
         })}
+        className="commission-rate-table"
         loading={loading || restaurants === null}
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
-        totalRecords={(data?.commissionRate?.totalPages || 0) * rowsPerPage} // Approximation if totalCount missing
+        totalRecords={data?.commissionRate?.totalCount || 0}
         onPageChange={(page, rows) => {
           setCurrentPage(page);
           setRowsPerPage(rows);
+        }}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onSortChange={(field, order) => {
+          if (field !== 'name' && field !== 'commissionRate') return;
+          setSortField(field);
+          setSortOrder(order === -1 ? -1 : 1);
+          setCurrentPage(1);
         }}
         header={
           <CommissionRateHeader
             selectedActions={selectedActions}
             setSelectedActions={setSelectedActions}
-            onSearch={setSearchTerm}
+            onSearch={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
           />
         }
       />

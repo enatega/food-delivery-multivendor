@@ -67,7 +67,7 @@ const CommissionRateHeader: React.FC<ICommissionRateHeaderProps> = ({
             maxLength={35}
             className="w-64"
             showLabel={false}
-            placeholder={t('Filter tasks')}
+            placeholder={t('Search stores')}
             value={searchValue}
             onChange={handleSearch}
           />

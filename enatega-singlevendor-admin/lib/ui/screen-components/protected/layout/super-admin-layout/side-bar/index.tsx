@@ -57,7 +57,15 @@ function SuperAdminSidebar({ children }: IGlobalComponentProps) {
 export default function MakeSidebar() {
   // Hooks
   const t = useTranslations();
-  const { IS_MULTIVENDOR } = useConfiguration();
+  const { IS_MULTIVENDOR, SINGLE_VENDOR_WEB_URL } = useConfiguration();
+  const websiteUrl = (() => {
+    try {
+      const url = new URL(SINGLE_VENDOR_WEB_URL || '');
+      return ['http:', 'https:'].includes(url.protocol) ? url.toString() : null;
+    } catch {
+      return null;
+    }
+  })();
 
   // Contexts
   const { isSuperAdminSidebarVisible } =
@@ -67,10 +75,10 @@ export default function MakeSidebar() {
     {
       text: 'My Website',
       label: t('My Website'),
-      route: 'https://web-fast.netlify.app/',
+      route: websiteUrl || '/',
       isParent: true,
       icon: faUpRightFromSquare,
-      isClickable: true,
+      isClickable: Boolean(websiteUrl),
       shouldOpenInNewTab: true,
     },
     {

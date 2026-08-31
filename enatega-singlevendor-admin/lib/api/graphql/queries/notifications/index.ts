@@ -7,6 +7,7 @@ export const GET_NOTIFICATIONS = gql`
       body
       title
       createdAt
+      recipientType
     }
   }
 `;

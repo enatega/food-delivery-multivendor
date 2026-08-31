@@ -6,6 +6,7 @@ export interface INotification {
   title: string;
   body: string;
   createdAt: string;
+  recipientType: 'CUSTOMER' | 'STORE' | 'RIDER';
 }
 
 export interface IGetNotification {

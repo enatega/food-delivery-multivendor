@@ -3,7 +3,7 @@ import { INotification } from '@/lib/utils/interfaces/notification.interface';
 import CustomButton from '../../button';
 
 // Hooks
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useMutation } from '@apollo/client';
 
 // GrahpQL
@@ -17,9 +17,10 @@ export const NOTIFICATIONS_TABLE_COLUMNS = () => {
   // Hooks
   const t = useTranslations();
   const { showToast } = useContext(ToastContext);
+  const [resendingId, setResendingId] = useState<string | null>(null);
 
   // Mutations
-  const [sendNotificationUser, { loading }] = useMutation(
+  const [sendNotificationUser] = useMutation(
     SEND_NOTIFICATION_USER,
     {
       onCompleted: () => {
@@ -44,17 +45,37 @@ export const NOTIFICATIONS_TABLE_COLUMNS = () => {
 
   // Handlers
   async function handleResendNotification(rowData: INotification) {
-    await sendNotificationUser({
-      variables: {
-        notificationTitle: rowData.title,
-        notificationBody: rowData.body,
-      },
-    });
+    setResendingId(rowData._id);
+    try {
+      await sendNotificationUser({
+        variables: {
+          notificationTitle: rowData.title,
+          notificationBody: rowData.body,
+          recipientType: rowData.recipientType || 'CUSTOMER',
+        },
+      });
+    } finally {
+      setResendingId(null);
+    }
   }
+
+  const formatNotificationDate = (value: string) => {
+    const date = /^\d+$/.test(value) ? new Date(Number(value)) : new Date(value);
+    if (Number.isNaN(date.getTime())) return '—';
+    return new Intl.DateTimeFormat(undefined, {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    }).format(date);
+  };
 
   // Columns
   const notification_columns = useMemo(
     () => [
+      {
+        headerName: t('Recipient Type'),
+        propertyName: 'recipientType',
+        body: (rowData: INotification) => <span>{t(rowData.recipientType || 'CUSTOMER')}</span>,
+      },
       {
         headerName: t('Title'),
         propertyName: 'title',
@@ -67,7 +88,7 @@ export const NOTIFICATIONS_TABLE_COLUMNS = () => {
         headerName: t('Date'),
         propertyName: 'createdAt',
         body: (rowData: INotification) => {
-          return <span>{rowData.createdAt}</span>;
+          return <span>{formatNotificationDate(rowData.createdAt)}</span>;
         },
       },
       {
@@ -76,15 +97,16 @@ export const NOTIFICATIONS_TABLE_COLUMNS = () => {
         body: (rowData: INotification) => (
           <CustomButton
             onClick={() => handleResendNotification(rowData)}
-            label="Resend"
-            loading={loading}
+            label={t('Resend')}
+            loading={resendingId === rowData._id}
+            disabled={resendingId !== null}
             type="button"
             className="block self-end"
           />
         ),
       },
     ],
-    []
+    [resendingId, t]
   );
   return notification_columns;
 };

@@ -84,6 +84,7 @@ export const useConfiguration = () => {
   return {
     SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
     WS_SERVER_URL: process.env.NEXT_PUBLIC_WS_SERVER_URL,
+    SINGLE_VENDOR_WEB_URL: process.env.NEXT_PUBLIC_SINGLE_VENDOR_WEB_URL,
     COLORS,
     IS_FETCHING_CONFIGURATION,
     RESTURANT_COUNT,

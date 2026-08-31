@@ -25,8 +25,8 @@ export const GET_RESTAURANTS_DROPDOWN = gql`
 // currentPage
 // totalPages
 export const GET_COMMISSION_RATES_PAGINATED = gql`
-  query CommissionRate($page: Int, $limit: Int) {
-    commissionRate(page: $page, limit: $limit) {
+  query CommissionRate($page: Int, $limit: Int, $search: String, $sortBy: CommissionRateSortField, $sortOrder: CommissionRateSortOrder) {
+    commissionRate(page: $page, limit: $limit, search: $search, sortBy: $sortBy, sortOrder: $sortOrder) {
       restaurant {
         _id
         unique_restaurant_id
@@ -37,6 +37,7 @@ export const GET_COMMISSION_RATES_PAGINATED = gql`
       }
       currentPage
       totalPages
+      totalCount
       nextPage
       prevPage
     }

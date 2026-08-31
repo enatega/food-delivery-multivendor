@@ -4,10 +4,12 @@ export const SEND_NOTIFICATION_USER = gql`
   mutation SendNotificationUser(
     $notificationTitle: String
     $notificationBody: String!
+    $recipientType: NotificationRecipientType
   ) {
     sendNotificationUser(
       notificationTitle: $notificationTitle
       notificationBody: $notificationBody
+      recipientType: $recipientType
     )
   }
 `;

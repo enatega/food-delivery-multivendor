@@ -39,6 +39,9 @@ const Table = <T extends ITableExtends>({
   currentPage = 1,
   minWidth,
   globalFilterFields,
+  sortField,
+  sortOrder,
+  onSortChange,
 }: IDataTableProps<T>) => {
   const handleSelectionChange = (
     e: DataTableSelectionMultipleChangeEvent<T[]>
@@ -118,6 +121,10 @@ const Table = <T extends ITableExtends>({
         scrollable={scrollable}
         scrollHeight={scrollHeight}
         removableSort
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onSort={onSortChange ? (event) => onSortChange(String(event.sortField || ''), event.sortOrder) : undefined}
+        paginatorClassName="gap-2 rounded-b-xl border border-gray-200 px-3 py-2 dark:border-dark-600"
         rowClassName={rowClassName}
         onRowClick={handleRowClick}
         emptyMessage={
@@ -149,7 +156,7 @@ const Table = <T extends ITableExtends>({
             field={col?.propertyName}
             header={col?.headerName}
             className="dark:text-white"
-            headerClassName="dark:text-white dark:bg-dark-900"
+            headerClassName="sticky top-0 z-10 bg-white dark:text-white dark:bg-dark-900"
             footerClassName="dark:text-white dark:bg-dark-900"
             sortable={!col?.propertyName?.includes('action')}
             hidden={col?.hidden}
