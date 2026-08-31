@@ -102,7 +102,6 @@ export default function OrderTrackingScreen({
     return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
   }, [mergedOrderDetails?.deliveryAddress?.location?.coordinates]);
   const showLiveMap =
-    !mergedOrderDetails?.isPickedUp &&
     isLiveDeliveryTrackingStatus(mergedOrderDetails?.orderStatus) &&
     Boolean(destination);
 

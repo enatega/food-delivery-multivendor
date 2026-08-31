@@ -34,6 +34,7 @@ export default function SingleVendorProductDetails({
     variables: { foodId, skip: 0, limit: 5 },
   });
   const [selectedVariation, setSelectedVariation] = useState("");
+  const [selectedAddonOptions, setSelectedAddonOptions] = useState<Record<string, string[]>>({});
   const [toggleFavorite] = useMutation(SINGLE_VENDOR_TOGGLE_FAVORITE);
   const product = productQuery.data?.getFoodDetails;
   if (productQuery.loading)
@@ -61,6 +62,39 @@ export default function SingleVendorProductDetails({
   const selectedIsOutOfStock = Boolean(
     product.isOutOfStock || variation?.isOutOfStock,
   );
+  const addonGroups = variation?.addons ?? [];
+  const addonTotal = addonGroups.reduce(
+    (sum: number, addon: any) =>
+      sum +
+      (addon.options ?? [])
+        .filter((option: any) => selectedAddonOptions[addon.id]?.includes(option.id))
+        .reduce((optionSum: number, option: any) => optionSum + Number(option.price || 0), 0),
+    0,
+  );
+  const addonsAreValid = addonGroups.every((addon: any) => {
+    const count = selectedAddonOptions[addon.id]?.length ?? 0;
+    return count >= Number(addon.quantityMinimum || 0) &&
+      count <= Number(addon.quantityMaximum || Number.POSITIVE_INFINITY);
+  });
+  const selectedAddons = addonGroups
+    .map((addon: any) => ({
+      _id: addon.id,
+      options: (selectedAddonOptions[addon.id] ?? []).map((_id) => ({ _id })),
+    }))
+    .filter((addon: any) => addon.options.length > 0);
+
+  const toggleAddonOption = (addon: any, optionId: string) => {
+    setSelectedAddonOptions((current) => {
+      const selected = current[addon.id] ?? [];
+      const maximum = Number(addon.quantityMaximum || addon.options?.length || 1);
+      if (maximum === 1) return { ...current, [addon.id]: [optionId] };
+      if (selected.includes(optionId)) {
+        return { ...current, [addon.id]: selected.filter((id) => id !== optionId) };
+      }
+      if (selected.length >= maximum) return current;
+      return { ...current, [addon.id]: [...selected, optionId] };
+    });
+  };
   return (
     <div className="pb-12 pt-6">
       <div className="grid gap-8 md:grid-cols-2">
@@ -124,7 +158,10 @@ export default function SingleVendorProductDetails({
                       type="radio"
                       name="variation"
                       checked={variationId === variation.id}
-                      onChange={() => setSelectedVariation(variation.id)}
+                      onChange={() => {
+                        setSelectedVariation(variation.id);
+                        setSelectedAddonOptions({});
+                      }}
                       className="me-3"
                     />
                     {variation.title}
@@ -148,6 +185,46 @@ export default function SingleVendorProductDetails({
               );
             })}
           </div>
+          {addonGroups.length > 0 && (
+            <div className="mt-6 space-y-4">
+              {addonGroups.map((addon: any) => {
+                const minimum = Number(addon.quantityMinimum || 0);
+                const maximum = Number(addon.quantityMaximum || addon.options?.length || 1);
+                return (
+                  <fieldset key={addon.id} className="rounded-2xl border border-gray-200 p-4 dark:border-gray-700">
+                    <legend className="px-2 font-semibold text-gray-900 dark:text-white">
+                      {addon.title}{' '}
+                      <span className="text-xs font-normal text-gray-500">
+                        {minimum > 0 ? `Select ${minimum}` : 'Optional'}
+                        {maximum > 1 ? ` · up to ${maximum}` : ''}
+                      </span>
+                    </legend>
+                    {addon.description && <p className="mb-3 text-sm text-gray-500">{addon.description}</p>}
+                    <div className="space-y-2">
+                      {(addon.options ?? []).map((option: any) => {
+                        const checked = selectedAddonOptions[addon.id]?.includes(option.id) ?? false;
+                        return (
+                          <label key={option.id} className="flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <span className="flex items-center gap-3">
+                              <input
+                                type={maximum === 1 ? 'radio' : 'checkbox'}
+                                name={`addon-${addon.id}`}
+                                checked={checked}
+                                onChange={() => toggleAddonOption(addon, option.id)}
+                                className="accent-primary-color"
+                              />
+                              <span>{option.title}</span>
+                            </span>
+                            <span className="text-sm text-gray-500">+{formatCurrency(Number(option.price || 0))}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+                );
+              })}
+            </div>
+          )}
           <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-gray-700 dark:bg-gray-800">
             <div className="min-w-0">
               <p className="font-semibold text-gray-900 dark:text-white">
@@ -157,21 +234,30 @@ export default function SingleVendorProductDetails({
               </p>
               {!selectedIsOutOfStock && (
                 <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                  Add this option now and adjust the quantity anytime.
+                  {addonsAreValid
+                    ? `${formatCurrency(Number(selectedFinalPrice) + addonTotal)} per item`
+                    : 'Select the required options to continue.'}
                 </p>
               )}
             </div>
-            <CartQuantityController
-              variant="details"
-              foodId={foodId}
-              categoryId={categoryId || product.categoryId}
-              variationId={variationId}
-              foodTitle={product.title}
-              variationTitle={variation?.title}
-              image={product.image}
-              unitPrice={Number(selectedFinalPrice)}
-              isOutOfStock={selectedIsOutOfStock}
-            />
+            {addonsAreValid ? (
+              <CartQuantityController
+                variant="details"
+                foodId={foodId}
+                categoryId={categoryId || product.categoryId}
+                variationId={variationId}
+                foodTitle={product.title}
+                variationTitle={variation?.title}
+                image={product.image}
+                unitPrice={Number(selectedFinalPrice) + addonTotal}
+                addons={selectedAddons}
+                isOutOfStock={selectedIsOutOfStock}
+              />
+            ) : (
+              <button type="button" disabled className="h-14 min-w-[190px] rounded-2xl bg-gray-200 px-5 font-semibold text-gray-500 dark:bg-gray-700 dark:text-gray-300">
+                Select required options
+              </button>
+            )}
           </div>
           {product.ingredients && (
             <p className="mt-8 text-sm text-gray-500">

@@ -793,6 +793,15 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
         (item) =>
           item._id === input.foodId && item.variation._id === input.variationId,
       );
+      const normalizeAddons = (addons: SingleVendorCartQuantityInput["addons"] = []) =>
+        addons
+          .map((addon) => ({
+            _id: addon._id,
+            options: addon.options.map((option) => option._id).sort(),
+          }))
+          .sort((a, b) => a._id.localeCompare(b._id));
+      const addonsChanged = JSON.stringify(normalizeAddons(existing?.addons)) !==
+        JSON.stringify(normalizeAddons(input.addons));
 
       setCart((currentCart) => {
         const currentIndex = currentCart.findIndex(
@@ -830,7 +839,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       });
 
       try {
-        if (existing && !existing.key.startsWith("optimistic:")) {
+        if (
+          existing &&
+          !existing.key.startsWith("optimistic:") &&
+          (quantity === 0 || !addonsChanged)
+        ) {
           const response = await updateSingleCartCount({
             variables: {
               input: {
@@ -881,7 +894,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
           }
         }
 
-        await fetchSingleCart();
       } catch (error) {
         await fetchSingleCart();
         throw error;

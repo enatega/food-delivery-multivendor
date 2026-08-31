@@ -101,6 +101,32 @@ function TrackingOrderDetails({
     return (variationPrice + addonsPrice) * item.quantity;
   };
 
+  const getItemPricing = (item: any) => {
+    const originalUnitPrice = Number(item.variation?.price || 0);
+    const discountedUnitPrice = Number(
+      item.variation?.discounted ?? originalUnitPrice,
+    );
+    const addonsUnitPrice =
+      item.addons?.reduce(
+        (sum: number, addon: any) =>
+          sum +
+          addon.options.reduce(
+            (optionSum: number, option: any) =>
+              optionSum + Number(option.price || 0),
+            0,
+          ),
+        0,
+      ) || 0;
+    return {
+      originalUnitPrice,
+      discountedUnitPrice,
+      addonsUnitPrice,
+      hasDiscount: discountedUnitPrice < originalUnitPrice,
+      originalLineTotal: (originalUnitPrice + addonsUnitPrice) * item.quantity,
+      finalLineTotal: (discountedUnitPrice + addonsUnitPrice) * item.quantity,
+    };
+  };
+
   // Check if order can be cancelled (only PENDING or ACCEPTED)
   const canCancelOrder = () => {
     const cancellableStatuses = ["PENDING"];
@@ -191,9 +217,22 @@ function TrackingOrderDetails({
                 )}
               </div>
             </div>
-            <span className="text-secondary-color dark:text-primary-color font-semibold">
-              {formatCurrency(calculateItemTotal(item))}
-            </span>
+            <div className="text-end">
+              {getItemPricing(item).hasDiscount && (
+                <span className="me-2 text-sm text-gray-400 line-through">
+                  {formatCurrency(getItemPricing(item).originalLineTotal)}
+                </span>
+              )}
+              <span className="text-secondary-color dark:text-primary-color font-semibold">
+                {formatCurrency(getItemPricing(item).finalLineTotal)}
+              </span>
+              <p className="mt-1 text-xs text-gray-500">
+                {item.quantity} × {formatCurrency(getItemPricing(item).discountedUnitPrice)}
+                {getItemPricing(item).addonsUnitPrice > 0
+                  ? ` + ${formatCurrency(getItemPricing(item).addonsUnitPrice)} add-ons`
+                  : ''}
+              </p>
+            </div>
           </div>
         ))}
       </div>
@@ -221,8 +260,7 @@ function TrackingOrderDetails({
               </span>
               <span>
                 {formatCurrency(
-                  (item.variation?.discounted ?? item.variation?.price ?? 0) *
-                    item.quantity,
+                  calculateItemTotal(item),
                 )}
               </span>
             </div>

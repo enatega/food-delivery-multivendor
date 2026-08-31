@@ -382,6 +382,8 @@ export const SINGLE_VENDOR_PRODUCT = gql`
           title
           description
           isSelected
+          quantityMinimum
+          quantityMaximum
           options {
             id
             title

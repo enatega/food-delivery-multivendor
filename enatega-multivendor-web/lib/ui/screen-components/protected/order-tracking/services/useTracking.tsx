@@ -29,10 +29,8 @@ function useTracking({ orderId }: { orderId: string }) {
   const currentStatus =
     subscriptionData?.subscriptionOrder?.orderStatus ||
     orderTrackingDetails?.orderDetails?.orderStatus;
-  const isDeliveryOrder = !orderTrackingDetails?.orderDetails?.isPickedUp;
   const trackingEnabled =
     Boolean(orderId) &&
-    isDeliveryOrder &&
     isLiveDeliveryTrackingStatus(currentStatus);
 
   const { data: initialTrackingData } = useQuery(ORDER_LIVE_TRACKING, {

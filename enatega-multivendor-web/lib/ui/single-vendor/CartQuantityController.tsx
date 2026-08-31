@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { FiMinus, FiPlus, FiShoppingBag, FiTrash2 } from "react-icons/fi";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useAuth } from "@/lib/context/auth/auth.context";
 import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
@@ -18,6 +18,7 @@ interface CartQuantityControllerProps {
   unitPrice?: number;
   variant?: "overlay" | "details";
   isOutOfStock?: boolean;
+  addons?: Array<{ _id: string; options: Array<{ _id: string }> }>;
 }
 
 export default function CartQuantityController({
@@ -30,12 +31,14 @@ export default function CartQuantityController({
   unitPrice,
   variant = "overlay",
   isOutOfStock = false,
+  addons = [],
 }: CartQuantityControllerProps) {
   const t = useTranslations();
   const { authToken, setIsAuthModalVisible } = useAuth();
   const { cart, setSingleVendorItemQuantity } = useUser();
   const { showToast } = useToast();
   const [isUpdating, setIsUpdating] = useState(false);
+  const updatePendingRef = useRef(false);
   const cartItem = cart.find(
     (item) => item._id === foodId && item.variation._id === variationId,
   );
@@ -43,6 +46,7 @@ export default function CartQuantityController({
   const isDetails = variant === "details";
 
   const changeQuantity = async (nextQuantity: number) => {
+    if (updatePendingRef.current) return;
     if (isOutOfStock && nextQuantity > quantity) return;
     if (!authToken) {
       setIsAuthModalVisible(true);
@@ -59,6 +63,7 @@ export default function CartQuantityController({
     }
 
     try {
+      updatePendingRef.current = true;
       setIsUpdating(true);
       await setSingleVendorItemQuantity({
         foodId,
@@ -69,7 +74,7 @@ export default function CartQuantityController({
         variationTitle,
         image,
         unitPrice,
-        addons: [],
+        addons,
       });
     } catch (error) {
       showToast({
@@ -81,6 +86,7 @@ export default function CartQuantityController({
             : "Please try updating your cart again.",
       });
     } finally {
+      updatePendingRef.current = false;
       setIsUpdating(false);
     }
   };

@@ -64,8 +64,8 @@ const Card: React.FC<ICardProps> = ({
           src={item?.image}
           alt={item?.name}
           fill
+          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 30vw"
           className="object-cover transition duration-500 group-hover:scale-[1.025]"
-          unoptimized
         />
       </div>
 

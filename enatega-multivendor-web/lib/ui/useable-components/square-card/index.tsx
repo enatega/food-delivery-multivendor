@@ -56,6 +56,7 @@ const SquareCard: React.FC<ICuisinesCardProps> = ({
             src={getImgSrc}
             alt={item?.name}
             fill
+            sizes={cuisines ? "112px" : "(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 20vw"}
             className="object-cover transition duration-500 group-hover:scale-[1.025]"
           />
         )}
