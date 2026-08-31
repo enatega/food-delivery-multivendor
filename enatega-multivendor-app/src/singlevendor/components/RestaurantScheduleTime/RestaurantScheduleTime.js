@@ -26,17 +26,16 @@ const RestaurantScheduleTime = () => {
 
     const formatDaysLabel = label => {
       if (!label) return ''
-      return label
-        .split('-')
-        .map(day => {
-          const dayCode = day.trim().toUpperCase()
-          return t(dayCode, { defaultValue: dayCode })
-        })
-        .join('–')
+      return label.replace(/\b(MON|TUE|WED|THU|FRI|SAT|SUN)\b/g, dayCode =>
+        t(dayCode, { defaultValue: dayCode })
+      ).replace(/-/g, '–')
     }
 
     const primaryDays = formatDaysLabel(openDaysString)
-    const primaryHours = openDaysTimes?.trim() || ''
+    const rawPrimaryHours = openDaysTimes?.trim() || ''
+    const primaryHours = rawPrimaryHours.includes(';')
+      ? formatDaysLabel(rawPrimaryHours).replace(/;\s*/g, '\n')
+      : rawPrimaryHours.replace(new RegExp(`^${openDaysString?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`), '')
     const saturdayHours = saturdaySlotString?.trim() || ''
     const saturdayLabel = t('SAT', { defaultValue: 'SAT' })
 
@@ -126,7 +125,7 @@ const styles = (currentTheme) =>
     container: {
       flexDirection: 'row',
       alignItems: 'center',
-      width: scale(104),
+      width: scale(148),
       minHeight: scale(42),
       paddingHorizontal: scale(7),
       paddingVertical: scale(6),
