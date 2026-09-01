@@ -1,0 +1,35 @@
+appId: ${APP_ID}
+---
+# Search for the second allowlisted restaurant and scroll its second allowlisted
+# product into view, without tapping it. Callers decide what the tap should do.
+#
+# Same matching rules as discovery.yaml: names are wrapped in .* because catalog
+# names carry padding, cards are tapped by test ID because the search box and
+# the menu's scroll container both defeat text matching.
+- tapOn:
+    id: customer.tab.search
+- extendedWaitUntil:
+    visible:
+      id: customer.search.input
+    timeout: 15000
+- tapOn:
+    id: customer.search.input
+- inputText: ${SECOND_RESTAURANT_NAME}
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      text: ".*${SECOND_RESTAURANT_NAME}.*"
+    timeout: 30000
+- tapOn:
+    id: "customer\\.restaurant\\.card\\..*"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: ".*${SECOND_RESTAURANT_NAME}.*"
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: "customer\\.product\\.card\\.${SECOND_PRODUCT_ID}"
+    direction: DOWN
+    timeout: 30000
+    centerElement: false

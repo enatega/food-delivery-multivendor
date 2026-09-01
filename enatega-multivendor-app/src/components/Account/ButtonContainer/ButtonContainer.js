@@ -20,6 +20,7 @@ const ButtonContainer = (props) => {
     <>
       <View style={[styles().padding]}>
         <TouchableOpacity
+          testID={props?.testID}
           activeOpacity={isDisabled ? 1 : 0.7}
           style={[styles(currentTheme).linkContainer, styles(currentTheme).flexRow]}
           onPress={isDisabled ? null : props?.onPress}
@@ -39,6 +40,7 @@ const ButtonContainer = (props) => {
           <View style={styles(currentTheme).leftContainer}>
             <View>
               <TextDefault
+                testID={props?.detailTestID}
                 style={styles().drawerContainer}
                 textColor={currentTheme.fontMainColor}
                 small

@@ -1,0 +1,45 @@
+appId: ${APP_ID}
+name: CM-P1-007 Guest browsing cannot reach checkout
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# A guest may browse the catalog and build a cart, but Cart.js renders
+# `customer.cart.checkout` only when `isLoggedIn && profile`. This flow proves
+# the auth wall holds at the point where an order would otherwise begin.
+- runFlow: ../../subflows/launch.yaml
+- tapOn:
+    id: customer.tab.profile
+- assertVisible:
+    id: customer.auth.welcome
+- tapOn:
+    id: customer.auth.continue-guest
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+# Browsing and cart building must still work without an account.
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- assertVisible:
+    id: customer.cart.total
+# The gate itself.
+- assertNotVisible:
+    id: customer.cart.checkout
+- takeScreenshot: guest-checkout-gate
+# Signing in from the same session must lift the gate, which also proves the
+# assertion above failed for the right reason rather than a missing cart.
+- runFlow: ../../subflows/login.yaml
+- retry:
+    maxRetries: 5
+    commands:
+      - tapOn:
+          id: customer.header.cart
+      - extendedWaitUntil:
+          visible:
+            id: customer.cart.screen
+          timeout: 10000
+- assertVisible:
+    id: customer.cart.checkout
+- takeScreenshot: authenticated-checkout-available

@@ -241,10 +241,10 @@ export default function CurrentLocation() {
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return !currentLocation && !isInitialLoading ? (
-    <View style={[allowedLocationStyles.container, { backgroundColor: currentTheme.themeBackground }]}>
+    <View testID='customer.location.screen' style={[allowedLocationStyles.container, { backgroundColor: currentTheme.themeBackground }]}>
       <Text style={allowedLocationStyles.title}>Enable Location Services</Text>
       <Text style={allowedLocationStyles.description}>We need access to your location to show nearby restaurants and provide accurate delivery services.</Text>
-      <TouchableOpacity style={allowedLocationStyles.button} onPress={onRequestPermissionHandler}>
+      <TouchableOpacity testID='customer.location.allow' style={allowedLocationStyles.button} onPress={onRequestPermissionHandler}>
         <Text style={allowedLocationStyles.buttonText}>Allow Location Access</Text>
       </TouchableOpacity>
     </View>
@@ -259,7 +259,7 @@ export default function CurrentLocation() {
     >
       <View style={[styles().flex, styles(currentTheme).screenBackground]}>
         <View style={styles().mapView}>
-          <MapView style={styles().flex} provider={PROVIDER_DEFAULT} customMapStyle={customMapStyle} region={initialRegion}>
+          <MapView testID='customer.location.map' style={styles().flex} provider={PROVIDER_DEFAULT} customMapStyle={customMapStyle} region={initialRegion}>
             {currentLocation && <Marker coordinate={currentLocation} onPress={() => handleMarkerPress(currentLocation)} />}
 
             {filterCities()?.map((city) => (

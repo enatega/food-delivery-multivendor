@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+---
+# The allowlisted product must have OPTION_ID configured as a required option.
+- tapOn:
+    id: customer.item.add-to-cart
+- assertVisible:
+    id: customer.item.screen
+- tapOn:
+    id: customer.item.option.${OPTION_ID}
+- tapOn:
+    id: customer.item.quantity-increase
+- assertVisible:
+    id: customer.item.quantity
+- tapOn:
+    id: customer.item.add-to-cart
+- extendedWaitUntil:
+    visible:
+      id: customer.restaurant.open-cart
+    timeout: 15000
+- tapOn:
+    id: customer.restaurant.open-cart
+- assertVisible:
+    id: customer.cart.screen
+- tapOn:
+    id: customer.cart.item.*.increase
+- assertVisible:
+    id: customer.cart.total
+- stopApp:
+    appId: ${APP_ID}
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: customer.header.cart
+    timeout: 30000
+# The cart count is refetched from the server after relaunch, and the header cart
+# button deliberately no-ops (flashing "cart is empty") while cartCount is still
+# 0. Retry the tap until the cart screen actually opens rather than assuming the
+# first tap lands after the data has arrived.
+- retry:
+    maxRetries: 5
+    commands:
+      - tapOn:
+          id: customer.header.cart
+      - extendedWaitUntil:
+          visible:
+            id: customer.cart.screen
+          timeout: 10000
+- assertVisible:
+    id: customer.cart.screen
+

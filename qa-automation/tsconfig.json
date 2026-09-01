@@ -4,11 +4,18 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "strict": true,
+    "allowJs": true,
+    "checkJs": true,
     "noEmit": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "types": ["node", "@playwright/test"]
   },
-  "include": ["playwright.config.ts", "src/**/*.ts", "tests/**/*.ts"]
+  "include": [
+    "playwright.config.ts",
+    "scripts/**/*.js",
+    "src/**/*.ts",
+    "tests/**/*.ts"
+  ]
 }

@@ -19,6 +19,7 @@ export const InstructionsModal = ({ theme, isVisible, hideModal, onSubmit, value
             <View style={styles.container}>
                 <View style={styles.topContainer}>
                     <TouchableOpacity
+                        testID='customer.cart.instructions-done'
                         onPress={onSubmit}
                         style={styles.closeButton}>
                         <TextDefault bolder textColor={theme.newButtonText}>{t('Done')}</TextDefault>
@@ -31,6 +32,7 @@ export const InstructionsModal = ({ theme, isVisible, hideModal, onSubmit, value
                 </View>
                 <View style={styles.inputContainer}>
                     <TextInput 
+                        testID='customer.cart.instructions-input'
                         value={value} 
                         onChangeText={setValue} 
                         autoFocus 

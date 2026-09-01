@@ -101,14 +101,15 @@ function OrderDetail(props) {
     ...theme[themeContext.ThemeValue]
   }
   const navigation = useNavigation()
-  const { GOOGLE_MAPS_KEY } = useEnvVars()
+  const { GOOGLE_MAPS_KEY, IS_QA_AUTOMATION_BUILD } = useEnvVars()
   const mapView = useRef(null)
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   const [cancelOrder, { loading: loadingCancel }] = useMutation(CANCEL_ORDER, {
     onError,
-    onCompleted: (data) => {
+    onCompleted: async () => {
       setCancelModalVisible(false)
-      navigation.navigate('Main')
+      await reFetchOrders()
+      if (!IS_QA_AUTOMATION_BUILD) navigation.navigate('Main')
     },
     variables: { abortOrderId: id }
   })
@@ -255,7 +256,7 @@ function OrderDetail(props) {
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
-    <View style={{ flex: 1 }}>
+    <View testID='customer.order.screen' style={{ flex: 1 }}>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -358,7 +359,7 @@ function OrderDetail(props) {
                   <ProgressBar configuration={configuration} currentTheme={currentTheme} item={order} navigation={navigation} isPicked={order?.isPickedUp} />
                 </>
               )}
-              <TextDefault H5 style={{ ...alignment.Mmedium }} textColor={currentTheme.gray600} bold center>
+              <TextDefault testID='customer.order.status' H5 style={{ ...alignment.Mmedium }} textColor={currentTheme.gray600} bold center>
                 {' '}
                 {t(checkStatus(order?.orderStatus)?.statusText)}
               </TextDefault>
@@ -383,7 +384,7 @@ function OrderDetail(props) {
         <PriceRow theme={currentTheme} title={t('total')} currency={configuration.currencySymbol} price={total.toFixed(2)} />
 
         <View style={{ margin: scale(20) }}>
-          <Button disabled={isOrderCancelable ? false : true} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
+          <Button disabled={isOrderCancelable ? false : true} text={t('cancelOrder')} buttonProps={{ testID: 'customer.order.cancel-open', onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
         </View>
 
       </View>

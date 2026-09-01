@@ -5,5 +5,7 @@ playwright-report/
 .env
 .env.local
 .env.*.local
+.env.mobile.local
+.maestro/
 *.pem
 *.key

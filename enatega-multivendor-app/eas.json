@@ -5,7 +5,8 @@
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "APP_ENV": "development"
+        "APP_ENV": "development",
+        "EXPO_PUBLIC_APP_ENV": "development"
       },
       "android": {
         "buildType": "apk"
@@ -19,7 +20,8 @@
       "channel": "staging",
       "distribution": "internal",
       "env": {
-        "APP_ENV": "staging"
+        "APP_ENV": "staging",
+        "EXPO_PUBLIC_APP_ENV": "staging"
       },
       "android": {
         "buildType": "apk"
@@ -28,10 +30,23 @@
     "production": {
       "channel": "production",
       "env": {
-        "APP_ENV": "production"
+        "APP_ENV": "production",
+        "EXPO_PUBLIC_APP_ENV": "production"
       },
       "ios": {
         "image": "macos-sequoia-15.6-xcode-26.2"
+      }
+    },
+    "qa-production": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "qa-production",
+      "env": {
+        "APP_ENV": "qa-production",
+        "EXPO_PUBLIC_APP_ENV": "qa-production"
+      },
+      "ios": {
+        "simulator": true
       }
     }
   },

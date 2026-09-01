@@ -1,0 +1,58 @@
+appId: ${APP_ID}
+name: CM-P1-012 Profile hub and account details belong to the signed-in customer
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# Proves the restored session is bound to the dedicated automation account and
+# not to whatever profile happened to be cached. Account.js renders the email
+# row read-only (`onPress='null'`), so nothing here can edit the account, and
+# the Delete Account control is deliberately left uninstrumented so no flow can
+# reach it by test ID.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/open-profile.yaml
+# Profile.js renders `Hi ${profile?.name}!`. An unresolved profile still renders
+# that template, so assert the interpolation actually produced a name.
+- assertVisible:
+    id: customer.profile.greeting
+- copyTextFrom:
+    id: customer.profile.greeting
+- evalScript: ${output.greeting = maestro.copiedText.trim()}
+- assertTrue:
+    condition: ${output.greeting.length > 3 && !output.greeting.includes('undefined') && !output.greeting.includes('null')}
+    label: Profile greeting must interpolate a real customer name
+# Every hub entry point the later flows depend on must be present.
+- assertVisible:
+    id: customer.profile.order-history
+- assertVisible:
+    id: customer.profile.account
+- assertVisible:
+    id: customer.profile.addresses
+- takeScreenshot: profile-hub
+- tapOn:
+    id: customer.profile.account
+- extendedWaitUntil:
+    visible:
+      id: customer.account.screen
+    timeout: 30000
+# The identity assertion: the account on screen must be the one we logged in as.
+- copyTextFrom:
+    id: customer.account.email-value
+- evalScript: ${output.accountEmail = maestro.copiedText.trim().toLowerCase()}
+- assertTrue:
+    condition: ${output.accountEmail === CUSTOMER_EMAIL.trim().toLowerCase()}
+    label: Account email must match the customer the flow signed in as
+- copyTextFrom:
+    id: customer.account.name-value
+- evalScript: ${output.accountName = maestro.copiedText.trim()}
+- assertTrue:
+    condition: ${output.accountName.length > 0 && output.accountName !== 'undefined'}
+    label: Account name must be populated from the real profile
+- assertVisible:
+    id: customer.account.phone
+# Logout is reachable but must not be tapped here; CM-P1-016 owns that path.
+- assertVisible:
+    id: customer.account.logout
+- takeScreenshot: account-details

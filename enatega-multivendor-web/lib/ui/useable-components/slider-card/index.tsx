@@ -148,7 +148,7 @@ const SliderCard = <T,>({
           itemTemplate={(item) => <Card item={item} isModalOpen={isModalOpen} handleUpdateIsModalOpen={handleUpdateIsModalOpen} />}
           numVisible={numVisible}
           numScroll={1}
-          circular
+          circular={data.length > numVisible}
           responsiveOptions={responsiveOptions}
           showIndicators={false}
           showNavigators

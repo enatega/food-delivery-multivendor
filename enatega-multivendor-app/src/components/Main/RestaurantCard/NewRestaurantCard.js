@@ -133,6 +133,7 @@ function NewRestaurantCard(props) {
       { position: 'relative' }
     ]}>
       <Ripple 
+        testID={`customer.restaurant.card.${restaurantId}`}
         rippleColor={'#F5F5F5'} 
         style={[
           styles(currentTheme).cardSurface,

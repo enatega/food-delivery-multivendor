@@ -125,7 +125,7 @@ export default function SelectLocation(props) {
 
   return (
     <>
-      <View style={styles().flex}>
+      <View testID='customer.select-location.screen' style={styles().flex}>
         <View style={styles().mapView}>
           <MapView
             ref={mapRef}

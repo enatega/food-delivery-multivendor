@@ -1,0 +1,108 @@
+appId: ${APP_ID}
+name: CM-P3-002 Every Profile hub row must open its screen and come back
+tags:
+  - regression
+  - production-readonly
+  - ios
+  - navigation
+---
+# The Profile hub is the app's densest cluster of navigation controls. Each row
+# is asserted as a round trip — tap, land on the destination's own marker, pop,
+# land back on the hub — because a row that navigates correctly but cannot be
+# backed out of still traps the customer.
+#
+# Deliberately NOT reached: Delete Account on the Account screen. It is left
+# uninstrumented precisely so that no flow can tap it by test ID, and this flow
+# does not go looking for it by text either.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/open-profile.yaml
+# --- Account ---------------------------------------------------------------
+- tapOn:
+    id: customer.profile.account
+- extendedWaitUntil:
+    visible:
+      id: customer.account.screen
+    timeout: 30000
+- takeScreenshot: hub-account
+- runFlow: ../../subflows/back.yaml
+- assertVisible:
+    id: customer.profile.screen
+# --- Addresses -------------------------------------------------------------
+- tapOn:
+    id: customer.profile.addresses
+- extendedWaitUntil:
+    visible:
+      id: customer.addresses.screen
+    timeout: 30000
+- takeScreenshot: hub-addresses
+- runFlow: ../../subflows/back.yaml
+- assertVisible:
+    id: customer.profile.screen
+# --- Order history ---------------------------------------------------------
+- tapOn:
+    id: customer.profile.order-history
+- extendedWaitUntil:
+    visible:
+      id: customer.orders.screen
+    timeout: 30000
+- takeScreenshot: hub-order-history
+- runFlow: ../../subflows/back.yaml
+- assertVisible:
+    id: customer.profile.screen
+# --- Active orders ---------------------------------------------------------
+# This row and the one above both navigate to MyOrders. That is intentional in
+# the app, so the assertion is the same marker — but the row must still work.
+- tapOn:
+    id: customer.profile.active-orders
+- extendedWaitUntil:
+    visible:
+      id: customer.orders.screen
+    timeout: 30000
+- assertVisible:
+    id: customer.orders.tab.current
+- runFlow: ../../subflows/back.yaml
+- assertVisible:
+    id: customer.profile.screen
+# --- Support ---------------------------------------------------------------
+- tapOn:
+    id: customer.profile.support
+- extendedWaitUntil:
+    visible:
+      id: customer.support.screen
+    timeout: 30000
+- takeScreenshot: hub-support
+- runFlow: ../../subflows/back.yaml
+- assertVisible:
+    id: customer.profile.screen
+# --- FAQ / Help ------------------------------------------------------------
+- tapOn:
+    id: customer.profile.faq
+- extendedWaitUntil:
+    visible:
+      id: customer.help.screen
+    timeout: 30000
+- takeScreenshot: hub-help
+- runFlow: ../../subflows/back.yaml
+- assertVisible:
+    id: customer.profile.screen
+# --- Favourites ------------------------------------------------------------
+# The hub only renders this row when the account holds at least one favourite,
+# so it is guarded the same way p1-favourites.yaml guards it. When the row is
+# absent there is nothing to navigate and nothing to assert; when it is present
+# it must behave like every other row.
+- runFlow:
+    when:
+      visible:
+        id: customer.profile.favourites-see-all
+    commands:
+      - tapOn:
+          id: customer.profile.favourites-see-all
+      - extendedWaitUntil:
+          visible:
+            id: customer.favourites.screen
+          timeout: 30000
+      - takeScreenshot: hub-favourites
+      - runFlow: ../../subflows/back.yaml
+      - assertVisible:
+          id: customer.profile.screen

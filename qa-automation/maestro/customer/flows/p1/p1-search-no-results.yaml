@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+name: CM-P1-008 Search empty state and clear control
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# SearchScreen renders `noResults` ("No Results Found") as the FlatList empty
+# component, and Search.js renders `customer.search.clear` only while the query
+# is non-empty. Both are asserted in each direction.
+- runFlow: ../../subflows/launch.yaml
+- tapOn:
+    id: customer.tab.search
+- extendedWaitUntil:
+    visible:
+      id: customer.search.input
+    timeout: 15000
+# No clear control is offered before anything is typed.
+- assertNotVisible:
+    id: customer.search.clear
+- tapOn:
+    id: customer.search.input
+# A deliberately unmatchable token, so this never depends on live catalog data.
+- inputText: zzqa000noresults
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      text: ".*No Results.*"
+    timeout: 30000
+- assertVisible:
+    id: customer.search.clear
+- takeScreenshot: search-no-results
+- tapOn:
+    id: customer.search.clear
+# Clearing must retract both the empty state and the clear control itself.
+- extendedWaitUntil:
+    notVisible:
+      text: ".*No Results.*"
+    timeout: 15000
+- assertNotVisible:
+    id: customer.search.clear
+# Search must recover: the allowlisted restaurant is still findable afterwards.
+- tapOn:
+    id: customer.search.input
+- inputText: ${RESTAURANT_NAME}
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      text: ".*${RESTAURANT_NAME}.*"
+    timeout: 30000
+- assertVisible:
+    id: "customer\\.restaurant\\.card\\..*"

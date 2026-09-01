@@ -6,8 +6,8 @@ import { FontAwesome } from '@expo/vector-icons'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 
-export const PaymentModeOption = ({ theme, icon, title, selected, onSelect }) => {
-    return (<Pressable onPress={onSelect} style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', marginVertical: scale(8) }}>
+export const PaymentModeOption = ({ theme, icon, title, selected, onSelect, testID }) => {
+    return (<Pressable testID={testID} onPress={onSelect} style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', marginVertical: scale(8) }}>
         <View style={{ flex: 1 }}>
             <FontAwesome
                 name={icon}

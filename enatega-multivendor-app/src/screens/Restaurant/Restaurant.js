@@ -585,7 +585,7 @@ function Restaurant(props) {
   if (error) return <TextError text={JSON.stringify(error)} />
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles(currentTheme).flex}>
+    <SafeAreaView testID='customer.restaurant.screen' edges={['left', 'right', 'bottom']} style={styles(currentTheme).flex}>
       <View style={styles(currentTheme).flex}>
         {searchOpen ? (
           <View style={styles(currentTheme).flex}>
@@ -667,7 +667,7 @@ function Restaurant(props) {
 
         {cartCount > 0 && (
           <View style={styles(currentTheme).buttonContainer}>
-            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).button} onPress={() => navigation.navigate('Cart')}>
+            <TouchableOpacity testID='customer.restaurant.open-cart' activeOpacity={0.7} style={styles(currentTheme).button} onPress={() => navigation.navigate('Cart')}>
               <View style={styles().buttontLeft}>
                 <Animated.View
                   style={[
@@ -779,6 +779,7 @@ const FoodRow = React.memo(function FoodRow({ configuration, currentTheme, item,
 
   return (
     <Pressable
+      testID={`customer.product.card.${item?._id}`}
       android_disableSound
       onPress={() => onPressItem(item)}
       style={({ pressed }) => ({

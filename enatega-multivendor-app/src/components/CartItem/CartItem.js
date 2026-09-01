@@ -79,7 +79,7 @@ const CartItem = (props) => {
   }, [props?.quantity])
 
   return (
-    <View style={styles(currentTheme).itemContainer}>
+    <View testID={`customer.cart.item.${props?.food?._id}`} style={styles(currentTheme).itemContainer}>
       <View
         style={{
           flexDirection: currentTheme?.isRTL ? 'row-reverse' : 'row',
@@ -186,6 +186,7 @@ const CartItem = (props) => {
       </View>
       <View style={styles(currentTheme).actionContainer}>
         <TouchableOpacity
+          testID={`customer.cart.item.${props?.food?._id}.decrease`}
           activeOpacity={0.7}
           style={[
             styles(currentTheme).actionContainerBtns,
@@ -209,6 +210,7 @@ const CartItem = (props) => {
         </TouchableOpacity>
 
         <Animated.View
+          testID={`customer.cart.item.${props?.food?._id}.quantity`}
           style={[styles(currentTheme).actionContainerView, animatedStyle]}
         >
           <TextDefault H5 bold textColor={currentTheme.black} isRTL>
@@ -217,6 +219,7 @@ const CartItem = (props) => {
         </Animated.View>
 
         <TouchableOpacity
+          testID={`customer.cart.item.${props?.food?._id}.increase`}
           activeOpacity={0.7}
           style={[
             styles(currentTheme).actionContainerBtns,

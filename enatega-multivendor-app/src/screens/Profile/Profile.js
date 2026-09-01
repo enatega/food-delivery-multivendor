@@ -146,7 +146,7 @@ function Profile(props) {
           setModalVisible(false)
         }}
       />
-      <View style={styles(currentTheme).formContainer}>
+      <View testID='customer.profile.screen' style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles(currentTheme).flex}
@@ -158,6 +158,7 @@ function Profile(props) {
             alwaysBounceVertical={false}
           >
             <TextDefault
+              testID='customer.profile.greeting'
               bolder
               style={[
                 { fontSize: scale(30), lineHeight: scale(38) },
@@ -171,6 +172,7 @@ function Profile(props) {
             </TextDefault>
             <View style={styles(currentTheme).mainContainer}>
               <TouchableOpacity
+                testID='customer.profile.active-orders'
                 activeOpacity={0.8}
                 style={[
                   styles(currentTheme).nameView,
@@ -230,6 +232,7 @@ function Profile(props) {
                       </View>
                       <View>
                         <TouchableOpacity
+                          testID='customer.profile.favourites-see-all'
                           style={styles(currentTheme).seeAll}
                           onPress={() => navigation.navigate('Favourite')}
                         >
@@ -293,6 +296,7 @@ function Profile(props) {
                 </TextDefault>
 
                 <ButtonContainer
+                  testID='customer.profile.support'
                   icon={'people-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('CustomerSupport')}
@@ -301,6 +305,7 @@ function Profile(props) {
                 />
                 <View style={styles(currentTheme).line} />
                 <ButtonContainer
+                  testID='customer.profile.faq'
                   icon={'help-circle-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('Help')}
@@ -309,6 +314,7 @@ function Profile(props) {
                 />
                 <View style={styles(currentTheme).line} />
                 <ButtonContainer
+                  testID='customer.profile.order-history'
                   icon={'file-tray-stacked-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('MyOrders')}
@@ -378,6 +384,7 @@ function Profile(props) {
                 </TextDefault>
 
                 <ButtonContainer
+                  testID='customer.profile.account'
                   icon={'account-outline'}
                   iconType={'MaterialCommunityIcons'}
                   onPress={() => navigation.navigate('Account')}
@@ -386,6 +393,7 @@ function Profile(props) {
                 />
                 <View style={styles(currentTheme).line} />
                 <ButtonContainer
+                  testID='customer.profile.addresses'
                   icon={'location-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('Addresses')}

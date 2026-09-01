@@ -29,6 +29,7 @@ function RadioComponent(props) {
     <View>
       {options.map((option) => (
         <TouchableOpacity
+          testID={`customer.item.option.${option?._id}`}
           activeOpacity={0.7}
           onPress={onPress.bind(this, option)}
           key={option._id}

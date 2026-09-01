@@ -35,12 +35,21 @@ const ENV_CONFIG = {
     // SERVER_URL: 'http://192.168.1.175:8001/graphql',
     // SERVER_REST_URL: 'http://192.168.1.175:8001/',
     CLARITY_ENABLED: true
+  },
+  'qa-production': {
+    GRAPHQL_URL: 'https://aws-server-v2.enatega.com/graphql',
+    WS_GRAPHQL_URL: 'wss://aws-server-v2.enatega.com/graphql',
+    SERVER_URL: 'https://aws-server-v2.enatega.com/graphql',
+    SERVER_REST_URL: 'https://aws-server-v2.enatega.com/',
+    CLARITY_ENABLED: false,
+    IS_QA_AUTOMATION_BUILD: true
   }
 }
 
 const normalizeEnvironment = (env) => {
-  if (env === 'production' || env === 'staging') return env
-  return 'development'
+  if (!env) throw new Error('EXPO_PUBLIC_APP_ENV is required')
+  if (Object.hasOwn(ENV_CONFIG, env)) return env
+  throw new Error(`Unsupported mobile environment: ${env}`)
 }
 
 const getEnvironmentConfig = (env) => {

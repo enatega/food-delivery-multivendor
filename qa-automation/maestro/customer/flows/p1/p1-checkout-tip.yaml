@@ -1,0 +1,95 @@
+appId: ${APP_ID}
+name: CM-P1-017 Tip is added to the delivery total and zeroed on pickup
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# calculateOrderPricing adds the tip flatly on top of subtotal, delivery and
+# tax, and Checkout.js passes `tip: isPickup ? 0 : tip`. Both halves are
+# asserted arithmetically, so a tip that is charged but not shown — or shown but
+# still charged on a pickup order — fails here rather than in production.
+#
+# The place-order control is asserted but never tapped.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- runFlow: ../../subflows/open-checkout.yaml
+# Establish the pickup baseline first; it is the figure the tip must not touch.
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: customer.checkout.tip-section
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.pickupTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.pickupTotal) && output.pickupTotal > 0}
+    label: Pickup total must be a positive number
+# Tipping is a delivery-only affordance.
+- tapOn:
+    id: customer.checkout.fulfillment.delivery
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.tip-section
+    timeout: 15000
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.deliveryTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.deliveryTotal) && output.deliveryTotal >= output.pickupTotal}
+    label: Delivery total must be finite and at or above the pickup total
+# The "Other" control opens the custom-amount modal. It only renders once the
+# tipping configuration query has returned, so a missing control here is a real
+# defect rather than a timing artefact.
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.tip-open
+    timeout: 15000
+- tapOn:
+    id: customer.checkout.tip-open
+- tapOn:
+    id: customer.checkout.tip-input
+- inputText: "5"
+- hideKeyboard
+- tapOn:
+    id: customer.checkout.tip-apply
+- extendedWaitUntil:
+    notVisible:
+      id: customer.checkout.tip-input
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.tippedTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+# Exact arithmetic, with a cent of tolerance for the fixed-point rendering.
+- assertTrue:
+    condition: ${Math.abs(output.tippedTotal - (output.deliveryTotal + 5)) < 0.01}
+    label: A tip of 5 must raise the delivery total by exactly 5
+- takeScreenshot: checkout-tip-applied
+# Switching to pickup must drop the tip entirely and restore the original
+# pickup figure — not merely reduce the total by the delivery fee.
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: customer.checkout.tip-section
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.restoredTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.restoredTotal - output.pickupTotal) < 0.01}
+    label: Pickup must zero the tip and restore the original pickup total
+- assertTrue:
+    condition: ${output.restoredTotal <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must stay at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: checkout-tip-cleared

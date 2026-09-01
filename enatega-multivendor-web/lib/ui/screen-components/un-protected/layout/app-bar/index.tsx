@@ -484,6 +484,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {!authToken && !isSearchFocused ? (
                   <button
+                    data-testid="customer-login-trigger"
                     className="flex h-10 min-w-[72px] items-center justify-center rounded-full bg-primary-color px-4 text-sm font-semibold text-white transition-all duration-200 hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-[0.98] md:h-11 md:px-5"
                     onClick={handleModalToggle}
                     type="button"
@@ -524,6 +525,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 {!isSearchFocused && (
                   <div className="relative flex items-center gap-1 sm:gap-2">
                     <button
+                      data-testid="theme-toggle"
                       type="button"
                       onClick={toggleTheme}
                       aria-label={theme === "dark" ? "Enable light mode" : "Enable dark mode"}
@@ -534,6 +536,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       </span>
                     </button>
                     <button
+                      data-testid="language-menu-trigger"
                       type="button"
                       onClick={(e) => languageMenuRef.current?.toggle(e)}
                       aria-label="Languages"
@@ -563,7 +566,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 <div className="p-0">
                   {cartCount > 0 && !isSearchFocused && (
-                    <div
+                    <button
+                      type="button"
+                      data-testid="customer-cart-trigger"
+                      aria-label={t("show_items_btn")}
                       className="hidden h-11 items-center justify-between gap-3 rounded-full bg-primary-color px-4 text-white shadow-sm transition-all duration-200 hover:brightness-95 lg:flex lg:min-w-[240px]"
                       onClick={() => {
                         if (!authToken) {
@@ -584,7 +590,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       <span className="text-sm font-medium">
                         {formattedSubtotal}
                       </span>
-                    </div>
+                    </button>
                   )}
                   {isSearchFocused ? (
                     <button
@@ -601,6 +607,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   ) : (
                     <button
                       type="button"
+                      data-testid="customer-cart-trigger"
                       aria-label={t("show_items_btn")}
                       className={`${cartCount > 0 ? "lg:hidden" : ""} relative flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-all duration-200 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-95 dark:bg-gray-800 dark:hover:bg-gray-700`}
                       onClick={() => {

@@ -465,7 +465,7 @@ function Main(props) {
       {!connect ? (
         <ErrorView refetchFunctions={[refetchRestaurants, refetchBanners]} />
       ) : (
-        <SafeAreaView edges={['bottom', 'left', 'right']} style={styles().flex}>
+        <SafeAreaView testID='customer.discovery.screen' edges={['bottom', 'left', 'right']} style={styles().flex}>
           <View style={[styles().flex, styles(currentTheme).screenBackground]}>
             <View style={styles().flex}>
               <View style={styles().mainContentContainer}>

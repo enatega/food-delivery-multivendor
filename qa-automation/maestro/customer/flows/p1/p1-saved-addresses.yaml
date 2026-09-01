@@ -1,0 +1,47 @@
+appId: ${APP_ID}
+name: CM-P1-014 Saved addresses list and add-address entry point
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# Addresses.js drives the delivery leg of every order, so a broken list is an
+# order-blocking defect. This flow reads the list and proves the add-address
+# route opens, but never saves, edits, or deletes an address: the edit mode and
+# the delete modals fire real mutations and are left untouched.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/open-profile.yaml
+- tapOn:
+    id: customer.profile.addresses
+- extendedWaitUntil:
+    visible:
+      id: customer.addresses.screen
+    timeout: 30000
+# The list must resolve to real address rows or to its own empty state. A blank
+# screen — the failure mode when the profile query silently returns nothing —
+# satisfies neither branch.
+- extendedWaitUntil:
+    visible:
+      id: "customer\\.addresses\\.(item\\..*|empty)"
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: "customer\\.addresses\\.item\\..*"
+    commands:
+      - assertVisible:
+          id: customer.addresses.empty
+- takeScreenshot: addresses-list
+# The add-address control must always be offered, including on an empty list.
+- assertVisible:
+    id: customer.addresses.add
+- tapOn:
+    id: customer.addresses.add
+# SelectLocation is the map picker. Reaching it is the assertion; the flow stops
+# here rather than confirming a location, because saving one is a write.
+- extendedWaitUntil:
+    visible:
+      id: customer.select-location.screen
+    timeout: 30000
+- takeScreenshot: address-picker-opened

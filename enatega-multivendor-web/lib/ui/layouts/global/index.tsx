@@ -47,6 +47,14 @@ const AppLayout = ({ children }: IProvider) => {
   }, [pathname]);
 
   useEffect(() => {
+    document.documentElement.dataset.appReady = "true";
+
+    return () => {
+      delete document.documentElement.dataset.appReady;
+    };
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       setIsScrolled(scrollTop > 300 ? true : false);

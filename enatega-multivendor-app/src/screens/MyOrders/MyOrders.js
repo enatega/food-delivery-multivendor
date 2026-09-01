@@ -85,10 +85,10 @@ function MyOrders(props) {
     })
   }, [props?.navigation])
 
-  const TabButton = ({ text, onPress, isSelected, currentTheme }) => {
+  const TabButton = ({ text, onPress, isSelected, currentTheme, testID }) => {
     return (
       <View style={isSelected ? styles(currentTheme).activeTabStyles : styles(currentTheme).inactiveTabStyles}>
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity testID={testID} onPress={onPress}>
           <TextDefault H4 bold textColor={isSelected ? currentTheme.newFontcolor : currentTheme.gray500}>
             {t(text)}
           </TextDefault>
@@ -110,11 +110,11 @@ function MyOrders(props) {
   if (!connect) return <ErrorView refetchFunctions={[reFetchOrders]} />
   return (
     <>
-      <View style={styles(currentTheme).container}>
+      <View testID='customer.orders.screen' style={styles(currentTheme).container}>
         <View style={styles(currentTheme).tabContainer}>
-          <TabButton text={t('current')} onPress={() => setSelectedTab('current')} isSelected={selectedTab === 'current'} currentTheme={currentTheme} />
+          <TabButton testID='customer.orders.tab.current' text={t('current')} onPress={() => setSelectedTab('current')} isSelected={selectedTab === 'current'} currentTheme={currentTheme} />
 
-          <TabButton text={t('past')} onPress={() => setSelectedTab('past')} isSelected={selectedTab === 'past'} currentTheme={currentTheme} />
+          <TabButton testID='customer.orders.tab.past' text={t('past')} onPress={() => setSelectedTab('past')} isSelected={selectedTab === 'past'} currentTheme={currentTheme} />
         </View>
         <View style={styles(currentTheme).listContainer}>
           <View pointerEvents={selectedTab === 'current' ? 'auto' : 'none'} style={selectedTab === 'current' ? styles(currentTheme).visibleTabContent : styles(currentTheme).hiddenTabContent}>

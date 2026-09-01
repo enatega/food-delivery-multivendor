@@ -744,7 +744,8 @@ export default function RestaurantDetailsScreen() {
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
                   {category.foods.map((meal: IFood, mealIndex) => (
                     <div
-                      key={mealIndex}
+                      key={meal._id ?? mealIndex}
+                      data-testid={`product-card-${meal._id}`}
                       className="flex gap-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm bg-white dark:bg-gray-800 p-3 relative cursor-pointer transition-transform duration-300 hover:shadow-lg"
                       onClick={() => handleRestaurantClick(meal)}
                     >

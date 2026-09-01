@@ -1,0 +1,13 @@
+appId: ${APP_ID}
+name: CM-P0-001-006 Customer iOS production read-only smoke
+tags:
+  - smoke
+  - production-readonly
+  - ios
+---
+- runFlow: ../subflows/launch.yaml
+- runFlow: ../subflows/login.yaml
+- runFlow: ../subflows/discovery.yaml
+- runFlow: ../subflows/configure-cart.yaml
+- runFlow: ../subflows/checkout-readonly.yaml
+

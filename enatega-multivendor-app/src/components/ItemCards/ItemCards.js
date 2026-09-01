@@ -28,7 +28,7 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
   const imageUrl = item?.image && item?.image?.trim() !== '' ? item?.image : IMAGE_LINK
 
   return (
-    <RectButton onPress={handleAddToCart} rippleColor={currentTheme.rippleColor}>
+    <RectButton testID={`customer.product.card.${item?._id}`} onPress={handleAddToCart} rippleColor={currentTheme.rippleColor}>
       <LinearGradient style={styles(currentTheme).card} colors={[currentTheme.gray100, currentTheme.white]}>
         {tagCart(item?._id)}
         <TextDefault

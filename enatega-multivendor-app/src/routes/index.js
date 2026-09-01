@@ -271,14 +271,16 @@ function BottomTabNavigator() {
         name='Discovery'
         component={Main}
         options={{
-          tabBarLabel: t('Discovery')
+          tabBarLabel: t('Discovery'),
+          tabBarTestID: 'customer.tab.discovery'
         }}
       />
       <Tab.Screen
         name='Restaurants'
         component={Menu}
         options={{
-          tabBarLabel: t('Restaurants')
+          tabBarLabel: t('Restaurants'),
+          tabBarTestID: 'customer.tab.restaurants'
         }}
         initialParams={{
           selectedType: 'restaurant',
@@ -289,7 +291,8 @@ function BottomTabNavigator() {
         name='Store'
         component={Menu}
         options={{
-          tabBarLabel: t('Store')
+          tabBarLabel: t('Store'),
+          tabBarTestID: 'customer.tab.store'
         }}
         initialParams={{
           selectedType: 'grocery',
@@ -300,14 +303,16 @@ function BottomTabNavigator() {
         name='Search'
         getComponent={() => require('../screens/Search/SearchScreen').default}
         options={{
-          tabBarLabel: t('search')
+          tabBarLabel: t('search'),
+          tabBarTestID: 'customer.tab.search'
         }}
       />
       <Tab.Screen
         name='Profile'
         component={isLoggedIn ? Profile : CreateAccount}
         options={{
-          tabBarLabel: t('titleProfile')
+          tabBarLabel: t('titleProfile'),
+          tabBarTestID: 'customer.tab.profile'
         }}
       />
     </Tab.Navigator>

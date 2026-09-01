@@ -351,6 +351,7 @@ function ItemDetail(props) {
   if (!connect) return <ErrorView />
   return (
     <KeyboardAvoidingView
+      testID='customer.item.screen'
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}
     >
@@ -407,7 +408,7 @@ function ItemDetail(props) {
             </View>
 
             <View style={styles(currentTheme).line}></View>
-            <View style={styles(currentTheme).inputContainer}>
+            <View testID='customer.item.instructions' style={styles(currentTheme).inputContainer}>
               <TitleComponent title={t('specialInstructions')} subTitle={t('anySpecificPreferences')} status={t('optional')} />
               <TextField style={styles(currentTheme).input} placeholder={t('noMayo')} textAlignVertical='center' value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={144} textColor={currentTheme.fontMainColor} baseColor={currentTheme.lightHorizontalLine} errorColor={currentTheme.textErrorColor} tintColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} placeholderTextColor={themeContext.ThemeValue === 'Dark' ? "white" : "black"} />
             </View>

@@ -1,4 +1,6 @@
 module.exports = () => {
+  const { getAppVariantConfig } = require('./app-variant.config')
+  const appVariant = getAppVariantConfig(process.env.EXPO_PUBLIC_APP_ENV)
   const iosGoogleMapsApiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS
   const androidGoogleMapsApiKey =
     process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID
@@ -22,8 +24,8 @@ module.exports = () => {
     : fallbackUrlTypes
 
   return {
-    name: 'Enatega Multi',
-    scheme: 'enategamultivendor',
+    name: appVariant.name,
+    scheme: appVariant.scheme,
     version: '1.1.27',
     description:
       "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
@@ -57,7 +59,7 @@ module.exports = () => {
       },
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
-      bundleIdentifier: 'com.enatega.multivendor',
+      bundleIdentifier: appVariant.bundleIdentifier,
       icon: './assets/icon.png',
       googleServicesFile: './GoogleService-Info.plist',
       infoPlist: {
@@ -83,7 +85,7 @@ module.exports = () => {
     },
     android: {
       versionCode: 127,
-      package: 'com.enatega.multivendor',
+      package: appVariant.packageName,
       userInterfaceStyle: 'automatic',
       googleServicesFile: './google-services.json',
       splash: {

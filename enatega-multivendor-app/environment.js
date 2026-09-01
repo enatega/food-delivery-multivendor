@@ -9,7 +9,9 @@ import ConfigurationContext from './src/context/Configuration'
 import * as Updates from 'expo-updates'
 const { getEnvironmentConfig } = require('./environment.config')
 
-const useEnvVars = (env = Updates.channel) => {
+const useEnvVars = (
+  env = process.env.EXPO_PUBLIC_APP_ENV || Updates.channel
+) => {
   const configuration = useContext(ConfigurationContext)
   const sharedConfig = getEnvironmentConfig(env)
   const googleMapsKey =

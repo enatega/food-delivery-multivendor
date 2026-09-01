@@ -35,7 +35,7 @@ function Login(props) {
   if (!connect) return <ErrorView />
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
+    <SafeAreaView testID='customer.auth.login' edges={['bottom', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles().flex} keyboardVerticalOffset={headerHeight}>
         <StatusBar backgroundColor={currentTheme.themeBackground} barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
         <ScrollView style={styles().flex} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
@@ -67,6 +67,7 @@ function Login(props) {
                   {!registeredEmail && (
                     <View>
                       <TextInput
+                        testID='customer.auth.email'
                         placeholder={t('email')}
                         style={[styles(currentTheme).textField, emailError !== null ? styles(currentTheme).errorInput : {}]}
                         placeholderTextColor={currentTheme.fontSecondColor}
@@ -85,7 +86,7 @@ function Login(props) {
                   {registeredEmail && (
                     <>
                       <View style={styles(currentTheme).passwordField}>
-                        <TextInput secureTextEntry={showPassword} placeholder={t('password')} style={[styles(currentTheme).textField, styles().passwordInput, passwordError !== null ? styles(currentTheme).errorInput : {}]} placeholderTextColor={currentTheme.fontSecondColor} value={password} onChangeText={(e) => setPassword(e)} />
+                        <TextInput testID='customer.auth.password' secureTextEntry={showPassword} placeholder={t('password')} style={[styles(currentTheme).textField, styles().passwordInput, passwordError !== null ? styles(currentTheme).errorInput : {}]} placeholderTextColor={currentTheme.fontSecondColor} value={password} onChangeText={(e) => setPassword(e)} />
                         <FontAwesome onPress={() => setShowPassword(!showPassword)} name={showPassword ? 'eye-slash' : 'eye'} size={24} color={passwordError === null ? currentTheme.newFontcolor : currentTheme.textErrorColor} style={[styles(currentTheme).eyeBtn]} />
                       </View>
                       {passwordError !== null && (
@@ -114,7 +115,7 @@ function Login(props) {
               </View>
 
               <View>
-                <TouchableOpacity onPress={() => (registeredEmail ? loginAction(emailRef.current, password) : checkEmailExist())} activeOpacity={0.7} style={styles(currentTheme).btn} disabled={loading || loginLoading}>
+                <TouchableOpacity testID={registeredEmail ? 'customer.auth.login-submit' : 'customer.auth.email-submit'} onPress={() => (registeredEmail ? loginAction(emailRef.current, password) : checkEmailExist())} activeOpacity={0.7} style={styles(currentTheme).btn} disabled={loading || loginLoading}>
                   <TextDefault H4 textColor={currentTheme.black} bold>
                     {loading || loginLoading ? <Spinner backColor='transparent' spinnerColor={currentTheme.white} size='small' /> : registeredEmail ? t('loginBtn') : t('continueBtn')}
                   </TextDefault>

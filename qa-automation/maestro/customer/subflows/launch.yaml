@@ -1,0 +1,17 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    appId: ${APP_ID}
+    clearState: true
+    clearKeychain: true
+    permissions:
+      all: deny
+      location: inuse
+      notifications: deny
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+- assertVisible:
+    id: customer.tab.discovery
+

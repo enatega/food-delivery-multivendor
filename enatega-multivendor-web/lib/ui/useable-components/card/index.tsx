@@ -39,6 +39,7 @@ const Card: React.FC<ICardProps> = ({
 
   return (
     <div
+      data-testid={`restaurant-card-${item._id}`}
       className={`relative rounded-md shadow-md cursor-pointer hover:scale-102 hover:opacity-95 transition-transform duration-500 max-h-[272px] w-[96%] ml-[2%] ${
         pathname === "/restaurants" || pathname === "/store"
           ? "my-[2%]"
@@ -94,7 +95,7 @@ const Card: React.FC<ICardProps> = ({
               {item?.name}
             </p>
             <p className="text-xs xl:text-sm text-[#4B5563] font-light line-clamp-1 dark:text-gray-400 hover:line-clamp-2">
-              {item?.cuisines.map((cuisine) => cuisine).join(", ")}
+              {item?.cuisines?.map((cuisine) => cuisine).join(", ") ?? ""}
             </p>
           </div>
 

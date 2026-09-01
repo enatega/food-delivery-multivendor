@@ -1,0 +1,80 @@
+appId: ${APP_ID}
+name: CM-P1-018 An invalid voucher is rejected and leaves the total untouched
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# The highest-risk failure in coupon handling is a code that is rejected in the
+# UI but still discounts the order, or one that is accepted silently. This flow
+# submits a code that cannot exist and requires the checkout to come back
+# unchanged: no coupon chip, the apply-voucher entry point still offered, and
+# the same total to the cent.
+#
+# `applyCoupon` looks a coupon up by code; it creates nothing, and no order is
+# placed. The place-order control is asserted but never tapped.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- runFlow: ../../subflows/open-checkout.yaml
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- tapOn:
+    id: customer.checkout.payment.cod
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.totalBefore = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.totalBefore) && output.totalBefore > 0}
+    label: Checkout total must be a positive number before the voucher attempt
+# `customer.checkout.voucher-open` is rendered only while no coupon is applied,
+# so its presence here and after the attempt is itself part of the assertion.
+- assertVisible:
+    id: customer.checkout.voucher-open
+- tapOn:
+    id: customer.checkout.voucher-open
+- tapOn:
+    id: customer.checkout.voucher-input
+- inputText: QA-INVALID-VOUCHER-000
+- hideKeyboard
+- tapOn:
+    id: customer.checkout.voucher-apply
+# The mutation is in flight; give the rejection time to come back before
+# concluding that nothing changed.
+- waitForAnimationToEnd:
+    timeout: 10000
+- takeScreenshot: voucher-rejected
+# onCouponCompleted only dismisses the sheet when a coupon was actually applied,
+# so a rejected code deliberately leaves it open. Close it explicitly to read the
+# checkout total from an unobstructed screen.
+- runFlow:
+    when:
+      visible:
+        id: customer.checkout.voucher-input
+    commands:
+      - tapOn:
+          id: customer.checkout.voucher-close
+      - extendedWaitUntil:
+          notVisible:
+            id: customer.checkout.voucher-input
+          timeout: 15000
+- assertVisible:
+    id: customer.checkout.screen
+# A rejected code must leave the checkout exactly as it was.
+- assertVisible:
+    id: customer.checkout.voucher-open
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.totalAfter = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.totalAfter - output.totalBefore) < 0.01}
+    label: An invalid voucher must not change the checkout total
+- assertTrue:
+    condition: ${output.totalAfter <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must stay at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: checkout-unchanged-after-voucher

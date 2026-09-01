@@ -1,0 +1,100 @@
+appId: ${APP_ID}
+name: CM-P1-019 Item screen enforces required options and the quantity floor
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# Two guards that silently corrupt orders when they break: a required addon that
+# can be skipped, and a quantity stepper that can go below one. Both are
+# asserted on the allowlisted product, which is configured with an addon whose
+# quantityMinimum is at least 1.
+#
+# Nothing leaves the cart screen, so no order is created.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+# --- Required option gate --------------------------------------------------
+# ItemDetail keeps add-to-cart inert until every addon with quantityMinimum >= 1
+# has a selection, so this tap must do nothing at all.
+- assertVisible:
+    id: customer.item.screen
+- tapOn:
+    id: customer.item.add-to-cart
+- waitForAnimationToEnd:
+    timeout: 5000
+# Staying on the item screen is the gate. It is only meaningful in contrast
+# with the end of this flow, where the identical tap — after the option is
+# chosen — does navigate to the cart.
+- assertVisible:
+    id: customer.item.screen
+- takeScreenshot: item-required-option-gate
+# --- Quantity floor --------------------------------------------------------
+# CartComponent starts at 1 and returns early from onRemove at 1, swapping the
+# minus icon for a delete icon. Pressing decrease at 1 must be a no-op.
+- copyTextFrom:
+    id: customer.item.quantity
+- evalScript: ${output.startQuantity = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.startQuantity === 1}
+    label: The item screen must open at quantity 1
+- tapOn:
+    id: customer.item.quantity-decrease
+- copyTextFrom:
+    id: customer.item.quantity
+- evalScript: ${output.flooredQuantity = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.flooredQuantity === 1}
+    label: Decreasing at quantity 1 must not drop below 1
+# The stepper must still work in both directions afterwards.
+- tapOn:
+    id: customer.item.quantity-increase
+- tapOn:
+    id: customer.item.quantity-increase
+- copyTextFrom:
+    id: customer.item.quantity
+- evalScript: ${output.raisedQuantity = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.raisedQuantity === 3}
+    label: Two increases must step the quantity from 1 to 3
+- tapOn:
+    id: customer.item.quantity-decrease
+- copyTextFrom:
+    id: customer.item.quantity
+- evalScript: ${output.loweredQuantity = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.loweredQuantity === 2}
+    label: One decrease must step the quantity from 3 back to 2
+# --- Special instructions --------------------------------------------------
+- tapOn:
+    id: customer.item.instructions
+- inputText: QA no onions
+- hideKeyboard
+- assertVisible:
+    id: customer.item.screen
+# --- Satisfying the gate unblocks the add ----------------------------------
+# This is what makes the gate assertion above meaningful: the same tap that did
+# nothing before now reaches the cart.
+- tapOn:
+    id: customer.item.option.${OPTION_ID}
+- tapOn:
+    id: customer.item.add-to-cart
+- extendedWaitUntil:
+    visible:
+      id: customer.restaurant.open-cart
+    timeout: 15000
+- tapOn:
+    id: customer.restaurant.open-cart
+- extendedWaitUntil:
+    visible:
+      id: customer.cart.screen
+    timeout: 15000
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.cartQuantity = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.cartQuantity === 2}
+    label: The configured quantity must carry into the cart line
+- assertVisible:
+    id: customer.cart.total
+- takeScreenshot: item-configured-into-cart

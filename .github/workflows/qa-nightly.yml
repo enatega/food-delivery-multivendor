@@ -1,0 +1,78 @@
+name: QA Nightly (Production Read-Only)
+
+# Real-GraphQL coverage against live production. Kept OFF the per-push path:
+# it depends on live data and a short-lived session, so it runs on a schedule
+# and on demand instead of gating every commit. All traffic is guarded
+# read-only — the automation blocks every business mutation except the
+# MetricsGeneral bootstrap.
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # 02:00 UTC daily
+  workflow_dispatch:
+
+concurrency:
+  group: qa-nightly
+  cancel-in-progress: false
+
+jobs:
+  production:
+    name: Read-only smoke + authenticated
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: qa-automation
+    env:
+      QA_CUSTOMER_EMAIL: ${{ secrets.QA_CUSTOMER_EMAIL }}
+      QA_CUSTOMER_PASSWORD: ${{ secrets.QA_CUSTOMER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            qa-automation/package-lock.json
+            enatega-multivendor-web/package-lock.json
+      - name: Install QA automation dependencies
+        run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Install Customer Web dependencies
+        working-directory: enatega-multivendor-web
+        run: npm ci --legacy-peer-deps
+      - name: Point Customer Web at production
+        working-directory: enatega-multivendor-web
+        run: |
+          {
+            echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}"
+            echo 'NEXT_PUBLIC_SERVER_URL=https://aws-server-v2.enatega.com/'
+            echo 'NEXT_PUBLIC_WS_SERVER_URL=wss://aws-server-v2.enatega.com/'
+          } > .env
+
+      - name: Read-only GraphQL + UI smoke
+        run: npm run test:web:production-smoke
+        env:
+          CI: 'true'
+
+      # Authenticated flows only run when the customer secrets are configured.
+      - name: Establish authenticated session
+        if: ${{ env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
+        run: npm run auth:web:production
+        env:
+          CI: 'true'
+      - name: Authenticated read-only suite
+        if: ${{ env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
+        run: npm run test:web:production-authenticated
+        env:
+          CI: 'true'
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-report
+          path: |
+            qa-automation/reports/playwright
+            qa-automation/reports/junit
+          retention-days: 14

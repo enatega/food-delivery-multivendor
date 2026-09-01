@@ -1,0 +1,43 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: customer.tab.profile
+- assertVisible:
+    id: customer.auth.welcome
+- tapOn:
+    id: customer.auth.continue-email
+- assertVisible:
+    id: customer.auth.email
+- tapOn:
+    id: customer.auth.email
+- inputText: invalid-email
+- hideKeyboard
+- tapOn:
+    id: customer.auth.email-submit
+- assertVisible:
+    id: customer.auth.email
+- tapOn:
+    id: customer.auth.email
+- eraseText
+- inputText: ${CUSTOMER_EMAIL}
+- hideKeyboard
+- tapOn:
+    id: customer.auth.email-submit
+# The email check is a production round trip. 15s was tight enough to flake when
+# several flows sign in back to back, so this matches the 30s used for the login
+# submit below rather than assuming the lookup is faster than the login.
+- extendedWaitUntil:
+    visible:
+      id: customer.auth.password
+    timeout: 30000
+- tapOn:
+    id: customer.auth.password
+- inputText: ${CUSTOMER_PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: customer.auth.login-submit
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+

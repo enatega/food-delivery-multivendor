@@ -65,10 +65,16 @@ export const useCreateAccount = () => {
     IOS_CLIENT_ID_GOOGLE
   } = useEnvVars()
 
+  // Google.useAuthRequest throws at render time if a client id is `undefined`,
+  // which takes down the whole auth screen and blocks email/password login too.
+  // Hooks cannot be called conditionally, so coerce missing ids to '' instead:
+  // that satisfies the library's `typeof value === 'undefined'` invariant while
+  // staying falsy, so the existing `!IOS_CLIENT_ID_GOOGLE` guard in signIn()
+  // still reports "social login is not configured" rather than starting a flow.
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: EXPO_CLIENT_ID,
-    androidClientId: ANDROID_CLIENT_ID_GOOGLE,
-    iosClientId: IOS_CLIENT_ID_GOOGLE,
+    clientId: EXPO_CLIENT_ID ?? '',
+    androidClientId: ANDROID_CLIENT_ID_GOOGLE ?? '',
+    iosClientId: IOS_CLIENT_ID_GOOGLE ?? '',
     scopes: ['profile', 'email', 'openid']
   })
 

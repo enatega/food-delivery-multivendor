@@ -1,0 +1,51 @@
+appId: ${APP_ID}
+name: CM-P1-015 Favourites list renders for the signed-in customer
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# Profile.js renders the favourites section only when `userFavourite` returns at
+# least one restaurant, so this flow is deliberately two-branched: with data it
+# opens the full list and requires real restaurant cards, and without data it
+# requires the section to be absent rather than half-rendered.
+#
+# The heart control on a restaurant card is a `userFavourite` mutation and is
+# never tapped here.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/open-profile.yaml
+# Let the favourites query settle before branching on its result.
+- waitForAnimationToEnd:
+    timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: customer.profile.favourites-see-all
+    commands:
+      - tapOn:
+          id: customer.profile.favourites-see-all
+      - extendedWaitUntil:
+          visible:
+            id: customer.favourites.screen
+          timeout: 30000
+      # The hub only offers "See all" when at least one favourite exists, so the
+      # list behind it must contain cards, never the empty state.
+      - assertVisible:
+          id: "customer\\.restaurant\\.card\\..*"
+      - assertNotVisible:
+          id: customer.favourites.empty
+      - takeScreenshot: favourites-populated
+- runFlow:
+    when:
+      notVisible:
+        id: customer.profile.favourites-see-all
+    commands:
+      # No favourites: the hub must simply omit the section. Asserting the
+      # profile screen still stands rules out the section being missing because
+      # the whole hub failed to render.
+      - assertVisible:
+          id: customer.profile.screen
+      - assertVisible:
+          id: customer.profile.order-history
+      - takeScreenshot: favourites-absent

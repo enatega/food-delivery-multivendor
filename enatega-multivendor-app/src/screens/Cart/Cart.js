@@ -283,7 +283,7 @@ function Cart(props) {
   if (deliveryTime < 1) deliveryTime += restaurant?.deliveryTime
   return (
     <>
-      <View style={styles(currentTheme).mainContainer}>
+      <View testID='customer.cart.screen' style={styles(currentTheme).mainContainer}>
         {cart?.length === 0 ? (
           emptyCart()
         ) : (
@@ -344,7 +344,7 @@ function Cart(props) {
             <View style={styles().totalBillContainer}>
               <View style={styles(currentTheme).buttonContainer}>
                 <View style={styles().cartAmount}>
-                  <Animated.View style={[animatedStyle]}>
+                  <Animated.View testID='customer.cart.total' style={[animatedStyle]}>
                     <TextDefault textColor={currentTheme.black} style={styles().totalBill} bolder H2 isRTL>
                       {configuration.currencySymbol}
                       {calculateTotal()}
@@ -357,6 +357,7 @@ function Cart(props) {
                 </View>
                 {isLoggedIn && profile ? (
                   <TouchableOpacity
+                    testID='customer.cart.checkout'
                     activeOpacity={0.7}
                     onPress={() => {
                       if (calculateTotal() < minimumOrder) {

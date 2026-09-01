@@ -174,7 +174,7 @@ const CustomerSupport = (props) => {
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles(currentTheme).flex}>
+    <SafeAreaView testID='customer.support.screen' edges={['bottom', 'right', 'left']} style={styles(currentTheme).flex}>
       <StatusBar barStyle='light-content' backgroundColor={currentTheme.themeBackground} />
       <ScrollView
         showsVerticalScrollIndicator={false}

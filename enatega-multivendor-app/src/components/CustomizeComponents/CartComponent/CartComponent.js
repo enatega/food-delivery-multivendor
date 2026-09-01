@@ -26,6 +26,7 @@ function CartComponent(props) {
       <View style={styles().subContainer}>
       <View style={styles(currentTheme).actionContainer}>
         <TouchableOpacity
+          testID='customer.item.quantity-decrease'
           activeOpacity={0.7}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           style={[
@@ -40,12 +41,13 @@ function CartComponent(props) {
           />
         </TouchableOpacity>
 
-        <View style={styles(currentTheme).actionContainerView}>
+        <View testID='customer.item.quantity' style={styles(currentTheme).actionContainerView}>
           <TextDefault H5 bold textColor={currentTheme.black}>
           {quantity}
           </TextDefault>
         </View>
         <TouchableOpacity
+          testID='customer.item.quantity-increase'
           activeOpacity={0.7}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           style={[
@@ -57,6 +59,7 @@ function CartComponent(props) {
         </TouchableOpacity>
       </View>
         <TouchableOpacity
+          testID='customer.item.add-to-cart'
           activeOpacity={0.7}
           onPress={props?.onPress.bind(this, quantity)}
           style={

@@ -716,7 +716,7 @@ function Menu({ route, props }) {
   )
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
+    <SafeAreaView testID={selectedType === 'grocery' ? 'customer.store.screen' : 'customer.restaurants.screen'} edges={['left', 'right']} style={[styles().flex, { backgroundColor: currentTheme.themeBackground }]}>
       <Animated.FlatList
         style={[styles(currentTheme).container]}
         ListHeaderComponent={menuHeader}

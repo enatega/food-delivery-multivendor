@@ -184,7 +184,7 @@ function HeaderContent({
               <Entypo name='cross' color={currentTheme.newIconColor} size={scale(22)} />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={() => navigation.goBack()}>
+            <TouchableOpacity testID='customer.restaurant.back' activeOpacity={0.7} style={styles(currentTheme).touchArea} onPress={() => navigation.goBack()}>
               <Ionicons name='arrow-back' color={currentTheme.newIconColor} size={scale(22)} />
             </TouchableOpacity>
           )}

@@ -3,6 +3,13 @@
 Deterministic end-to-end automation for Enatega Customer, Store, Rider, Web,
 Admin, and GraphQL surfaces.
 
+## Coverage ledger
+
+[AUTOMATED-COVERAGE.md](AUTOMATED-COVERAGE.md) is the source of truth for
+manual QA work converted into automation. Every change that adds, removes,
+renames, skips, or materially changes a test must update that ledger in the
+same pull request.
+
 ## Safety
 
 No live test or data mutation may run until `validateQaEnvironment` accepts an
@@ -25,5 +32,8 @@ npm run qa:validate-env
 `qa:validate-env` reads the Git-ignored `.env.local` and validates target
 identity only. It performs no network request and no data mutation.
 
-Browser and mobile flows will be added after the QA environment, accounts,
-fixtures, and exact Store preparation/ready state mapping are approved.
+See [AUTOMATION.md](AUTOMATION.md) for the Customer Web execution strategy,
+commands, CI workflows, and known constraints.
+
+See [MOBILE-IOS.md](MOBILE-IOS.md) for the Maestro iOS toolchain, dedicated QA
+build, safe smoke command, and explicitly guarded production-order procedure.

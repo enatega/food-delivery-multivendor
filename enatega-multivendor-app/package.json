@@ -3,9 +3,9 @@
   "version": "5.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "start": "EXPO_PUBLIC_APP_ENV=development expo start",
+    "android": "EXPO_PUBLIC_APP_ENV=development expo run:android",
+    "ios": "EXPO_PUBLIC_APP_ENV=development expo run:ios",
     "eject": "expo eject",
     "format": "prettier --write '**/*.js'",
     "lint:fix": "eslint . --ext .js --fix",
@@ -20,13 +20,15 @@
     "build:production": "eas build --profile production -p all",
     "build:production:android": "eas build --profile production -p android",
     "build:production:ios": "eas build --profile production -p ios",
+    "build:qa-production:ios": "eas build --profile qa-production -p ios",
     "submit:production": "eas submit --profile production -p all",
     "submit:production:android": "eas submit --profile production -p android",
     "submit:production:ios": "eas submit --profile production -p ios",
     "publish:staging": "ENVIRONMENT=staging expo publish --release-channel staging",
     "publish:production": "ENVIRONMENT=production expo publish --release-channel production",
     "apkBuild": "eas build --profile staging --platform android",
-    "iosTestFlight": "eas build --profile production --platform ios"
+    "iosTestFlight": "eas build --profile production --platform ios",
+    "test:config": "node --test scripts/environment-config.test.js"
   },
   "husky": {
     "hooks": {

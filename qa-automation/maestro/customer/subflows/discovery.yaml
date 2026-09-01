@@ -1,0 +1,44 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: customer.tab.search
+- extendedWaitUntil:
+    visible:
+      id: customer.search.input
+    timeout: 15000
+- tapOn:
+    id: customer.search.input
+- inputText: ${RESTAURANT_NAME}
+- hideKeyboard
+# Maestro matches `text` as an anchored regex, but the app renders catalog names
+# with surrounding whitespace (e.g. "Falafel Tmeer "). Every name match below is
+# therefore wrapped in .* so padding does not cause a false negative.
+- extendedWaitUntil:
+    visible:
+      text: ".*${RESTAURANT_NAME}.*"
+    timeout: 30000
+# Tap the restaurant CARD by its testID, not by raw text: the search box still
+# holds the same string, so a text match can resolve to the input field and
+# merely refocus it instead of navigating.
+- tapOn:
+    id: "customer\\.restaurant\\.card\\..*"
+    index: 0
+# Fail loudly if the card that was tapped was not the intended restaurant.
+- extendedWaitUntil:
+    visible:
+      text: ".*${RESTAURANT_NAME}.*"
+    timeout: 30000
+# Scroll to and tap the product CARD by its testID. A text match here is unsafe:
+# the scroll container's accessibility label aggregates every child's text, so
+# ".*<product>.*" also matches the full-screen container and the tap lands on
+# nothing.
+- scrollUntilVisible:
+    element:
+      id: "customer\\.product\\.card\\.${PRODUCT_ID}"
+    direction: DOWN
+    timeout: 30000
+    centerElement: false
+- tapOn:
+    id: "customer\\.product\\.card\\.${PRODUCT_ID}"
+- assertVisible:
+    id: customer.item.screen

@@ -19,6 +19,7 @@ const contentSecurityPolicy = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  allowedDevOrigins: ["127.0.0.1"],
   webpack: (config) => {
     config.module.rules.push({
       test: /\.(woff|woff2|eot|ttf|otf)$/i,

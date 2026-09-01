@@ -1,0 +1,33 @@
+appId: ${APP_ID}
+---
+# Configure the allowlisted product on the item screen and open the cart.
+#
+# This is the proven prefix of configure-cart.yaml with the app restart removed.
+# Flows that only need a populated cart use this instead, so they do not pay for
+# a relaunch and the server-side cart refetch that follows it.
+#
+# The leading add-to-cart tap is deliberate: the allowlisted product carries an
+# addon with quantityMinimum >= 1, so adding before the required option is
+# chosen must be rejected and must leave us on the item screen.
+- tapOn:
+    id: customer.item.add-to-cart
+- assertVisible:
+    id: customer.item.screen
+- tapOn:
+    id: customer.item.option.${OPTION_ID}
+- tapOn:
+    id: customer.item.quantity-increase
+- assertVisible:
+    id: customer.item.quantity
+- tapOn:
+    id: customer.item.add-to-cart
+- extendedWaitUntil:
+    visible:
+      id: customer.restaurant.open-cart
+    timeout: 15000
+- tapOn:
+    id: customer.restaurant.open-cart
+- extendedWaitUntil:
+    visible:
+      id: customer.cart.screen
+    timeout: 15000

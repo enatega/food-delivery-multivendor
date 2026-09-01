@@ -1,0 +1,55 @@
+appId: ${APP_ID}
+name: CM-P1-009 Cart quantity stepper and last-unit removal
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# CartItem.js swaps the decrease control to a trash icon at quantity < 2, so the
+# final decrement removes the line rather than reaching zero. Nothing here
+# leaves the cart, so no order is ever created.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+# add-item-to-cart increments once on the item screen, so the line starts at 2.
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.quantity = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.quantity === 2}
+    label: The configured line must enter the cart at quantity 2
+- tapOn:
+    id: "customer\\.cart\\.item\\..*\\.increase"
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.increased = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.increased === 3}
+    label: Increase must step the line from 2 to 3
+- assertVisible:
+    id: customer.cart.total
+- tapOn:
+    id: "customer\\.cart\\.item\\..*\\.decrease"
+- tapOn:
+    id: "customer\\.cart\\.item\\..*\\.decrease"
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.decreased = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.decreased === 1}
+    label: Two decreases must step the line from 3 back to 1
+- takeScreenshot: cart-single-unit
+# The last decrement removes the line instead of leaving a zero-quantity item.
+- tapOn:
+    id: "customer\\.cart\\.item\\..*\\.decrease"
+- extendedWaitUntil:
+    notVisible:
+      id: "customer\\.cart\\.item\\..*\\.quantity"
+    timeout: 15000
+- assertNotVisible:
+    id: "customer\\.cart\\.item\\..*\\.decrease"
+# An emptied cart must not offer checkout.
+- assertNotVisible:
+    id: customer.cart.checkout
+- takeScreenshot: cart-emptied

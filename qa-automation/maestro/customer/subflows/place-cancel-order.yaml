@@ -1,0 +1,39 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: customer.cart.instructions-open
+- tapOn:
+    id: customer.cart.instructions-input
+- inputText: QA-RUN-${RUN_ID}
+- hideKeyboard
+- tapOn:
+    id: customer.cart.instructions-done
+- runFlow: checkout-readonly.yaml
+- assertTrue:
+    condition: ${QA_PLACE_REAL_ORDER == 'true' && FULFILLMENT == 'pickup' && PAYMENT_METHOD == 'COD'}
+    label: Production write guards must reach the device unchanged
+- tapOn:
+    id: customer.checkout.place-order
+- extendedWaitUntil:
+    visible:
+      id: customer.order.screen
+    timeout: 45000
+- assertVisible:
+    id: customer.order.number
+- takeScreenshot: order-created-${RUN_ID}
+- tapOn:
+    id: customer.order.cancel-open
+- tapOn:
+    id: customer.order.cancel-confirm
+- extendedWaitUntil:
+    visible:
+      text: ".*[Cc]ancel.*"
+    timeout: 30000
+- assertVisible:
+    id: customer.order.status
+- copyTextFrom:
+    id: customer.order.status
+- assertTrue:
+    condition: ${maestro.copiedText.toLowerCase().includes('cancel')}
+    label: Order detail must report a cancelled state
+- takeScreenshot: order-cancelled-${RUN_ID}

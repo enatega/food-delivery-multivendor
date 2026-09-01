@@ -125,7 +125,7 @@ const CreateAccount = (props) => {
   )
 
   const renderGuestButton = () => (
-    <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).guestButton} onPress={() => navigation.navigate('Discovery')} disabled={props.loadingIcon}>
+    <TouchableOpacity testID='customer.auth.continue-guest' activeOpacity={0.7} style={styles(currentTheme).guestButton} onPress={() => navigation.navigate('Discovery')} disabled={props.loadingIcon}>
       {props.loadingIcon ? (
         <Spinner backColor='rgba(0,0,0,0.1)' spinnerColor={currentTheme.main} />
       ) : (
@@ -140,7 +140,7 @@ const CreateAccount = (props) => {
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
+    <SafeAreaView testID='customer.auth.welcome' edges={['top', 'left', 'right']} style={styles(currentTheme).safeAreaViewStyles}>
       <StatusBar backgroundColor='transparent' translucent barStyle={themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content'} />
 
       <View style={styles().mainContainer}>

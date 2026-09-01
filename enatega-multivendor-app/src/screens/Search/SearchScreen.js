@@ -377,7 +377,7 @@ const SearchScreen = () => {
   }
 
   return (
-    <ScrollView style={styles(currentTheme).flex}>
+    <ScrollView testID='customer.search.screen' style={styles(currentTheme).flex}>
       <View
         showsVerticalScrollIndicator={false}
         refreshControl={
