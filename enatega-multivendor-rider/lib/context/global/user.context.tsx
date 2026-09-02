@@ -1,5 +1,12 @@
 import { QueryResult, useQuery } from "@apollo/client";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 // Interface
 import {
   IRiderProfileResponse,
@@ -7,8 +14,14 @@ import {
   IUserProviderProps,
 } from "@/lib/utils/interfaces";
 // API
-import { RIDER_ORDERS, RIDER_PROFILE } from "@/lib/apollo/queries";
 import {
+  RIDER_ORDERS,
+  RIDER_PROFILE,
+  SINGLE_VENDOR_RIDER_ORDERS,
+} from "@/lib/apollo/queries";
+import {
+  SINGLE_VENDOR_SUBSCRIPTION_ASSIGNED_RIDER,
+  SINGLE_VENDOR_SUBSCRIPTION_ZONE_ORDERS,
   SUBSCRIPTION_ASSIGNED_RIDER,
   SUBSCRIPTION_ZONE_ORDERS,
 } from "@/lib/apollo/subscriptions";
@@ -18,11 +31,29 @@ import {
   IRiderEarnings,
   IRiderEarningsArray,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getSecureItem } from "@/lib/services/secure-storage";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
+import { isNewOrderForMode } from "@/lib/utils/order-state";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
+// Stable reference for the "no orders" case so consumers don't see a new []
+// (and re-render) on every provider render.
+const EMPTY_ORDERS: IOrder[] = [];
+
 export const UserProvider = ({ children }: IUserProviderProps) => {
+  const { mode, riderIdKey } = useRiderMode();
+  const isSingleVendor = mode === RIDER_SERVER_MODES.SINGLE;
+  const riderOrdersQuery = isSingleVendor
+    ? SINGLE_VENDOR_RIDER_ORDERS
+    : RIDER_ORDERS;
+  const assignedRiderSubscription = isSingleVendor
+    ? SINGLE_VENDOR_SUBSCRIPTION_ASSIGNED_RIDER
+    : SUBSCRIPTION_ASSIGNED_RIDER;
+  const zoneOrdersSubscription = isSingleVendor
+    ? SINGLE_VENDOR_SUBSCRIPTION_ZONE_ORDERS
+    : SUBSCRIPTION_ZONE_ORDERS;
   // States
   const [modalVisible, setModalVisible] = useState<
     IRiderEarnings & { bool: boolean }
@@ -40,6 +71,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   >([] as IRiderEarningsArray[]);
   const [userId, setUserId] = useState("");
   const [zoneId, setZoneId] = useState("");
+  const [hasMoreAssigned, setHasMoreAssigned] = useState(true);
 
   const {
     loading: loadingProfile,
@@ -62,27 +94,41 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     networkStatus: networkStatusAssigned,
     subscribeToMore,
     refetch: refetchAssigned,
-  } = useQuery(RIDER_ORDERS, {
+    fetchMore: fetchMoreAssigned,
+  } = useQuery(riderOrdersQuery, {
     // Orders change constantly (status updates, new assignments), so every
     // fetch/refetch/poll must hit the network rather than falling back to
     // cache-first, which could serve stale order lists.
     fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
-    pollInterval: 30000,
+    pollInterval: isSingleVendor ? 0 : 30000,
     skip: !userId,
-    variables: {
-      userId,
-    },
+    variables: isSingleVendor ? {limit: 50, offset: 0} : {userId},
   });
+  const loadMoreAssigned = useCallback(async () => {
+    if (!isSingleVendor || loadingAssigned || !hasMoreAssigned) return;
+    const existing = dataAssigned?.riderOrders ?? [];
+    const {data: nextPage} = await fetchMoreAssigned({
+      variables: {limit: 50, offset: existing.length},
+      updateQuery: (previous, {fetchMoreResult}) => {
+        const incoming = fetchMoreResult?.riderOrders ?? [];
+        const byId = new Map(
+          [...(previous.riderOrders ?? []), ...incoming].map((order: IOrder) => [order._id, order]),
+        );
+        return {riderOrders: [...byId.values()]};
+      },
+    });
+    setHasMoreAssigned((nextPage?.riderOrders?.length ?? 0) === 50);
+  }, [dataAssigned?.riderOrders, fetchMoreAssigned, hasMoreAssigned, isSingleVendor, loadingAssigned]);
   const isRiderAvailable = Boolean(dataProfile?.rider?.available);
 
-  async function getUserId() {
-    const id = await AsyncStorage.getItem("rider-id");
+  const getUserId = useCallback(async () => {
+    const id = await getSecureItem(riderIdKey);
 
     if (id) {
       setUserId(id);
     }
-  }
+  }, [riderIdKey]);
 
   // UseEffects
 
@@ -113,8 +159,11 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     };
 
     const unsubAssignOrder = subscribeToMore({
-      document: SUBSCRIPTION_ASSIGNED_RIDER,
+      document: assignedRiderSubscription,
       variables: { riderId },
+      onError: () => {
+        void refetchAssigned();
+      },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const { origin, order } = subscriptionData.data.subscriptionAssignRider;
@@ -123,7 +172,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         } else if (origin === "remove") {
           return {
             riderOrders: (prev.riderOrders ?? []).filter(
-              (o: IOrder) => o._id !== order._id
+              (o: IOrder) => o._id !== order._id,
             ),
           };
         }
@@ -133,11 +182,15 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
     const unsubZoneOrder = isRiderAvailable
       ? subscribeToMore({
-          document: SUBSCRIPTION_ZONE_ORDERS,
+          document: zoneOrdersSubscription,
           variables: { zoneId: zoneIdValue },
+          onError: () => {
+            void refetchAssigned();
+          },
           updateQuery: (prev, { subscriptionData }) => {
             if (!subscriptionData.data) return prev;
-            const { origin, order } = subscriptionData.data.subscriptionZoneOrders;
+            const { origin, order } =
+              subscriptionData.data.subscriptionZoneOrders;
             if (origin === "new" || origin === "update") {
               return { riderOrders: upsertOrder(prev.riderOrders, order) };
             }
@@ -150,68 +203,113 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       try {
         unsubZoneOrder?.();
       } catch (err) {
-        console.log("err in unsubZoneOrder", err);
+        if (__DEV__) {
+          console.log("err in unsubZoneOrder", err);
+        }
       }
       try {
         unsubAssignOrder();
       } catch (err) {
-        console.log("err in unsubAssignOrder", err);
+        if (__DEV__) {
+          console.log("err in unsubAssignOrder", err);
+        }
       }
     };
-  }, [dataProfile, isRiderAvailable, subscribeToMore, userId, zoneId]);
+  }, [
+    assignedRiderSubscription,
+    dataProfile,
+    isRiderAvailable,
+    refetchAssigned,
+    subscribeToMore,
+    userId,
+    zoneId,
+    zoneOrdersSubscription,
+  ]);
 
-  const filteredAssignedOrders = (dataAssigned?.riderOrders ?? []).filter(
-    (order: IOrder) =>
-      isRiderAvailable ||
-      order?.orderStatus !== "ACCEPTED" ||
-      Boolean(order?.rider) ||
-      Boolean(order?.isPickedUp)
-  );
+  // Only blank the list on a hard error — NOT while `loadingAssigned` is true.
+  // With cache-and-network + a 30s poll + notifyOnNetworkStatusChange,
+  // `loadingAssigned` flips true on every background poll while Apollo still holds
+  // the previous data; clearing here made every order disappear and reappear each
+  // poll (the "blink"). Memoized + falls back to the shared EMPTY_ORDERS so the
+  // reference stays stable when there are no matching orders.
+  const assignedOrders = useMemo<IOrder[]>(() => {
+    if (errorAssigned) return EMPTY_ORDERS;
+    const filtered = (dataAssigned?.riderOrders ?? EMPTY_ORDERS).filter(
+      (order: IOrder) =>
+        isRiderAvailable ||
+        !isNewOrderForMode(order, mode) ||
+        Boolean(order?.rider) ||
+        Boolean(order?.isPickedUp),
+    );
+    return filtered.length ? filtered : EMPTY_ORDERS;
+  }, [dataAssigned?.riderOrders, errorAssigned, isRiderAvailable, mode]);
+
+  // Apollo automatically re-runs RIDER_PROFILE and RIDER_ORDERS when `skip`
+  // flips to false (userId becomes available) using the new variables, so an
+  // explicit refetch here would only duplicate those network requests.
 
   useEffect(() => {
-    if (!userId) return;
-
-    refetchProfile({ id: userId });
-    refetchAssigned({ userId });
-  }, [refetchProfile, refetchAssigned, userId]);
-
-  useEffect(() => {
-    const listener = asyncStorageEmitter.addListener("rider-id", (data) => {
+    // Keep a single stable handler reference so the cleanup removes the exact
+    // listener that was added. Previously a fresh anonymous function was passed
+    // to removeListener, so it never matched and listeners leaked on every
+    // remount (each firing setUserId on every rider-id storage event).
+    const handleRiderId = (data?: { value?: string }) => {
       setUserId(data?.value ?? "");
-    });
+    };
+    asyncStorageEmitter.addListener(riderIdKey, handleRiderId);
 
     getUserId();
     return () => {
-      if (listener) {
-        listener.removeListener("rider-id", () => {
-          console.log("Rider Id listerener removed");
-        });
-      }
+      asyncStorageEmitter.removeListener(riderIdKey, handleRiderId);
     };
-  }, []);
+  }, [getUserId, riderIdKey]);
+
+  // Memoize the context value so a new object isn't created on every render.
+  // UserProvider re-renders frequently (cache-and-network + 30s poll + two live
+  // subscriptions); without this, every consumer re-rendered each time. The
+  // setModalVisible / setRiderOrderEarnings state setters are referentially
+  // stable per React, so they're intentionally omitted from the dependency list.
+  const contextValue = useMemo<IUserContextProps>(
+    () => ({
+      modalVisible,
+      riderOrderEarnings,
+      setModalVisible,
+      setRiderOrderEarnings,
+      userId,
+      setUserId,
+      loadingProfile,
+      errorProfile,
+      dataProfile: dataProfile?.rider ?? null,
+      loadingAssigned,
+      errorAssigned,
+      assignedOrders,
+      refetchAssigned,
+      loadMoreAssigned,
+      hasMoreAssigned,
+      refetchProfile,
+      networkStatusAssigned,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      modalVisible,
+      riderOrderEarnings,
+      userId,
+      loadingProfile,
+      errorProfile,
+      dataProfile,
+      loadingAssigned,
+      errorAssigned,
+      assignedOrders,
+      refetchAssigned,
+      loadMoreAssigned,
+      hasMoreAssigned,
+      refetchProfile,
+      networkStatusAssigned,
+    ],
+  );
 
   return (
-    <UserContext.Provider
-      value={{
-        modalVisible,
-        riderOrderEarnings,
-        setModalVisible,
-        setRiderOrderEarnings,
-        userId,
-        loadingProfile,
-        errorProfile,
-        dataProfile: dataProfile?.rider ?? null,
-        loadingAssigned,
-        errorAssigned,
-        assignedOrders:
-          loadingAssigned || errorAssigned ? [] : filteredAssignedOrders,
-        refetchAssigned,
-        refetchProfile,
-        networkStatusAssigned,
-      }}
-    >
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 };
 export const UserConsumer = UserContext.Consumer;

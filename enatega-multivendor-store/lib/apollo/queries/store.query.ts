@@ -62,8 +62,44 @@ export const STORE_CURRENT_WITHDRAW_REQUEST = gql`
   }
 `;
 
-export const STORE_PROFILE = gql`
-  query Restaurant($restaurantId: String!) {
+export const STORE_PROFILE =
+  // @multi-vendor-only
+  gql`
+    query Restaurant($restaurantId: String!) {
+      restaurant(id: $restaurantId) {
+        _id
+        unique_restaurant_id
+        orderId
+        orderPrefix
+        name
+        image
+        logo
+        address
+        username
+        minimumOrder
+        isActive
+        isAvailable
+        slug
+        commissionRate
+        tax
+        notificationToken
+        enableNotification
+        shopType
+        phone
+        hasBusinessDetails
+        openingTimes {
+          day
+          times {
+            startTime
+            endTime
+          }
+        }
+      }
+    }
+  `;
+
+export const STORE_PROFILE_SINGLE_VENDOR = gql`
+  query SingleVendorStoreProfile($restaurantId: String!) {
     restaurant(id: $restaurantId) {
       _id
       unique_restaurant_id
@@ -84,7 +120,40 @@ export const STORE_PROFILE = gql`
       enableNotification
       shopType
       phone
-      hasBusinessDetails
+      bussinessDetails {
+        bankName
+        accountNumber
+        accountName
+        accountCode
+      }
+      openingTimes {
+        day
+        times {
+          startTime
+          endTime
+        }
+      }
+    }
+  }
+`;
+
+export const GET_RESTAURANT_BY_ID = gql`
+  query Restaurant($id: String) {
+    restaurant(id: $id) {
+      _id
+      orderId
+      orderPrefix
+      name
+      image
+      address
+      location {
+        coordinates
+      }
+      deliveryTime
+      username
+      isAvailable
+      notificationToken
+      enableNotification
       openingTimes {
         day
         times {

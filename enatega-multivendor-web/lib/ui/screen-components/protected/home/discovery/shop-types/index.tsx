@@ -16,18 +16,17 @@ function ShopTypes() {
 
   if (error) {
     return (
-      <div className="mt-7 px-4">
+      <div className="mt-10 border-t border-dispatch-line pt-6">
         <div className="flex justify-start mb-4">
-          <h2 className="font-inter font-bold text-xl sm:text-2xl text-gray-900 dark:text-white">
+          <h2 className="text-xl font-medium tracking-[-0.02em] text-dispatch-ink sm:text-2xl dark:text-white">
             {t("shop-types")}
           </h2>
         </div>
 
-        <div className="flex flex-col items-center justify-center py-10 border border-red-400  rounded-md ">
+        <div className="flex flex-col items-center justify-center border border-red-300 bg-red-50 py-10 dark:border-red-900 dark:bg-red-950/20">
           <p className="text-red-400 text-center mb-3">
-            Unable to fetch shop types.
+            {t("something_went_wrong_please_try_again")}
           </p>
-
         </div>
       </div>
     );

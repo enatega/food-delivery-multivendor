@@ -1,11 +1,8 @@
-import axios from "axios";
+import type { AppMode } from "@/lib/mode";
 
 interface IReverseGeocodeResponse {
   success: boolean;
-  error: {
-    code: string;
-    message: string;
-  } | null;
+  error: { code: string; message: string } | null;
   data: {
     status: string;
     errorMessage: string | null;
@@ -14,35 +11,29 @@ interface IReverseGeocodeResponse {
   } | null;
 }
 
-const normalizeBaseUrl = (baseUrl: string): string =>
-  baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
-
 export async function reverseGeocode({
-  serverUrl,
+  mode,
   latitude,
   longitude,
 }: {
-  serverUrl: string;
+  mode: AppMode;
   latitude: number;
   longitude: number;
 }) {
-  const response = await axios.get<IReverseGeocodeResponse>(
-    `${normalizeBaseUrl(serverUrl)}/maps/reverse-geocode`,
-    {
-      params: {
-        latitude,
-        longitude,
-        language: "en",
-      },
-      timeout: 10000,
-    },
-  );
+  const params = new URLSearchParams({
+    mode,
+    latitude: String(latitude),
+    longitude: String(longitude),
+    language: "en",
+  });
+  const response = await fetch(`/api/maps/reverse-geocode?${params}`, {
+    signal: AbortSignal.timeout(10000),
+  });
+  const payload = (await response.json()) as IReverseGeocodeResponse;
 
-  if (!response.data.success || !response.data.data) {
-    throw new Error(
-      response.data.error?.message || "Unable to fetch address.",
-    );
+  if (!response.ok || !payload.success || !payload.data) {
+    throw new Error(payload.error?.message || "Unable to fetch address.");
   }
 
-  return response.data.data;
+  return payload.data;
 }

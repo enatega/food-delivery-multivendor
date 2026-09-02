@@ -9,6 +9,7 @@ export const ORDER_TRACKING = gql`query OrderDetails($orderDetailsId: String!) {
       name
       image
       slug
+      shopType
       address
       location {
         coordinates
@@ -88,6 +89,57 @@ export const ORDER_TRACKING = gql`query OrderDetails($orderDetailsId: String!) {
     preparationTime
     selectedPrepTime
     instructions
+    eta {
+      phase
+      source
+      readyAt
+      baseArrivalAt
+      estimatedArrivalAt
+      windowStartAt
+      windowEndAt
+      durationSeconds
+      distanceMeters
+      encodedPolyline
+      origin { latitude longitude }
+      destination { latitude longitude }
+      calculatedAt
+      lastLocationAt
+      version
+    }
     __typename
   }
 }`;
+
+export const ORDER_LIVE_TRACKING = gql`
+  query OrderTracking($id: ID!) {
+    orderTracking(id: $id) {
+      orderId
+      status
+      riderLocation {
+        latitude
+        longitude
+        accuracy
+        heading
+        speed
+        recordedAt
+      }
+      eta {
+        phase
+        source
+        readyAt
+        baseArrivalAt
+        estimatedArrivalAt
+        windowStartAt
+        windowEndAt
+        durationSeconds
+        distanceMeters
+        encodedPolyline
+        origin { latitude longitude }
+        destination { latitude longitude }
+        calculatedAt
+        lastLocationAt
+        version
+      }
+    }
+  }
+`;

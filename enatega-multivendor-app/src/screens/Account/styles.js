@@ -2,9 +2,6 @@ import { scale, verticalScale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../utils/alignment'
 import { theme } from '../../utils/themeColors'
-import { Dimensions } from 'react-native'
-const {height} = Dimensions.get('screen')
-
 const styles = (props = null) =>
   StyleSheet.create({
     flex: {
@@ -13,7 +10,7 @@ const styles = (props = null) =>
     formContainer: {
       flex: 1,
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     containerInfo: {
       width: '100%',
@@ -21,21 +18,50 @@ const styles = (props = null) =>
     },
     mainContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      backgroundColor: props !== null ? props.themeBackground : 'transparent'
     },
     subContainer: {
-      ...alignment.MTmedium
+      paddingTop: props?.spacing?.sm ?? scale(8)
     },
-    //Modal
+    screenContent: {
+      flexGrow: 1,
+      paddingBottom: props?.spacing?.section ?? verticalScale(28)
+    },
+    sectionBlock: {
+      marginTop: props?.spacing?.section ?? verticalScale(28)
+    },
+    sectionTitle: {
+      ...props?.typeScale?.heading,
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
+      marginBottom: props?.spacing?.sm ?? scale(8)
+    },
+    preferenceRow: {
+      minHeight: props?.sizes?.headerContent ?? verticalScale(56),
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
+      paddingVertical: props?.spacing?.sm ?? scale(8),
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: props?.spacing?.lg ?? scale(16)
+    },
+    preferenceText: {
+      flex: 1,
+      ...props?.typeScale?.body
+    },
+    controlRow: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: props?.spacing?.sm ?? scale(8)
+    },
+    // Modal
     centeredView: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#000',
+      backgroundColor: '#000'
     },
     modalView: {
       width: '90%',
-      alignItems: 'flex-start',
       gap: 24,
       margin: 20,
       backgroundColor: props !== null ? props.themeBackground : 'white',
@@ -88,8 +114,8 @@ const styles = (props = null) =>
       paddingRight: 16
     },
     width85: {
-      width: '70%',
-      //backgroundColor: theme.Pink.deleteButton
+      width: '70%'
+      // backgroundColor: theme.Pink.deleteButton
     },
     shadow: {
       shadowOffset: { width: 0, height: scale(2) },
@@ -109,6 +135,7 @@ const styles = (props = null) =>
     },
     mainContainerArea: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
+      marginTop: props?.spacing?.section ?? verticalScale(28)
     },
     languageContainer: {
       width: '100%',
@@ -153,7 +180,7 @@ const styles = (props = null) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       ...alignment.MLxSmall,
-      ...alignment.MRsmall,
+      ...alignment.MRsmall
     },
 
     buttonContainer: {
@@ -185,11 +212,10 @@ const styles = (props = null) =>
     modalContainer: {
       width: '100%',
       backgroundColor: props !== null ? props.themeBackground : '#FFF',
-      borderRadius: verticalScale(4),
       ...alignment.Plarge,
       borderColor: props !== null ? props.gray200 : '#E5E7EB',
-      borderWidth:scale(1),
-      borderRadius:scale(10)
+      borderWidth: scale(1),
+      borderRadius: scale(10)
 
     },
     radioContainer: {
@@ -212,29 +238,26 @@ const styles = (props = null) =>
     },
     checkboxSettings: {
       marginBottom: scale(10),
-       alignItems: 'center'
+      alignItems: 'center'
     },
     legalView: {
-      ...alignment.MTmedium,
+      ...alignment.MTmedium
     },
     containerButton: {
       backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      width: '90%',
-      height: scale(40),
-      bottom: verticalScale(0),
+      width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      alignSelf: 'center',
-      ...alignment.MTmedium,
-      ...alignment.PBlarge
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
+      marginTop: props?.spacing?.section ?? verticalScale(28)
     },
     addButton: {
-      backgroundColor: props !== null ? props.color3 : 'transparent',
-      borderWidth: 2,
-      borderColor: props !== null ? props.red600 : '#DC2626',
+      backgroundColor: 'transparent',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.danger ?? props?.red600 ?? '#DC2626',
       width: '100%',
-      height: scale(40),
-      borderRadius: 50,
+      minHeight: props?.sizes?.primaryButton ?? scale(48),
+      borderRadius: props?.radii?.round ?? 50,
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center'
@@ -242,11 +265,11 @@ const styles = (props = null) =>
     contentContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     line: {
       height: 0.5,
-      backgroundColor: props !== null ? props.borderBottomColor : '#f9f9f9',
+      backgroundColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.22)'
     },
     padding: {
       ...alignment.Pmedium
@@ -268,7 +291,7 @@ const styles = (props = null) =>
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      gap: scale(5),
-    },
+      gap: scale(5)
+    }
   })
 export default styles

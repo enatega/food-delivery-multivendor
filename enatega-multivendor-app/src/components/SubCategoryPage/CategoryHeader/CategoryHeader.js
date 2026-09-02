@@ -49,10 +49,11 @@ const CategoryPageHeader = ({
             textColor={currentTheme.fontMainColor}
             numberOfLines={1} // Ensures text truncation
             ellipsizeMode='tail' // Adds "..." if text is too long
+            style={styles(currentTheme).restaurantName}
           >
             {restaurantName}
           </TextDefault>
-          <TextDefault textColor={currentTheme.plusIcon}>
+          <TextDefault textColor={currentTheme.plusIcon} style={styles(currentTheme).deliveryTime}>
             Delivery in {deliveryTime} mins
           </TextDefault>
         </View>

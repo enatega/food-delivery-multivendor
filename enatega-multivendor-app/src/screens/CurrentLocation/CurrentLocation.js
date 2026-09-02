@@ -23,7 +23,7 @@ import { checkLocationInCities } from '../../utils/locationUtil'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import useWatchLocation from '../../ui/hooks/useWatchLocation'
-import { DEMO_DEFAULT_LOCATION, ENABLE_DEMO_DEFAULT_LOCATION } from '../../utils/demoDefaultLocation'
+import ConfigurationContext from '../../context/Configuration'
 
 export default function CurrentLocation() {
   const Analytics = analytics()
@@ -43,6 +43,8 @@ export default function CurrentLocation() {
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
   const { getAddress } = useGeocoding()
+  const configuration = useContext(ConfigurationContext)
+  const enableCustomerDemoMode = !!configuration?.enableCustomerDemoMode
 
   const { cities, location, setLocation, isLocationLoaded, permissionState, setPermissionState } = useContext(LocationContext)
 
@@ -141,6 +143,12 @@ export default function CurrentLocation() {
     // Handle permission request result
     if (!permissionState || !isLocationLoaded) return
 
+    if (enableCustomerDemoMode && location?.isDemoDefaultLocation) {
+      setLoading(false)
+      navigation.navigate('Main')
+      return
+    }
+
     if (!permissionState?.granted) {
       console.log('Location permission not granted')
       setLoading(false)
@@ -149,13 +157,6 @@ export default function CurrentLocation() {
 
     if (location) {
       setLoading(false)
-      return
-    }
-
-    if (!location && ENABLE_DEMO_DEFAULT_LOCATION) {
-      setLocation(DEMO_DEFAULT_LOCATION)
-      setLoading(false)
-      navigation.navigate('Main')
       return
     }
 
@@ -199,12 +200,17 @@ export default function CurrentLocation() {
   }
 
   useEffect(() => {
+    if (enableCustomerDemoMode && location?.isDemoDefaultLocation) {
+      setIsInitialLoading(false)
+      return
+    }
+
     async function Track() {
       await Analytics.track(Analytics.events.NAVIGATE_TO_CURRENTLOCATION)
     }
     Track()
     checkLocationPermission()
-  }, [])
+  }, [enableCustomerDemoMode, location?.isDemoDefaultLocation])
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -215,7 +221,7 @@ export default function CurrentLocation() {
 
   useEffect(() => {
     getCurrentLocationOnStart()
-  }, [permissionState, permission, isLocationLoaded, location])
+  }, [permissionState, permission, isLocationLoaded, location, enableCustomerDemoMode])
 
   useEffect(() => {
     checkCityMatch()

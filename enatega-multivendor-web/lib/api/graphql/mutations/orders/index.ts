@@ -96,6 +96,11 @@ export const PLACE_ORDER = gql`
       createdAt
       completionTime
       preparationTime
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline calculatedAt lastLocationAt version
+      }
     }
   }
 `;
@@ -191,6 +196,11 @@ export const ADD_REVIEW_ORDER = gql`
       deliveredAt
       cancelledAt
       assignedAt
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline calculatedAt lastLocationAt version
+      }
     }
   }
 `;
@@ -203,6 +213,11 @@ export const ABORT_ORDER = gql`
       orderStatus
       cancelledAt
       reason
+      eta {
+        phase source readyAt baseArrivalAt estimatedArrivalAt
+        windowStartAt windowEndAt durationSeconds distanceMeters
+        encodedPolyline calculatedAt lastLocationAt version
+      }
       restaurant {
         _id
         name

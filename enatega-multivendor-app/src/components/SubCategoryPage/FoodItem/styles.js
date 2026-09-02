@@ -3,13 +3,19 @@ import { scale } from '../../../utils/scaling'
 import { subtleCardShadow } from '../../../utils/cardShadows'
 
 const { width } = Dimensions.get('window')
-const ITEM_WIDTH = width / 2 // Account for padding and gap
+const LIST_HORIZONTAL_PADDING = scale(42)
+const LIST_GAP = scale(10)
+const ITEM_CARD_WIDTH = Math.max(
+  scale(148),
+  Math.min(scale(210), (width - LIST_HORIZONTAL_PADDING - LIST_GAP) / 2)
+)
+const ITEM_IMAGE_HEIGHT = Math.max(scale(118), Math.min(scale(154), ITEM_CARD_WIDTH * 0.82))
 
 const styles = (props = null) =>
   StyleSheet.create({
     foodItemContainer: {
       backgroundColor: props?.cardBackground,
-      width: width * 0.45,
+      width: ITEM_CARD_WIDTH,
       borderRadius: scale(20),
       padding: scale(10),
       marginBottom: scale(8),
@@ -18,7 +24,7 @@ const styles = (props = null) =>
     imageContainer: {
       position: 'relative',
       width: '100%',
-      height: scale(150),
+      height: ITEM_IMAGE_HEIGHT,
       borderRadius: scale(15),
       overflow: 'hidden'
     },
@@ -39,7 +45,8 @@ const styles = (props = null) =>
     },
     detailsContainer: {
       marginTop: scale(10),
-      gap: scale(4)
+      gap: scale(4),
+      minHeight: scale(44)
     },
     // Improved styles for out of stock items
     disabledItem: {

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import NextImage, { ImageProps } from "next/image";
 
-const DIRECT_IMAGE_HOSTS = new Set(["assets.enatega.com"]);
 export const FALLBACK_IMAGE_SRC = "/assets/images/png/freshGroceries.jpg";
 
 function shouldBypassOptimization(src: ImageProps['src']) {
@@ -11,8 +10,8 @@ function shouldBypassOptimization(src: ImageProps['src']) {
   if (src.startsWith('blob:') || src.startsWith('data:')) return true;
 
   try {
-    const { hostname, protocol } = new URL(src);
-    return protocol === 'https:' && DIRECT_IMAGE_HOSTS.has(hostname);
+    new URL(src);
+    return false;
   } catch {
     return false;
   }

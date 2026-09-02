@@ -16,8 +16,42 @@ export const EDIT_RIDER = gql`
 `;
 
 export const UPDATE_LOCATION = gql`
-  mutation UpdateRiderLocation($latitude: String!, $longitude: String!) {
-    updateRiderLocation(latitude: $latitude, longitude: $longitude) {
+  mutation UpdateRiderLocation(
+    $latitude: String!
+    $longitude: String!
+    $accuracy: Float
+    $heading: Float
+    $speed: Float
+    $deviceTimestamp: String
+  ) {
+    updateRiderLocation(
+      latitude: $latitude
+      longitude: $longitude
+      accuracy: $accuracy
+      heading: $heading
+      speed: $speed
+      deviceTimestamp: $deviceTimestamp
+    ) { _id }
+  }
+`;
+
+export const UPDATE_LOCATION_MULTI_VENDOR = gql`
+  mutation UpdateRiderLocation(
+    $latitude: String!
+    $longitude: String!
+    $accuracy: Float
+    $heading: Float
+    $speed: Float
+    $deviceTimestamp: String
+  ) {
+    updateRiderLocation(
+      latitude: $latitude
+      longitude: $longitude
+      accuracy: $accuracy
+      heading: $heading
+      speed: $speed
+      deviceTimestamp: $deviceTimestamp
+    ) {
       _id
     }
   }

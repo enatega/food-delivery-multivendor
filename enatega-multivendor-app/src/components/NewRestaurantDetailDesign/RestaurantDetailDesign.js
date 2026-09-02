@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useState, useEffect } from 'react'
-import { View, StatusBar, Platform, Animated, Alert } from 'react-native'
+import React, { useContext, useRef, useState, useEffect, useMemo } from 'react'
+import { View, StatusBar, Platform, Animated } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { useRestaurant } from '../../ui/hooks'
@@ -18,13 +18,15 @@ import { useNavigation } from '@react-navigation/native'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import RestaurantCompactHeader from './RestaurntCompactHeader/RestaurantCompactHeader'
 import RestaurantDetailSkeleton from './RestaurantDetailSkeleton'
+import { useMultivendorTheme } from '../../ui/designSystem'
 
-const HEADER_MAX_HEIGHT = Platform.OS === 'ios' ? 520 : 490
-const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 120 : 120
+const HEADER_MAX_HEIGHT = scale(420)
+const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? scale(104) : scale(92)
 
 function NewRestaurantDetailDesign(props) {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
   const { cartCount } = useContext(UserContext)
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
@@ -34,16 +36,19 @@ function NewRestaurantDetailDesign(props) {
   const restaurantId = restaurant?._id
 
   const scrollOffsetY = useRef(new Animated.Value(0)).current
+  const collapsedRef = useRef(false)
 
-  // Measure the real header height so the content padding matches it exactly.
-  // Header content is device-scaled, so a fixed constant leaves a gap / clips.
-  const [headerMaxHeight, setHeaderMaxHeight] = useState(HEADER_MAX_HEIGHT)
-  const headerScrollDistance = headerMaxHeight - HEADER_MIN_HEIGHT
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const headerScrollDistance = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT
 
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const currentTheme = useMemo(
+    () => ({
+      isRTL: i18n.dir() === 'rtl',
+      ...theme[themeContext.ThemeValue],
+      ...tokens
+    }),
+    [i18n, themeContext.ThemeValue, tokens]
+  )
 
   // Animation for cart button
   const scaleValue = useRef(new Animated.Value(1)).current
@@ -72,28 +77,43 @@ function NewRestaurantDetailDesign(props) {
 
   // Use both route params and API data to determine if restaurant is closed
   const isRestaurantOpen =
-    restaurant?.isOpen ?? restaurantData?.restaurant?.isOpen
+    restaurantData?.restaurant?.isOpen ?? restaurant?.isOpen
   const isAvailable =
-    restaurant?.isAvailable ?? restaurantData?.restaurant?.isAvailable
+    restaurantData?.restaurant?.isAvailable ?? restaurant?.isAvailable
 
   // Calculate header animation values
-  const headerHeight = scrollOffsetY.interpolate({
+  const headerTranslateY = scrollOffsetY.interpolate({
     inputRange: [0, headerScrollDistance],
-    outputRange: [headerMaxHeight, HEADER_MIN_HEIGHT],
+    outputRange: [0, -headerScrollDistance],
     extrapolate: 'clamp'
   })
 
   const headerOpacity = scrollOffsetY.interpolate({
-    inputRange: [0, headerScrollDistance / 2],
+    inputRange: [0, headerScrollDistance * 0.88],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   })
 
   const collapsedHeaderOpacity = scrollOffsetY.interpolate({
-    inputRange: [headerScrollDistance / 2, headerScrollDistance],
+    inputRange: [headerScrollDistance * 0.84, headerScrollDistance],
     outputRange: [0, 1],
     extrapolate: 'clamp'
   })
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
+    {
+      useNativeDriver: true,
+      listener: (event) => {
+        const y = event.nativeEvent.contentOffset.y
+        const nextCollapsed = y >= headerScrollDistance * 0.9
+        if (collapsedRef.current !== nextCollapsed) {
+          collapsedRef.current = nextCollapsed
+          setIsCollapsed(nextCollapsed)
+        }
+      }
+    }
+  )
 
   // Handler for opening search overlay
   const handleOpenSearch = () => {
@@ -113,8 +133,8 @@ function NewRestaurantDetailDesign(props) {
 
   // Merge restaurant data from route params and API
   const mergedRestaurant = {
-    ...(restaurantData?.restaurant || {}),
     ...restaurant,
+    ...(restaurantData?.restaurant || {}),
     latitude: restaurantData?.restaurant
       ? restaurantData?.restaurant.location.coordinates[1]
       : '',
@@ -122,7 +142,7 @@ function NewRestaurantDetailDesign(props) {
       ? restaurantData?.restaurant.location.coordinates[0]
       : '',
     isOpen: isRestaurantOpen,
-    isAvailable: isAvailable
+    isAvailable
   }
 
   // Render the skeleton loader when data is loading
@@ -155,11 +175,12 @@ function NewRestaurantDetailDesign(props) {
 
       {/* Main Header */}
       <Animated.View
-        pointerEvents='box-none'
+        pointerEvents={isCollapsed ? 'none' : 'box-none'}
         style={[
           styles(currentTheme).headerContainer,
           {
-            height: headerHeight,
+            height: HEADER_MAX_HEIGHT,
+            transform: [{ translateY: headerTranslateY }],
             zIndex: 1
           }
         ]}
@@ -168,10 +189,6 @@ function NewRestaurantDetailDesign(props) {
         <Animated.View
           pointerEvents='box-none'
           style={{ opacity: headerOpacity }}
-          onLayout={(e) => {
-            const h = e.nativeEvent.layout.height
-            if (h > 0 && Math.abs(h - headerMaxHeight) > 1) setHeaderMaxHeight(h)
-          }}
         >
           <RestaurantDetailHeader
             restaurant={mergedRestaurant}
@@ -185,7 +202,7 @@ function NewRestaurantDetailDesign(props) {
 
         {/* Collapsed Header */}
         <Animated.View
-          pointerEvents='box-none'
+          pointerEvents={isCollapsed ? 'box-none' : 'none'}
           style={[
             {
               opacity: collapsedHeaderOpacity,
@@ -211,19 +228,19 @@ function NewRestaurantDetailDesign(props) {
       {/* Scrollable Content with Restaurant Sections */}
       <Animated.ScrollView
         scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
-          { useNativeDriver: false }
-        )}
+        onScroll={handleScroll}
         style={styles(currentTheme).scrollView}
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
+        bounces
+        alwaysBounceVertical
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={[
+          styles(currentTheme).contentContainer,
+          { paddingTop: HEADER_MAX_HEIGHT }
+        ]}
       >
-        <View
-          style={[
-            styles(currentTheme).contentContainer,
-            { paddingTop: headerMaxHeight }
-          ]}
-        >
+        <View>
           <RestaurantSections
             restaurantId={restaurantId}
             configuration={configuration}

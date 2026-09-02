@@ -6,7 +6,8 @@ import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, AppState, BackHandler, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import { ActivityIndicator, Alert, AppState, BackHandler, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import * as NavigationBar from 'expo-navigation-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import FlashMessage from 'react-native-flash-message'
 import 'react-native-gesture-handler'
@@ -25,12 +26,11 @@ import ThemeReducer from './src/ui/ThemeReducer/ThemeReducer'
 import { exitAlert } from './src/utils/androidBackButton'
 import { NOTIFICATION_TYPES } from './src/utils/enums'
 import { theme as Theme } from './src/utils/themeColors'
-import { useKeepAwake } from 'expo-keep-awake'
 import AnimatedSplashScreen from './src/components/Splash/AnimatedSplashScreen'
 import './i18next'
-import * as SplashScreen from 'expo-splash-screen'
 import TextDefault from './src/components/Text/TextDefault/TextDefault'
 import { ErrorBoundary } from './src/components/ErrorBoundary'
+import SentryInit from './src/components/Sentry/SentryInit'
 import SessionExpiredModal from './src/components/SessionExpiredModal/SessionExpiredModal'
 import navigationService from './src/routes/navigationService'
 import {
@@ -42,6 +42,20 @@ import {
   initializePublicAccessToken,
   stopPublicAccessTokenRefresh
 } from './src/services/publicAcccessService'
+import LiveActivityService from './src/utils/liveActivityService'
+import { registerLiveActivityForegroundHandler } from './src/utils/liveActivityMessaging'
+import {
+  AppModeProvider,
+  useAppMode
+} from './src/mode/AppModeContext'
+import { APP_MODES } from './src/mode/constants'
+import SingleVendorAppContainer from './src/singlevendor/routes/SingleVendorAppContainer'
+import ModeNotificationRegistration from './src/mode/ModeNotificationRegistration'
+import {
+  inferNotificationMode,
+  savePendingOrderNavigation
+} from './src/mode/orderOrigin'
+import { getGoogleAuthConfigurationErrors } from './src/utils/googleAuthConfig'
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -53,26 +67,67 @@ Notifications.setNotificationHandler({
   }
 })
 
-export default function App() {
+function ModeAwareApp() {
   const reviewModalRef = useRef()
   const [appIsReady, setAppIsReady] = useState(false)
-  const [location, setLocation] = useState(null)
+  const [isThemeReady, setIsThemeReady] = useState(false)
   const [orderId, setOrderId] = useState()
   const [isUpdating, setIsUpdating] = useState(false)
   const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false)
   const [clarityInitialized, setClarityInitialized] = useState(false)
-  const { CLARITY_ENABLED, GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars()
+  const { mode, isModeReady, switchMode } = useAppMode()
+  const {
+    CLARITY_ENABLED,
+    GRAPHQL_URL,
+    WS_GRAPHQL_URL,
+    PUBLIC_ACCESS_REQUIRED,
+    EXPO_CLIENT_ID,
+    ANDROID_CLIENT_ID_GOOGLE,
+    IOS_CLIENT_ID_GOOGLE
+  } = useEnvVars()
+
+  useEffect(() => {
+    const invalidFields = getGoogleAuthConfigurationErrors({
+      webClientId: EXPO_CLIENT_ID,
+      androidClientId: ANDROID_CLIENT_ID_GOOGLE,
+      iosClientId: IOS_CLIENT_ID_GOOGLE
+    })
+    if (invalidFields.length) {
+      console.warn('[GoogleAuth] Invalid or missing client ID fields:', invalidFields.join(', '))
+    }
+  }, [EXPO_CLIENT_ID, ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE])
   const client = useMemo(
-    () => setupApolloClient({ GRAPHQL_URL, WS_GRAPHQL_URL }),
-    [GRAPHQL_URL, WS_GRAPHQL_URL]
+    () => setupApolloClient({
+      GRAPHQL_URL,
+      WS_GRAPHQL_URL,
+      mode,
+      publicAccessRequired: PUBLIC_ACCESS_REQUIRED
+    }),
+    [
+      GRAPHQL_URL,
+      mode,
+      PUBLIC_ACCESS_REQUIRED,
+      WS_GRAPHQL_URL
+    ]
   )
+
+  useEffect(() => {
+    LiveActivityService.configure(client, mode)
+    const unsubscribe = registerLiveActivityForegroundHandler()
+    LiveActivityService.cleanAppGroupImages(24).catch(() => {})
+    return unsubscribe
+  }, [client, mode])
+
+  useEffect(() => () => {
+    void client.dispose?.()
+  }, [client])
 
   // Fetch/refresh the public (MetricsGeneral) token up front and keep it fresh
   // via a background timer, instead of refreshing only when a request finds it
   // expired. Also refresh when the app returns to the foreground, since RN
   // suspends timers while backgrounded.
   useEffect(() => {
-    if (!GRAPHQL_URL) return undefined
+    if (!GRAPHQL_URL || !PUBLIC_ACCESS_REQUIRED) return undefined
 
     initializePublicAccessToken(GRAPHQL_URL)
 
@@ -86,31 +141,48 @@ export default function App() {
       subscription.remove()
       stopPublicAccessTokenRefresh()
     }
-  }, [GRAPHQL_URL])
+  }, [GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED])
 
-  useKeepAwake()
+  // Screen keep-awake is now scoped to the active order-tracking screen
+  // (see OrderDetail) instead of being on app-wide, which drained battery
+  // on every screen (PERF-011).
 
-  // Use system theme
+  // Use the system theme only as the first-install default. A manually selected
+  // theme is restored from storage before the splash screen is dismissed.
   const systemTheme = useColorScheme()
   const [theme, themeSetter] = useReducer(ThemeReducer, systemTheme === 'dark' ? 'Dark' : 'Pink')
+
+  // Match the Android system navigation bar to the bottom tab bar
+  // (currentTheme.cardBackground) for both light and dark themes, so the two
+  // blend seamlessly instead of showing a mismatched bar underneath.
   useEffect(() => {
-    try {
-      themeSetter({ type: systemTheme === 'dark' ? 'Dark' : 'Pink' })
-    } catch (error) {
-      // Error retrieving data
-      console.log('Theme Error : ', error.message)
-    }
-  }, [systemTheme])
+    if (Platform.OS !== 'android') return
+    const navBarColor = Theme[theme].cardBackground
+    NavigationBar.setBackgroundColorAsync(navBarColor).catch(() => {})
+    NavigationBar.setButtonStyleAsync(theme === 'Dark' ? 'light' : 'dark').catch(
+      () => {}
+    )
+  }, [theme])
 
   // For Fonts, etc
   useEffect(() => {
     const loadAppData = async () => {
+      try {
+        const storedTheme = await AsyncStorage.getItem('theme')
+        if (storedTheme === 'Dark' || storedTheme === 'Pink') {
+          themeSetter({ type: storedTheme })
+        }
+      } catch (error) {
+        console.warn('Unable to restore the saved theme:', error?.message)
+      } finally {
+        setIsThemeReady(true)
+      }
+
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
         MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
       })
-      await getActiveLocation()
       setAppIsReady(true)
     }
 
@@ -122,16 +194,6 @@ export default function App() {
       backHandler.remove()
     }
   }, [])
-
-  useEffect(() => {
-    if (!appIsReady) return
-
-    const hideSplashScreen = async () => {
-      await SplashScreen.hideAsync()
-    }
-
-    hideSplashScreen()
-  }, [appIsReady])
 
   useEffect(() => {
     const unsubscribe = subscribeToSessionInvalidation(({ reason }) => {
@@ -209,12 +271,44 @@ export default function App() {
       }
     })
 
-    const responseSub = Notifications.addNotificationResponseReceivedListener((response) => {
-      if (response?.notification?.request?.content?.data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
-        const id = response?.notification?.request?.content?.data?._id
+    const responseSub = Notifications.addNotificationResponseReceivedListener(async (response) => {
+      const data = response?.notification?.request?.content?.data
+      if (data?.type === NOTIFICATION_TYPES.REVIEW_ORDER) {
+        const id = data?._id
         if (id) {
           setOrderId(id)
           reviewModalRef?.current?.open()
+        }
+        return
+      }
+
+      if (data?.type === 'order') {
+        const targetMode = await inferNotificationMode(data)
+        const notificationOrderId = data?._id || data?.orderId
+        if (targetMode && targetMode !== mode && notificationOrderId) {
+          Alert.alert(
+            'Switch delivery mode?',
+            'This order belongs to your other delivery service.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              {
+                text: 'Switch and track',
+                onPress: async () => {
+                  await savePendingOrderNavigation(
+                    notificationOrderId,
+                    targetMode
+                  )
+                  const switched = await switchMode(targetMode)
+                  if (!switched) {
+                    Alert.alert(
+                      'Unable to switch',
+                      'Finish the payment or order request in progress, then try again.'
+                    )
+                  }
+                }
+              }
+            ]
+          )
         }
       }
     })
@@ -222,20 +316,7 @@ export default function App() {
       notifSub.remove()
       responseSub.remove()
     }
-  }, [])
-
-  // Handlers
-  // get active location
-  async function getActiveLocation() {
-    try {
-      const locationStr = await AsyncStorage.getItem('location')
-      if (locationStr) {
-        setLocation(JSON.parse(locationStr))
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  }, [mode, switchMode])
 
   // set modal close
   const onOverlayPress = () => {
@@ -247,7 +328,7 @@ export default function App() {
     navigationService.navigate('CreateAccount')
   }
 
-  if (isUpdating) {
+  if (!isModeReady || isUpdating) {
     return (
       <View style={[styles.flex, styles.mainContainer, { backgroundColor: Theme[theme].startColor }]}>
         <TextDefault textColor={Theme[theme].white} bold>
@@ -261,23 +342,31 @@ export default function App() {
   return (
     <ErrorBoundary>
       <GestureHandlerRootView style={styles.flex}>
-        <AnimatedSplashScreen>
-          <ApolloProvider client={client}>
+        <AnimatedSplashScreen
+          ready={appIsReady && isModeReady}
+          themeReady={isThemeReady}
+          themeMode={theme}
+        >
+          <ApolloProvider client={client} key={mode}>
             <ThemeContext.Provider
               value={{ ThemeValue: theme, dispatch: themeSetter }}
             >
               <StatusBar backgroundColor={Theme[theme].menuBar} barStyle={theme === 'Dark' ? 'light-content' : 'dark-content'} />
-              <LocationProvider>
-                <ConfigurationProvider>
-                  <AuthProvider>
+              <AuthProvider key={`auth-${mode}`}>
+                <ConfigurationProvider key={`configuration-${mode}`}>
+                  <LocationProvider>
+                    <SentryInit />
                     <UserProvider>
+                      <ModeNotificationRegistration />
                       <OrdersProvider
                         onOrderDelivered={(order) => {
                           setOrderId(order._id)
                           reviewModalRef?.current?.open()
                         }}
                       >
-                        <AppContainer />
+                        {mode === APP_MODES.SINGLE
+                          ? <SingleVendorAppContainer />
+                          : <AppContainer />}
                         <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
                         <SessionExpiredModal
                           visible={sessionExpiredVisible}
@@ -285,15 +374,23 @@ export default function App() {
                         />
                       </OrdersProvider>
                     </UserProvider>
-                  </AuthProvider>
+                  </LocationProvider>
                 </ConfigurationProvider>
-              </LocationProvider>
+              </AuthProvider>
               <FlashMessage MessageComponent={MessageComponent} />
             </ThemeContext.Provider>
           </ApolloProvider>
         </AnimatedSplashScreen>
       </GestureHandlerRootView>
     </ErrorBoundary>
+  )
+}
+
+export default function App() {
+  return (
+    <AppModeProvider>
+      <ModeAwareApp />
+    </AppModeProvider>
   )
 }
 

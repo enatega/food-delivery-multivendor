@@ -35,6 +35,7 @@ import { ku } from "./languages/ku";
 import { uz } from "./languages/uz";
 import { az } from "./languages/az";
 import { nl } from "./languages/nl";
+import { kk } from "./languages/kk";
 
 // Define language resources
 export const languageResources: { [key: string]: { translation: object } } = {
@@ -69,6 +70,7 @@ export const languageResources: { [key: string]: { translation: object } } = {
   uz: { translation: uz },
   az: { translation: az },
   nl: { translation: nl },
+  kk: { translation: kk },
 };
 
 const defaultLanguage = Localization.getLocales()[0]?.languageCode || "en";

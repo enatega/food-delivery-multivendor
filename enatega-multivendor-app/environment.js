@@ -6,6 +6,7 @@
 import { useContext } from 'react'
 import { Platform } from 'react-native'
 import ConfigurationContext from './src/context/Configuration'
+import { useAppMode } from './src/mode/AppModeContext'
 import * as Updates from 'expo-updates'
 const { getEnvironmentConfig } = require('./environment.config')
 
@@ -13,7 +14,8 @@ const useEnvVars = (
   env = process.env.EXPO_PUBLIC_APP_ENV || Updates.channel
 ) => {
   const configuration = useContext(ConfigurationContext)
-  const sharedConfig = getEnvironmentConfig(env)
+  const { mode } = useAppMode()
+  const sharedConfig = getEnvironmentConfig(env, mode)
   const googleMapsKey =
     Platform.OS === 'ios'
       ? process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS
@@ -26,7 +28,9 @@ const useEnvVars = (
     AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
     GOOGLE_MAPS_KEY: googleMapsKey,
     EXPO_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    SENTRY_DSN: configuration?.customerAppSentryUrl ?? 'https://4213c02977911e1b75898c93cc5517fb@o1103026.ingest.us.sentry.io/4508662470803456',
+    // Sentry DSN must come from server configuration; no hardcoded fallback so a
+    // leaked repo cannot be used to flood the Sentry project (SEC-010).
+    SENTRY_DSN: configuration?.customerAppSentryUrl ?? null,
     TERMS_AND_CONDITIONS: configuration?.termsAndConditions,
     PRIVACY_POLICY: configuration?.privacyPolicy,
     TEST_OTP: configuration?.testOtp,

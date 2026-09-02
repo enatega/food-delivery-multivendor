@@ -2,8 +2,7 @@ import { Libraries } from "@react-google-maps/api";
 import { ReactNode } from "react";
 import { IGlobalComponentProps } from "./global.interface";
 
-export interface IGoogleMapsLoaderComponentProps
-  extends IGlobalComponentProps {}
+export interface IGoogleMapsLoaderComponentProps extends IGlobalComponentProps {}
 
 export interface IAutoCompleteItem {
   code: string;
@@ -17,6 +16,7 @@ export interface ICustomGoogleMapsLocationBoundsComponentProps {
 
 export interface IGoogleMapsContext {
   isLoaded: boolean;
+  loadError?: Error;
 }
 
 export interface IGoogleMapsProviderProps {

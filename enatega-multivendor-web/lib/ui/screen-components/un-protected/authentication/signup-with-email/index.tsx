@@ -65,6 +65,7 @@ export default function SignUpWithEmail({
     try {
       setIsLoading(true);
       setIsRegistering(true);
+      const normalizedEmail = formData.email?.trim() || "";
 
       // Required fields
       if (Object.values(formData).some((val) => !val)) {
@@ -88,9 +89,9 @@ export default function SignUpWithEmail({
       }
       // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      setIsValid(emailRegex.test(formData.email || ""));
+      setIsValid(emailRegex.test(normalizedEmail));
 
-      if (!emailRegex.test(formData.email || "")) {
+      if (!emailRegex.test(normalizedEmail)) {
         showToast({
           type: "error",
           title: t("create_user_label"),
@@ -111,9 +112,9 @@ export default function SignUpWithEmail({
 
       // Check email existence first (before phone check)
       // Only check if we are NOT already continuing with isPhoneExists flag
-      if (!isPhoneExists && formData.email) {
-        console.log("Checking email existence for:", formData.email);
-        const emailExists = await checkEmailExists(formData.email);
+      if (!isPhoneExists && normalizedEmail) {
+        console.log("Checking email existence for:", normalizedEmail);
+        const emailExists = await checkEmailExists(normalizedEmail);
         console.log("Email exists result:", emailExists);
 
         if (emailExists) {
@@ -143,12 +144,13 @@ export default function SignUpWithEmail({
       }
 
       // Verification flow (prioritize email, then phone, then direct create)
-      if (formData.email && !SKIP_EMAIL_VERIFICATION) {
-        // Store isPhoneExists in formData before proceeding to email verification
-        if (isPhoneExists) {
-          setFormData({ ...formData, isPhoneExists: true });
-        }
-        sendOtpToEmailAddress(formData.email);
+      if (normalizedEmail && !SKIP_EMAIL_VERIFICATION) {
+        setFormData({
+          ...formData,
+          email: normalizedEmail,
+          ...(isPhoneExists ? { isPhoneExists: true } : {}),
+        });
+        sendOtpToEmailAddress(normalizedEmail);
         handleChangePanel(3); // Email OTP step
         return;
       }
@@ -162,7 +164,7 @@ export default function SignUpWithEmail({
       // If both verifications are skipped → create user immediately
       if (SKIP_EMAIL_VERIFICATION && SKIP_MOBILE_VERIFICATION) {
         const userData = await handleCreateUser({
-          email: formData.email,
+          email: normalizedEmail,
           phone: formData.phone,
           name: formData.name,
           password: formData.password,
@@ -225,7 +227,6 @@ export default function SignUpWithEmail({
           type="email"
           placeholder={t("emailLabel")}
           onChange={(e) => handleFormChange("email", e.target.value)}
-          disabled={!!formData.email}
         />
       </div>
       {/* Email Validation message */}

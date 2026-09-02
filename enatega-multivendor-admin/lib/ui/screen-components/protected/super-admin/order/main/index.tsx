@@ -1,5 +1,5 @@
 // Hooks
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useQueryGQL } from '@/lib/hooks/useQueryQL';
 import useDebounce from '@/lib/hooks/useDebounce';
 // Interfaces & Types
@@ -9,18 +9,17 @@ import {
   IPaginationVars,
 } from '@/lib/utils/interfaces';
 import { IOrder, IExtendedOrder } from '@/lib/utils/interfaces';
-import { TOrderRowData } from '@/lib/utils/types';
 import { getGraphQLErrorMessage } from '@/lib/utils/methods/error';
 import { useTranslations } from 'next-intl';
 
 // GraphQL
-import { GET_ALL_ORDERS_PAGINATED } from '@/lib/api/graphql';
+import {
+  GET_ALL_ORDERS_PAGINATED,
+  GET_ORDER_FILTER_OPTIONS,
+} from '@/lib/api/graphql';
 
 // Components
 import OrderSuperAdminTableHeader from '../header/table-header';
-// import Table from '@/lib/ui/useable-components/table';
-import OrderTableSkeleton from '@/lib/ui/useable-components/custom-skeletons/orders.vendor.row.skeleton';
-// import { ORDER_SUPER_ADMIN_COLUMNS } from '@/lib/ui/useable-components/table/columns/order-superadmin-columns';
 import OrderDetailModal from '@/lib/ui/useable-components/popup-menu/order-details-modal';
 import DashboardDateFilter from '@/lib/ui/useable-components/date-filter';
 import OrderTable from '../order-table';
@@ -31,11 +30,14 @@ import { DataTableRowClickEvent } from 'primereact/datatable';
 
 export default function OrderSuperAdminMain() {
   const t = useTranslations();
+
   // States
   const [selectedData, setSelectedData] = useState<IExtendedOrder[]>([]);
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
+  const [selectedRiderId, setSelectedRiderId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRestaurant, setSelectedRestaurant] =
+  const [selectedOrder, setSelectedOrder] =
     useState<IExtendedOrder | null>(null);
   const [dateFilter, setDateFilter] = useState<IDateFilter>({
     dateKeyword: 'All',
@@ -68,9 +70,37 @@ export default function OrderSuperAdminMain() {
       dateFilter.dateKeyword === 'Custom' ? dateFilter.endDate : undefined,
     orderStatus: selectedActions.length > 0 ? selectedActions : undefined,
     search: debouncedSearch,
+    restaurantId: selectedRestaurantId ?? undefined,
+    riderId: selectedRiderId ?? undefined,
   };
 
-  const { data, error, loading, refetch } = useQueryGQL(
+  const {
+    data: filterOptionsData,
+    loading: filterOptionsLoading,
+  } = useQueryGQL(GET_ORDER_FILTER_OPTIONS, {}, {
+    fetchPolicy: 'cache-first',
+  }) as IQueryResult<
+    | {
+        orderFilterOptions: {
+          restaurants: Array<{ _id: string; name: string }>;
+          riders: Array<{
+            _id: string;
+            name: string;
+            username?: string;
+            phone?: string;
+          }>;
+        };
+      }
+    | undefined,
+    Record<string, never>
+  >;
+
+  const {
+    data: paginatedData,
+    error: paginatedError,
+    loading: paginatedLoading,
+    refetch: refetchPaginated,
+  } = useQueryGQL(
     GET_ALL_ORDERS_PAGINATED,
     queryVariables,
     {
@@ -99,10 +129,21 @@ export default function OrderSuperAdminMain() {
   });
 
   useEffect(() => {
-    if (!loading && isInitialLoad) {
+    if (!paginatedLoading && isInitialLoad) {
       setIsInitialLoad(false);
     }
-  }, [loading, isInitialLoad]);
+  }, [isInitialLoad, paginatedLoading]);
+
+  useEffect(() => {
+    setFirst(0);
+    setCurrentPage(1);
+  }, [
+    dateFilter,
+    debouncedSearch,
+    selectedActions,
+    selectedRestaurantId,
+    selectedRiderId,
+  ]);
 
   // For global search - updates filters for PrimeReact DataTable
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,42 +156,16 @@ export default function OrderSuperAdminMain() {
 
   const handleRowClick = (event: DataTableRowClickEvent) => {
     const selectedOrder = event?.data as IExtendedOrder;
-    setSelectedRestaurant(selectedOrder);
+    setSelectedOrder(selectedOrder);
     setIsModalOpen(true);
   };
 
   const handleRefetch = () => {
-    refetch({
+    refetchPaginated({
       page: currentPage,
       rows: rows,
     });
   };
-
-  const tableData = useMemo(() => {
-    if (!data?.allOrdersPaginated?.orders) return [];
-
-    return data?.allOrdersPaginated?.orders?.map(
-      (order: IOrder): IExtendedOrder => ({
-        ...order,
-        itemsTitle:
-          order?.items
-            .map((item) => item?.title)
-            .join(', ')
-            .slice(0, 15) + '...',
-        OrderdeliveryAddress:
-          order?.deliveryAddress?.deliveryAddress?.toString()?.slice(0, 15) +
-          '...',
-        DateCreated: order?.createdAt?.toString()?.slice(0, 10),
-      })
-    );
-  }, [data]);
-
-  const displayData: TOrderRowData[] = useMemo(() => {
-    if (loading) {
-      return OrderTableSkeleton({ rowCount: 10 }); // Display 10 skeleton rows while loading
-    }
-    return tableData;
-  }, [loading, tableData]);
 
   return (
     <div className="p-3 screen-container">
@@ -163,6 +178,13 @@ export default function OrderSuperAdminMain() {
             setSelectedActions={setSelectedActions}
             dateFilter={dateFilter}
             handleDateFilter={handleDateFilter}
+            restaurants={filterOptionsData?.orderFilterOptions?.restaurants ?? []}
+            riders={filterOptionsData?.orderFilterOptions?.riders ?? []}
+            filtersLoading={filterOptionsLoading}
+            selectedRestaurantId={selectedRestaurantId}
+            selectedRiderId={selectedRiderId}
+            setSelectedRestaurantId={setSelectedRestaurantId}
+            setSelectedRiderId={setSelectedRiderId}
           />
           <DashboardDateFilter
             dateFilter={dateFilter}
@@ -170,17 +192,10 @@ export default function OrderSuperAdminMain() {
           />
         </>
       }
-      {!error && (
+      {!paginatedError && (
         <OrderTable
-          data={
-            data?.allOrdersPaginated
-              ? {
-                  ...data.allOrdersPaginated,
-                  orders: displayData as IExtendedOrder[],
-                }
-              : undefined
-          }
-          loading={loading}
+          data={paginatedData?.allOrdersPaginated}
+          loading={paginatedLoading}
           isInitialLoad={isInitialLoad}
           handleRowClick={handleRowClick}
           selectedData={selectedData}
@@ -199,13 +214,13 @@ export default function OrderSuperAdminMain() {
       <OrderDetailModal
         visible={isModalOpen}
         onHide={() => setIsModalOpen(false)}
-        restaurantData={selectedRestaurant}
+        restaurantData={selectedOrder}
       />
 
       <ApiErrorAlert
-        error={getGraphQLErrorMessage(error)}
+        error={getGraphQLErrorMessage(paginatedError)}
         refetch={handleRefetch}
-        queryName="GET_ALL_ORDERS_PAGINATED"
+        queryName={'GET_ALL_ORDERS_PAGINATED'}
         title={t('Error')}
       />
     </div>

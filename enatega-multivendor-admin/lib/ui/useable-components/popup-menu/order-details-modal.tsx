@@ -3,6 +3,11 @@ import { Dialog } from 'primereact/dialog';
 import { IExtendedOrder, Items } from '@/lib/utils/interfaces';
 import './order-detail-modal.css';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
+import {
+  ORDER_TRACKING,
+  SUBSCRIPTION_ORDER_TRACKING,
+} from '@/lib/api/graphql';
+import { useQuery, useSubscription } from '@apollo/client';
 
 interface IOrderDetailModalProps {
   visible: boolean;
@@ -16,6 +21,23 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
   restaurantData,
 }) => {
   const { CURRENT_SYMBOL } = useConfiguration();
+  const trackingEnabled =
+    visible && restaurantData?.orderStatus === 'PICKED' && Boolean(restaurantData?._id);
+  const { data: trackingQueryData } = useQuery(ORDER_TRACKING, {
+    variables: { id: restaurantData?._id },
+    skip: !trackingEnabled,
+    fetchPolicy: 'network-only',
+  });
+  const { data: trackingSubscriptionData } = useSubscription(
+    SUBSCRIPTION_ORDER_TRACKING,
+    {
+      variables: { id: restaurantData?._id },
+      skip: !trackingEnabled,
+    }
+  );
+  const liveTracking =
+    trackingSubscriptionData?.subscriptionOrderTracking ||
+    trackingQueryData?.orderTracking;
   const calculateSubtotal = (items: Items[]) => {
     let Subtotal = 0;
     for (let i = 0; i < items.length; i++) {
@@ -38,9 +60,71 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
       visible={visible}
       onHide={onHide}
       header={`Order # ${restaurantData.orderId}`}
-      className="custom-modal border border-dark-600" // Added custom class for CSS override
+      className="custom-modal border border-dark-600"
+      breakpoints={{ '960px': '78vw', '640px': 'calc(100vw - 16px)' }}
     >
       <div className="order-details-container dark:bg-dark-900 dark:text-white ">
+        {/* Customer Information Section */}
+        <div className="order-section dark:bg-dark-600">
+          <h3 className="section-header dark:text-primary-dark">
+            Customer Information
+          </h3>
+          {restaurantData.user ? (
+            <div className="information-grid">
+              <div className="information-item">
+                <span className="information-label">Name</span>
+                <span>{restaurantData.user.name || 'Not available'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Phone</span>
+                <span>{restaurantData.user.phone || 'Not available'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Email</span>
+                <span>{restaurantData.user.email || 'Not available'}</span>
+              </div>
+            </div>
+          ) : (
+            <p>Customer information is not available</p>
+          )}
+        </div>
+
+        {restaurantData.eta?.windowStartAt && restaurantData.eta?.windowEndAt && (
+          <div className="order-section dark:bg-dark-600">
+            <h3 className="section-header dark:text-primary-dark">
+              Delivery estimate
+            </h3>
+            <div className="information-grid">
+              <div className="information-item">
+                <span className="information-label">Arrival window</span>
+                <span>
+                  {new Date(restaurantData.eta.windowStartAt).toLocaleTimeString([], {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                  })}
+                  –
+                  {new Date(restaurantData.eta.windowEndAt).toLocaleTimeString([], {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                  })}
+                </span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Source</span>
+                <span>{restaurantData.eta.source || 'Unavailable'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Tracking freshness</span>
+                <span>
+                  {liveTracking?.riderLocation?.recordedAt
+                    ? new Date(liveTracking.riderLocation.recordedAt).toLocaleTimeString()
+                    : 'Waiting for rider location'}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Items Section */}
         <div className="order-section dark:bg-dark-600">
           <h3 className="section-header dark:text-primary-dark">Items</h3>
@@ -138,6 +222,35 @@ const OrderDetailModal: React.FC<IOrderDetailModalProps> = ({
             </span>
           </div>
         </div>
+
+        {/* Rider Information Section */}
+        {restaurantData.rider && (
+          <div className="order-section dark:bg-dark-600">
+            <h3 className="section-header dark:text-primary-dark">
+              Rider Information
+            </h3>
+            <div className="information-grid">
+              <div className="information-item">
+                <span className="information-label">Name</span>
+                <span>{restaurantData.rider.name || 'Not available'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Username</span>
+                <span>{restaurantData.rider.username || 'Not available'}</span>
+              </div>
+              <div className="information-item">
+                <span className="information-label">Availability</span>
+                <span>
+                  {restaurantData.rider.available === undefined
+                    ? 'Not available'
+                    : restaurantData.rider.available
+                      ? 'Available'
+                      : 'Unavailable'}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Delivery Address Section */}
         <div className="order-section dark:bg-dark-600">

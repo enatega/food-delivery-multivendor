@@ -6,32 +6,27 @@ import { Href, router } from "expo-router";
 import { AuthContext } from "../context/global/auth.context";
 
 // GraphQL
-import {
-  DEFAULT_RIDER_CREDS,
-  RIDER_LOGIN,
-} from "../api/graphql/mutation/login";
+import { RIDER_LOGIN } from "../api/graphql/mutation/login";
 
 // Components
 import { FlashMessageComponent } from "../ui/useable-components";
 
 // Interfaces
-import {
-  IRiderDefaultCredsResponse,
-  IRiderLoginResponse,
-} from "../utils/interfaces/auth.interface";
+import { IRiderLoginResponse } from "../utils/interfaces/auth.interface";
 
 // Constants
 import { ROUTES } from "../utils/constants";
 
 // Hooks
-import { ApolloError, useMutation, useQuery } from "@apollo/client";
+import { ApolloError, useMutation } from "@apollo/client";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { setItem } from "../services/async-storage";
+import { setSecureItem } from "../services/secure-storage";
+import { useUserContext } from "../context/global/user.context";
 import { getNotificationToken } from "../utils/methods/permission";
+import { useRiderMode } from "../context/global/rider-mode.context";
 
 const useLogin = () => {
-  const [creds, setCreds] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Hooks
@@ -39,6 +34,8 @@ const useLogin = () => {
 
   // Context
   const { setTokenAsync } = useContext(AuthContext);
+  const { setUserId } = useUserContext();
+  const { riderIdKey } = useRiderMode();
 
   // API
   const [login] = useMutation(RIDER_LOGIN, {
@@ -46,34 +43,27 @@ const useLogin = () => {
     onError,
   });
 
-  useQuery(DEFAULT_RIDER_CREDS, { onCompleted: onDefaultCredsCompleted });
+  //  useQuery(DEFAULT_RIDER_CREDS, { onCompleted: onDefaultCredsCompleted });
 
   // Handlers
   // For login mutation
-async function onLoginCompleted({ riderLogin }: { riderLogin: IRiderLoginResponse }) {
-  setIsLoading(false);
-  if (riderLogin) {
-    // Store the token (and clear the Apollo cache) before the rider-id, since
-    // writing rider-id un-skips the profile/orders queries. Doing it in this
-    // order avoids clearStore() cancelling those queries mid-flight, which
-    // left assignedOrders stuck at [] until the app was restarted.
-    await setTokenAsync(riderLogin.token);
-    await setItem("rider-id", riderLogin.userId);
-    router.replace(ROUTES.home as Href);
+  async function onLoginCompleted({
+    riderLogin,
+  }: {
+    riderLogin: IRiderLoginResponse;
+  }) {
+    setIsLoading(false);
+    if (riderLogin) {
+      // Store the token (and clear the Apollo cache) before the rider-id, since
+      // writing rider-id un-skips the profile/orders queries. Doing it in this
+      // order avoids clearStore() cancelling those queries mid-flight, which
+      // left assignedOrders stuck at [] until the app was restarted.
+      await setTokenAsync(riderLogin.token);
+      setUserId(riderLogin.userId);
+      await setSecureItem(riderIdKey, riderLogin.userId);
+      router.replace(ROUTES.home as Href);
+    }
   }
-}
-
-// For default credentials query
-function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDefaultCredsResponse }) {
-  // Only prefill the username; never fetch or auto-fill the password.
-  if (lastOrderCreds?.riderUsername) {
-    setCreds({
-      username: lastOrderCreds.riderUsername,
-      password: "",
-    });
-  }
-}
-
   function onError(err: ApolloError) {
     const error = err as ApolloError;
     setIsLoading(false);
@@ -86,7 +76,7 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
         : t("Something went wrong");
     FlashMessageComponent({ message });
   }
-  
+
   const onLogin = async (username: string, password: string) => {
     try {
       setIsLoading(true);
@@ -110,7 +100,6 @@ function onDefaultCredsCompleted({ lastOrderCreds }: { lastOrderCreds: IRiderDef
   };
 
   return {
-    creds,
     onLogin,
     isLogging: isLoading,
   };

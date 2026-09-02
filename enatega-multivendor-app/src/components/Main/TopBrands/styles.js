@@ -1,38 +1,59 @@
-import { verticalScale, scale } from '../../../utils/scaling'
-import { Dimensions, StyleSheet } from 'react-native'
-import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
-import { subtleCardShadowSoft } from '../../../utils/cardShadows'
-const { height } = Dimensions.get('window')
+import { scale } from '../../../utils/scaling'
+import { StyleSheet } from 'react-native'
 
 const buildStyles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      gap: 16
+      gap: 0
     },
     topbrandsSec: {
-      gap: scale(8),
-      marginHorizontal: scale(15),
-      marginBottom: scale(15)
+      marginTop: scale(20),
+      marginBottom: scale(10)
     },
-    topbrandsHeading:{
-      ...alignment.PRmedium
-
+    sectionHeader: {
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      marginBottom: scale(15)
     },
     brandImg: {
       width: '100%',
-      height: scale(70),
+      height: '100%',
       objectFit: 'cover',
-      borderRadius: 8,
+      borderRadius: 8
     },
     topbrandsContainer: {
-      width: scale(96),
-      ...alignment.MRmedium
+      width: props?.sizes?.compactTile ?? scale(80),
+      alignItems: 'center'
     },
     brandImgContainer: {
-      backgroundColor: props != null ? props?.cardBackground : '#F3F4F6',
-      borderRadius: 8,
-      ...subtleCardShadowSoft
+      position: 'relative',
+      backgroundColor: props?.colors?.surfaceSubtle ?? '#F3F4F6',
+      borderRadius: props?.radii?.tile ?? 12,
+      width: props?.sizes?.compactTile ?? scale(80),
+      height: props?.sizes?.compactTile ?? scale(80),
+      overflow: 'hidden'
+    },
+    deliveryBadge: {
+      position: 'absolute',
+      right: scale(5),
+      bottom: scale(5),
+      minHeight: scale(22),
+      paddingHorizontal: scale(6),
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: scale(3),
+      borderRadius: props?.radii?.round ?? scale(999),
+      backgroundColor: props?.isDark ? 'rgba(24, 24, 27, 0.88)' : 'rgba(255, 255, 255, 0.90)',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)'
+    },
+    deliveryBadgeText: {
+      fontSize: scale(9),
+      lineHeight: scale(12),
+      fontWeight: '600'
+    },
+    brandTextContainer: {
+      width: '100%',
+      alignItems: 'center'
     },
     brandName: {
       marginTop: scale(6),
@@ -40,16 +61,13 @@ const buildStyles = (props = null) =>
       // Responsive but clamped so it's neither oversized nor overflowing.
       fontSize: Math.min(Math.max(scale(12), 11), 14),
       lineHeight: scale(16),
+      textAlign: 'center',
       // Reserve two lines so every card's delivery-time row aligns.
       minHeight: scale(32)
     },
-    margin: {
-      ...alignment.MLmedium,
-      ...alignment.MBmedium
-    },
     screenBackground: {
       backgroundColor: props != null ? props?.themeBackground : '#FFF',
-      ...alignment.PBlarge
+      paddingBottom: scale(16)
     },
     placeHolderFadeColor: {
       backgroundColor: props != null ? props?.fontSecondColor : '#B8B8B8'
@@ -61,22 +79,6 @@ const buildStyles = (props = null) =>
     },
     height80: {
       height: scale(80)
-    },
-    header: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      // ...alignment.MRmedium,
-      // marginHorizontal: scale(10),
-    },
-    seeAllBtn: {
-      backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
-      borderRadius: 4,
-      paddingTop: 8,
-      paddingBottom: 8,
-      paddingLeft: 16,
-      paddingRight: 16,
-      
     }
   })
 

@@ -11,9 +11,10 @@
 
 const PREFIX = '[GoogleSignIn]'
 
-// Toggle to silence in production if needed. Left on so the whole flow is
-// inspectable while the sign-in issue is being diagnosed.
-const ENABLED = true
+// Only ever log in development builds. In production this is inert so user
+// emails, names and error stacks are never written to logcat / iOS Console
+// (SEC-004).
+const ENABLED = __DEV__
 
 // Redact a token/secret down to a fingerprint that is safe to log.
 export const redactToken = (token) => {

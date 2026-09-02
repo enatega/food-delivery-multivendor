@@ -126,6 +126,13 @@
   "no_items_found": "کوئی آئٹم نہیں ملا",
   "something_went_wrong": "کچھ غلط ہوا",
   "shop-types": "دکانوں کی اقسام",
+  "categories_label": "زمرے",
+  "all_categories_label": "تمام زمرے",
+  "tab_deals": "ڈیلز",
+  "tab_browse": "براؤز کریں",
+  "order_details_minimum_order_fee_label": "کم آرڈر فیس",
+  "order_details_priority_delivery_fee_label": "ترجیحی ڈیلیوری فیس",
+  "order_details_credits_applied_label": "استعمال شدہ کریڈٹ",
   "for_rest": "ریستوراں کے لیے",
   "for_riders": "رائڈرز کے لیے",
   "reviews": "ریویوز",
@@ -181,6 +188,8 @@
   "tab_discovery": "دریافت",
   "tab_restaurants": "ریستوراں",
   "tab_store": "دکان",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "آپ کے قریب",
   "generic_listing_heading": "آپ کے قریب ریستوراں",
   "generic_listing_cuisine_section": "کھانے کے انداز",
@@ -908,5 +917,88 @@
   "show_more_orders": "مزید آرڈرز دکھائیں",
   "your_email": "آپ@ای میل.com",
   "Select_your_address_prompt": "اپنا پتہ منتخب کریں۔",
-  "Our-brands": "ہمارے برانڈز"
+  "Our-brands": "ہمارے برانڈز",
+  "Landing": {
+    "hero": {
+      "eyebrow": "ایک ایپ۔ روزمرہ کے بے شمار امکانات۔",
+      "title": "آپ کی ضرورت کی ہر چیز،",
+      "accent": "خوبصورتی سے ڈیلیور۔",
+      "body": "کھانا، گروسری اور روزمرہ کی ضروریات، ایک سادہ تجربے میں یکجا۔"
+    },
+    "categories": {
+      "label": "ڈیلیوری کی اقسام",
+      "food": "کھانا",
+      "groceries": "گروسری",
+      "essentials": "ضروریات",
+      "show": "{category} دکھائیں",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "شہر تلاش کیا جا رہا ہے۔",
+      "ready": "شہر منتخب ہو گیا۔ تیار ہوں تو آئٹمز دکھائیں۔",
+      "cityError": "یہ شہر نہیں مل سکا۔ کوئی اور تجویز منتخب کریں۔",
+      "locating": "آپ کا موجودہ مقام تلاش کیا جا رہا ہے۔",
+      "locationError": "آپ کے مقام تک رسائی نہیں ہو سکی۔ اس کے بجائے شہر تلاش کریں۔"
+    },
+    "journey": {
+      "eyebrow": "Enatega کیسے پہنچاتا ہے",
+      "title": "آپ کے شہر سے،",
+      "accent": "آپ کی دہلیز تک۔",
+      "bagAlt": "Enatega ڈیلیوری بیگ",
+      "stages": {
+        "choose": {
+          "title": "منتخب کریں",
+          "body": "کھانا، گروسری یا ضروریات۔"
+        },
+        "moving": {
+          "title": "راستے میں",
+          "body": "آپ کے شہر میں ایک واضح سفر۔"
+        },
+        "arrived": {
+          "title": "پہنچ گیا",
+          "body": "جہاں ضرورت ہو، وہیں ڈیلیور۔"
+        }
+      }
+    },
+    "cta": {
+      "label": "Enatega کے ساتھ کام کریں",
+      "business": {
+        "eyebrow": "کاروبار کے لیے",
+        "title": "Enatega کے ساتھ ترقی کریں۔",
+        "body": "اپنے اسٹور کو مزید صارفین کے قریب لائیں۔",
+        "action": "شراکت دار بنیں"
+      },
+      "rider": {
+        "eyebrow": "رائیڈرز کے لیے",
+        "title": "Enatega کے ساتھ رائیڈ کریں۔",
+        "body": "اپنے شیڈول کے مطابق ڈیلیور کریں۔",
+        "action": "رائیڈر بنیں"
+      }
+    },
+    "footer": {
+      "rights": "جملہ حقوق محفوظ ہیں۔"
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

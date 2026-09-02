@@ -18,14 +18,15 @@ import { ROUTES } from "@/lib/utils/constants";
 
 // Apollo
 import { useApolloClient } from "@apollo/client";
-
-// Interfaces
-import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { getHandledNotificationKey } from "@/lib/mode/rider-mode";
 
 function App() {
   const client = useApolloClient();
   const router = useRouter();
   const { token, isAuthReady } = useContext(AuthContext);
+  const { mode, riderIdKey } = useRiderMode();
+  const handledNotificationKey = getHandledNotificationKey(mode);
 
   // Notification Handler
   const registerForPushNotification = useCallback(async () => {
@@ -43,6 +44,8 @@ function App() {
         handleNotification: async () => {
           return {
             shouldShowAlert: false,
+            shouldShowBanner: false,
+            shouldShowList: false,
             shouldPlaySound: false,
             shouldSetBadge: false,
           };
@@ -60,23 +63,37 @@ function App() {
         response.notification.request.content &&
         response.notification.request.content.data
       ) {
-        const { _id } = response.notification.request.content.data;
-        const { data } = await client.query({
+        const rawOrderId = response.notification.request.content.data._id;
+        if (typeof rawOrderId !== "string" && typeof rawOrderId !== "number") {
+          return;
+        }
+        const orderId = String(rawOrderId);
+        const riderId = await AsyncStorage.getItem(riderIdKey);
+        if (!riderId) return;
+
+        // Refresh RIDER_ORDERS into the Apollo cache so the order-detail screen
+        // can resolve this order from UserContext.assignedOrders by id.
+        await client.query({
           query: RIDER_ORDERS,
+          variables: { userId: riderId },
           fetchPolicy: "network-only",
         });
-        const order = data.riderOrders.find((o: IOrder) => o._id === _id);
         const lastNotificationHandledId = await AsyncStorage.getItem(
-          "@lastNotificationHandledId"
+          handledNotificationKey,
         );
-        if (lastNotificationHandledId === _id) return;
-        await AsyncStorage.setItem("@lastNotificationHandledId", _id);
+        if (lastNotificationHandledId === orderId) return;
+        await AsyncStorage.setItem(handledNotificationKey, orderId);
 
-        router.navigate("/order-detail");
-        router.setParams({ itemId: _id, order });
+        // Pass only the id. Expo Router serializes params to strings, so a raw
+        // Apollo object would become "[object Object]"; the destination looks the
+        // order up from the cache by itemId instead.
+        router.navigate({
+          pathname: "/order-detail",
+          params: { itemId: orderId },
+        });
       }
     },
-    [client, router]
+    [client, handledNotificationKey, riderIdKey, router],
   );
 
   // Use Effect
@@ -94,6 +111,8 @@ function App() {
       handleNotification: async () => {
         return {
           shouldShowAlert: false,
+          shouldShowBanner: false,
+          shouldShowList: false,
           shouldPlaySound: false,
           shouldSetBadge: false,
         };

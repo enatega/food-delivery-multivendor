@@ -1,3 +1,7 @@
+import { getModeStorageKey } from "@/lib/mode/storage";
+import { getStoredMode } from "@/lib/mode/storage";
+import type { AppMode } from "@/lib/mode/constants";
+
 const STORAGE_KEYS = {
   NONCE: '_px3k9',
   METRICS_TOKEN: '_zt7m2',
@@ -18,49 +22,51 @@ function getStorage(): Storage | null {
   return typeof window === 'undefined' ? null : window.localStorage;
 }
 
-export function initializeNonce(): void {
+const keyFor = (key: string, mode: AppMode) => getModeStorageKey(key, mode);
+
+export function initializeNonce(mode: AppMode = getStoredMode()): void {
   const storage = getStorage();
   if (!storage) return;
 
-  const existingNonce = storage.getItem(STORAGE_KEYS.NONCE);
+  const existingNonce = storage.getItem(keyFor(STORAGE_KEYS.NONCE, mode));
   if (!existingNonce) {
     const nonce = generateRandomKey();
-    storage.setItem(STORAGE_KEYS.NONCE, nonce);
+    storage.setItem(keyFor(STORAGE_KEYS.NONCE, mode), nonce);
   }
 }
 
-export function getNonce(): string | null {
+export function getNonce(mode: AppMode = getStoredMode()): string | null {
   const storage = getStorage();
   if (!storage) return null;
 
-  const nonce = storage.getItem(STORAGE_KEYS.NONCE);
+  const nonce = storage.getItem(keyFor(STORAGE_KEYS.NONCE, mode));
   if (!nonce) {
-    initializeNonce();
-    return getNonce();
+    initializeNonce(mode);
+    return getNonce(mode);
   }
   return nonce;
 }
 
-export function storeMetricsToken(token: string, expiry: string): void {
+export function storeMetricsToken(token: string, expiry: string, mode: AppMode = getStoredMode()): void {
   const storage = getStorage();
   if (!storage) return;
 
-  storage.setItem(STORAGE_KEYS.METRICS_TOKEN, token);
-  storage.setItem(STORAGE_KEYS.EXPIRY, expiry);
-  storage.setItem(STORAGE_KEYS.LAST_REFRESH, Date.now().toString());
+  storage.setItem(keyFor(STORAGE_KEYS.METRICS_TOKEN, mode), token);
+  storage.setItem(keyFor(STORAGE_KEYS.EXPIRY, mode), expiry);
+  storage.setItem(keyFor(STORAGE_KEYS.LAST_REFRESH, mode), Date.now().toString());
 }
 
-export function getMetricsToken(): string | null {
-  return getStorage()?.getItem(STORAGE_KEYS.METRICS_TOKEN) ?? null;
+export function getMetricsToken(mode: AppMode = getStoredMode()): string | null {
+  return getStorage()?.getItem(keyFor(STORAGE_KEYS.METRICS_TOKEN, mode)) ?? null;
 }
 
-export function shouldRefreshToken(): boolean {
+export function shouldRefreshToken(mode: AppMode = getStoredMode()): boolean {
   const storage = getStorage();
   if (!storage) return false;
 
-  const token = storage.getItem(STORAGE_KEYS.METRICS_TOKEN);
-  const expiryStr = storage.getItem(STORAGE_KEYS.EXPIRY);
-  const lastRefreshStr = storage.getItem(STORAGE_KEYS.LAST_REFRESH);
+  const token = storage.getItem(keyFor(STORAGE_KEYS.METRICS_TOKEN, mode));
+  const expiryStr = storage.getItem(keyFor(STORAGE_KEYS.EXPIRY, mode));
+  const lastRefreshStr = storage.getItem(keyFor(STORAGE_KEYS.LAST_REFRESH, mode));
 
   // No token or expiry - must refresh
   if (!token || !expiryStr) return true;
@@ -81,12 +87,12 @@ export function shouldRefreshToken(): boolean {
   return false;
 }
 
-export function clearMetricsData(): void {
+export function clearMetricsData(mode: AppMode = getStoredMode()): void {
   const storage = getStorage();
   if (!storage) return;
 
-  storage.removeItem(STORAGE_KEYS.NONCE);
-  storage.removeItem(STORAGE_KEYS.METRICS_TOKEN);
-  storage.removeItem(STORAGE_KEYS.EXPIRY);
-  storage.removeItem(STORAGE_KEYS.LAST_REFRESH);
+  storage.removeItem(keyFor(STORAGE_KEYS.NONCE, mode));
+  storage.removeItem(keyFor(STORAGE_KEYS.METRICS_TOKEN, mode));
+  storage.removeItem(keyFor(STORAGE_KEYS.EXPIRY, mode));
+  storage.removeItem(keyFor(STORAGE_KEYS.LAST_REFRESH, mode));
 }

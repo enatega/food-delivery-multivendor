@@ -69,6 +69,8 @@ export const useConfiguration = () => {
   const APP_TERMS = configuration?.termsAndConditions;
   const APP_PRIVACY = configuration?.privacyPolicy;
   const APP_TEST_OTP = configuration?.testOtp;
+  const ENABLE_CUSTOMER_DEMO_MODE = configuration?.enableCustomerDemoMode;
+  const CUSTOMER_DEMO_ZONE_ID = configuration?.customerDemoZoneId;
   const CURRENCY_CODE = configuration?.currency;
   const CURRENCY_SYMBOL = configuration?.currency;
   const ISPAID_VERSION = configuration?.isPaidVersion;
@@ -141,6 +143,8 @@ export const useConfiguration = () => {
     APP_TERMS,
     APP_PRIVACY,
     APP_TEST_OTP,
+    ENABLE_CUSTOMER_DEMO_MODE,
+    CUSTOMER_DEMO_ZONE_ID,
 
     // APP
     SKIP_EMAIL_VERIFICATION,

@@ -1,26 +1,31 @@
-import { ApolloError, useMutation } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ApolloError, useApolloClient, useMutation } from "@apollo/client";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { useContext, useState } from "react";
 
-import { Href, router } from "expo-router";
-import { STORE_LOGIN } from "../api/graphql/mutation/login";
+import { router } from "expo-router";
+import { STORE_LOGIN } from "../apollo/mutations/login.mutation";
 import { AuthContext } from "../context/global/auth.context";
 import { setItem } from "../services";
 import { FlashMessageComponent } from "../ui/useable-components";
 import { ROUTES } from "../utils/constants";
 import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
+import PublicAccessTokenService from "@/lib/services/public-access-token.service";
+import * as SecureStore from "expo-secure-store";
+import { removeItem } from "../services";
 
 const useLogin = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const client = useApolloClient();
 
   // Context
   const { setTokenAsync } = useContext(AuthContext);
+  const { environment, storeIdKey, tokenKey } = useStoreMode();
 
   // API
-  const [login, { data: storeLoginData }] = useMutation(STORE_LOGIN, {
+  const [login] = useMutation(STORE_LOGIN, {
     onCompleted,
     onError,
     fetchPolicy: "no-cache",
@@ -62,15 +67,13 @@ const useLogin = () => {
   }
 
   // Handlers
-  async function onCompleted({
-    restaurantLogin,
-  }: IStoreLoginCompleteResponse) {
+  async function onCompleted({ restaurantLogin }: IStoreLoginCompleteResponse) {
     setIsLoading(false);
 
     if (restaurantLogin) {
-      await setItem("store-id", restaurantLogin?.restaurantId);
+      await setItem(storeIdKey, restaurantLogin.restaurantId);
       await setTokenAsync(restaurantLogin?.token);
-      router.replace(ROUTES.home as Href);
+      router.replace(ROUTES.home);
     }
   }
 
@@ -90,6 +93,21 @@ const useLogin = () => {
         throw new Error("Username and password are required");
       }
 
+      // A login screen must always begin from a clean session for the active
+      // backend. This also removes stale mode-scoped credentials left by an
+      // interrupted logout or an older app build.
+      await Promise.all([
+        SecureStore.deleteItemAsync(tokenKey),
+        removeItem(storeIdKey),
+      ]);
+
+      // Public proof is bound to the backend and request fingerprint. Always
+      // mint a fresh proof before login so a proof persisted by another mode,
+      // app version, or server deployment can never poison future attempts.
+      if (environment.PUBLIC_ACCESS_REQUIRED) {
+        await PublicAccessTokenService.reset(client);
+      }
+
       // Get notification permissions
       const settings = await Notifications.getPermissionsAsync();
       let notificationPermissions = { ...settings };
@@ -97,7 +115,9 @@ const useLogin = () => {
       // Request notification permissions if not granted or not provisional on iOS
       if (
         settings?.status !== "granted" ||
-        (settings.ios && settings.ios?.status !== Notifications.IosAuthorizationStatus.PROVISIONAL)
+        (settings.ios &&
+          settings.ios?.status !==
+            Notifications.IosAuthorizationStatus.PROVISIONAL)
       ) {
         notificationPermissions = await Notifications.requestPermissionsAsync({
           ios: {
@@ -110,30 +130,30 @@ const useLogin = () => {
       }
 
       let notificationToken = null;
-      
+
       // Get notification token if permissions are granted and it's a device
       if (
         (notificationPermissions?.status === "granted" ||
-          (notificationPermissions.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL)) &&
+          notificationPermissions.ios?.status ===
+            Notifications.IosAuthorizationStatus.PROVISIONAL) &&
         Device.isDevice
       ) {
         try {
           const projectId = Constants.expoConfig?.extra?.eas?.projectId;
 
           if (projectId) {
-            // const tokenResult = await Notifications.getExpoPushTokenAsync({
-            //   projectId: projectId,
-            // });
-            const tokenResult =  (await Notifications.getDevicePushTokenAsync());
+            const tokenResult = await Notifications.getExpoPushTokenAsync({
+              projectId,
+            });
             notificationToken = tokenResult.data;
           }
-        } catch (tokenError) {
+        } catch {
           // Continue without token - don't fail the login
         }
       }
 
       // Perform mutation with the obtained data
-      const { data } = await login({
+      await login({
         variables: {
           username: username,
           password: password,
@@ -145,14 +165,6 @@ const useLogin = () => {
           },
         },
       });
-
-      // FIX: Check data first, then storeLoginData
-      const restaurantId = data?.restaurantLogin?.restaurantId || storeLoginData?.restaurantLogin?.restaurantId;
-
-      if (restaurantId) {
-        await AsyncStorage.setItem("store-id", restaurantId);
-      }
-
     } catch (err) {
       setIsLoading(false);
 

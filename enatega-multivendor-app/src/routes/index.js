@@ -3,7 +3,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import navigationService from './navigationService'
 import * as Notifications from 'expo-notifications'
 import Login from '../screens/Login/Login'
@@ -29,6 +28,7 @@ import CartAddress from '../screens/CartAddress/CartAddress'
 import Settings from '../screens/Settings/Settings'
 import HelpBrowser from '../screens/HelpBrowser/HelpBrowser'
 import Main from '../screens/Main/Main'
+import mainNavigationOptions from '../screens/Main/navigationOptions'
 import Restaurant from '../screens/Restaurant/Restaurant'
 import About from '../screens/About'
 import SelectLocation from '../screens/SelectLocation'
@@ -36,7 +36,6 @@ import AddNewAddress from '../screens/SelectLocation/AddNewAddress'
 import CurrentLocation from '../screens/CurrentLocation'
 import ThemeContext from '../ui/ThemeContext/ThemeContext'
 import { theme } from '../utils/themeColors'
-import { ENABLE_DEMO_DEFAULT_LOCATION } from '../utils/demoDefaultLocation'
 import screenOptions from './screenOptions'
 import { LocationContext } from '../context/Location'
 import Reorder from '../screens/Reorder/Reorder'
@@ -46,8 +45,12 @@ import EmailOtp from '../screens/Otp/Email/EmailOtp'
 import PhoneOtp from '../screens/Otp/Phone/PhoneOtp'
 import ForgotPasswordOtp from '../screens/Otp/ForgotPassword/ForgetPasswordOtp'
 import PhoneNumber from '../screens/PhoneNumber/PhoneNumber'
-import { useApolloClient, gql } from '@apollo/client'
-import { myOrders } from '../apollo/queries'
+import { APP_MODES } from '../mode/constants'
+import {
+  consumePendingOrderNavigation,
+  inferNotificationMode
+} from '../mode/orderOrigin'
+import { getModeItem, setModeItem } from '../mode/storage'
 import Checkout from '../screens/Checkout/Checkout'
 import Menu from '../screens/Menu/Menu'
 import Reviews from '../screens/Reviews'
@@ -58,13 +61,22 @@ import Collection from '../screens/Collection/Collection'
 import Account from '../screens/Account/Account'
 import EditName from '../components/Account/EditName/EditName'
 import UserContext from '../context/User'
-import { Easing, Platform } from 'react-native'
-// import HypCheckout from '../screens/Hyp/HypCheckout'
+import ConfigurationContext from '../context/Configuration'
+import { ActivityIndicator, Easing, StyleSheet, View } from 'react-native'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
+import ModeProfileTab from '../components/VendorModeToggle/ModeProfileTab'
+import useMultivendorTheme from '../ui/designSystem/useMultivendorTheme'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
 const Tab = createBottomTabNavigator()
+const MultiVendorProfileTab = props => (
+  <ModeProfileTab
+    {...props}
+    AuthenticatedComponent={Profile}
+    GuestComponent={CreateAccount}
+  />
+)
 const linking = {
   prefixes: [
     Linking.createURL('/'),
@@ -76,6 +88,9 @@ const linking = {
     screens: {
       SetYourPassword: {
         path: 'auth/reset'
+      },
+      OrderDetail: {
+        path: 'order-tracking'
       }
     }
   }
@@ -127,7 +142,6 @@ function MainNavigator() {
         options={SLIDE_UP_RIGHT_ANIMATION}
       />
       <NavigationStack.Screen name='Account' component={Account} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen
         name='SearchScreen'
         getComponent={() => require('../screens/Search/SearchScreen').default}
@@ -190,7 +204,14 @@ function MainNavigator() {
       />
       <NavigationStack.Screen name='ItemDetail' component={ItemDetail} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='Cart' component={Cart} options={SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER} />
-      <NavigationStack.Screen name='Checkout' component={Checkout} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen
+        name='Checkout'
+        component={Checkout}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          cardStyle: { backgroundColor: currentTheme.themeBackground }
+        }}
+      />
       <NavigationStack.Screen name='Help' component={Help} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='Collection' component={Collection} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen
@@ -211,6 +232,9 @@ function MainNavigator() {
       <NavigationStack.Screen name='Login' component={Login} />
       <NavigationStack.Screen name='Register' component={Register} />
       <NavigationStack.Screen name='PhoneNumber' component={PhoneNumber} />
+      {/* Registered outside the authenticated subset so Apple onboarding can
+          repair a missing first-authorization name immediately after login. */}
+      <NavigationStack.Screen name='EditName' component={EditName} />
       <NavigationStack.Screen name='ForgotPassword' component={ForgotPassword} />
       <NavigationStack.Screen name='SetYourPassword' component={SetYourPassword} />
       <NavigationStack.Screen name='EmailOtp' component={EmailOtp} />
@@ -218,7 +242,6 @@ function MainNavigator() {
       <NavigationStack.Screen name='ForgotPasswordOtp' component={ForgotPasswordOtp} />
       <NavigationStack.Screen name='SelectLocation' component={SelectLocation} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       {protectedScreens}
-      {/* <NavigationStack.Screen name='HypCheckout' component={HypCheckout} /> */}
     </NavigationStack.Navigator>
   )
 }
@@ -229,7 +252,11 @@ function LocationStack() {
       <Location.Screen name='CurrentLocation' component={CurrentLocation} options={{ header: () => null }} />
       <Location.Screen name='SelectLocation' component={SelectLocation} />
       <Location.Screen name='AddNewAddress' component={AddNewAddress} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
-      <NavigationStack.Screen
+      {/* Must be a Location.Screen — a child of the Location navigator must be
+          that navigator's own Screen, otherwise 'Main' is never registered here
+          and navigation.navigate('Main') throws "No navigator for screen 'Main'"
+          after address selection / OTP (QUAL-001). */}
+      <Location.Screen
         name='Main'
         component={BottomTabNavigator}
         options={{
@@ -246,42 +273,60 @@ function BottomTabNavigator() {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { t } = useTranslation()
-  const { isLoggedIn } = useContext(UserContext)
+  const { tokens } = useMultivendorTheme()
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color, size }) => {
           // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
-          return <BottomTabIcon name={route.name.toLowerCase()} size={focused ? '28' : size} color={color} />
+          return <BottomTabIcon name={route.name.toLowerCase()} size={size} color={color} />
         },
         tabBarStyle: {
-          paddingHorizontal: 15,
-          paddingVertical: 10,
-          paddingBottom: Platform.OS === 'ios' ? 25 : 15,
-          height: Platform.OS === 'ios' ? 90 : 70,
-          backgroundColor: currentTheme.cardBackground
+          backgroundColor: currentTheme.cardBackground,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopColor: tokens.colors.borderSubtle,
+          elevation: 0,
+          shadowOpacity: 0
         },
-        tabBarActiveTintColor: '#0EA5E9',
+        tabBarItemStyle: {
+          flex: 1
+        },
+        tabBarLabelPosition: 'below-icon',
+        tabBarActiveTintColor: currentTheme.singleVendorBrandForeground,
         tabBarInactiveTintColor: currentTheme.fontNewColor,
-        tabBarLabelStyle: { fontSize: 12 },
         headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />
       })}
     >
       <Tab.Screen
         name='Discovery'
         component={Main}
-        options={{
+        options={({ navigation }) => ({
           tabBarLabel: t('Discovery'),
-          tabBarTestID: 'customer.tab.discovery'
-        }}
+          ...mainNavigationOptions({
+            headerMenuBackground: currentTheme.themeBackground,
+            fontMainColor: currentTheme.darkBgFont,
+            navigation,
+            open: () => {}
+          })
+        })}
       />
       <Tab.Screen
         name='Restaurants'
         component={Menu}
         options={{
-          tabBarLabel: t('Restaurants'),
-          tabBarTestID: 'customer.tab.restaurants'
+          tabBarLabel: t('Restaurants')
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('Restaurants', {
+              selectedType: 'restaurant',
+              queryType: 'restaurant',
+              collection: null,
+              isShopType: false,
+              menuTitle: null
+            })
+          }
+        })}
         initialParams={{
           selectedType: 'restaurant',
           queryType: 'restaurant'
@@ -291,9 +336,20 @@ function BottomTabNavigator() {
         name='Store'
         component={Menu}
         options={{
-          tabBarLabel: t('Store'),
-          tabBarTestID: 'customer.tab.store'
+          tabBarLabel: t('Store')
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('Store', {
+              selectedType: 'grocery',
+              queryType: 'grocery',
+              shopType: 'grocery',
+              collection: null,
+              isShopType: false,
+              menuTitle: null
+            })
+          }
+        })}
         initialParams={{
           selectedType: 'grocery',
           queryType: 'grocery'
@@ -303,16 +359,14 @@ function BottomTabNavigator() {
         name='Search'
         getComponent={() => require('../screens/Search/SearchScreen').default}
         options={{
-          tabBarLabel: t('search'),
-          tabBarTestID: 'customer.tab.search'
+          tabBarLabel: t('search')
         }}
       />
       <Tab.Screen
         name='Profile'
-        component={isLoggedIn ? Profile : CreateAccount}
+        component={MultiVendorProfileTab}
         options={{
-          tabBarLabel: t('titleProfile'),
-          tabBarTestID: 'customer.tab.profile'
+          tabBarLabel: t('titleProfile')
         }}
       />
     </Tab.Navigator>
@@ -320,12 +374,14 @@ function BottomTabNavigator() {
 }
 
 function AppContainer() {
-  const client = useApolloClient()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const { permissionState, setPermissionState, location, isLocationLoaded } = useContext(LocationContext)
+  const configuration = useContext(ConfigurationContext)
   const { isLoggedIn } = useContext(UserContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
+  const isConfigurationLoaded = configuration?.isConfigurationLoaded
+  const enableCustomerDemoMode = !!configuration?.enableCustomerDemoMode
 
   // React Navigation's DefaultTheme paints the scene background white. During a
   // scale/zoom push transition (e.g. Discovery -> Restaurant) the area around
@@ -344,21 +400,26 @@ function AppContainer() {
   const handleNotification = useCallback(
     async (response) => {
       const { _id } = response.notification.request.content.data
-      const lastNotificationHandledId = await AsyncStorage.getItem('@lastNotificationHandledId')
-      await client.query({
-        query: gql`
-          ${myOrders}
-        `,
-        fetchPolicy: 'network-only'
-      })
+      const notificationMode = await inferNotificationMode(
+        response.notification.request.content.data
+      )
+      if (notificationMode && notificationMode !== APP_MODES.MULTI) return
+      const lastNotificationHandledId = await getModeItem(
+        '@lastNotificationHandledId',
+        APP_MODES.MULTI
+      )
       const identifier = response.notification.request.identifier
       if (lastNotificationHandledId === identifier) return
-      await AsyncStorage.setItem('@lastNotificationHandledId', identifier)
+      await setModeItem(
+        '@lastNotificationHandledId',
+        identifier,
+        APP_MODES.MULTI
+      )
       navigationService.navigate('OrderDetail', {
         _id
       })
     },
-    [lastNotificationResponse]
+    []
   )
 
   // Handlers
@@ -385,12 +446,28 @@ function AppContainer() {
     }
   }, [lastNotificationResponse])
 
-  console.log('-------------')
-  console.log('-------------')
-  console.log({ permissionState, location })
+  useEffect(() => {
+    consumePendingOrderNavigation(APP_MODES.MULTI).then(pendingOrderId => {
+      if (!pendingOrderId) return
+      navigationService.navigate('OrderDetail', { _id: pendingOrderId })
+    })
+  }, [])
 
-  if (isLoadingPermission || !isLocationLoaded) return
-  const shouldShowLocationStack = ENABLE_DEMO_DEFAULT_LOCATION
+  if (isLoadingPermission || !isConfigurationLoaded || !isLocationLoaded) {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: currentTheme.themeBackground,
+          flex: 1,
+          justifyContent: 'center'
+        }}
+      >
+        <ActivityIndicator color={currentTheme.iconColorPink} size='large' />
+      </View>
+    )
+  }
+  const shouldShowLocationStack = enableCustomerDemoMode
     ? !location
     : !permissionState?.granted || !location
 

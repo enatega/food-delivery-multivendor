@@ -11,7 +11,7 @@ export default function PaddingContainer({
 }: IPaddingContainer) {
   return (
     <div
-      className={`w-full px-4 md:px-6 lg:px-12 xl:px-20 2xl:px-[80px] ${className}`}
+      className={`mx-auto w-full max-w-dispatch-page px-4 sm:px-5 lg:px-6 xl:px-8 ${className || ""}`}
       style={{
         height,
         paddingTop,

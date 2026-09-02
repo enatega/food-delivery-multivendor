@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ImageBackground } from 'react-native'
 import styles from './styles'
 import { scale } from '../../../utils/scaling'
-import { IMAGE_LINK } from '../../../utils/constants'
 import { useCachedMediaUri } from '../../../utils/mediaCache'
 
 function ImageHeader(props) {
@@ -10,7 +9,7 @@ function ImageHeader(props) {
 
   return (
     <ImageBackground
-      style={styles.backgroundImage}
+      style={[styles.backgroundImage, props?.style]}
       borderRadius={scale(12)}
       resizeMode="cover"
       source={{ uri: imageUri }}

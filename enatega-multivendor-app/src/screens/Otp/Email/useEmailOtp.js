@@ -31,6 +31,10 @@ const useEmailOtp = (isPhoneExists) => {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const configuration = useContext(ConfigurationContext)
+  const isEmailVerificationSkipped =
+    !!configuration?.skipEmailVerification
+  const isMobileVerificationSkipped =
+    !!configuration?.skipMobileVerification
   const { setTokenAsync } = useContext(AuthContext)
   const route = useRoute()
   const [otp, setOtp] = useState('')
@@ -43,8 +47,11 @@ const useEmailOtp = (isPhoneExists) => {
 
   function onError(error) {
     if (error.networkError) {
+      // networkError.result is null on raw connectivity failures — guard the
+      // chain and fall back to a friendly message instead of crashing (QUAL-004).
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message:
+          error.networkError?.result?.errors?.[0]?.message ?? t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -62,7 +69,8 @@ const useEmailOtp = (isPhoneExists) => {
   function onCreateUserError(error) {
     if (error.networkError) {
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message:
+          error.networkError?.result?.errors?.[0]?.message ?? t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -88,8 +96,10 @@ const useEmailOtp = (isPhoneExists) => {
         email: data.createUser.email,
         type: 'email'
       })
-      console.log('onCreateUserCompleted data:', data,configuration?.skipMobileVerification, data?.createUser?.token)
-      if (configuration?.skipMobileVerification && data?.createUser?.token) {
+      if (__DEV__) {
+        console.log('onCreateUserCompleted data:', data, configuration?.skipMobileVerification, data?.createUser?.token)
+      }
+      if (isMobileVerificationSkipped && data?.createUser?.token) {
         await setTokenAsync(data.createUser.token)
         navigation.reset({
           index: 0,
@@ -140,7 +150,7 @@ const useEmailOtp = (isPhoneExists) => {
           console.log('Error catched in notificationToken:', error)
         }
       }
-      console.log('mutation variables: create user', isPhoneExists)
+      if (__DEV__) console.log('mutation variables: create user', isPhoneExists)
       await mutateUser({
         variables: {
           phone: user?.phone ?? '',
@@ -160,7 +170,7 @@ const useEmailOtp = (isPhoneExists) => {
   }
 
   const onCodeFilled = async (otp_code) => {
-    if (configuration?.skipEmailVerification) {
+    if (isEmailVerificationSkipped) {
       await mutateRegister()
       return
     }
@@ -184,6 +194,9 @@ const useEmailOtp = (isPhoneExists) => {
   }
 
   useEffect(() => {
+    // Depend on [seconds] so the interval is recreated per tick instead of on
+    // every render — otherwise the countdown resets continuously and the resend
+    // button never re-enables (PERF-003 / QUAL-005).
     const myInterval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1)
@@ -195,11 +208,11 @@ const useEmailOtp = (isPhoneExists) => {
     return () => {
       clearInterval(myInterval)
     }
-  })
+  }, [seconds])
 
   useEffect(() => {
     if (!configuration) return
-    if (!configuration.skipEmailVerification) {
+    if (!isEmailVerificationSkipped) {
       sendOTPToEmail({ variables: { email: user.email } })
     }
   }, [configuration])
@@ -207,9 +220,8 @@ const useEmailOtp = (isPhoneExists) => {
   useEffect(() => {
     let timer = null
     if (!configuration) return
-    if (configuration.skipEmailVerification && !autoSubmittedRef.current) {
+    if (isEmailVerificationSkipped && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true
-      setOtp(demoOtp)
       timer = setTimeout(async () => {
         await onCodeFilled(demoOtp)
       }, 300)
@@ -217,7 +229,7 @@ const useEmailOtp = (isPhoneExists) => {
     return () => {
       timer && clearTimeout(timer)
     }
-  }, [configuration, demoOtp])
+  }, [configuration, demoOtp, onCodeFilled, isEmailVerificationSkipped])
 
   return {
     otp,
@@ -232,7 +244,7 @@ const useEmailOtp = (isPhoneExists) => {
     currentTheme,
     themeContext,
     demoOtp,
-    isDemoOtpEnabled: Boolean(configuration?.skipEmailVerification)
+    isDemoOtpEnabled: isEmailVerificationSkipped
   }
 }
 

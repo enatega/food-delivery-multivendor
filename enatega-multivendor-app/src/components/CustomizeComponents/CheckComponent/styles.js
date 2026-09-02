@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 
 const styles = (props = null) =>
@@ -9,22 +8,25 @@ const styles = (props = null) =>
     },
     mainContainer: {
       width: '100%',
+      minHeight: scale(42),
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      ...alignment.MBsmall,
+      alignItems: 'center',
       justifyContent: 'space-between'
     },
     leftContainer: {
-      width: '70%',
+      flex: 1,
+      minWidth: 0,
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center'
     },
     rightContainer: {
-      width: '30%',
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
+      flexShrink: 0
     },
     title: {
-      paddingHorizontal: scale(10)
+      paddingHorizontal: scale(10),
+      flexShrink: 1
     }
   })
 export default styles

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import { gql, useQuery, useSubscription } from "@apollo/client";
 import {
   GET_USERS_ACTIVE_ORDERS,
   GET_USERS_PAST_ORDERS,
@@ -12,6 +12,14 @@ import {
 import { IOrder } from "@/lib/utils/interfaces/orders.interface";
 import { useTranslations } from "next-intl";
 import ErrorDisplay from "@/lib/ui/useable-components/slider-error-display";
+import { orderStatusChanged } from "@/lib/api/graphql/subscription";
+import useUser from "@/lib/hooks/useUser";
+import { useAppMode } from "@/lib/mode";
+import { SINGLE_VENDOR_ACTIVE_ORDERS, SINGLE_VENDOR_ORDER_STATUS, SINGLE_VENDOR_PAST_ORDERS } from "@/lib/api/graphql/single-vendor";
+
+const ORDER_STATUS_CHANGED = gql`
+  ${orderStatusChanged}
+`;
 
 export default function OrderHistoryScreen() {
   const [page, setPage] = useState(1);
@@ -21,6 +29,13 @@ export default function OrderHistoryScreen() {
   const [pastOrderHasMore, setPastOrderHasMore] = useState(true);
   const limit = 5;
   const t = useTranslations();
+  const { profile } = useUser();
+  const { isSingleVendor } = useAppMode();
+
+  const { data: orderUpdateData } = useSubscription(isSingleVendor ? SINGLE_VENDOR_ORDER_STATUS : ORDER_STATUS_CHANGED, {
+    variables: { userId: profile?._id || "" },
+    skip: !profile?._id,
+  });
 
   const {
     data: pastOrder,
@@ -28,11 +43,11 @@ export default function OrderHistoryScreen() {
     fetchMore: pastOrderFetchMore,
     networkStatus: pastOrderNetwork,
     error: pastOrderError,
-  } = useQuery(GET_USERS_PAST_ORDERS, {
+  } = useQuery(isSingleVendor ? SINGLE_VENDOR_PAST_ORDERS : GET_USERS_PAST_ORDERS, {
     variables: {
       page,
       limit,
-      offset: 0,
+      ...(isSingleVendor ? {} : { offset: 0 }),
     },
   });
 
@@ -42,11 +57,11 @@ export default function OrderHistoryScreen() {
     fetchMore: activeOrderFetchMore,
     networkStatus: activeOrderNetwork,
     error: activeOrderError,
-  } = useQuery(GET_USERS_ACTIVE_ORDERS, {
+  } = useQuery(isSingleVendor ? SINGLE_VENDOR_ACTIVE_ORDERS : GET_USERS_ACTIVE_ORDERS, {
     variables: {
       page,
       limit,
-      offset: 0,
+      ...(isSingleVendor ? {} : { offset: 0 }),
     },
   });
 
@@ -55,10 +70,11 @@ export default function OrderHistoryScreen() {
     if (!activeOrder?.getUsersActiveOrders) return;
     
     setActiveOrders((prev) => {
-      const newOrders = activeOrder.getUsersActiveOrders.filter(
-        (order: IOrder) => !prev.some((p) => p._id === order._id)
-      );
-      return [...prev, ...newOrders];
+      const byId = new Map(prev.map((order) => [order._id, order]));
+      activeOrder.getUsersActiveOrders.forEach((order: IOrder) => {
+        byId.set(order._id, { ...byId.get(order._id), ...order });
+      });
+      return Array.from(byId.values());
     });
 
     // Only update hasMore after pagination starts
@@ -82,6 +98,38 @@ export default function OrderHistoryScreen() {
       setPastOrderHasMore(false);
     }
   }, [pastOrder, page, limit]);
+
+  useEffect(() => {
+    const update = (isSingleVendor
+      ? orderUpdateData?.orderStatusChanged?.rawOrder
+      : orderUpdateData?.orderStatusChanged?.order) as
+      | IOrder
+      | undefined;
+    if (!update?._id) return;
+
+    const isTerminal = ["DELIVERED", "COMPLETED", "CANCELLED"].includes(
+      update.orderStatus,
+    );
+    const upsert = (orders: IOrder[]) => {
+      const index = orders.findIndex((order) => order._id === update._id);
+      if (index < 0) return [update, ...orders];
+      const next = [...orders];
+      next[index] = { ...next[index], ...update };
+      return next;
+    };
+
+    if (isTerminal) {
+      setActiveOrders((orders) =>
+        orders.filter((order) => order._id !== update._id),
+      );
+      setPastOrders(upsert);
+    } else {
+      setPastOrders((orders) =>
+        orders.filter((order) => order._id !== update._id),
+      );
+      setActiveOrders(upsert);
+    }
+  }, [isSingleVendor, orderUpdateData]);
 
   const loadMore = () => {
     // Stop completely if nothing has more data

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Device from 'expo-device'
+import * as Crypto from 'expo-crypto'
 
 const STORAGE_KEYS = {
   TOKEN: '_sys_cache_v2',
@@ -7,36 +8,41 @@ const STORAGE_KEYS = {
   EXPIRY: '_session_ttl'
 }
 
-const generateNonce = async () => {
+const scopedKey = (key, scope) => `${key}:${encodeURIComponent(scope || 'legacy')}`
+
+const generateNonce = async() => {
   const deviceId = Device.modelId || Device.osInternalBuildId || 'unknown'
   const timestamp = Date.now()
-  const random = Math.random().toString(36).substring(2, 15)
+  // Use a cryptographically secure UUID instead of Math.random() so the device
+  // fingerprint nonce is not predictable (PERF-012).
+  const random = Crypto.randomUUID()
   return `${deviceId}-${timestamp}-${random}`
 }
 
-export const getOrCreateNonce = async () => {
-  let nonce = await AsyncStorage.getItem(STORAGE_KEYS.NONCE)
+export const getOrCreateNonce = async(scope) => {
+  const key = scopedKey(STORAGE_KEYS.NONCE, scope)
+  let nonce = await AsyncStorage.getItem(key)
   if (!nonce) {
     nonce = await generateNonce()
-    await AsyncStorage.setItem(STORAGE_KEYS.NONCE, nonce)
+    await AsyncStorage.setItem(key, nonce)
   }
   return nonce
 }
 
-export const savePublicToken = async (token, expiry) => {
+export const savePublicToken = async(token, expiry, scope) => {
   await AsyncStorage.multiSet([
-    [STORAGE_KEYS.TOKEN, token],
-    [STORAGE_KEYS.EXPIRY, expiry]
+    [scopedKey(STORAGE_KEYS.TOKEN, scope), token],
+    [scopedKey(STORAGE_KEYS.EXPIRY, scope), expiry]
   ])
 }
 
-export const getPublicToken = async () => {
-  const token = await AsyncStorage.getItem(STORAGE_KEYS.TOKEN)
+export const getPublicToken = async(scope) => {
+  const token = await AsyncStorage.getItem(scopedKey(STORAGE_KEYS.TOKEN, scope))
   return token
 }
 
-export const getTokenExpiry = async () => {
-  const expiry = await AsyncStorage.getItem(STORAGE_KEYS.EXPIRY)
+export const getTokenExpiry = async(scope) => {
+  const expiry = await AsyncStorage.getItem(scopedKey(STORAGE_KEYS.EXPIRY, scope))
   return expiry
 }
 
@@ -45,12 +51,15 @@ export const getTokenExpiry = async () => {
 // (clock skew / network latency) and comes back "Unauthorized: jwt expired".
 const EXPIRY_SKEW_MS = 15000
 
-export const isTokenExpired = async () => {
-  const expiry = await getTokenExpiry()
+export const isTokenExpired = async(scope) => {
+  const expiry = await getTokenExpiry(scope)
   if (!expiry) return true
   return new Date(expiry).getTime() - EXPIRY_SKEW_MS <= Date.now()
 }
 
-export const clearPublicToken = async () => {
-  await AsyncStorage.multiRemove([STORAGE_KEYS.TOKEN, STORAGE_KEYS.EXPIRY])
+export const clearPublicToken = async(scope) => {
+  await AsyncStorage.multiRemove([
+    scopedKey(STORAGE_KEYS.TOKEN, scope),
+    scopedKey(STORAGE_KEYS.EXPIRY, scope)
+  ])
 }

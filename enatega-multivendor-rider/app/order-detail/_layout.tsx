@@ -1,14 +1,22 @@
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { Stack } from "expo-router";
 import { Platform, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function OrderDetailLayour() {
   // Hooks
   const { appTheme } = useApptheme();
-  const {top} = useSafeAreaInsets()
+  const { t } = useTranslation();
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={{paddingTop: top+10, flex: 1, backgroundColor: appTheme.themeBackground}}>
+    <View
+      style={{
+        paddingTop: top + 10,
+        flex: 1,
+        backgroundColor: appTheme.themeBackground,
+      }}
+    >
       <Stack
         screenOptions={{
           headerBackButtonDisplayMode: "generic",
@@ -35,7 +43,7 @@ export default function OrderDetailLayour() {
         <Stack.Screen
           name="index"
           options={{
-            title: "Order Detail",
+            title: t("Order Details"),
             headerTintColor: appTheme.fontMainColor,
             headerTitleAlign: "center",
             headerShadowVisible: false,

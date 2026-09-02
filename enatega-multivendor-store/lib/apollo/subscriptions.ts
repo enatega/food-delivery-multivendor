@@ -7,6 +7,7 @@ export const SUBSCRIBE_PLACE_ORDER = gql`
       origin
       order {
         _id
+        id
         orderId
         restaurant {
           _id
@@ -27,20 +28,24 @@ export const SUBSCRIBE_PLACE_ORDER = gql`
         }
         items {
           _id
+          id
           title
           description
           image
           quantity
           variation {
             _id
+            id
             title
             price
             discounted
           }
           addons {
             _id
+            id
             options {
               _id
+              id
               title
               description
               price
@@ -73,17 +78,30 @@ export const SUBSCRIBE_PLACE_ORDER = gql`
         isActive
         createdAt
         orderDate
+        pickedAt
         deliveryCharges
         isPickedUp
         preparationTime
         acceptedAt
         isRinged
+        instructions
+        eta {
+          phase
+          source
+          readyAt
+          estimatedArrivalAt
+          windowStartAt
+          windowEndAt
+          calculatedAt
+          lastLocationAt
+        }
         rider {
           _id
           name
           username
           available
         }
+        discountAmount
       }
     }
   }
@@ -105,6 +123,41 @@ export const SUBSCRIPTION_ORDER = gql`
       }
       completionTime
       preparationTime
+      eta {
+        phase
+        source
+        readyAt
+        estimatedArrivalAt
+        windowStartAt
+        windowEndAt
+        calculatedAt
+        lastLocationAt
+      }
+    }
+  }
+`;
+
+export const SUBSCRIPTION_ORDER_MULTI_VENDOR =
+  // @multi-vendor-only
+  gql`
+  subscription SubscriptionOrder($id: String!) {
+    subscriptionOrder(id: $id) {
+      _id
+      orderStatus
+      isPickedUp
+      rider { _id }
+      completionTime
+      preparationTime
+      eta {
+        phase
+        source
+        readyAt
+        estimatedArrivalAt
+        windowStartAt
+        windowEndAt
+        calculatedAt
+        lastLocationAt
+      }
     }
   }
 `;

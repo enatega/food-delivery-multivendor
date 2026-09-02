@@ -1,14 +1,19 @@
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { useCallback, useEffect } from "react";
-import { Platform } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Alert, Platform } from "react-native";
 
 // API
-import { GET_RESTAURANT_BY_ID, SAVE_TOKEN } from "@/lib/api/graphql";
+import { SAVE_TOKEN } from "@/lib/apollo/mutations/notification.mutation";
+import { GET_RESTAURANT_BY_ID } from "@/lib/apollo/queries/store.query";
+import { getStoreId } from "@/lib/services";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 export default function useNotification() {
+  const [storeLookupComplete, setStoreLookupComplete] = useState(false);
+  const { mode, storeIdKey } = useStoreMode();
   const [getStore, { data }] = useLazyQuery(GET_RESTAURANT_BY_ID, {
     fetchPolicy: "cache-and-network",
     // variables: { id: userId },
@@ -17,18 +22,21 @@ export default function useNotification() {
 
   // Handler
   const onGetStoreData = async () => {
-    const userId = await AsyncStorage.getItem("store-id");
-
-    if (!userId) return;
-    await getStore({
-      variables: { id: userId },
-    });
+    try {
+      const userId = await getStoreId(storeIdKey);
+      if (!userId) return;
+      await getStore({
+        variables: { id: userId },
+      });
+    } finally {
+      setStoreLookupComplete(true);
+    }
   };
 
   // Notification Handler
   async function registerForPushNotificationsAsync() {
     if (!Device.isDevice) {
-      alert("Must use physical device for Push Notifications");
+      Alert.alert("Must use physical device for Push Notifications");
     }
     if (Platform.OS === "android") {
       Notifications.setNotificationChannelAsync("default", {
@@ -53,9 +61,7 @@ export default function useNotification() {
 
     if (finalStatus === "granted") {
       Notifications.setNotificationHandler({
-        handleNotification: async (
-          notification: Notifications.Notification
-        ) => {
+        handleNotification: async () => {
           return {
             shouldShowAlert: true, // ✅ show banner/alert
             shouldPlaySound: true, // ✅ play notification sound
@@ -80,14 +86,16 @@ export default function useNotification() {
         response.notification.request.content.data
       ) {
         const { _id } = response.notification.request.content.data;
+        if (typeof _id !== "string") return;
+        const handledNotificationKey = `@enatega/store/${mode.toLowerCase()}/last-notification`;
         const lastNotificationHandledId = await AsyncStorage.getItem(
-          "@lastNotificationHandledId"
+          handledNotificationKey,
         );
         if (lastNotificationHandledId === _id) return;
-        await AsyncStorage.setItem("@lastNotificationHandledId", _id);
+        await AsyncStorage.setItem(handledNotificationKey, _id);
       }
     },
-    []
+    [mode],
   );
 
   // Use Effect
@@ -102,7 +110,7 @@ export default function useNotification() {
     registerForPushNotification();
     registerForPushNotificationsAsync();
     onGetStoreData();
-  }, []);
+  }, [storeIdKey]);
 
   return {
     getPermission: Notifications.getPermissionsAsync,
@@ -111,6 +119,7 @@ export default function useNotification() {
     getDevicePushToken: Notifications.getDevicePushTokenAsync,
     sendTokenToBackend,
     restaurantData: data,
+    storeLookupComplete,
     savingToken: loading,
   };
 }

@@ -130,14 +130,13 @@ function PhoneOtp(props) {
             </View>
           </View>
           <View>
-            {loading ||
-              (updateUserLoading && (
-                <Spinner
-                  backColor={currentTheme.themeBackground}
-                  spinnerColor={currentTheme.main}
-                  size='large'
-                />
-              ))}
+            {(loading || updateUserLoading) && (
+              <Spinner
+                backColor={currentTheme.themeBackground}
+                spinnerColor={currentTheme.main}
+                size='large'
+              />
+            )}
           </View>
           {!isDemoOtpEnabled && (
             <View style={styles().btnContainer}>

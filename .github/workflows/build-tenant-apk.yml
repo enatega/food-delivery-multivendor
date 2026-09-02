@@ -1,0 +1,119 @@
+name: Build White-Label Tenant APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      tenant_slug:
+        description: "Tenant slug (e.g. natra-1a2b)"
+        required: true
+      tenant_name:
+        description: "App name shown on launcher (e.g. NATRA Delivery)"
+        required: true
+      tenant_icon_url:
+        description: "Public URL of the tenant logo PNG (min 1024x1024)"
+        required: true
+      callback_url:
+        description: "API endpoint to POST the result to when done"
+        required: true
+
+jobs:
+  build:
+    name: EAS tenant APK
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: enatega-multivendor-app
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: saas-demo
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: enatega-multivendor-app/package-lock.json
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Push tenant env vars as EAS project secrets
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          # Write tenant values to a temp .env file, then push as EAS secrets.
+          # These are picked up by app.config.js and prepare-tenant-icon.js
+          # on the EAS cloud worker.
+          printf 'TENANT_SLUG=%s\nTENANT_APP_NAME=%s\nTENANT_ICON_URL=%s\n' \
+            "${{ github.event.inputs.tenant_slug }}" \
+            "${{ github.event.inputs.tenant_name }}" \
+            "${{ github.event.inputs.tenant_icon_url }}" \
+            > /tmp/.env.tenant
+          eas secret:push --scope project --env-file /tmp/.env.tenant --force
+          rm /tmp/.env.tenant
+
+      - name: Build APK via EAS
+        id: eas_build
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          OUTPUT=$(eas build \
+            --platform android \
+            --profile tenant \
+            --non-interactive \
+            --no-wait 2>&1)
+          echo "$OUTPUT"
+          BUILD_ID=$(echo "$OUTPUT" | grep -oP 'builds/\K[0-9a-f-]{36}' | head -1)
+          echo "build_id=$BUILD_ID" >> "$GITHUB_OUTPUT"
+          echo "Triggered EAS build: $BUILD_ID"
+
+      - name: Wait for build and capture APK URL
+        id: apk_result
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          BUILD_ID="${{ steps.eas_build.outputs.build_id }}"
+          if [ -z "$BUILD_ID" ]; then
+            echo "build_status=failed" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Polling build $BUILD_ID (up to 40 min)..."
+          for i in $(seq 1 40); do
+            sleep 60
+            RESULT=$(eas build:view "$BUILD_ID" --json 2>/dev/null || echo '{}')
+            STATUS=$(echo "$RESULT" | python3 -c "import sys,json; b=json.load(sys.stdin); print(b.get('status',''))" 2>/dev/null || echo "")
+            echo "[$i/40] $STATUS"
+            if [ "$STATUS" = "FINISHED" ]; then
+              APK_URL=$(echo "$RESULT" | python3 -c "import sys,json; b=json.load(sys.stdin); print(b.get('artifacts',{}).get('buildUrl',''))" 2>/dev/null || echo "")
+              echo "apk_url=$APK_URL" >> "$GITHUB_OUTPUT"
+              echo "build_status=success" >> "$GITHUB_OUTPUT"
+              break
+            elif [ "$STATUS" = "ERRORED" ] || [ "$STATUS" = "CANCELED" ]; then
+              echo "build_status=failed" >> "$GITHUB_OUTPUT"
+              break
+            fi
+          done
+
+      - name: Clean up EAS tenant secrets
+        if: always()
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas secret:delete --name TENANT_SLUG --scope project --non-interactive 2>/dev/null || true
+          eas secret:delete --name TENANT_APP_NAME --scope project --non-interactive 2>/dev/null || true
+          eas secret:delete --name TENANT_ICON_URL --scope project --non-interactive 2>/dev/null || true
+
+      - name: Notify API of result
+        if: always()
+        run: |
+          STATUS="${{ steps.apk_result.outputs.build_status || 'failed' }}"
+          APK_URL="${{ steps.apk_result.outputs.apk_url || '' }}"
+          BUILD_ID="${{ steps.eas_build.outputs.build_id || '' }}"
+          curl -sf -X POST "${{ github.event.inputs.callback_url }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"slug\":\"${{ github.event.inputs.tenant_slug }}\",\"status\":\"$STATUS\",\"apk_url\":\"$APK_URL\",\"build_id\":\"$BUILD_ID\"}" \
+            || echo "Callback failed (non-fatal)"

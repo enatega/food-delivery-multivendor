@@ -15,7 +15,13 @@ export default function ProfileLayout() {
 
   return (
     <View style={{paddingTop: top+10, flex: 1, backgroundColor: appTheme.themeBackground}}>
-      <Stack screenOptions={{ headerShown: false, headerShadowVisible: false }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          headerShadowVisible: false,
+          contentStyle: { backgroundColor: appTheme.themeBackground },
+        }}
+      >
         <Stack.Screen
           name="index"
           options={{

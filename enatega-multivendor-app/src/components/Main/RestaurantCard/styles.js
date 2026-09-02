@@ -1,41 +1,56 @@
 import { scale } from '../../../utils/scaling'
-import { Dimensions, Platform, StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { subtleCardShadow } from '../../../utils/cardShadows'
-const { height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
+
+export const RESTAURANT_CARD_WIDTH = Math.max(
+  scale(196),
+  Math.min(scale(224), width * 0.56)
+)
 
 const buildStyles = (props = null) => {
-  const isDarkMode = props?.cardBackground === '#181818' || props?.themeBackground === '#000'
+  const isDarkMode = props?.isDark
   const chipBackground = isDarkMode ? 'rgba(17, 24, 39, 0.82)' : 'rgba(255, 255, 255, 0.92)'
-  const chipBorder = isDarkMode ? 'rgba(255, 255, 255, 0.14)' : '#E5E7EB'
+  const chipBorder = props?.colors?.borderSubtle ?? (isDarkMode ? 'rgba(161, 161, 170, 0.22)' : 'rgba(24, 24, 27, 0.10)')
 
   return StyleSheet.create({
     offerContainer: {
-      borderRadius: 22,
-      width: scale(270),
-      height: height * (Platform.OS === 'ios' ? 0.395 : 0.376),
+      borderRadius: props?.radii?.lg ?? 14,
+      width: RESTAURANT_CARD_WIDTH,
       ...alignment.MRsmall,
-      backgroundColor: props != null ? props?.cardBackground : '#181818',
-      ...subtleCardShadow
+      backgroundColor: 'transparent',
+      marginTop: scale(2),
+      marginBottom: scale(8),
+      overflow: 'visible',
+      // Match the restrained single-vendor card treatment. The outer wrapper
+      // owns the shadow while cardSurface clips media and ripple content.
+      shadowColor: props?.shadowColor ?? '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3
+    },
+    compactOfferContainer: {
+      width: Math.max(scale(180), Math.min(scale(204), width * 0.51))
     },
     cardSurface: {
-      flex: 1,
-      borderRadius: 22,
+      width: '100%',
+      borderRadius: props?.radii?.lg ?? 14,
       overflow: 'hidden',
-      backgroundColor: props != null ? props?.cardBackground : '#181818',
-      borderWidth: 1,
-      borderColor: props != null ? (isDarkMode ? props?.lightHorizontalLine : props?.newBorderColor) : '#232323'
+      backgroundColor: props?.colors?.surface ?? '#181818'
     },
     cardBody: {
-      flex: 1,
-      backgroundColor: props != null ? props?.cardBackground : '#181818'
+      backgroundColor: props?.colors?.surface ?? '#181818'
     },
     overlayContainer: {
       position: 'absolute',
       top: 0,
       height: '100%',
       backgroundColor: 'rgba(0, 0, 0, 0)',
-      width: scale(270),
+      width: '100%',
       pointerEvents: 'box-none'
     },
     favouriteOverlay: {
@@ -49,18 +64,21 @@ const buildStyles = (props = null) => {
       zIndex: 1,
       borderRadius: scale(14),
       backgroundColor: chipBackground,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderColor: chipBorder
     },
     descriptionContainer: {
-      paddingHorizontal: scale(12),
-      paddingTop: scale(12),
-      paddingBottom: Platform.OS === 'ios' ? scale(16) : scale(12),
+      paddingHorizontal: scale(11),
+      paddingVertical: scale(10),
       width: '100%',
-      height: Platform.OS === 'ios' ? '36%' : '35%',
-      justifyContent: 'space-between',
+      justifyContent: 'flex-start',
       alignItems: 'stretch',
-      gap: scale(8)
+      gap: scale(6)
+    },
+    compactDescriptionContainer: {
+      paddingHorizontal: scale(10),
+      paddingVertical: scale(8),
+      gap: scale(4)
     },
     titleRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -76,9 +94,12 @@ const buildStyles = (props = null) => {
       width: '100%',
       textAlign: props?.isRTL ? 'right' : 'left'
     },
+    categoryText: {
+      lineHeight: scale(18)
+    },
     mainContainer: {
       paddingTop: scale(15),
-      marginBottom: scale(15),
+      marginBottom: scale(6),
       borderTopLeftRadius: scale(20),
       borderTopRightRadius: scale(20),
       borderTopColor: '#ebebeb',
@@ -93,7 +114,11 @@ const buildStyles = (props = null) => {
     imageContainer: {
       position: 'relative',
       alignItems: 'center',
-      height: '62%'
+      width: '100%',
+      aspectRatio: 1.48
+    },
+    compactImageContainer: {
+      aspectRatio: 1.62
     },
     restaurantTotalRating: {
       paddingLeft: scale(5)
@@ -110,27 +135,21 @@ const buildStyles = (props = null) => {
     metaRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(8),
-      flexWrap: 'wrap'
+      justifyContent: 'space-between',
+      gap: scale(4)
     },
     metaPill: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(4),
-      paddingVertical: scale(6),
-      paddingHorizontal: scale(9),
-      borderRadius: scale(999),
-      backgroundColor: chipBackground,
-      borderWidth: 1,
-      borderColor: chipBorder
-    }, 
+      gap: scale(3),
+      paddingVertical: scale(3),
+      paddingHorizontal: scale(2),
+      borderRadius: scale(999)
+    },
     border: {
       width: '100%',
-      height: 1,
-      borderWidth: 1,
-      borderColor: props != null ? (isDarkMode ? props?.lightHorizontalLine : props?.iconBackground) : '#E5E7EB',
-      borderStyle: 'solid',
-      opacity: 0.8
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: props?.colors?.borderSubtle ?? chipBorder
     },
     closedOverlay: {
       position: 'absolute',
@@ -140,7 +159,7 @@ const buildStyles = (props = null) => {
       bottom: 0,
       backgroundColor: 'rgba(150, 150, 150, 0.7)',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     badgeRow: {
       position: 'absolute',
@@ -154,7 +173,7 @@ const buildStyles = (props = null) => {
       paddingHorizontal: scale(10),
       borderRadius: scale(999),
       backgroundColor: chipBackground,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderColor: chipBorder
     },
     ratingBadge: {
@@ -165,7 +184,7 @@ const buildStyles = (props = null) => {
       paddingHorizontal: scale(9),
       borderRadius: scale(999),
       backgroundColor: chipBackground,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderColor: chipBorder
     }
   })

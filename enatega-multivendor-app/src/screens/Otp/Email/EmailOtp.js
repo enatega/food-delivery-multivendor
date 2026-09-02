@@ -116,10 +116,12 @@ function EmailOtp(props) {
                   borderColor: currentTheme.main
                 }}
                 autoFocusOnLoad={!isDemoOtpEnabled}
-                code={otp}
-                onCodeChanged={(code) => setOtp(code)}
+                code={isDemoOtpEnabled ? demoOtp : otp}
+                onCodeChanged={(code) => {
+                  if (!isDemoOtpEnabled) setOtp(code)
+                }}
                 onCodeFilled={(code) => {
-                  onCodeFilled(code)
+                  if (!isDemoOtpEnabled) onCodeFilled(code)
                 }}
                 editable={!isDemoOtpEnabled}
               />
@@ -135,14 +137,13 @@ function EmailOtp(props) {
             </View>
           </View>
           <View>
-            {loading ||
-              (updateUserLoading && (
-                <Spinner
-                  backColor={currentTheme.themeBackground}
-                  spinnerColor={currentTheme.main}
-                  size='large'
-                />
-              ))}
+            {(loading || updateUserLoading || isDemoOtpEnabled) && (
+              <Spinner
+                backColor={currentTheme.themeBackground}
+                spinnerColor={currentTheme.main}
+                size='large'
+              />
+            )}
           </View>
           {!isDemoOtpEnabled && (
             <View

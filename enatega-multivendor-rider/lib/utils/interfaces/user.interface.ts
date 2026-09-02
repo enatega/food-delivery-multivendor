@@ -13,10 +13,13 @@ export interface IUserContextProps {
   errorProfile: ApolloError | undefined;
   dataProfile: IRiderProfile | null;
   userId: string | null;
+  setUserId: Dispatch<SetStateAction<string>>;
   loadingAssigned: boolean;
   errorAssigned: ApolloError | undefined;
   assignedOrders: IOrder[] | null;
   refetchAssigned: () => void;
+  loadMoreAssigned: () => Promise<void>;
+  hasMoreAssigned: boolean;
   refetchProfile: () => Promise<unknown>;
   networkStatusAssigned: NetworkStatus;
   modalVisible: IRiderEarnings & { bool: boolean };
@@ -72,7 +75,6 @@ export interface IRiderProfile {
     coordinates: string[];
   };
   isAvailable: boolean;
-  password: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -154,6 +156,7 @@ export interface Order {
   orderAmount: number;
   paymentStatus: string;
   orderStatus: string;
+  orderState?: string;
   tipping: number;
   taxationAmount: number;
   reason?: string;

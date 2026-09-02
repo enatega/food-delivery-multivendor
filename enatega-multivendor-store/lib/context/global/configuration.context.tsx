@@ -1,7 +1,11 @@
-"use client";
-
 // Core
-import { createContext, useCallback, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 // Interfaces§
 import {
@@ -11,10 +15,12 @@ import {
 } from "@/lib/utils/interfaces";
 
 // API
-import { GET_CONFIGURATION } from "@/lib/api/graphql";
+import { GET_CONFIGURATION } from "@/lib/apollo/queries";
 
 // Hooks
 import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
+import { AuthContext } from "@/lib/context/global/auth.context";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 export const ConfigurationContext = createContext<IConfiguration | undefined>({
   _id: "",
@@ -29,6 +35,8 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   const [configuration, setConfiguration] = useState<
     IConfiguration | undefined
   >();
+  const { isInitialized, token } = useContext(AuthContext);
+  const { isSingleVendor } = useStoreMode();
 
   // API
   const { fetch, loading, error, data } = useLazyQueryQL(GET_CONFIGURATION, {
@@ -54,17 +62,18 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   };
 
   const fetchConfiguration = useCallback(() => {
+    if (!isInitialized || (isSingleVendor && !token)) return;
     fetch();
-  }, [fetch]);
+  }, [fetch, isInitialized, isSingleVendor, token]);
 
   // Use Effect
   useEffect(() => {
     fetchConfiguration();
-  }, []);
+  }, [fetchConfiguration]);
 
   useEffect(() => {
     onFetchConfiguration();
-  }, [data]);
+  }, [data, error, loading]);
 
   return (
     <ConfigurationContext.Provider value={configuration}>

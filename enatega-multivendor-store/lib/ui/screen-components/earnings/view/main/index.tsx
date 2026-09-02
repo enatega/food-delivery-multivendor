@@ -30,7 +30,7 @@ import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 import { useApptheme } from "@/lib/context/theme.context";
 import formatNumber from "@/lib/utils/methods/num-formatter";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { showMessage } from "react-native-flash-message";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import EarningsBarChart from "../../bar-chart";
@@ -58,10 +58,6 @@ export default function EarningsMain() {
     limit: 5,
     ...getQueryDates(),
   };
-
-  // States
-  const [recentTransaction, setRecentTransaction] =
-    useState<IStoreEarnings[]>();
 
   // Hooks
   const { appTheme } = useApptheme();
@@ -113,40 +109,31 @@ export default function EarningsMain() {
     }
   }, [userId]);
 
-  const barData: barDataItem[] =
-    storeEarningsData?.storeEarningsGraph.earnings
-      .slice(0, 7)
-      .map((earning: IStoreEarnings) => ({
+  const earnings = storeEarningsData?.storeEarningsGraph.earnings ?? [];
+  const barData = useMemo<barDataItem[]>(
+    () =>
+      earnings.slice(0, 7).map((earning) => ({
         value: earning.totalEarningsSum.toString().startsWith("-")
           ? Number(-earning.totalEarningsSum)
           : earning.totalEarningsSum,
         label: earning._id,
-        topLabelComponent: () => {
-          return (
-            <Text
-              style={{
-                color: appTheme.fontMainColor,
-                fontSize: 8,
-                fontWeight: "600",
-                marginBottom: 1,
-                wordWrap: "wrap",
-              }}
-            >
-              ${formatNumber(Number(earning.totalEarningsSum))}
-            </Text>
-          );
-        },
-      })) ?? ([] as barDataItem[]);
-
-  // UseEffects
-  useEffect(() => {
-    if (storeEarningsData?.storeEarningsGraph?.earnings?.length) {
-      const sortedTransactions = [
-        ...storeEarningsData.storeEarningsGraph.earnings,
-      ];
-      setRecentTransaction(sortedTransactions);
-    }
-  }, [storeEarningsData?.storeEarningsGraph?.earnings?.length]);
+        topLabelComponent: () => (
+          <Text
+            style={{
+              color: appTheme.fontMainColor,
+              fontSize: 8,
+              fontWeight: "600",
+              marginBottom: 1,
+              wordWrap: "wrap",
+            }}
+          >
+            ${formatNumber(Number(earning.totalEarningsSum))}
+          </Text>
+        ),
+      })),
+    [appTheme.fontMainColor, earnings],
+  );
+  const recentTransaction = earnings;
 
   const renderEmptyState = (
     <Text

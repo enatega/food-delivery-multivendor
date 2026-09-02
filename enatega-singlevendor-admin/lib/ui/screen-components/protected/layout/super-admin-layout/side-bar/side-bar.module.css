@@ -1,0 +1,18 @@
+.sub-menu {
+  overflow: hidden;
+  transition: height 300ms;
+}
+
+.custom-panel-menu :global(.p-panelmenu-header-content) {
+  cursor: pointer !important;
+  background: white;
+  border: none;
+  color: #71717a;
+}
+
+.custom-panel-menu :global(.p-panelmenu-content) {
+  cursor: pointer !important;
+  background: white;
+  border: none;
+  color: #71717a;
+}

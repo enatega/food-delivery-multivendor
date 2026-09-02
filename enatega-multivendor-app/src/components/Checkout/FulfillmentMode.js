@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { useStyles } from './styles'
 import TextDefault from '../Text/TextDefault/TextDefault'
 
@@ -11,19 +11,22 @@ export const FulfillmentMode = ({ theme, isPickup, setIsPickup, t }) => {
     const styles = useStyles(theme)
     return <View style={styles.container}>
         <View style={styles.ovalContainer}>
-            <OvalButton testID='customer.checkout.fulfillment.delivery' theme={theme} styles={styles.ovalButton} title={t('Delivery')} selected={!isPickup} icon={<DeliveryIcon />} onSelect={() => { setIsPickup(false) }} />
-            <OvalButton testID='customer.checkout.fulfillment.pickup' theme={theme} styles={styles.ovalButton} title={t('Pickup')} selected={isPickup} icon={<PickupIcon />} onSelect={() => { setIsPickup(true) }} />
+            <OvalButton theme={theme} styles={styles.ovalButton} title={t('Delivery')} selected={!isPickup} icon={<DeliveryIcon />} onSelect={() => { setIsPickup(false) }} />
+            <OvalButton theme={theme} styles={styles.ovalButton} title={t('Pickup')} selected={isPickup} icon={<PickupIcon />} onSelect={() => { setIsPickup(true) }} />
         </View>
     </View>
 }
 
-const OvalButton = ({ theme, selected = false, title, icon, onSelect, testID, styles }) => (
-    <Pressable testID={testID} onPress={onSelect} style={[styles, {
-        backgroundColor: selected ? theme.main : null
-    }]}>
+const OvalButton = ({
+    theme,
+    selected = false, title,
+    icon,
+    onSelect,
+    styles }) => (<Pressable onPress={onSelect} style={[styles, {
+        backgroundColor: selected ? (theme.colors?.accent || theme.main) : 'transparent'
+    }]}> 
         <View style={alignment.MxSmall}>
             {icon}
         </View>
-        <TextDefault bold={!selected} textColor={theme.color4}>{title}</TextDefault>
-    </Pressable>
-)
+        <TextDefault bold textColor={selected ? (theme.colors?.onAccent || theme.color4) : theme.colors?.textPrimary}>{title}</TextDefault>
+    </Pressable>)

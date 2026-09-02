@@ -78,6 +78,45 @@ export interface IRider {
   phone?: string;
 }
 
+export interface IEtaCoordinate {
+  latitude: number;
+  longitude: number;
+}
+
+export interface IOrderEta {
+  phase?: string | null;
+  source?: string | null;
+  readyAt?: string | null;
+  baseArrivalAt?: string | null;
+  estimatedArrivalAt?: string | null;
+  windowStartAt?: string | null;
+  windowEndAt?: string | null;
+  durationSeconds?: number | null;
+  distanceMeters?: number | null;
+  encodedPolyline?: string | null;
+  origin?: IEtaCoordinate | null;
+  destination?: IEtaCoordinate | null;
+  calculatedAt?: string | null;
+  lastLocationAt?: string | null;
+  version?: number | null;
+}
+
+export interface IRiderTrackingLocation {
+  latitude: number;
+  longitude: number;
+  accuracy?: number | null;
+  heading?: number | null;
+  speed?: number | null;
+  recordedAt: string;
+}
+
+export interface IOrderTracking {
+  orderId: string;
+  status: string;
+  riderLocation?: IRiderTrackingLocation | null;
+  eta?: IOrderEta | null;
+}
+
 export interface IReview {
   _id?: string;
   order: {
@@ -119,6 +158,7 @@ export interface IOrder {
   createdAt?: string;
   completionTime?: string;
   preparationTime?: string;
+  eta?: IOrderEta | null;
   orderDate?: string;
   expectedTime?: string;
   isPickedUp?: boolean;

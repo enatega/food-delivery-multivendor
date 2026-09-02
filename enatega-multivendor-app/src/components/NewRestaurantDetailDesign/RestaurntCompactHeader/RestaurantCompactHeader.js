@@ -21,9 +21,9 @@ function RestaurantCompactHeader({
         onPress={() => navigation.goBack()}
       >
         <Ionicons
-          name='arrow-back-circle-sharp'
-          color={currentTheme.fontMainColor}
-          size={scale(32)}
+          name='arrow-back'
+          color={currentTheme.colors.textPrimary}
+          size={scale(20)}
         />
       </TouchableOpacity>
 
@@ -31,7 +31,7 @@ function RestaurantCompactHeader({
         <TextDefault
           H4
           bolder
-          textColor={currentTheme.fontMainColor}
+          textColor={currentTheme.colors.textPrimary}
           numberOfLines={1}
           style={styles(currentTheme).title}
         >
@@ -45,9 +45,9 @@ function RestaurantCompactHeader({
         onPress={handleOpenSearch}
       >
         <Ionicons
-          name='search-circle-sharp'
-          size={scale(32)}
-          color={currentTheme.fontMainColor}
+          name='search-outline'
+          size={scale(20)}
+          color={currentTheme.colors.textPrimary}
         />
       </TouchableOpacity>
 
@@ -57,9 +57,9 @@ function RestaurantCompactHeader({
         onPress={handleNavigateToAbout}
       >
         <Ionicons
-          name='information-circle-sharp'
-          size={scale(32)}
-          color={currentTheme.fontMainColor}
+          name='information-outline'
+          size={scale(20)}
+          color={currentTheme.colors.textPrimary}
         />
       </TouchableOpacity>
     </View>

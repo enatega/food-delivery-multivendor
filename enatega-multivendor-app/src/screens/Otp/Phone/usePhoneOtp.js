@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useRef } from 'react'
+import { useState, useContext, useEffect, useRef, useCallback } from 'react'
 import { sendOtpToPhoneNumber, updateUser, VERIFY_OTP } from '../../../apollo/mutations'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
@@ -13,6 +13,12 @@ import useEnvVars from '../../../../environment'
 
 import { useTranslation } from 'react-i18next'
 import ConfigurationContext from '../../../context/Configuration'
+import { useAppMode } from '../../../mode/AppModeContext'
+import {
+  getModeHomeRoute,
+  getModeProfileRoute,
+  getModeProfileTabRoute
+} from '../../../mode/navigation'
 
 const SEND_OTP_TO_PHONE = gql`
   ${sendOtpToPhoneNumber}
@@ -27,7 +33,11 @@ const usePhoneOtp = () => {
   const demoOtp = TEST_OTP || '111111'
   const { t } = useTranslation()
   const navigation = useNavigation()
+  const { mode } = useAppMode()
   const configuration = useContext(ConfigurationContext)
+  const isMobileVerificationSkipped =
+    !!configuration?.skipMobileVerification
+  const isDemoOtpEnabled = !!TEST_OTP
   const route = useRoute()
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState(false)
@@ -36,7 +46,7 @@ const usePhoneOtp = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   const [seconds, setSeconds] = useState(30)
-  const { name, phone, screen, token } = route?.params || {}
+  const { name, phone, screen, token, prevScreen } = route?.params || {}
   const { setTokenAsync } = useContext(AuthContext)
   const resolvedName = name ?? profile?.name ?? ''
   const resolvedPhone = phone ?? profile?.phone ?? ''
@@ -61,8 +71,11 @@ const usePhoneOtp = () => {
 
   function onError(error) {
     if (error.networkError) {
+      // networkError.result is null on raw connectivity failures — guard the
+      // chain and fall back to a friendly message instead of crashing (QUAL-004).
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message:
+          error.networkError?.result?.errors?.[0]?.message ?? t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -80,7 +93,8 @@ const usePhoneOtp = () => {
   function onUpdateUserError(error) {
     if (error.networkError) {
       FlashMessage({
-        message: error.networkError.result.errors[0].message
+        message:
+          error.networkError?.result?.errors?.[0]?.message ?? t('networkError')
       })
     } else if (error.graphQLErrors) {
       FlashMessage({
@@ -101,25 +115,24 @@ const usePhoneOtp = () => {
       navigation.reset({
         index: 0,
         routes: [
-          {
-            name: 'Main',
-            params: {
-              screen: 'Discovery'
-            }
-          }
+          getModeHomeRoute(mode)
         ]
       })
     } else if (!profile?.name) {
-      navigation.navigate('Profile', { editName: true })
+      const profileRoute = getModeProfileRoute(mode, { editName: true })
+      navigation.navigate(profileRoute.name, profileRoute.params)
     } else if (screen === 'Checkout') {
       navigation.navigate('Checkout')
+    } else if (prevScreen === 'Account') {
+      const profileTabRoute = getModeProfileTabRoute(mode)
+      navigation.navigate(profileTabRoute.name, profileTabRoute.params)
+    } else if (prevScreen) {
+      navigation.navigate(prevScreen)
     } else {
-      route.params?.prevScreen
-        ? navigation.navigate(route.params.prevScreen)
-        : navigation.navigate({
-            name: 'Main',
-            merge: true
-          })
+      navigation.navigate({
+        ...getModeHomeRoute(mode),
+        merge: true
+      })
     }
   }
 
@@ -137,13 +150,13 @@ const usePhoneOtp = () => {
     onError: onUpdateUserError
   })
 
-  const onCodeFilled = async (otp_code) => {
+  const onCodeFilled = useCallback(async (otp_code) => {
     if (token && !authReady) {
       await setTokenAsync(token)
       setAuthReady(true)
     }
 
-    if (configuration?.skipMobileVerification) {
+    if (isMobileVerificationSkipped) {
       await mutateUser({
         variables: {
           name: resolvedName,
@@ -172,18 +185,27 @@ const usePhoneOtp = () => {
     } else {
       setOtpError(true)
     }
-  }
+  }, [
+    authReady,
+    isMobileVerificationSkipped,
+    mutateUser,
+    resolvedName,
+    resolvedPhone,
+    setTokenAsync,
+    token,
+    verifyOTP
+  ])
 
   const onSendOTPHandler = () => {
     try {
-      if (!profile?.phone && !phone) {
+      if (!phone && !profile?.phone) {
         FlashMessage({
           message: t('mobileErr1')
         })
         return
       }
 
-      sendOTPToPhone({ variables: { phone: profile?.phone ?? phone } })
+      sendOTPToPhone({ variables: { phone: phone ?? profile?.phone } })
     } catch (err) {
       FlashMessage({
         message: t('somethingWentWrong')
@@ -197,6 +219,9 @@ const usePhoneOtp = () => {
   }
 
   useEffect(() => {
+    // Depend on [seconds] so the interval is recreated per tick instead of on
+    // every render — otherwise the countdown resets continuously and the resend
+    // button never re-enables (PERF-003 / QUAL-005).
     const myInterval = setInterval(() => {
       if (seconds > 0) {
         setSeconds(seconds - 1)
@@ -208,30 +233,23 @@ const usePhoneOtp = () => {
     return () => {
       clearInterval(myInterval)
     }
-  })
+  }, [seconds])
 
   useEffect(() => {
     if (!configuration) return
-    if (!configuration.skipMobileVerification) {
+    if (!isMobileVerificationSkipped && !isDemoOtpEnabled) {
       onSendOTPHandler()
     }
   }, [configuration, phone])
 
   useEffect(() => {
-    let timer = null
     if (!configuration) return
-    if (configuration.skipMobileVerification && !autoSubmittedRef.current) {
+    if ((isMobileVerificationSkipped || isDemoOtpEnabled) && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true
       setOtp(demoOtp)
-      timer = setTimeout(() => {
-        onCodeFilled(demoOtp)
-      }, 300)
+      void onCodeFilled(demoOtp)
     }
-
-    return () => {
-      timer && clearTimeout(timer)
-    }
-  }, [authReady, configuration, demoOtp, onCodeFilled])
+  }, [authReady, configuration, demoOtp, isDemoOtpEnabled, onCodeFilled])
 
   return {
     otp,
@@ -247,7 +265,7 @@ const usePhoneOtp = () => {
     themeContext,
     loadingProfile,
     demoOtp,
-    isDemoOtpEnabled: Boolean(configuration?.skipMobileVerification)
+    isDemoOtpEnabled: isMobileVerificationSkipped || isDemoOtpEnabled
   }
 }
 

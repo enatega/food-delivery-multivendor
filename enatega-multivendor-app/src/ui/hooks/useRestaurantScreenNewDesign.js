@@ -31,10 +31,32 @@ export const useRestaurantQueries = (restaurantId) => {
   } = useQuery(FETCH_CATEGORY_DETAILS, {
     variables: { storeId: restaurantId }
   })
+  const categoryItems =
+    categoryData?.fetchCategoryDetailsByStoreIdForMobile || []
+
+  const categoryImageById = categoryItems.reduce((acc, category) => {
+    const foods = category?.foods || category?.items || []
+    foods.forEach((food) => {
+      if (food?._id && food?.image && String(food.image).trim() !== '') {
+        acc[food._id] = food.image
+      }
+    })
+    return acc
+  }, {})
+
+  const normalizedPopularItems = (popularItemsData?.popularFoodItems || []).map((item) => {
+    if (item?.image && String(item.image).trim() !== '') {
+      return item
+    }
+
+    const fallbackImage = categoryImageById[item?._id]
+    return fallbackImage ? { ...item, image: fallbackImage } : item
+  })
+
   return {
     // Popular Items Query
     popularItems: {
-      data: popularItemsData?.popularFoodItems,
+      data: normalizedPopularItems,
       loading: popularItemsLoading,
       error: popularItemsError,
       refetch: refetchPopularItems

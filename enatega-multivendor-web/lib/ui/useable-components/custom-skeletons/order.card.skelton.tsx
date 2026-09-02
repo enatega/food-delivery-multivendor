@@ -14,7 +14,7 @@ const OrderCardSkeleton: React.FC<OrderCardSkeletonProps> = ({
     <div 
       key={index} 
       className={twMerge(
-        "p-6 bg-white rounded-lg shadow-md animate-pulse", 
+        "p-6 bg-dispatch-surface rounded-lg shadow-md animate-pulse", 
         className
       )}
     >
@@ -22,20 +22,20 @@ const OrderCardSkeleton: React.FC<OrderCardSkeletonProps> = ({
       <div className="flex flex-col md:flex-row gap-4">
         {/* Restaurant Image */}
         <div className="flex items-start gap-4 flex-1">
-          <div className="w-16 h-16 bg-gray-300 rounded-md flex-shrink-0"></div>
+          <div className="skeleton-surface h-16 w-16 flex-shrink-0 rounded-md"></div>
           
           {/* Restaurant Details */}
           <div className="flex-1 space-y-2">
-            <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-5 bg-gray-300 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+            <div className="skeleton-line h-6 w-3/4 rounded"></div>
+            <div className="skeleton-line h-5 w-1/2 rounded"></div>
+            <div className="skeleton-line h-4 w-2/3 rounded"></div>
           </div>
         </div>
 
         {/* Price Section */}
         <div className="flex md:flex-col md:items-end justify-between gap-2">
-          <div className="h-6 bg-gray-300 rounded w-20"></div>
-          <div className="h-8 bg-gray-300 rounded w-24"></div>
+          <div className="skeleton-line h-6 w-20 rounded"></div>
+          <div className="skeleton-line h-8 w-24 rounded"></div>
         </div>
       </div>
 

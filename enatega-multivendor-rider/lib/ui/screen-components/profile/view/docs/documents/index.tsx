@@ -21,7 +21,7 @@ export default function DocumentsSection({
   const { dataProfile } = useUserContext();
   return (
     <View
-      className="flex flex-col h-[24%] w-full justify-between items-center"
+      className="flex flex-col w-full items-center"
       style={{ backgroundColor: appTheme.screenBackground }}
     >
       <View className="flex flex-col gap-3 items-start justify-center px-5 w-full border-b-2  border-b-gray-200 py-3">
@@ -36,7 +36,7 @@ export default function DocumentsSection({
           </TouchableOpacity>
         </View>
         <View
-          className={`${dataProfile?.licenseDetails ? "bg-[#E0F2FE]" : "bg-[#FEE2E2]"} p-2 border rounded-3xl border-[#E0F2FE]`}
+          className={`${dataProfile?.licenseDetails ? "bg-[#E0F2FE]" : "bg-[#FEE2E2]"} py-1.5 px-2 border rounded-3xl border-[#E0F2FE]`}
         >
           <Text
             className={`${dataProfile?.licenseDetails ? "text-[#0D99FF]" : "text-[#991B1B]"} font-semibold`}
@@ -59,7 +59,7 @@ export default function DocumentsSection({
           </TouchableOpacity>
         </View>
         <View
-          className={`${dataProfile?.vehicleDetails ? "bg-[#E0F2FE]" : "bg-[#FEE2E2]"} p-3 border rounded-3xl border-[#E0F2FE]`}
+          className={`${dataProfile?.vehicleDetails ? "bg-[#E0F2FE]" : "bg-[#FEE2E2]"} py-1.5 px-2 border rounded-3xl border-[#E0F2FE]`}
         >
           <Text
             className={`${dataProfile?.vehicleDetails ? "text-[#0D99FF]" : "text-[#991B1B]"} font-semibold`}

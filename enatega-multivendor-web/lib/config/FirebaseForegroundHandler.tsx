@@ -4,8 +4,10 @@
 import { useEffect } from "react";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { setupFirebase, onMessage } from "./firebase";
+import { isAppMode, modeStorage, useAppMode } from "@/lib/mode";
 
 export default function FirebaseForegroundHandler() {
+  const { mode, switchMode } = useAppMode();
   const {
     FIREBASE_KEY,
     FIREBASE_AUTH_DOMAIN,
@@ -46,17 +48,22 @@ export default function FirebaseForegroundHandler() {
 
       if (Notification.permission === "granted") {
         const { title, body } = payload.notification || {};
-        const { redirectUrl } = payload.data || {};
+        const { redirectUrl, vendorMode, orderId } = payload.data || {};
 
         const notification = new Notification(title || "Notification", {
           body: body || "You have a new message!",
           icon: "/192.png",
         });
 
-        notification.onclick = () => {
-          if (redirectUrl) {
-            window.open(redirectUrl, "_blank");
+        notification.onclick = async () => {
+          const targetMode = isAppMode(vendorMode) ? vendorMode : mode;
+          const target = redirectUrl || (orderId ? `/order/${orderId}/tracking` : "/profile/order-history");
+          if (targetMode !== mode) {
+            if (!window.confirm("This order belongs to your other delivery service. Switch and open it?")) return;
+            modeStorage.set("pendingOrderNavigation", target);
+            if (!await switchMode(targetMode)) return;
           }
+          window.location.assign(target);
         };
       } else {
         console.warn("❌ Notification permission not granted.");
@@ -74,6 +81,8 @@ export default function FirebaseForegroundHandler() {
     FIREBASE_STORAGE_BUCKET,
     FIREBASE_MSG_SENDER_ID,
     FIREBASE_APP_ID,
+    mode,
+    switchMode,
   ]);
 
   return null;

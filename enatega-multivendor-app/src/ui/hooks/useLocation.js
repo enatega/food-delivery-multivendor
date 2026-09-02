@@ -2,7 +2,7 @@ import * as Location from 'expo-location'
 import { getLocationFromStorage } from './useWatchLocation'
 
 export default function useLocation() {
-  const getLocationPermission = async () => {
+  const getLocationPermission = async() => {
     const {
       status,
       canAskAgain
@@ -10,7 +10,7 @@ export default function useLocation() {
     return { status, canAskAgain }
   }
 
-  const askLocationPermission = async () => {
+  const askLocationPermission = async() => {
     let finalStatus = null
     let finalCanAskAgain = null
     const {
@@ -36,12 +36,11 @@ export default function useLocation() {
     return { status: finalStatus, canAskAgain: finalCanAskAgain }
   }
 
-  const getCurrentLocation = async () => {
-    const location = await getLocationFromStorage()
+  const getCurrentLocation = async({ preferStored = true } = {}) => {
+    const location = preferStored ? await getLocationFromStorage() : null
     if (location) return { coords: location }
     const { status } = await askLocationPermission()
 
-    
     if (status === 'granted') {
       try {
         const location = await Location.getCurrentPositionAsync({
@@ -49,7 +48,7 @@ export default function useLocation() {
         })
         return { ...location, error: false }
       } catch (e) {
-        console.log("location error", e)
+        console.log('location error', e)
         return { error: true, message: e.message }
       }
     }

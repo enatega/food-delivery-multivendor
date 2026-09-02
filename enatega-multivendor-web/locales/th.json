@@ -137,6 +137,13 @@
   "something_went_wrong": "เกิดข้อผิดพลาดบางอย่าง",
   "for_rest": "สำหรับร้านอาหาร",
   "shop-types": "ประเภทร้านค้า",
+  "categories_label": "หมวดหมู่",
+  "all_categories_label": "หมวดหมู่ทั้งหมด",
+  "tab_deals": "ดีล",
+  "tab_browse": "เรียกดู",
+  "order_details_minimum_order_fee_label": "ค่าธรรมเนียมคำสั่งซื้อขั้นต่ำ",
+  "order_details_priority_delivery_fee_label": "ค่าจัดส่งแบบเร่งด่วน",
+  "order_details_credits_applied_label": "เครดิตที่ใช้",
   "for_riders": "สำหรับผู้ส่ง",
   "reviews": "รีวิว",
   "redirecting_in": "กำลังเปลี่ยนเส้นทางใน",
@@ -191,6 +198,8 @@
   "tab_discovery": "ค้นพบ",
   "tab_restaurants": "ร้านอาหาร",
   "tab_store": "ร้านค้า",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "ใกล้คุณ",
   "generic_listing_heading": "ร้านอาหารใกล้คุณ",
   "generic_listing_cuisine_section": "ประเภทอาหาร",
@@ -919,5 +928,88 @@
   "show_more_orders": "แสดงคำสั่งซื้อเพิ่มเติม",
   "your_email": "อีเมลของคุณ",
   "Select_your_address_prompt": "เลือกที่อยู่ของคุณ",
-  "Our-brands": "แบรนด์ของเรา"
+  "Our-brands": "แบรนด์ของเรา",
+  "Landing": {
+    "hero": {
+      "eyebrow": "One app. Everyday possibilities.",
+      "title": "Everything you need,",
+      "accent": "beautifully delivered.",
+      "body": "Food, groceries and everyday essentials, brought together in one simple experience."
+    },
+    "categories": {
+      "label": "Delivery categories",
+      "food": "Food",
+      "groceries": "Groceries",
+      "essentials": "Essentials",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Finding that city.",
+      "ready": "City selected. Show items when you are ready.",
+      "cityError": "We could not locate that city. Choose another suggestion.",
+      "locating": "Finding your current location.",
+      "locationError": "We could not access your location. Search for a city instead."
+    },
+    "journey": {
+      "eyebrow": "How Enatega moves",
+      "title": "From your city,",
+      "accent": "to your doorstep.",
+      "bagAlt": "Enatega delivery bag",
+      "stages": {
+        "choose": {
+          "title": "Choose",
+          "body": "Food, groceries or essentials."
+        },
+        "moving": {
+          "title": "Moving",
+          "body": "One clear journey across your city."
+        },
+        "arrived": {
+          "title": "Arrived",
+          "body": "Delivered where you need it."
+        }
+      }
+    },
+    "cta": {
+      "label": "Work with Enatega",
+      "business": {
+        "eyebrow": "For businesses",
+        "title": "Grow with Enatega.",
+        "body": "Bring your store closer to more customers.",
+        "action": "Become a partner"
+      },
+      "rider": {
+        "eyebrow": "For riders",
+        "title": "Ride with Enatega.",
+        "body": "Deliver on your schedule.",
+        "action": "Become a rider"
+      }
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

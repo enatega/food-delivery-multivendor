@@ -11,6 +11,7 @@ export default function useRestaurant(id) {
     RESTAURANT,
     {
       variables: { id },
+      skip: !id,
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-first'
     }

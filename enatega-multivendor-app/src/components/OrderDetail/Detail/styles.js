@@ -4,7 +4,7 @@ import { scale, verticalScale } from '../../../utils/scaling'
 const { width: WIDTH } = Dimensions.get('window')
 export default StyleSheet.create({
   container: theme => ({
-    marginHorizontal: scale(10),
+    marginHorizontal: scale(12)
   }),
   line: theme => ({
     height: 1,
@@ -30,7 +30,7 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   itemsContainer: {
-    width: WIDTH - 20,
+    width: '100%'
   },
   line2: theme => ({
     marginVertical: scale(10),
@@ -41,12 +41,21 @@ export default StyleSheet.create({
   itemRow: theme=>({
     flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
     justifyContent: 'space-between',
-    alignItems: 'center', 
-    marginVertical: scale(5),
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.gray100,
-    borderRadius: scale(10)
+    alignItems: 'center',
+    gap: scale(10),
+    paddingVertical: scale(10),
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: theme.colors.borderSubtle
   }),
+  itemCopy: {
+    flex: 1,
+    minWidth: 0,
+    justifyContent: 'center'
+  },
+  itemPrice: {
+    minWidth: scale(58),
+    textAlign: 'right'
+  },
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

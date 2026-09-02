@@ -1,5 +1,5 @@
-import HomeScreen from "@/lib/ui/screens/unprotected";
+import ModeHome from "@/lib/ui/screens/unprotected/ModeHome";
 
 export default function RootPage() {
-  return <HomeScreen />;
+  return <ModeHome />;
 }

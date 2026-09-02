@@ -3,6 +3,7 @@ import { TextInput } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import {
   getNationalDigits,
+  getPhoneMaxLength,
   formatPhoneNumber,
   isValidPhoneNumber,
   getPhoneExample
@@ -33,6 +34,11 @@ const PhoneNumberInput = ({
       digits = digits.slice(cc.length);
     }
 
+    const maxDigits = getPhoneMaxLength(region);
+    if (digits.length > maxDigits) {
+      digits = digits.slice(0, maxDigits);
+    }
+
     onChange(digits);
 
     // Hide any error while typing; only validate once the user pauses.
@@ -54,7 +60,7 @@ const PhoneNumberInput = ({
       keyboardType="phone-pad"
       value={formatPhoneNumber(value, region)}
       onChangeText={handleChange}
-      maxLength={20}
+      maxLength={Math.max(getPhoneMaxLength(region) + 4, 8)}
     />
   );
 };

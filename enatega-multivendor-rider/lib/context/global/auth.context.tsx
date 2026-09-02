@@ -1,19 +1,14 @@
 import * as Location from "expo-location";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // Interfaces§
-import { RIDER_ID, RIDER_TOKEN } from "@/lib/utils/constants";
-import { getSecureItem } from "@/lib/services/secure-storage";
-import {
-  removeSecureItem,
-  setSecureItem,
-} from "@/lib/services/secure-storage";
-import { removeItem } from "@/lib/services/async-storage";
+import { getSecureItem, removeSecureItem, setSecureItem } from "@/lib/services/secure-storage";
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
 import { useRouter } from "expo-router";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 
 export const AuthContext = React.createContext<IAuthContext>(
-  {} as IAuthContext
+  {} as IAuthContext,
 );
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({
@@ -22,6 +17,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 }) => {
   // Hooks
   const router = useRouter();
+  const { riderIdKey, tokenKey } = useRiderMode();
 
   // State
   const [token, setToken] = useState<string>("");
@@ -32,7 +28,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 
     const hydrateAuth = async () => {
       try {
-        const storedToken = await getSecureItem(RIDER_TOKEN);
+        const storedToken = await getSecureItem(tokenKey);
 
         if (isMounted && storedToken) {
           setToken(storedToken);
@@ -49,27 +45,29 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [tokenKey]);
 
-  const setTokenAsync = async (token: string) => {
-    await setSecureItem(RIDER_TOKEN, token);
-    await client.clearStore();
-    setToken(token);
-  };
+  const setTokenAsync = useCallback(
+    async (token: string) => {
+      await setSecureItem(tokenKey, token);
+      await client.clearStore();
+      setToken(token);
+    },
+    [client, tokenKey],
+  );
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     setToken("");
 
     try {
-      await Promise.all([
-        removeSecureItem(RIDER_TOKEN),
-        removeItem(RIDER_ID),
-      ]);
+      await Promise.all([removeSecureItem(tokenKey), removeSecureItem(riderIdKey)]);
 
       try {
         await client.clearStore();
       } catch (cacheError) {
-        console.log("Error clearing Apollo cache during logout:", cacheError);
+        if (__DEV__) {
+          console.log("Error clearing Apollo cache during logout:", cacheError);
+        }
       }
 
       try {
@@ -79,21 +77,28 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
           await Location.stopLocationUpdatesAsync("RIDER_LOCATION");
         }
       } catch (locationError) {
-        console.log("Error stopping location updates:", locationError);
+        if (__DEV__) {
+          console.log("Error stopping location updates:", locationError);
+        }
       }
     } catch (e) {
-      console.log("Logout Error: ", e);
+      if (__DEV__) {
+        console.log("Logout Error: ", e);
+      }
     } finally {
       router.replace("/login");
     }
-  };
+  }, [client, riderIdKey, router, tokenKey]);
 
-  const values: IAuthContext = {
-    token: token ?? "",
-    isAuthReady,
-    logout,
-    setTokenAsync,
-  };
+  const values: IAuthContext = useMemo(
+    () => ({
+      token: token ?? "",
+      isAuthReady,
+      logout,
+      setTokenAsync,
+    }),
+    [token, isAuthReady, logout, setTokenAsync],
+  );
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

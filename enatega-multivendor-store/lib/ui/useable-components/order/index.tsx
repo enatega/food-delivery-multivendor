@@ -1,9 +1,17 @@
 import { useSubscription } from "@apollo/client";
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
-import { SUBSCRIPTION_ORDER } from "@/lib/apollo/subscriptions";
+import {
+  SUBSCRIPTION_ORDER,
+  SUBSCRIPTION_ORDER_MULTI_VENDOR,
+} from "@/lib/apollo/subscriptions";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 import { MAX_TIME } from "@/lib/utils/constants";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
-import { orderSubTotal } from "@/lib/utils/methods";
+import { formatAmount, orderSubTotal } from "@/lib/utils/methods";
+import {
+  formatTimestampTime,
+  parseTimestamp,
+} from "@/lib/utils/methods/date-time";
 import { getIsAcceptButtonVisible } from "@/lib/utils/methods/gloabl";
 import { ORDER_TYPE } from "@/lib/utils/types";
 import { memo, useContext, useEffect, useRef, useState } from "react";
@@ -49,17 +57,21 @@ const Order = ({
   const { t } = useTranslation();
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
+  const { isSingleVendor } = useStoreMode();
 
   // Keep this order's status live in real time. The subscription result is
   // written into the normalized cache (keyed by _id), so orderStatus/isPickedUp
   // update here without waiting for a refetch or the 60s poll.
-  useSubscription(SUBSCRIPTION_ORDER, {
+  useSubscription(
+    isSingleVendor ? SUBSCRIPTION_ORDER : SUBSCRIPTION_ORDER_MULTI_VENDOR,
+    {
     variables: { id: order?._id },
     skip: !order?._id,
-  });
+    },
+  );
 
   // Ref
-  const timer = useRef<NodeJS.Timeout>();
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // States
   const [isAcceptButtonVisible, setIsAcceptButtonVisible] = useState(
@@ -69,7 +81,8 @@ const Order = ({
   // Timer
   const timeNow = new Date();
   const acceptanceTime = Math.floor(
-    ((order ? new Date(order.orderDate).getTime() : 0) - timeNow.getTime()) / 1000,
+    ((order ? new Date(order.orderDate).getTime() : 0) - timeNow.getTime()) /
+      1000,
   );
   let remainingTime = Math.floor(
     ((order ? new Date(order.createdAt).getTime() : 0) +
@@ -79,9 +92,15 @@ const Order = ({
   );
 
   // Preparation Time
-  const prep = new Date(order.preparationTime ?? "2023-08-16T08:00:00.000Z");
-  const diffTime = prep.getTime() - timeNow.getTime();
+  const prep = parseTimestamp(order.preparationTime);
+  const diffTime = prep ? prep.getTime() - timeNow.getTime() : 0;
   const totalPrep = diffTime > 0 ? diffTime / 1000 : 0;
+  const etaWindowStart = formatTimestampTime(order.eta?.windowStartAt);
+  const etaWindowEnd = formatTimestampTime(order.eta?.windowEndAt);
+  const etaWindow =
+    etaWindowStart && etaWindowEnd
+      ? `${etaWindowStart}–${etaWindowEnd}`
+      : null;
 
   const decision = !isAcceptButtonVisible
     ? acceptanceTime
@@ -96,7 +115,7 @@ const Order = ({
   // Handlers
   const onCancelOrderHandler = async () => {
     await silenceRing();
-    cancelOrder(order._id, "not available");
+    await cancelOrder(order._id, "not available");
   };
 
   const onPickupOrder = () => {
@@ -123,7 +142,7 @@ const Order = ({
       if (timer.current) clearInterval(timer.current);
       isSubscribed = false;
     };
-  }, []);
+  }, [order.orderDate]);
 
   if (!order || !configuration) {
     return null;
@@ -132,7 +151,7 @@ const Order = ({
   return (
     <View className="w-full">
       <View
-        className="flex-1 gap-y-2 rounded-[8px] m-4 p-4"
+        className="gap-y-2 rounded-[8px] m-4 p-4"
         style={{
           backgroundColor: appTheme.themeBackground,
           borderWidth: 1,
@@ -140,7 +159,7 @@ const Order = ({
         }}
       >
         {/* Status */}
-        <View className="flex-1 flex-row justify-between items-center">
+        <View className="flex-row justify-between items-center">
           <Text
             style={{
               color: appTheme.fontMainColor,
@@ -177,7 +196,7 @@ const Order = ({
         </View>
 
         {/* Order ID */}
-        <View className="flex-1 flex-row justify-between items-center">
+        <View className="flex-row justify-between items-center">
           <Text
             style={{
               color: appTheme.fontMainColor,
@@ -200,7 +219,7 @@ const Order = ({
         </View>
 
         {/* Order Items */}
-        <View className="flex-1 flex-row justify-between items-center">
+        <View className="flex-row justify-between items-center">
           <Text
             style={{
               color: appTheme.fontSecondColor,
@@ -231,7 +250,7 @@ const Order = ({
             return (
               <View
                 key={item._id}
-                className="flex-1 flex-row justify-between items-start mb-6"
+                className="flex-row justify-between items-start mb-6"
               >
                 {/* Left Side: Image and Details */}
                 <View className="flex-row gap-x-2 flex-1">
@@ -280,7 +299,8 @@ const Order = ({
 
                     {/* Toggle and Collapsible Details */}
                     <View className="mt-2">
-                      {(variation.title || (item?.addons && item?.addons.length > 0)) && (
+                      {(variation.title ||
+                        (item?.addons && item?.addons.length > 0)) && (
                         <TouchableOpacity
                           onPress={() => onToggleDetails(item._id)}
                           className="flex-row items-center mb-2"
@@ -292,10 +312,14 @@ const Order = ({
                               fontWeight: "500",
                             }}
                           >
-                            {showDetails[item._id] ? "Hide Details" : "Show Details"}
+                            {showDetails[item._id]
+                              ? t("Hide Details")
+                              : t("Show Details")}
                           </Text>
                           <View className="ml-1">
-                            <Text style={{ color: appTheme.primary, fontSize: 10 }}>
+                            <Text
+                              style={{ color: appTheme.primary, fontSize: 10 }}
+                            >
                               {showDetails[item._id] ? "▲" : "▼"}
                             </Text>
                           </View>
@@ -324,7 +348,7 @@ const Order = ({
                                     fontWeight: "600",
                                   }}
                                 >
-                                  {`${configuration?.currencySymbol}${variation.price}`}
+                                  {`${configuration?.currencySymbol}${formatAmount(variation.price)}`}
                                 </Text>
                               </View>
                             </View>
@@ -333,7 +357,10 @@ const Order = ({
                           {item?.addons?.map((addon) => (
                             <View key={addon._id} className="mb-1">
                               {addon?.options?.map((option) => (
-                                <View key={option._id} className="flex-row items-center">
+                                <View
+                                  key={option._id}
+                                  className="flex-row items-center"
+                                >
                                   <Text
                                     style={{
                                       color: appTheme.fontSecondColor,
@@ -349,7 +376,7 @@ const Order = ({
                                       fontSize: 12,
                                     }}
                                   >
-                                    {`(+${configuration?.currencySymbol}${option?.price})`}
+                                    {`(+${configuration?.currencySymbol}${formatAmount(option?.price)})`}
                                   </Text>
                                 </View>
                               ))}
@@ -363,8 +390,10 @@ const Order = ({
 
                 {/* Right Side: Price */}
                 <View className="w-auto items-end">
-                  <Text style={{ color: appTheme.fontMainColor, fontWeight: "600" }}>
-                    {`${configuration?.currencySymbol}${itemTotal.toFixed(2)}`}
+                  <Text
+                    style={{ color: appTheme.fontMainColor, fontWeight: "600" }}
+                  >
+                    {`${configuration?.currencySymbol}${formatAmount(itemTotal)}`}
                   </Text>
                 </View>
               </View>
@@ -397,7 +426,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {orderSubTotal(order)}
+            {formatAmount(orderSubTotal(order))}
           </Text>
         </View>
 
@@ -420,7 +449,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.tipping}
+            {formatAmount(order?.tipping)}
           </Text>
         </View>
 
@@ -443,57 +472,59 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.taxationAmount}
+            {formatAmount(order?.taxationAmount)}
           </Text>
         </View>
 
         {/* Discount Amount */}
-        {order?.discountAmount > 0 && (         
-        <View className="flex-row justify-between">
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 18,
-              fontWeight: "600",
-            }}
-          >
-            {t("discountAmount")}
-          </Text>
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 18,
-              fontWeight: "600",
-            }}
-          >
-            {configuration?.currencySymbol}
-            {order?.discountAmount}
-          </Text>
-        </View>
+        {order?.discountAmount > 0 && (
+          <View className="flex-row justify-between">
+            <Text
+              style={{
+                color: appTheme.fontMainColor,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {t("discountAmount")}
+            </Text>
+            <Text
+              style={{
+                color: appTheme.fontMainColor,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {configuration?.currencySymbol}
+              {formatAmount(order?.discountAmount)}
+            </Text>
+          </View>
         )}
 
         {/* Delivery */}
-        {!order?.isPickedUp && <View className="flex-row justify-between">
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 18,
-              fontWeight: "600",
-            }}
-          >
-            {t("Delivery Charges")}
-          </Text>
-          <Text
-            style={{
-              color: appTheme.fontMainColor,
-              fontSize: 18,
-              fontWeight: "600",
-            }}
-          >
-            {configuration?.currencySymbol}
-            {order?.deliveryCharges}
-          </Text>
-        </View>}
+        {!order?.isPickedUp && (
+          <View className="flex-row justify-between">
+            <Text
+              style={{
+                color: appTheme.fontMainColor,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {t("Delivery Charges")}
+            </Text>
+            <Text
+              style={{
+                color: appTheme.fontMainColor,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {configuration?.currencySymbol}
+              {formatAmount(order?.deliveryCharges)}
+            </Text>
+          </View>
+        )}
 
         {/* Total Amount */}
         <View className="flex-row justify-between">
@@ -514,7 +545,7 @@ const Order = ({
             }}
           >
             {configuration?.currencySymbol}
-            {order?.orderAmount}
+            {formatAmount(order?.orderAmount)}
           </Text>
         </View>
 
@@ -615,6 +646,17 @@ const Order = ({
                   </Text>
 
                   <CountdownTimer duration={totalPrep} />
+                  {etaWindow && (
+                    <Text
+                      style={{
+                        color: appTheme.fontSecondColor,
+                        fontSize: 12,
+                        marginTop: 2,
+                      }}
+                    >
+                      Estimated delivery {etaWindow}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>

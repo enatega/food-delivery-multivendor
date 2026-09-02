@@ -9,7 +9,7 @@ function OrderItAgain() {
   const { loading, queryData, error } = useRecentOrderRestaurants()
 
   if (loading) {
-    <SliderSkeleton />;
+    return <SliderSkeleton />;
   }
 
   if (error) {

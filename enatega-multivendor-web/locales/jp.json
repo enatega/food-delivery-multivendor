@@ -135,6 +135,13 @@
   "app_version": "1.0.0",
   "no_items_found": "アイテムが見つかりません",
   "shop-types": "店の種類",
+  "categories_label": "カテゴリー",
+  "all_categories_label": "すべてのカテゴリー",
+  "tab_deals": "お得情報",
+  "tab_browse": "閲覧",
+  "order_details_minimum_order_fee_label": "少額注文手数料",
+  "order_details_priority_delivery_fee_label": "優先配達手数料",
+  "order_details_credits_applied_label": "使用済みクレジット",
   "something_went_wrong": "問題が発生しました",
   "for_rest": "レストラン向け",
   "for_riders": "ライダー向け",
@@ -191,6 +198,8 @@
   "tab_discovery": "発見",
   "tab_restaurants": "レストラン",
   "tab_store": "店舗",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "近く",
   "generic_listing_heading": "近くのレストラン",
   "generic_listing_cuisine_section": "料理",
@@ -918,5 +927,88 @@
   "show_more_orders": "さらに注文を表示",
   "your_email": "your@email.com",
   "Select_your_address_prompt": "住所を選択してください。",
-  "Our-brands": "私たちのブランド"
+  "Our-brands": "私たちのブランド",
+  "Landing": {
+    "hero": {
+      "eyebrow": "One app. Everyday possibilities.",
+      "title": "Everything you need,",
+      "accent": "beautifully delivered.",
+      "body": "Food, groceries and everyday essentials, brought together in one simple experience."
+    },
+    "categories": {
+      "label": "Delivery categories",
+      "food": "Food",
+      "groceries": "Groceries",
+      "essentials": "Essentials",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Finding that city.",
+      "ready": "City selected. Show items when you are ready.",
+      "cityError": "We could not locate that city. Choose another suggestion.",
+      "locating": "Finding your current location.",
+      "locationError": "We could not access your location. Search for a city instead."
+    },
+    "journey": {
+      "eyebrow": "How Enatega moves",
+      "title": "From your city,",
+      "accent": "to your doorstep.",
+      "bagAlt": "Enatega delivery bag",
+      "stages": {
+        "choose": {
+          "title": "Choose",
+          "body": "Food, groceries or essentials."
+        },
+        "moving": {
+          "title": "Moving",
+          "body": "One clear journey across your city."
+        },
+        "arrived": {
+          "title": "Arrived",
+          "body": "必要な場所にお届けします。"
+        }
+      }
+    },
+    "cta": {
+      "label": "Enategaと連携",
+      "business": {
+        "eyebrow": "ビジネス向け",
+        "title": "Enategaと共に成長しましょう。",
+        "body": "店舗をより多くのお客様に近づけましょう。",
+        "action": "パートナーになる"
+      },
+      "rider": {
+        "eyebrow": "乗客向け",
+        "title": "Enategaの配車サービス。",
+        "body": "ご都合に合わせて配達しましょう。",
+        "action": "乗客になる"
+      }
+    },
+    "footer": {
+      "rights": "無断複写・転載を禁じます。"
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

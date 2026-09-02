@@ -1,11 +1,10 @@
 /* eslint-disable react/display-name */
 import React, { useRef, useContext, useLayoutEffect, useState, useEffect, useCallback } from 'react'
-import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Dimensions } from 'react-native'
+import { View, TouchableOpacity, Animated, StatusBar, Platform, RefreshControl, FlatList, Dimensions, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { SimpleLineIcons, AntDesign } from '@expo/vector-icons'
+import { SimpleLineIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useQuery, useMutation } from '@apollo/client'
 import { useCollapsibleSubHeader } from 'react-navigation-collapsible'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import gql from 'graphql-tag'
 import { useLocation } from '../../ui/hooks'
 import UserContext from '../../context/User'
@@ -19,7 +18,6 @@ import { theme } from '../../utils/themeColors'
 import navigationOptions from './navigationOptions'
 import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { LocationContext } from '../../context/Location'
-import { ActiveOrdersAndSections } from '../../components/Main/ActiveOrdersAndSections'
 import analytics from '../../utils/analytics'
 import { useTranslation } from 'react-i18next'
 import { FILTER_TYPE } from '../../utils/enums'
@@ -33,15 +31,16 @@ import Spinner from '../../components/Spinner/Spinner'
 import MainModalize from '../../components/Main/Modalize/MainModalize'
 import { useMemo } from 'react'
 import NewRestaurantCard from '../../components/Main/RestaurantCard/NewRestaurantCard'
-import CachedImage from '../../components/CachedImage'
 import { Modalize } from 'react-native-modalize'
 import Filters from '../../components/Filter/FilterSlider'
 import AppliedFilters from '../../components/Filter/AppliedFilters'
 import NetInfo from '@react-native-community/netinfo'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
-import Ripple from 'react-native-material-ripple'
 import useGeocoding from '../../ui/hooks/useGeocoding'
+import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+import CollectionCard from '../../components/CollectionCard/CollectionCard'
+import { SectionAction, SectionHeader, SkeletonBlock, useMultivendorTheme } from '../../ui/designSystem'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -70,6 +69,17 @@ export const FILTER_VALUES = {
     values: ['3+ Rating', '4+ Rating', '5 star Rating']
   }
 }
+
+const cloneFilterState = (filters = {}) =>
+  Object.keys(filters).reduce((acc, key) => {
+    const filter = filters[key] || {}
+    acc[key] = {
+      ...filter,
+      values: Array.isArray(filter.values) ? [...filter.values] : [],
+      selected: Array.isArray(filter.selected) ? [...filter.selected] : []
+    }
+    return acc
+  }, {})
 const { height: HEIGHT } = Dimensions.get('window')
 function Menu({ route, props }) {
   const Analytics = analytics()
@@ -80,21 +90,21 @@ function Menu({ route, props }) {
   const { t, i18n } = useTranslation()
   const { getAddress } = useGeocoding()
   const [busy, setBusy] = useState(false)
-  const { loadingOrders, isLoggedIn, profile } = useContext(UserContext)
+  const { loadingOrders, isLoggedIn, profile, cartCount } = useContext(UserContext)
   const { location, setLocation } = useContext(LocationContext)
-  const [filters, setFilters] = useState(FILTER_VALUES)
+  const [filters, setFilters] = useState(() => cloneFilterState(FILTER_VALUES))
   const [filterSectionApplied, setfilterSectionApplied] = useState(false)
-  const [appliedFilters, setAppliedFilters] = useState(FILTER_VALUES)
+  const [appliedFilters, setAppliedFilters] = useState(() => cloneFilterState(FILTER_VALUES))
   const [activeCollection, setActiveCollection] = useState()
   const [isConnected, setIsConnected] = useState(false)
   const modalRef = useRef(null)
   const filtersModalRef = useRef()
   const flatListRef = useRef(null)
   const onEndReachedDuringMomentum = useRef(false)
-  const [itemWidth, setItemWidth] = useState(0)
   const navigation = useNavigation()
   const routeData = useRoute()
   const themeContext = useContext(ThemeContext)
+  const { tokens } = useMultivendorTheme()
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -111,7 +121,8 @@ function Menu({ route, props }) {
 
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
+    ...theme[themeContext.ThemeValue],
+    ...tokens
   }
   const { getCurrentLocation } = useLocation()
 
@@ -141,6 +152,28 @@ function Menu({ route, props }) {
     onError
   })
 
+  // QUAL-012: Only offer the "Free Delivery" / "Accept Vouchers" filters when at
+  // least one restaurant in the current list actually has that flag. Otherwise
+  // selecting them would always clear the list (the backend can return these
+  // fields as false/null for every restaurant). This is self-healing: as soon as
+  // the backend serves restaurants with the flag set, the option reappears.
+  const availableOffers = useMemo(() => {
+    const list = allData || []
+    return FILTER_VALUES.Offers.values.filter((offer) => {
+      if (offer === 'Free Delivery') return list.some((r) => r?.freeDelivery)
+      if (offer === 'Accept Vouchers') return list.some((r) => r?.acceptVouchers)
+      return true // other offer types are unaffected
+    })
+  }, [allData])
+
+  const displayFilters = useMemo(
+    () => ({
+      ...filters,
+      Offers: { ...filters.Offers, values: availableOffers }
+    }),
+    [filters, availableOffers]
+  )
+
   const restaurantsCuisinsVariables = isShopType ? { latitude: location.latitude || null, longitude: location.longitude || null, shopType: collection } : {}
 
   console.log('restaurantsCuisinsVariables::', restaurantsCuisinsVariables)
@@ -161,12 +194,43 @@ function Menu({ route, props }) {
   const { onScroll /* Event handler */, containerPaddingTop /* number */, scrollIndicatorInsetTop /* number */ } = useCollapsibleSubHeader()
 
   const emptyViewDesc = selectedType === 'restaurant' ? t('noRestaurant') : t('noGrocery')
+  const menuPageTitle = heading
+    ? t(heading)
+    : routeData?.params?.menuTitle
+      ? t(routeData.params.menuTitle)
+      : t(
+          routeData?.name === 'Restaurants'
+            ? 'Restaurants'
+            : routeData?.name === 'Store'
+              ? 'All Stores'
+              : 'Restaurants'
+        )
+  const cuisinesHeaderTitle = activeCollection || routeData?.params?.collection || t('BrowseCuisines')
+  const restaurantSectionTitle = t(
+    heading || (
+      routeData?.name === 'Restaurants'
+        ? 'Restaurants'
+        : routeData?.name === 'Store'
+          ? 'All Stores'
+          : 'Restaurants'
+    )
+  )
+  const emptyCuisineTitle = activeCollection
+    ? `No ${activeCollection} ${selectedType === 'grocery' ? 'stores' : 'restaurants'} yet`
+    : !filterApplied
+      ? t('notAvailableinYourArea')
+      : t('noMatchingResults')
+  const emptyCuisineDescription = activeCollection
+    ? `Try another cuisine or clear the selection to explore more ${selectedType === 'grocery' ? 'stores' : 'restaurants'}.`
+    : !filterApplied
+      ? emptyViewDesc
+      : t('noMatchingResultsDesc')
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(currentTheme.newheaderColor)
+      StatusBar.setBackgroundColor(currentTheme.themeBackground)
     }
-    StatusBar.setBarStyle('dark-content')
+    StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
   })
   useEffect(() => {
     async function Track() {
@@ -185,11 +249,16 @@ function Menu({ route, props }) {
         icon: 'back',
         haveBackBtn: routeData?.name === 'Menu',
         onPressFilter: () => filtersModalRef?.current?.open(),
-        onPressMap: () =>
+        onPressMap: () => {
+          if (!isLoggedIn) {
+            FlashMessage({ message: t('mapLoginRequired') })
+            return
+          }
           navigation.navigate('MapSection', {
             location,
             restaurants: restaurantData
-          }),
+          })
+        },
         onPressBack: () => navigation.goBack()
       })
     )
@@ -209,8 +278,34 @@ function Menu({ route, props }) {
   useEffect(() => {
     if (collection) {
       setActiveCollection(collection)
+    } else {
+      setActiveCollection(null)
     }
   }, [collection, route])
+
+  useEffect(() => {
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+      if (routeData?.name !== 'Store' && routeData?.name !== 'Restaurants') return
+
+      const isStore = routeData?.name === 'Store'
+
+      setActiveCollection(null)
+      setfilterApplied(false)
+      setfilterSectionApplied(false)
+      setAppliedFilters(cloneFilterState(FILTER_VALUES))
+      setFilters(cloneFilterState(FILTER_VALUES))
+
+      navigation.setParams({
+        collection: null,
+        isShopType: false,
+        selectedType: isStore ? 'grocery' : 'restaurant',
+        queryType: isStore ? 'grocery' : 'restaurant',
+        menuTitle: null
+      })
+    })
+
+    return unsubscribeBlur
+  }, [navigation, routeData?.name])
 
   const onOpen = () => {
     const modal = modalRef.current
@@ -297,7 +392,26 @@ function Menu({ route, props }) {
     return allCuisines?.cuisines
   }, [allCuisines, isShopType, routeData, selectedType])
 
-  console.log('collectionData::', collectionData)
+  useEffect(() => {
+    if (!collection || !collectionData?.length) return
+
+    const normalizedCollection = collection.trim().toLowerCase()
+    const targetIndex = collectionData.findIndex(
+      (item) => item?.name?.trim().toLowerCase() === normalizedCollection
+    )
+    if (targetIndex < 0) return
+
+    setActiveCollection(collectionData[targetIndex].name)
+    const scrollTimer = setTimeout(() => {
+      flatListRef.current?.scrollToIndex({
+        index: targetIndex,
+        animated: true,
+        viewPosition: 0.5
+      })
+    }, 80)
+
+    return () => clearTimeout(scrollTimer)
+  }, [collection, collectionData])
 
   const setCurrentLocation = async () => {
     setBusy(true)
@@ -400,11 +514,18 @@ function Menu({ route, props }) {
       return (
         <View style={styles().emptyViewContainer}>
           <View style={styles(currentTheme).emptyViewBox}>
-            <TextDefault bold H4 center textColor={currentTheme.fontMainColor}>
-              {!filterApplied ? t('notAvailableinYourArea') : t('noMatchingResults')}
+            {activeCollection ? (
+              <View style={styles(currentTheme).emptyBadge}>
+                <TextDefault small bold textColor={currentTheme.main}>
+                  {cuisinesHeaderTitle}
+                </TextDefault>
+              </View>
+            ) : null}
+            <TextDefault bold H4 center textColor={currentTheme.fontMainColor} style={styles(currentTheme).emptyTitle}>
+              {emptyCuisineTitle}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontMainColor} center>
-              {!filterApplied ? emptyViewDesc : t('noMatchingResultsDesc')}
+            <TextDefault textColor={currentTheme.fontMainColor} center style={styles(currentTheme).emptyDescription}>
+              {emptyCuisineDescription}
             </TextDefault>
           </View>
         </View>
@@ -443,19 +564,26 @@ function Menu({ route, props }) {
 
   function loadingScreen() {
     return (
-      <View style={styles(currentTheme).screenBackground}>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
-        <Placeholder Animation={(props) => <Fade {...props} style={styles(currentTheme).placeHolderFadeColor} duration={600} />} style={styles(currentTheme).placeHolderContainer}>
-          <PlaceholderLine style={styles().height200} />
-          <PlaceholderLine />
-        </Placeholder>
+      <View style={[styles(currentTheme).screenBackground, { paddingHorizontal: scale(12), paddingTop: scale(12), gap: scale(14) }]}>
+        <SkeletonBlock width='42%' height={scale(24)} borderRadius={scale(7)} />
+        <View style={{ flexDirection: 'row', gap: scale(10), overflow: 'hidden' }}>
+          {[0, 1, 2, 3].map((item) => (
+            <View key={item} style={{ width: scale(92), gap: scale(7) }}>
+              <SkeletonBlock width={scale(92)} height={scale(92)} borderRadius={scale(12)} />
+              <SkeletonBlock width='78%' height={scale(12)} borderRadius={scale(6)} />
+            </View>
+          ))}
+        </View>
+        {[0, 1, 2].map((item) => (
+          <View key={item} style={{ borderRadius: scale(16), overflow: 'hidden', backgroundColor: tokens.colors.surface, borderWidth: StyleSheet.hairlineWidth, borderColor: tokens.colors.borderSubtle }}>
+            <SkeletonBlock height={scale(172)} borderRadius={0} />
+            <View style={{ padding: scale(12), gap: scale(10) }}>
+              <SkeletonBlock width='54%' height={scale(20)} borderRadius={scale(6)} />
+              <SkeletonBlock width='82%' height={scale(12)} borderRadius={scale(6)} />
+              <SkeletonBlock width='48%' height={scale(12)} borderRadius={scale(6)} />
+            </View>
+          </View>
+        ))}
       </View>
     )
   }
@@ -526,9 +654,10 @@ function Menu({ route, props }) {
   //   }
   // }
   const onPressCollection = (collection, index) => {
-    flatListRef.current.scrollToIndex({
+    flatListRef.current?.scrollToIndex({
       index: index,
-      animated: true
+      animated: true,
+      viewPosition: 0.5
     })
     if (activeCollection === collection.name) {
       // If the same collection is clicked again, deselect it
@@ -540,14 +669,9 @@ function Menu({ route, props }) {
     }
   }
 
-  const onItemLayout = (event) => {
-    const { width } = event.nativeEvent.layout
-    setItemWidth(width)
-  }
-
   const getItemLayout = (data, index) => ({
-    length: 108,
-    offset: 108 * index,
+    length: scale(96),
+    offset: scale(96) * index,
     index
   })
 
@@ -614,18 +738,20 @@ function Menu({ route, props }) {
   }, [activeCollection, allData, appliedFilters, buildVisibleRestaurantData, setRestaurantData])
 
   const applyFilters = (nextFilters = filters) => {
-    const filteredData = buildVisibleRestaurantData(allData, nextFilters, activeCollection)
-    const ratings = nextFilters.Rating
-    const sort = nextFilters.Sort
-    const offers = nextFilters.Offers
-    const cuisines = nextFilters.Cuisines
+    const normalizedFilters = cloneFilterState(nextFilters)
+    const filteredData = buildVisibleRestaurantData(allData, normalizedFilters, activeCollection)
+    const ratings = normalizedFilters.Rating
+    const sort = normalizedFilters.Sort
+    const offers = normalizedFilters.Offers
+    const cuisines = normalizedFilters.Cuisines
 
     // Set filtered data
     setRestaurantData(filteredData)
     filtersModalRef.current.close()
 
     // Update applied filters state
-    setAppliedFilters(nextFilters)
+    setAppliedFilters(normalizedFilters)
+    setFilters(normalizedFilters)
 
     // **Check if any filters are applied**
     const anyFilterSelected = !!activeCollection || ratings?.selected?.length > 0 || sort?.selected?.length > 0 || offers?.selected?.length > 0 || cuisines?.selected?.length > 0
@@ -643,75 +769,66 @@ function Menu({ route, props }) {
   if (isInitialLoading || mutationLoading || loadingOrders || (restaurantData === null && !error)) return loadingScreen()
 
   const menuHeader = (
-    <View>
-        <View style={[styles(currentTheme).header, { paddingHorizontal: 10, paddingVertical: 6 }]}>
-          <View>
-            <TextDefault bolder H2 isRTL>
-              {t(heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants')}
-            </TextDefault>
-            <TextDefault bold H5 isRTL>
-              {t('BrowseCuisines')}
-            </TextDefault>
-          </View>
-          <Ripple
-            style={styles(currentTheme).seeAllBtn}
-            activeOpacity={0.8}
-            onPress={() => {
-              const collectionType = selectedType === 'grocery' ? 'Store' : 'Restaurants'
-              navigation.navigate('Collection', {
-                collectionType,
-                title: t('BrowseCuisines'),
-                data: collectionData,
-                showHeader: false
+    <View style={styles(tokens).menuHeader}>
+      <SectionHeader
+        style={styles(tokens).menuSectionHeader}
+        title={menuPageTitle}
+        description={cuisinesHeaderTitle}
+        action={<SectionAction
+          label={t('SeeAll')}
+          onPress={() => {
+            const collectionType = selectedType === 'grocery' ? 'Store' : 'Restaurants'
+            navigation.navigate('Collection', {
+              collectionType,
+              title: t('BrowseCuisines'),
+              data: collectionData,
+              showHeader: true
+            })
+          }}
+        />}
+      />
+      <View style={styles(tokens).collectionRail}>
+        <FlatList
+          ref={flatListRef}
+          data={collectionData ?? []}
+          renderItem={({ item, index }) => (
+            <CollectionCard
+              onPress={() => onPressCollection(item, index)}
+              image={item?.image}
+              name={item?.name}
+              selected={activeCollection === item.name}
+            />
+          )}
+          initialScrollIndex={0}
+          keyExtractor={(item) => item?._id}
+          contentContainerStyle={styles(tokens).collectionContainer}
+          ItemSeparatorComponent={() => <View style={styles(tokens).collectionSeparator} />}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          inverted={currentTheme?.isRTL}
+          getItemLayout={getItemLayout}
+          onScrollToIndexFailed={({ index }) => {
+            setTimeout(() => {
+              flatListRef.current?.scrollToIndex({
+                index,
+                animated: true,
+                viewPosition: 0.5
               })
-            }}
-          >
-            <TextDefault H5 bolder textColor={currentTheme.main}>
-              {t('SeeAll')}
-            </TextDefault>
-          </Ripple>
-        </View>
-        <View style={{ paddingLeft: 10, paddingRight: 10, paddingHorizontal: '5' }}>
-          <FlatList
-            ref={flatListRef}
-            data={collectionData ?? []}
-            renderItem={({ item, index }) => {
-              return (
-                <Ripple
-                  activeOpacity={0.8}
-                  onPress={() => onPressCollection(item, index)}
-                  style={[
-                    styles(currentTheme).collectionCard,
-                    activeCollection === item.name && {
-                      backgroundColor: currentTheme.newButtonBackground
-                    }
-                  ]}
-                >
-                  <View style={[styles().brandImgContainer]}>
-                    <View>
-                      <CachedImage source={{ uri: item?.image }} style={styles().collectionImage} resizeMode='cover' />
-                    </View>
-                    <TextDefault Normal bolder style={{ padding: 4 }} textColor={activeCollection === item.name ? currentTheme.main : currentTheme.gray700} isRTL>
-                      {item.name}
-                    </TextDefault>
-                  </View>
-                </Ripple>
-              )
-            }}
-            initialScrollIndex={0}
-            keyExtractor={(item) => item?._id}
-            contentContainerStyle={styles().collectionContainer}
-            // showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            inverted={currentTheme?.isRTL ? true : false}
-            getItemLayout={getItemLayout}
+            }, 120)
+          }}
+        />
+      </View>
+
+      {restaurantData?.length === 0
+        ? null
+        : <SectionHeader
+            style={styles(tokens).restaurantSectionHeader}
+            title={restaurantSectionTitle}
+            description={t(subHeading || '')}
           />
-        </View>
+      }
 
-        <View style={{ backgroundColor: currentTheme?.toggler }}>{restaurantData?.length === 0 ? null : <ActiveOrdersAndSections menuPageHeading={heading ? heading : routeData?.name === 'Restaurants' ? 'Restaurants' : routeData?.name === 'Store' ? 'All Stores' : 'Restaurants'} subHeading={subHeading ? subHeading : ''} />}</View>
-
-        {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
+      {filterSectionApplied && <AppliedFilters filters={appliedFilters} />}
     </View>
   )
 
@@ -724,8 +841,7 @@ function Menu({ route, props }) {
         contentContainerStyle={{
           paddingTop: Platform.OS === 'ios' ? 0 : containerPaddingTop,
           paddingBottom: HEIGHT * 0.34,
-          paddingHorizontal: 15,
-          gap: 16
+          paddingHorizontal: tokens.spacing.md
         }}
         contentOffset={{ y: -containerPaddingTop }}
         onScroll={onScroll}
@@ -748,6 +864,7 @@ function Menu({ route, props }) {
         }
         data={renderedRestaurants}
         renderItem={renderRestaurantItem}
+        ItemSeparatorComponent={() => <View style={styles(tokens).restaurantSeparator} />}
         onEndReached={() => {
           if (
             onEndReachedDuringMomentum.current ||
@@ -778,6 +895,25 @@ function Menu({ route, props }) {
         windowSize={7}
         removeClippedSubviews
       />
+      {cartCount > 0 && (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          accessibilityRole='button'
+          accessibilityLabel={t('viewCart')}
+          style={[
+            styles(currentTheme).floatingCart,
+            { [currentTheme.isRTL ? 'left' : 'right']: scale(20) }
+          ]}
+          onPress={() => navigation.navigate('Cart')}
+        >
+          <MaterialCommunityIcons name='cart-outline' size={scale(26)} color={currentTheme.fontWhite} />
+          <View style={styles(currentTheme).cartBadge}>
+            <TextDefault small bolder center textColor={currentTheme.fontWhite}>
+              {cartCount}
+            </TextDefault>
+          </View>
+        </TouchableOpacity>
+      )}
       <MainModalize modalRef={modalRef} currentTheme={currentTheme} isLoggedIn={isLoggedIn} addressIcons={addressIcons} modalHeader={modalHeader} modalFooter={modalFooter} setAddressLocation={setAddressLocation} profile={profile} location={location} />
       <Modalize
         ref={filtersModalRef}
@@ -796,7 +932,7 @@ function Menu({ route, props }) {
         }}
       >
         <Filters
-          filters={filters}
+          filters={displayFilters}
           setFilters={setFilters}
           applyFilters={applyFilters}
           onClose={() => {

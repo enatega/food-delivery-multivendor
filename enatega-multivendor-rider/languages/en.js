@@ -225,6 +225,15 @@ export const en = {
     "Enable Location For Better Experience",
   "We need your location to find nearby restaurants, ensure accurate delivery, and provide the best service possible":
     "We need your location to find nearby restaurants, ensure accurate delivery, and provide the best service possible",
+  "Location access for deliveries": "Location access for deliveries",
+  "Enatega Multivendor Rider uses your precise location while you use the app to show your current position and support pickup and delivery navigation.":
+    "Enatega Multivendor Rider uses your precise location while you use the app to show your current position and support pickup and delivery navigation.",
+  "Allow background location for live delivery tracking":
+    "Allow background location for live delivery tracking",
+  "Enatega Multivendor Rider collects and transmits your precise location to the delivery server to enable live delivery tracking for customers and dispatchers during an active delivery, even when the app is not in use. Location sharing starts only after you accept a delivery and stops when the delivery ends or you log out.":
+    "Enatega Multivendor Rider collects and transmits your precise location to the delivery server to enable live delivery tracking for customers and dispatchers during an active delivery, even when the app is not in use. Location sharing starts only after you accept a delivery and stops when the delivery ends or you log out.",
+  "Allow delivery tracking": "Allow delivery tracking",
+  "Not now": "Not now",
   Logout: "Logout",
   Monday: "Monday",
   Tuesday: "Tuesday",
@@ -314,8 +323,6 @@ export const en = {
   "Please select an end date": "Please select an end date",
   "Start date cannot be after end date": "Start date cannot be after end date",
   "Please log in to view your earnings": "Please log in to view your earnings",
-
-
   // Profile Forms
   "Unable to update availability": "Unable to update availability",
   "rider name": "Rider Name",
@@ -327,5 +334,35 @@ export const en = {
   "Time slot overlaps with another existing slot": "Time slot overlaps with another existing slot",
   "Account holder name": "Account holder name",
   "Tips": "Tips",
-  "Account not found, Please create your account." : "Account not found, Please create your account."
+  "Account not found, Please create your account." : "Account not found, Please create your account.",
+  "Delivered Orders": "Delivered Orders",
+  "Processing Orders": "Processing Orders",
+  "Chat": "Chat",
+  "Unable to connect. Please check your internet and try again.": "Unable to connect. Please check your internet and try again.",
+  "Invalid username or password": "Invalid username or password",
+  "Unable to connect. Please try again.": "Unable to connect. Please try again.",
+  "Work Schedule": "Work Schedule",
+  "Uploading image...": "Uploading image...",
+  "Chats Here": "Chats Here",
+  "Please Wait": "Please Wait",
+  "Are you sure you want to logout?": "Are you sure you want to logout?",
+  "User ID is missing": "User ID is missing",
+  "Navigation Error": "Navigation Error",
+  "Rider location is unavailable.": "Rider location is unavailable.",
+  "Restaurant location is unavailable.": "Restaurant location is unavailable.",
+  "Delivery location is unavailable.": "Delivery location is unavailable.",
+  "Could not open maps application": "Could not open maps application",
+  "An error occurred when trying to open maps": "An error occurred when trying to open maps",
+  "Map not loaded.": "Map not loaded.",
+  "Location data is unavailable.": "Location data is unavailable.",
+  "Pickup Address": "Pickup Address",
+  "Confirm you have collected": "Confirm you have collected",
+  "Mark as Delivered?": "Mark as Delivered?",
+  "This completes the order and cannot be undone.": "This completes the order and cannot be undone.",
+  "Please try again later": "Please try again later",
+  "has overlapping slots": "has overlapping slots",
+  "Loading...": "Loading...",
+  "Oops!": "Oops!",
+  "Multi Vendor": "Multi Vendor",
+  "Single Vendor": "Single Vendor",
 };

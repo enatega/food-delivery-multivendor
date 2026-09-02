@@ -10,8 +10,11 @@ import {
 } from "@/lib/api/graphql";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { setupFirebase } from "@/lib/config/firebase";
+import { getAccessToken } from "@/lib/utils/methods/auth";
+import { modeStorage, useAppMode } from "@/lib/mode";
 
 export default function NotificationInitializer() {
+  const { mode } = useAppMode();
   const [saveNotify] = useMutation(saveNotificationTokenWeb);
   const [mutatePrefs] = useMutation(updateNotificationStatus);
 
@@ -37,8 +40,8 @@ export default function NotificationInitializer() {
     };
 
     const initNotifications = async () => {
-      const localToken = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId");
+      const localToken = getAccessToken(mode);
+      const userId = modeStorage.get("userId", mode);
     
       if (
         Notification.permission === "default" &&
@@ -65,6 +68,7 @@ export default function NotificationInitializer() {
           });
           
           if (fcmToken) {
+            modeStorage.set("messaging-token", fcmToken);
             await saveNotify({ variables: { token: fcmToken } });
           } else {
             console.warn("❌ Failed to get FCM token");
@@ -86,6 +90,7 @@ export default function NotificationInitializer() {
     FIREBASE_VAPID_KEY,
     mutatePrefs,
     saveNotify,
+    mode,
   ]);
 
   return null;

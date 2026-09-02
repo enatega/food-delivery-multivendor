@@ -2,8 +2,10 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -46,7 +48,7 @@ export default function AppThemeProvidor({
   );
 
   // Methods
-  async function getCurrentAppTheme() {
+  const getCurrentAppTheme = useCallback(async () => {
     const systemTheme = Appearance.getColorScheme();
     const localTheme = await AsyncStorage.getItem("app_theme");
     const theme = localTheme || systemTheme || "dark";
@@ -59,20 +61,20 @@ export default function AppThemeProvidor({
           ? Colors.dark
           : Colors.light,
     );
-  }
+  }, []);
 
   // Handlers
-  const toggleTheme = (val: app_theme) => {
+  const toggleTheme = useCallback((val: app_theme) => {
     const updatedVal = val === "light" ? "dark" : "light";
     setAppTheme(Colors[updatedVal] ?? Colors.light);
     setCurrentTheme(updatedVal);
     // Appearance.setColorScheme(val === "light" ? "dark" : "light");
-    AsyncStorage.setItem("app_theme", updatedVal);
-  };
+    void AsyncStorage.setItem("app_theme", updatedVal);
+  }, []);
 
   useEffect(() => {
     getCurrentAppTheme();
-  }, [colorScheme]);
+  }, [colorScheme, getCurrentAppTheme]);
 
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
@@ -83,12 +85,13 @@ export default function AppThemeProvidor({
       subscription.remove();
     };
   }, []);
+  const value = useMemo(
+    () => ({ toggleTheme, currentTheme, appTheme }),
+    [appTheme, currentTheme, toggleTheme],
+  );
+
   return (
-    <ThemeContext.Provider
-      value={{ toggleTheme, currentTheme: currentTheme, appTheme }}
-    >
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 

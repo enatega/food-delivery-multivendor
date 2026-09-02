@@ -67,14 +67,16 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     buttonBackground: {
-      width: '100%',
+      width: '90%',
+      alignSelf: 'center',
       backgroundColor: props !== null ? props?.newFontcolor : '#000',
-      borderRadius: scale(30),
-      height: getResponsiveSize(height * 0.07)
+      borderRadius: scale(28),
+      height: height * 0.07
     },
     appleBtn: {
-      width: '100%',
-      height: getResponsiveSize(height * 0.07)
+      width: '90%',
+      alignSelf: 'center',
+      height: height * 0.07
     },
 
     safeAreaViewStyles: {

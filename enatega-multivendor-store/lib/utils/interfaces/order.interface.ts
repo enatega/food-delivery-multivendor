@@ -116,6 +116,16 @@ export interface IOrder {
   review?: Review;
   zone: Zone;
   completionTime?: string;
+  eta?: {
+    phase?: string;
+    source?: string;
+    readyAt?: string;
+    estimatedArrivalAt?: string;
+    windowStartAt?: string;
+    windowEndAt?: string;
+    calculatedAt?: string;
+    lastLocationAt?: string;
+  };
   orderDate: string;
   expectedTime?: string;
   preparationTime?: string;

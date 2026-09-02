@@ -7,21 +7,28 @@ import styles from './styles'
 import ShimmerImage from '../../ShimmerImage/ShimmerImage'
 import { useTranslation } from 'react-i18next'
 import { calculateDiscountedPrice } from '../../../utils/calculateDiscountedPrice'
+import { IMAGE_LINK } from '../../../utils/constants'
 
 const FoodItem = ({ item, currentTheme, configuration, onPress }) => {
   const variation = item.variations?.[0]
   const price = variation?.price || 0
   const discountedPrice = variation?.discounted
   const isOutOfStock = item.isOutOfStock === true
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const withoutDiscountPrice = calculateDiscountedPrice(price, discountedPrice)
-
+  const imageUrl =
+    item?.image && String(item.image).trim() !== '' ? item.image : IMAGE_LINK
 
   return (
     <TouchableOpacity style={[styles(currentTheme).foodItemContainer, isOutOfStock && styles(currentTheme).disabledItem]} activeOpacity={0.8} disabled={isOutOfStock} onPress={onPress} >
       <View style={styles(currentTheme).imageContainer}>
-        <ShimmerImage imageUrl={item.image} style={[styles(currentTheme).foodImage, isOutOfStock && styles(currentTheme).grayedImage]} resizeMode='cover' />
+        <ShimmerImage
+          imageUrl={imageUrl}
+          style={[styles(currentTheme).foodImage, isOutOfStock && styles(currentTheme).grayedImage]}
+          resizeMode='cover'
+          defaultSource={require('../../../assets/images/food_placeholder.png')}
+        />
         {isOutOfStock && (
           <View style={styles(currentTheme).outOfStockRibbon}>
             <TextDefault style={styles(currentTheme).outOfStockText} small bold>

@@ -1,18 +1,17 @@
-import { verticalScale, scale } from '../../../utils/scaling'
-import { alignment } from '../../../utils/alignment'
+import { scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
-import { Dimensions } from 'react-native'
-import { subtleCardShadow } from '../../../utils/cardShadows'
-const { width } = Dimensions.get('window')
 
 const styles = (props = null) =>
   StyleSheet.create({
+    wrapper: {
+      paddingTop: scale(30),
+      marginBottom: scale(16)
+    },
     banner: {
       flex: 1,
-      height: scale(200),
-      ...subtleCardShadow,
+      height: scale(190),
       margin: 0,
-      borderRadius: 8,
+      borderRadius: 14,
       overflow: 'hidden',
       backgroundColor: props?.themeBackground ?? '#fff',
       paddingHorizontal: scale(12)
@@ -24,7 +23,7 @@ const styles = (props = null) =>
       flex: 1,
       justifyContent: 'center',
       overflow: 'hidden',
-      borderRadius: 18,
+      borderRadius: 14,
       objectFit: 'cover'
     },
     container: {
@@ -34,24 +33,24 @@ const styles = (props = null) =>
       justifyContent: 'flex-end',
       paddingVertical: scale(20),
       paddingHorizontal: scale(18),
-      borderRadius: 18
+      borderRadius: 14
     },
     pagination: {
       position: 'relative',
       gap: -8
     },
     paginationItem: {
-      height: 10,
-      width: 10
+      height: 6,
+      width: 6
     },
     imgs1:
     {
-      overflow:"hidden",
-      resizeMode: "cover",
+      overflow: 'hidden',
+      resizeMode: 'cover',
       alignSelf: 'center',
-      width: "100%",
-      height:"100%",
-      borderRadius: 18
+      width: '100%',
+      height: '100%',
+      borderRadius: 14
     },
     csd:
     {
@@ -59,7 +58,7 @@ const styles = (props = null) =>
       justifyContent: 'center',
       alignItems: 'center',
       width: '100%',
-      height: "100%",
+      height: '100%',
       paddingHorizontal: 0,
       backgroundColor: 'transparent'
     }

@@ -3,10 +3,11 @@ import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
 
 // Core
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // Constants
-import { STORE_TOKEN } from "@/lib/utils/constants";
+import { getStoreId, removeItem } from "@/lib/services";
+import { useStoreMode } from "@/lib/context/global/store-mode.context";
 
 // Interfaces
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
@@ -29,13 +30,18 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 }) => {
   // States
   const [isSelected, setIsSelected] = useState("");
+  const [isInitialized, setIsInitialized] = useState(false);
   const [token, setToken] = useState<string>("");
-  
-  const setTokenAsync = async (token: string) => {
-    await SecureStore.setItemAsync(STORE_TOKEN, token);
-    client.clearStore();
-    setToken(token);
-  };
+  const { storeIdKey, tokenKey } = useStoreMode();
+
+  const setTokenAsync = useCallback(
+    async (token: string) => {
+      await SecureStore.setItemAsync(tokenKey, token);
+      await client.clearStore();
+      setToken(token);
+    },
+    [client, tokenKey],
+  );
 
   // Handlers
   const handleSetCurrentLanguage = async () => {
@@ -66,13 +72,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     }
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
-      client.stop();
       await Promise.all([
         client.clearStore(),
-        SecureStore.deleteItemAsync(STORE_TOKEN),
-        AsyncStorage.removeItem("store-id"),
+        SecureStore.deleteItemAsync(tokenKey),
+        removeItem(storeIdKey),
       ]);
 
       setToken("");
@@ -80,12 +85,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     } catch {
       return;
     }
-  };
+  }, [client, storeIdKey, tokenKey]);
 
-  async function checkAuth() {
+  const checkAuth = useCallback(async () => {
     try {
-      const token = await SecureStore.getItemAsync(STORE_TOKEN);
-      const storeId = await AsyncStorage.getItem("store-id");
+      const token = await SecureStore.getItemAsync(tokenKey);
+      const storeId = await getStoreId(storeIdKey);
 
       if (!storeId || !token) {
         return await logout();
@@ -93,8 +98,10 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       setToken(token);
     } catch {
       await logout();
+    } finally {
+      setIsInitialized(true);
     }
-  }
+  }, [logout, storeIdKey, tokenKey]);
 
   // UseEffects
   useEffect(() => {
@@ -103,7 +110,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [checkAuth]);
 
   useEffect(() => {
     if (__DEV__) {
@@ -112,13 +119,17 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     }
   }, []);
 
-  const values: IAuthContext = {
-    token: token ?? "",
-    logout,
-    setTokenAsync,
-    isSelected,
-    setIsSelected,
-  };
+  const values = useMemo<IAuthContext>(
+    () => ({
+      isInitialized,
+      token: token ?? "",
+      logout,
+      setTokenAsync,
+      isSelected,
+      setIsSelected,
+    }),
+    [isInitialized, isSelected, logout, setTokenAsync, token],
+  );
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

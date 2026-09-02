@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useContext, useLayoutEffect, useCallback } from 'react'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { Ionicons, FontAwesome5, Entypo } from '@expo/vector-icons'
@@ -46,22 +46,22 @@ export const useChatScreen = ({ navigation, route }) => {
   )
   const [uploading, setUploading] = useState(false)
 
+  const mapChatMessage = useCallback((message) => ({
+    _id: message.id,
+    text: message.message || '',
+    image: message.image || undefined,
+    createdAt: message.createdAt ? new Date(message.createdAt) : new Date(),
+    user: {
+      _id: message.user.id,
+      name: message.user.name
+    }
+  }), [])
+
   useEffect(() => {
     if (chatData) {
-      setMessages(
-        chatData.chat.map(message => ({
-          _id: message.id,
-          text: message.message,
-          image: message.image || undefined,
-          createdAt: message.createdAt,
-          user: {
-            _id: message.user.id,
-            name: message.user.name
-          }
-        }))
-      )
+      setMessages(chatData.chat.map(mapChatMessage))
     }
-  }, [chatData])
+  }, [chatData, mapChatMessage])
 
   function onCompleted({ sendChatMessage: messageResult }) {
     if (!messageResult?.success) {
@@ -141,7 +141,7 @@ export const useChatScreen = ({ navigation, route }) => {
       }
     })
     return unsubscribe
-  })
+  }, [orderId, subscribeToMessages])
   const onSend = () => {
     if (!inputMessage?.trim()) return
 
@@ -175,11 +175,12 @@ export const useChatScreen = ({ navigation, route }) => {
   }
 
   // Optimistically add an image-only message, then persist it.
-  const sendImageMessage = (imageUrl) => {
+  const sendImageMessage = (imageUrl, localPreviewUri) => {
     const newMessage = {
       _id: Date.now().toString(),
       text: '',
       image: imageUrl,
+      localImage: localPreviewUri || undefined,
       createdAt: new Date(),
       user: {
         _id: profile._id,
@@ -231,7 +232,7 @@ export const useChatScreen = ({ navigation, route }) => {
       const { data } = await uploadImage({ variables: { image: `data:image/jpeg;base64,${asset.base64}` } })
       const imageUrl = data?.uploadImageToS3?.imageUrl
       if (!imageUrl) throw new Error(t('imageUploadFailed'))
-      sendImageMessage(imageUrl)
+      sendImageMessage(imageUrl, asset.uri)
     } catch (error) {
       Alert.alert('Error', error.message)
     } finally {

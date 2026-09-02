@@ -15,9 +15,12 @@ import * as AppleAuthentication from 'expo-apple-authentication'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import * as Linking from 'expo-linking'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
-import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
 import { useTranslation } from 'react-i18next'
+import { useAppMode } from '../../mode/AppModeContext'
+import { getModeHomeRoute } from '../../mode/navigation'
+import { APP_MODES } from '../../mode/constants'
+import { LOGIN_SINGLE_VENDOR } from '../../singlevendor/apollo/mutations'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
 import {
@@ -34,10 +37,12 @@ const LOGIN = gql`
 `
 
 export const useCreateAccount = () => {
-  const Analytics = analytics()
   const navigation = useNavigation()
+  const { mode } = useAppMode()
+  const loginDocument =
+    mode === APP_MODES.SINGLE ? LOGIN_SINGLE_VENDOR : LOGIN
   const { t, i18n } = useTranslation()
-  const [mutate] = useMutation(LOGIN, { onCompleted, onError })
+  const [mutate] = useMutation(loginDocument, { onCompleted, onError })
   const [enableApple, setEnableApple] = useState(false)
   const [loginButton, loginButtonSetter] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -115,7 +120,7 @@ export const useCreateAccount = () => {
     }
   }, [response])
 
-  const fetchUserInfo = async ({ accessToken, idToken }) => {
+  const fetchUserInfo = async({ accessToken, idToken }) => {
     logStep('fetchUserInfo: start', { hasAccessToken: !!accessToken })
     try {
       let user = {}
@@ -146,7 +151,7 @@ export const useCreateAccount = () => {
         idToken,
         password: '',
         name: user.name,
-        picture: user.photo || '',
+        picture: user.picture || user.photo || '',
         type: 'google'
       }
 
@@ -161,7 +166,7 @@ export const useCreateAccount = () => {
     }
   }
 
-  const signIn = async () => {
+  const signIn = async() => {
     logStep('signIn: tapped', {
       hasIosClientId: !!IOS_CLIENT_ID_GOOGLE,
       hasExpoClientId: !!EXPO_CLIENT_ID,
@@ -207,18 +212,16 @@ export const useCreateAccount = () => {
     navigation.navigate('Register')
   }
 
-  const navigateToPhone = () => {
+  const navigateToPhone = (name = '') => {
     navigation.navigate('PhoneNumber', {
-      name: googleUser,
+      name: name || googleUser,
       phone: ''
     })
   }
 
   const navigateToMain = () => {
-    navigation.navigate({
-      name: 'Main',
-      merge: true
-    })
+    const route = getModeHomeRoute(mode)
+    navigation.navigate(route.name, route.params)
   }
 
   async function mutateLogin(user) {
@@ -303,15 +306,27 @@ export const useCreateAccount = () => {
     }
 
     try {
-      setTokenAsync(data.login.token)
+      const needsPhone = data?.login?.phone === ''
+      const needsName =
+        loginButton === 'Apple' &&
+        !data?.login?.name?.trim()
+
+      await setTokenAsync(data.login.token)
       FlashMessage({ message: 'Successfully logged in' })
 
-      if (data?.login?.phone === '') {
+      if (needsName) {
+        logStep('onCompleted: Apple account has no persisted name → request name')
+        navigation.navigate(mode === APP_MODES.SINGLE ? 'EditNameSingleVendor' : 'EditName', {
+          name: '',
+          onboarding: true,
+          needsPhone
+        })
+      } else if (needsPhone) {
         logStep('onCompleted: no phone on account → navigate to PhoneNumber')
-        navigateToPhone()
+        navigateToPhone(data?.login?.name)
       } else {
-        logStep('onCompleted: navigate to Main')
         navigateToMain()
+        logStep('onCompleted: navigate to Main')
       }
     } finally {
       setLoading(false)
@@ -384,6 +399,7 @@ export const useCreateAccount = () => {
     themeContext,
     mutateLogin,
     currentTheme,
+    statusBarBackgroundColor: currentTheme.themeBackground,
     navigateToLogin,
     navigateToRegister,
     openTerms,

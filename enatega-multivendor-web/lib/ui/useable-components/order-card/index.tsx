@@ -2,7 +2,7 @@
 
 import { useCallback, useState, type FC } from "react";
 import { Rating } from "primereact/rating";
-import Image from '@/lib/ui/useable-components/safe-image';
+import Image from "@/lib/ui/useable-components/safe-image";
 import { twMerge } from "tailwind-merge";
 import {
   IOrder,
@@ -16,6 +16,8 @@ import CustomDialog from "../custom-dialog";
 import useUser from "@/lib/hooks/useUser";
 import { CartItem } from "@/lib/context/User/User.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
+import { formatEtaWindow } from "@/lib/utils/methods/order-eta";
+import { useAppMode } from "@/lib/mode";
 
 const OrderCard: FC<IOrderCardProps> = ({
   order,
@@ -27,6 +29,25 @@ const OrderCard: FC<IOrderCardProps> = ({
 }) => {
   const t = useTranslations();
   const { CURRENCY_SYMBOL } = useConfig();
+  const { isSingleVendor } = useAppMode();
+  const etaWindow = formatEtaWindow(order.eta);
+  const activeStatusText = (() => {
+    if (order.isPickedUp) return "Collection order";
+    switch (order.orderStatus) {
+      case "PENDING":
+        return "Waiting for store confirmation";
+      case "ACCEPTED":
+        return etaWindow ? `Preparing · ${etaWindow}` : "Preparing your order";
+      case "ASSIGNED":
+        return etaWindow ? `Rider assigned · ${etaWindow}` : "Rider assigned";
+      case "PICKED":
+        return etaWindow
+          ? `On the way · ${etaWindow}`
+          : "Your order is on the way";
+      default:
+        return null;
+    }
+  })();
 
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -35,7 +56,7 @@ const OrderCard: FC<IOrderCardProps> = ({
   const [pendingReorderItems, setPendingReorderItems] = useState<any[]>([]);
 
   const handleTrackOrder = (order: IOrder) => {
-    handleTrackOrderClicked?.(order?._id);
+    handleTrackOrderClicked?.(isSingleVendor ? order?.orderId : order?._id);
   };
 
   const { cart, setCart, transformCartWithFoodInfo, setCartRestaurant } =
@@ -280,6 +301,7 @@ const OrderCard: FC<IOrderCardProps> = ({
             {type === "active" ? (
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400  mt-1">
                 <i className="fa-solid fa-clock text-gray-400 dark:text-gray-500"></i>
+                {activeStatusText && <span>{activeStatusText}</span>}
               </div>
             ) : (
               <>

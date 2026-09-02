@@ -27,19 +27,22 @@ const styles = (props = null) =>
       width: '30%'
     },
     screenBackground: {
+      flex: 1,
       backgroundColor: props != null ? props.themeBackground : '#FFF'
     },
     mainContainer: {
       flex: 1,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent'
-      //...alignment.PTsmall
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'transparent'
+    },
+    cartContent: {
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      paddingTop: props?.spacing?.sm ?? scale(8),
+      paddingBottom: scale(118),
+      gap: props?.spacing?.md ?? scale(12)
     },
     dealContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      borderRadius: scale(10),
-      ...alignment.PLsmall,
-      ...alignment.PRsmall
+      backgroundColor: 'transparent'
     },
     totalOrder: {
       marginBottom: scale(12)
@@ -53,7 +56,7 @@ const styles = (props = null) =>
     },
     itemContainer: {
       width: '100%',
-      backgroundColor: props !== null ? props.backgroundColor : 'transparent'
+      backgroundColor: 'transparent'
     },
     priceContainer: {
       width: '100%',
@@ -94,8 +97,8 @@ const styles = (props = null) =>
       borderBottomWidth: StyleSheet.hairlineWidth
     },
     suggestedItems: {
-      paddingBottom: scale(30),
-      ...alignment.PLlarge
+      paddingTop: scale(6),
+      paddingBottom: scale(24)
     },
     suggestItemDesciption: {
       ...alignment.PRlarge
@@ -137,10 +140,11 @@ const styles = (props = null) =>
     },
     totalBillContainer: {
       width: '100%',
-      height: '20%',
-      backgroundColor: props !== null ? props.newheaderColor : '#90E36D',
-      ...alignment.PLlarge,
-      ...alignment.PRlarge
+      backgroundColor: props?.colors?.surface ?? '#FFFFFF',
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colors?.borderSubtle ?? 'rgba(24, 24, 27, 0.10)',
+      paddingHorizontal: props?.spacing?.lg ?? scale(16),
+      paddingBottom: props?.spacing?.lg ?? scale(16)
     },
     cartAmount: {
       width: '50%'
@@ -149,7 +153,8 @@ const styles = (props = null) =>
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingTop: scale(28)
+      paddingTop: props?.spacing?.md ?? scale(12),
+      gap: props?.spacing?.md ?? scale(12)
     },
     button: {
       backgroundColor: '#111827',
@@ -158,6 +163,10 @@ const styles = (props = null) =>
       width: scale(140),
       height: scale(40),
       borderRadius: 40
+    },
+    checkoutAction: {
+      flex: 1,
+      maxWidth: scale(180)
     },
     subContainerImage: {
       flex: 1,
@@ -239,7 +248,7 @@ const styles = (props = null) =>
       borderRadius: scale(10),
       backgroundColor: props !== null ? props.main : 'transparent',
       width: '22%',
-      //borderWidth: 2,
+      // borderWidth: 2,
       justifyContent: 'center',
       color: props !== null ? props.tagColor : 'transparent',
       borderColor: props !== null ? props.tagColor : 'transparent',
@@ -318,6 +327,54 @@ const styles = (props = null) =>
       fontSize: 20,
       fontWeight: '500',
       color: props != null ? props.newFontcolor : '#E5E7EB'
+    },
+    buttonDisabled: {
+      backgroundColor: '#374151',
+      opacity: 0.55
+    },
+    minOrderMessageContainer: {
+      width: '100%',
+      alignItems: 'center',
+      backgroundColor: props !== null ? props.themeBackground : '#FFF',
+      paddingBottom: verticalScale(10),
+      paddingTop: verticalScale(10)
+    },
+    minOrderMessagePill: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      alignSelf: 'center',
+      maxWidth: '96%',
+      backgroundColor: props !== null ? props.newBorderColor : '#F3F4F6',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props !== null ? props.red600 : '#DC2626',
+      borderRadius: scale(20),
+      paddingVertical: verticalScale(6),
+      paddingHorizontal: scale(14)
+    },
+    minOrderMessageText: {
+      flexShrink: 1,
+      textAlign: 'center',
+      marginLeft: scale(6)
+    },
+    cartSkeleton: {
+      flex: 1,
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      paddingTop: props?.spacing?.lg ?? scale(16),
+      gap: props?.spacing?.md ?? scale(12),
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#000'
+    },
+    cartSkeletonRow: {
+      minHeight: scale(88),
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: props?.spacing?.md ?? scale(12),
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.22)'
+    },
+    cartSkeletonLines: {
+      flex: 1,
+      gap: props?.spacing?.sm ?? scale(8)
     }
   })
 export default styles

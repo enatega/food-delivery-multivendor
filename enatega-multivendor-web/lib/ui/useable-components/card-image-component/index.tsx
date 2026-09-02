@@ -5,9 +5,9 @@ import { twMerge } from "tailwind-merge";
 const ImageComponent: React.FC<IImageComponentProps> = ({ src, alt, className }) => {
     return (
       <Image
-        unoptimized
         width={40}
         height={40}
+        sizes="40px"
         src={src || "https://placehold.co/600x400"}
         alt={alt || "N/A"}
         className={twMerge(

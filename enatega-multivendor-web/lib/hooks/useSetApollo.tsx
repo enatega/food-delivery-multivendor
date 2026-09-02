@@ -30,36 +30,43 @@ import {
   storeMetricsToken,
   getMetricsToken,
   shouldRefreshToken,
-} from '../utils/methods/security';
-import { METRICS_GENERAL } from '../api/graphql/mutations/metrics';
-import { print } from 'graphql';
-import { getAccessToken, invalidateClientSession } from '../utils/methods/auth';
+} from "../utils/methods/security";
+import { METRICS_GENERAL } from "../api/graphql/mutations/metrics";
+import { print } from "graphql";
+import { getAccessToken, invalidateClientSession } from "../utils/methods/auth";
+import { getModeEnvironment, useAppMode, type AppMode } from "@/lib/mode";
 
-let isRefreshing = false;
-let refreshPromise: Promise<string | null> | null = null;
+const refreshPromises = new Map<AppMode, Promise<string | null>>();
 let isAuthRedirecting = false;
 
-function handleInvalidSession(): void {
+function getOperationMode(
+  operation: Operation,
+  fallbackMode: AppMode,
+): AppMode {
+  return operation.getContext().appMode ?? fallbackMode;
+}
+
+function handleInvalidSession(mode: AppMode): void {
   if (typeof window === "undefined" || isAuthRedirecting) return;
   isAuthRedirecting = true;
-  invalidateClientSession();
+  invalidateClientSession(mode);
   window.location.assign("/auth/login");
 }
 
-async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
-  if (isRefreshing && refreshPromise) {
-    return refreshPromise;
-  }
-
-  isRefreshing = true;
-  refreshPromise = (async () => {
+async function fetchMetricsToken(
+  serverUrl: string,
+  mode: AppMode,
+): Promise<string | null> {
+  const existing = refreshPromises.get(mode);
+  if (existing) return existing;
+  const refreshPromise = (async () => {
     try {
-      const nonce = getNonce();
-      const response = await fetch(`${serverUrl}graphql`, {
-        method: 'POST',
+      const nonce = getNonce(mode);
+      const response = await fetch(serverUrl, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          nonce: nonce || '',
+          "Content-Type": "application/json",
+          nonce: nonce || "",
         },
         body: JSON.stringify({
           query: print(METRICS_GENERAL),
@@ -69,23 +76,25 @@ async function fetchMetricsToken(serverUrl?: string): Promise<string | null> {
       const result = await response.json();
       if (result.data?.metricsGeneral) {
         const { experience, hehe } = result.data.metricsGeneral;
-        storeMetricsToken(experience, hehe);
+        storeMetricsToken(experience, hehe, mode);
         return experience;
       }
       return null;
     } catch (error) {
-      console.error('Failed to fetch metrics token:', error);
+      console.error("Failed to fetch metrics token:", error);
       return null;
     } finally {
-      isRefreshing = false;
-      refreshPromise = null;
+      refreshPromises.delete(mode);
     }
   })();
 
+  refreshPromises.set(mode, refreshPromise);
   return refreshPromise;
 }
 
 export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
+  const { mode } = useAppMode();
+  const environment = getModeEnvironment(mode);
   const clientRef = useRef<ApolloClient<NormalizedCacheObject> | null>(null);
   const wsClientRef = useRef<SubscriptionClient | null>(null);
 
@@ -102,78 +111,93 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   }
 
   // const { SERVER_URL, WS_SERVER_URL } = getEnv(ENV);
-  const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
-  const WS_SERVER_URL = process.env.NEXT_PUBLIC_WS_SERVER_URL;
+  const SERVER_URL = environment.graphqlUrl;
+  const WS_SERVER_URL = environment.websocketUrl;
 
-  initializeNonce();
+  initializeNonce(mode);
 
   const cache = new InMemoryCache();
 
   const httpLink = createHttpLink({
-    uri: `${SERVER_URL}graphql`,
-    // useGETForQueries: true, 
+    uri: (operation) =>
+      getModeEnvironment(getOperationMode(operation, mode)).graphqlUrl,
+    // useGETForQueries: true,
   });
 
   // WebSocketLink with error handling
-  const wsClient = new SubscriptionClient(`${WS_SERVER_URL}graphql`, {
-      reconnect: true,
-      timeout: 30000,
-      lazy: true,
-      connectionParams: () => ({
-        authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : '',
-      }),
-    });
+  const wsClient = new SubscriptionClient(WS_SERVER_URL, {
+    reconnect: true,
+    timeout: 30000,
+    lazy: true,
+    connectionParams: () => ({
+      authorization: getAccessToken(mode)
+        ? `Bearer ${getAccessToken(mode)}`
+        : "",
+    }),
+  });
   wsClientRef.current = wsClient;
   const wsLink = new WebSocketLink(wsClient);
 
-  const errorLink = new ApolloLink((operation, forward) =>
-    new Observable((observer) => {
-      let subscription: Subscription | undefined;
+  const errorLink = new ApolloLink(
+    (operation, forward) =>
+      new Observable((observer) => {
+        let subscription: Subscription | undefined;
 
-      const run = () => {
-        subscription = forward(operation).subscribe({
-          next: observer.next.bind(observer),
-          complete: observer.complete.bind(observer),
-          error: (error) => {
-            const graphQLErrors = error?.graphQLErrors ?? [];
-            const hasInvalidSession = graphQLErrors.some(
-              (graphQLError: { extensions?: { code?: string } }) =>
-                graphQLError.extensions?.code === "TOKEN_EXPIRED" ||
-                graphQLError.extensions?.code === "INVALID_TOKEN",
-            );
+        const run = () => {
+          subscription = forward(operation).subscribe({
+            next: observer.next.bind(observer),
+            complete: observer.complete.bind(observer),
+            error: (error) => {
+              const graphQLErrors = error?.graphQLErrors ?? [];
+              const hasInvalidSession = graphQLErrors.some(
+                (graphQLError: { extensions?: { code?: string } }) =>
+                  graphQLError.extensions?.code === "TOKEN_EXPIRED" ||
+                  graphQLError.extensions?.code === "INVALID_TOKEN",
+              );
 
-            if (hasInvalidSession) {
-              handleInvalidSession();
-            }
+              if (hasInvalidSession) {
+                handleInvalidSession(getOperationMode(operation, mode));
+              }
 
-            observer.error(error);
-          },
-        });
-      };
+              observer.error(error);
+            },
+          });
+        };
 
-      run();
-      return () => subscription?.unsubscribe();
-    })
+        run();
+        return () => subscription?.unsubscribe();
+      }),
   );
 
   const request = async (operation: Operation): Promise<void> => {
-    const token = getAccessToken();
-    const userId = typeof window === 'undefined' ? '' : localStorage.getItem('userId');
+    const operationMode = getOperationMode(operation, mode);
+    const operationServerUrl = getModeEnvironment(operationMode).graphqlUrl;
+    initializeNonce(operationMode);
+    const token = getAccessToken(operationMode);
+    const userId =
+      typeof window === "undefined"
+        ? ""
+        : localStorage.getItem(
+            `@enatega/${operationMode.toLowerCase()}/userId`,
+          );
     const operationName = operation.operationName;
-    if (operationName !== 'MetricsGeneral' && shouldRefreshToken()) {
-      await fetchMetricsToken(SERVER_URL);
+    if (
+      operationName !== "MetricsGeneral" &&
+      shouldRefreshToken(operationMode)
+    ) {
+      await fetchMetricsToken(operationServerUrl, operationMode);
     }
 
-    const nonce = getNonce();
-    const metricsToken = getMetricsToken();
+    const nonce = getNonce(operationMode);
+    const metricsToken = getMetricsToken(operationMode);
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : "",
-        nonce: nonce || '',
-        'bop-auth': metricsToken ? `Bearer ${metricsToken}` : '',
+        nonce: nonce || "",
+        "bop-auth": metricsToken ? `Bearer ${metricsToken}` : "",
         userId: userId ?? "",
         isAuth: !!token,
-        "X-Client-Type": "web"
+        "X-Client-Type": "web",
       },
     });
   };
@@ -197,7 +221,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
         return () => {
           if (handle) handle.unsubscribe();
         };
-      })
+      }),
   );
 
   // Terminating Link for split between HTTP and WebSocket
@@ -212,7 +236,7 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   const client = new ApolloClient({
     link: concat(
       ApolloLink.from([errorLink, terminatingLink, requestLink]),
-      httpLink
+      httpLink,
     ),
     cache,
     connectToDevTools: process.env.NODE_ENV !== "production",

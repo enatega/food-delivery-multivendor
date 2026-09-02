@@ -1,20 +1,23 @@
 "use client";
 
 // Core
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Interfaces§
 import {
   IConfiguration,
   IConfigurationProviderProps,
-  ILazyQueryResult,
 } from "@/lib/utils/interfaces";
 
 // API
 import { GET_CONFIGURATION } from "@/lib/api/graphql";
 
 // Hooks
-import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
+import { useQuery } from "@apollo/client";
+import { useContext } from "react";
+import { AuthContext } from "@/lib/context/global/auth.context";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
 
 export const ConfigurationContext = React.createContext<
   IConfiguration | undefined
@@ -28,22 +31,27 @@ export const ConfigurationContext = React.createContext<
 export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   children,
 }) => {
+  const { isAuthReady, token } = useContext(AuthContext);
+  const { mode } = useRiderMode();
+  const requiresAuthentication = mode === RIDER_SERVER_MODES.SINGLE;
   const [configuration, setConfiguration] = useState<
     IConfiguration | undefined
   >();
   // API
 
-  const { fetch, loading, error, data } = useLazyQueryQL(GET_CONFIGURATION, {
-    debounceMs: 300,
-  }) as ILazyQueryResult<
-    { configuration: IConfiguration } | undefined,
-    undefined
-  >;
+  // Fetch configuration immediately with useQuery (the previous lazy query +
+  // 300 ms debounce delayed the first render — currency symbol showed blank).
+  const { loading, error, data } = useQuery<{ configuration: IConfiguration }>(
+    GET_CONFIGURATION,
+    {
+      skip: !isAuthReady || (requiresAuthentication && !token),
+    },
+  );
 
-  // Handlers
-  const onFetchConfiguration = () => {
+  // Use Effect
+  useEffect(() => {
     try {
-      const configuration: IConfiguration | undefined =
+      const nextConfiguration: IConfiguration | undefined =
         loading || error || !data
           ? {
               _id: "",
@@ -53,25 +61,14 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
             }
           : data?.configuration;
 
-      setConfiguration(configuration);
-    } catch (error) {
-      console.log("Configuration error: ", error);
+      setConfiguration(nextConfiguration);
+    } catch (err) {
+      if (__DEV__) {
+        console.log("Configuration error: ", err);
+      }
       setConfiguration(undefined);
     }
-  };
-
-  const fetchConfiguration = useCallback(() => {
-    fetch();
-  }, [fetch]);
-
-  // Use Effect
-  useEffect(() => {
-    fetchConfiguration();
-  }, []);
-
-  useEffect(() => {
-    onFetchConfiguration();
-  }, [data]);
+  }, [loading, error, data]);
 
   return (
     <ConfigurationContext.Provider value={configuration}>

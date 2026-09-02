@@ -1,27 +1,26 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { View } from 'react-native'
 import styles from './styles'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
+import { SkeletonBlock, useMultivendorTheme } from '../../../ui/designSystem'
+import { scale } from '../../../utils/scaling'
 
 const TopBrandsLoadingUI = () => {
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = theme[themeContext.ThemeValue]
+  const { tokens } = useMultivendorTheme()
 
   return (
-    <View style={styles(currentTheme).screenBackground}>
-      <Placeholder
-        Animation={props => (
-          <Fade
-            {...props}
-            style={styles(currentTheme).placeHolderFadeColor}
-            duration={600}
-          />
-        )}
-        style={styles(currentTheme).brandsPlaceHolderContainer}>
-        <PlaceholderLine style={styles().height80} />
-      </Placeholder>
+    <View style={styles(tokens).brandSectionSkeleton}>
+      <View style={styles(tokens).sectionHeaderSkeleton}>
+        <SkeletonBlock width={scale(112)} height={scale(22)} borderRadius={scale(7)} />
+        <SkeletonBlock width={scale(58)} height={scale(18)} borderRadius={scale(7)} />
+      </View>
+      <View style={styles(tokens).brandRowSkeleton}>
+        {[0, 1, 2, 3].map((item) => (
+          <View key={item} style={styles(tokens).brandItemSkeleton}>
+            <SkeletonBlock width={scale(82)} height={scale(82)} borderRadius={scale(12)} />
+            <SkeletonBlock width={scale(66)} height={scale(12)} borderRadius={scale(6)} />
+          </View>
+        ))}
+      </View>
     </View>
   )
 }

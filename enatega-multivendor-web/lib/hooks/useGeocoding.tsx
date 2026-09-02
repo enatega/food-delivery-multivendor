@@ -1,5 +1,5 @@
-import { useConfig } from "../context/configuration/configuration.context";
 import { reverseGeocode } from "../api/google-maps";
+import { useAppMode } from "@/lib/mode";
 
 interface GeocodingResult {
   formattedAddress: string;
@@ -7,15 +7,15 @@ interface GeocodingResult {
 }
 
 const useGeocoding = () => {
-  const { SERVER_URL } = useConfig();
+  const { mode } = useAppMode();
 
   const getAddress = async (
     latitude: number,
-    longitude: number
+    longitude: number,
   ): Promise<GeocodingResult> => {
     try {
       const data = await reverseGeocode({
-        serverUrl: SERVER_URL,
+        mode,
         latitude,
         longitude,
       });

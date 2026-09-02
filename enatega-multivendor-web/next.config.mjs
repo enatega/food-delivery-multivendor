@@ -60,20 +60,18 @@ const nextConfig = {
   },
 
   images: {
-    // domains: ["storage.googleapis.com"],
-    unoptimized: true,
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 86400,
     dangerouslyAllowSVG: false,
     remotePatterns: [
       {
         protocol: "https",
         hostname: "storage.googleapis.com",
       },
-      // Dummy
       {
         protocol: "https",
         hostname: "images.ctfassets.net",
       },
-      //////////
       {
         protocol: "https",
         hostname: "placehold.co",
@@ -128,10 +126,6 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "images.ctfassets.net",
-      },
-      {
-        protocol: "https",
         hostname: "flagcdn.com",
       },
       {
@@ -150,7 +144,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "*.s3.*.amazonaws.com",
       },
-    ], // Add placehold.co as an allowed domain
+    ],
   },
 };
 // export default withPWA(withNextIntl(nextConfig));

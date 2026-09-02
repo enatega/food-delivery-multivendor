@@ -1,21 +1,37 @@
 import { StyleSheet } from 'react-native'
-import { subtleCardShadow } from '../../utils/cardShadows'
 
 const buildStyles = (props = null) =>
   StyleSheet.create({
     collectionCard: {
-      backgroundColor: props != null ? props?.cardBackground : '#181818',
-      height: 130,
-      width: 100,
-      borderRadius: 8,
-      ...subtleCardShadow
+      width: props?.sizes?.compactTile ?? 80,
+      alignItems: 'center'
+    },
+    brandImgContainer: {
+      width: props?.sizes?.compactTile ?? 80,
+      height: props?.sizes?.compactTile ?? 80,
+      borderRadius: props?.radii?.tile ?? 12,
+      overflow: 'hidden',
+      backgroundColor: props?.colors?.surfaceSubtle ?? '#F7F7F8'
+    },
+    selectedImageContainer: {
+      borderWidth: 2,
+      borderColor: props?.colors?.accent ?? '#90E36D'
     },
     collectionImage: {
-      height: 80,
+      height: '100%',
       width: '100%',
-      borderTopLeftRadius: 8,
-      borderTopRightRadius: 8
+      borderRadius: props?.radii?.tile ?? 12
     },
+    label: {
+      paddingTop: props?.spacing?.sm ?? 8,
+      paddingBottom: props?.spacing?.xs ?? 4,
+      width: '100%',
+      minHeight: 40,
+      fontSize: 14,
+      lineHeight: 18,
+      fontWeight: '500',
+      textAlign: 'center'
+    }
   })
 
 // Cache the built stylesheet per theme so it isn't rebuilt on every render of

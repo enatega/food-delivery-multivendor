@@ -1,12 +1,17 @@
 import { verticalScale, scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { subtleCardShadow } from '../../../utils/cardShadows'
+
+const { width } = Dimensions.get('window')
+const CARD_WIDTH = Math.max(scale(236), Math.min(scale(332), width - scale(30)))
+const CARD_IMAGE_HEIGHT = Math.max(scale(160), Math.min(scale(190), CARD_WIDTH * 0.58))
+const CARD_HEIGHT = CARD_IMAGE_HEIGHT + Math.max(scale(112), CARD_WIDTH * 0.34)
 
 const styles = (props = null) =>
   StyleSheet.create({
     mainContainer: {
-      width: scale(330),
+      width: CARD_WIDTH,
       alignItems: 'center',
       backgroundColor: 'white',
       ...subtleCardShadow
@@ -16,10 +21,8 @@ const styles = (props = null) =>
       borderColor: props != null ? props?.borderColor : 'grey',
       borderWidth: scale(1),
       borderRadius: scale(8),
-      height: scale(280),
+      minHeight: CARD_HEIGHT,
       width: '100%',
-
-
       ...alignment.MBsmall
     },
     imageContainer: {
@@ -27,7 +30,7 @@ const styles = (props = null) =>
       zIndex: 1,
       alignItems: 'center',
       width: '100%',
-      height: '68%'
+      height: CARD_IMAGE_HEIGHT
     },
     img: {
       width: '100%',
@@ -75,7 +78,9 @@ const styles = (props = null) =>
     },
     descriptionContainer: {
       width: '100%',
-      padding: scale(12)
+      padding: scale(12),
+      minHeight: Math.max(scale(104), CARD_WIDTH * 0.31),
+      justifyContent: 'space-between'
     },
     offerCategoty: {
       ...alignment.MTxSmall,

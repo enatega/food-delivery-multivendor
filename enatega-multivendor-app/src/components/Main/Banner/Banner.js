@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState, useCallback } from 'react'
-import { View, ImageBackground, TouchableOpacity, Dimensions, Platform } from 'react-native'
+import { View, ImageBackground, TouchableOpacity, Dimensions, AppState, InteractionManager } from 'react-native'
 import styles from './styles'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -13,14 +13,17 @@ import { getCachedMediaUri, useCachedMediaUri } from '../../../utils/mediaCache'
 
 // Helper function to get media type from URL
 const getMediaTypeFromUrl = (url) => {
-  const extension = url?.split('.').pop().toLowerCase()
-  const videoExtensions = ['mp4']
+  if (!url || typeof url !== 'string') return 'image'
+  const path = url.split(/[?#]/, 1)[0]
+  const extension = path.split('.').pop()?.toLowerCase()
+  const videoExtensions = ['mp4', 'm4v', 'mov', 'webm']
   return videoExtensions.includes(extension) ? 'video' : 'image'
 }
 
 // Stable empty object so slides without cached media keep referential equality
 // across renders (otherwise `|| {}` would break React.memo on every render).
 const EMPTY_CACHE = {}
+const PRIORITY_BANNER_COUNT = 2
 
 const BannerContent = ({ item, currentTheme }) => (
   <View style={styles(currentTheme).container}>
@@ -37,30 +40,34 @@ const BannerContent = ({ item, currentTheme }) => (
 // slides whose `isActiveSlide` flips — not every mounted ImageBackground/video.
 const BannerSlide = React.memo(function BannerSlide({ item, width, cached, isActiveSlide, currentTheme, onPress }) {
   const mediaType = getMediaTypeFromUrl(item.file)
-  const shouldRenderVideo = mediaType === 'video' && (!Platform.OS || Platform.OS !== 'android' || isActiveSlide)
-  const fallbackImage = cached.image || item?.image || item?.thumbnail || item?.previewImage
+  const isVideoBanner = mediaType === 'video'
+  const fallbackImage = cached.image || item?.image || item?.thumbnail || item?.previewImage || (mediaType !== 'video' ? item?.file : null)
   const imageUri = useCachedMediaUri(fallbackImage, 'image')
   const videoUri = cached.video || item?.file
 
   return (
     <TouchableOpacity style={[styles(currentTheme).banner, { width }]} activeOpacity={0.9} onPress={() => onPress(item)}>
-      {shouldRenderVideo ? (
-        <VideoBanner style={styles(currentTheme).image} source={videoUri}>
+      {isVideoBanner
+        ? (
+        <VideoBanner style={styles(currentTheme).image} posterUri={imageUri} shouldPlay={isActiveSlide} source={videoUri}>
           <BannerContent item={item} currentTheme={currentTheme} />
         </VideoBanner>
-      ) : (
+          )
+        : (
         <View style={styles(currentTheme).csd}>
-          {imageUri ? (
+          {imageUri
+            ? (
             <ImageBackground source={{ uri: imageUri }} style={styles(currentTheme).imgs1} resizeMode='cover'>
               <BannerContent item={item} currentTheme={currentTheme} />
             </ImageBackground>
-          ) : (
+              )
+            : (
             <View style={[styles(currentTheme).imgs1, { backgroundColor: '#1f2937' }]}>
               <BannerContent item={item} currentTheme={currentTheme} />
             </View>
-          )}
+              )}
         </View>
-      )}
+          )}
     </TouchableOpacity>
   )
 })
@@ -72,25 +79,19 @@ const Banner = ({ banners }) => {
   const { width } = Dimensions.get('window')
   const [activeIndex, setActiveIndex] = useState(0)
   const [isFocused, setIsFocused] = useState(true)
+  const [isAppActive, setIsAppActive] = useState(AppState.currentState === 'active')
   const [cachedMediaMap, setCachedMediaMap] = useState({})
 
-  const onPressBanner = useCallback((banner) => {
-    let _selectedType = ''
-    let _queryType = ''
-    let parameters = null
-    const action = banner.action
-    if (banner?.parameters) {
-      parameters = JSON.parse(banner.parameters)
-      _selectedType = parameters[0]?.value
-      _queryType = parameters[1]?.value
-    }
+  const onPressBanner = useCallback(
+    (banner) => {
+      const action = banner.action
 
-    if (action === 'Navigate Specific Restaurant') {
-      navigation.navigate('Restaurant', {
-        _id: banner.screen
-      })
-    } else {
-      /*
+      if (action === 'Navigate Specific Restaurant') {
+        navigation.navigate('Restaurant', {
+          _id: banner.screen
+        })
+      } else {
+        /*
 
          navigation?.getState()?.routeNames?.includes(banner.screen)
           ? banner.screen
@@ -98,19 +99,22 @@ const Banner = ({ banners }) => {
 
       */
 
-      const { name, selectedType, queryType } = BANNER_PARAMETERS[banner?.screen]
-      navigation.navigate(name, {
-        // Pass navigation parameters
-        selectedType: selectedType ?? 'restaurant', // Use selectedType if provided, otherwise default to 'restaurant'
-        queryType: queryType ?? 'restaurant' // Use queryType if provided, otherwise default to 'restaurant'
-      })
-    }
-  }, [navigation])
+        const { name, selectedType, queryType } = BANNER_PARAMETERS[banner?.screen]
+        navigation.navigate(name, {
+          // Pass navigation parameters
+          selectedType: selectedType ?? 'restaurant', // Use selectedType if provided, otherwise default to 'restaurant'
+          queryType: queryType ?? 'restaurant' // Use queryType if provided, otherwise default to 'restaurant'
+        })
+      }
+    },
+    [navigation]
+  )
 
   const bannersData = useMemo(() => {
     const list = banners ?? []
     return list
   }, [banners])
+  const slideStyles = useMemo(() => styles(currentTheme), [currentTheme])
 
   useFocusEffect(
     useCallback(() => {
@@ -120,54 +124,58 @@ const Banner = ({ banners }) => {
   )
 
   React.useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      setIsAppActive(nextState === 'active')
+    })
+
+    return () => subscription.remove()
+  }, [])
+
+  React.useEffect(() => {
     let isMounted = true
-    ;(async () => {
-      const list = bannersData || []
-      const entries = await Promise.all(
-        list.map(async (banner) => {
-          const mediaUrl = banner?.file
-          const imageUrl = banner?.image || banner?.thumbnail || banner?.previewImage
-          const mediaType = getMediaTypeFromUrl(mediaUrl)
-          const cacheValue = {}
+    const list = bannersData || []
 
-          if (mediaUrl && mediaType === 'video') {
-            cacheValue.video = await getCachedMediaUri(mediaUrl, 'video')
-          }
-          if (imageUrl) {
-            cacheValue.image = await getCachedMediaUri(imageUrl, 'image')
-          } else if (mediaUrl && mediaType !== 'video') {
-            cacheValue.image = await getCachedMediaUri(mediaUrl, 'image')
-          }
+    const resolveCacheEntry = async(banner) => {
+      const mediaUrl = banner?.file
+      const mediaType = getMediaTypeFromUrl(mediaUrl)
+      const imageUrl = banner?.image || banner?.thumbnail || banner?.previewImage || (mediaType !== 'video' ? mediaUrl : null)
+      const cacheValue = {}
 
-          return [banner?._id || mediaUrl, cacheValue]
-        })
-      )
-
-      if (isMounted) {
-        setCachedMediaMap((prev) => ({ ...prev, ...Object.fromEntries(entries) }))
+      if (imageUrl) {
+        cacheValue.image = await getCachedMediaUri(imageUrl, 'image')
       }
-    })()
+      if (mediaUrl && mediaType === 'video') {
+        cacheValue.video = await getCachedMediaUri(mediaUrl, 'video')
+      }
+
+      return [banner?._id || mediaUrl, cacheValue]
+    }
+
+    const hydrateCacheBatch = async(batch) => {
+      if (!batch.length) return
+      const entries = await Promise.all(batch.map(resolveCacheEntry))
+      if (!isMounted) return
+      setCachedMediaMap((prev) => ({ ...prev, ...Object.fromEntries(entries) }))
+    }
+
+    hydrateCacheBatch(list.slice(0, PRIORITY_BANNER_COUNT))
+
+    const interactionTask = InteractionManager.runAfterInteractions(() => {
+      hydrateCacheBatch(list.slice(PRIORITY_BANNER_COUNT))
+    })
 
     return () => {
       isMounted = false
+      interactionTask?.cancel?.()
     }
   }, [bannersData])
 
   const renderItem = useCallback(
     ({ item, index }) => {
       const cacheKey = item?._id || item?.file
-      return (
-        <BannerSlide
-          item={item}
-          width={width}
-          cached={cachedMediaMap[cacheKey] || EMPTY_CACHE}
-          isActiveSlide={index === activeIndex && isFocused}
-          currentTheme={currentTheme}
-          onPress={onPressBanner}
-        />
-      )
+      return <BannerSlide item={item} width={width} cached={cachedMediaMap[cacheKey] || EMPTY_CACHE} isActiveSlide={index === activeIndex && isFocused && isAppActive} currentTheme={currentTheme} onPress={onPressBanner} />
     },
-    [width, cachedMediaMap, activeIndex, isFocused, currentTheme, onPressBanner]
+    [width, cachedMediaMap, activeIndex, isFocused, isAppActive, currentTheme, onPressBanner]
   )
 
   const onChangeIndex = useCallback(({ index }) => setActiveIndex(index), [])
@@ -178,25 +186,30 @@ const Banner = ({ banners }) => {
   if (!bannersData || bannersData.length === 0) return null
 
   return (
-    <SwiperFlatList
-      autoplay
-      autoplayDelay={3}
-      autoplayLoop
-      // Keep neighboring slides mounted so reverse swipes do not flash blank.
-      removeClippedSubviews={false}
-      windowSize={5}
-      showPagination
-      data={bannersData}
-      snapToInterval={width} // Ensures only one image is visible at a time
-      snapToAlignment='center'
-      paginationStyle={styles().pagination}
-      paginationActiveColor={currentTheme.main}
-      paginationDefaultColor={currentTheme.hex}
-      paginationStyleItemActive={styles().paginationItem}
-      paginationStyleItemInactive={styles().paginationItem}
-      onChangeIndex={onChangeIndex}
-      renderItem={renderItem}
-    />
+    <View style={slideStyles.wrapper}>
+      <SwiperFlatList
+        autoplay
+        autoplayDelay={3}
+        autoplayLoop
+        initialNumToRender={PRIORITY_BANNER_COUNT}
+        maxToRenderPerBatch={PRIORITY_BANNER_COUNT}
+        updateCellsBatchingPeriod={16}
+        removeClippedSubviews
+        windowSize={3}
+        showPagination
+        data={bannersData}
+        keyExtractor={(item, index) => item?._id || item?.file || String(index)}
+        snapToInterval={width} // Ensures only one image is visible at a time
+        snapToAlignment='center'
+        paginationStyle={slideStyles.pagination}
+        paginationActiveColor={currentTheme.main}
+        paginationDefaultColor={currentTheme.hex}
+        paginationStyleItemActive={slideStyles.paginationItem}
+        paginationStyleItemInactive={slideStyles.paginationItem}
+        onChangeIndex={onChangeIndex}
+        renderItem={renderItem}
+      />
+    </View>
   )
 }
 

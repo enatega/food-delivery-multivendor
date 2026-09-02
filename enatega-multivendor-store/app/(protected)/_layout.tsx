@@ -14,7 +14,11 @@ import FlashMessage from "react-native-flash-message";
 
 export default function ProtectedLayout() {
   const { appTheme, currentTheme } = useApptheme();
-  const { token } = useContext(AuthContext);
+  const { isInitialized, token } = useContext(AuthContext);
+
+  if (!isInitialized) {
+    return null;
+  }
 
   if (!token) {
     return <Redirect href="/(un-protected)/login" />;
@@ -34,16 +38,7 @@ export default function ProtectedLayout() {
             }}
           >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="order-detail"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="chat" options={{ headerShown: false }} />
           </Stack>
-          {/* <Stack.Screen
-            name="bank-management"
-            options={{ headerShown: true }}
-          /> */}
           <StatusBar style={currentTheme as StatusBarStyle} />
           <FlashMessage position="bottom" />
         </>

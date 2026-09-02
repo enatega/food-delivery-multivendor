@@ -10,8 +10,100 @@
   "order": "Bestellung",
   "orders": "Bestellungen",
   "shop-types": "Ladenarten",
+  "categories_label": "Kategorien",
+  "all_categories_label": "Alle Kategorien",
+  "tab_deals": "Angebote",
+  "tab_browse": "Durchsuchen",
+  "order_details_minimum_order_fee_label": "Mindermengenzuschlag",
+  "order_details_priority_delivery_fee_label": "Gebühr für Prioritätslieferung",
+  "order_details_credits_applied_label": "Eingesetztes Guthaben",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "ok": "OK",
   "loading_orders": "Bestellungen werden geladen...",
   "show_more_orders": "Weitere Bestellungen anzeigen",
-  "Our-brands": "Our brands"
+  "Our-brands": "Our brands",
+  "Landing": {
+    "hero": {
+      "eyebrow": "Eine App. Alltägliche Möglichkeiten.",
+      "title": "Alles, was du brauchst,",
+      "accent": "wunderschön geliefert.",
+      "body": "Essen, Lebensmittel und alltägliche Dinge, die in einer einfachen Erfahrung vereint sind."
+    },
+    "categories": {
+      "label": "Lieferkategorien",
+      "food": "Essen",
+      "groceries": "Lebensmittel",
+      "essentials": "Grundausstattung",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Diese Stadt finden.",
+      "ready": "Stadt ausgewählt. Artikel anzeigen, wenn du bereit bist.",
+      "cityError": "Wir konnten diese Stadt nicht finden. Wählen Sie einen anderen Vorschlag.",
+      "locating": "Finden Sie Ihren aktuellen Standort.",
+      "locationError": "Wir konnten nicht auf deinen Standort zugreifen. Suche stattdessen nach einer Stadt."
+    },
+    "journey": {
+      "eyebrow": "So bewegt sich Enatega",
+      "title": "Von deiner Stadt",
+      "accent": "vor deine Haustür.",
+      "bagAlt": "Enatega Liefertasche",
+      "stages": {
+        "choose": {
+          "title": "Wählen",
+          "body": "Essen, Lebensmittel oder Essentials."
+        },
+        "moving": {
+          "title": "Bewegung",
+          "body": "Eine freie Fahrt durch deine Stadt."
+        },
+        "arrived": {
+          "title": "Angekommen",
+          "body": "Geliefert, wo Sie es brauchen."
+        }
+      }
+    },
+    "cta": {
+      "label": "Arbeiten Sie mit Enatega",
+      "business": {
+        "eyebrow": "Für Unternehmen",
+        "title": "Wachsen Sie mit Enatega.",
+        "body": "Bringen Sie Ihr Geschäft mehr Kunden näher.",
+        "action": "Partner werden"
+      },
+      "rider": {
+        "eyebrow": "Für Fahrgäste",
+        "title": "Fahre mit Enatega.",
+        "body": "Liefere nach deinem Zeitplan.",
+        "action": "Fahrgast werden"
+      }
+    },
+    "footer": {
+      "rights": "Alle Rechte vorbehalten."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

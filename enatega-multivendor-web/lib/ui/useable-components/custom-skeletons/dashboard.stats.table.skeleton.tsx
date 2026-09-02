@@ -4,8 +4,8 @@ import { Skeleton } from 'primereact/skeleton';
 export default function DashboardStatsTableSkeleton() {
   return (
     <div className="w-full mx-auto mt-10">
-      <div className="bg-white shadow-md rounded-lg border border-gray-300">
-        <div className="flex justify-between items-center bg-gray-100 p-4 rounded-t-lg">
+      <div className="skeleton-ring rounded-lg border bg-dispatch-surface shadow-md">
+        <div className="skeleton-surface flex items-center justify-between rounded-t-lg p-4">
           <Skeleton width="40%" height="24px" className="mb-2" />
           <Skeleton shape="circle" size="24px" />
         </div>

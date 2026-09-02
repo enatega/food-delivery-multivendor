@@ -97,7 +97,7 @@
   "PHCategory": "например, Завтрак",
   "ChooseCurrency": "Выберите валюту",
   "ChooseSymbol": "Выберите символ",
-  "PHMail": "например, что-то@email.com",
+  "PHMail": "например, something@email.com",
   "EmailName": "Имя электронной почты",
   "PHEnatega": "например, Enatega",
   "PHFood": "например, Еда",
@@ -1113,5 +1113,15 @@
   "Store Creation Failed - Please select a vendor": "Не удалось создать магазин - Выберите продавца.",
   "Something went wrong - Please try again": "Что-то пошло не так. Попробуйте снова",
   "An error occurred while fetching restaurants - Please try again later": "Произошла ошибка при получении ресторанов. Попробуйте позже.",
-  "We have sent OTP code to your email": "Мы отправили код OTP на john@email.com"
+  "We have sent OTP code to your email": "Мы отправили код OTP на john@email.com",
+  "enter_a_password": "Введите пароль",
+  "Audit Logs": "Журналы аудита",
+  "no_user_found": "Пользователь не найден",
+  "vehicle_type": "Тип транспортного средства",
+  "rider_deleted": "Пользователь удален",
+  "lifetime_active": "время жизни Активный",
+  "userType": "Тип пользователя",
+  "Customers enter this code at checkout": "Покупатели вводят этот код при оформлении заказа",
+  "Cash": "Наличные",
+  "Yearly Payment Link": "Ссылка на ежегодный платеж"
 }

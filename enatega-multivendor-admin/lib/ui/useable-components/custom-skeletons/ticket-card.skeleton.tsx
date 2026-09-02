@@ -14,28 +14,28 @@ export default function TicketCardSkeleton({
       {[...Array(count)].map((_, index) => (
         <div
           key={index}
-          className="flex flex-col border-b dark:bg-dark-950 border-gray-200 p-3 animate-pulse"
+          className="flex animate-pulse flex-col border-b border-gray-200 p-3 dark:border-dark-600"
         >
           {/* Title and status */}
-          <div className="flex justify-between items-start mb-2">
-            <div className="h-6 bg-gray-200 dark:bg-dark-950 rounded w-2/5 mb-2"></div>
-            <div className="h-5 bg-gray-200 dark:bg-dark-950 rounded-full w-20"></div>
+          <div className="mb-2 flex items-start justify-between">
+            <div className="mb-2 h-6 w-2/5 rounded bg-gray-200 dark:bg-dark-700"></div>
+            <div className="h-5 w-20 rounded-full bg-gray-200 dark:bg-dark-700"></div>
           </div>
 
           {/* Category and order ID */}
-          <div className="flex mb-2">
-            <div className="h-4 bg-gray-200 dark:bg-dark-950 rounded w-1/4 mr-3"></div>
-            <div className="h-4 bg-gray-200 dark:bg-dark-950 rounded w-1/4"></div>
+          <div className="mb-2 flex">
+            <div className="mr-3 h-4 w-1/4 rounded bg-gray-200 dark:bg-dark-700"></div>
+            <div className="h-4 w-1/4 rounded bg-gray-200 dark:bg-dark-700"></div>
           </div>
 
           {/* Description */}
-          <div className="h-4 bg-gray-200 dark:bg-dark-950 rounded w-full mb-1"></div>
-          <div className="h-4 bg-gray-200 dark:bg-dark-950 rounded w-3/4 mb-2"></div>
+          <div className="mb-1 h-4 w-full rounded bg-gray-200 dark:bg-dark-700"></div>
+          <div className="mb-2 h-4 w-3/4 rounded bg-gray-200 dark:bg-dark-700"></div>
 
           {/* Created and updated dates */}
-          <div className="flex justify-between mt-2">
-            <div className="h-3 bg-gray-200 dark:bg-dark-950 rounded w-1/4"></div>
-            <div className="h-3 bg-gray-200 dark:bg-dark-950  rounded w-1/4"></div>
+          <div className="mt-2 flex justify-between">
+            <div className="h-3 w-1/4 rounded bg-gray-200 dark:bg-dark-700"></div>
+            <div className="h-3 w-1/4 rounded bg-gray-200 dark:bg-dark-700"></div>
           </div>
         </div>
       ))}

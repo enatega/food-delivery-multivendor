@@ -136,6 +136,13 @@
   "no_items_found": "Tidak ada item ditemukan",
   "something_went_wrong": "Ada yang salah",
   "shop-types": "Jenis Toko",
+  "categories_label": "Kategori",
+  "all_categories_label": "Semua kategori",
+  "tab_deals": "Promo",
+  "tab_browse": "Jelajahi",
+  "order_details_minimum_order_fee_label": "Biaya pesanan kecil",
+  "order_details_priority_delivery_fee_label": "Biaya pengiriman prioritas",
+  "order_details_credits_applied_label": "Kredit digunakan",
   "for_rest": "Untuk Restoran",
   "for_riders": "Untuk Kurir",
   "reviews": "ulasan",
@@ -191,6 +198,8 @@
   "tab_discovery": "Penemuan",
   "tab_restaurants": "Restoran",
   "tab_store": "Toko",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "di dekat Anda",
   "generic_listing_heading": "Restoran di Dekat Anda",
   "generic_listing_cuisine_section": "Masakan",
@@ -919,5 +928,88 @@
   "show_more_orders": "Tampilkan lebih banyak pesanan",
   "your_email": "email@anda.com",
   "Select_your_address_prompt": "Pilih alamat Anda.",
-  "Our-brands": "Merek kami"
+  "Our-brands": "Merek kami",
+  "Landing": {
+    "hero": {
+      "eyebrow": "Satu aplikasi. Kemungkinan sehari - hari.",
+      "title": "Semua yang Anda butuhkan,",
+      "accent": "diantarkan dengan indah.",
+      "body": "Makanan, bahan makanan, dan kebutuhan sehari - hari, disatukan dalam satu pengalaman sederhana."
+    },
+    "categories": {
+      "label": "Kategori pengantaran",
+      "food": "Makanan",
+      "groceries": "Bahan makanan",
+      "essentials": "Perlengkapan dasar",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Menemukan kota itu.",
+      "ready": "Kota dipilih. Tampilkan item saat Anda siap.",
+      "cityError": "Kami tidak dapat menemukan kota itu. Pilih saran lain.",
+      "locating": "Menemukan lokasi Anda saat ini.",
+      "locationError": "Kami tidak dapat mengakses lokasi Anda. Cari kota sebagai gantinya."
+    },
+    "journey": {
+      "eyebrow": "Bagaimana Enatega bergerak",
+      "title": "Dari kota Anda,",
+      "accent": "ke depan pintu Anda.",
+      "bagAlt": "Tas pengantaran Enatega",
+      "stages": {
+        "choose": {
+          "title": "Pilih",
+          "body": "Makanan, kebutuhan sehari - hari, atau kebutuhan dasar."
+        },
+        "moving": {
+          "title": "Pindah",
+          "body": "Satu perjalanan yang jelas melintasi kota Anda."
+        },
+        "arrived": {
+          "title": "Tiba",
+          "body": "Diantarkan ke tempat yang Anda butuhkan."
+        }
+      }
+    },
+    "cta": {
+      "label": "Bekerja sama dengan Enatega",
+      "business": {
+        "eyebrow": "Untuk bisnis",
+        "title": "Berkembang bersama Enatega.",
+        "body": "Dekatkan toko Anda dengan lebih banyak pelanggan.",
+        "action": "Menjadi mitra"
+      },
+      "rider": {
+        "eyebrow": "Untuk penumpang",
+        "title": "Lakukan perjalanan bersama Enatega.",
+        "body": "Antarkan sesuai jadwal Anda.",
+        "action": "Jadilah penumpang"
+      }
+    },
+    "footer": {
+      "rights": "Semua hak dilindungi undang - undang."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

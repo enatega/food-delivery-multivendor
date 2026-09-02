@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, View } from 'react-native'
+import { ActivityIndicator, Image, Platform, View } from 'react-native'
 import {
   GiftedChat,
   Bubble,
@@ -8,7 +8,6 @@ import {
   Actions,
   Time
 } from 'react-native-gifted-chat'
-import { useHeaderHeight } from '@react-navigation/elements'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useChatScreen } from './useChatScreen'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -35,7 +34,6 @@ const renderInputToolbar = (props) => {
 
 const ChatScreen = ({ navigation, route }) => {
   const configuration = useContext(ConfigurationContext)
-  const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
 
   const {
@@ -143,7 +141,7 @@ const ChatScreen = ({ navigation, route }) => {
   }
 
   const renderMessageImage = (props) => {
-    const uri = props?.currentMessage?.image
+    const uri = props?.currentMessage?.localImage || props?.currentMessage?.image
     if (!uri) return null
     return (
       <CachedImage
@@ -210,11 +208,7 @@ const ChatScreen = ({ navigation, route }) => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles(currentTheme).chatSec}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? headerHeight : 0}
-    >
+    <View style={styles(currentTheme).chatSec}>
       <View style={styles(currentTheme).orderDetails}>
         <View style={styles(currentTheme).orderNoSec}>
           <TextDefault textColor={currentTheme.fontFourthColor} normal bold>
@@ -248,8 +242,14 @@ const ChatScreen = ({ navigation, route }) => {
           renderChatEmpty={renderChatEmpty}
           inverted={Platform.OS !== 'web' || messages.length === 0}
           placeholder={t('replyRider')}
+          // Let GiftedChat handle the keyboard itself (its default). It lifts the
+          // input toolbar to sit right on top of the keyboard on both iOS and
+          // Android, so the customer always sees what they're typing. The manual
+          // KeyboardAvoidingView (removed) fought Android's adjustResize and was
+          // unreliable on iOS.
+          isKeyboardInternallyHandled={true}
           keyboardShouldPersistTaps='handled'
-          bottomOffset={Platform.OS === 'ios' ? insets.bottom : 0}
+          bottomOffset={insets.bottom}
           textInputProps={{
             style: {
               width: '75%',
@@ -281,7 +281,7 @@ const ChatScreen = ({ navigation, route }) => {
           }}
         />
       </View>
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 

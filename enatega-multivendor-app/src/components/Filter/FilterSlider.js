@@ -7,27 +7,36 @@ import { theme } from '../../utils/themeColors'
 import { FILTER_TYPE } from '../../utils/enums'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
+import useMultivendorTheme from '../../ui/designSystem/useMultivendorTheme'
 
+const cloneFiltersState = (filters = {}) =>
+  Object.keys(filters).reduce((acc, key) => {
+    const filter = filters[key] || {}
+    acc[key] = {
+      ...filter,
+      values: Array.isArray(filter.values) ? [...filter.values] : [],
+      selected: Array.isArray(filter.selected) ? [...filter.selected] : []
+    }
+    return acc
+  }, {})
 
 const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  const { tokens } = useMultivendorTheme()
+  const currentTheme = {
+    isRTL: i18n.dir() === 'rtl',
+    ...theme[themeContext.ThemeValue],
+    ...tokens
+  }
 
   const safeFilters = useMemo(() => {
-    return Object.keys(filters || {}).reduce((acc, key) => {
-      const filter = filters?.[key] || {}
-      acc[key] = {
-        ...filter,
-        values: Array.isArray(filter.values) ? filter.values : [],
-        selected: Array.isArray(filter.selected) ? filter.selected : []
-      }
-      return acc
-    }, {})
+    return cloneFiltersState(filters)
   }, [filters])
 
   const handleValueSelection = (filterTitle, filterValue) => {
-    const selectedFilter = safeFilters[filterTitle]
+    const nextFilters = cloneFiltersState(safeFilters)
+    const selectedFilter = nextFilters[filterTitle]
     if (selectedFilter.type === FILTER_TYPE.RADIO) {
       selectedFilter.selected = [filterValue]
     } else {
@@ -36,9 +45,9 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
         selectedFilter.selected = selectedFilter.selected.filter(
           (a) => a !== filterValue
         )
-      } else selectedFilter.selected.push(filterValue)
+      } else selectedFilter.selected = [...selectedFilter.selected, filterValue]
     }
-    setFilters({ ...safeFilters, [filterTitle]: { ...selectedFilter } })
+    setFilters(nextFilters)
   }
 
   const clearFilters = () => {
@@ -53,89 +62,93 @@ const Filters = ({ filters, setFilters, applyFilters, onClose }) => {
   const anySelected = Object.values(safeFilters).some((f) => (f.selected || []).length > 0)
 
   return (
-  <ScrollView style={styles().container}>
-    <TextDefault H2 bolder style={styles().heading} isRTL>
-      {t('filters')}
-    </TextDefault>
-
-    {Object.keys(safeFilters).map((filter, index) => (
-      <View style={{ gap: 8 }} key={'filters-' + filter + index}>
-        <TextDefault H4 bolder style={{ paddingHorizontal: 15, paddingVertical: 10 }} isRTL>
-          {t(filter)}
-        </TextDefault>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles().flatlist}
-        >
-          {safeFilters[filter].values.map((item, idx) => (
-            <TouchableOpacity
-              key={item + idx}
-              activeOpacity={0.8}
-              onPress={() => handleValueSelection(filter, item)}
-              style={[
-                styles().filterBtn,
-                {
-                  borderColor: safeFilters[filter].selected.includes(item)
-                    ? currentTheme.main
-                    : currentTheme.color7,
-                  backgroundColor: safeFilters[filter].selected.includes(item)
-                    ? currentTheme.main
-                    : currentTheme.color1
-                }
-              ]}
-            >
-              <TextDefault
-                Normal
-                bolder
-                textColor={
-                  safeFilters[filter].selected.includes(item)
-                    ? currentTheme.white
-                    : currentTheme.fontMainColor
-                }
-              >
-                {t(item)}
-              </TextDefault>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        <View style={{ height: 1, backgroundColor: '#D1D5DB', marginBottom: 10 }}  />
-      </View>
-    ))}
-
-    {anySelected && (
-      <TouchableOpacity
-        style={styles(currentTheme).clearBtn}
-        activeOpacity={0.8}
-        onPress={clearFilters}
-      >
-        <TextDefault center bold H4 textColor={currentTheme.main}>
-          {t('clearAll', 'Clear all')}
-        </TextDefault>
-      </TouchableOpacity>
-    )}
-
-    <TouchableOpacity
-      style={styles(currentTheme).applyBtn}
-      activeOpacity={0.8}
-      onPress={applyFilters}
+    <ScrollView
+      style={styles(currentTheme).container}
+      contentContainerStyle={styles(currentTheme).contentContainer}
+      showsVerticalScrollIndicator={false}
     >
-      <TextDefault center bold H4 textColor={currentTheme.black}>
-        {t('apply')}
-      </TextDefault>
-    </TouchableOpacity>
+      <View style={styles(currentTheme).headerRow}>
+        <TextDefault H3 bold textColor={currentTheme.colors.textPrimary} isRTL>
+          {t('filters')}
+        </TextDefault>
+        <TouchableOpacity
+          accessibilityRole='button'
+          accessibilityLabel={t('close')}
+          activeOpacity={0.7}
+          style={styles(currentTheme).closeBtn}
+          onPress={onClose}
+        >
+          <Feather name='x' size={20} color={currentTheme.colors.textPrimary} />
+        </TouchableOpacity>
+      </View>
 
-    <Feather
-      name="x-circle"
-      size={24}
-      color={currentTheme.newIconColor}
-      style={styles(currentTheme).closeBtn}
-      onPress={onClose}
-    />
-  </ScrollView>
-)
+      {Object.keys(safeFilters).map((filter, index) => (
+        <View style={styles(currentTheme).filterSection} key={'filters-' + filter + index}>
+          <TextDefault H5 bold textColor={currentTheme.colors.textPrimary} style={styles(currentTheme).sectionTitle} isRTL>
+            {t(filter)}
+          </TextDefault>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles(currentTheme).flatlist}
+          >
+            {safeFilters[filter].values.map((item, idx) => (
+              <TouchableOpacity
+                key={item + idx}
+                activeOpacity={0.8}
+                onPress={() => handleValueSelection(filter, item)}
+                style={[
+                  styles(currentTheme).filterBtn,
+                  safeFilters[filter].selected.includes(item) && styles(currentTheme).filterBtnSelected
+                ]}
+              >
+                <TextDefault
+                  Normal
+                  bold
+                  textColor={
+                    safeFilters[filter].selected.includes(item)
+                      ? currentTheme.colors.accent
+                      : currentTheme.colors.textSecondary
+                  }
+                >
+                  {t(item)}
+                </TextDefault>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {index < Object.keys(safeFilters).length - 1 && (
+            <View style={styles(currentTheme).divider} />
+          )}
+        </View>
+      ))}
+
+      <View style={styles(currentTheme).actions}>
+        {anySelected && (
+          <TouchableOpacity
+            style={styles(currentTheme).clearBtn}
+            activeOpacity={0.7}
+            onPress={clearFilters}
+          >
+            <TextDefault center bold textColor={currentTheme.colors.accent}>
+              {t('clearAll', 'Clear all')}
+            </TextDefault>
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          style={styles(currentTheme).applyBtn}
+          activeOpacity={0.8}
+          onPress={() => applyFilters(safeFilters)}
+        >
+          <TextDefault center bold H4 textColor={currentTheme.colors.textOnAccent}>
+            {t('apply')}
+          </TextDefault>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+  )
 }
 
 export default Filters

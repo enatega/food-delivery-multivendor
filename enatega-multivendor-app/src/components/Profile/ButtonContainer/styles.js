@@ -1,30 +1,28 @@
 import { scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
-import { Dimensions } from 'react-native'
-const {height} = Dimensions.get('screen')
 
 const styles = (props = null) =>
   StyleSheet.create({
     leftContainer: {
-      height: scale(30),
-      width: scale(30),
+      height: scale(36),
+      width: scale(36),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props.gray100 : 'transparent',
-      borderRadius: 25
+      backgroundColor: props?.colors?.surfaceSubtle ?? 'transparent',
+      borderRadius: props?.radii?.round ?? 25
     },
     flexRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
-      marginVertical: scale(10),
+      minHeight: scale(60),
+      paddingHorizontal: props?.spacing?.lg ?? scale(16)
     },
     linkContainer: {
       flex: 1,
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     mainLeftContainer: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',

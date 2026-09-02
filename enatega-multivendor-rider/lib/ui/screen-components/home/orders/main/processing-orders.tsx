@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 // Core
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo } from "react";
 import { ListRenderItem } from "@shopify/flash-list";
 import { useCallback } from "react";
 
@@ -22,6 +22,8 @@ import { useApptheme } from "@/lib/context/global/theme.context";
 import { ORDER_TYPE } from "@/lib/utils/types";
 import { FlashList } from "@shopify/flash-list";
 import { useTranslation } from "react-i18next";
+import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import { isProcessingOrderForMode } from "@/lib/utils/order-state";
 
 const { height } = Dimensions.get("window");
 // Approximate rendered height (px) of an Order card, used by FlashList for layout estimation
@@ -34,35 +36,22 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const { mode } = useRiderMode();
   const {
-    loadingAssigned,
     errorAssigned,
     assignedOrders,
     refetchAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
 
-  // States
-  const [orders, setOrders] = useState<IOrder[]>([]);
-
-  // Handlers
-  const onInitOrders = () => {
-    if (loadingAssigned || errorAssigned) return;
-    if (!assignedOrders) return;
-
-
-    const _orders = assignedOrders?.filter(
-      (o: IOrder) =>
-        ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp,
+  // Derived from assignedOrders — memoized instead of mirrored into state.
+  const orders = useMemo<IOrder[]>(() => {
+    if (errorAssigned || !assignedOrders) return [];
+    return (
+      assignedOrders.filter((o: IOrder) => isProcessingOrderForMode(o, mode)) ??
+      []
     );
-
-    setOrders(_orders ?? []);
-  };
-
-  // Use Effect
-  useEffect(() => {
-    onInitOrders();
-  }, [assignedOrders, route.key]);
+  }, [assignedOrders, errorAssigned, mode]);
 
   const keyExtractor = useCallback((item: IOrder) => item._id, []);
 
@@ -80,6 +69,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
         paymentStatus={item.paymentStatus}
         acceptedAt={item.acceptedAt}
         user={item.user}
+        eta={item.eta}
       />
     ),
     [route.key],
@@ -95,11 +85,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
           alignItems: "center",
         }}
       >
-        <WalletIcon
-          height={100}
-          width={100}
-          color={appTheme.fontMainColor}
-        />
+        <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
 
         {orders?.length === 0 ? (
           <Text
@@ -115,56 +101,36 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
         )}
       </View>
     ),
-    [appTheme.fontMainColor, appTheme.fontSecondColor, orders?.length, route.key, t],
+    [
+      appTheme.fontMainColor,
+      appTheme.fontSecondColor,
+      orders?.length,
+      route.key,
+      t,
+    ],
   );
   // Calculate the marginBottom dynamically
   // const marginBottom = Platform.OS === "ios" ? height * 0.5 : height * 0.01;
   // Render
 
-    // console.log({assignedOrders: JSON.stringify(orders, null, 2)});
-
+  // console.log({assignedOrders: JSON.stringify(orders, null, 2)});
 
   return (
     <View
       className="pt-14 flex-1 pb-16"
       style={[style.container, { backgroundColor: appTheme.screenBackground }]}
     >
-      {orders?.length > 0 ? (
-        <FlashList
-          data={orders}
-          estimatedItemSize={ORDER_CARD_ESTIMATED_HEIGHT}
-          keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
-          refreshing={networkStatusAssigned === NetworkStatus.loading}
-          onRefresh={refetchAssigned}
-          renderItem={renderItem}
-          ListEmptyComponent={renderListEmptyComponent}
-        />
-      ) : (
-        <View
-          style={{
-            minHeight:
-              height > 670 ? height - height * 0.5 : height - height * 0.6,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
-
-          {orders?.length === 0 ? (
-            <Text
-              className="font-[Inter] text-[18px] text-base font-[500] "
-              style={{ color: appTheme.fontSecondColor }}
-            >
-              {t(NO_ORDER_PROMPT[route.key])}
-            </Text>
-          ) : (
-            <Text style={{ color: appTheme.fontSecondColor }}>
-              {t("Pull down to refresh")}
-            </Text>
-          )}
-        </View>
-      )}
+      <FlashList
+        data={orders}
+        estimatedItemSize={ORDER_CARD_ESTIMATED_HEIGHT}
+        keyExtractor={keyExtractor}
+        showsVerticalScrollIndicator={false}
+        alwaysBounceVertical
+        refreshing={networkStatusAssigned === NetworkStatus.refetch}
+        onRefresh={refetchAssigned}
+        renderItem={renderItem}
+        ListEmptyComponent={renderListEmptyComponent}
+      />
     </View>
   );
 }

@@ -1,87 +1,38 @@
-// import 'expo-dev-client'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import Animated, {
-  Easing,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming
-} from 'react-native-reanimated'
-import SplashVideo from './SplashVideo'
+import React, { useEffect, useState } from 'react'
+import { View } from 'react-native'
+import AnimatedSplash from './AnimatedSplash'
 
-export default function AnimatedSplashScreen({ children }) {
-  const opacityAnimation = useSharedValue(1) // Shared value for opacity
-  const scaleAnimation = useSharedValue(1) // Shared value for scale
-  const [isAppReady, setAppReady] = useState(false)
-  const [isSplashVideoComplete, setSplashVideoComplete] = useState(false)
-  const [isSplashAnimationComplete, setAnimationComplete] = useState(false)
+// Keep the native OS splash up until our theme-aware JS splash has painted, so
+// there is no black/white flash at the native -> JS handoff.
+SplashScreen.preventAutoHideAsync().catch(() => {})
 
+export default function AnimatedSplashScreen({
+  ready = false,
+  themeReady = false,
+  themeMode = 'Pink',
+  children
+}) {
+  const [splashDone, setSplashDone] = useState(false)
+
+  // Keep the native layer visible until the saved app theme has been restored.
+  // Effects run after the correctly themed animated splash has been committed,
+  // avoiding a light splash flash for users who selected dark mode.
   useEffect(() => {
-    if (isAppReady && isSplashVideoComplete) {
-      // Start fade out and scale down animation when the app is ready and video has completed
-      opacityAnimation.value = withTiming(0, {
-        duration: 300,
-        easing: Easing.out(Easing.exp)
-      })
-
-      scaleAnimation.value = withTiming(
-        2,
-        {
-          duration: 300,
-          easing: Easing.out(Easing.exp)
-        },
-        () => {
-          runOnJS(setAnimationComplete)(true) // Update the animation completion state
-        }
-      )
-    }
-  }, [isAppReady, isSplashVideoComplete])
-
-  const onImageLoaded = useCallback(async () => {
-    try {
-      await SplashScreen.hideAsync()
-      // Load stuff
-      await Promise.all([])
-    } catch (e) {
-      // Handle errors
-    } finally {
-      setAppReady(true)
-    }
-  }, [])
-
-  const videoElement = useMemo(() => {
-    return (
-      <SplashVideo
-        onLoaded={onImageLoaded}
-        onFinish={() => {
-          setSplashVideoComplete(true) // Mark video as complete
-        }}
-      />
-    )
-  }, [onImageLoaded])
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: opacityAnimation.value, // Use shared value for opacity
-      transform: [{ scale: scaleAnimation.value }] // Use shared value for scale
-    }
-  })
+    if (!themeReady) return
+    SplashScreen.hideAsync().catch(() => {})
+  }, [themeReady])
 
   return (
     <View style={{ flex: 1 }}>
-      {isSplashAnimationComplete ? children : null}
-      <Animated.View
-        pointerEvents='none'
-        style={[
-          StyleSheet.absoluteFill,
-          animatedStyle,
-          { backgroundColor: 'black' }
-        ]}
-      >
-        {videoElement}
-      </Animated.View>
+      {children}
+      {!splashDone && themeReady && (
+        <AnimatedSplash
+          ready={ready}
+          themeMode={themeMode}
+          onFinish={() => setSplashDone(true)}
+        />
+      )}
     </View>
   )
 }

@@ -1,42 +1,41 @@
-import { scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
-import { alignment } from '../../../utils/alignment'
-import { theme } from '../../../utils/themeColors'
-import { Dimensions } from 'react-native'
-const {height} = Dimensions.get('screen')
 
-const styles = (props = null) =>
+const styles = (tokens, isRTL = false) =>
   StyleSheet.create({
-    leftContainer: {
-      display: 'flex',
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      justifyContent: 'space-between',
+    row: {
+      minHeight: tokens.sizes.headerContent,
+      paddingHorizontal: tokens.spacing.lg,
+      paddingVertical: tokens.spacing.sm,
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      gap: scale(5),
+      gap: tokens.spacing.md
     },
-    flexRow: {
-      display: 'flex',
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      justifyContent: 'space-between',
-      // marginVertical: scale(10)
+    pressed: {
+      backgroundColor: tokens.colors.surfaceSubtle
     },
-    linkContainer: {
+    content: {
       flex: 1,
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: isRTL ? 'flex-end' : 'flex-start'
     },
-    mainLeftContainer: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+    label: {
+      ...tokens.typeScale.caption,
+      marginBottom: tokens.spacing.xxs
+    },
+    standaloneTitle: {
+      ...tokens.typeScale.bodyStrong
+    },
+    detail: {
+      ...tokens.typeScale.bodyStrong,
+      maxWidth: '100%'
     },
     verifyView: {
-      // alignItems: 'flex-end'
-      ...props?.isRTL ? {alignItems: 'flex-start'} : {alignItems: 'flex-end'}
+      marginTop: tokens.spacing.xxs,
+      flexDirection: isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      gap: tokens.spacing.xs
     },
-    padding: {
-      ...alignment.Pmedium
+    status: {
+      ...tokens.typeScale.caption
     }
   })
 export default styles

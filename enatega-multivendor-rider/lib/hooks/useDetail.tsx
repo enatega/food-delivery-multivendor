@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import {
   ApolloCache,
@@ -8,10 +8,11 @@ import {
   ServerParseError,
   useMutation,
   useQuery,
-  useSubscription,
 } from "@apollo/client";
 import { GraphQLFormattedError } from "graphql";
+import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
+import { parseTimestamp } from "@/lib/utils/methods/date-time";
 import { GET_CONFIGURATION } from "../api/graphql/query/configuration";
 import {
   ASSIGN_ORDER,
@@ -19,19 +20,28 @@ import {
 } from "../apollo/mutations/order.mutation";
 import { RIDER_EARNINGS_GRAPH } from "../apollo/queries/earnings.query";
 import {
-  RIDER_CURRENT_WITHDRAW_REQUEST,
   RIDER_ORDERS,
   RIDER_PROFILE,
-  RIDER_TRANSACTIONS_HISTORY,
+  SINGLE_VENDOR_RIDER_ORDERS,
 } from "../apollo/queries/rider.query";
-import { SUBSCRIPTION_ORDERS } from "../apollo/subscriptions";
 import UserContext from "../context/global/user.context";
+import { useRiderMode } from "../context/global/rider-mode.context";
+import { RIDER_SERVER_MODES } from "../mode/rider-mode";
 import { FlashMessageComponent } from "../ui/useable-components";
 import { IOrder } from "../utils/interfaces/order.interface";
+
+interface RiderOrdersCacheData {
+  riderOrders: IOrder[];
+}
 
 const useDetails = (orderData: IOrder) => {
   // Hooks
   const { t } = useTranslation();
+  const { mode } = useRiderMode();
+  const riderOrdersQuery =
+    mode === RIDER_SERVER_MODES.SINGLE
+      ? SINGLE_VENDOR_RIDER_ORDERS
+      : RIDER_ORDERS;
   const { assignedOrders, loadingAssigned, userId } = useContext(UserContext);
   const [order, setOrder] = useState<IOrder>(orderData);
 
@@ -43,32 +53,37 @@ const useDetails = (orderData: IOrder) => {
     }
   }, [assignedOrders, loadingAssigned, orderData]);
 
-  const preparationTime = {
-    hours: new Date(order?.preparationTime).getHours(),
-    minutes: new Date(order?.preparationTime).getMinutes(),
-    seconds: new Date(order?.preparationTime).getSeconds(),
-  };
+  // Derive the prep/now second-of-day values once per order instead of building
+  // six `new Date()` objects on every render.
+  const { preparationSeconds, currentSeconds } = useMemo(() => {
+    const preparationDate = parseTimestamp(order?.preparationTime);
+    const preparationTime = {
+      hours: preparationDate?.getHours() ?? 0,
+      minutes: preparationDate?.getMinutes() ?? 0,
+      seconds: preparationDate?.getSeconds() ?? 0,
+    };
+    const currentTime = {
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes(),
+      seconds: new Date().getSeconds(),
+    };
+    return {
+      preparationSeconds:
+        preparationTime.hours * 3600 +
+        preparationTime.minutes * 60 +
+        preparationTime.seconds,
+      currentSeconds:
+        currentTime.hours * 3600 +
+        currentTime.minutes * 60 +
+        currentTime.seconds,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order?._id, order?.preparationTime]);
 
-  const currentTime = {
-    hours: new Date().getHours(),
-    minutes: new Date().getMinutes(),
-    seconds: new Date().getSeconds(),
-  };
-
-  const preparationSeconds =
-    preparationTime.hours * 3600 +
-    preparationTime.minutes * 60 +
-    preparationTime.seconds;
-  const currentSeconds =
-    currentTime.hours * 3600 + currentTime.minutes * 60 + currentTime.seconds;
-
-  useSubscription(SUBSCRIPTION_ORDERS, {
-    variables: { id: order?._id },
-    skip: !order?._id,
-    onError: (error) => {
-      console.log("Order details subscription error:", error);
-    },
-  });
+  // Order updates arrive through UserContext's SUBSCRIPTION_ASSIGNED_RIDER /
+  // SUBSCRIPTION_ZONE_ORDERS (upserted into RIDER_ORDERS -> assignedOrders), which
+  // this hook already reads via `order`. A per-order SUBSCRIPTION_ORDERS here was a
+  // duplicate socket whose result was never consumed, so it's removed.
 
   const {
     data: dataConfig,
@@ -79,7 +94,7 @@ const useDetails = (orderData: IOrder) => {
   const [mutateAssignOrder, { loading: loadingAssignOrder }] = useMutation(
     ASSIGN_ORDER,
     {
-      refetchQueries: [{ query: RIDER_ORDERS }],
+      refetchQueries: [{ query: riderOrdersQuery }],
       onCompleted,
       onError,
       update,
@@ -92,22 +107,18 @@ const useDetails = (orderData: IOrder) => {
       onCompleted,
       onError,
       update,
-      refetchQueries: [
-        { query: RIDER_PROFILE, variables: { id: userId } },
-        {
-          query: RIDER_TRANSACTIONS_HISTORY,
-          variables: {},
-        },
-        {
-          query: RIDER_CURRENT_WITHDRAW_REQUEST,
-          variables: { riderId: userId },
-        },
-        {
-          query: RIDER_EARNINGS_GRAPH,
-          variables: { rideId: userId },
-        },
-        { query: RIDER_ORDERS },
-      ],
+      // RIDER_ORDERS is kept in sync by update() (below), so it's not refetched
+      // here. Intermediate transitions (PICKED/ASSIGNED) don't change earnings or
+      // wallet, so they trigger no network refetch — the rider needs bandwidth to
+      // navigate at that moment. Only a "DELIVERED" transition affects earnings /
+      // wallet balance, so refetch just those two queries then.
+      refetchQueries: (mutationResult) =>
+        mutationResult.data?.updateOrderStatusRider?.orderStatus === "DELIVERED"
+          ? [
+              { query: RIDER_PROFILE, variables: { id: userId } },
+              { query: RIDER_EARNINGS_GRAPH, variables: { rideId: userId } },
+            ]
+          : [],
     },
   );
 
@@ -126,7 +137,6 @@ const useDetails = (orderData: IOrder) => {
   }
 
   function onError({
-    cause,
     graphQLErrors,
     networkError,
   }: {
@@ -134,16 +144,33 @@ const useDetails = (orderData: IOrder) => {
     networkError: Error | ServerParseError | ServerError | null;
   }) {
     let message = t("Something went wrong");
-    if (networkError) message = "Internal Server Error";
-    if (graphQLErrors) message = graphQLErrors.map((o) => o.message).join(", ");
-    if (cause) message = cause.message;
-    // FlashMessageComponent({ message: message });
-    console.log({ message });
+    if (graphQLErrors?.length) {
+      message = graphQLErrors.map((o) => o.message).join(", ");
+    }
+    if (networkError) {
+      message = t(
+        "Unable to connect. Please check your internet and try again.",
+      );
+    }
+
+    // Make failures visible to the rider. Critical connectivity/server failures
+    // get a blocking Alert; operational (GraphQL) errors get a flash message.
+    if (networkError) {
+      Alert.alert(t("Something went wrong"), message);
+    } else {
+      FlashMessageComponent({ message });
+    }
+
+    if (__DEV__) {
+      console.log({ message });
+    }
   }
 
   async function update(cache: ApolloCache<any>, { data }: FetchResult<any>) {
     if (data?.assignOrder) {
-      const existingData = cache.readQuery({ query: RIDER_ORDERS });
+      const existingData = cache.readQuery<RiderOrdersCacheData>({
+        query: riderOrdersQuery,
+      });
       if (existingData) {
         const index = existingData.riderOrders.findIndex(
           (o: IOrder) => o._id === data.assignOrder._id,
@@ -153,14 +180,16 @@ const useDetails = (orderData: IOrder) => {
           existingData.riderOrders[index].orderStatus =
             data.assignOrder.orderStatus;
           cache.writeQuery({
-            query: RIDER_ORDERS,
+            query: riderOrdersQuery,
             data: { riderOrders: [...existingData.riderOrders] },
           });
         }
       }
     }
     if (data?.updateOrderStatusRider) {
-      const existingData = cache.readQuery({ query: RIDER_ORDERS });
+      const existingData = cache.readQuery<RiderOrdersCacheData>({
+        query: riderOrdersQuery,
+      });
       if (existingData) {
         const index = existingData.riderOrders.findIndex(
           (o: IOrder) => o._id === data.updateOrderStatusRider._id,
@@ -169,7 +198,7 @@ const useDetails = (orderData: IOrder) => {
           existingData.riderOrders[index].orderStatus =
             data.updateOrderStatusRider.orderStatus;
           cache.writeQuery({
-            query: RIDER_ORDERS,
+            query: riderOrdersQuery,
             data: { riderOrders: [...existingData.riderOrders] },
           });
         }

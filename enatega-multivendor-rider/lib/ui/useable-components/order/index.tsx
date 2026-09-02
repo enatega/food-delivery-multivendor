@@ -22,6 +22,7 @@ import { useLocationContext } from "@/lib/context/global/location.context";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { calculateDistance } from "@/lib/utils/methods/custom-functions";
+import { formatTimestampTime } from "@/lib/utils/methods/date-time";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import SpinnerComponent from "../spinner";
@@ -37,6 +38,7 @@ const Order = ({
   paymentStatus,
   acceptedAt,
   user,
+  eta,
   tab,
 }: IOrderComponentProps) => {
   // Hooks
@@ -113,12 +115,14 @@ const Order = ({
 
   // Time field, consistent across every tab. (The previous value was an
   // accept-countdown that sat at 00:00 once an order had been accepted.)
-  const deliveryTimeLabel =
-    restaurant?.deliveryTime != null
-      ? `${restaurant.deliveryTime} mins`
-      : etaMinutes !== null
-        ? `${etaMinutes} mins`
-        : null;
+  const backendEtaWindowStart = formatTimestampTime(eta?.windowStartAt);
+  const backendEtaWindowEnd = formatTimestampTime(eta?.windowEndAt);
+  const backendEtaWindow =
+    backendEtaWindowStart && backendEtaWindowEnd
+      ? `${backendEtaWindowStart}–${backendEtaWindowEnd}`
+      : null;
+  const deliveryTimeLabel = backendEtaWindow ??
+    (etaMinutes !== null ? `${etaMinutes} mins` : null);
 
   if (
     !orderId ||
@@ -158,21 +162,14 @@ const Order = ({
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
+                // Pass only the id + tab. The order-detail screen resolves the
+                // full order from UserContext's assignedOrders cache by id, so
+                // serializing the whole object here is redundant work on every
+                // parent re-render (GPS ticks).
                 router.push({
                   pathname: "/order-detail",
                   params: {
                     itemId: _id,
-                    order: JSON.stringify({
-                      _id,
-                      orderStatus,
-                      restaurant,
-                      deliveryAddress,
-                      paymentMethod,
-                      orderAmount,
-                      paymentStatus,
-                      acceptedAt,
-                      user,
-                    }),
                     tab,
                   },
                 });
@@ -209,7 +206,7 @@ const Order = ({
                               ? "blue"
                               : tab === "processing"
                                 ? "orange"
-                                : "green0",
+                                : "green",
                         }}
                       >
                         <Text

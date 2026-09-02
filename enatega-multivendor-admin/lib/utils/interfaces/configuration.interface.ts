@@ -61,6 +61,8 @@ export interface IConfiguration {
   termsAndConditions?: string;
   privacyPolicy?: string;
   testOtp?: string;
+  enableCustomerDemoMode?: boolean;
+  customerDemoZoneId?: string;
   enableRiderDemo?: boolean;
   enableRestaurantDemo?: boolean;
   enableAdminDemo?: boolean;

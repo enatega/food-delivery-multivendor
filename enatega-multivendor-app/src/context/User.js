@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useApolloClient, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { v1 as uuidv1 } from 'uuid'
@@ -10,9 +9,17 @@ import AuthContext from './Auth'
 import analytics from '../utils/analytics'
 
 import { useTranslation } from 'react-i18next'
-import navigationService from '../routes/navigationService'
 import { dismissSessionExpiredModal, isLogoutInProgress, setLogoutInProgress, subscribeToSessionInvalidation } from '../utils/session'
 import { clearPublicToken } from '../utils/publicAccessToken'
+import { deleteToken } from '../utils/secureToken'
+import { useAppMode } from '../mode/AppModeContext'
+import { APP_MODES } from '../mode/constants'
+import {
+  getModeItem,
+  migrateMultivendorStorage,
+  removeModeItem,
+  setModeItem
+} from '../mode/storage'
 
 const v1options = {
   random: [0x10, 0x91, 0x56, 0xbe, 0xc4, 0xfb, 0xc1, 0xea, 0x71, 0xb4, 0xef, 0xe1, 0x67, 0x1c, 0x58, 0x36]
@@ -22,16 +29,51 @@ const PROFILE = gql`
   ${profile}
 `
 
+const SINGLE_VENDOR_PROFILE = gql`
+  query SingleVendorProfile {
+    profile {
+      _id
+      name
+      phone
+      phoneIsVerified
+      email
+      emailIsVerified
+      notificationToken
+      userType
+      isActive
+      isOrderNotification
+      isOfferNotification
+      addresses {
+        _id
+        label
+        deliveryAddress
+        details
+        location {
+          coordinates
+        }
+        selected
+      }
+      favourite
+      stripe_plan_id
+    }
+  }
+`
+
 const UserContext = React.createContext({})
 
 export const UserProvider = (props) => {
   const Analytics = analytics()
+  const { mode } = useAppMode()
 
   const { t } = useTranslation()
 
   const { token, setToken } = useContext(AuthContext)
   const client = useApolloClient()
-  const { location, setLocation } = useContext(LocationContext)
+  const {
+    location,
+    setLocation,
+    isLocationLoaded
+  } = useContext(LocationContext)
   const [cart, setCart] = useState([])
   const [restaurant, setRestaurant] = useState(null)
   const [isPickup, setIsPickup] = useState(false)
@@ -44,6 +86,7 @@ export const UserProvider = (props) => {
 
   const onCompleted = useCallback(
     async (data) => {
+      if (!data?.profile) return
       const { _id: userId, name, email, phone } = data?.profile
       await Analytics.identify(
         {
@@ -68,22 +111,26 @@ export const UserProvider = (props) => {
     data: dataProfile,
     refetch: refetchProfile,
     networkStatus
-  } = useQuery(PROFILE, {
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true,
-    onError,
-    onCompleted,
-    skip: !token
-  })
+  } = useQuery(
+    mode === APP_MODES.SINGLE ? SINGLE_VENDOR_PROFILE : PROFILE,
+    {
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+      notifyOnNetworkStatusChange: true,
+      onError,
+      onCompleted,
+      skip: !token
+    }
+  )
 
   useEffect(() => {
     let isSubscribed = true
     ;(async () => {
-      const restaurant = await AsyncStorage.getItem('restaurant')
+      if (mode === APP_MODES.MULTI) await migrateMultivendorStorage()
 
-      const cart = await AsyncStorage.getItem('cartItems')
-      const savedCoupon = await AsyncStorage.getItem('coupon')
+      const restaurant = await getModeItem('restaurant', mode)
+      const cart = await getModeItem('cartItems', mode)
+      const savedCoupon = await getModeItem('coupon', mode)
       isSubscribed && setRestaurant(restaurant || null)
       isSubscribed && setCart(cart ? JSON.parse(cart) : [])
       isSubscribed && setCoupon(savedCoupon ? JSON.parse(savedCoupon) : null)
@@ -91,32 +138,64 @@ export const UserProvider = (props) => {
     return () => {
       isSubscribed = false
     }
-  }, [])
+  }, [mode])
+
+  useEffect(() => {
+    if (
+      mode !== APP_MODES.SINGLE ||
+      !isLocationLoaded ||
+      location ||
+      !dataProfile?.profile
+    ) return
+
+    const selectedAddress = dataProfile.profile.addresses?.find(
+      address => address?.selected
+    )
+    const coordinates = selectedAddress?.location?.coordinates
+    if (!selectedAddress || !Array.isArray(coordinates)) return
+
+    setLocation({
+      _id: selectedAddress._id,
+      label: selectedAddress.label,
+      latitude: Number(coordinates[1]),
+      longitude: Number(coordinates[0]),
+      deliveryAddress: selectedAddress.deliveryAddress,
+      details: selectedAddress.details
+    })
+  }, [
+    dataProfile?.profile,
+    isLocationLoaded,
+    location,
+    mode,
+    setLocation
+  ])
 
   const saveCoupon = useCallback(async (couponData) => {
     setCoupon(couponData)
     if (couponData) {
-      await AsyncStorage.setItem('coupon', JSON.stringify(couponData))
+      await setModeItem('coupon', JSON.stringify(couponData), mode)
     } else {
-      await AsyncStorage.removeItem('coupon')
+      await removeModeItem('coupon', mode)
     }
-  }, [])
+  }, [mode])
 
   const clearCart = useCallback(async () => {
     setCart([])
     setRestaurant(null)
     setInstructions('')
     await saveCoupon(null)
-    await AsyncStorage.removeItem('cartItems')
-    await AsyncStorage.removeItem('restaurant')
-  }, [saveCoupon])
+    await removeModeItem('cartItems', mode)
+    await removeModeItem('restaurant', mode)
+  }, [mode, saveCoupon])
 
   const addQuantity = useCallback(async (key, quantity = 1) => {
-    const cartIndex = cart.findIndex((c) => c.key === key)
-    cart[cartIndex].quantity += quantity
-    setCart([...cart])
-    await AsyncStorage.setItem('cartItems', JSON.stringify([...cart]))
-  }, [cart])
+    // Immutable update — never mutate the existing cart item objects (QUAL-009).
+    const nextCart = cart.map((c) =>
+      c.key === key ? { ...c, quantity: c.quantity + quantity } : c
+    )
+    setCart(nextCart)
+    await setModeItem('cartItems', JSON.stringify(nextCart), mode)
+  }, [cart, mode])
 
   const deleteItem = useCallback(async (key) => {
     const cartIndex = cart.findIndex((c) => c.key === key)
@@ -125,18 +204,19 @@ export const UserProvider = (props) => {
       const items = [...cart.filter((c) => c.quantity > 0)]
       setCart(items)
       if (items.length === 0) setRestaurant(null)
-      await AsyncStorage.setItem('cartItems', JSON.stringify(items))
+      await setModeItem('cartItems', JSON.stringify(items), mode)
     }
-  }, [cart])
+  }, [cart, mode])
 
   const removeQuantity = useCallback(async (key) => {
-    const cartIndex = cart.findIndex((c) => c.key === key)
-    cart[cartIndex].quantity -= 1
-    const items = [...cart.filter((c) => c.quantity > 0)]
+    // Immutable update — never mutate the existing cart item objects (QUAL-009).
+    const items = cart
+      .map((c) => (c.key === key ? { ...c, quantity: c.quantity - 1 } : c))
+      .filter((c) => c.quantity > 0)
     setCart(items)
     if (items.length === 0) setRestaurant(null)
-    await AsyncStorage.setItem('cartItems', JSON.stringify(items))
-  }, [cart])
+    await setModeItem('cartItems', JSON.stringify(items), mode)
+  }, [cart, mode])
 
   const checkItemCart = useCallback((itemId) => {
     const cartIndex = cart.findIndex((c) => c._id === itemId)
@@ -175,24 +255,23 @@ export const UserProvider = (props) => {
       specialInstructions
     })
 
-    await AsyncStorage.setItem('cartItems', JSON.stringify([...cartItems]))
+    await setModeItem('cartItems', JSON.stringify([...cartItems]), mode)
     setCart([...cartItems])
-  }, [cart])
+  }, [cart, mode])
 
   const updateCart = useCallback(async (nextCart) => {
     setCart(nextCart)
-    await AsyncStorage.setItem('cartItems', JSON.stringify(nextCart))
-  }, [])
+    await setModeItem('cartItems', JSON.stringify(nextCart), mode)
+  }, [mode])
 
   const setCartRestaurant = useCallback(async (id) => {
     setRestaurant(id)
-    await AsyncStorage.setItem('restaurant', id)
-  }, [])
+    await setModeItem('restaurant', id, mode)
+  }, [mode])
 
   const logout = useCallback(async (options = {}) => {
     const {
-      clearStoredToken = true,
-      shouldNavigate = true
+      clearStoredToken = true
     } = options
 
     try {
@@ -200,11 +279,10 @@ export const UserProvider = (props) => {
       await dismissSessionExpiredModal()
 
       if (clearStoredToken) {
-        await AsyncStorage.removeItem('token')
+        await deleteToken(mode)
       }
       await clearCart()
-      await clearPublicToken()
-      await AsyncStorage.removeItem('location')
+      if (mode === APP_MODES.MULTI) await clearPublicToken()
       setToken(null)
       setCoupon(null)
       setCart([])
@@ -223,18 +301,27 @@ export const UserProvider = (props) => {
           id: `${dataProfile.profile.__typename}:${dataProfile.profile._id}`
         })
       }
-      await client.resetStore()
+      // resetStore refetches every active query. On the single-vendor guest
+      // flow that can turn one unavailable/401 response into an endless loop.
+      // Its cache is mode-isolated, so clearing it is the correct logout action.
+      if (mode === APP_MODES.SINGLE) {
+        await client.clearStore()
+      } else {
+        await client.resetStore()
+      }
       await dismissSessionExpiredModal()
 
-      if (shouldNavigate) {
-        navigationService.navigate('Login')
-      }
+      // Do NOT navigate here. The root navigator is auth-gated with
+      // key={isLoggedIn ? 'authed' : 'guest'}; clearing the token above flips
+      // that key and remounts the navigator straight to the guest Discovery
+      // screen. Navigating imperatively as well caused a double transition
+      // (Login flash -> Main) and a visible refresh — the logout jank.
     } catch (error) {
       console.log('error on logout', error)
     } finally {
       setLogoutInProgress(false)
     }
-  }, [clearCart, client, dataProfile?.profile?._id, dataProfile?.profile?.__typename, location, setLocation, setToken, t])
+  }, [clearCart, client, dataProfile?.profile?._id, dataProfile?.profile?.__typename, location, mode, setLocation, setToken, t])
 
   useEffect(() => {
     const unsubscribe = subscribeToSessionInvalidation(() => {

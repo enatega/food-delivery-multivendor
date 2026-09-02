@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 // UI
 import CustomTab from "@/lib/ui/useable-components/custom-tab";
@@ -20,7 +20,7 @@ import { ORDER_TYPE } from "@/lib/utils/types";
 import { useKeepAwake } from "expo-keep-awake";
 import { useTranslation } from "react-i18next";
 
-function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
+function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   // Props
   const { route } = props;
 
@@ -28,54 +28,50 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
   const tabBarHeight = useBottomTabBarHeight();
-  const {
-    loading,
-    error,
-    data,
-    processingOrders,
-    refetch,
-    currentTab,
-    setCurrentTab,
-  } = useOrders();
+  const { loading, processingOrders, refetch, currentTab, setCurrentTab } =
+    useOrders();
   useKeepAwake();
 
   // const { loading: mutateLoading } = useAcceptOrder();
 
   // States
   const [refreshing, setRefreshing] = useState(false);
-  const [orders, setOrders] = useState<IOrder[]>([]);
   const [showDetails, setShowDetails] = useState<Record<string, boolean>>({});
 
   // Handlers
-  const onInitOrders = () => {
-    if (loading || error) return;
-    if (!data) return;
+  const orders = useMemo(
+    () =>
+      processingOrders.filter((order) =>
+        currentTab === ORDER_DISPATCH_TYPE[0]
+          ? !order?.isPickedUp
+          : order?.isPickedUp,
+      ),
+    [currentTab, processingOrders],
+  );
 
-    const _orders = processingOrders?.filter((order) =>
-      currentTab === ORDER_DISPATCH_TYPE[0]
-        ? !order?.isPickedUp
-        : order?.isPickedUp
-    );
-    setOrders(_orders ?? []);
-  };
-
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    refetch();
-    setRefreshing(false);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
   };
 
-  const toggleShowDetails = (itemId: string) => {
+  const toggleShowDetails = useCallback((itemId: string) => {
     setShowDetails((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
-  };
+  }, []);
 
-  const renderOrderItem = ({ item }: { item: IOrder }) => (
-    <Order
-      tab={route.key as ORDER_TYPE}
-      order={item}
-      showDetails={showDetails}
-      onToggleDetails={toggleShowDetails}
-    />
+  const renderOrderItem = useCallback(
+    ({ item }: { item: IOrder }) => (
+      <Order
+        tab={route.key as ORDER_TYPE}
+        order={item}
+        showDetails={showDetails}
+        onToggleDetails={toggleShowDetails}
+      />
+    ),
+    [route.key, showDetails, toggleShowDetails],
   );
 
   const renderEmptyState = () => (
@@ -107,11 +103,6 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
     </View>
   );
 
-  // Use Effect
-  useEffect(() => {
-    onInitOrders();
-  }, [data?.restaurantOrders, route.key, currentTab]);
-
   return (
     <View
       className="pt-14 flex-1 items-center"
@@ -130,7 +121,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
       />
 
       <View className="flex-1 w-full">
-        {loading ? (
+        {loading && (!orders || orders.length < 1) ? (
           <View className="flex-1">
             <Spinner />
           </View>
@@ -160,7 +151,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   );
 }
 
-export default HomeDeliveredOrdersMain;
+export default HomeProcessingOrdersMain;
 
 const style = StyleSheet.create({
   container: { flex: 1 },

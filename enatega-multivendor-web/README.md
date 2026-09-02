@@ -40,7 +40,10 @@ Examples already exist in `.env.stage` and `.env.prod`.
 ## Google setup
 
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` is required for Google Maps in the browser
-- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is optional and only needed for Google login
+- Google OAuth, Firebase, payments, currency, and other browser configuration is
+  loaded from the Multi Vendor `configuration` query in both storefront modes.
+- Single Vendor environment variables only select its GraphQL, WebSocket, and
+  REST endpoints.
 
 ## Notes
 

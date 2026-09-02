@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { Dimensions, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, Platform, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import CrossCirleIcon from '../../assets/SVG/cross-circle-icon'
@@ -24,14 +24,15 @@ const REVIEWORDER = gql`
   ${reviewOrder}
 `
 
-function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
-
+function Review({ onOverlayPress, onClosed, onSubmitted, theme, orderId, rating }, ref) {
   const { t } = useTranslation()
 
   const ratingRef = useRef()
+  const contentRef = useRef(null)
   const [description, setDescription] = useState('')
+  const [selectedRating, setSelectedRating] = useState(rating || 0)
   const [mutate] = useMutation(REVIEWORDER, { variables: { order: orderId, description, rating: ratingRef.current }, onCompleted, onError })
- 
+
   function onCompleted() {
     setDescription('')
     ref?.current?.close()
@@ -41,60 +42,78 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
     console.log(JSON.stringify(error))
   }
   const client = useApolloClient()
-  const [showSection, setShowSection] = useState(false)
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [order, setOrder] = useState()
-  const isFeedbackVisible = showSection || rating > 0
-  const onSelectRating = (rating) => {
-    if (!showSection) { setShowSection(true) }
-    ratingRef.current = rating
+  const isFeedbackVisible = selectedRating > 0
+  const onSelectRating = (nextRating) => {
+    ratingRef.current = nextRating
+    setSelectedRating(nextRating)
   }
-  const fetchOrder = async() => {
-    const result = await client.query({ query: ORDER, variables: { id: orderId } })
-    setOrder(result?.data?.order)
-  }
+
+  useEffect(() => {
+    const nextRating = rating || 0
+    ratingRef.current = nextRating
+    setSelectedRating(nextRating)
+  }, [orderId, rating])
+
   useEffect(() => {
     if (!orderId) return
-    fetchOrder()
-  }, [orderId])
 
-  const onSubmit = async () => {
-    if (loading) return; 
-    setLoading(true); 
-  
+    let isActive = true
+    client.query({
+      query: ORDER,
+      variables: { id: orderId },
+      fetchPolicy: 'cache-first'
+    }).then((result) => {
+      if (isActive) setOrder(result?.data?.order)
+    }).catch((error) => {
+      if (isActive) console.error('Error loading review order:', error)
+    })
+
+    return () => {
+      isActive = false
+    }
+  }, [client, orderId])
+
+  const onSubmit = async() => {
+    if (loading) return
+    setLoading(true)
+
     try {
       await mutate({
         variables: { order: orderId, description, rating: ratingRef.current }
-      });
+      })
     } catch (error) {
-      console.error("Error submitting review:", error);
+      console.error('Error submitting review:', error)
     } finally {
-      setLoading(false); 
+      setLoading(false)
     }
-  };
+  }
   return (
     <Modalize
       snapPoint={SNAP_HEIGHT}
       modalHeight={isFeedbackVisible ? EXPANDED_MODAL_HEIGHT : BASE_MODAL_HEIGHT}
       handlePosition='inside'
       ref={ref}
+      contentRef={contentRef}
       withHandle={false}
       adjustToContentHeight={false}
+      avoidKeyboardLikeIOS
       keyboardAvoidingBehavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardAvoidingOffset={Platform.OS === 'ios' ? 24 : 0}
-      modalStyle={{ borderWidth: StyleSheet.hairlineWidth }}
+      scrollViewProps={{
+        keyboardShouldPersistTaps: 'handled',
+        showsVerticalScrollIndicator: false,
+        contentContainerStyle: styles.content(theme)
+      }}
+      modalStyle={{
+        borderWidth: StyleSheet.hairlineWidth,
+        backgroundColor: theme.cardBackground
+      }}
       onOverlayPress={onOverlayPress}
+      onClosed={onClosed}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container(theme)}
-      >
-        <ScrollView
-          keyboardShouldPersistTaps='handled'
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.content(theme)}
-        >
-          <View style={styles.headingContainer(theme)}>
+      <View style={styles.container(theme)}>
+        <View style={styles.headingContainer(theme)}>
             <TextDefault bolder H3 textColor={theme.gray900}>
               {t('howWasOrder')}
             </TextDefault>
@@ -131,12 +150,12 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
               </View>
             </View>
             <View>
-              <CachedImage source={order?.restaurant?.image ? { uri: order?.restaurant?.image }: require('../../assets/images/food_placeholder.png') } style={styles.image}/>
+              <CachedImage source={order?.restaurant?.image ? { uri: order?.restaurant?.image } : require('../../assets/images/food_placeholder.png') } style={styles.image}/>
             </View>
           </View>
 
           <View style={styles.starRow}>
-            <StarRating numberOfStars={5} onSelect={onSelectRating} defaultRating={rating} theme={theme} />
+            <StarRating numberOfStars={5} onSelect={onSelectRating} selectedRating={selectedRating} theme={theme} />
           </View>
 
           {isFeedbackVisible && (
@@ -152,6 +171,12 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
                 multiline
                 textAlignVertical='top'
                 scrollEnabled
+                onFocus={() => {
+                  ref?.current?.open('top')
+                  requestAnimationFrame(() => {
+                    contentRef.current?.scrollToEnd({ animated: true })
+                  })
+                }}
                 style={styles.modalInput(theme)}
               />
               <Button
@@ -168,27 +193,21 @@ function Review({ onOverlayPress, onSubmitted, theme, orderId, rating }, ref) {
               />
             </View>
           )}
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </View>
     </Modalize>
   )
 }
 
-const StarRating = ({ numberOfStars = 5, onSelect, defaultRating=0, theme }) => {
+const StarRating = ({ numberOfStars = 5, onSelect, selectedRating = 0, theme }) => {
   const stars = Array.from({ length: numberOfStars }, (_, index) => index + 1)
-  const [selected, setSelected] = useState(defaultRating)
-  useEffect(()=>{
-    if(defaultRating) onSelect(defaultRating)
-  },[])
   const onPress = index => {
     onSelect(index)
-    setSelected(index)
   }
   return (
     <View style={styles.starContainer(theme)}>
       {stars.map(index => <TouchableWithoutFeedback key={`star-${index}`} onPress={() => onPress(index)}>
         <View style={{ flex: 1 }}>
-          <StarIcon isFilled={index <= selected}/>
+          <StarIcon isFilled={index <= selectedRating}/>
         </View>
       </TouchableWithoutFeedback>)}
     </View>

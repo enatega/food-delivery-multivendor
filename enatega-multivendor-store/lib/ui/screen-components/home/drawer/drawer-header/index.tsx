@@ -1,4 +1,4 @@
-import { UPDATE_AVAILABILITY } from "@/lib/apollo/mutations/rider.mutation";
+import { UPDATE_AVAILABILITY } from "@/lib/apollo/mutations/store.mutation";
 import { STORE_PROFILE } from "@/lib/apollo/queries";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { useApptheme } from "@/lib/context/theme.context";
@@ -14,14 +14,15 @@ const CustomDrawerHeader = () => {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { dataProfile, userId, refetchProfile, loadingProfile } = useUserContext();
+  const { dataProfile, userId, refetchProfile, loadingProfile } =
+    useUserContext();
 
   // Queries
   const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
     refetchQueries: [
       { query: STORE_PROFILE, variables: { restaurantId: userId } },
     ],
-    onCompleted: (data) => {
+    onCompleted: () => {
       if (refetchProfile) {
         refetchProfile();
       }
@@ -42,6 +43,7 @@ const CustomDrawerHeader = () => {
     try {
       await toggleAvailablity({ variables: { restaurantId: userId ?? "" } });
     } catch {
+      // Apollo onError displays the failure.
     }
   }
 
@@ -56,44 +58,44 @@ const CustomDrawerHeader = () => {
           style={{ backgroundColor: appTheme.white }}
         >
           {dataProfile?.logo ? (
-        <Image
-          source={{ uri: dataProfile.logo }}
-          width={100}
-          height={100}
-          resizeMode="cover"
-        />
+            <Image
+              source={{ uri: dataProfile.logo }}
+              width={100}
+              height={100}
+              resizeMode="cover"
+            />
           ) : (
-        <Text
-          className="text-[16px] font-semibold"
-          style={{
-            color: appTheme.primary,
-          }}
-        >
-          {(() => {
-            const name = dataProfile?.name;
-            if (!name || typeof name !== "string") return "JS";
+            <Text
+              className="text-[16px] font-semibold"
+              style={{
+                color: appTheme.primary,
+              }}
+            >
+              {(() => {
+                const name = dataProfile?.name;
+                if (!name || typeof name !== "string") return "JS";
 
-            const nameParts = name.split(" ");
-            const firstInitial =
-          nameParts[0]?.substring(0, 1)?.toUpperCase() || "";
-            const secondInitial =
-          nameParts[1]?.substring(0, 1)?.toUpperCase() || "";
+                const nameParts = name.split(" ");
+                const firstInitial =
+                  nameParts[0]?.substring(0, 1)?.toUpperCase() || "";
+                const secondInitial =
+                  nameParts[1]?.substring(0, 1)?.toUpperCase() || "";
 
-            return firstInitial + secondInitial || "JS";
-          })()}
-        </Text>
+                return firstInitial + secondInitial || "JS";
+              })()}
+            </Text>
           )}
         </View>
         <View className="flex-1 pr-2 pt-3">
           <Text
-        className="font-semibold text-[16px]"
-        style={{
-          color: appTheme.black,
-        }}
-        numberOfLines={2}
-        ellipsizeMode="tail"
+            className="font-semibold text-[16px]"
+            style={{
+              color: appTheme.black,
+            }}
+            numberOfLines={2}
+            ellipsizeMode="tail"
           >
-        {dataProfile?.name ?? t("store name")}
+            {dataProfile?.name ?? t("store name")}
           </Text>
           {/* <Text
         className="font-medium"
@@ -117,9 +119,9 @@ const CustomDrawerHeader = () => {
           <SpinnerComponent color={appTheme.secondaryTextColor} height={10} />
         ) : (
           <CustomSwitch
-        value={!!dataProfile?.isAvailable}
-        isDisabled={loading}
-        onToggle={handleToggleAvailability}
+            value={!!dataProfile?.isAvailable}
+            isDisabled={loading}
+            onToggle={handleToggleAvailability}
           />
         )}
         <Text

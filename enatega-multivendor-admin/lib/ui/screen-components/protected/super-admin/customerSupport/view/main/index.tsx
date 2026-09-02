@@ -1,8 +1,14 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { useQuery, useMutation, useApolloClient } from '@apollo/client';
-import { GET_TICKET_USERS, GET_USER_SUPPORT_TICKETS, GET_TICKET_MESSAGES } from '@/lib/api/graphql/queries/supportTickets';
-import { CREATE_TICKET_MESSAGE, UPDATE_TICKET_STATUS } from '@/lib/api/graphql/mutations/supportTickets';
+import { useQuery, useMutation } from '@apollo/client';
+import {
+  GET_TICKET_USERS_WITH_LATEST,
+  GET_USER_SUPPORT_TICKETS,
+} from '@/lib/api/graphql/queries/supportTickets';
+import {
+  CREATE_TICKET_MESSAGE,
+  UPDATE_TICKET_STATUS,
+} from '@/lib/api/graphql/mutations/supportTickets';
 import UserTicketCard from '@/lib/ui/useable-components/user-ticket-card';
 import TicketCard from '@/lib/ui/useable-components/ticket-card';
 import TicketChatModal from '@/lib/ui/useable-components/ticket-chat-modal';
@@ -42,127 +48,119 @@ export interface ITicket {
 interface UserWithLatestTicket {
   user: IUser;
   latestTicket: ITicket | null;
-  lastUpdated: number; // Timestamp to track the most recent update
 }
 
-export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomerSupportMainProps) {
+export default function CustomerSupportMain({
+  activeTab = 'tickets',
+}: ICustomerSupportMainProps) {
   // Hooks
   const t = useTranslations();
-  const client = useApolloClient();
 
   // States
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [isChatModalVisible, setIsChatModalVisible] = useState<boolean>(false);
-  const [page] = useState<number>(1);
-  const [limit] = useState<number>(20);
-  const [usersWithTickets, setUsersWithTickets] = useState<UserWithLatestTicket[]>([]);
   const [showTicketSkeleton, setShowTicketSkeleton] = useState<boolean>(false);
   const [sortedTickets, setSortedTickets] = useState<ITicket[]>([]);
 
-  // Refs
-  const initialDataLoaded = useRef<boolean>(false);
-  const pollingIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastPolledAt = useRef<number>(Date.now());
-
-  // Fetch list of users who have created tickets
-  const { data: usersData, loading: usersLoading, error: usersError, refetch: refetchUsers } = useQuery(
-    GET_TICKET_USERS,
-    {
-      variables: {
-        input: {
-          page,
-          limit
-        }
+  // Fetch users and their latest tickets in one request. Polling refreshes the
+  // Apollo cache without replacing already-rendered data with a loading state.
+  const {
+    data: usersData,
+    loading: usersLoading,
+    error: usersError,
+    refetch: refetchUsers,
+  } = useQuery(GET_TICKET_USERS_WITH_LATEST, {
+    variables: {
+      input: {
+        page: 1,
+        limit: 20,
       },
-      fetchPolicy: "cache-and-network",
-      notifyOnNetworkStatusChange: true,
-    }
-  );
+    },
+    fetchPolicy: 'cache-and-network',
+    pollInterval: 30000,
+    notifyOnNetworkStatusChange: false,
+  });
 
   // Fetch tickets for the selected user
-  const { data: ticketsData, loading: ticketsLoading, error: ticketsError, refetch: refetchTickets } = useQuery(
-    GET_USER_SUPPORT_TICKETS,
+  const {
+    data: ticketsData,
+    loading: ticketsLoading,
+    error: ticketsError,
+    refetch: refetchTickets,
+  } = useQuery(GET_USER_SUPPORT_TICKETS, {
+    variables: {
+      input: {
+        userId: selectedUserId,
+        filters: {
+          page: 1,
+          limit: 50,
+        },
+      },
+    },
+    skip: !selectedUserId,
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+    onCompleted: () => {
+      setShowTicketSkeleton(false);
+    },
+    onError: () => {
+      setShowTicketSkeleton(false);
+    },
+  });
+
+  // Send message mutation
+  const [createMessage, { loading: isSendingMessage }] = useMutation(
+    CREATE_TICKET_MESSAGE,
     {
-      variables: {
-        input: {
-          userId: selectedUserId,
-          filters: {
-            page: 1,
-            limit: 50
-          }
+      onCompleted: () => {
+        if (selectedTicketId) {
+          // After sending a message, refresh tickets
+          refetchTickets();
+          refetchUsers();
         }
       },
-      skip: !selectedUserId,
-      fetchPolicy: "cache-and-network",
-      notifyOnNetworkStatusChange: true,
-      onCompleted: () => {
-        setShowTicketSkeleton(false);
-      }
     }
   );
 
-  // Send message mutation
-  const [createMessage, { loading: isSendingMessage }] = useMutation(CREATE_TICKET_MESSAGE, {
-    onCompleted: () => {
-      if (selectedTicketId) {
-        // After sending a message, refresh tickets
-        refetchTickets();
-        // Update the latest ticket information without showing loading states
-        if (selectedUserId) {
-          fetchLatestUserTickets([selectedUserId]);
-        }
-      }
-    }
-  });
-
   // Update ticket status mutation
-  const [updateTicketStatus, { loading: isUpdatingStatus }] = useMutation(UPDATE_TICKET_STATUS, {
-    onCompleted: () => {
-      refetchTickets();
-      // Update the latest ticket information without showing loading states
-      if (selectedUserId) {
-        fetchLatestUserTickets([selectedUserId]);
-      }
+  const [updateTicketStatus, { loading: isUpdatingStatus }] = useMutation(
+    UPDATE_TICKET_STATUS,
+    {
+      onCompleted: () => {
+        refetchTickets();
+        refetchUsers();
+      },
     }
-  });
+  );
 
-  // Extract data from queries
-  const users: IUser[] = usersData?.getTicketUsers?.users || [];
-
-  // Consistent sorting function for users with tickets
-  const sortUsersByLatestActivity = (users: UserWithLatestTicket[]): UserWithLatestTicket[] => {
-    return [...users].sort((a, b) => {
-      // Get the timestamp for the latest activity (message or update)
-      const getLatestTimestamp = (user: UserWithLatestTicket): number => {
-        if (!user.latestTicket) return 0;
-
-        // Use lastMessageAt if available, otherwise fall back to updatedAt
-        const timestamp = user.latestTicket.lastMessageAt || user.latestTicket.updatedAt;
-        try {
-          return parseInt(timestamp);
-        } catch (error) {
-          return 0;
-        }
-      };
-
-      // Sort by timestamp (most recent first)
-      return getLatestTimestamp(b) - getLatestTimestamp(a);
+  const usersWithTickets: UserWithLatestTicket[] = (
+    usersData?.getTicketUsersWithLatest?.users || []
+  )
+    .map((user: IUser & { latestTicket?: ITicket | null }) => ({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      },
+      latestTicket: user.latestTicket || null,
+    }))
+    .sort((a: UserWithLatestTicket, b: UserWithLatestTicket) => {
+      const aTimestamp =
+        a.latestTicket?.lastMessageAt || a.latestTicket?.updatedAt || '0';
+      const bTimestamp =
+        b.latestTicket?.lastMessageAt || b.latestTicket?.updatedAt || '0';
+      return Number(bTimestamp) - Number(aTimestamp);
     });
-  };
-
-  // Update search when value changes
-  useEffect(() => {
-    if (initialDataLoaded.current) {
-      refetchUsers();
-    }
-  }, [refetchUsers]);
+  const users = usersWithTickets.map(({ user }) => user);
 
   // Update ticket sorting when ticket data changes
   useEffect(() => {
     if (ticketsData && !ticketsLoading) {
       // Extract tickets from the query result
-      const userTickets: ITicket[] = ticketsData?.getSingleUserSupportTickets?.tickets || [];
+      const userTickets: ITicket[] =
+        ticketsData?.getSingleUserSupportTickets?.tickets || [];
 
       // Sort the tickets by latest activity time (newest first)
       const sorted = [...userTickets].sort((a, b) => {
@@ -189,212 +187,21 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
       });
     } catch (error) {
-      return "unknown date";
+      return 'unknown date';
     }
   };
 
-  // Fetch latest ticket for a specific user
-  const fetchUserLatestTicket = async (userId: string): Promise<UserWithLatestTicket | null> => {
-    try {
-      // Fetch this user's tickets
-      const { data } = await client.query({
-        query: GET_USER_SUPPORT_TICKETS,
-        variables: {
-          input: {
-            userId,
-            filters: {
-              page: 1,
-              limit: 10
-            }
-          }
-        },
-        fetchPolicy: "network-only"
-      });
+  const firstUserId = usersWithTickets[0]?.user._id;
 
-      // Find the user object
-      const user = users.find(u => u._id === userId);
-      if (!user) return null;
-
-      // Get all tickets sorted by updatedAt time (newest first)
-      const userTickets = data?.getSingleUserSupportTickets?.tickets || [];
-      let latestTicket: ITicket | null = null;
-
-      if (userTickets.length > 0) {
-        // Sort by lastMessageAt or updatedAt timestamp (newest first)
-        const sortedTickets = [...userTickets].sort((a, b) => {
-          const getTimestamp = (ticket: ITicket): number => {
-            const timestamp = ticket.lastMessageAt || ticket.updatedAt;
-            try {
-              return parseInt(timestamp);
-            } catch (error) {
-              return 0;
-            }
-          };
-
-          return getTimestamp(b) - getTimestamp(a);
-        });
-
-        if (sortedTickets.length > 0) {
-          latestTicket = sortedTickets[0];
-
-          // For the latest ticket, also check for its last message time
-          if (latestTicket) {
-            try {
-              const { data: messageData } = await client.query({
-                query: GET_TICKET_MESSAGES,
-                variables: {
-                  input: {
-                    ticket: latestTicket._id,
-                    page: 1,
-                    limit: 1, // Just get the most recent message
-                  }
-                },
-                fetchPolicy: "network-only"
-              });
-
-              // If messages exist, update the lastMessageAt time
-              const messages = messageData?.getTicketMessages?.messages || [];
-              if (messages.length > 0) {
-                // Messages are already sorted newest first
-                latestTicket = {
-                  ...latestTicket,
-                  lastMessageAt: messages[0].createdAt
-                };
-              }
-            } catch (error) {
-              console.error("Error fetching messages for ticket:", error);
-            }
-          }
-        }
-      }
-
-      return {
-        user,
-        latestTicket,
-        lastUpdated: Date.now()
-      };
-    } catch (error) {
-      console.error("Error fetching user ticket:", error);
-      return null;
-    }
-  };
-
-  // Fetch latest tickets for specific users
-  const fetchLatestUserTickets = async (userIds: string[] = []) => {
-    if (userIds.length === 0) return;
-
-    try {
-      const promises = userIds.map(userId => fetchUserLatestTicket(userId));
-      const results = await Promise.all(promises);
-
-      // Filter out null results
-      const validResults = results.filter(Boolean) as UserWithLatestTicket[];
-
-      // Update the users with tickets array, replacing only the updated users
-      setUsersWithTickets(prevUsers => {
-        const updatedUsers = [...prevUsers];
-
-        validResults.forEach(newUserData => {
-          const existingIndex = updatedUsers.findIndex(u => u.user._id === newUserData.user._id);
-
-          if (existingIndex >= 0) {
-            // Replace existing user data
-            updatedUsers[existingIndex] = newUserData;
-          } else {
-            // Add new user data
-            updatedUsers.push(newUserData);
-          }
-        });
-
-        // Apply consistent sorting
-        return sortUsersByLatestActivity(updatedUsers);
-      });
-    } catch (error) {
-      console.error("Error fetching latest user tickets:", error);
-    }
-  };
-
-  // Initial fetch for all users' latest tickets
-  const fetchAllUsersLatestTickets = useCallback(async (firstLoad: boolean = false) => {
-    if (usersLoading || !users.length) return;
-
-    try {
-      // For each user, fetch their tickets to find the most recent one
-      const userTicketsPromises = users.map(async (user: IUser) => {
-        return fetchUserLatestTicket(user._id);
-      });
-
-      // Wait for all requests to complete
-      const results = await Promise.all(userTicketsPromises);
-
-      // Filter out null results
-      const validResults = results.filter(Boolean) as UserWithLatestTicket[];
-
-      // Apply consistent sorting
-      const sortedResults = sortUsersByLatestActivity(validResults);
-
-      setUsersWithTickets(sortedResults);
-
-      // Auto-select the first user if none is selected
-      if (!selectedUserId && sortedResults.length > 0) {
-        setSelectedUserId(sortedResults[0].user._id);
-      }
-
-      // On first load, mark as loaded
-      if (firstLoad && !initialDataLoaded.current) {
-        initialDataLoaded.current = true;
-      }
-    } catch (error) {
-      console.error("Error fetching all user tickets:", error);
-    }
-  }, [users, usersLoading, selectedUserId, client]);
-
-  // Load initial data
+  // Select the most recently active user once the combined query completes.
   useEffect(() => {
-    if (!usersLoading && users.length > 0 && !initialDataLoaded.current) {
-      fetchAllUsersLatestTickets(true);
+    if (!selectedUserId && firstUserId) {
+      setSelectedUserId(firstUserId);
     }
-  }, [usersLoading, users, fetchAllUsersLatestTickets]);
-
-  // Setup polling for updates
-  useEffect(() => {
-    // Define the polling function
-    const pollForUpdates = async () => {
-      // Only poll if we have initial data and the component is mounted
-      if (initialDataLoaded.current && users.length > 0) {
-        const now = Date.now();
-
-        // Only poll if it's been at least 15 seconds since the last poll
-        if (now - lastPolledAt.current >= 15000) {
-          lastPolledAt.current = now;
-
-          // Poll for fresh users
-          await refetchUsers();
-
-          // Fetch latest tickets for all users but don't show loading state
-          fetchAllUsersLatestTickets();
-
-          // If a user is selected, also refresh their tickets
-          if (selectedUserId) {
-            refetchTickets();
-          }
-        }
-      }
-    };
-
-    // Set up the polling interval (every 30 seconds)
-    pollingIntervalRef.current = setInterval(pollForUpdates, 30000);
-
-    // Cleanup the interval when the component unmounts
-    return () => {
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-      }
-    };
-  }, [refetchUsers, users, selectedUserId, refetchTickets, fetchAllUsersLatestTickets]);
+  }, [firstUserId, selectedUserId]);
 
   // Handle user selection - show skeleton when changing user
   const handleUserSelect = (userId: string) => {
@@ -418,9 +225,7 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
     // Refresh tickets and user data without showing loading state
     setTimeout(() => {
       refetchTickets();
-      if (selectedUserId) {
-        fetchLatestUserTickets([selectedUserId]);
-      }
+      refetchUsers();
     }, 300);
   };
 
@@ -432,9 +237,9 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
       variables: {
         messageInput: {
           content: message,
-          ticket: selectedTicketId
-        }
-      }
+          ticket: selectedTicketId,
+        },
+      },
     });
   };
 
@@ -446,21 +251,23 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
       variables: {
         input: {
           ticketId,
-          status: newStatus
-        }
-      }
+          status: newStatus,
+        },
+      },
     });
   };
 
-  // Determine if we're loading - only show loading state on first load
-  const isLoading = usersLoading && !initialDataLoaded.current;
+  // Cached data stays visible during polling; the skeleton is only for a true
+  // first load, and the empty state is only reachable after that load resolves.
+  const isLoading = usersLoading && usersWithTickets.length === 0;
 
   return (
     <div className="flex flex-grow flex-col overflow-hidden sm:flex-row">
       {/* Left panel - Users list */}
       <div
-        className={`w-full overflow-y-auto border-gray-200 border dark:border-dark-600 bg-white dark:bg-dark-950 sm:w-1/3 ${activeTab === 'tickets' ? '' : 'hidden sm:block'
-          }`}
+        className={`w-full overflow-y-auto border-gray-200 border dark:border-dark-600 bg-white dark:bg-dark-950 sm:w-1/3 ${
+          activeTab === 'tickets' ? '' : 'hidden sm:block'
+        }`}
       >
         {/* Mobile-only header for Users section */}
         <div className="mt-3 border-b dark:border-dark-600 p-3 sm:hidden">
@@ -474,18 +281,22 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
           {isLoading ? (
             <UserTicketSkeleton count={5} />
           ) : usersError ? (
-            <div className="p-4 text-center text-red-500">Error loading users</div>
+            <div className="p-4 text-center text-red-500">
+              Error loading users
+            </div>
           ) : usersWithTickets.length > 0 ? (
-            usersWithTickets.map(({ user, latestTicket }: UserWithLatestTicket) => (
-              <UserTicketCard
-                key={user._id}
-                user={user}
-                latestTicket={latestTicket}
-                isSelected={selectedUserId === user._id}
-                onClick={() => handleUserSelect(user._id)}
-                formatDate={formatDate}
-              />
-            ))
+            usersWithTickets.map(
+              ({ user, latestTicket }: UserWithLatestTicket) => (
+                <UserTicketCard
+                  key={user._id}
+                  user={user}
+                  latestTicket={latestTicket}
+                  isSelected={selectedUserId === user._id}
+                  onClick={() => handleUserSelect(user._id)}
+                  formatDate={formatDate}
+                />
+              )
+            )
           ) : (
             <NoData message={t('no_user_found')} />
           )}
@@ -494,8 +305,9 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
 
       {/* Right panel - Tickets list */}
       <div
-        className={`flex-1 overflow-y-auto border-l border-gray-200 dark:border-dark-600 px-2 ${activeTab === 'chats' ? '' : 'hidden sm:block'
-          }`}
+        className={`flex-1 overflow-y-auto border-l border-gray-200 dark:border-dark-600 px-2 ${
+          activeTab === 'chats' ? '' : 'hidden sm:block'
+        }`}
       >
         {/* Header for Tickets section */}
         <div className="border-b dark:border-dark-600  pb-2 pt-3">
@@ -507,7 +319,10 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
               <HeaderText text={t('ticket_chats')} />
               {selectedUserId && (
                 <Chip
-                  label={users.find((u: IUser) => u._id === selectedUserId)?.name || 'User'}
+                  label={
+                    users.find((u: IUser) => u._id === selectedUserId)?.name ||
+                    'User'
+                  }
                   className="w-full"
                 />
               )}
@@ -517,14 +332,21 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
 
         {/* Tickets list */}
         <div className="pb-16">
-          {!selectedUserId ? (
+          {isLoading ? (
+            <TicketCardSkeleton count={3} />
+          ) : !selectedUserId ? (
             <div className="flex items-center justify-center p-8">
-              <p className="text-gray-500 dark:text-white">{t('select_a_user_to_view_tickets')}</p>
+              <p className="text-gray-500 dark:text-white">
+                {t('select_a_user_to_view_tickets')}
+              </p>
             </div>
-          ) : showTicketSkeleton || (ticketsLoading && !sortedTickets.length) ? (
+          ) : showTicketSkeleton ||
+            (ticketsLoading && !sortedTickets.length) ? (
             <TicketCardSkeleton count={3} />
           ) : ticketsError ? (
-            <div className="p-4 text-center text-red-500">Error loading tickets</div>
+            <div className="p-4 text-center text-red-500">
+              Error loading tickets
+            </div>
           ) : sortedTickets.length > 0 ? (
             sortedTickets.map((ticket: ITicket) => (
               <TicketCard
@@ -535,7 +357,9 @@ export default function CustomerSupportMain({ activeTab = 'tickets' }: ICustomer
             ))
           ) : (
             <div className="flex items-center justify-center p-8">
-              <p className="text-gray-500">{t('No tickets found for this user')}</p>
+              <p className="text-gray-500">
+                {t('No tickets found for this user')}
+              </p>
             </div>
           )}
         </div>

@@ -90,6 +90,7 @@ export default function OrderTable({
 
   return (
     <Table
+      className="order-responsive-table"
       data={displayData as IExtendedOrder[]}
       setSelectedData={setSelectedData}
       selectedData={selectedData}

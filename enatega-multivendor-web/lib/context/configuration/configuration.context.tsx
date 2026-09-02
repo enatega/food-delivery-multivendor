@@ -12,6 +12,8 @@ import { Libraries } from "@react-google-maps/api";
 
 // Core
 import React, { ReactNode, useContext } from "react";
+import { APP_MODES, getModeEnvironment, useAppMode } from "@/lib/mode";
+import { SINGLE_VENDOR_CONFIGURATION } from "@/lib/api/graphql/single-vendor";
 
 const ConfigurationContext = React.createContext({} as IConfigProps);
 const GOOGLE_WEB_CLIENT_ID_REGEX =
@@ -22,44 +24,58 @@ export const ConfigurationProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const { loading, data, error } = useQuery(GET_CONFIG);
-  const configuration =
-    loading || error || !data.configuration ?
-      { currency: "", currencySymbol: "", deliveryRate: 0, costType: "perKM" }
-    : data.configuration;
+  const { mode, isSingleVendor } = useAppMode();
+  const modeEnvironment = getModeEnvironment(mode);
+  // Browser configuration is shared by both storefront modes. Only operational
+  // API traffic (auth, catalog, cart, orders, etc.) follows the active mode.
+  const sharedConfigurationQuery = useQuery(GET_CONFIG, {
+    context: isSingleVendor ? { appMode: APP_MODES.MULTI } : undefined,
+  });
+  const singleVendorConfigurationQuery = useQuery(SINGLE_VENDOR_CONFIGURATION, {
+    skip: !isSingleVendor,
+  });
+  const sharedConfiguration =
+    sharedConfigurationQuery.loading ||
+    sharedConfigurationQuery.error ||
+    !sharedConfigurationQuery.data?.configuration
+      ? { currency: "", currencySymbol: "", deliveryRate: 0, costType: "perKM" }
+      : sharedConfigurationQuery.data.configuration;
+  const commerceConfiguration = isSingleVendor
+    ? singleVendorConfigurationQuery.data?.configuration || sharedConfiguration
+    : sharedConfiguration;
 
-  
+  const configuredGoogleClientId = sharedConfiguration.webClientID;
   const GOOGLE_CLIENT_ID = GOOGLE_WEB_CLIENT_ID_REGEX.test(
-    configuration.webClientID ?? "",
+    configuredGoogleClientId ?? "",
   )
-    ? configuration.webClientID
+    ? configuredGoogleClientId
     : "not_found";
-  const STRIPE_PUBLIC_KEY = configuration.publishableKey;
-  const PAYPAL_KEY = configuration.clientId;
+  const STRIPE_PUBLIC_KEY = commerceConfiguration.publishableKey;
+  const PAYPAL_KEY = sharedConfiguration.clientId;
   const GOOGLE_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
-  const AMPLITUDE_API_KEY = configuration.webAmplitudeApiKey;
+  const AMPLITUDE_API_KEY = sharedConfiguration.webAmplitudeApiKey;
   const LIBRARIES = "places,drawing,geometry".split(",") as Libraries;
   const COLORS = {
-    GOOGLE: configuration.googleColor as string,
+    GOOGLE: sharedConfiguration.googleColor as string,
   };
-  const SENTRY_DSN = configuration.webSentryUrl;
-  const SKIP_EMAIL_VERIFICATION = configuration.skipEmailVerification;
-  const SKIP_MOBILE_VERIFICATION = configuration.skipMobileVerification;
-  const CURRENCY = configuration.currency;
-  const CURRENCY_SYMBOL = configuration.currencySymbol;
-  const DELIVERY_RATE = configuration.deliveryRate;
-  const COST_TYPE = configuration.costType;
-  const TEST_OTP = configuration.testOtp;
+  const SENTRY_DSN = sharedConfiguration.webSentryUrl;
+  const SKIP_EMAIL_VERIFICATION = commerceConfiguration.skipEmailVerification;
+  const SKIP_MOBILE_VERIFICATION = commerceConfiguration.skipMobileVerification;
+  const CURRENCY = commerceConfiguration.currency;
+  const CURRENCY_SYMBOL = commerceConfiguration.currencySymbol;
+  const DELIVERY_RATE = commerceConfiguration.deliveryRate;
+  const COST_TYPE = commerceConfiguration.costType;
+  const TEST_OTP = sharedConfiguration.testOtp;
 
-  const FIREBASE_KEY = configuration?.firebaseKey;
-  const FIREBASE_PROJECT_ID = configuration?.projectId;
-  const FIREBASE_STORAGE_BUCKET = configuration?.storageBucket;
-  const FIREBASE_MSG_SENDER_ID = configuration?.msgSenderId;
-  const FIREBASE_APP_ID = configuration?.appId;
-  const FIREBASE_MEASUREMENT_ID = configuration?.measurementId;
-  const FIREBASE_VAPID_KEY = configuration?.vapidKey;
-  const FIREBASE_AUTH_DOMAIN = configuration?.authDomain;
-  const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL ?? "";
+  const FIREBASE_KEY = sharedConfiguration?.firebaseKey;
+  const FIREBASE_PROJECT_ID = sharedConfiguration?.projectId;
+  const FIREBASE_STORAGE_BUCKET = sharedConfiguration?.storageBucket;
+  const FIREBASE_MSG_SENDER_ID = sharedConfiguration?.msgSenderId;
+  const FIREBASE_APP_ID = sharedConfiguration?.appId;
+  const FIREBASE_MEASUREMENT_ID = sharedConfiguration?.measurementId;
+  const FIREBASE_VAPID_KEY = sharedConfiguration?.vapidKey;
+  const FIREBASE_AUTH_DOMAIN = sharedConfiguration?.authDomain;
+  const SERVER_URL = modeEnvironment.restUrl;
 
   return (
     <ConfigurationContext.Provider
@@ -87,8 +103,7 @@ export const ConfigurationProvider = ({
         FIREBASE_MSG_SENDER_ID,
         FIREBASE_PROJECT_ID,
         FIREBASE_STORAGE_BUCKET,
-        FIREBASE_AUTH_DOMAIN
-
+        FIREBASE_AUTH_DOMAIN,
       }}
     >
       {children}

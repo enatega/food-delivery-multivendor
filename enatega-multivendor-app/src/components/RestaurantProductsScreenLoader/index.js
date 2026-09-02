@@ -1,12 +1,12 @@
 // Core
 import React from 'react'
 import { View } from 'react-native'
-
-// Placeholder
-import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { StyleSheet } from 'react-native'
 
 // Components
 import ImageHeader from '../Restaurant/ImageHeader'
+import { SkeletonBlock } from '../../ui/designSystem'
+import { scale } from '../../utils/scaling'
 
 const RestaurantProductsScreenLoader = (
     { styles, currentTheme, iconColor, iconSize, search,
@@ -14,7 +14,7 @@ const RestaurantProductsScreenLoader = (
         iconTouchHeight, propsData, loading, searchOpen,
         showSearchResults, searchHandler, searchPopupHandler,
         translationY, HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT,
-        TOP_BAR_HEIGHT, PlaceholderMedia, data, setSearch
+        TOP_BAR_HEIGHT, data, setSearch
     }
 ) => {
     return (
@@ -52,28 +52,51 @@ const RestaurantProductsScreenLoader = (
                     }
                 ]}
             >
-                {Array.from(Array(10), (_, i) => (
-                    <Placeholder
-                        key={i}
-                        Animation={(props) => (
-                            <Fade
-                                {...props}
-                                style={{ backgroundColor: currentTheme.gray }}
-                                duration={600}
-                            />
-                        )}
-                        Left={PlaceholderMedia}
-                        style={{
-                            padding: 12
-                        }}
-                    >
-                        <PlaceholderLine width={80} />
-                        <PlaceholderLine width={80} />
-                    </Placeholder>
-                ))}
+                <View style={loaderStyles.tabs}>
+                  {[0, 1, 2, 3].map((item) => (
+                    <SkeletonBlock key={item} width={scale(80)} height={scale(34)} borderRadius={scale(17)} />
+                  ))}
+                </View>
+                <View style={loaderStyles.rows}>
+                  {Array.from(Array(6), (_, i) => (
+                    <View key={i} style={[loaderStyles.row, { borderBottomColor: currentTheme.colors?.borderSubtle || 'rgba(128, 128, 128, 0.22)' }]}>
+                      <View style={loaderStyles.copy}>
+                        <SkeletonBlock width='62%' height={scale(17)} borderRadius={scale(6)} />
+                        <SkeletonBlock width='90%' height={scale(12)} borderRadius={scale(6)} />
+                        <SkeletonBlock width='28%' height={scale(14)} borderRadius={scale(6)} />
+                      </View>
+                      <SkeletonBlock width={scale(96)} height={scale(84)} borderRadius={scale(12)} />
+                    </View>
+                  ))}
+                </View>
             </View>
         </View>
     )
 }
+
+const loaderStyles = StyleSheet.create({
+  tabs: {
+    flexDirection: 'row',
+    gap: scale(8),
+    paddingHorizontal: scale(12),
+    paddingVertical: scale(10),
+    overflow: 'hidden'
+  },
+  rows: {
+    paddingHorizontal: scale(12)
+  },
+  row: {
+    minHeight: scale(106),
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: scale(12),
+    paddingVertical: scale(10),
+    borderBottomWidth: StyleSheet.hairlineWidth
+  },
+  copy: {
+    flex: 1,
+    gap: scale(9)
+  }
+})
 
 export default RestaurantProductsScreenLoader

@@ -84,12 +84,33 @@ export const useRestaurantData = (
     if (!restaurant)
       return { sortedDeals: [], merged_food_items: [], deals: [] }
 
+    // The popularFoodItems resolver can return an empty/missing `image` for
+    // items even though the same food has a valid image in the restaurant's
+    // categories. Build an id -> image lookup from the restaurant's own foods so
+    // Popular items show the real image (matching the "All items" list) instead
+    // of a blank card.
+    const foodImageById = {}
+    restaurant?.categories?.forEach((cat) => {
+      cat?.foods?.forEach((food) => {
+        if (food?._id && food?.image && String(food.image).trim() !== '') {
+          foodImageById[food._id] = food.image
+        }
+      })
+    })
+
+    const popularFoods = (popularFoodsItems?.popularFoodItems || []).map((food) => {
+      const hasImage = food?.image && String(food.image).trim() !== ''
+      if (hasImage) return food
+      const fallbackImage = foodImageById[food?._id]
+      return fallbackImage ? { ...food, image: fallbackImage } : food
+    })
+
     // First create the popular section
     const popularSection = {
       title: 'Popular',
       parentCategoryTitle: 'Popular',
       subCategoryTitle: null,
-      foods: popularFoodsItems?.popularFoodItems || [] // Use the new resolver data
+      foods: popularFoods
     }
 
     const allDeals =

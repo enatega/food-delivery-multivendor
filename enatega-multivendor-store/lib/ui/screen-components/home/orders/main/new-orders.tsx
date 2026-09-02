@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 // UI
 import CustomTab from "@/lib/ui/useable-components/custom-tab";
@@ -36,13 +36,8 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
   const tabBarHeight = useBottomTabBarHeight();
-  const {
-    loading,
-    activeOrders,
-    refetch,
-    currentTab,
-    setCurrentTab,
-  } = useOrders();
+  const { loading, activeOrders, refetch, currentTab, setCurrentTab } =
+    useOrders();
   useKeepAwake();
 
   // Ref
@@ -56,41 +51,50 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
 
   //////////
 
-  const orders =
-    activeOrders?.filter((order) =>
-      currentTab === ORDER_DISPATCH_TYPE[0]
-        ? !order?.isPickedUp
-        : order?.isPickedUp,
-    ) ?? [];
+  const orders = useMemo(
+    () =>
+      activeOrders.filter((order) =>
+        currentTab === ORDER_DISPATCH_TYPE[0]
+          ? !order?.isPickedUp
+          : order?.isPickedUp,
+      ),
+    [activeOrders, currentTab],
+  );
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    refetch();
-    setRefreshing(false);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
   };
 
-  const handlePresentModalPress = (order: IOrder) => {
+  const handlePresentModalPress = useCallback((order: IOrder) => {
     setSelectedOrder(order);
     bottomSheetModalRef.current?.present();
-  };
+  }, []);
 
-  const handleDismissModal = () => {
+  const handleDismissModal = useCallback(() => {
     setSelectedOrder(null);
     bottomSheetModalRef.current?.dismiss();
-  };
+  }, []);
 
-  const toggleShowDetails = (itemId: string) => {
+  const toggleShowDetails = useCallback((itemId: string) => {
     setShowDetails((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
-  };
+  }, []);
 
-  const renderOrderItem = ({ item }: { item: IOrder }) => (
-    <Order
-      tab={route.key as ORDER_TYPE}
-      order={item}
-      handlePresentModalPress={handlePresentModalPress}
-      showDetails={showDetails}
-      onToggleDetails={toggleShowDetails}
-    />
+  const renderOrderItem = useCallback(
+    ({ item }: { item: IOrder }) => (
+      <Order
+        tab={route.key as ORDER_TYPE}
+        order={item}
+        handlePresentModalPress={handlePresentModalPress}
+        showDetails={showDetails}
+        onToggleDetails={toggleShowDetails}
+      />
+    ),
+    [handlePresentModalPress, route.key, showDetails, toggleShowDetails],
   );
 
   const renderEmptyState = () => (
@@ -102,11 +106,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
         alignItems: "center",
       }}
     >
-      <WalletIcon
-        height={100}
-        width={100}
-        color={appTheme.fontMainColor}
-      />
+      <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
       {orders?.length === 0 ? (
         <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
           {t(NO_ORDER_PROMPT[route.key])}
@@ -158,7 +158,6 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                 initialNumToRender={20} // render more items up front
                 maxToRenderPerBatch={20} // reduce batching delays
                 windowSize={5} // keep more items around viewport
-                removeClippedSubviews={false}
                 renderItem={renderOrderItem}
                 ListEmptyComponent={renderEmptyState}
               />

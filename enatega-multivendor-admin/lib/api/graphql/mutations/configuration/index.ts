@@ -139,6 +139,8 @@ export const SAVE_APP_CONFIGURATION = gql`
       termsAndConditions
       privacyPolicy
       testOtp
+      enableCustomerDemoMode
+      customerDemoZoneId
     }
   }
 `;

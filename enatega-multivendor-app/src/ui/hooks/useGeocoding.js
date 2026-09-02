@@ -6,11 +6,16 @@ const useGeocoding = () => {
 
   const getAddress = async (latitude, longitude) => {
     try {
+
+      console.log(`Fetching address for coordinates: (${latitude}, ${longitude})`)
       const data = await fetchReverseGeocode({
         baseUrl: SERVER_REST_URL,
         latitude,
         longitude,
         language: 'en'
+      }).catch((error) => {
+        console.error('Error fetching reverse geocode data:', error)
+        throw error
       })
       console.log('Reverse geocode data:', data)
       if (data?.status === 'OK' && data?.formattedAddress) {

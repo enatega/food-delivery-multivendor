@@ -1,93 +1,79 @@
-import { scale } from '../../utils/scaling'
 import { StyleSheet } from 'react-native'
-import { alignment } from '../../utils/alignment'
-import { verticalScale } from '../../utils/scaling'
 
-const styles = (props = null) =>
-  StyleSheet.create({
-    flex: {
-      flex: 1,
-      
-    },
-    width100: {
-      width: '100%'
-    },
-    width10: {
-      width: '10%'
-    },
-    titleAddress: {
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-    },
-    homeIcon: {
-      width: '20%',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    homeIconImg: {
-      width: scale(15),
-      height: scale(15)
-    },
-    cartAddress:{
-      ...alignment.PBmedium,
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
+const styles = (theme) => StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: theme.colors.canvas
+  },
+  listContent: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.sm,
+    paddingBottom: theme.spacing.xl
+  },
+  addressRow: {
+    minHeight: theme.sizes.compactTile,
+    flexDirection: theme.isRTL ? 'row-reverse' : 'row',
+    alignItems: 'center',
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.sm,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: theme.colors.borderSubtle
+  },
+  selectedAddressRow: {
+    marginVertical: theme.spacing.xs,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.radii.tile,
+    borderBottomColor: 'transparent',
+    backgroundColor: theme.colors.accentSubtle
+  },
+  selectionColumn: {
+    width: theme.sizes.touchTarget,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  addressCopy: {
+    flex: 1,
+    minWidth: 0,
+    paddingLeft: theme.isRTL ? 0 : theme.spacing.xs,
+    paddingRight: theme.isRTL ? theme.spacing.xs : 0
+  },
+  addressTitleRow: {
+    flexDirection: theme.isRTL ? 'row-reverse' : 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.xs
+  },
+  addressTitle: {
+    flex: 1,
+    textAlign: theme.isRTL ? 'right' : 'left',
+    ...theme.typeScale.bodyStrong
+  },
+  addressDetail: {
+    paddingRight: theme.isRTL ? 0 : theme.spacing.xl,
+    paddingLeft: theme.isRTL ? theme.spacing.xl : 0,
+    textAlign: theme.isRTL ? 'right' : 'left',
+    ...theme.typeScale.body
+  },
+  editButton: {
+    width: theme.sizes.iconButton,
+    height: theme.sizes.iconButton,
+    borderRadius: theme.radii.round,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  bottomAction: {
+    paddingTop: theme.spacing.sm
+  },
+  actionRow: {
+    flexDirection: theme.isRTL ? 'row-reverse' : 'row',
+    gap: theme.spacing.sm
+  },
+  secondaryAction: {
+    flex: 1
+  },
+  primaryAction: {
+    flex: 0.82
+  }
+})
 
-    },
-    addressContainer: {
-      width: '93%',
-      alignSelf: 'center',
-      borderRadius: scale(10),
-      backgroundColor: props !== null ? props.gray100 : 'transparent',
-      ...alignment.PTsmall,
-      ...alignment.PBsmall,
-      ...alignment.PRsmall,
-      ...alignment.PLsmall,
-      borderWidth: 1,
-      alignSelf: 'center',
-      borderColor: props !== null ? props.gray200 : '#E5E7EB'
-    },
-    addressDetail: {
-      width: '80%',
-      alignSelf: 'flex-end'
-    },
-    line: {
-      width: '80%',
-      alignSelf: 'flex-end',
-      borderBottomColor: 'lightgrey',
-      borderBottomWidth: 1,
-      ...alignment.MTmedium,
-      ...alignment.MBmedium
-    },
-    
-    containerSpace: {
-      backgroundColor: props !== null ? props.cardBackground : 'transparent',
-      width: '92%',
-      // margin: scale(10),
-      padding: scale(5),
-      borderRadius: scale(10),
-      borderWidth: 1,
-      alignSelf: 'center',
-      borderColor: props !== null ? props.customBorder : '#E5E7EB',
-    },
-
-    containerButton: {
-      backgroundColor: props !== null ? props.themeBackground : 'transparent',
-      width: '90%',
-      height: scale(55),
-      bottom: verticalScale(0),
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignSelf: 'center',
-      ...alignment.PBmedium
-    },
-    addButton: {
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
-      width: '100%',
-      height: scale(40),
-      borderRadius: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignSelf: 'center'
-    },
-
-  })
 export default styles

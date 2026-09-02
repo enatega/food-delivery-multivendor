@@ -1,5 +1,6 @@
 // Core
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { useCallback, useMemo } from "react";
 
 // Interfaces
 import {
@@ -50,32 +51,50 @@ export default function EarningsMain() {
     },
   ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>;
 
-  const barData: barDataItem[] =
-    riderEarningsData?.riderEarningsGraph.earnings
-      .slice(0, 5)
-      .sort(
-        (a, b) =>
-          new Date(String(a.date)).setHours(0, 0, 0, 0) -
-          new Date(String(b.date)).setHours(23, 59, 59, 999),
-      )
-      .map((earning: IRiderEarnings) => ({
-        value: Math.abs(earning.totalEarningsSum),
-        label: earning._id,
-        topLabelComponent: () => {
-          return (
-            <Text
-              style={{
-                color: appTheme.fontMainColor,
-                fontSize: 10,
-                fontWeight: "600",
-                marginBottom: 0,
-              }}
-            >
-              ${formatNumber(earning.totalEarningsSum)}
-            </Text>
-          );
-        },
-      })) ?? ([] as barDataItem[]);
+  const barData: barDataItem[] = useMemo(
+    () =>
+      riderEarningsData?.riderEarningsGraph.earnings
+        .slice(0, 5)
+        .sort(
+          (a, b) =>
+            new Date(String(a.date)).setHours(0, 0, 0, 0) -
+            new Date(String(b.date)).setHours(23, 59, 59, 999),
+        )
+        .map((earning: IRiderEarnings) => ({
+          value: Math.abs(earning.totalEarningsSum),
+          label: earning._id,
+          topLabelComponent: () => {
+            return (
+              <Text
+                style={{
+                  color: appTheme.fontMainColor,
+                  fontSize: 10,
+                  fontWeight: "600",
+                  marginBottom: 0,
+                }}
+              >
+                ${formatNumber(earning.totalEarningsSum)}
+              </Text>
+            );
+          },
+        })) ?? ([] as barDataItem[]),
+    [riderEarningsData, appTheme.fontMainColor],
+  );
+
+  const renderEarning = useCallback(
+    ({ item }: { item: IRiderEarnings }) => (
+      <EarningStack
+        date={item?.date}
+        earning={item?.totalEarningsSum}
+        totalDeliveries={item?.earningsArray.length}
+        _id={item?._id}
+        tip={item?.totalTipsSum}
+        earningsArray={item?.earningsArray}
+        setModalVisible={setModalVisible}
+      />
+    ),
+    [setModalVisible],
+  );
 
   // If loading
   if (isRiderEarningsLoading) return <EarningScreenMainLoading />;
@@ -127,7 +146,9 @@ export default function EarningsMain() {
         <FlatList
           data={riderEarningsData?.riderEarningsGraph?.earnings?.slice(0, 5)}
           contentContainerClassName="scroll-smooth"
-          keyExtractor={(_, index) => index.toString()}
+          keyExtractor={(item: IRiderEarnings, index) =>
+            item?._id ?? String(item?.date ?? index)
+          }
           style={{ height: "55%" }}
           ListEmptyComponent={
             <Text
@@ -137,20 +158,7 @@ export default function EarningsMain() {
               {t("No record found")}
             </Text>
           }
-          renderItem={(info) => {
-            return (
-              <EarningStack
-                date={info?.item?.date}
-                earning={info?.item?.totalEarningsSum}
-                totalDeliveries={info?.item?.earningsArray.length}
-                _id={info?.item?._id}
-                tip={info?.item?.totalTipsSum}
-                earningsArray={info?.item?.earningsArray}
-                key={info.index}
-                setModalVisible={setModalVisible}
-              />
-            );
-          }}
+          renderItem={renderEarning}
         />
       </View>
     </View>

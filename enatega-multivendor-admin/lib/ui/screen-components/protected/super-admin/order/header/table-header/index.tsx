@@ -3,6 +3,7 @@ import TextIconClickable from '@/lib/ui/useable-components/text-icon-clickable';
 import { IOrderSuperAdminHeaderProps } from '@/lib/utils/interfaces';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { Checkbox } from 'primereact/checkbox';
+import { Dropdown } from 'primereact/dropdown';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import React, { useRef } from 'react';
 import classes from './order-superadmin.header.module.css';
@@ -19,6 +20,13 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
   onGlobalFilterChange,
   dateFilter,
   handleDateFilter,
+  restaurants,
+  riders,
+  filtersLoading,
+  selectedRestaurantId,
+  selectedRiderId,
+  setSelectedRestaurantId,
+  setSelectedRiderId,
 }) => {
   // Hooks
   const t = useTranslations();
@@ -45,8 +53,8 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
 
   return (
     <div className="mb-4 flex flex-col gap-6">
-      <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-        <div className="flex w-full flex-row items-center gap-4 sm:w-auto sm:flex-col">
+      <div className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="flex w-full min-w-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
           <div className="sm:hidden">
             <TextIconClickable
               className="flex h-10 w-10 items-center justify-center rounded-full border border-dotted border-[#E4E4E7]"
@@ -56,16 +64,18 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
             />
           </div>
 
-          <CustomTextField
-            type="text"
-            name="riderFilter"
-            maxLength={35}
-            className="w-64"
-            showLabel={false}
-            value={globalFilterValue}
-            onChange={onGlobalFilterChange}
-            placeholder={t('Search Orders')}
-          />
+          <div className="mobile-order-toolbar flex w-full min-w-0 items-center gap-1.5 sm:w-auto sm:gap-3">
+            <CustomTextField
+              type="text"
+              name="riderFilter"
+              maxLength={35}
+              className="mobile-order-search w-full sm:w-64"
+              showLabel={false}
+              value={globalFilterValue}
+              onChange={onGlobalFilterChange}
+              placeholder={t('Search Orders')}
+            />
+          </div>
         </div>
 
         <div className="hidden sm:block">
@@ -91,6 +101,36 @@ const OrderSuperAdminTableHeader: React.FC<IOrderSuperAdminHeaderProps> = ({
           setSelectedTab={(tab: string) =>
             handleDateFilter({ ...dateFilter, dateKeyword: tab })
           }
+        />
+
+        <Dropdown
+          className="order-filter-dropdown h-10 w-full min-w-0 border border-gray-300 bg-white text-sm transition-colors sm:w-52 dark:border-dark-600 dark:bg-dark-900"
+          panelClassName="order-filter-dropdown-panel"
+          value={selectedRestaurantId}
+          options={restaurants}
+          optionLabel="name"
+          optionValue="_id"
+          onChange={(event) => setSelectedRestaurantId(event.value ?? null)}
+          placeholder={t('Restaurant')}
+          emptyMessage="No restaurants found"
+          filter
+          showClear
+          loading={filtersLoading}
+        />
+
+        <Dropdown
+          className="order-filter-dropdown h-10 w-full min-w-0 border border-gray-300 bg-white text-sm transition-colors sm:w-52 dark:border-dark-600 dark:bg-dark-900"
+          panelClassName="order-filter-dropdown-panel"
+          value={selectedRiderId}
+          options={riders}
+          optionLabel="name"
+          optionValue="_id"
+          onChange={(event) => setSelectedRiderId(event.value ?? null)}
+          placeholder={t('Rider')}
+          emptyMessage="No riders found"
+          filter
+          showClear
+          loading={filtersLoading}
         />
 
         <OverlayPanel ref={overlayPanelRef} dismissable>

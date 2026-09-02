@@ -1,6 +1,7 @@
 import { ORDER_STATUS_ENUM } from "../../enums";
 import { IRestaurantProfile, IReview } from "../../interfaces";
 import { IOrder } from "../../interfaces/order.interface";
+import { parseTimestamp } from "../date-time";
 // function calculateDistance(
 //   latS: number,
 //   lonS: number,
@@ -56,8 +57,10 @@ const calulateRemainingTime = (order: IOrder) => {
     ) ?
       order?.preparationTime
     : order?.completionTime;
+  const expectedAt = parseTimestamp(expectedTime);
+  if (!expectedAt) return 0;
   const remainingTime = Math.floor(
-    (new Date(expectedTime).getTime() - Date.now()) / 1000 / 60
+    (expectedAt.getTime() - Date.now()) / 1000 / 60
   );
   return remainingTime > 0 ? remainingTime : 0;
 };
@@ -151,4 +154,3 @@ export {
   calulateRemainingTime, groupAndCount, isOpen,
   sortRestaurantsByOpenStatus, sortReviews
 };
-

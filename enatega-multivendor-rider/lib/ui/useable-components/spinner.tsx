@@ -11,7 +11,7 @@ function SpinnerComponent(props: ISpinnerComponentProps) {
   const { appTheme } = useApptheme();
   return (
     <ActivityIndicator
-      size="small"
+      size={props.size ?? "small"}
       color={props.color ? props.color : appTheme.primary}
       style={{
         flex: 1,

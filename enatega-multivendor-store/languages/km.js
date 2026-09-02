@@ -275,5 +275,7 @@ export const km = {
   Orders: "ការបញ្ជាទិញ",
   "Order Status": "ស្ថានភាពការបញ្ជាទិញ",
   "Set Preparation Time": "កំណត់ពេលវេលាបញ្ជាទិញ",
+  "Show Details": "បង្ហាញព័ត៌មានលម្អិត",
+  "Hide Details": "លាក់ព័ត៌មានលម្អិត",
   "Tax": "ពន្ធ"
 };

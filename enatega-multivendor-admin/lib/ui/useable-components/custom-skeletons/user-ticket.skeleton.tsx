@@ -14,26 +14,26 @@ export default function UserTicketSkeleton({
       {[...Array(count)].map((_, index) => (
         <div
           key={index}
-          className="flex items-center p-3 border-b border-gray-200 dark:bg-dark-950 animate-pulse"
+          className="flex animate-pulse items-center border-b border-gray-200 p-3 dark:border-dark-600"
         >
           {/* Avatar circle */}
-          <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-dark-950 mr-3"></div>
+          <div className="mr-3 h-10 w-10 rounded-full bg-gray-200 dark:bg-dark-700"></div>
 
           <div className="flex-1">
             {/* Name */}
-            <div className="flex justify-between items-center mb-1">
-              <div className="h-5 bg-gray-200 dark:bg-dark-950 rounded w-1/3"></div>
-              <div className="h-3 bg-gray-200 dark:bg-dark-950 rounded w-1/6"></div>
+            <div className="mb-1 flex items-center justify-between">
+              <div className="h-5 w-1/3 rounded bg-gray-200 dark:bg-dark-700"></div>
+              <div className="h-3 w-1/6 rounded bg-gray-200 dark:bg-dark-700"></div>
             </div>
 
             {/* Ticket title */}
-            <div className="h-4 bg-gray-200 dark:bg-dark-950 rounded w-2/3 mb-1"></div>
+            <div className="mb-1 h-4 w-2/3 rounded bg-gray-200 dark:bg-dark-700"></div>
 
             {/* Email */}
-            <div className="h-3 bg-gray-200 dark:bg-dark-950 rounded w-1/2 mb-1"></div>
+            <div className="mb-1 h-3 w-1/2 rounded bg-gray-200 dark:bg-dark-700"></div>
 
             {/* Status badge */}
-            <div className="h-5 bg-gray-200 dark:bg-dark-950 rounded-full w-16 mt-1"></div>
+            <div className="mt-1 h-5 w-16 rounded-full bg-gray-200 dark:bg-dark-700"></div>
           </div>
         </div>
       ))}

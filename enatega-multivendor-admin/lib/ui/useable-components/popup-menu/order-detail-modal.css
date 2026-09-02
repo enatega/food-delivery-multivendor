@@ -86,8 +86,43 @@
   flex-grow: 1;
 }
 
+/* User and rider information sections */
+.information-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+}
+
+.information-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.information-label {
+  margin-bottom: 2px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #64748b;
+}
+
 /* Delivery Address Section */
 .delivery-address {
   margin-top: 10px;
   font-size: 16px;
+}
+
+@media (max-width: 640px) {
+  .custom-modal {
+    width: calc(100vw - 24px);
+  }
+
+  .order-details-container {
+    padding: 8px;
+  }
+
+  .information-grid {
+    grid-template-columns: 1fr;
+  }
 }

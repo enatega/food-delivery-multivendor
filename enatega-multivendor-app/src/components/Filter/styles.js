@@ -1,54 +1,84 @@
 import { StyleSheet } from 'react-native'
-import { verticalScale, scale } from '../../utils/scaling'
-import { alignment } from '../../utils/alignment'
+import { scale } from '../../utils/scaling'
 
 const styles = (props = null) =>
   StyleSheet.create({
     container: {
-      flexDirection: 'column',
-      gap: 24,
-      // ...alignment.MBxLarge
-      marginVertical : 16
+      maxHeight: '100%'
     },
-    heading: { 
-      marginBottom: 10, 
-      paddingHorizontal: 15
+    contentContainer: {
+      paddingTop: scale(18),
+      paddingBottom: scale(12)
+    },
+    headerRow: {
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: scale(14),
+      marginBottom: scale(12)
+    },
+    filterSection: {
+      paddingTop: scale(10)
+    },
+    sectionTitle: {
+      paddingHorizontal: scale(14),
+      marginBottom: scale(10)
     },
     flatlist: {
       alignSelf: 'flex-start',
       flexGrow: 1,
-      gap: 8,
-      paddingHorizontal: 15
+      gap: scale(8),
+      paddingHorizontal: scale(14),
+      paddingBottom: scale(14)
     },
     filterBtn: {
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      borderRadius: 50,
-      // borderWidth: 1,
-      marginRight: 8,
+      minHeight: scale(36),
+      paddingHorizontal: scale(14),
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: scale(18),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle,
+      backgroundColor: props?.colors?.surfaceSubtle
+    },
+    filterBtnSelected: {
+      borderColor: props?.colors?.accent,
+      backgroundColor: props?.colors?.accentSubtle
+    },
+    divider: {
+      height: StyleSheet.hairlineWidth,
+      marginHorizontal: scale(14),
+      backgroundColor: props?.colors?.borderSubtle
+    },
+    actions: {
+      paddingHorizontal: scale(14),
+      paddingTop: scale(14),
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colors?.borderSubtle,
+      gap: scale(8)
     },
     applyBtn: {
-      width: 'auto',
-      backgroundColor: props !== null ? props?.main : '#90E36D',
-      padding: 16,
-      marginHorizontal: 10,
-      borderRadius: 50
+      minHeight: scale(50),
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: props?.colors?.accent ?? props?.main ?? '#90E36D',
+      borderRadius: scale(14)
     },
     clearBtn: {
-      width: 'auto',
-      backgroundColor: 'transparent',
-      borderWidth: 1,
-      borderColor: props !== null ? props?.main : '#90E36D',
-      padding: 16,
-      marginHorizontal: 10,
-      marginBottom: 8,
-      borderRadius: 50
+      alignSelf: props?.isRTL ? 'flex-start' : 'flex-end',
+      minHeight: scale(32),
+      justifyContent: 'center',
+      paddingHorizontal: scale(4)
     },
     closeBtn: {
-      position: 'absolute',
-      ...props?.isRTL ? {left: 10,} : {right: 10,},
-      top: 10,
-      zIndex: 100
+      width: scale(34),
+      height: scale(34),
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: scale(17),
+      backgroundColor: props?.colors?.surfaceSubtle,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle
     }
 
   })

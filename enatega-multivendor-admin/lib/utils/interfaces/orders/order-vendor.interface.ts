@@ -50,10 +50,32 @@ export interface IExtendedOrder extends IOrder {
   tipping?: number;
   reason?: string | null;
   taxationAmount?: number;
+  eta?: {
+    phase?: string;
+    source?: string;
+    readyAt?: string;
+    estimatedArrivalAt?: string;
+    windowStartAt?: string;
+    windowEndAt?: string;
+    calculatedAt?: string;
+    lastLocationAt?: string;
+  };
   itemsTitle?: string;
   OrderdeliveryAddress?: string;
   DateCreated?: string;
   restaurant?: IRestaurant;
+  user?: {
+    _id: string;
+    name: string;
+    phone?: string | null;
+    email?: string | null;
+  } | null;
+  rider?: {
+    _id: string;
+    name: string;
+    username?: string | null;
+    available?: boolean;
+  } | null;
 }
 
 export interface IOrdersData extends IGlobalComponentProps {

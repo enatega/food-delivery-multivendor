@@ -1,0 +1,65 @@
+import { gql } from '@apollo/client';
+
+export const GET_CONFIGURATION = gql`
+  query getConfiguration {
+    configuration: adminConfiguration {
+      _id
+      email
+      emailName
+      enableEmail
+      clientId
+      sandbox
+      publishableKey
+      currency
+      currencySymbol
+      deliveryRate
+      twilioAccountSid
+      twilioPhoneNumber
+      twilioEnabled
+      skipWhatsAppOTP
+      twilioWhatsAppNumber
+      formEmail
+      sendGridEnabled
+      sendGridEmail
+      sendGridEmailName
+      dashboardSentryUrl
+      webSentryUrl
+      apiSentryUrl
+      customerAppSentryUrl
+      restaurantAppSentryUrl
+      riderAppSentryUrl
+      googleApiKey
+      cloudinaryUploadUrl
+      webAmplitudeApiKey
+      appAmplitudeApiKey
+      webClientID
+      androidClientID
+      iOSClientID
+      expoClientID
+      googleMapLibraries
+      googleColor
+      termsAndConditions
+      privacyPolicy
+      hasEmailPasswordConfigured
+      hasPaypalSecretConfigured
+      hasStripeSecretConfigured
+      hasTwilioSecretConfigured
+      hasSendGridSecretConfigured
+      firebaseKey
+      authDomain
+      projectId
+      storageBucket
+      msgSenderId
+      appId
+      measurementId
+      isPaidVersion
+      skipEmailVerification
+      skipMobileVerification
+      costType
+      vapidKey
+      isMultiVendor
+      restaurantCount
+      isAppLaunched
+    }
+  }
+`;

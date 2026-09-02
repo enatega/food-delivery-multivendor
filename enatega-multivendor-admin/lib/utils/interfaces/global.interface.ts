@@ -56,6 +56,9 @@ export interface IPaginationVars {
 export interface IPaginationCommissionRateVars {
   page?: number;
   limit?: number;
+  search?: string;
+  sortBy?: 'NAME' | 'COMMISSION_RATE';
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export interface ITableColumn<T> {

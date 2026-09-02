@@ -43,7 +43,8 @@ export const languageTypes = [
   { value: 'کوردی', code: 'ku', index: 27 },
   { value: 'ozbek', code: 'uz', index: 28 },
   { value: 'azərbaycan', code: 'az', index: 29 },
-  { value: 'Nederlands', code: 'nl', index: 30 }
+  { value: 'Nederlands', code: 'nl', index: 30 },
+  { value: 'Қазақша', code: 'kk', index: 31 }
 ]
 
 const LanguageModal = ({ modalVisible, setModalVisible, currentTheme, showCrossButton, dontClose }) => {

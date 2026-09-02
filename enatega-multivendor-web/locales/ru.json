@@ -133,6 +133,13 @@
   "grocerylist": "Список продуктов",
   "toppicks": "Лучшие продуктовые выборы",
   "shop-types": "Типы магазинов",
+  "categories_label": "Категории",
+  "all_categories_label": "Все категории",
+  "tab_deals": "Предложения",
+  "tab_browse": "Обзор",
+  "order_details_minimum_order_fee_label": "Плата за малый заказ",
+  "order_details_priority_delivery_fee_label": "Плата за приоритетную доставку",
+  "order_details_credits_applied_label": "Использованный кредит",
   "app_version": "1.0.0",
   "no_items_found": "Товары не найдены",
   "something_went_wrong": "Что-то пошло не так",
@@ -191,6 +198,8 @@
   "tab_discovery": "Открытия",
   "tab_restaurants": "Рестораны",
   "tab_store": "Магазин",
+  "multi_vendor_label": "Multi Vendor",
+  "single_vendor_label": "Single Vendor",
   "near_you": "рядом с вами",
   "generic_listing_heading": "Рестораны рядом с вами",
   "generic_listing_cuisine_section": "Кухни",
@@ -481,7 +490,7 @@
   "please_reenter_your_valid_phone_number_message": "Пожалуйста, повторно введите ваш действительный номер телефона",
   "your_email_already_verified_message": "Ваш email уже подтвержден",
   "please_enter_your_email_address_label": "Пожалуйста, введите ваш адрес email",
-  "example_email_label": "пример@email.com",
+  "example_email_label": "example@email.com",
   "please_enter_valid_phone_number_message": "Пожалуйста, введите действительный номер телефона",
   "your_phone_number_already_verified_message": "Ваш номер телефона уже подтвержден",
   "good_to_see_you_again": "Рады снова вас видеть!",
@@ -917,7 +926,103 @@
   "Sunday": "Воскресенье",
   "loading_orders": "Загрузка заказов...",
   "show_more_orders": "Показать больше заказов",
-  "your_email": "ваш@email.com",
+  "your_email": "your@email.com",
   "Select_your_address_prompt": "Выберите ваш адрес.",
-  "Our-brands": "Наши бренды"
+  "Our-brands": "Наши бренды",
+  "email_already_registered": "Этот адрес электронной почты уже зарегистрирован. Пожалуйста, используйте другой адрес электронной почты или войдите в существующую учетную запись.",
+  "reset_password_email_sent_generic_message": "Если адрес электронной почты существует, мы отправили инструкции по сбросу.",
+  "reset_link_invalid_or_expired_message": "Эта ссылка для сброса устарела или недействительна. Пожалуйста, запросите новый.",
+  "request_new_reset_link_label": "Запросить новую ссылку для сброса",
+  "open_login_label": "Открыть вход",
+  "AcceptedRestaurantJustnow": "Ресторан только что принял ваш заказ и готовит вам еду. {riderMessage}",
+  "AcceptedStoreJustnow": "Магазин только что принял ваш заказ и готовит его к отправке. {riderMessage}",
+  "PickedElapsedJustNow": "Ваш водитель только что забрал ваш заказ и направляется к вам!",
+  "verified": "Подтверждено",
+  "not_verified": "Не проверено",
+  "you_currently_have": "В настоящее время у вас есть",
+  "active": "активный",
+  "you_can_only_delete_account": "Вы сможете удалить свою учетную запись только после того, как все ваши заказы будут выполнены.",
+  "Landing": {
+    "hero": {
+      "eyebrow": "One app. Everyday possibilities.",
+      "title": "Everything you need,",
+      "accent": "beautifully delivered.",
+      "body": "Food, groceries and everyday essentials, brought together in one simple experience."
+    },
+    "categories": {
+      "label": "Delivery categories",
+      "food": "Food",
+      "groceries": "Groceries",
+      "essentials": "Essentials",
+      "show": "Show {category}",
+      "orbit": {
+        "food": "Eat",
+        "groceries": "Shop",
+        "essentials": "Essentials"
+      }
+    },
+    "search": {
+      "resolving": "Finding that city.",
+      "ready": "City selected. Show items when you are ready.",
+      "cityError": "We could not locate that city. Choose another suggestion.",
+      "locating": "Finding your current location.",
+      "locationError": "We could not access your location. Search for a city instead."
+    },
+    "journey": {
+      "eyebrow": "How Enatega moves",
+      "title": "From your city,",
+      "accent": "to your doorstep.",
+      "bagAlt": "Enatega delivery bag",
+      "stages": {
+        "choose": {
+          "title": "Choose",
+          "body": "Food, groceries or essentials."
+        },
+        "moving": {
+          "title": "Moving",
+          "body": "One clear journey across your city."
+        },
+        "arrived": {
+          "title": "Arrived",
+          "body": "Delivered where you need it."
+        }
+      }
+    },
+    "cta": {
+      "label": "Work with Enatega",
+      "business": {
+        "eyebrow": "For businesses",
+        "title": "Grow with Enatega.",
+        "body": "Bring your store closer to more customers.",
+        "action": "Become a partner"
+      },
+      "rider": {
+        "eyebrow": "For riders",
+        "title": "Ride with Enatega.",
+        "body": "Deliver on your schedule.",
+        "action": "Become a rider"
+      }
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "more": {
+      "title": "More than",
+      "accent": "delivery.",
+      "items": {
+        "customer": {
+          "title": "For customers",
+          "body": "A smooth, reliable experience from discovery to doorstep."
+        },
+        "business": {
+          "title": "For businesses",
+          "body": "Tools to grow, manage and delight your customers."
+        },
+        "rider": {
+          "title": "For riders",
+          "body": "Flexible earning with clear support every step."
+        }
+      }
+    }
+  }
 }

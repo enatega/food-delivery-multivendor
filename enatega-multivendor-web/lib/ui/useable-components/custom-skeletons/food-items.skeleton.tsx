@@ -9,7 +9,7 @@ export default function FoodCategorySkeleton({ count = 6 }) {
         {Array.from({ length: count }).map((_, idx) => (
           <div
             key={idx}
-            className="flex items-center gap-4 rounded-lg border border-gray-300 shadow-sm bg-white p-3 relative"
+            className="skeleton-ring relative flex items-center gap-4 rounded-lg border bg-dispatch-surface p-3 shadow-sm"
           >
             {/* Text Skeleton */}
             <div className="flex-grow text-left md:text-left space-y-2">

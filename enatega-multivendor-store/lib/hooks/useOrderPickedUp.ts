@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { PICK_UP_ORDER } from "../api/graphql";
+import { PICK_UP_ORDER } from "../apollo/mutations/order.mutation";
 
 export default function useOrderPickedUp() {
   const [mutatePickedUp, { loading, error }] = useMutation(PICK_UP_ORDER);

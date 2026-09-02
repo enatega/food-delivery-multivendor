@@ -36,17 +36,70 @@ export const GET_ACTIVE_ORDERS = gql`
             coordinates
           }
           deliveryAddress
+          details
+          label
+        }
+        items {
+          _id
+          title
+          description
+          image
+          quantity
+          variation {
+            _id
+            title
+            price
+            discounted
+          }
+          addons {
+            _id
+            options {
+              _id
+              title
+              description
+              price
+            }
+            description
+            title
+            quantityMinimum
+            quantityMaximum
+          }
+          specialInstructions
+          isActive
+          createdAt
+          updatedAt
         }
         user {
+          _id
           name
           phone
+          email
         }
         paymentMethod
+        paidAmount
+        orderAmount
         orderStatus
         isPickedUp
         status
+        paymentStatus
+        reason
         isActive
         createdAt
+        deliveryCharges
+        tipping
+        taxationAmount
+        completionTime
+        preparationTime
+        eta {
+          phase
+          source
+          readyAt
+          estimatedArrivalAt
+          windowStartAt
+          windowEndAt
+          calculatedAt
+          lastLocationAt
+        }
         rider {
           _id
           name
@@ -311,6 +364,8 @@ export const GET_ALL_ORDERS_PAGINATED = gql`
     $ending_date: String
     $orderStatus: [String]
     $search: String
+    $restaurantId: ID
+    $riderId: ID
   ) {
     allOrdersPaginated(
       page: $page
@@ -320,6 +375,8 @@ export const GET_ALL_ORDERS_PAGINATED = gql`
       ending_date: $ending_date
       orderStatus: $orderStatus
       search: $search
+      restaurantId: $restaurantId
+      riderId: $riderId
     ) {
       totalCount
       currentPage
@@ -409,6 +466,23 @@ export const GET_ALL_ORDERS_PAGINATED = gql`
   }
 `;
 
+export const GET_ORDER_FILTER_OPTIONS = gql`
+  query OrderFilterOptions {
+    orderFilterOptions {
+      restaurants {
+        _id
+        name
+      }
+      riders {
+        _id
+        name
+        username
+        phone
+      }
+    }
+  }
+`;
+
 
 export const GET_ORDERS_WITHOUT_PAGINATION = gql`
   query OrdersWithoutPagination(
@@ -470,6 +544,12 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
         createdAt
         updatedAt
       }
+      user {
+        _id
+        name
+        phone
+        email
+      }
       paymentMethod
       paidAmount
       orderAmount
@@ -491,8 +571,4 @@ export const GET_ORDERS_WITHOUT_PAGINATION = gql`
     }
   }
 `;
-
-
-
-
 

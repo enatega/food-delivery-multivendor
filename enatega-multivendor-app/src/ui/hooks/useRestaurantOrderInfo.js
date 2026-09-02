@@ -33,14 +33,18 @@ export default function useHomeRestaurants() {
     variables: mostOrderedVariables,
     fetchPolicy: 'cache-and-network'
   })
+  const mostOrderedGroceryStores = useQuery(mostOrderedRestaurantsQuery, {
+    variables: { ...mostOrderedVariables, shopType: 'grocery', limit: 10 },
+    fetchPolicy: 'cache-and-network'
+  })
 
   const orderLoading =
-    recentOrderRestaurants?.loading || mostOrderedRestaurants?.loading
+    recentOrderRestaurants?.loading || mostOrderedRestaurants?.loading || mostOrderedGroceryStores?.loading
 
   const orderError =
-    recentOrderRestaurants?.error || mostOrderedRestaurants?.error
+    recentOrderRestaurants?.error || mostOrderedRestaurants?.error || mostOrderedGroceryStores?.error
 
-// console.log("recentOrderRestaurants?.data?.recentOrderRestaurantsPreview",JSON.stringify(recentOrderRestaurants?.data?.recentOrderRestaurantsPreview,null,2))
+  // console.log("recentOrderRestaurants?.data?.recentOrderRestaurantsPreview",JSON.stringify(recentOrderRestaurants?.data?.recentOrderRestaurantsPreview,null,2))
   return {
     orderLoading,
     orderError,
@@ -48,7 +52,9 @@ export default function useHomeRestaurants() {
       recentOrderRestaurants:
         recentOrderRestaurants?.data?.recentOrderRestaurantsPreview,
       mostOrderedRestaurants:
-        mostOrderedRestaurants?.data?.mostOrderedRestaurantsPreview
+        mostOrderedRestaurants?.data?.mostOrderedRestaurantsPreview,
+      mostOrderedGroceryStores:
+        mostOrderedGroceryStores?.data?.mostOrderedRestaurantsPreview
     }
   }
 }

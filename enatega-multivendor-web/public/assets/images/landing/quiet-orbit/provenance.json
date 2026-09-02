@@ -1,0 +1,19 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "createdAt": "2026-08-25",
+  "processing": "Neutral checkerboard extracted from the image boundary, alpha validated, trimmed, resized, and encoded as WebP with Sharp.",
+  "assets": {
+    "meal-bowl.webp": {
+      "prompt": "Create one isolated, photorealistic warm-white ceramic healthy meal bowl with grilled chicken, rice, avocado, tomatoes, greens, chickpeas and purple cabbage; soft upper-left studio light, restrained contact shadow, genuine transparent background, no props, branding, text, people or scenery."
+    },
+    "grocery-bag.webp": {
+      "prompt": "Create one isolated, photorealistic natural kraft grocery bag containing a restrained selection of leafy greens, carrots, red pepper, tomatoes and a baguette; soft upper-left studio light, restrained contact shadow, genuine transparent background, no branding, text, people or scenery."
+    },
+    "essentials-parcel.webp": {
+      "prompt": "Create one isolated, photorealistic warm kraft parcel with folded sage towels, one blank amber pump bottle and one small matte sage bottle; soft upper-left studio light, restrained contact shadow, genuine transparent background, no readable labels, medical claims, branding, text, people or scenery."
+    },
+    "delivery-bag.webp": {
+      "prompt": "Create one isolated, photorealistic cube-shaped pale-sage insulated delivery bag with black piping, zipper, handle and side pocket; blank front panel for a real SVG logo overlay, soft upper-left studio light, restrained contact shadow, genuine transparent background, no branding, text, people or scenery."
+    }
+  }
+}

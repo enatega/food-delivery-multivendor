@@ -8,6 +8,7 @@ import useEnvVars from '../../../environment'
 import { useApolloClient } from '@apollo/client'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
+import LiveActivityService from '../../utils/liveActivityService'
 
 import { useTranslation } from 'react-i18next'
 
@@ -77,12 +78,22 @@ function Paypal(props) {
           query: MYORDERS,
           fetchPolicy: 'network-only'
         })
-        const order = result.data.orders.find((item) => item.orderId === _id)
+        // orders can be null on a race where the order hasn't persisted yet;
+        // default to [] so .find() never throws inside the polling loop (QUAL-003).
+        const order = (result?.data?.orders ?? []).find((item) => item.orderId === _id)
         const isPaidOrder =
           order &&
           (String(order.paymentStatus).toUpperCase() === 'PAID' || Number(order.paidAmount || 0) > 0)
 
         if (isPaidOrder) {
+          if (order?._id && !order?.isPickedUp) {
+            LiveActivityService.initiateForOrder({
+              orderId: order._id.toString(),
+              displayOrderId: order.orderId.toString()
+            }).catch((error) => {
+              console.warn('Live Activity could not be started', error?.message)
+            })
+          }
           await clearCart()
           props?.navigation.reset({
             routes: [

@@ -9,11 +9,37 @@ const styles = (props = null) =>
     flex: {
       flex: 1
     },
+    floatingCart: {
+      position: 'absolute',
+      bottom: scale(16),
+      width: scale(54),
+      height: scale(54),
+      borderRadius: scale(27),
+      backgroundColor: props?.main,
+      alignItems: 'center',
+      justifyContent: 'center',
+      elevation: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.25,
+      shadowRadius: 4
+    },
+    cartBadge: {
+      position: 'absolute',
+      top: -scale(4),
+      right: -scale(4),
+      minWidth: scale(20),
+      height: scale(20),
+      paddingHorizontal: scale(4),
+      borderRadius: scale(10),
+      backgroundColor: props?.black,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
     container: { flex: 1, gap: 8, backgroundColor: props != null ? props?.themeBackground : '#FFF' },
     screenBackground: {
       backgroundColor: props != null ? props?.themeBackground : '#FFF',
-      ...alignment.PBlarge,
-      
+      ...alignment.PBlarge
     },
     searchbar: {
       ...alignment.PBmedium,
@@ -23,8 +49,7 @@ const styles = (props = null) =>
     mainContentContainer: {
       width: '100%',
       height: '80%',
-      alignSelf: 'center',
-      // backgroundColor: 'red'
+      alignSelf: 'center'
     },
 
     ML20: {
@@ -80,15 +105,14 @@ const styles = (props = null) =>
       ...alignment.PTlarge
     },
     modal: {
-      backgroundColor: props != null ? props?.cardBackground : '#FFF',
-      paddingTop: scale(10),
+      backgroundColor: props?.colors?.surface ?? props?.cardBackground ?? '#FFF',
       borderTopEndRadius: scale(20),
       borderTopStartRadius: scale(20),
       position: 'relative',
       zIndex: 9999999,
       shadowOpacity: 0,
-      borderWidth: scale(1),
-      borderColor: props != null ? props?.customBorder : '#FFF'
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderColor: props?.colors?.borderSubtle ?? props?.customBorder
     },
     addressTextContainer: {
       display: 'flex',
@@ -105,8 +129,10 @@ const styles = (props = null) =>
         props != null ? props?.backgroundColor2 : 'rgba(0, 0, 0, 0.5)'
     },
     handle: {
-      width: scale(150),
-      backgroundColor: props != null ? props?.backgroundColor : 'transparent'
+      width: scale(36),
+      height: scale(4),
+      borderRadius: scale(2),
+      backgroundColor: props?.colors?.borderStandard ?? props?.backgroundColor
     },
     relative: {
       position: 'relative'
@@ -130,14 +156,30 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     emptyViewBox: {
-      backgroundColor: props !== null ? props?.color8 : '#000',
-      borderRadius: scale(10),
+      backgroundColor: props !== null ? props?.cardBackground : '#000',
+      borderRadius: scale(16),
       width: '85%',
-      height: verticalScale(130),
+      minHeight: verticalScale(150),
       justifyContent: 'center',
       alignItems: 'center',
       padding: scale(15),
-      marginTop: scale(30)
+      marginTop: scale(30),
+      borderWidth: 1,
+      borderColor: props?.newBorderColor || '#E5E7EB',
+      ...subtleCardShadow
+    },
+    emptyBadge: {
+      paddingVertical: scale(6),
+      paddingHorizontal: scale(12),
+      borderRadius: scale(999),
+      backgroundColor: props?.newButtonBackground || '#F3FFEE',
+      marginBottom: scale(12)
+    },
+    emptyTitle: {
+      marginBottom: scale(8)
+    },
+    emptyDescription: {
+      opacity: 0.8
     },
     homeIcon: {
       color: props !== null ? props?.darkBgFont : '#000',
@@ -163,34 +205,26 @@ const styles = (props = null) =>
       textAlign: 'justify',
       paddingLeft: scale(38)
     },
-    collectionCard: {
-      backgroundColor: props !== null ? props?.cardBackground : '#181818',
-      height: 135,
-      width: 100,
-      borderRadius: 8,
-      ...subtleCardShadow
+    menuHeader: {
+      paddingTop: scale(12)
     },
-    collectionImage: {
-      height: 80,
-      width: '100%',
-      borderTopLeftRadius: 8,
-      borderTopRightRadius: 8
+    menuSectionHeader: {
+      paddingHorizontal: 0,
+      marginBottom: scale(15)
     },
-    header: {
-      
-      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      ...alignment.MTsmall,
-      
+    collectionRail: {
+      marginHorizontal: -(props?.spacing?.md ?? scale(12))
     },
-    seeAllBtn: {
-      backgroundColor: props != null ? props?.newButtonBackground : '#F3FFEE',
-      borderRadius: 4,
-      paddingTop: 8,
-      paddingBottom: 8,
-      paddingLeft: 16,
-      paddingRight: 16,
+    collectionSeparator: {
+      width: props?.spacing?.lg ?? scale(16)
+    },
+    restaurantSectionHeader: {
+      paddingHorizontal: 0,
+      marginTop: scale(20),
+      marginBottom: scale(15)
+    },
+    restaurantSeparator: {
+      height: props?.spacing?.lg ?? scale(16)
     },
     modalContainer: {
       display: 'flex',
@@ -204,18 +238,8 @@ const styles = (props = null) =>
     },
     collectionContainer: {
       flexGrow: 1,
-      gap: 8,
-      // ...alignment.PTsmall,
-      ...alignment.PBsmall
-    },
-    all:
-    {
-      padding:3,
-      backgroundColor:"red"
-    },
-    brandImgContainer:
-    {
-      overflow: 'hidden'
+      paddingHorizontal: props?.spacing?.md ?? scale(12),
+      paddingBottom: props?.spacing?.sm ?? scale(8)
     }
   })
 export default styles

@@ -7,6 +7,10 @@ import { theme } from '../../../utils/themeColors'
 import { FlashMessage } from '../../../ui/FlashMessage/FlashMessage'
 import { useRoute, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import {
+  setResetSession,
+  clearResetSession
+} from '../../../utils/resetPasswordSession'
 
 const FORGOT_PASSWORD = gql`
   ${forgotPassword}
@@ -57,13 +61,19 @@ export const useForgotPasswordOtp = () => {
       }
     })
     if (data?.verifyOtp) {
-      navigation.navigate('SetYourPassword', { email, otp: code })
+      // SEC-015: hand the verified OTP to the reset screen via an ephemeral
+      // in-memory store instead of navigation params (which leak into crash
+      // reports / DevTools). Only the non-sensitive email stays in params.
+      setResetSession({ email, otp: code })
+      navigation.navigate('SetYourPassword', { email })
     } else {
       setOtpError(true)
     }
   }
 
   const resendOtp = () => {
+    // A new OTP invalidates any previously verified one.
+    clearResetSession()
     mutate({
       variables: { email: email.toLowerCase().trim() }
     })

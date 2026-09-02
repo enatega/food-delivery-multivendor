@@ -18,8 +18,15 @@ import useGetCuisines from "@/lib/hooks/useGetCuisines";
 import useNearByRestaurantsPreview from "@/lib/hooks/useNearByRestaurantsPreview";
 import useMostOrderedRestaurants from "@/lib/hooks/useMostOrderedRestaurants";
 import ShopTypes from "@/lib/ui/screen-components/protected/home/discovery/shop-types";
+import { useAppMode } from "@/lib/mode";
+import SingleVendorDiscovery from "@/lib/ui/single-vendor/Discovery";
 
 export default function DiscoveryScreen() {
+  const { isSingleVendor } = useAppMode();
+  return isSingleVendor ? <SingleVendorDiscovery /> : <MultiVendorDiscovery />;
+}
+
+function MultiVendorDiscovery() {
   const { restaurantCuisinesData, groceryCuisinesData, queryData:cuisinesQueryData, error, loading } =
     useGetCuisines();
 

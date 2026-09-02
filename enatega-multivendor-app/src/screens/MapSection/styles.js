@@ -40,7 +40,7 @@ const styles = (props = null) =>
       flexDirection: 'row',
       alignItems: 'center',
       width: 310,
-      backgroundColor: props !== null ? props?.white : 'white',
+      backgroundColor: props !== null ? props?.cardBackground : 'white',
       padding: 16,
       borderRadius: scale(8),
       gap: 16,

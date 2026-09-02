@@ -15,7 +15,7 @@ import TextDefault from '../../components/Text/TextDefault/TextDefault'
 import { alignment } from '../../utils/alignment'
 import screenOptions from './screenOptions'
 import { FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
-import CountryPicker from 'react-native-country-picker-modal'
+import CountryPicker, { DARK_THEME } from 'react-native-country-picker-modal'
 import useRegister from './useRegister'
 import { useTranslation } from 'react-i18next'
 import SignUpSvg from '../../assets/SVG/imageComponents/SignUpSvg'
@@ -48,6 +48,7 @@ function Register(props) {
     countryCode,
     registerAction,
     onCountrySelect,
+    themeContext,
     currentTheme,
     setPhoneError,
     isCountryLoading
@@ -235,6 +236,7 @@ function Register(props) {
                           <CountryPicker
                             countryCode={countryCode}
                             onSelect={(country) => onCountrySelect(country)}
+                            theme={themeContext.ThemeValue === 'Dark' ? DARK_THEME : undefined}
                             withAlphaFilter
                             withFilter
                             flatListProps={{

@@ -8,7 +8,7 @@ const buildStyles = (props = null) =>
   StyleSheet.create({
     flex: {
       flex: 1,
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'white'
     },
     navbarContainer: {
       paddingBottom: 0,
@@ -24,24 +24,24 @@ const buildStyles = (props = null) =>
       zIndex: 1
     },
     sectionHeader: {
-      backgroundColor: props != null ? props.themeBackground : '#fff'
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? '#fff'
     },
     sectionHeaderText: {
       textTransform: 'capitalize',
       fontSize: scale(18),
       fontWeight: '600',
       ...alignment.PTlarge,
-      paddingHorizontal: scale(15)
+      paddingHorizontal: scale(12)
     },
     restaurantItems: {
-      backgroundColor: props != null ? props.themeBackground : 'white'
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'white'
     },
     popularItemCards: {
       ...alignment.PTlarge,
       flexDirection: 'row',
       flexWrap: 'wrap',
-      paddingLeft: scale(17),
-      paddingRight: scale(17),
+      paddingLeft: scale(12),
+      paddingRight: scale(12),
       justifyContent: 'space-between',
       rowGap: scale(10)
     },
@@ -109,17 +109,19 @@ const buildStyles = (props = null) =>
     buttonContainer: {
       width: '100%',
       height: '10%',
-      backgroundColor: props !== null ? props.themeBackground : 'black',
+      backgroundColor: props?.colors?.canvas ?? props?.themeBackground ?? 'black',
       justifyContent: 'center',
       alignItems: 'center',
-      elevation: 12,
-      shadowColor: props !== null ? props.shadowColor : 'black',
+      elevation: props?.isDark ? 0 : 3,
+      shadowColor: '#000000',
       shadowOffset: {
         width: 0,
-        height: -verticalScale(3)
+        height: -verticalScale(2)
       },
-      shadowOpacity: 0.5,
-      shadowRadius: verticalScale(2)
+      shadowOpacity: props?.isDark ? 0 : 0.12,
+      shadowRadius: scale(8),
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: props?.colors?.borderSubtle ?? 'rgba(161, 161, 170, 0.18)'
     },
     button: {
       justifyContent: 'space-between',
@@ -182,12 +184,19 @@ const buildStyles = (props = null) =>
       alignItems: 'center',
       gap: 6,
       ...alignment.PTlarge,
-      paddingHorizontal: scale(15)
+      paddingHorizontal: scale(12)
     },
     popularText: {
       textTransform: 'capitalize',
       fontSize: scale(18),
       fontWeight: '600'
+    },
+    popularSubtitle: {
+      ...alignment.PLsmall,
+      ...alignment.PRsmall,
+      fontSize: scale(12),
+      fontWeight: '400',
+      marginTop: scale(3)
     }
   })
 
