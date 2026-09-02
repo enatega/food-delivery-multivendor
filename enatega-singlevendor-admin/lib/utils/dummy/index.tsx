@@ -572,6 +572,8 @@ export const generateDummyCouponsRestaurant = (
       title: `rider${i + 1}`,
       discount: i + 1,
       enabled: Math.random() > 0.5,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 86_400_000).toISOString(),
       __typename: 'Rider',
     });
   }

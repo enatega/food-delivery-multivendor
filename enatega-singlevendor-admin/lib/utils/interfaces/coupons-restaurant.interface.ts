@@ -7,6 +7,8 @@ export interface ICouponRestaurantResponse {
   title: string;
   __typename: string;
   _id: string;
+  startDate: string | null;
+  endDate: string | null;
 }
 
 export interface ICouponRestaurantGQLResponse {

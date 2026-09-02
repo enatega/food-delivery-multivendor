@@ -18,6 +18,11 @@ import { EDIT_RESTAURANT_COUPON } from '@/lib/api/graphql/mutations/coupons-rest
 import { GET_RESTAURANT_COUPONS } from '@/lib/api/graphql/queries/coupons-restaurant';
 import { useTranslations } from 'next-intl';
 
+const formatCouponDate = (value: string | null) => {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString();
+};
 
 export const COUPONS_RESTAURANT_TABLE_COLUMNS = ({
   menuItems,
@@ -36,7 +41,9 @@ export const COUPONS_RESTAURANT_TABLE_COLUMNS = ({
 
   // GraphQL mutation hook
   const [mutateToggle, { loading }] = useMutation(EDIT_RESTAURANT_COUPON, {
-    refetchQueries: [{ query: GET_RESTAURANT_COUPONS }],
+    refetchQueries: [
+      { query: GET_RESTAURANT_COUPONS, variables: { restaurantId } },
+    ],
     awaitRefetchQueries: true,
   });
 
@@ -55,6 +62,9 @@ export const COUPONS_RESTAURANT_TABLE_COLUMNS = ({
             title: coupon.title,
             discount: coupon.discount,
             enabled,
+            startDate: coupon.startDate,
+            endDate: coupon.endDate,
+            couponType: 'PERCENTAGE',
           },
         },
       });
@@ -68,8 +78,25 @@ export const COUPONS_RESTAURANT_TABLE_COLUMNS = ({
   return [
     { headerName: t('Name'), propertyName: '__typename' },
     { headerName: t('Code'), propertyName: 'title' },
-    { headerName: t('Discount'), propertyName: 'discount' },
-    // add column for endDate and lifeTimeActive
+    {
+      headerName: t('Discount'),
+      propertyName: 'discount',
+      body: (coupon: ICouponRestaurantResponse) => <span>{coupon.discount}%</span>,
+    },
+    {
+      headerName: 'Valid From',
+      propertyName: 'startDate',
+      body: (coupon: ICouponRestaurantResponse) => (
+        <span>{formatCouponDate(coupon.startDate)}</span>
+      ),
+    },
+    {
+      headerName: 'Valid Until',
+      propertyName: 'endDate',
+      body: (coupon: ICouponRestaurantResponse) => (
+        <span>{formatCouponDate(coupon.endDate)}</span>
+      ),
+    },
     {
       headerName: t('Enabled'),
       propertyName: 'enabled',
