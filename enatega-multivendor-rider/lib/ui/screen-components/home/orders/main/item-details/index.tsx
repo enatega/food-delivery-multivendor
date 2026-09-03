@@ -5,6 +5,23 @@ import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Text, View } from "react-native";
 
+type IOrderItem = IOrder["items"][number];
+
+const getAddonsPrice = (item: IOrderItem) =>
+  item?.addons?.reduce(
+    (addonsTotal, addon) =>
+      addonsTotal +
+      (addon?.options?.reduce(
+        (optionsTotal, option) => optionsTotal + (option?.price ?? 0),
+        0,
+      ) ?? 0),
+    0,
+  ) ?? 0;
+
+const getItemTotal = (item: IOrderItem) =>
+  ((item?.variation?.price ?? 0) + getAddonsPrice(item)) *
+  (item?.quantity ?? 0);
+
 const ItemDetails = ({
   orderData: order,
 }: {
@@ -20,7 +37,7 @@ const ItemDetails = ({
 
   const itemAmount = useMemo(() => {
     return order?.items?.reduce((sum, item) => {
-      return sum + item.quantity * item.variation.price;
+      return sum + getItemTotal(item);
     }, 0);
   }, [order?.items]);
 
@@ -127,7 +144,7 @@ const ItemDetails = ({
                   style={{ color: appTheme.fontMainColor }}
                 >
                   {configuration?.currencySymbol}
-                  {item.variation?.price}
+                  {getItemTotal(item).toFixed(2)}
                 </Text>
               </View>
             </View>
@@ -155,7 +172,7 @@ const ItemDetails = ({
             style={{ color: appTheme.fontMainColor }}
           >
             {configuration?.currencySymbol}
-            {itemAmount}
+            {(itemAmount ?? 0).toFixed(2)}
           </Text>
         </View>
       </View>
