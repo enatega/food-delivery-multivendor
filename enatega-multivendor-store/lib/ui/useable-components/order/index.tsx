@@ -35,6 +35,53 @@ interface IOrderProps {
   onToggleDetails: (itemId: string) => void;
 }
 
+const InstructionCard = ({
+  instructions,
+  compact = false,
+}: {
+  instructions?: string;
+  compact?: boolean;
+}) => {
+  const { appTheme } = useApptheme();
+  const { t } = useTranslation();
+  const content = instructions?.trim();
+
+  if (!content) return null;
+
+  return (
+    <View
+      style={{
+        backgroundColor: appTheme.lowOpacityPrimaryColor,
+        borderColor: appTheme.primary,
+        borderStartWidth: 3,
+        borderRadius: 8,
+        marginTop: compact ? 6 : 8,
+        padding: compact ? 8 : 12,
+      }}
+    >
+      <Text
+        style={{
+          color: appTheme.primary,
+          fontSize: compact ? 12 : 14,
+          fontWeight: "600",
+        }}
+      >
+        {t("Special Instructions")}
+      </Text>
+      <Text
+        style={{
+          color: appTheme.fontMainColor,
+          fontSize: compact ? 12 : 14,
+          lineHeight: compact ? 17 : 20,
+          marginTop: 3,
+        }}
+      >
+        {content}
+      </Text>
+    </View>
+  );
+};
+
 const didOrderDetailVisibilityChange = (
   prevShowDetails: Record<string, boolean>,
   nextShowDetails: Record<string, boolean>,
@@ -218,6 +265,8 @@ const Order = ({
           </Text>
         </View>
 
+        <InstructionCard instructions={order.instructions} />
+
         {/* Order Items */}
         <View className="flex-row justify-between items-center">
           <Text
@@ -287,14 +336,10 @@ const Order = ({
                       >
                         {item?.description}
                       </Text>
-                      <Text
-                        style={{
-                          color: appTheme.fontSecondColor,
-                          fontSize: 12,
-                        }}
-                      >
-                        {item?.specialInstructions}
-                      </Text>
+                      <InstructionCard
+                        instructions={item?.specialInstructions}
+                        compact
+                      />
                     </View>
 
                     {/* Toggle and Collapsible Details */}
@@ -548,32 +593,6 @@ const Order = ({
             {formatAmount(order?.orderAmount)}
           </Text>
         </View>
-
-        {/* Order Instructions */}
-        {order?.instructions && (
-          <View className="py-2">
-            <Text
-              style={{
-                color: appTheme.primary,
-                fontSize: 14,
-                fontWeight: "600",
-              }}
-            >
-              {t("Special Instructions")}
-            </Text>
-            <Text
-              style={{
-                color: appTheme.fontMainColor,
-                fontSize: 16,
-                fontWeight: "400",
-                fontStyle: "italic",
-                marginTop: 4,
-              }}
-            >
-              {order?.instructions}
-            </Text>
-          </View>
-        )}
 
         {/* New Order */}
         {order?.orderStatus === "PENDING" && (
