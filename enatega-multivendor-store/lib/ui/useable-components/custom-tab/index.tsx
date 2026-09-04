@@ -21,86 +21,76 @@ const CustomTab = ({
       style={{ backgroundColor: appTheme.themeBackground }}
     >
       <View
-        className="h-[50px] w-full flex-row p-2 justify-center items-center space-x-2 rounded-[8px]"
+        className="h-[50px] w-full flex-row p-2 justify-center items-center rounded-[8px]"
         style={{ backgroundColor: appTheme.themeBackground }}
       >
-        {options.map((option) => (
-          <TouchableOpacity
-            key={String(option)}
-            onPress={() => setSelectedTab(option)}
-            className={`h-full px-4 py-2 w-1/2 flex items-center justify-center rounded-[8px]`}
-            style={{
-              backgroundColor:
-                selectedTab === option
-                  ? appTheme.primary
-                  : appTheme.themeBackground,
-              borderColor: appTheme.borderLineColor,
-              borderWidth: 1,
-              marginHorizontal: 2,
-            }}
-          >
-            <Text
+        {options.map((option, index) => {
+          const count =
+            option === "Delivery Orders"
+              ? deliveryCount
+              : option === "Pick up Orders"
+                ? pickupCount
+                : 0;
+
+          return (
+            <TouchableOpacity
+              key={String(option)}
+              onPress={() => setSelectedTab(option)}
+              className="h-full py-2 flex-1 items-center justify-center rounded-[8px]"
               style={{
-                color:
+                backgroundColor:
                   selectedTab === option
-                    ? appTheme.fontMainColor
-                    : appTheme.fontSecondColor,
+                    ? appTheme.primary
+                    : appTheme.themeBackground,
+                borderColor: appTheme.borderLineColor,
+                borderWidth: 1,
+                marginLeft: index === 0 ? 0 : 4,
               }}
             >
-              {t(option)}
-            </Text>
-            {option === "Delivery Orders" && (
-              <View
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
                 style={{
-                  backgroundColor: appTheme.error,
-                  borderRadius: 100,
-                  width: 20,
-                  height: 20,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "absolute",
-                  left: -3,
-                  top: -5,
+                  color:
+                    selectedTab === option
+                      ? appTheme.fontMainColor
+                      : appTheme.fontSecondColor,
+                  paddingHorizontal: count > 0 ? 24 : 12,
+                  textAlign: "center",
                 }}
               >
-                <Text
+                {t(option)}
+              </Text>
+              {count > 0 && (
+                <View
                   style={{
-                    textAlign: "center",
-                    color: appTheme.white,
-                    alignSelf: "center",
+                    backgroundColor: appTheme.error,
+                    borderRadius: 100,
+                    minWidth: 20,
+                    height: 20,
+                    paddingHorizontal: 4,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "absolute",
+                    right: 4,
+                    top: 4,
                   }}
                 >
-                  {deliveryCount}
-                </Text>
-              </View>
-            )}
-            {option === "Pick up Orders" && (
-              <View
-                style={{
-                  backgroundColor: appTheme.error,
-                  borderRadius: 100,
-                  width: 20,
-                  height: 20,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "absolute",
-                  left: -3,
-                  top: -5,
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: appTheme.white,
-                    alignSelf: "center",
-                  }}
-                >
-                  {pickupCount}
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        ))}
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: appTheme.white,
+                      alignSelf: "center",
+                    }}
+                  >
+                    {count}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </View>
   );
