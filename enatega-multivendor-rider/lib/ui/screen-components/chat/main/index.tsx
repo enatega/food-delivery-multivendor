@@ -34,6 +34,7 @@ export default function ChatMain() {
   const insets = useSafeAreaInsets();
   const messageContainerRef = useRef<any>(null);
   const isAndroid = Platform.OS === "android";
+  const isIOS = Platform.OS === "ios";
   const {
     messages,
     onSend,
@@ -250,9 +251,9 @@ export default function ChatMain() {
         styles.chatContainer,
         { flex: 1, backgroundColor: appTheme.screenBackground },
       ]}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      enabled={Platform.OS === "ios"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
+      behavior={isIOS ? "padding" : undefined}
+      enabled={isIOS}
+      keyboardVerticalOffset={0}
     >
       <GiftedChat
         messages={messages}
@@ -273,7 +274,7 @@ export default function ChatMain() {
         renderAvatar={null}
         renderUsernameOnMessage
         inverted={true}
-        isKeyboardInternallyHandled={true}
+        isKeyboardInternallyHandled={!isIOS}
         timeTextStyle={{
           left: { color: appTheme.fontMainColor },
           right: { color: appTheme.primary },
