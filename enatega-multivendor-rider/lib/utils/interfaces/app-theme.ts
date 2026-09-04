@@ -42,4 +42,9 @@ export interface AppTheme {
   gray: string;
   screenBackground: string;
   mapBackground: string;
+  mapRoad: string;
+  mapLabel: string;
+  mapWater: string;
+  mapRoute: string;
+  mapControlBackground: string;
 }

@@ -38,7 +38,12 @@ export const Colors = {
     borderLineColor: "rgb(181, 181, 181)",
     gray: "#e5e5e5",
     screenBackground: "#FFFF",
-    mapBackground: "#ffffff",
+    mapBackground: "#F5F7F3",
+    mapRoad: "#D8DED4",
+    mapLabel: "#33413A",
+    mapWater: "#A8D7F4",
+    mapRoute: "#C2410C",
+    mapControlBackground: "#FFFFFF",
   },
   dark: {
     primary: "#A5C616", // Slightly darker green to avoid too much brightness
@@ -75,5 +80,10 @@ export const Colors = {
     tabNaviatorBackground: "#1F2937",
     gray: "#e5e5e5",
     mapBackground: "#242f3e",
+    mapRoad: "#3E4A45",
+    mapLabel: "#E5ECE8",
+    mapWater: "#244A61",
+    mapRoute: "#FFB067",
+    mapControlBackground: "#26322D",
   },
 };

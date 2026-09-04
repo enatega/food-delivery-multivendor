@@ -356,6 +356,7 @@ export const en = {
   "Rider location is unavailable.": "Rider location is unavailable.",
   "Restaurant location is unavailable.": "Restaurant location is unavailable.",
   "Delivery location is unavailable.": "Delivery location is unavailable.",
+  "Open in Maps": "Open in Maps",
   "Could not open maps application": "Could not open maps application",
   "An error occurred when trying to open maps": "An error occurred when trying to open maps",
   "Map not loaded.": "Map not loaded.",
