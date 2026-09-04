@@ -11,7 +11,7 @@ import { applyCoupon, placeOrder } from '../../apollo/mutations'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
-import MapView, { PROVIDER_DEFAULT } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import ConfigurationContext from '../../context/Configuration'
 import UserContext from '../../context/User'
@@ -33,6 +33,7 @@ import Location from '../../components/Main/Location/Location'
 import { customMapStyle } from '../../utils/customMapStyles'
 import Spinner from '../../components/Spinner/Spinner'
 import RestaurantMarker from '../../assets/SVG/restaurant-marker'
+import CustomerMarker from '../../assets/SVG/customer-marker'
 import { FulfillmentMode } from '../../components/Checkout/FulfillmentMode'
 import { Instructions } from '../../components/Checkout/Instructions'
 import PickUp from '../../components/Pickup'
@@ -95,6 +96,7 @@ function Checkout(props) {
   }
   const voucherModalRef = useRef(null)
   const tipModalRef = useRef(null)
+  const checkoutMapRef = useRef(null)
   const [loadingData, setLoadingData] = useState(true)
   const [minimumOrder, setMinimumOrder] = useState('')
   const [orderDate, setOrderDate] = useState(new Date())
@@ -129,6 +131,37 @@ function Checkout(props) {
         longitudeDelta: 0.5
       }
     : null
+  const customerLatitude = Number(location?.latitude)
+  const customerLongitude = Number(location?.longitude)
+  const hasCustomerCoordinates =
+    !isPickup &&
+    location?.latitude != null &&
+    location?.longitude != null &&
+    Number.isFinite(customerLatitude) &&
+    Number.isFinite(customerLongitude) &&
+    Math.abs(customerLatitude) <= 90 &&
+    Math.abs(customerLongitude) <= 180
+
+  const fitCheckoutMap = useCallback(() => {
+    if (!hasRestaurantCoordinates) return
+
+    const coordinates = [{ latitude: latOrigin, longitude: lonOrigin }]
+    if (hasCustomerCoordinates) {
+      coordinates.push({
+        latitude: customerLatitude,
+        longitude: customerLongitude
+      })
+    }
+
+    checkoutMapRef.current?.fitToCoordinates(coordinates, {
+      animated: false,
+      edgePadding: { top: 36, right: 36, bottom: 56, left: 36 }
+    })
+  }, [customerLatitude, customerLongitude, hasCustomerCoordinates, hasRestaurantCoordinates, latOrigin, lonOrigin])
+
+  useEffect(() => {
+    fitCheckoutMap()
+  }, [fitCheckoutMap])
   const [isModalVisible, setisModalVisible] = useState(false)
   const [orderConfirmedTime, setOrderConfirmedTime] = useState(null)
   // When demo mode is enabled the order should go through with whatever
@@ -670,10 +703,11 @@ function Checkout(props) {
                   {initialRegion ? (
                     <View style={styles(currentTheme).mapView}>
                       <MapView
+                        ref={checkoutMapRef}
                         style={styles().flex}
-                        scrollEnabled={false}
-                        zoomEnabled={false}
-                        zoomControlEnabled={false}
+                        scrollEnabled
+                        zoomEnabled
+                        zoomControlEnabled={Platform.OS === 'android'}
                         rotateEnabled={false}
                         loadingEnabled
                         loadingBackgroundColor={currentTheme.themeBackground}
@@ -681,10 +715,26 @@ function Checkout(props) {
                         initialRegion={initialRegion}
                         customMapStyle={customMapStyle}
                         provider={PROVIDER_DEFAULT}
-                      />
-                      <View style={styles().marker}>
-                        <RestaurantMarker />
-                      </View>
+                        onMapReady={fitCheckoutMap}
+                      >
+                        <Marker
+                          coordinate={{ latitude: latOrigin, longitude: lonOrigin }}
+                          tracksViewChanges={false}
+                        >
+                          <RestaurantMarker />
+                        </Marker>
+                        {hasCustomerCoordinates && (
+                          <Marker
+                            coordinate={{
+                              latitude: customerLatitude,
+                              longitude: customerLongitude
+                            }}
+                            tracksViewChanges={false}
+                          >
+                            <CustomerMarker />
+                          </Marker>
+                        )}
+                      </MapView>
                       {!!restaurant?.name && (
                         <View style={styles(currentTheme).mapLabel}>
                           <MaterialCommunityIcons
