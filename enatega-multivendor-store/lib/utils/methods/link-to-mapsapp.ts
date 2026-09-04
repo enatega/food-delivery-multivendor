@@ -1,12 +1,19 @@
-import { Platform, Linking } from "react-native";
+import { Linking, Platform } from "react-native";
 
-export function linkToMapsApp({ latitude, longitude }, label) {
-  const scheme = Platform.select({ ios: "maps:0,0?q=", android: "geo:0,0?q=" });
+interface IMapCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
+export function linkToMapsApp(
+  { latitude, longitude }: IMapCoordinates,
+  label: string,
+) {
   const latLng = `${latitude},${longitude}`;
-  const url = Platform.select({
-    ios: `${scheme}${label}@${latLng}`,
-    android: `${scheme}${latLng}(${label})`,
-  });
+  const url =
+    Platform.OS === "ios"
+      ? `maps:0,0?q=${encodeURIComponent(label)}@${latLng}`
+      : `geo:0,0?q=${latLng}(${encodeURIComponent(label)})`;
 
-  Linking.openURL(url);
+  void Linking.openURL(url);
 }

@@ -19,6 +19,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import CountdownTimer from "../custom-timer";
 import SpinnerComponent from "../spinner";
 import { TimeLeftIcon } from "../svg";
+import NewOrderOverview from "./new-order-overview";
 
 // Hooks
 import { useSoundContext } from "@/lib/context/global/sound.context";
@@ -264,6 +265,10 @@ const Order = ({
             #{order?.orderId}
           </Text>
         </View>
+
+        {order.orderStatus === "PENDING" && (
+          <NewOrderOverview order={order} />
+        )}
 
         <InstructionCard instructions={order.instructions} />
 
@@ -642,6 +647,21 @@ const Order = ({
                 </TouchableOpacity>
               )}
             </View>
+            {remainingTime > 0 && (
+              <View className="items-center mt-4">
+                <Text
+                  style={{
+                    color: appTheme.fontSecondColor,
+                    fontSize: 13,
+                    fontWeight: "500",
+                    marginBottom: 2,
+                  }}
+                >
+                  {t("Auto decline in")}
+                </Text>
+                <CountdownTimer duration={remainingTime} />
+              </View>
+            )}
           </View>
         )}
 
