@@ -7,7 +7,24 @@ import { useTranslation } from "react-i18next";
 
 // Core
 import { useApptheme } from "@/lib/context/theme.context";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
+import { formatAmount } from "@/lib/utils/methods";
+import { Ionicons } from "@expo/vector-icons";
+import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+
+const formatEarningDate = (value: string) => {
+  const [day, month, year] = value.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return Number.isFinite(date.getTime())
+    ? date.toLocaleDateString(undefined, {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : value;
+};
 
 export default function EarningStack({
   date,
@@ -17,11 +34,11 @@ export default function EarningStack({
   earningsArray,
   totalDeliveries,
   totalOrderAmount,
-  isLast,
 }: IEarningStackProps) {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const configuration = useContext(ConfigurationContext);
 
   // Handlers
   function handleForwardPress() {
@@ -37,29 +54,69 @@ export default function EarningStack({
   }
 
   return (
-    <View
-      className="flex flex-row justify-between items-center p-4 w-[95%] mx-auto my-3  border-b-2"
+    <TouchableOpacity
+      activeOpacity={0.75}
+      className="flex-row justify-between items-center p-4 mb-3"
+      onPress={handleForwardPress}
       style={{
-        borderBottomColor: appTheme.borderLineColor,
-        backgroundColor: appTheme.themeBackground,
-        marginBottom: isLast ? 300 : 0,
+        backgroundColor: appTheme.cartContainer,
+        borderColor: appTheme.borderLineColor,
+        borderRadius: 12,
+        borderWidth: 1,
       }}
     >
-      <View className="flex flex-row gap-2 items-center flex-2">
-        <Text style={{ color: appTheme.fontMainColor }}>{date}</Text>
-        <Text className="font-bold" style={{ color: appTheme.fontMainColor }}>
-          {t("Total Earnings")}
-        </Text>
+      <View className="flex-row items-center flex-1">
+        <View
+          style={{
+            alignItems: "center",
+            backgroundColor: appTheme.lowOpacityPrimaryColor,
+            borderRadius: 8,
+            height: 38,
+            justifyContent: "center",
+            marginRight: 10,
+            width: 38,
+          }}
+        >
+          <Ionicons
+            name="calendar-outline"
+            color={appTheme.primary}
+            size={21}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{
+              color: appTheme.fontMainColor,
+              fontSize: 14,
+              fontWeight: "600",
+            }}
+          >
+            {formatEarningDate(date)}
+          </Text>
+          <Text
+            style={{
+              color: appTheme.fontSecondColor,
+              fontSize: 12,
+              marginTop: 2,
+            }}
+          >
+            {t("Total Earnings")}
+          </Text>
+        </View>
       </View>
-      <TouchableOpacity
-        className="flex flex-row gap-2 items-center flex-2"
-        onPress={handleForwardPress}
-      >
-        <Text className="font-bold " style={{ color: appTheme.linkColor }}>
-          ${Number(earning)}
+      <View className="flex-row items-center gap-2">
+        <Text
+          style={{
+            color: appTheme.fontMainColor,
+            fontSize: 14,
+            fontWeight: "700",
+          }}
+        >
+          {configuration?.currencySymbol || "$"}
+          {formatAmount(earning)}
         </Text>
-        <RightArrowIcon color={appTheme.linkColor} />
-      </TouchableOpacity>
-    </View>
+        <RightArrowIcon color={appTheme.fontSecondColor} />
+      </View>
+    </TouchableOpacity>
   );
 }

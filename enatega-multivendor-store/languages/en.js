@@ -172,6 +172,8 @@ export const en = {
   "Confirm Password": "Confirm Password",
   Login: "Login",
   "Recent Activity": "Recent Activity",
+  "Earnings Overview": "Earnings Overview",
+  "Last {{count}} days": "Last {{count}} days",
   "See More": "See More",
   Status: "Status",
   ACCEPTED: "ACCEPTED",
