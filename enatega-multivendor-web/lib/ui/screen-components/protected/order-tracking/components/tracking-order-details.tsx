@@ -7,6 +7,7 @@ import CancelOrderSuccessModal from "./cancel-order-success-modal";
 import { onUseLocalStorage } from "@/lib/utils/methods/local-storage";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { useTranslations } from "next-intl";
+import { getOrderVariationPricing } from "../services/tracking-pricing";
 
 function TrackingOrderDetails({
   orderTrackingDetails,
@@ -16,6 +17,7 @@ function TrackingOrderDetails({
   orderTrackingDetails: IOrderTrackingDetail;
   summaryAmounts?: {
     subtotal: number;
+    dealDiscount: number;
     deliveryCharge: number;
     tax: number;
     tip: number;
@@ -66,8 +68,9 @@ function TrackingOrderDetails({
     if (!orderTrackingDetails?.items) return 0;
 
     return orderTrackingDetails?.items.reduce((total, item) => {
-      const unitPrice =
-        item?.variation?.discounted ?? item?.variation?.price ?? 0;
+      const { finalUnitPrice: unitPrice } = getOrderVariationPricing(
+        item?.variation,
+      );
       return total + unitPrice * item?.quantity;
     }, 0);
   };
@@ -86,8 +89,9 @@ function TrackingOrderDetails({
   // };
 
   const calculateItemTotal = (item: any) => {
-    const variationPrice =
-      item.variation?.discounted ?? item.variation?.price ?? 0;
+    const { finalUnitPrice: variationPrice } = getOrderVariationPricing(
+      item.variation,
+    );
     const addonsPrice =
       item.addons?.reduce((sum: number, addon: any) => {
         return (
@@ -102,10 +106,8 @@ function TrackingOrderDetails({
   };
 
   const getItemPricing = (item: any) => {
-    const originalUnitPrice = Number(item.variation?.price || 0);
-    const discountedUnitPrice = Number(
-      item.variation?.discounted ?? originalUnitPrice,
-    );
+    const { originalUnitPrice, finalUnitPrice, hasDiscount } =
+      getOrderVariationPricing(item.variation);
     const addonsUnitPrice =
       item.addons?.reduce(
         (sum: number, addon: any) =>
@@ -119,11 +121,11 @@ function TrackingOrderDetails({
       ) || 0;
     return {
       originalUnitPrice,
-      discountedUnitPrice,
+      discountedUnitPrice: finalUnitPrice,
       addonsUnitPrice,
-      hasDiscount: discountedUnitPrice < originalUnitPrice,
+      hasDiscount,
       originalLineTotal: (originalUnitPrice + addonsUnitPrice) * item.quantity,
-      finalLineTotal: (discountedUnitPrice + addonsUnitPrice) * item.quantity,
+      finalLineTotal: (finalUnitPrice + addonsUnitPrice) * item.quantity,
     };
   };
 
@@ -227,10 +229,11 @@ function TrackingOrderDetails({
                 {formatCurrency(getItemPricing(item).finalLineTotal)}
               </span>
               <p className="mt-1 text-xs text-gray-500">
-                {item.quantity} × {formatCurrency(getItemPricing(item).discountedUnitPrice)}
+                {item.quantity} ×{" "}
+                {formatCurrency(getItemPricing(item).discountedUnitPrice)}
                 {getItemPricing(item).addonsUnitPrice > 0
                   ? ` + ${formatCurrency(getItemPricing(item).addonsUnitPrice)} add-ons`
-                  : ''}
+                  : ""}
               </p>
             </div>
           </div>
@@ -258,11 +261,7 @@ function TrackingOrderDetails({
               <span>
                 {item.quantity}x {item.title}
               </span>
-              <span>
-                {formatCurrency(
-                  calculateItemTotal(item),
-                )}
-              </span>
+              <span>{formatCurrency(calculateItemTotal(item))}</span>
             </div>
           ))}
 
@@ -271,6 +270,13 @@ function TrackingOrderDetails({
             <span>{t("order_details_subtotal_label")}</span>
             <span>{formatCurrency(calculateSubtotal())}</span>
           </div>
+
+          {(summaryAmounts?.dealDiscount ?? 0) > 0 && (
+            <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
+              <span>Deals savings</span>
+              <span>-{formatCurrency(summaryAmounts?.dealDiscount ?? 0)}</span>
+            </div>
+          )}
 
           {(summaryAmounts?.tax ?? orderTrackingDetails.taxationAmount) > 0 && (
             <div className="flex justify-between">
@@ -294,7 +300,7 @@ function TrackingOrderDetails({
             </div>
           )}
 
-          {calculateTotalAddonPrice() > 0 && (
+          {!summaryAmounts && calculateTotalAddonPrice() > 0 && (
             <div className="flex justify-between">
               <span>{t("Addons_label")}</span>
               <span>{formatCurrency(calculateTotalAddonPrice() || 0)}</span>

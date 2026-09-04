@@ -59,7 +59,10 @@ import {
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
-import { useChatNotifications } from "@/lib/context/global/chat-notification.context";
+import {
+  useChatNotifications,
+  useUnreadChat,
+} from "@/lib/context/global/chat-notification.context";
 import AccordionItem from "@/lib/ui/useable-components/accordian";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import { ChatIcon, HomeIcon } from "@/lib/ui/useable-components/svg";
@@ -125,8 +128,8 @@ export default function OrderDetailScreen() {
     locationPin,
   } = useOrderDetail();
   const { userId } = useUserContext();
-  const { getUnreadChat, markChatRead } = useChatNotifications();
-  const unreadChat = order?._id ? getUnreadChat(order._id) : undefined;
+  const { markChatRead } = useChatNotifications();
+  const unreadChat = useUnreadChat(order?._id ?? "");
   const { mutateAssignOrder, mutateOrderStatus, loadingAssignOrder, loadingOrderStatus } =
     useDetails(order);
 

@@ -1,30 +1,139 @@
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { memo, useContext } from "react";
-import { I18nManager, Image, Text, TouchableOpacity, View } from "react-native";
-import { FontAwesome6 } from "@expo/vector-icons";
-
-// Components
-import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
-// Interface
-import { IOrderComponentProps } from "@/lib/utils/interfaces/interface";
-
-// Contexrtg
-// Hook
-import useOrder from "@/lib/hooks/useOrder";
-
-// Cion
-import { BikeRidingIcon, ChatIcon, ClockIcon } from "../svg";
-
-// Hooks
-import { ConfigurationContext } from "@/lib/context/global/configuration.context";
-import { useLocationContext } from "@/lib/context/global/location.context";
-import { useApptheme } from "@/lib/context/global/theme.context";
-import { IOrder } from "@/lib/utils/interfaces/order.interface";
-import { calculateDistance } from "@/lib/utils/methods/custom-functions";
-import { formatTimestampTime } from "@/lib/utils/methods/date-time";
+import { I18nManager, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
+import {
+  useChatNotifications,
+  useUnreadChat,
+} from "@/lib/context/global/chat-notification.context";
+import { useLocationContext } from "@/lib/context/global/location.context";
+import { useApptheme } from "@/lib/context/global/theme.context";
+import useOrder from "@/lib/hooks/useOrder";
+import {
+  IOrder,
+  IOrderComponentProps,
+} from "@/lib/utils/interfaces/order.interface";
+import { calculateDistance } from "@/lib/utils/methods/custom-functions";
+import { formatTimestampTime } from "@/lib/utils/methods/date-time";
 import SpinnerComponent from "../spinner";
-import { useChatNotifications } from "@/lib/context/global/chat-notification.context";
+import {
+  Metric,
+  OrderHeader,
+  PaymentSummary,
+  RestaurantIdentity,
+  RouteStop,
+  styles,
+} from "./order-card-presentation";
+
+const AVERAGE_SPEED_KMH = 25;
+
+const OrderChatButton = memo(
+  ({
+    _id,
+    orderId,
+    phone,
+  }: {
+    _id: string;
+    orderId: string;
+    phone: string;
+  }) => {
+    const { t } = useTranslation();
+    const { appTheme } = useApptheme();
+    const router = useRouter();
+    const { markChatRead } = useChatNotifications();
+    const unreadChat = useUnreadChat(_id);
+
+    const openChat = () => {
+      markChatRead(_id);
+      router.push({
+        pathname: "/chat",
+        params: { phoneNumber: phone, orderId, id: _id },
+      });
+    };
+
+    return (
+      <TouchableOpacity
+        accessibilityRole="button"
+        onPress={openChat}
+        style={[
+          styles.chatButton,
+          { borderColor: `${appTheme.fontMainColor}1F` },
+        ]}
+      >
+        <View
+          style={[
+            styles.chatIcon,
+            { backgroundColor: appTheme.lowOpacityPrimaryColor },
+          ]}
+        >
+          <Ionicons
+            color={appTheme.primary}
+            name="chatbubble-ellipses-outline"
+            size={20}
+          />
+          {!!unreadChat?.count && (
+            <View
+              style={{
+                alignItems: "center",
+                backgroundColor: appTheme.orderUncomplete,
+                borderColor: appTheme.cartContainer,
+                borderRadius: 10,
+                borderWidth: 1.5,
+                end: -5,
+                height: 20,
+                justifyContent: "center",
+                minWidth: 20,
+                paddingHorizontal: 5,
+                position: "absolute",
+                top: -5,
+              }}
+            >
+              <Text
+                style={{
+                  color: appTheme.white,
+                  fontSize: 11,
+                  fontWeight: "700",
+                }}
+              >
+                {unreadChat.count > 99 ? "99+" : unreadChat.count}
+              </Text>
+            </View>
+          )}
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{
+              color: appTheme.fontSecondColor,
+              fontSize: 12,
+              fontWeight: "500",
+            }}
+          >
+            {unreadChat?.count ? t("New message") : t("Chat with Customer")}
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={{
+              color: appTheme.fontMainColor,
+              fontSize: 14,
+              fontWeight: "600",
+              marginTop: 2,
+            }}
+          >
+            {unreadChat?.preview || t("Start Chat")}
+          </Text>
+        </View>
+        <FontAwesome6
+          color={appTheme.fontSecondColor}
+          name={I18nManager.isRTL ? "chevron-left" : "chevron-right"}
+          size={12}
+        />
+      </TouchableOpacity>
+    );
+  },
+);
 
 const Order = ({
   orderId,
@@ -40,7 +149,6 @@ const Order = ({
   eta,
   tab,
 }: IOrderComponentProps) => {
-  // Hooks
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
   const { mutateAssignOrder, loadingAssignOrder } = useOrder({
@@ -49,12 +157,8 @@ const Order = ({
   } as IOrder);
   const configuration = useContext(ConfigurationContext);
   const router = useRouter();
-  const { getUnreadChat, markChatRead } = useChatNotifications();
   const { location: riderLocation } = useLocationContext();
-  const unreadChat = getUnreadChat(_id);
 
-  // Distance/time shown on the card. GeoJSON stores coordinates as
-  // [longitude, latitude].
   const riderLat = Number(riderLocation?.latitude);
   const riderLng = Number(riderLocation?.longitude);
   const customerLng = Number(deliveryAddress?.location?.coordinates?.[0]);
@@ -71,13 +175,14 @@ const Order = ({
   const hasRestaurantLocation =
     Number.isFinite(restaurantLat) && Number.isFinite(restaurantLng);
 
-  // Always render a real distance. Measure from the rider once we have their
-  // GPS fix; otherwise fall back to the restaurant -> customer leg, which is
-  // always present in the order payload. This keeps the value filled on every
-  // tab instead of showing "--".
   let distanceKm: number | null = null;
   if (hasRiderLocation && hasCustomerLocation) {
-    distanceKm = calculateDistance(riderLat, riderLng, customerLat, customerLng);
+    distanceKm = calculateDistance(
+      riderLat,
+      riderLng,
+      customerLat,
+      customerLng,
+    );
   } else if (hasRestaurantLocation && hasCustomerLocation) {
     distanceKm = calculateDistance(
       restaurantLat,
@@ -86,29 +191,21 @@ const Order = ({
       customerLng,
     );
   }
-  const distanceLabel = distanceKm !== null ? `${distanceKm.toFixed(2)} km` : "--";
 
-  // Estimated travel time from the distance (km / average rider speed). The
-  // rider `riderOrders` API does not return the restaurant's configured
-  // deliveryTime, so we derive a live ETA that is always available and stays
-  // consistent with the distance shown next to it. If the backend later exposes
-  // restaurant.deliveryTime it takes precedence.
-  const AVERAGE_SPEED_KMH = 25;
+  const distanceLabel =
+    distanceKm !== null ? `${distanceKm.toFixed(2)} km` : "—";
   const etaMinutes =
     distanceKm !== null
       ? Math.max(1, Math.round((distanceKm / AVERAGE_SPEED_KMH) * 60))
       : null;
-
-  // Time field, consistent across every tab. (The previous value was an
-  // accept-countdown that sat at 00:00 once an order had been accepted.)
   const backendEtaWindowStart = formatTimestampTime(eta?.windowStartAt);
   const backendEtaWindowEnd = formatTimestampTime(eta?.windowEndAt);
   const backendEtaWindow =
     backendEtaWindowStart && backendEtaWindowEnd
       ? `${backendEtaWindowStart}–${backendEtaWindowEnd}`
       : null;
-  const deliveryTimeLabel = backendEtaWindow ??
-    (etaMinutes !== null ? `${etaMinutes} mins` : null);
+  const deliveryTimeLabel =
+    backendEtaWindow ?? (etaMinutes !== null ? `${etaMinutes} mins` : "—");
 
   if (
     !orderId ||
@@ -122,387 +219,118 @@ const Order = ({
     !acceptedAt
   ) {
     return null;
-  } else
-    return (
-      <View
-        className="m-auto"
-        style={{
-          minWidth: "50%",
-          minHeight: ["PICKED"].includes(orderStatus) ? "6.8%" : "6%",
-          height: "auto",
-        }}
-        key={orderId}
+  }
+
+  const openOrderDetails = () => {
+    router.push({
+      pathname: "/order-detail",
+      params: { itemId: _id, tab },
+    });
+  };
+
+  return (
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: appTheme.cartContainer,
+          borderColor: `${appTheme.fontMainColor}1F`,
+        },
+      ]}
+    >
+      <TouchableOpacity
+        accessibilityHint={t("Opens order details")}
+        accessibilityRole="button"
+        activeOpacity={0.82}
+        onPress={openOrderDetails}
       >
-        {orderStatus === "ACCEPTED" || orderStatus === "PICKED" ? (
-          <View />
-        ) : null}
-        {!!orderId &&
-          !!_id &&
-          !!orderStatus &&
-          !!restaurant &&
-          !!deliveryAddress &&
-          !!paymentMethod &&
-          !!orderAmount &&
-          !!paymentStatus &&
-          !!acceptedAt && (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              accessibilityRole="button"
-              accessibilityHint={t("Opens order details")}
-              onPress={() => {
-                // Pass only the id + tab. The order-detail screen resolves the
-                // full order from UserContext's assignedOrders cache by id, so
-                // serializing the whole object here is redundant work on every
-                // parent re-render (GPS ticks).
-                router.push({
-                  pathname: "/order-detail",
-                  params: {
-                    itemId: _id,
-                    tab,
-                  },
-                });
+        <OrderHeader orderId={orderId} orderStatus={orderStatus} tab={tab} />
+
+        <RestaurantIdentity image={restaurant.image} name={restaurant.name} />
+
+        <View style={styles.routeSection}>
+          <RouteStop
+            address={restaurant.address}
+            label={t("Pickup Address")}
+            type="pickup"
+          />
+          <RouteStop
+            address={deliveryAddress.deliveryAddress}
+            isLast
+            label={t("Delivery Address")}
+            type="delivery"
+          />
+        </View>
+
+        <View
+          style={[
+            styles.metricsRow,
+            { backgroundColor: appTheme.lowOpacityPrimaryColor },
+          ]}
+        >
+          <Metric icon="time-outline" value={deliveryTimeLabel} />
+          <View
+            style={{
+              backgroundColor: `${appTheme.fontMainColor}1F`,
+              width: 1,
+            }}
+          />
+          <Metric icon="bicycle-outline" value={distanceLabel} />
+        </View>
+
+        <PaymentSummary
+          amount={orderAmount}
+          currencySymbol={configuration?.currencySymbol}
+          paymentMethod={paymentMethod}
+          paymentStatus={paymentStatus}
+        />
+
+        <View style={styles.detailAffordance}>
+          <Text
+            style={{
+              color: appTheme.primary,
+              fontSize: 13,
+              fontWeight: "600",
+            }}
+          >
+            {t("View order details")}
+          </Text>
+          <FontAwesome6
+            color={appTheme.primary}
+            name={I18nManager.isRTL ? "chevron-left" : "chevron-right"}
+            size={12}
+          />
+        </View>
+      </TouchableOpacity>
+
+      {orderStatus === "PICKED" && (
+        <OrderChatButton _id={_id} orderId={orderId} phone={user.phone} />
+      )}
+
+      {tab === "new_orders" && (
+        <TouchableOpacity
+          accessibilityRole="button"
+          disabled={loadingAssignOrder}
+          onPress={() => mutateAssignOrder({ variables: { id: _id } })}
+          style={[styles.assignButton, { backgroundColor: appTheme.primary }]}
+        >
+          {loadingAssignOrder ? (
+            <SpinnerComponent />
+          ) : (
+            <Text
+              style={{
+                color: appTheme.black,
+                fontSize: 16,
+                fontWeight: "700",
               }}
             >
-              <View
-                className="flex-1 gap-y-4  border border-1 rounded-[8px] m-4 p-2"
-                style={{
-                  backgroundColor: appTheme.themeBackground,
-                  borderColor: appTheme.borderLineColor,
-                }}
-              >
-                <View className="flex flex-col gap-y-2">
-                  {/* Status */}
-                  {orderStatus && (
-                    <View className="flex-1 flex-row justify-between items-center">
-                      <Text
-                        className="font-[Inter] text-base font-bold  text-left decoration-skip-ink-0 "
-                        style={{ color: appTheme.fontSecondColor }}
-                      >
-                        {t("Status")}
-                      </Text>
-                      <View
-                        className={`px-3 py-1 border border-1 rounded-[12px]`}
-                        style={{
-                          backgroundColor:
-                            tab === "delivered"
-                              ? "cyan"
-                              : tab === "processing"
-                                ? "lightyellow"
-                                : "lightgreen",
-                          borderColor:
-                            tab === "delivered"
-                              ? "blue"
-                              : tab === "processing"
-                                ? "orange"
-                                : "green",
-                        }}
-                      >
-                        <Text
-                          className={`font-[Inter] text-[12px] font-semibold text-center decoration-skip-ink-0`}
-                          style={{
-                            color:
-                              tab === "delivered"
-                                ? "blue"
-                                : tab === "processing"
-                                  ? "orange"
-                                  : "green",
-                          }}
-                        >
-                          {orderStatus}
-                        </Text>
-                      </View>
-                    </View>
-                  )}
-
-                  {/* Order ID */}
-                  {orderId && (
-                    <View className="flex-1 flex-row justify-between items-center">
-                      <Text
-                        className="font-[Inter] text-base font-bold  text-left decoration-skip-ink-0 "
-                        style={{ color: appTheme.fontSecondColor }}
-                      >
-                        {t("Order ID")}
-                      </Text>
-                      <Text
-                        className="font-[Inter] text-[16px] text-base font-semibold  text-right underline-offset-auto decoration-skip-ink "
-                        style={{ color: appTheme.fontMainColor }}
-                      >
-                        #{orderId}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-
-                {/* Store Image and Name */}
-                <View className="w-[90%] flex-row justify-start items-center gap-x-4">
-                  {/* <View className="h-8 w-8 bg-gray-400 justify-center items-center"> */}
-                  {/* <View className="w-[60px] h-[70px] bg-gray-200 rounded-[8px]"> */}
-                  <Image
-                    source={
-                      restaurant?.image
-                        ? { uri: restaurant.image }
-                        : (
-                            // eslint-disable-next-line @typescript-eslint/no-require-imports
-                            require("../../../assets/images/placeholder.jpg")
-                          )
-                    }
-                    style={{ width: 32, height: 30, borderRadius: 8 }}
-                  />
-                  {/* </View> */}
-                  {/* </View> */}
-                  <Text
-                    className="font-[Inter] text-lg font-bold leading-7 text-left underline-offset-auto decoration-skip-ink "
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    {restaurant?.name}
-                  </Text>
-                </View>
-
-                {/* Pickup Address */}
-                <View className="w-[90%] flex-row items-center gap-x-2">
-                  <View>
-                    <IconSymbol
-                      name="apartment"
-                      size={30}
-                      weight="medium"
-                      color={appTheme.fontMainColor}
-                    />
-                  </View>
-                  <View>
-                    <Text
-                      className="font-[Inter] text-base font-semibold leading-6 text-left underline-offset-auto decoration-skip-ink "
-                      style={{ color: appTheme.fontMainColor }}
-                    >
-                      {t("Pickup Address")}
-                    </Text>
-                    <Text
-                      className="font-[Inter] text-base font-bold leading-6 text-left underline-offset-auto decoration-skip-ink "
-                      style={{ color: appTheme.fontMainColor }}
-                    >
-                      {(String(restaurant.address).length > 40
-                        ? String(restaurant.address)
-                            .substring(0, 40)
-                            .concat("...")
-                        : String(restaurant.address)) ?? "-"}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Delivery Address */}
-                <View className="w-[90%] flex-row items-center gap-x-2">
-                  <View>
-                    <IconSymbol
-                      name="home"
-                      size={30}
-                      weight="medium"
-                      color={appTheme.fontMainColor}
-                    />
-                  </View>
-                  <View>
-                    <Text
-                      className="font-[Inter] text-base font-semibold leading-6 text-left underline-offset-auto decoration-skip-ink "
-                      style={{ color: appTheme.fontMainColor }}
-                    >
-                      {t("Delivery Address")}
-                    </Text>
-                    <Text
-                      className="font-[Inter] text-base font-bold leading-6 text-left underline-offset-auto decoration-skip-ink "
-                      style={{ color: appTheme.fontMainColor }}
-                    >
-                      {(String(deliveryAddress?.deliveryAddress).length > 40
-                        ? String(deliveryAddress?.deliveryAddress)
-                            .substring(0, 40)
-                            .concat("...")
-                        : String(deliveryAddress?.deliveryAddress)) ?? "-"}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Price/Time/Distance */}
-                <View className="w-[99%] flex-row justify-between items-center">
-                  <View className="flex-1 flex-row justify-start  items-center gap-x-1">
-                    <ClockIcon color="#6b7280" />
-                    <Text
-                      className="font-[Inter] text-base font-medium  text-left underline-offset-auto decoration-skip-ink "
-                      style={{ color: appTheme.fontMainColor }}
-                    >
-                      {deliveryTimeLabel ?? "--"}
-                    </Text>
-                  </View>
-
-                  <View className="flex-1 flex-row justify-end items-center gap-x-1">
-                    <BikeRidingIcon color="#6b7280" />
-                    <Text
-                      className="font-[Inter] text-base font-medium "
-                      style={{ color: appTheme.fontMainColor }}
-                    >
-                      {distanceLabel}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Payment Method */}
-                <View className="w-[99%] flex-row justify-between items-center">
-                  <Text
-                    className="flex-1 font-[Inter] text-[16px] text-base font-[500] "
-                    style={{ color: appTheme.fontSecondColor }}
-                  >
-                    {t("Payment Method")}
-                  </Text>
-                  <Text
-                    className="flex-1 font-[Inter] text-base font-semibold text-right underline-offset-auto decoration-skip-ink "
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    {paymentMethod}
-                  </Text>
-                </View>
-
-                {/* Order Amount */}
-                <View className="w-[99%] flex-row justify-between">
-                  <Text
-                    className="flex-1 font-[Inter] text-[16px] text-base font-[500] "
-                    style={{ color: appTheme.fontSecondColor }}
-                  >
-                    {t("Order Amount")}
-                  </Text>
-
-                  <Text
-                    className="flex-1 font-[Inter] font-semibold text-right "
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    {configuration?.currencySymbol}
-                    {orderAmount}
-                    {paymentStatus === "PAID" ? t("Paid") : t("(Not paid yet)")}
-                  </Text>
-                </View>
-
-                {["PICKED"].includes(orderStatus) && (
-                  <TouchableOpacity
-                    accessibilityRole="button"
-                    className="flex-row items-center gap-x-2"
-                    onPress={() => {
-                      markChatRead(_id);
-                      router.push({
-                        pathname: "/chat",
-                        params: {
-                          phoneNumber: user.phone,
-                          orderId: orderId,
-                          id: _id,
-                        },
-                      });
-                    }}
-                  >
-                    <View className="border border-[#E2E8F0] rounded-full p-3">
-                      <ChatIcon
-                        width={30}
-                        height={30}
-                        color={appTheme.fontMainColor}
-                      />
-                      {!!unreadChat?.count && (
-                        <View
-                          style={{
-                            position: "absolute",
-                            top: -4,
-                            end: -4,
-                            minWidth: 20,
-                            height: 20,
-                            paddingHorizontal: 5,
-                            borderRadius: 10,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: appTheme.orderUncomplete,
-                            borderWidth: 1.5,
-                            borderColor: appTheme.themeBackground,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: appTheme.white,
-                              fontSize: 11,
-                              fontWeight: "700",
-                            }}
-                          >
-                            {unreadChat.count > 99 ? "99+" : unreadChat.count}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                    <View className="flex-1">
-                      <Text
-                        className="font-[Inter] text-[16px] text-base font-[500] "
-                        style={{ color: appTheme.fontSecondColor }}
-                      >
-                        {unreadChat?.count
-                          ? t("New message")
-                          : t("Chat with Customer")}
-                      </Text>
-                      <Text
-                        className="font-[Inter] text-[16px] italic font-medium "
-                        style={{ color: appTheme.fontMainColor }}
-                        numberOfLines={1}
-                      >
-                        {unreadChat?.preview || t("Start Chat")}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-                {tab === "new_orders" && (
-                  <View
-                    className="flex-row items-center justify-end gap-x-2 border-t pt-3"
-                    style={{ borderColor: appTheme.borderLineColor }}
-                  >
-                    <Text
-                      className="font-[Inter] text-sm font-medium"
-                      style={{ color: appTheme.fontSecondColor }}
-                    >
-                      {t("View order details")}
-                    </Text>
-                    <FontAwesome6
-                      name={
-                        I18nManager.isRTL ? "chevron-left" : "chevron-right"
-                      }
-                      size={12}
-                      color={appTheme.fontSecondColor}
-                    />
-                  </View>
-                )}
-                {tab === "new_orders" && (
-                  // <CustomContinueButton
-                  //   title={t("Assign me")}
-                  //   className="w-[95%] mx-auto"
-                  //   onPress={() =>
-                  //     mutateAssignOrder({
-                  //       variables: { id: _id },
-                  //     })
-                  //   }
-                  // />
-                  <TouchableOpacity
-                    className="h-14 rounded-3xl py-3 mt-10 w-full"
-                    disabled={loadingAssignOrder}
-                    style={{ backgroundColor: appTheme.primary }}
-                    onPress={() =>
-                      mutateAssignOrder({
-                        variables: { id: _id },
-                      })
-                    }
-                  >
-                    {loadingAssignOrder ? (
-                      <SpinnerComponent />
-                    ) : (
-                      <Text
-                        className="text-center text-lg font-medium"
-                        style={{ color: appTheme.black }}
-                      >
-                        {t("Assign me")}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-                )}
-              </View>
-            </TouchableOpacity>
+              {t("Assign me")}
+            </Text>
           )}
-      </View>
-    );
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 };
 
 const areOrderPropsEqual = (

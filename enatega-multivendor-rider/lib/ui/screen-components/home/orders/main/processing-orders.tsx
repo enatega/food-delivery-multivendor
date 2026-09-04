@@ -27,7 +27,7 @@ import { isProcessingOrderForMode } from "@/lib/utils/order-state";
 
 const { height } = Dimensions.get("window");
 // Approximate rendered height (px) of an Order card, used by FlashList for layout estimation
-const ORDER_CARD_ESTIMATED_HEIGHT = 430;
+const ORDER_CARD_ESTIMATED_HEIGHT = 500;
 
 function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   // Props

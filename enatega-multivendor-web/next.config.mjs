@@ -1,6 +1,31 @@
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
+
+const configuredApiImagePatterns = [
+  process.env.NEXT_PUBLIC_SERVER_URL,
+  process.env.NEXT_PUBLIC_SINGLE_VENDOR_SERVER_URL,
+  process.env.NEXT_PUBLIC_SINGLE_VENDOR_REST_URL,
+]
+  .map((value) => {
+    if (!value) return null;
+
+    try {
+      const url = new URL(value);
+      if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+
+      return {
+        protocol: url.protocol.slice(0, -1),
+        hostname: url.hostname,
+        port: url.port,
+        pathname: "/**",
+      };
+    } catch {
+      return null;
+    }
+  })
+  .filter(Boolean);
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -143,6 +168,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "*.s3.*.amazonaws.com",
       },
+      ...configuredApiImagePatterns,
     ],
   },
 };

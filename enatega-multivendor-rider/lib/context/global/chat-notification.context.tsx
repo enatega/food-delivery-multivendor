@@ -9,12 +9,18 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { AppState, AppStateStatus, Platform } from "react-native";
 
 import { RIDER_ORDERS, SINGLE_VENDOR_RIDER_ORDERS } from "@/lib/apollo/queries";
+import {
+  SINGLE_VENDOR_SUBSCRIPTION_NEW_MESSAGE,
+  SUBSCRIPTION_NEW_MESSAGE,
+} from "@/lib/apollo/subscriptions";
 import {
   getChatUnreadKey,
   getHandledNotificationKey,
@@ -26,22 +32,34 @@ import {
   ChatUnreadEntry,
   ChatUnreadState,
   clearChatUnread,
+  createChatUnreadSubscriptions,
 } from "@/lib/utils/chat-unread";
+import { isProcessingOrderForMode } from "@/lib/utils/order-state";
 import { useRiderMode } from "./rider-mode.context";
 import { useUserContext } from "./user.context";
 
 interface ChatNotificationContextValue {
   getUnreadChat: (orderId: string) => ChatUnreadEntry | undefined;
   markChatRead: (orderId: string) => void;
+  subscribeToUnreadChat: (orderId: string, listener: () => void) => () => void;
 }
 
 const ChatNotificationContext = createContext<ChatNotificationContextValue>({
   getUnreadChat: () => undefined,
   markChatRead: () => {},
+  subscribeToUnreadChat: () => () => {},
 });
 
 const isChatNotification = (notification: Notifications.Notification) =>
   notification.request.content.data?.type === "chat";
+
+interface IncomingChatMessage {
+  id?: string | number;
+  message?: string | null;
+  image?: string | null;
+  createdAt?: string | number | null;
+  user?: { id?: string | number | null } | null;
+}
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -69,6 +87,8 @@ export const ChatNotificationProvider = ({
   const { mode } = useRiderMode();
   const { assignedOrders, userId } = useUserContext();
   const [unreadChats, setUnreadChats] = useState<ChatUnreadState>({});
+  const unreadChatsRef = useRef<ChatUnreadState>({});
+  const unreadSubscriptionsRef = useRef(createChatUnreadSubscriptions());
   const [hydrated, setHydrated] = useState(false);
   const unreadStorageKey = getChatUnreadKey(mode);
   const handledNotificationKey = getHandledNotificationKey(mode);
@@ -97,26 +117,38 @@ export const ChatNotificationProvider = ({
     void AsyncStorage.setItem(unreadStorageKey, JSON.stringify(unreadChats));
   }, [hydrated, unreadChats, unreadStorageKey]);
 
-  const recordChatNotification = useCallback(
-    (notification: Notifications.Notification, showInAppAlert: boolean) => {
-      if (!isChatNotification(notification)) return;
-      const rawOrderId = notification.request.content.data?._id;
-      if (typeof rawOrderId !== "string" && typeof rawOrderId !== "number") {
-        return;
-      }
-      const orderId = String(rawOrderId);
+  useEffect(() => {
+    const previous = unreadChatsRef.current;
+    unreadChatsRef.current = unreadChats;
+    unreadSubscriptionsRef.current.notifyChanged(previous, unreadChats);
+  }, [unreadChats]);
+
+  const recordUnreadMessage = useCallback(
+    ({
+      orderId,
+      eventId,
+      notificationId,
+      preview,
+      showInAppAlert,
+    }: {
+      orderId: string;
+      eventId: string;
+      notificationId?: string;
+      preview: string;
+      showInAppAlert: boolean;
+    }) => {
       if (pathname === "/chat" && String(params.id ?? "") === orderId) return;
 
       setUnreadChats((current) =>
         addChatUnread(current, {
           orderId,
-          notificationId: notification.request.identifier,
-          preview: notification.request.content.body ?? "",
+          eventId,
+          notificationId,
+          preview,
         }),
       );
 
       if (showInAppAlert) {
-        const preview = notification.request.content.body;
         FlashMessageComponent({
           message: preview
             ? `${t("New message from customer")}: ${preview}`
@@ -127,6 +159,98 @@ export const ChatNotificationProvider = ({
     [params.id, pathname, t],
   );
 
+  const recordChatNotification = useCallback(
+    (notification: Notifications.Notification, showInAppAlert: boolean) => {
+      if (!isChatNotification(notification)) return;
+      const data = notification.request.content.data;
+      const rawOrderId = data?._id ?? data?.orderId;
+      if (typeof rawOrderId !== "string" && typeof rawOrderId !== "number") {
+        return;
+      }
+      const orderId = String(rawOrderId);
+      const rawMessageId = data?.messageId ?? data?.chatId;
+      const notificationId = notification.request.identifier;
+
+      recordUnreadMessage({
+        orderId,
+        eventId:
+          typeof rawMessageId === "string" || typeof rawMessageId === "number"
+            ? `message:${String(rawMessageId)}`
+            : `notification:${notificationId}`,
+        notificationId,
+        preview: notification.request.content.body ?? "",
+        showInAppAlert,
+      });
+    },
+    [recordUnreadMessage],
+  );
+
+  const subscribedOrderIds = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          (assignedOrders ?? [])
+            .filter((order) => isProcessingOrderForMode(order, mode))
+            .map((order) => String(order._id))
+            .filter(Boolean),
+        ),
+      ).sort(),
+    [assignedOrders, mode],
+  );
+  const subscribedOrderIdsKey = subscribedOrderIds.join("\u0000");
+
+  useEffect(() => {
+    if (!hydrated || !userId || !subscribedOrderIdsKey) return;
+
+    const chatSubscription =
+      mode === RIDER_SERVER_MODES.SINGLE
+        ? SINGLE_VENDOR_SUBSCRIPTION_NEW_MESSAGE
+        : SUBSCRIPTION_NEW_MESSAGE;
+    const subscriptions = subscribedOrderIdsKey.split("\u0000").map((orderId) =>
+      client
+        .subscribe<{ subscriptionNewMessage?: IncomingChatMessage }>({
+          query: chatSubscription,
+          variables: { order: orderId },
+        })
+        .subscribe({
+          next: ({ data }) => {
+            const message = data?.subscriptionNewMessage;
+            if (!message || String(message.user?.id ?? "") === String(userId)) {
+              return;
+            }
+
+            const messageId =
+              message.id ??
+              `${message.createdAt ?? "unknown"}:${message.message ?? ""}:${message.image ?? ""}`;
+            recordUnreadMessage({
+              orderId,
+              eventId: `message:${String(messageId)}`,
+              preview: message.message ?? "",
+              showInAppAlert: true,
+            });
+          },
+          error: (error) => {
+            if (__DEV__) {
+              console.warn(
+                `Unable to subscribe to chat messages for order ${orderId}`,
+                error,
+              );
+            }
+          },
+        }),
+    );
+
+    return () =>
+      subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }, [
+    client,
+    hydrated,
+    mode,
+    recordUnreadMessage,
+    subscribedOrderIdsKey,
+    userId,
+  ]);
+
   const reconcilePresentedNotifications = useCallback(async () => {
     const presented = await Notifications.getPresentedNotificationsAsync();
     presented.forEach((notification) =>
@@ -134,23 +258,21 @@ export const ChatNotificationProvider = ({
     );
   }, [recordChatNotification]);
 
-  const markChatRead = useCallback(
-    (orderId: string) => {
-      const notificationIds = unreadChats[orderId]?.notificationIds ?? [];
-      setUnreadChats((current) => clearChatUnread(current, orderId));
-      notificationIds.forEach((notificationId) => {
-        void Notifications.dismissNotificationAsync(notificationId);
-      });
-    },
-    [unreadChats],
-  );
+  const markChatRead = useCallback((orderId: string) => {
+    const notificationIds =
+      unreadChatsRef.current[orderId]?.notificationIds ?? [];
+    setUnreadChats((current) => clearChatUnread(current, orderId));
+    notificationIds.forEach((notificationId) => {
+      void Notifications.dismissNotificationAsync(notificationId);
+    });
+  }, []);
 
   const handleNotificationResponse = useCallback(
     async (response: Notifications.NotificationResponse) => {
       if (!userId) return;
       const notification = response.notification;
       const data = notification.request.content.data;
-      const rawOrderId = data?._id;
+      const rawOrderId = data?._id ?? data?.orderId;
       if (typeof rawOrderId !== "string" && typeof rawOrderId !== "number") {
         return;
       }
@@ -269,12 +391,17 @@ export const ChatNotificationProvider = ({
   }, [handleNotificationResponse, userId]);
 
   const getUnreadChat = useCallback(
-    (orderId: string) => unreadChats[orderId],
-    [unreadChats],
+    (orderId: string) => unreadChatsRef.current[orderId],
+    [],
+  );
+  const subscribeToUnreadChat = useCallback(
+    (orderId: string, listener: () => void) =>
+      unreadSubscriptionsRef.current.subscribe(orderId, listener),
+    [],
   );
   const value = useMemo(
-    () => ({ getUnreadChat, markChatRead }),
-    [getUnreadChat, markChatRead],
+    () => ({ getUnreadChat, markChatRead, subscribeToUnreadChat }),
+    [getUnreadChat, markChatRead, subscribeToUnreadChat],
   );
 
   return (
@@ -285,3 +412,17 @@ export const ChatNotificationProvider = ({
 };
 
 export const useChatNotifications = () => useContext(ChatNotificationContext);
+
+export const useUnreadChat = (orderId: string) => {
+  const { getUnreadChat, subscribeToUnreadChat } = useChatNotifications();
+  const subscribe = useCallback(
+    (listener: () => void) => subscribeToUnreadChat(orderId, listener),
+    [orderId, subscribeToUnreadChat],
+  );
+  const getSnapshot = useCallback(
+    () => getUnreadChat(orderId),
+    [getUnreadChat, orderId],
+  );
+
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+};

@@ -51,30 +51,34 @@ const CountdownTimer: React.FC<TimerProps> = ({ duration }) => {
         <View style={styles.box}>
           <Text
             style={[
-              styles[isOverdue ? "timerTextEnd" : "timerText"],
-              { color: appTheme.fontMainColor },
+              styles.timerText,
+              { color: isOverdue ? appTheme.error : appTheme.fontMainColor },
             ]}
           >
             {hours}
           </Text>
         </View>
-        <Text style={styles.colon}>:</Text>
+        <Text style={[styles.colon, { color: appTheme.fontSecondColor }]}>
+          :
+        </Text>
         <View style={styles.box}>
           <Text
             style={[
-              styles[isOverdue ? "timerTextEnd" : "timerText"],
-              { color: appTheme.fontMainColor },
+              styles.timerText,
+              { color: isOverdue ? appTheme.error : appTheme.fontMainColor },
             ]}
           >
             {minutes}
           </Text>
         </View>
-        <Text style={styles.colon}>:</Text>
+        <Text style={[styles.colon, { color: appTheme.fontSecondColor }]}>
+          :
+        </Text>
         <View style={styles.box}>
           <Text
             style={[
-              styles[isOverdue ? "timerTextEnd" : "timerText"],
-              { color: appTheme.fontMainColor },
+              styles.timerText,
+              { color: isOverdue ? appTheme.error : appTheme.fontMainColor },
             ]}
           >
             {seconds}
@@ -104,18 +108,12 @@ const styles = StyleSheet.create({
   },
   timerText: {
     fontSize: 20,
-    fontWeight: "bold",
-    // color: "red",
-  },
-  timerTextEnd: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "red",
+    fontVariant: ["tabular-nums"],
+    fontWeight: "700",
   },
   colon: {
-    fontWeight: "bold",
-    color: "red",
-    marginHorizontal: 5,
+    fontWeight: "700",
+    marginHorizontal: 2,
   },
   labelRow: {
     flexDirection: "row",

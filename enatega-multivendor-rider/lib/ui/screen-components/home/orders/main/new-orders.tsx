@@ -26,7 +26,7 @@ import { isNewOrderForMode } from "@/lib/utils/order-state";
 const { height } = Dimensions.get("window");
 // Approximate rendered height (px) of an Order card (incl. "Assign me" button),
 // used by FlashList for layout estimation
-const ORDER_CARD_ESTIMATED_HEIGHT = 520;
+const ORDER_CARD_ESTIMATED_HEIGHT = 580;
 
 export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Props

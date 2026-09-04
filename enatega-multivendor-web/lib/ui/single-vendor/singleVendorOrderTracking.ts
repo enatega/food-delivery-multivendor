@@ -1,3 +1,5 @@
+import { getOrderVariationPricing } from "@/lib/ui/screen-components/protected/order-tracking/services/tracking-pricing";
+
 const toAmount = (value: unknown) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? Math.max(parsed, 0) : 0;
@@ -30,7 +32,7 @@ export function normalizeSingleVendorTrackingOrder(
   const sourceItems = summaryData?.items?.length
     ? summaryData.items
     : (rawOrder.items ?? []);
-  const items = sourceItems.map((item: Record<string, any>) => ({
+  let items = sourceItems.map((item: Record<string, any>) => ({
     ...item,
     image:
       item.image || item.foodImage || item.variationImage || rawOrder.image,
@@ -47,6 +49,61 @@ export function normalizeSingleVendorTrackingOrder(
     addons: item.addons ?? [],
   }));
 
+  const expectedSubtotal = Number(summaryData?.itemsSubTotal);
+  if (Number.isFinite(expectedSubtotal)) {
+    const regularSubtotal = items.reduce(
+      (total: number, item: Record<string, any>) =>
+        total +
+        toAmount(item.variation?.price) * toAmount(item.quantity) +
+        getItemAddonsTotal(item),
+      0,
+    );
+    const displayedSubtotal = items.reduce(
+      (total: number, item: Record<string, any>) =>
+        total +
+        getOrderVariationPricing(item.variation).finalUnitPrice *
+          toAmount(item.quantity) +
+        getItemAddonsTotal(item),
+      0,
+    );
+
+    // Legacy orders copied the catalog's `discounted` field even when no deal
+    // was applied. The charged order subtotal is authoritative in that case.
+    if (
+      amountsMatch(expectedSubtotal, regularSubtotal) &&
+      !amountsMatch(expectedSubtotal, displayedSubtotal)
+    ) {
+      items = items.map((item: Record<string, any>) => ({
+        ...item,
+        variation: { ...item.variation, discounted: 0 },
+      }));
+    } else if (
+      items.length === 1 &&
+      !amountsMatch(expectedSubtotal, displayedSubtotal)
+    ) {
+      const [item] = items;
+      const quantity = Math.max(toAmount(item.quantity), 1);
+      const addonsTotal = getItemAddonsTotal(item);
+      const chargedUnitPrice = Math.max(
+        (expectedSubtotal - addonsTotal) / quantity,
+        0,
+      );
+      const originalUnitPrice = toAmount(item.variation?.price);
+
+      if (chargedUnitPrice < originalUnitPrice) {
+        items = [
+          {
+            ...item,
+            variation: {
+              ...item.variation,
+              discounted: Number(chargedUnitPrice.toFixed(2)),
+            },
+          },
+        ];
+      }
+    }
+  }
+
   return {
     ...rawOrder,
     ...summaryData,
@@ -61,23 +118,60 @@ export function normalizeSingleVendorTrackingOrder(
   };
 }
 
+function getItemAddonsTotal(item: Record<string, any>) {
+  const addonsUnitTotal = (item.addons ?? []).reduce(
+    (total: number, addon: Record<string, any>) =>
+      total +
+      (addon.options ?? []).reduce(
+        (optionsTotal: number, option: Record<string, any>) =>
+          optionsTotal + toAmount(option.price),
+        0,
+      ),
+    0,
+  );
+  return addonsUnitTotal * toAmount(item.quantity);
+}
+
+function amountsMatch(left: number, right: number) {
+  return Math.abs(left - right) < 0.005;
+}
+
 export function getSingleVendorTrackingAmounts(order: Record<string, any>) {
-  const calculatedSubtotal = (order.items ?? []).reduce(
+  const calculatedDiscountedSubtotal = (order.items ?? []).reduce(
     (total: number, item: Record<string, any>) => {
-      const unitPrice =
-        item.variation?.discounted ?? item.variation?.price ?? 0;
-      return total + toAmount(unitPrice) * toAmount(item.quantity);
+      const { finalUnitPrice: unitPrice } = getOrderVariationPricing(
+        item.variation,
+      );
+      return (
+        total +
+        toAmount(unitPrice) * toAmount(item.quantity) +
+        getItemAddonsTotal(item)
+      );
     },
+    0,
+  );
+  const calculatedOriginalSubtotal = (order.items ?? []).reduce(
+    (total: number, item: Record<string, any>) =>
+      total +
+      getOrderVariationPricing(item.variation).originalUnitPrice *
+        toAmount(item.quantity) +
+      getItemAddonsTotal(item),
+    0,
+  );
+  const chargedSubtotal =
+    order.itemsSubTotal === null || order.itemsSubTotal === undefined
+      ? calculatedDiscountedSubtotal
+      : toAmount(order.itemsSubTotal);
+  const dealDiscount = Math.max(
+    calculatedOriginalSubtotal - chargedSubtotal,
     0,
   );
   const detailedDiscount =
     toAmount(order.deliveryDiscount) + toAmount(order.couponDiscount);
 
   return {
-    subtotal:
-      order.itemsSubTotal === null || order.itemsSubTotal === undefined
-        ? calculatedSubtotal
-        : toAmount(order.itemsSubTotal),
+    subtotal: chargedSubtotal + dealDiscount,
+    dealDiscount: Number(dealDiscount.toFixed(2)),
     deliveryCharge: toAmount(
       order.deliverChargesAmount ?? order.deliveryCharges,
     ),

@@ -2,7 +2,7 @@ import { useApptheme } from "@/lib/context/theme.context";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { linkToMapsApp } from "@/lib/utils/methods";
 import { parseTimestamp } from "@/lib/utils/methods/date-time";
-import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 interface IOrderFactProps {
@@ -86,13 +86,12 @@ const NewOrderOverview = ({ order }: { order: IOrder }) => {
   return (
     <View
       style={{
-        backgroundColor: appTheme.cartContainer,
         borderColor: appTheme.borderLineColor,
-        borderRadius: 8,
-        borderWidth: 1,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderTopWidth: StyleSheet.hairlineWidth,
         gap: 12,
-        marginTop: 8,
-        padding: 12,
+        marginTop: 16,
+        paddingVertical: 16,
       }}
     >
       <View
