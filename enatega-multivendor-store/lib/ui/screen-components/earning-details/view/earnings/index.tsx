@@ -52,13 +52,7 @@ export default function EarningsDetailStacks({
   };
 
   return (
-    <View
-      className="h-full border-t-2"
-      style={{
-        borderTopColor: appTheme.borderLineColor,
-        backgroundColor: appTheme.themeBackground,
-      }}
-    >
+    <View style={{ backgroundColor: appTheme.themeBackground, flex: 1 }}>
       <FlatList
         data={storeEarnings ?? []}
         renderItem={({ item, index }) => renderItem({ item, index })}
@@ -69,6 +63,7 @@ export default function EarningsDetailStacks({
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={{
           flexGrow: 1,
+          paddingHorizontal: 16,
           paddingBottom: tabBarHeight + 24,
         }}
       />
