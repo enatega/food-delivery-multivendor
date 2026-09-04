@@ -9,13 +9,25 @@ import { ChatButton } from './ChatButton'
 import { ORDER_STATUS_ENUM } from '../../../utils/enums'
 import { formatNumber } from '../../../utils/formatNumber'
 import CachedImage from '../../CachedImage'
+import { callNumber } from '../../../utils/callNumber'
 
 export default function Detail({ theme, from, orderNo, deliveryAddress, items, currencySymbol, subTotal, tip, tax, deliveryCharges, total, navigation, id, rider, orderStatus, hasUnread, onChatOpen }) {
   const riderPhone = rider?.phone
   const { t } = useTranslation()
   return (
     <View style={styles.container(theme)}>
-      {rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED && orderStatus !== ORDER_STATUS_ENUM.CANCELLED && <ChatButton onPress={() => { onChatOpen?.(); navigation.navigate('ChatWithRider', { id, orderNo, total, riderPhone }) }} title={hasUnread ? t('newMessageFromRider') : t('chatWithRider')} description={t('askContactlessDelivery')} theme={theme} hasUnread={hasUnread} />}
+      {rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED && orderStatus !== ORDER_STATUS_ENUM.CANCELLED && (
+        <ChatButton
+          riderName={rider.name}
+          onCall={riderPhone ? () => callNumber(riderPhone) : null}
+          onMessage={() => {
+            onChatOpen?.()
+            navigation.navigate('ChatWithRider', { id, orderNo, total, riderPhone })
+          }}
+          theme={theme}
+          hasUnread={hasUnread}
+        />
+      )}
       <TextDefault textColor={theme.colors.textPrimary} bold H4 style={{ ...alignment.MBsmall }} isRTL>
         {from}
       </TextDefault>
@@ -42,32 +54,22 @@ export default function Detail({ theme, from, orderNo, deliveryAddress, items, c
           // Calculate total price including addons
           const basePrice = item.variation.price
           const addonPrice = item.addons.reduce((total, addon) => {
-            return total + addon.options.reduce((addonTotal, option) => {
-              return addonTotal + (option.price || 0)
-            }, 0)
+            return (
+              total +
+              addon.options.reduce((addonTotal, option) => {
+                return addonTotal + (option.price || 0)
+              }, 0)
+            )
           }, 0)
           const totalItemPrice = basePrice + addonPrice
-          
-          return (
-            <ItemRow 
-              key={item._id} 
-              theme={theme} 
-              quantity={item.quantity} 
-              variationTitle={item.variation.title} 
-              title={`${item.title}`} 
-              currency={currencySymbol} 
-              price={totalItemPrice} 
-              options={item.addons.map((addon) => addon.options.map(({ title }) => title))} 
-              image={item?.image} 
-            />
-          )
+
+          return <ItemRow key={item._id} theme={theme} quantity={item.quantity} variationTitle={item.variation.title} title={`${item.title}`} currency={currencySymbol} price={totalItemPrice} options={item.addons.map((addon) => addon.options.map(({ title }) => title))} image={item?.image} />
         })}
       </View>
     </View>
   )
 }
 const ItemRow = ({ theme, quantity, title, variationTitle, options = ['raita', '7up'], price, currency, image }) => {
-  const { t } = useTranslation()
   return (
     <View style={styles.itemRow(theme)}>
       <View>

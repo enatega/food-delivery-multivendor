@@ -1,25 +1,67 @@
 import { StyleSheet, Dimensions } from 'react-native'
-import { fontStyles } from '../../../utils/fontStyles'
-import { scale, verticalScale } from '../../../utils/scaling'
+import { scale } from '../../../utils/scaling'
 const { width: WIDTH } = Dimensions.get('window')
 export default StyleSheet.create({
-  container: theme => ({
-    marginHorizontal: scale(12)
+  container: (theme) => ({
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.borderSubtle,
+    borderRadius: scale(16),
+    borderWidth: StyleSheet.hairlineWidth,
+    marginHorizontal: scale(12),
+    marginTop: scale(12),
+    padding: scale(14)
   }),
-  line: theme => ({
+  line: (theme) => ({
     height: 1,
     width: '90%',
     backgroundColor: theme.secondaryText
   }),
-  chatButton: theme => ({
-    paddingVertical: scale(25),
-    // paddingHorizontal: scale(100),
-    backgroundColor: theme.themeBackground,
-    borderRadius: scale(20),
-    flexDirection: theme?.isRTL ? 'row-reverse' : 'row'
+  riderCard: (theme) => ({
+    alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.borderSubtle,
+    borderRadius: scale(14),
+    borderWidth: StyleSheet.hairlineWidth,
+    flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
+    justifyContent: 'space-between',
+    marginBottom: scale(16),
+    padding: scale(12)
+  }),
+  riderIdentity: (theme) => ({
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
+    minWidth: 0
+  }),
+  riderCopy: {
+    flex: 1,
+    marginHorizontal: scale(10)
+  },
+  riderActions: (theme) => ({
+    flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
+    gap: scale(8)
+  }),
+  riderAction: (theme) => ({
+    alignItems: 'center',
+    backgroundColor: theme.colors.accentSubtle,
+    borderRadius: scale(18),
+    height: scale(36),
+    justifyContent: 'center',
+    width: scale(36)
+  }),
+  unreadDot: (theme) => ({
+    backgroundColor: theme.red600,
+    borderColor: theme.colors.surface,
+    borderRadius: scale(4),
+    borderWidth: 1,
+    height: scale(8),
+    position: 'absolute',
+    right: scale(6),
+    top: scale(5),
+    width: scale(8)
   }),
 
-  orderDetailsContainer: theme => ({
+  orderDetailsContainer: (theme) => ({
     backgroundColor: theme.themeBackground
   }),
   addressContainer: {
@@ -32,13 +74,13 @@ export default StyleSheet.create({
   itemsContainer: {
     width: '100%'
   },
-  line2: theme => ({
+  line2: (theme) => ({
     marginVertical: scale(10),
     backgroundColor: theme.secondaryText,
     height: scale(1),
     width: '100%'
   }),
-  itemRow: theme=>({
+  itemRow: (theme) => ({
     flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -60,10 +102,5 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: scale(10)
-  },
-  chatIcon: theme => ({
-    flex: 1,
-    alignItems: theme?.isRTL ? 'flex-start' : 'flex-end',
-    justifyContent: 'center',
-  })
+  }
 })

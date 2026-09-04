@@ -14,6 +14,7 @@ import { theme } from '../../utils/themeColors'
 import Detail from '../../components/OrderDetail/Detail/Detail'
 import CustomerMarker from '../../assets/SVG/customer-marker'
 import RiderMarker from '../../assets/SVG/rider-marker'
+import RestaurantMarker from '../../assets/SVG/restaurant-marker'
 import OrdersContext from '../../context/Orders'
 import { mapStyle } from '../../utils/mapStyle'
 import darkMapStyle from '../../utils/DarkMapStyles'
@@ -99,20 +100,12 @@ const getStatusMessage = (order, eta, riderLocation, now) => {
     case ORDER_STATUS_ENUM.PENDING:
       return 'Waiting for the store to confirm your order.'
     case ORDER_STATUS_ENUM.ACCEPTED:
-      return eta?.readyAt && now > new Date(eta.readyAt).getTime()
-        ? 'Preparation is taking a little longer.'
-        : `Your order is being prepared${eta?.readyAt ? ` — expected ready by ${formatClockTime(eta.readyAt)}` : '.'}`
+      return eta?.readyAt && now > new Date(eta.readyAt).getTime() ? 'Preparation is taking a little longer.' : `Your order is being prepared${eta?.readyAt ? ` — expected ready by ${formatClockTime(eta.readyAt)}` : '.'}`
     case ORDER_STATUS_ENUM.ASSIGNED:
-      return eta?.readyAt && now > new Date(eta.readyAt).getTime()
-        ? 'Your rider is collecting the order. Preparation is taking a little longer.'
-        : 'Your order is being prepared and a rider has been assigned.'
+      return eta?.readyAt && now > new Date(eta.readyAt).getTime() ? 'Your rider is collecting the order. Preparation is taking a little longer.' : 'Your order is being prepared and a rider has been assigned.'
     case ORDER_STATUS_ENUM.PICKED: {
-      const locationAge = riderLocation?.recordedAt
-        ? now - new Date(riderLocation.recordedAt).getTime()
-        : Infinity
-      return locationAge > 90 * 1000
-        ? `Rider location temporarily unavailable${riderLocation?.recordedAt ? ` — last updated ${formatClockTime(riderLocation.recordedAt)}` : '.'}`
-        : 'Your order is on the way.'
+      const locationAge = riderLocation?.recordedAt ? now - new Date(riderLocation.recordedAt).getTime() : Infinity
+      return locationAge > 90 * 1000 ? `Rider location temporarily unavailable${riderLocation?.recordedAt ? ` — last updated ${formatClockTime(riderLocation.recordedAt)}` : '.'}` : 'Your order is on the way.'
     }
     case ORDER_STATUS_ENUM.DELIVERED:
     case ORDER_STATUS_ENUM.COMPLETED:
@@ -125,11 +118,10 @@ const getStatusMessage = (order, eta, riderLocation, now) => {
 function OrderDetail(props) {
   // console.log("propsdata",props?.route.params)
   const [cancelModalVisible, setCancelModalVisible] = useState(false)
+  const [showPaymentDetails, setShowPaymentDetails] = useState(false)
   // const Analytics = analytics()
   const { t, i18n } = useTranslation()
-  const id = props?.route.params
-    ? props?.route.params?._id || props?.route.params?.id
-    : null
+  const id = props?.route.params ? props?.route.params?._id || props?.route.params?.id : null
   const orderData = props?.route.params ? props?.route.params?.order : null
   // console.log('orderData',orderData)
   const { loadingOrders, errorOrders, orders, reFetchOrders } = useContext(OrdersContext)
@@ -242,8 +234,7 @@ function OrderDetail(props) {
     }, [])
   )
 
-  const trackingEnabled =
-    isTrackingFocused && order?.orderStatus === ORDER_STATUS_ENUM.PICKED && Boolean(id)
+  const trackingEnabled = isTrackingFocused && [ORDER_STATUS_ENUM.ASSIGNED, ORDER_STATUS_ENUM.PICKED].includes(order?.orderStatus) && Boolean(id)
   const { data: initialTrackingData } = useQuery(ORDER_TRACKING, {
     variables: { id },
     skip: !trackingEnabled,
@@ -288,14 +279,8 @@ function OrderDetail(props) {
   const openedCourierChatRef = useRef(false)
 
   useEffect(() => {
-    const shouldOpenCourierChat =
-      props?.route.params?.openCourierChat === true ||
-      props?.route.params?.chat === 'courier'
-    if (
-      shouldOpenCourierChat &&
-      !openedCourierChatRef.current &&
-      order?.rider
-    ) {
+    const shouldOpenCourierChat = props?.route.params?.openCourierChat === true || props?.route.params?.chat === 'courier'
+    if (shouldOpenCourierChat && !openedCourierChatRef.current && order?.rider) {
       openedCourierChatRef.current = true
       navigation.navigate('ChatWithRider', {
         id,
@@ -304,46 +289,18 @@ function OrderDetail(props) {
         riderPhone: order.rider.phone
       })
     }
-  }, [
-    id,
-    navigation,
-    order?.orderAmount,
-    order?.orderId,
-    order?.rider,
-    props?.route.params?.chat,
-    props?.route.params?.openCourierChat
-  ])
+  }, [id, navigation, order?.orderAmount, order?.orderId, order?.rider, props?.route.params?.chat, props?.route.params?.openCourierChat])
 
   useEffect(() => {
     props?.navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity
-          accessibilityRole='button'
-          accessibilityLabel={t('back')}
-          activeOpacity={0.65}
-          hitSlop={10}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons
-            name={currentTheme.isRTL ? 'arrow-forward' : 'arrow-back'}
-            size={scale(23)}
-            color={currentTheme.colors.textPrimary}
-          />
+        <TouchableOpacity accessibilityRole='button' accessibilityLabel={t('back')} activeOpacity={0.65} hitSlop={10} onPress={() => navigation.goBack()}>
+          <Ionicons name={currentTheme.isRTL ? 'arrow-forward' : 'arrow-back'} size={scale(23)} color={currentTheme.colors.textPrimary} />
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity
-          accessibilityRole='button'
-          accessibilityLabel={t('help')}
-          activeOpacity={0.65}
-          hitSlop={10}
-          onPress={() => navigation.navigate('Help')}
-        >
-          <Ionicons
-            name='information-circle-outline'
-            size={scale(24)}
-            color={currentTheme.colors.textPrimary}
-          />
+        <TouchableOpacity accessibilityRole='button' accessibilityLabel={t('help')} activeOpacity={0.65} hitSlop={10} onPress={() => navigation.navigate('Help')}>
+          <Ionicons name='information-circle-outline' size={scale(24)} color={currentTheme.colors.textPrimary} />
         </TouchableOpacity>
       ),
       headerTitle: t('trackOrder'),
@@ -376,10 +333,7 @@ function OrderDetail(props) {
   // useKeepAwake() that kept the screen on for every screen and drained the
   // battery (PERF-011).
   useEffect(() => {
-    const isActiveTransit = [
-      ORDER_STATUS_ENUM.ASSIGNED,
-      ORDER_STATUS_ENUM.PICKED
-    ].includes(order?.orderStatus)
+    const isActiveTransit = [ORDER_STATUS_ENUM.ASSIGNED, ORDER_STATUS_ENUM.PICKED].includes(order?.orderStatus)
     if (isActiveTransit) {
       activateKeepAwakeAsync('order-tracking')
     } else {
@@ -399,12 +353,7 @@ function OrderDetail(props) {
     return <Spinner backColor={currentTheme.themeBackground} spinnerColor={currentTheme.main} />
   }
   if (errorOrders) {
-    return (
-      <ErrorView
-        refetchFunctions={reFetchOrders ? [reFetchOrders] : []}
-        errorMessage={t('orderLoadError')}
-      />
-    )
+    return <ErrorView refetchFunctions={reFetchOrders ? [reFetchOrders] : []} errorMessage={t('orderLoadError')} />
   }
 
   // Order still resolving (e.g. mid-refetch after status change) — show the
@@ -415,7 +364,7 @@ function OrderDetail(props) {
 
   const { restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges, discountAmount } = order
 
-  const subTotal = total - tip - tax - deliveryCharges
+  const subTotal = total - tip - tax - deliveryCharges + (discountAmount || 0)
 
   const isOrderPending = order?.orderStatus === ORDER_STATUS_ENUM.PENDING
   const isOrderCancelable = isOrderPending
@@ -424,103 +373,102 @@ function OrderDetail(props) {
 
   return (
     <View style={styles(currentTheme).screen}>
-      <ScrollView
-        contentContainerStyle={styles(currentTheme).scrollContent}
-        showsVerticalScrollIndicator={false}
-        overScrollMode='never'
-      >
-        {order?.rider && order?.orderStatus === ORDER_STATUS_ENUM.PICKED && (
+      <ScrollView contentContainerStyle={styles(currentTheme).scrollContent} showsVerticalScrollIndicator={false} overScrollMode='never'>
+        {order?.rider && [ORDER_STATUS_ENUM.ASSIGNED, ORDER_STATUS_ENUM.PICKED].includes(order?.orderStatus) && (
           <View style={styles(currentTheme).mapCard}>
             <MapView
-            ref={(c) => (mapView.current = c)}
-            style={styles(currentTheme).map}
-            showsUserLocation={false}
-            initialRegion={{
-              latitude: +deliveryAddress?.location?.coordinates[1],
-              longitude: +deliveryAddress?.location?.coordinates[0],
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421
-            }}
-            zoomEnabled={true}
-            zoomControlEnabled={true}
-            rotateEnabled={false}
-            customMapStyle={
-              themeContext.ThemeValue === 'Dark' ? darkMapStyle : mapStyle
-            }
-            userInterfaceStyle={
-              themeContext.ThemeValue === 'Dark' ? 'dark' : 'light'
-            }
-            provider={PROVIDER_DEFAULT}
-          >
-            <Marker
-              coordinate={{
+              ref={(c) => (mapView.current = c)}
+              style={styles(currentTheme).map}
+              showsUserLocation={false}
+              initialRegion={{
                 latitude: +deliveryAddress?.location?.coordinates[1],
-                longitude: +deliveryAddress?.location?.coordinates[0]
+                longitude: +deliveryAddress?.location?.coordinates[0],
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
               }}
+              zoomEnabled={true}
+              zoomControlEnabled={true}
+              rotateEnabled={false}
+              customMapStyle={themeContext.ThemeValue === 'Dark' ? darkMapStyle : mapStyle}
+              userInterfaceStyle={themeContext.ThemeValue === 'Dark' ? 'dark' : 'light'}
+              provider={PROVIDER_DEFAULT}
             >
-              <CustomerMarker />
-            </Marker>
-            {routeCoordinates.length > 1 && (
-              <Polyline
-                coordinates={routeCoordinates}
-                strokeWidth={5}
-                strokeColor={currentTheme.colors.accent}
-              />
-            )}
-            {riderLocation && (
               <Marker
                 coordinate={{
-                  latitude: riderLocation.latitude,
-                  longitude: riderLocation.longitude
+                  latitude: +deliveryAddress?.location?.coordinates[1],
+                  longitude: +deliveryAddress?.location?.coordinates[0]
                 }}
               >
-                <RiderMarker />
+                <CustomerMarker />
               </Marker>
-            )}
+              {!!restaurant?.location?.coordinates?.length && (
+                <Marker
+                  coordinate={{
+                    latitude: +restaurant.location.coordinates[1],
+                    longitude: +restaurant.location.coordinates[0]
+                  }}
+                >
+                  <RestaurantMarker />
+                </Marker>
+              )}
+              {routeCoordinates.length > 1 && <Polyline coordinates={routeCoordinates} strokeWidth={5} strokeColor={currentTheme.colors.accent} />}
+              {riderLocation && (
+                <Marker
+                  coordinate={{
+                    latitude: riderLocation.latitude,
+                    longitude: riderLocation.longitude
+                  }}
+                >
+                  <RiderMarker />
+                </Marker>
+              )}
             </MapView>
           </View>
         )}
         <View style={styles(currentTheme).statusSection}>
-          <TextDefault
-            H4
-            bold
-            textColor={currentTheme.colors.textPrimary}
-            style={styles(currentTheme).statusHeading}
-          >
+          <TextDefault H4 bold textColor={currentTheme.colors.textPrimary} style={styles(currentTheme).statusHeading}>
             {getStatusMessage(order, eta, riderLocation, now)}
           </TextDefault>
           {![ORDER_STATUS_ENUM.PENDING, ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.COMPLETED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order?.orderStatus) && (
             <View style={styles(currentTheme).estimateRow}>
-              <TextDefault textColor={currentTheme.colors.textSecondary}>
-                {t('estimatedDeliveryTime')}
-              </TextDefault>
+              <TextDefault textColor={currentTheme.colors.textSecondary}>{t('estimatedDeliveryTime')}</TextDefault>
               <TextDefault H4 bolder textColor={currentTheme.colors.accent}>
-                {eta?.windowStartAt && eta?.windowEndAt
-                  ? `${formatClockTime(eta.windowStartAt)}–${formatClockTime(eta.windowEndAt)}`
-                  : t('calculating', { defaultValue: 'Calculating…' })}
+                {eta?.windowStartAt && eta?.windowEndAt ? `${formatClockTime(eta.windowStartAt)}–${formatClockTime(eta.windowEndAt)}` : t('calculating', { defaultValue: 'Calculating…' })}
               </TextDefault>
             </View>
           )}
-          <OrderStatusTimeline
-            currentStatus={order?.orderStatus}
-            isPickup={order?.isPickedUp}
-            theme={currentTheme}
-          />
+          <OrderStatusTimeline currentStatus={order?.orderStatus} isPickup={order?.isPickedUp} theme={currentTheme} />
         </View>
         <View style={styles(currentTheme).contentInset}>
           <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
         </View>
         <Detail navigation={props?.navigation} currencySymbol={configuration.currencySymbol} items={items} from={restaurant?.name} orderNo={order?.orderId} deliveryAddress={deliveryAddress?.deliveryAddress} subTotal={subTotal} tip={tip} tax={tax} deliveryCharges={deliveryCharges} total={total} theme={currentTheme} id={id} rider={order?.rider} orderStatus={order?.orderStatus} hasUnread={hasUnreadMessage} onChatOpen={() => setHasUnreadMessage(false)} />
-        <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol} tip={tip} discountAmount={discountAmount} />
+        <View style={styles(currentTheme).paymentCard}>
+          <TouchableOpacity accessibilityRole='button' accessibilityState={{ expanded: showPaymentDetails }} activeOpacity={0.7} onPress={() => setShowPaymentDetails((visible) => !visible)} style={styles(currentTheme).paymentHeader}>
+            <View>
+              <TextDefault H5 bold textColor={currentTheme.colors.textSecondary} isRTL>
+                {t('paymentDetails', { defaultValue: 'Payment details' })}
+              </TextDefault>
+              <TextDefault H4 bolder textColor={currentTheme.colors.textPrimary} isRTL>
+                {configuration.currencySymbol}
+                {total.toFixed(2)}
+              </TextDefault>
+            </View>
+            <Ionicons color={currentTheme.colors.textSecondary} name={showPaymentDetails ? 'chevron-up' : 'chevron-down'} size={scale(21)} />
+          </TouchableOpacity>
+          {showPaymentDetails && (
+            <View style={styles(currentTheme).paymentBreakdown}>
+              <PriceRow theme={currentTheme} title={t('subTotal')} currency={configuration.currencySymbol} price={subTotal.toFixed(2)} />
+              <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol} tip={tip} discountAmount={discountAmount} theme={currentTheme} />
+            </View>
+          )}
+        </View>
+        {isOrderCancelable && (
+          <View style={styles(currentTheme).cancelWrap}>
+            <Button disabled={!isOrderCancelable} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
+          </View>
+        )}
       </ScrollView>
-      <View style={styles().bottomContainer(currentTheme)}>
-        <PriceRow theme={currentTheme} title={t('total')} currency={configuration.currencySymbol} price={total.toFixed(2)} />
-
-        {isOrderCancelable && <View style={styles(currentTheme).cancelWrap}>
-          <Button disabled={!isOrderCancelable} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
-        </View>}
-
-      </View>
       <CancelModal theme={currentTheme} modalVisible={cancelModalVisible} setModalVisible={cancelModalToggle} cancelOrder={cancelOrder} loading={loadingCancel} orderStatus={order?.orderStatus} />
     </View>
   )
