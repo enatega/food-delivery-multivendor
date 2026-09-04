@@ -44,6 +44,8 @@ import { showMessage } from "react-native-flash-message";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import EarningsBarChart from "../../bar-chart";
 import EarningStack from "../earnings-stack";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEarningsTheme } from "../../theme";
 
 const RANGE_OPTIONS = [7, 30, 90] as const;
 
@@ -62,9 +64,15 @@ const formatChartDate = (value: string) => {
   return day && month ? `${day}/${month}` : value;
 };
 
+const parseEarningDate = (value: string) => {
+  const [day, month, year] = value.split("-").map(Number);
+  return new Date(year, month - 1, day).getTime();
+};
+
 export default function EarningsMain() {
   // Hooks
   const { appTheme } = useApptheme();
+  const earningsTheme = useEarningsTheme();
   const { t } = useTranslation();
   const { userId, setModalVisible } = useUserContext();
   const configuration = useContext(ConfigurationContext);
@@ -136,11 +144,15 @@ export default function EarningsMain() {
         label: formatChartDate(earning._id),
         topLabelComponent: () => (
           <Text
+            numberOfLines={1}
             style={{
-              color: appTheme.fontMainColor,
+              color: earningsTheme.primaryText,
               fontSize: 10,
-              fontWeight: "600",
+              fontWeight: "700",
+              fontVariant: ["tabular-nums"],
               marginBottom: 4,
+              textAlign: "center",
+              width: 72,
             }}
           >
             {currencySymbol}
@@ -148,9 +160,15 @@ export default function EarningsMain() {
           </Text>
         ),
       })),
-    [appTheme.fontMainColor, currencySymbol, earnings],
+    [currencySymbol, earnings, earningsTheme.primaryText],
   );
-  const recentTransaction = earnings;
+  const recentTransaction = useMemo(
+    () =>
+      [...earnings]
+        .sort((a, b) => parseEarningDate(b._id) - parseEarningDate(a._id))
+        .slice(0, 4),
+    [earnings],
+  );
 
   const renderEmptyState = (
     <Text
@@ -177,6 +195,8 @@ export default function EarningsMain() {
       earningsArray={item.earningsArray}
       key={index}
       setModalVisible={setModalVisible}
+      isFirst={index === 0}
+      isLast={index === recentTransaction.length - 1}
     />
   );
 
@@ -184,7 +204,7 @@ export default function EarningsMain() {
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
   return (
     <GestureHandlerRootView
-      style={{ backgroundColor: appTheme.themeBackground, flex: 1 }}
+      style={{ backgroundColor: earningsTheme.canvas, flex: 1 }}
     >
       <FlatList
         data={recentTransaction}
@@ -196,30 +216,35 @@ export default function EarningsMain() {
         ListEmptyComponent={renderEmptyState}
         ListHeaderComponent={
           <>
-            <View
+            <LinearGradient
+              colors={[earningsTheme.surfaceRaised, earningsTheme.surfaceEnd]}
+              end={{ x: 1, y: 1 }}
+              start={{ x: 0, y: 0 }}
               style={{
                 alignItems: "center",
-                backgroundColor: appTheme.cartContainer,
-                borderColor: appTheme.borderLineColor,
                 borderRadius: 14,
-                borderWidth: 1,
                 flexDirection: "row",
                 justifyContent: "space-between",
-                marginBottom: 16,
-                marginTop: 8,
-                padding: 18,
+                marginBottom: 18,
+                marginTop: 10,
+                minHeight: 130,
+                paddingHorizontal: 20,
+                paddingVertical: 22,
               }}
             >
-              <View>
-                <Text style={{ color: appTheme.fontSecondColor, fontSize: 14 }}>
+              <View style={{ flex: 1, paddingEnd: 16 }}>
+                <Text style={{ color: earningsTheme.mutedText, fontSize: 15 }}>
                   {t("Total Earnings")}
                 </Text>
                 <Text
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
                   style={{
-                    color: appTheme.fontMainColor,
-                    fontSize: 28,
-                    fontWeight: "700",
-                    marginTop: 4,
+                    color: earningsTheme.primaryText,
+                    fontSize: 32,
+                    fontWeight: "800",
+                    fontVariant: ["tabular-nums"],
+                    marginTop: 8,
                   }}
                 >
                   {currencySymbol}
@@ -229,11 +254,11 @@ export default function EarningsMain() {
               <View
                 style={{
                   alignItems: "center",
-                  backgroundColor: appTheme.lowOpacityPrimaryColor,
+                  backgroundColor: earningsTheme.accentSoft,
                   borderRadius: 12,
-                  height: 48,
+                  height: 54,
                   justifyContent: "center",
-                  width: 48,
+                  width: 54,
                 }}
               >
                 <Ionicons
@@ -242,24 +267,29 @@ export default function EarningsMain() {
                   size={26}
                 />
               </View>
-            </View>
+            </LinearGradient>
 
-            <View
+            <LinearGradient
+              colors={[earningsTheme.surface, earningsTheme.surfaceEnd]}
+              end={{ x: 1, y: 1 }}
+              start={{ x: 0, y: 0 }}
               style={{
-                backgroundColor: appTheme.cartContainer,
-                borderColor: appTheme.borderLineColor,
                 borderRadius: 14,
-                borderWidth: 1,
-                marginBottom: 18,
-                padding: 14,
+                marginBottom: 24,
+                paddingBottom: 18,
+                paddingHorizontal: 16,
+                paddingTop: 16,
               }}
             >
-              <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center justify-between mb-3">
                 <Text
+                  numberOfLines={1}
                   style={{
-                    color: appTheme.fontMainColor,
+                    color: earningsTheme.primaryText,
+                    flex: 1,
                     fontSize: 18,
                     fontWeight: "700",
+                    marginEnd: 12,
                   }}
                 >
                   {t("Earnings Overview")}
@@ -268,16 +298,29 @@ export default function EarningsMain() {
                   accessibilityRole="button"
                   onPress={() => setIsRangeMenuVisible(true)}
                   style={{
-                    borderColor: appTheme.borderLineColor,
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    paddingHorizontal: 10,
-                    paddingVertical: 7,
+                    alignItems: "center",
+                    backgroundColor: earningsTheme.surfaceRaised,
+                    borderRadius: 10,
+                    flexDirection: "row",
+                    paddingHorizontal: 11,
+                    paddingVertical: 8,
                   }}
                 >
-                  <Text style={{ color: appTheme.fontMainColor, fontSize: 13 }}>
-                    {t("Last {{count}} days", { count: rangeDays })} ▾
+                  <Text
+                    style={{
+                      color: earningsTheme.primaryText,
+                      fontSize: 13,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {t("Last {{count}} days", { count: rangeDays })}
                   </Text>
+                  <Ionicons
+                    color={earningsTheme.mutedText}
+                    name="chevron-down"
+                    size={15}
+                    style={{ marginStart: 5 }}
+                  />
                 </TouchableOpacity>
               </View>
               <EarningsBarChart
@@ -286,27 +329,27 @@ export default function EarningsMain() {
                 height={180}
                 frontColor={appTheme.primary}
                 barStyle={{ marginTop: 15 }}
-                rulesColor={appTheme.borderLineColor}
-                disableScroll={barData.length <= 7}
-                barWidth={barData.length > 7 ? 24 : 36}
-                spacing={barData.length > 7 ? 16 : 24}
+                rulesColor={earningsTheme.rule}
+                disableScroll={barData.length <= 4}
+                barWidth={barData.length > 4 ? 28 : 36}
+                spacing={barData.length > 4 ? 20 : 24}
                 xAxisLabelTextStyle={{
                   fontSize: 9,
-                  color: appTheme.fontSecondColor,
+                  color: earningsTheme.mutedText,
                 }}
                 yAxisTextStyle={{
                   fontSize: 9,
-                  color: appTheme.fontSecondColor,
+                  color: earningsTheme.mutedText,
                 }}
               />
-            </View>
+            </LinearGradient>
 
             <View className="flex-row justify-between items-center mb-3">
               <Text
                 style={{
                   fontSize: 20,
                   fontWeight: "bold",
-                  color: appTheme.fontMainColor,
+                  color: earningsTheme.primaryText,
                 }}
               >
                 {t("Recent Activity")}
@@ -354,7 +397,7 @@ export default function EarningsMain() {
           onPress={() => setIsRangeMenuVisible(false)}
           style={{
             alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.45)",
+            backgroundColor: earningsTheme.overlay,
             flex: 1,
             justifyContent: "center",
             padding: 24,
@@ -362,7 +405,7 @@ export default function EarningsMain() {
         >
           <View
             style={{
-              backgroundColor: appTheme.cartContainer,
+              backgroundColor: earningsTheme.surfaceRaised,
               borderRadius: 14,
               padding: 8,
               width: "100%",
@@ -378,7 +421,7 @@ export default function EarningsMain() {
                 style={{
                   backgroundColor:
                     days === rangeDays
-                      ? appTheme.lowOpacityPrimaryColor
+                      ? earningsTheme.accentSoft
                       : "transparent",
                   borderRadius: 8,
                   paddingHorizontal: 14,
@@ -387,7 +430,7 @@ export default function EarningsMain() {
               >
                 <Text
                   style={{
-                    color: appTheme.fontMainColor,
+                    color: earningsTheme.primaryText,
                     fontSize: 16,
                     fontWeight: days === rangeDays ? "600" : "400",
                     textAlign: "center",

@@ -9,7 +9,6 @@ import {
 
 // Hooks
 import { useUserContext } from "@/lib/context/global/user.context";
-import { useApptheme } from "@/lib/context/theme.context";
 import { QueryResult, useQuery } from "@apollo/client";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -27,6 +26,7 @@ import EarningDetailsDateFilter from "../date-filter";
 
 // React Native Flash Message
 import { showMessage } from "react-native-flash-message";
+import { useEarningsTheme } from "../../earnings/theme";
 
 const parseEarningDate = (value: string) => {
   const [day, month, year] = value.split("-").map(Number);
@@ -39,7 +39,7 @@ export default function EarningDetailsMain({
 }: IEarningDetailsMainProps) {
   // Hooks
   const { t } = useTranslation();
-  const { appTheme } = useApptheme();
+  const earningsTheme = useEarningsTheme();
 
   // States
   const [isFiltering, setIsFiltering] = useState(false);
@@ -134,7 +134,7 @@ export default function EarningDetailsMain({
   if (isStoreEarningsLoading || isFiltering)
     return <EarningsSummaryMainLoading />;
   return (
-    <View style={{ backgroundColor: appTheme.themeBackground, flex: 1 }}>
+    <View style={{ backgroundColor: earningsTheme.canvas, flex: 1 }}>
       <EarningDetailsDateFilter
         dateFilter={dateFilter}
         setDateFilter={setDateFilter}

@@ -12,6 +12,7 @@ import { formatAmount } from "@/lib/utils/methods";
 import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { useEarningsTheme } from "../../theme";
 
 const formatEarningDate = (value: string) => {
   const [day, month, year] = value.split("-").map(Number);
@@ -34,11 +35,14 @@ export default function EarningStack({
   earningsArray,
   totalDeliveries,
   totalOrderAmount,
+  isFirst = false,
+  isLast = false,
 }: IEarningStackProps) {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const configuration = useContext(ConfigurationContext);
+  const earningsTheme = useEarningsTheme();
 
   // Handlers
   function handleForwardPress() {
@@ -56,25 +60,31 @@ export default function EarningStack({
   return (
     <TouchableOpacity
       activeOpacity={0.75}
-      className="flex-row justify-between items-center p-4 mb-3"
+      className="flex-row justify-between items-center"
       onPress={handleForwardPress}
       style={{
-        backgroundColor: appTheme.cartContainer,
-        borderColor: appTheme.borderLineColor,
-        borderRadius: 12,
-        borderWidth: 1,
+        backgroundColor: earningsTheme.surface,
+        borderBottomColor: earningsTheme.divider,
+        borderBottomWidth: isLast ? 0 : 1,
+        borderTopLeftRadius: isFirst ? 14 : 0,
+        borderTopRightRadius: isFirst ? 14 : 0,
+        borderBottomLeftRadius: isLast ? 14 : 0,
+        borderBottomRightRadius: isLast ? 14 : 0,
+        minHeight: 76,
+        paddingHorizontal: 16,
+        paddingVertical: 13,
       }}
     >
       <View className="flex-row items-center flex-1">
         <View
           style={{
             alignItems: "center",
-            backgroundColor: appTheme.lowOpacityPrimaryColor,
-            borderRadius: 8,
-            height: 38,
+            backgroundColor: earningsTheme.accentSoft,
+            borderRadius: 10,
+            height: 42,
             justifyContent: "center",
-            marginRight: 10,
-            width: 38,
+            marginEnd: 10,
+            width: 42,
           }}
         >
           <Ionicons
@@ -87,8 +97,8 @@ export default function EarningStack({
           <Text
             style={{
               color: appTheme.fontMainColor,
-              fontSize: 14,
-              fontWeight: "600",
+              fontSize: 15,
+              fontWeight: "700",
             }}
           >
             {formatEarningDate(date)}
@@ -96,7 +106,7 @@ export default function EarningStack({
           <Text
             style={{
               color: appTheme.fontSecondColor,
-              fontSize: 12,
+              fontSize: 13,
               marginTop: 2,
             }}
           >
@@ -104,18 +114,22 @@ export default function EarningStack({
           </Text>
         </View>
       </View>
-      <View className="flex-row items-center gap-2">
+      <View className="flex-row items-center gap-3">
         <Text
+          adjustsFontSizeToFit
+          numberOfLines={1}
           style={{
             color: appTheme.fontMainColor,
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: "700",
+            fontVariant: ["tabular-nums"],
+            maxWidth: 120,
           }}
         >
           {configuration?.currencySymbol || "$"}
           {formatAmount(earning)}
         </Text>
-        <RightArrowIcon color={appTheme.fontSecondColor} />
+        <RightArrowIcon color={earningsTheme.mutedText} />
       </View>
     </TouchableOpacity>
   );

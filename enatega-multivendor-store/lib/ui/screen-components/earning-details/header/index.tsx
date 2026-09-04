@@ -10,12 +10,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEarningsTheme } from "../../earnings/theme";
 
 export default function EarningDetailsHeader() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId } = useUserContext();
   const configuration = useContext(ConfigurationContext);
+  const earningsTheme = useEarningsTheme();
 
   const { loading: isStoreEarningsLoading, data: storeEarningsData } = useQuery(
     STORE_EARNINGS_GRAPH,
@@ -55,66 +58,74 @@ export default function EarningDetailsHeader() {
   ];
 
   return (
-    <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+    <View style={{ paddingHorizontal: 16, paddingBottom: 22 }}>
       <Text
         style={{
-          color: appTheme.fontMainColor,
-          fontSize: 18,
-          fontWeight: "700",
-          marginBottom: 10,
+          color: earningsTheme.primaryText,
+          fontSize: 20,
+          fontWeight: "800",
+          marginBottom: 12,
         }}
       >
         {t("Summary")}
       </Text>
-      <View
+      <LinearGradient
+        colors={[earningsTheme.surfaceRaised, earningsTheme.surfaceEnd]}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
         style={{
-          backgroundColor: appTheme.cartContainer,
-          borderColor: appTheme.borderLineColor,
           borderRadius: 12,
-          borderWidth: 1,
           flexDirection: "row",
-          padding: 16,
+          padding: 18,
         }}
       >
         {summaryItems.map((item, index) => (
           <View
             key={item.label}
             style={{
-              borderStartColor: appTheme.borderLineColor,
-              borderStartWidth: index === 0 ? 0 : 1,
               flex: 1,
-              paddingStart: index === 0 ? 0 : 16,
+              paddingEnd: index === 0 ? 10 : 0,
+              paddingStart: index === 0 ? 0 : 10,
             }}
           >
-            <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <View
+              style={{
+                alignItems: "center",
+                backgroundColor: earningsTheme.accentSoft,
+                borderRadius: 9,
+                height: 34,
+                justifyContent: "center",
+                marginBottom: 12,
+                width: 34,
+              }}
+            >
               <Ionicons color={appTheme.primary} name={item.icon} size={18} />
-              <Text
-                numberOfLines={1}
-                style={{
-                  color: appTheme.fontSecondColor,
-                  flex: 1,
-                  fontSize: 12,
-                  marginStart: 6,
-                }}
-              >
-                {item.label}
-              </Text>
             </View>
+            <Text
+              numberOfLines={1}
+              style={{
+                color: earningsTheme.mutedText,
+                fontSize: 13,
+              }}
+            >
+              {item.label}
+            </Text>
             <Text
               adjustsFontSizeToFit
               numberOfLines={1}
               style={{
-                color: appTheme.fontMainColor,
-                fontSize: 20,
-                fontWeight: "700",
-                marginTop: 8,
+                color: earningsTheme.primaryText,
+                fontSize: 22,
+                fontWeight: "800",
+                fontVariant: ["tabular-nums"],
+                marginTop: 6,
               }}
             >
               {item.value}
             </Text>
           </View>
         ))}
-      </View>
+      </LinearGradient>
     </View>
   );
 }
