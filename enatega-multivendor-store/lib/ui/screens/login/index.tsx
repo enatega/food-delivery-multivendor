@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // React Native
 import {
   KeyboardAvoidingView,
+  Image,
   Platform,
   ScrollView,
   StyleSheet,
@@ -169,6 +170,20 @@ const LoginScreen = () => {
                   )}
 
                   <View className="flex-1 w-full p-5 items-center justify-center gap-y-2">
+                    <Image
+                      accessibilityLabel={t("Store app logo")}
+                      accessibilityRole="image"
+                      // eslint-disable-next-line @typescript-eslint/no-require-imports
+                      source={require("@/lib/assets/images/icon.png")}
+                      resizeMode="contain"
+                      style={{
+                        width: 128,
+                        height: 128,
+                        borderRadius: 28,
+                        marginBottom: 16,
+                      }}
+                    />
+
                     {/* Icon */}
                     <Icon name="envelope" size={30} color={appTheme.primary} />
 

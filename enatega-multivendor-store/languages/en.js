@@ -160,6 +160,7 @@ export const en = {
     "Your request for withdrawal has been submitted",
   "Usually it takes 1-2 business days": "Usually it takes 1-2 business days",
   "Enter Your Credentials to login": "Enter Your Credentials to login",
+  "Store app logo": "Store app logo",
   "We'll check if you have an account": "We'll check if you have an account",
   Email: "Email",
   Passowrd: "Password",
