@@ -104,7 +104,7 @@ const CartItem = (props) => {
               : props?.dealName}
           </TextDefault>
 
-          {props?.itemAddons?.length > 0 && (
+          {props?.optionsTitle?.length > 0 && (
             <View style={styles(currentTheme).additionalItem}>
               <View>
                 <TouchableOpacity
