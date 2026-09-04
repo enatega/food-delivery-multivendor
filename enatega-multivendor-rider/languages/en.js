@@ -156,6 +156,8 @@ export const en = {
   "Usually it takes 1-2 business days": "Usually it takes 1-2 business days",
   "Enter Your Credentials to login": "Enter Your Credentials to login",
   "Rider app logo": "Rider app logo",
+  "View order details": "View order details",
+  "Opens order details": "Opens order details",
   "We'll check if you have an account": "We'll check if you have an account",
   Email: "Email",
   Passowrd: "Password",

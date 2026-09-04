@@ -1,5 +1,6 @@
 import { memo, useContext } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { I18nManager, Image, Text, TouchableOpacity, View } from "react-native";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 // Components
 import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
@@ -146,6 +147,8 @@ const Order = ({
           !!acceptedAt && (
             <TouchableOpacity
               activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityHint={t("Opens order details")}
               onPress={() => {
                 // Pass only the id + tab. The order-detail screen resolves the
                 // full order from UserContext's assignedOrders cache by id, so
@@ -442,6 +445,26 @@ const Order = ({
                       </Text>
                     </View>
                   </TouchableOpacity>
+                )}
+                {tab === "new_orders" && (
+                  <View
+                    className="flex-row items-center justify-end gap-x-2 border-t pt-3"
+                    style={{ borderColor: appTheme.borderLineColor }}
+                  >
+                    <Text
+                      className="font-[Inter] text-sm font-medium"
+                      style={{ color: appTheme.fontSecondColor }}
+                    >
+                      {t("View order details")}
+                    </Text>
+                    <FontAwesome6
+                      name={
+                        I18nManager.isRTL ? "chevron-left" : "chevron-right"
+                      }
+                      size={12}
+                      color={appTheme.fontSecondColor}
+                    />
+                  </View>
                 )}
                 {tab === "new_orders" && (
                   // <CustomContinueButton
