@@ -1,6 +1,7 @@
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { orderItemsTotal, orderItemTotal } from "@/lib/utils/methods";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Text, View } from "react-native";
@@ -19,9 +20,7 @@ const ItemDetails = ({
   if (!order) return null;
 
   const itemAmount = useMemo(() => {
-    return order?.items?.reduce((sum, item) => {
-      return sum + item.quantity * item.variation.price;
-    }, 0);
+    return orderItemsTotal(order?.items);
   }, [order?.items]);
 
   return (
@@ -91,8 +90,13 @@ const ItemDetails = ({
                 <View>
                   {item?.variation && (
                     <View className="flex-row items-center">
-                      <Text style={{ color: appTheme.fontMainColor }}>{item?.variation?.title}</Text>
-                      <Text className="ml-2" style={{ color: appTheme.fontMainColor }}>
+                      <Text style={{ color: appTheme.fontMainColor }}>
+                        {item?.variation?.title}
+                      </Text>
+                      <Text
+                        className="ml-2"
+                        style={{ color: appTheme.fontMainColor }}
+                      >
                         {configuration?.currencySymbol}
                         {item?.variation?.price}
                       </Text>
@@ -102,22 +106,31 @@ const ItemDetails = ({
 
                 {/* Addons */}
                 <View>
-                  {
-                    item?.addons?.map((addon) => {
-                      return (
-                        <View key={addon._id}>
-                          {addon?.options?.map((option) => {
-                            return (
-                              <View key={option._id} className="flex-row items-center">
-                                <Text style={{ color: appTheme.fontMainColor }}>{option.title}</Text>
-                                <Text className="ml-2" style={{ color: appTheme.fontMainColor }}>({option?.price}{configuration?.currencySymbol})</Text>
-                              </View>
-                            );
-                          })}
-                        </View>
-                      );
-                    })
-                  }
+                  {item?.addons?.map((addon) => {
+                    return (
+                      <View key={addon._id}>
+                        {addon?.options?.map((option) => {
+                          return (
+                            <View
+                              key={option._id}
+                              className="flex-row items-center"
+                            >
+                              <Text style={{ color: appTheme.fontMainColor }}>
+                                {option.title}
+                              </Text>
+                              <Text
+                                className="ml-2"
+                                style={{ color: appTheme.fontMainColor }}
+                              >
+                                ({option?.price}
+                                {configuration?.currencySymbol})
+                              </Text>
+                            </View>
+                          );
+                        })}
+                      </View>
+                    );
+                  })}
                 </View>
               </View>
 
@@ -127,7 +140,7 @@ const ItemDetails = ({
                   style={{ color: appTheme.fontMainColor }}
                 >
                   {configuration?.currencySymbol}
-                  {item.variation?.price}
+                  {orderItemTotal(item)}
                 </Text>
               </View>
             </View>
