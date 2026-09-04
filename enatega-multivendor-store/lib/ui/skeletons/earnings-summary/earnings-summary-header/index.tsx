@@ -1,71 +1,58 @@
-// Moti
+import { useEarningsTheme } from "@/lib/ui/screen-components/earnings/theme";
 import { MotiText, MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-
-// Hooks
-import { useApptheme } from "@/lib/context/theme.context";
 import { useTranslation } from "react-i18next";
 
 export default function EarningSummaryHeader() {
-  // Hooks
-  const { appTheme, currentTheme } = useApptheme();
+  const earningsTheme = useEarningsTheme();
   const { t } = useTranslation();
+  const skeletonProps = {
+    backgroundColor: earningsTheme.skeletonBase,
+    colors: [
+      earningsTheme.skeletonBase,
+      earningsTheme.skeletonHighlight,
+      earningsTheme.skeletonBase,
+    ],
+  };
+
   return (
-    <MotiView
-      className="flex flex-col gap-3 p-3 w-full "
-      style={{ backgroundColor: appTheme.themeBackground }}
-    >
-      <MotiView>
-        <MotiText
-          className="font-bold text-lg pb-5 mt-0"
-          style={{
-            color: appTheme.fontMainColor,
-            backgroundColor: appTheme.themeBackground,
-          }}
-        >
-          {t("Summary")}
-        </MotiText>
-      </MotiView>
-      <MotiView className="flex flex-row justify-between w-[95%]">
-        <MotiView className="flex flex-col gap-2 items-center">
-          <MotiText
-            className="text-lg "
-            style={{ color: appTheme.fontSecondColor }}
+    <MotiView style={{ paddingBottom: 22 }}>
+      <Skeleton height={42} radius={10} width={148} {...skeletonProps} />
+      <MotiText
+        style={{
+          color: earningsTheme.primaryText,
+          fontSize: 20,
+          fontWeight: "800",
+          marginBottom: 12,
+          marginTop: 22,
+        }}
+      >
+        {t("Summary")}
+      </MotiText>
+      <MotiView
+        style={{
+          backgroundColor: earningsTheme.surfaceRaised,
+          borderRadius: 12,
+          flexDirection: "row",
+          minHeight: 146,
+          padding: 18,
+        }}
+      >
+        {[0, 1].map((index) => (
+          <MotiView
+            key={index}
+            style={{
+              flex: 1,
+              gap: 10,
+              paddingEnd: index === 0 ? 10 : 0,
+              paddingStart: index === 0 ? 0 : 10,
+            }}
           >
-            {t("Total Earnings")}
-          </MotiText>
-          <Skeleton
-            colorMode={currentTheme ?? "light"}
-            width={100}
-            height={70}
-          />
-        </MotiView>
-        <MotiView className="flex flex-col gap-2 items-center">
-          <MotiText
-            className="text-lg "
-            style={{ color: appTheme.fontSecondColor }}
-          >
-            {t("Total Tips")}
-          </MotiText>
-          <Skeleton
-            colorMode={currentTheme ?? "light"}
-            width={100}
-            height={70}
-          />
-        </MotiView>
-        <MotiView className="flex flex-col gap-2 items-center">
-          <MotiText
-            className="text-lg "
-            style={{ color: appTheme.fontSecondColor }}
-          >
-            {t("Total Deliveries")}
-          </MotiText>
-          <Skeleton
-            colorMode={currentTheme ?? "light"}
-            width={100}
-            height={70}
-          />
-        </MotiView>
+            <Skeleton height={34} radius={9} width={34} {...skeletonProps} />
+            <Skeleton height={13} radius={4} width="78%" {...skeletonProps} />
+            <Skeleton height={23} radius={6} width="88%" {...skeletonProps} />
+          </MotiView>
+        ))}
       </MotiView>
     </MotiView>
   );

@@ -19,6 +19,8 @@ export const useEarningsTheme = () => {
       overlay: isDark ? "rgba(2, 6, 12, 0.78)" : "rgba(19, 30, 20, 0.38)",
       primaryText: isDark ? "#F4F7FA" : "#17201A",
       rule: isDark ? "rgba(156, 168, 182, 0.18)" : "rgba(102, 112, 133, 0.18)",
+      skeletonBase: isDark ? "#172231" : "#E5EBE2",
+      skeletonHighlight: isDark ? "#223146" : "#F4F7F2",
       surface: isDark ? "#111A27" : "#FFFFFF",
       surfaceEnd: isDark ? "#0D1622" : "#F8FAF7",
       surfaceRaised: isDark ? "#172231" : "#F0F4EE",
