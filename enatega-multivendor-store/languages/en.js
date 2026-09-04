@@ -197,6 +197,9 @@ export const en = {
   "View Map": "View Map",
   "Delivery instructions": "Delivery instructions",
   "Auto decline in": "Auto decline in",
+  "Waiting for Rider": "Waiting for Rider",
+  "Your order is confirmed. We're waiting for a rider to accept and deliver your order.":
+    "Your order is confirmed. We're waiting for a rider to accept and deliver your order.",
   "Order Amount": "Order Amount",
   Paid: "Paid",
   "(Not paid yet)": "(Not paid yet)",

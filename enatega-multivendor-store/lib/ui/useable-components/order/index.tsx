@@ -451,6 +451,42 @@ const Order = ({
           })}
         </View>
 
+        {order.orderStatus === "ACCEPTED" &&
+          !order.isPickedUp &&
+          !order.rider?._id && (
+            <View
+              style={{
+                backgroundColor: appTheme.lowOpacityPrimaryColor,
+                borderColor: appTheme.primary,
+                borderRadius: 8,
+                borderStartWidth: 3,
+                padding: 12,
+              }}
+            >
+              <Text
+                style={{
+                  color: appTheme.primary,
+                  fontSize: 15,
+                  fontWeight: "600",
+                }}
+              >
+                {t("Waiting for Rider")}
+              </Text>
+              <Text
+                style={{
+                  color: appTheme.fontMainColor,
+                  fontSize: 14,
+                  lineHeight: 20,
+                  marginTop: 4,
+                }}
+              >
+                {t(
+                  "Your order is confirmed. We're waiting for a rider to accept and deliver your order.",
+                )}
+              </Text>
+            </View>
+          )}
+
         {/* Divider */}
         <View
           className="h-0.5 mb-4 mt-4"
@@ -769,6 +805,7 @@ export default memo(Order, (prevProps, nextProps) => {
   if (prevProps.order.updatedAt !== nextProps.order.updatedAt) return false;
   if (prevProps.order.orderStatus !== nextProps.order.orderStatus) return false;
   if (prevProps.order.isPickedUp !== nextProps.order.isPickedUp) return false;
+  if (prevProps.order.rider?._id !== nextProps.order.rider?._id) return false;
   if (prevProps.order.preparationTime !== nextProps.order.preparationTime) {
     return false;
   }
