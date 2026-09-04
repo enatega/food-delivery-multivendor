@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import { ApolloError, useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 import { ASSIGN_ORDER } from "../apollo/mutations/order.mutation";
 import UserContext from "../context/global/user.context";
@@ -13,6 +14,7 @@ const useOrder = (order: IOrder) => {
   //   const { active } = useContext(TabsContext)
   const { refetchAssigned } = useContext(UserContext);
   const navigation = useNavigation();
+  const router = useRouter();
   const secondsRef = useRef(0);
   const minutesRef = useRef(2);
   const timerRef = useRef<NodeJS.Timeout>();
@@ -74,6 +76,7 @@ const useOrder = (order: IOrder) => {
   async function onCompleted(result) {
     if (result.assignOrder) {
       FlashMessageComponent({ message: "Order has been assigned to you." });
+      router.replace("/(tabs)/home/orders/processing");
     }
   }
 
