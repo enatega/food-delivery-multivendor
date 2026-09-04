@@ -7,6 +7,10 @@ import { useAuth } from "@/lib/context/auth/auth.context";
 import useToast from "@/lib/hooks/useToast";
 import useUser from "@/lib/hooks/useUser";
 import { useTranslations } from "next-intl";
+import {
+  isSingleVendorCartConfiguration,
+  type SingleVendorCartAddonSelection,
+} from "@/lib/mode/singleVendorCart";
 
 interface CartQuantityControllerProps {
   foodId: string;
@@ -18,7 +22,7 @@ interface CartQuantityControllerProps {
   unitPrice?: number;
   variant?: "overlay" | "details";
   isOutOfStock?: boolean;
-  addons?: Array<{ _id: string; options: Array<{ _id: string }> }>;
+  addons?: SingleVendorCartAddonSelection[];
 }
 
 export default function CartQuantityController({
@@ -39,8 +43,10 @@ export default function CartQuantityController({
   const { showToast } = useToast();
   const [isUpdating, setIsUpdating] = useState(false);
   const updatePendingRef = useRef(false);
-  const cartItem = cart.find(
-    (item) => item._id === foodId && item.variation._id === variationId,
+  const cartItem = cart.find((item) =>
+    variationId
+      ? isSingleVendorCartConfiguration(item, foodId, variationId, addons)
+      : false,
   );
   const quantity = cartItem?.quantity ?? 0;
   const isDetails = variant === "details";

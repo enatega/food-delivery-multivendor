@@ -38,6 +38,14 @@ export default function SingleVendorCart({ onClose }: { onClose: () => void }) {
               <div className="min-w-0 flex-1">
                 <p className="font-semibold">{item.foodTitle || item.title}</p>
                 <p className="text-sm text-gray-500">{item.variationTitle}</p>
+                {item.optionTitles?.map((title, index) => (
+                  <p
+                    key={`${title}-${index}`}
+                    className="text-sm text-gray-500"
+                  >
+                    + {title}
+                  </p>
+                ))}
                 <p className="text-sm">Quantity: {item.quantity}</p>
               </div>
               <div className="text-end">

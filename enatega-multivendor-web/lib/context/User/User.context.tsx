@@ -37,7 +37,12 @@ import {
 import { invalidateClientSession } from "@/lib/utils/methods/auth";
 import { getAccessToken } from "@/lib/utils/methods/auth";
 import { modeStorage, useAppMode } from "@/lib/mode";
-import { getSingleVendorCartUnitPrice } from "@/lib/mode/singleVendorPricing";
+import {
+  getSingleVendorCartDisplayPricing,
+  isSingleVendorCartConfiguration,
+  serializeSingleVendorCartAddons,
+  type SingleVendorCartAddonSelection,
+} from "@/lib/mode/singleVendorCart";
 import {
   SINGLE_VENDOR_ACTIVE_ORDERS,
   SINGLE_VENDOR_CLEAR_CART,
@@ -64,13 +69,7 @@ export interface CartItem {
   variation: {
     _id: string;
   };
-  addons?: Array<{
-    _id: string;
-    options: Array<{
-      _id: string;
-      title?: string;
-    }>;
-  }>;
+  addons?: SingleVendorCartAddonSelection[];
   specialInstructions?: string;
   title?: string; // Added after querying food info
   foodTitle?: string;
@@ -97,10 +96,7 @@ export interface SingleVendorCartQuantityInput {
   foodTitle?: string;
   variationTitle?: string;
   unitPrice?: number;
-  addons?: Array<{
-    _id: string;
-    options: Array<{ _id: string }>;
-  }>;
+  addons?: SingleVendorCartAddonSelection[];
 }
 
 export interface ProfileType {
@@ -254,29 +250,32 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
   const normalizeSingleCart = useCallback(
     (response: any): CartItem[] =>
       (response?.foods ?? []).flatMap((food: any) =>
-        (food.variations ?? []).map((variation: any) => ({
-          key: variation._id || `${food.foodId}-${variation.variationId}`,
-          _id: food.foodId,
-          image: food.foodImage || "",
-          quantity: Number(variation.quantity) || 0,
-          variation: { _id: variation.variationId },
-          title: food.foodTitle,
-          foodTitle: food.foodTitle,
-          variationTitle: variation.variationTitle,
-          price: getSingleVendorCartUnitPrice(variation),
-          actualUnitPrice: Number(
-            variation.actualUnitPrice ?? variation.unitPrice ?? 0,
-          ),
-          discountedUnitPrice: Number(
-            variation.discountedUnitPrice ?? variation.unitPrice ?? 0,
-          ),
-          dealInfo: variation.dealInfo,
-          categoryId: food.categoryId,
-          addons: (variation.addons ?? []).map((addon: any) => ({
-            _id: addon.addonId,
-            options: [{ _id: addon.optionId }],
-          })),
-        })),
+        (food.variations ?? []).map((variation: any) => {
+          const pricing = getSingleVendorCartDisplayPricing(variation);
+
+          return {
+            key: variation._id || `${food.foodId}-${variation.variationId}`,
+            _id: food.foodId,
+            image: food.foodImage || "",
+            quantity: Number(variation.quantity) || 0,
+            variation: { _id: variation.variationId },
+            title: food.foodTitle,
+            foodTitle: food.foodTitle,
+            variationTitle: variation.variationTitle,
+            price: pricing.discountedUnitPrice,
+            actualUnitPrice: pricing.actualUnitPrice,
+            discountedUnitPrice: pricing.discountedUnitPrice,
+            dealInfo: variation.dealInfo,
+            categoryId: food.categoryId,
+            optionTitles: (variation.addons ?? [])
+              .map((addon: any) => addon.title)
+              .filter(Boolean),
+            addons: (variation.addons ?? []).map((addon: any) => ({
+              _id: addon.addonId,
+              options: [{ _id: addon.optionId, title: addon.title }],
+            })),
+          };
+        }),
       ),
     [],
   );
@@ -722,12 +721,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       variationId: string,
       restaurantId: string,
       quantity: number = 1,
-      addons: Array<{
-        _id: string;
-        options: Array<{
-          _id: string;
-        }>;
-      }> = [],
+      addons: SingleVendorCartAddonSelection[] = [],
       specialInstructions: string = "",
     ) => {
       if (isSingleVendor) {
@@ -738,7 +732,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
                 {
                   _id: foodId,
                   categoryId: restaurantId || "",
-                  variation: { _id: variationId, addons, count: quantity },
+                  variation: {
+                    _id: variationId,
+                    addons: serializeSingleVendorCartAddons(addons),
+                    count: quantity,
+                  },
                 },
               ],
             },
@@ -789,25 +787,23 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       if (!isSingleVendor) return;
 
       const quantity = Math.max(0, Math.floor(input.quantity));
-      const existing = cart.find(
-        (item) =>
-          item._id === input.foodId && item.variation._id === input.variationId,
+      const existing = cart.find((item) =>
+        isSingleVendorCartConfiguration(
+          item,
+          input.foodId,
+          input.variationId,
+          input.addons,
+        ),
       );
-      const normalizeAddons = (addons: SingleVendorCartQuantityInput["addons"] = []) =>
-        addons
-          .map((addon) => ({
-            _id: addon._id,
-            options: addon.options.map((option) => option._id).sort(),
-          }))
-          .sort((a, b) => a._id.localeCompare(b._id));
-      const addonsChanged = JSON.stringify(normalizeAddons(existing?.addons)) !==
-        JSON.stringify(normalizeAddons(input.addons));
 
       setCart((currentCart) => {
-        const currentIndex = currentCart.findIndex(
-          (item) =>
-            item._id === input.foodId &&
-            item.variation._id === input.variationId,
+        const currentIndex = currentCart.findIndex((item) =>
+          isSingleVendorCartConfiguration(
+            item,
+            input.foodId,
+            input.variationId,
+            input.addons,
+          ),
         );
 
         if (quantity === 0) {
@@ -839,11 +835,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
       });
 
       try {
-        if (
-          existing &&
-          !existing.key.startsWith("optimistic:") &&
-          (quantity === 0 || !addonsChanged)
-        ) {
+        if (existing && !existing.key.startsWith("optimistic:")) {
           const response = await updateSingleCartCount({
             variables: {
               input: {
@@ -878,7 +870,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
                     categoryId: input.categoryId,
                     variation: {
                       _id: input.variationId,
-                      addons: input.addons ?? [],
+                      addons: serializeSingleVendorCartAddons(input.addons),
                       count: quantity,
                     },
                   },
@@ -893,7 +885,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = (props) => {
             );
           }
         }
-
       } catch (error) {
         await fetchSingleCart();
         throw error;
