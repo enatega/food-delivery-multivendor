@@ -20,6 +20,7 @@ import { ConfigurationProvider } from "@/lib/context/global/configuration.contex
 import { LocationProvider } from "@/lib/context/global/location.context";
 import { SoundProvider } from "@/lib/context/global/sound.context";
 import { UserProvider } from "@/lib/context/global/user.context";
+import { ChatNotificationProvider } from "@/lib/context/global/chat-notification.context";
 import { ApolloProvider } from "@apollo/client";
 
 // Locale
@@ -93,20 +94,22 @@ function ModeAwareApp({ fontsLoaded }: { fontsLoaded: boolean }) {
         <ApolloProvider client={client} key={mode}>
           <AuthProvider client={client}>
             <UserProvider>
-              <InternetProvider>
-                <ConfigurationProvider>
-                  <LocationProvider>
-                    <SoundProvider>
-                      <LocationPermissionComp>
-                        <RootStackLayout />
-                        <UnavailableStatus />
-                      </LocationPermissionComp>
-                      <StatusBar style="inverted" />
-                      <FlashMessage position="bottom" />
-                    </SoundProvider>
-                  </LocationProvider>
-                </ConfigurationProvider>
-              </InternetProvider>
+              <ChatNotificationProvider>
+                <InternetProvider>
+                  <ConfigurationProvider>
+                    <LocationProvider>
+                      <SoundProvider>
+                        <LocationPermissionComp>
+                          <RootStackLayout />
+                          <UnavailableStatus />
+                        </LocationPermissionComp>
+                        <StatusBar style="inverted" />
+                        <FlashMessage position="bottom" />
+                      </SoundProvider>
+                    </LocationProvider>
+                  </ConfigurationProvider>
+                </InternetProvider>
+              </ChatNotificationProvider>
             </UserProvider>
           </AuthProvider>
         </ApolloProvider>

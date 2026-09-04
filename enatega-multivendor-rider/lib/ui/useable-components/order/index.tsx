@@ -1,8 +1,5 @@
-import { memo, useContext, useState } from "react";
+import { memo, useContext } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { useSubscription } from "@apollo/client";
-import { SUBSCRIPTION_NEW_MESSAGE } from "@/lib/apollo/subscriptions";
-import UserContext from "@/lib/context/global/user.context";
 
 // Components
 import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
@@ -26,6 +23,7 @@ import { formatTimestampTime } from "@/lib/utils/methods/date-time";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import SpinnerComponent from "../spinner";
+import { useChatNotifications } from "@/lib/context/global/chat-notification.context";
 
 const Order = ({
   orderId,
@@ -50,22 +48,9 @@ const Order = ({
   } as IOrder);
   const configuration = useContext(ConfigurationContext);
   const router = useRouter();
+  const { getUnreadChat, markChatRead } = useChatNotifications();
   const { location: riderLocation } = useLocationContext();
-
-  // Unread chat indicator: flag when the customer sends a message for this
-  // order while the rider hasn't opened the chat. Only active for PICKED orders
-  // (when the chat button is shown).
-  const { dataProfile } = useContext(UserContext);
-  const [hasUnread, setHasUnread] = useState(false);
-  useSubscription(SUBSCRIPTION_NEW_MESSAGE, {
-    variables: { order: _id },
-    skip: !_id || orderStatus !== "PICKED",
-    onData: ({ data }) => {
-      const msg = data?.data?.subscriptionNewMessage;
-      if (!msg) return;
-      if (msg.user?.id !== dataProfile?._id) setHasUnread(true);
-    },
-  });
+  const unreadChat = getUnreadChat(_id);
 
   // Distance/time shown on the card. GeoJSON stores coordinates as
   // [longitude, latitude].
@@ -389,59 +374,74 @@ const Order = ({
                 </View>
 
                 {["PICKED"].includes(orderStatus) && (
-                  <View className="flex-row items-center gap-x-2">
-                    <TouchableOpacity
-                      onPress={() => {
-                        setHasUnread(false);
-                        router.push({
-                          pathname: "/chat",
-                          params: {
-                            phoneNumber: user.phone,
-                            orderId: orderId,
-                            id: _id,
-                          },
-                        });
-                      }}
-                    >
-                      <View className="border border-[#E2E8F0] rounded-full p-3">
-                        <ChatIcon
-                          width={30}
-                          height={30}
-                          color={appTheme.fontMainColor}
-                        />
-                        {hasUnread && (
-                          <View
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    className="flex-row items-center gap-x-2"
+                    onPress={() => {
+                      markChatRead(_id);
+                      router.push({
+                        pathname: "/chat",
+                        params: {
+                          phoneNumber: user.phone,
+                          orderId: orderId,
+                          id: _id,
+                        },
+                      });
+                    }}
+                  >
+                    <View className="border border-[#E2E8F0] rounded-full p-3">
+                      <ChatIcon
+                        width={30}
+                        height={30}
+                        color={appTheme.fontMainColor}
+                      />
+                      {!!unreadChat?.count && (
+                        <View
+                          style={{
+                            position: "absolute",
+                            top: -4,
+                            end: -4,
+                            minWidth: 20,
+                            height: 20,
+                            paddingHorizontal: 5,
+                            borderRadius: 10,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: appTheme.orderUncomplete,
+                            borderWidth: 1.5,
+                            borderColor: appTheme.themeBackground,
+                          }}
+                        >
+                          <Text
                             style={{
-                              position: "absolute",
-                              top: 2,
-                              right: 2,
-                              width: 12,
-                              height: 12,
-                              borderRadius: 6,
-                              backgroundColor: "red",
-                              borderWidth: 1.5,
-                              borderColor: appTheme.themeBackground,
+                              color: appTheme.white,
+                              fontSize: 11,
+                              fontWeight: "700",
                             }}
-                          />
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                    {/* Order Comment */}
+                          >
+                            {unreadChat.count > 99 ? "99+" : unreadChat.count}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                     <View className="flex-1">
                       <Text
                         className="font-[Inter] text-[16px] text-base font-[500] "
                         style={{ color: appTheme.fontSecondColor }}
                       >
-                        {t("Order Comment")}
+                        {unreadChat?.count
+                          ? t("New message")
+                          : t("Chat with Customer")}
                       </Text>
                       <Text
                         className="font-[Inter] text-[16px] italic font-medium "
                         style={{ color: appTheme.fontMainColor }}
+                        numberOfLines={1}
                       >
-                        {t("No Comment")}
+                        {unreadChat?.preview || t("Start Chat")}
                       </Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 )}
                 {tab === "new_orders" && (
                   // <CustomContinueButton

@@ -38,6 +38,9 @@ export const getRiderIdKey = (mode: RiderServerMode) =>
 export const getHandledNotificationKey = (mode: RiderServerMode) =>
   `@enatega/rider/${mode.toLowerCase()}/last-notification-id`;
 
+export const getChatUnreadKey = (mode: RiderServerMode) =>
+  `@enatega/rider/${mode.toLowerCase()}/chat-unread`;
+
 export const isRiderServerMode = (
   value: string | null,
 ): value is RiderServerMode =>

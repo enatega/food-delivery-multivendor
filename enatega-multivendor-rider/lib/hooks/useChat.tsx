@@ -21,6 +21,7 @@ import {
 } from "@/lib/apollo/subscriptions";
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
+import { useChatNotifications } from "@/lib/context/global/chat-notification.context";
 
 // Interface
 
@@ -29,6 +30,7 @@ export const useChatScreen = () => {
 
   const { dataProfile } = useContext(UserContext);
   const { mode } = useRiderMode();
+  const { markChatRead } = useChatNotifications();
   const isSingleVendor = mode === RIDER_SERVER_MODES.SINGLE;
 
   // States
@@ -195,6 +197,10 @@ export const useChatScreen = () => {
   };
 
   // Use Effect
+  useEffect(() => {
+    if (orderId) markChatRead(String(orderId));
+  }, [markChatRead, orderId]);
+
   useEffect(() => {
     const unsubscribe = subscribeToMessages({
       document: isSingleVendor

@@ -316,6 +316,11 @@ export const en = {
   "Send": "Send",
   "Message sent": "Message sent",
   "Message failed": "Message failed",
+  "Chat with Customer": "Chat with Customer",
+  "Start Chat": "Start Chat",
+  "New message": "New message",
+  "New message from customer": "New message from customer",
+  "Messages and orders": "Messages and orders",
 
   // Earnings Screen
   "Please select a date range": "Please select a date range",

@@ -58,6 +58,7 @@ import {
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
+import { useChatNotifications } from "@/lib/context/global/chat-notification.context";
 import AccordionItem from "@/lib/ui/useable-components/accordian";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import { ChatIcon, HomeIcon } from "@/lib/ui/useable-components/svg";
@@ -121,6 +122,8 @@ export default function OrderDetailScreen() {
     locationPin,
   } = useOrderDetail();
   const { userId } = useUserContext();
+  const { getUnreadChat, markChatRead } = useChatNotifications();
+  const unreadChat = order?._id ? getUnreadChat(order._id) : undefined;
   const { mutateAssignOrder, mutateOrderStatus, loadingAssignOrder, loadingOrderStatus } =
     useDetails(order);
 
@@ -709,7 +712,8 @@ export default function OrderDetailScreen() {
                 <TouchableOpacity
                   className="h-14 rounded-3xl py-3 w-full mt-4"
                   style={{ backgroundColor: appTheme.themeBackground, borderWidth: 1, borderColor: appTheme.borderLineColor }}
-                  onPress={() =>
+                  onPress={() => {
+                    if (order?._id) markChatRead(order._id);
                     router.push({
                       pathname: "/chat",
                       params: {
@@ -718,14 +722,42 @@ export default function OrderDetailScreen() {
                         id: order?._id,
                       },
                     })
-                  }
+                  }}
                 >
                   <View className="flex-row items-center justify-center gap-x-3">
-                    <ChatIcon
-                      width={24}
-                      height={24}
-                      color={appTheme.fontMainColor}
-                    />
+                    <View>
+                      <ChatIcon
+                        width={24}
+                        height={24}
+                        color={appTheme.fontMainColor}
+                      />
+                      {!!unreadChat?.count && (
+                        <View
+                          style={{
+                            position: "absolute",
+                            top: -8,
+                            end: -12,
+                            minWidth: 18,
+                            height: 18,
+                            paddingHorizontal: 4,
+                            borderRadius: 9,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: appTheme.orderUncomplete,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: appTheme.white,
+                              fontSize: 10,
+                              fontWeight: "700",
+                            }}
+                          >
+                            {unreadChat.count > 99 ? "99+" : unreadChat.count}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                     <Text
                       className="text-center text-lg font-medium"
                       style={{ color: appTheme.fontMainColor }}
