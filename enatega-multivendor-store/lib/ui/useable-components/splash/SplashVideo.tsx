@@ -3,14 +3,20 @@ import { VideoView, useVideoPlayer } from "expo-video";
 import { StyleSheet } from "react-native";
 import { useEffect, useRef } from "react";
 
-export default function SplashVideo({ onLoaded, onFinish }) {
+interface SplashVideoProps {
+  onLoaded: () => void;
+  onFinish: () => void;
+}
+
+export default function SplashVideo({ onLoaded, onFinish }: SplashVideoProps) {
   const didLoad = useRef(false);
-  const player = useVideoPlayer(require("@/lib/assets/video/mobile-splash.mp4"), (
-    videoPlayer,
-  ) => {
-    videoPlayer.loop = false;
-    videoPlayer.play();
-  });
+  const player = useVideoPlayer(
+    require("@/lib/assets/video/mobile-splash.mp4"),
+    (videoPlayer) => {
+      videoPlayer.loop = false;
+      videoPlayer.play();
+    },
+  );
 
   useEffect(() => {
     const subscription = player.addListener("playToEnd", onFinish);

@@ -10,13 +10,21 @@
     "scheme": "enatega-store",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./lib/assets/images/black.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#000000"
-    },
     "plugins": [
       "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#f4f8f5",
+          "image": "./lib/assets/images/splashTransparent.png",
+          "imageWidth": 1,
+          "resizeMode": "contain",
+          "dark": {
+            "backgroundColor": "#0b1225",
+            "image": "./lib/assets/images/splashTransparent.png"
+          }
+        }
+      ],
       [
         "expo-image-picker",
         {
