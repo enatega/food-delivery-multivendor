@@ -27,6 +27,8 @@ import { useTranslation } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import { useKeepAwake } from "expo-keep-awake";
+import { useRouter } from "expo-router";
+import { ROUTES } from "@/lib/utils/constants/routes";
 
 function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Props
@@ -35,6 +37,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Hooks
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
+  const router = useRouter();
   const tabBarHeight = useBottomTabBarHeight();
   const { loading, activeOrders, refetch, currentTab, setCurrentTab } =
     useOrders();
@@ -79,6 +82,12 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     setSelectedOrder(null);
     bottomSheetModalRef.current?.dismiss();
   }, []);
+
+  const handleOrderAccepted = useCallback(() => {
+    setSelectedOrder(null);
+    bottomSheetModalRef.current?.dismiss();
+    router.replace(ROUTES.processingOrders);
+  }, [router]);
 
   const toggleShowDetails = useCallback((itemId: string) => {
     setShowDetails((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
@@ -199,6 +208,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                 id={selectedOrder?._id ?? ""}
                 orderId={selectedOrder?.orderId ?? ""}
                 handleDismissModal={handleDismissModal}
+                onOrderAccepted={handleOrderAccepted}
               />
             )}
           </BottomSheetView>

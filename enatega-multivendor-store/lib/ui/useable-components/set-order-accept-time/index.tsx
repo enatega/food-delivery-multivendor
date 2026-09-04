@@ -28,11 +28,13 @@ import { useTranslation } from "react-i18next";
 import CustomContinueButton from "../custom-continue-button";
 import { CircleCrossIcon } from "../svg";
 import usePrintOrder from "@/lib/hooks/usePrintOrder";
+import FlashMessageComponent from "../flash-message";
 
 const SetTimeScreenAndAcceptOrder = ({
   id,
   orderId,
   handleDismissModal,
+  onOrderAccepted,
 }: ISetOrderTimeComponentProps) => {
   // Hooks
   const { appTheme } = useApptheme();
@@ -52,14 +54,18 @@ const SetTimeScreenAndAcceptOrder = ({
     if (isSubmitting) return;
 
     try {
+      setIsAcceptingOrder(true);
       await silenceRing();
       await acceptOrder(id, selectedTime?.toString() || "0");
       muteRing(orderId).catch(() => {});
-      handleDismissModal();
+      FlashMessageComponent({
+        message: t("Order accepted. Opening Processing."),
+      });
+      onOrderAccepted();
     } catch {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
     } finally {
-      handleDismissModal();
+      setIsAcceptingOrder(false);
     }
   };
   const onAcceptAndPrintOrderHandler = async () => {
@@ -74,15 +80,17 @@ const SetTimeScreenAndAcceptOrder = ({
         await silenceRing();
         await acceptOrder(id, selectedTime?.toString() || "0");
         muteRing(orderId).catch(() => {});
+        FlashMessageComponent({
+          message: t("Order accepted. Opening Processing."),
+        });
+        onOrderAccepted();
       }
 
       setIsAcceptingOrder(false);
-      handleDismissModal();
     } catch {
       // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
     } finally {
       setIsAcceptingOrder(false);
-      handleDismissModal();
     }
   };
 
@@ -129,7 +137,7 @@ const SetTimeScreenAndAcceptOrder = ({
       <View>
         <CustomContinueButton
           disabled={isSubmitting}
-          isLoading={loadingAcceptOrder || loadingRing}
+          isLoading={isSubmitting}
           style={{ backgroundColor: appTheme.primary }}
           onPress={onAcceptOrderHandler}
           title={t("Done")}
