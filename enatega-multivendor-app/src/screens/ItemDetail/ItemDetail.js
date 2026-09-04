@@ -355,6 +355,18 @@ function ItemDetail(props) {
             )}
           </View>
           <View style={[styles(currentTheme).subContainer]}>
+            <View style={styles(currentTheme).inputContainer}>
+              <TitleComponent title={t('specialInstructions')} subTitle={t('anySpecificPreferences')} status={t('optional')} />
+              <TextInput
+                style={styles(currentTheme).input}
+                placeholder={t('noMayo')}
+                placeholderTextColor={tokens.colors.textMuted}
+                multiline
+                value={specialInstructions}
+                onChangeText={setSpecialInstructions}
+                maxLength={144}
+              />
+            </View>
             <View>
               {food?.variations?.length > 1 && (
                 <View key='variations' style={styles(currentTheme).optionSection}>
@@ -376,19 +388,6 @@ function ItemDetail(props) {
                   <Options addon={addon} onSelectOption={onSelectOption} addonRefs={addonRefs} selectedAddons={selectedAddons} />
                 </View>)
               })}
-            </View>
-
-            <View style={styles(currentTheme).inputContainer}>
-              <TitleComponent title={t('specialInstructions')} subTitle={t('anySpecificPreferences')} status={t('optional')} />
-              <TextInput
-                style={styles(currentTheme).input}
-                placeholder={t('noMayo')}
-                placeholderTextColor={tokens.colors.textMuted}
-                multiline
-                value={specialInstructions}
-                onChangeText={setSpecialInstructions}
-                maxLength={144}
-              />
             </View>
             {/** frequently bought together */}
             <FrequentlyBoughtTogether itemId={food?._id} restaurantId={restaurant} />
