@@ -13,6 +13,34 @@ import { GET_NOTIFICATIONS, SEND_NOTIFICATION_USER } from '@/lib/api/graphql';
 import { ToastContext } from '@/lib/context/global/toast.context';
 import { useTranslations } from 'next-intl';
 
+const formatNotificationDate = (
+  createdAt: string | number | null | undefined
+) => {
+  if (createdAt === null || createdAt === undefined) return '—';
+
+  const value = typeof createdAt === 'string' ? createdAt.trim() : createdAt;
+  if (value === '') return '—';
+
+  const timestamp = typeof value === 'number' ? value : Number(value);
+  const date = new Date(
+    typeof value === 'number' || !Number.isNaN(timestamp) ? timestamp : value
+  );
+
+  if (Number.isNaN(date.getTime())) return '—';
+
+  const formattedDate = date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+  const formattedTime = date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  return `${formattedDate}, ${formattedTime}`;
+};
+
 export const NOTIFICATIONS_TABLE_COLUMNS = () => {
   // Hooks
   const t = useTranslations();
@@ -67,7 +95,7 @@ export const NOTIFICATIONS_TABLE_COLUMNS = () => {
         headerName: t('Date'),
         propertyName: 'createdAt',
         body: (rowData: INotification) => {
-          return <span>{rowData.createdAt}</span>;
+          return <span>{formatNotificationDate(rowData.createdAt)}</span>;
         },
       },
       {
