@@ -143,7 +143,7 @@ function Profile(props) {
           setModalVisible(false)
         }}
       />
-      <View style={styles(currentTheme).formContainer}>
+      <View testID='customer.profile.screen' style={styles(currentTheme).formContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={styles(currentTheme).flex}
@@ -154,7 +154,7 @@ function Profile(props) {
             showsVerticalScrollIndicator={false}
             alwaysBounceVertical={false}
           >
-            <TextDefault
+            <TextDefault testID='customer.profile.greeting'
               bolder
               textColor={tokens.colors.textPrimary}
               style={styles(tokens).greeting}
@@ -163,7 +163,7 @@ function Profile(props) {
               {`${t('Hi')}${profile?.name ? ` ${profile.name}` : ''}!`}
             </TextDefault>
             <View style={styles(currentTheme).mainContainer}>
-              <TouchableOpacity
+              <TouchableOpacity testID='customer.profile.active-orders'
                 activeOpacity={0.8}
                 style={styles(tokens).activeOrderRow}
                 onPress={() => navigation.navigate('MyOrders')}
@@ -199,7 +199,7 @@ function Profile(props) {
                     <SectionHeader
                       style={styles(tokens).flushSectionHeader}
                       title={t('YourFavourites')}
-                      action={<TouchableOpacity onPress={() => navigation.navigate('Favourite')} style={styles(tokens).quietAction}>
+                      action={<TouchableOpacity testID='customer.profile.favourites-see-all' onPress={() => navigation.navigate('Favourite')} style={styles(tokens).quietAction}>
                         <TextDefault bolder textColor={tokens.colors.accent}>{t('SeeAll')}</TextDefault>
                       </TouchableOpacity>}
                     />
@@ -239,7 +239,7 @@ function Profile(props) {
               <View style={styles().quickLinkView}>
                 <SectionHeader title={t('QuickLinks')} />
 
-                <ButtonContainer
+                <ButtonContainer testID='customer.profile.support'
                   icon={'people-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('CustomerSupport')}
@@ -247,7 +247,7 @@ function Profile(props) {
                   currentTheme={currentTheme}
                 />
                 <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
-                <ButtonContainer
+                <ButtonContainer testID='customer.profile.faq'
                   icon={'help-circle-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('Help')}
@@ -255,7 +255,7 @@ function Profile(props) {
                   currentTheme={currentTheme}
                 />
                 <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
-                <ButtonContainer
+                <ButtonContainer testID='customer.profile.order-history'
                   icon={'file-tray-stacked-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('MyOrders')}
@@ -302,7 +302,7 @@ function Profile(props) {
               <View style={styles().settingView}>
                 <SectionHeader title={t('titleSettings')} />
 
-                <ButtonContainer
+                <ButtonContainer testID='customer.profile.account'
                   icon={'account-outline'}
                   iconType={'MaterialCommunityIcons'}
                   onPress={() => navigation.navigate('Account')}
@@ -310,7 +310,7 @@ function Profile(props) {
                   currentTheme={currentTheme}
                 />
                 <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
-                <ButtonContainer
+                <ButtonContainer testID='customer.profile.addresses'
                   icon={'location-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('Addresses')}

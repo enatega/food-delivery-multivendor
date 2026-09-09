@@ -690,7 +690,7 @@ function Checkout(props) {
 
   return (
     <>
-      <View style={styles(currentTheme).mainContainer}>
+      <View testID='customer.checkout.screen' style={styles(currentTheme).mainContainer}>
         {!!cart.length && (
           <>
             <ScrollView
@@ -814,7 +814,7 @@ function Checkout(props) {
                         {t('titlePayment')}
                       </TextDefault>
                       <View>
-                        <PaymentModeOption
+                        <PaymentModeOption testID='customer.checkout.payment.cod'
                           title={t('cod')}
                           icon={'cash'}
                           iconFamily='material-community'
@@ -835,6 +835,7 @@ function Checkout(props) {
                         /> */}
                         {restaurant?.stripeDetailsSubmitted && (
                           <PaymentModeOption
+                            testID='customer.checkout.payment.stripe'
                             title={t('Stripe')}
                             icon={'credit-card'}
                             selected={paymentMode === 'STRIPE'}
@@ -850,7 +851,7 @@ function Checkout(props) {
                 )}
                 <View style={styles(currentTheme).voucherSec}>
                   {!coupon ? (
-                    <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).voucherSecInner} onPress={() => onModalOpen(voucherModalRef)}>
+                    <TouchableOpacity testID='customer.checkout.voucher-open' activeOpacity={0.7} style={styles(currentTheme).voucherSecInner} onPress={() => onModalOpen(voucherModalRef)}>
                       <MaterialCommunityIcons name='ticket-confirmation-outline' size={24} color={currentTheme.colors.accent} />
                       <TextDefault H4 bolder textColor={currentTheme.colors.accent} center>
                         {t('applyVoucher')}
@@ -900,7 +901,7 @@ function Checkout(props) {
                   )}
                 </View>
                 {!isPickup && (
-                  <View style={styles(currentTheme).tipSec}>
+                  <View testID='customer.checkout.tip-section' style={styles(currentTheme).tipSec}>
                     <View style={[styles(currentTheme).tipRow]}>
                       <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor}>
                         {t('AddTip')}
@@ -913,6 +914,7 @@ function Checkout(props) {
                       <View style={styles(currentTheme).buttonInline}>
                         {dataTip.tips.tipVariations.map((label, index) => (
                           <TouchableOpacity
+                            testID={`customer.checkout.tip.preset.${index}`}
                             activeOpacity={0.7}
                             key={index}
                             style={[selectedTip === label ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton]}
@@ -927,7 +929,7 @@ function Checkout(props) {
                             </TextDefault>
                           </TouchableOpacity>
                         ))}
-                        <TouchableOpacity activeOpacity={0.7} style={tip ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton} onPress={() => onModalOpen(tipModalRef)}>
+                        <TouchableOpacity testID='customer.checkout.tip-open' activeOpacity={0.7} style={tip ? styles(currentTheme).activeLabel : styles(currentTheme).labelButton} onPress={() => onModalOpen(tipModalRef)}>
                           <TextDefault textColor={tip ? currentTheme.colors.accent : currentTheme.colors.textPrimary} normal bolder center>
                             {t('Other')}
                           </TextDefault>
@@ -945,7 +947,7 @@ function Checkout(props) {
                     <TextDefault numberOfLines={1} normal bold textColor={currentTheme.fontFourthColor}>
                       {t('subTotal')}
                     </TextDefault>
-                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                    <TextDefault testID='customer.checkout.subtotal' numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                       {configuration.currencySymbol}
                       {calculatePrice(0, false)}
                     </TextDefault>
@@ -968,7 +970,7 @@ function Checkout(props) {
                     <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                       {t('taxFee')}
                     </TextDefault>
-                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                    <TextDefault testID='customer.checkout.tax' numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                       {configuration.currencySymbol}
                       {taxCalculation()}
                     </TextDefault>
@@ -1006,7 +1008,7 @@ function Checkout(props) {
                     <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} H4 bolder>
                       {t('total')}
                     </TextDefault>
-                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                    <TextDefault testID='customer.checkout.total' numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                       {configuration.currencySymbol}
                       {calculateTotal()}
                     </TextDefault>
@@ -1033,7 +1035,7 @@ function Checkout(props) {
                   }
                 ]}
               >
-                <TouchableOpacity
+                <TouchableOpacity testID='customer.checkout.place-order'
                   disabled={loadingOrder}
                   activeOpacity={0.7}
                   onPress={() => {
@@ -1085,15 +1087,15 @@ function Checkout(props) {
                   {t('AddTip')}
                 </TextDefault>
               </View>
-              <Feather name='x-circle' size={24} color={currentTheme.newIconColor} onPress={() => onModalClose(tipModalRef)} />
+              <Feather testID='customer.checkout.tip-close' name='x-circle' size={24} color={currentTheme.newIconColor} onPress={() => onModalClose(tipModalRef)} />
             </View>
             <View style={{ gap: 8 }}>
               <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
                 {t('enterAmount')}
               </TextDefault>
-              <TextInput keyboardType='numeric' placeholder={'e.g. 25'} placeholderTextColor={currentTheme.inputPlaceHolder} value={tipAmount} onChangeText={(text) => setTipAmount(text)} style={styles(currentTheme).modalInput} />
+              <TextInput testID='customer.checkout.tip-input' keyboardType='numeric' placeholder={'e.g. 25'} placeholderTextColor={currentTheme.inputPlaceHolder} value={tipAmount} onChangeText={(text) => setTipAmount(text)} style={styles(currentTheme).modalInput} />
             </View>
-            <TouchableOpacity disabled={!tipAmount} activeOpacity={0.7} onPress={onTipping} style={[styles(currentTheme).button, { height: scale(40) }]}>
+            <TouchableOpacity testID='customer.checkout.tip-apply' disabled={!tipAmount} activeOpacity={0.7} onPress={onTipping} style={[styles(currentTheme).button, { height: scale(40) }]}>
               <TextDefault textColor={currentTheme.black} style={styles().checkoutBtn} bold H4>
                 {t('apply')}
               </TextDefault>
@@ -1125,15 +1127,16 @@ function Checkout(props) {
                   {t('applyVoucher')}
                 </TextDefault>
               </View>
-              <Feather name='x-circle' size={24} color={currentTheme.newIconColor} onPress={() => onModalClose(voucherModalRef)} />
+              <Feather testID='customer.checkout.voucher-close' name='x-circle' size={24} color={currentTheme.newIconColor} onPress={() => onModalClose(voucherModalRef)} />
             </View>
             <View style={{ gap: 8 }}>
               <TextDefault uppercase bold textColor={currentTheme.gray500} isRTL>
                 {t('enterCode')}
               </TextDefault>
-              <TextInput label={t('inputCode')} placeholder={t('inputCode')} placeholderTextColor={currentTheme.inputPlaceHolder} value={voucherCode} onChangeText={(text) => setVoucherCode(text)} style={styles(currentTheme).modalInput} />
+              <TextInput testID='customer.checkout.voucher-input' label={t('inputCode')} placeholder={t('inputCode')} placeholderTextColor={currentTheme.inputPlaceHolder} value={voucherCode} onChangeText={(text) => setVoucherCode(text)} style={styles(currentTheme).modalInput} />
             </View>
             <TouchableOpacity
+              testID='customer.checkout.voucher-apply'
               disabled={!voucherCode || couponLoading}
               activeOpacity={0.7}
               onPress={() => {

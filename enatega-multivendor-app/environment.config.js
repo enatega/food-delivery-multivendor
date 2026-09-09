@@ -97,7 +97,7 @@ const getSingleVendorConfig = () => {
 
 const normalizeEnvironment = (env) => {
   if (!env) throw new Error('EXPO_PUBLIC_APP_ENV is required')
-  if (Object.hasOwn(ENV_CONFIG, env)) return env
+  if (Object.hasOwn(MULTI_ENV_CONFIG, env)) return env
   throw new Error(`Unsupported mobile environment: ${env}`)
 }
 

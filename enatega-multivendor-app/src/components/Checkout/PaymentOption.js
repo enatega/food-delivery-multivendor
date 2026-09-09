@@ -6,11 +6,11 @@ import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import TextDefault from '../Text/TextDefault/TextDefault'
 import RadioButton from '../../ui/FdRadioBtn/RadioBtn'
 
-export const PaymentModeOption = ({ theme, icon, iconFamily, title, selected, onSelect }) => {
+export const PaymentModeOption = ({ theme, icon, iconFamily, title, selected, onSelect, testID }) => {
     const IconComponent =
         iconFamily === 'material-community' ? MaterialCommunityIcons : FontAwesome
 
-    return (<Pressable onPress={onSelect} style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', minHeight: scale(48) }}>
+    return (<Pressable testID={testID} onPress={onSelect} style={{ flexDirection: theme?.isRTL ? 'row-reverse' : 'row', alignItems: 'center', minHeight: scale(48) }}>
         <View style={{ width: scale(34), alignItems: 'center' }}>
             <IconComponent
                 name={icon}

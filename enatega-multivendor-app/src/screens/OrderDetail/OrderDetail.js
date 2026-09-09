@@ -372,7 +372,7 @@ function OrderDetail(props) {
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
-    <View style={styles(currentTheme).screen}>
+    <View testID='customer.order.screen' style={styles(currentTheme).screen}>
       <ScrollView contentContainerStyle={styles(currentTheme).scrollContent} showsVerticalScrollIndicator={false} overScrollMode='never'>
         {order?.rider && [ORDER_STATUS_ENUM.ASSIGNED, ORDER_STATUS_ENUM.PICKED].includes(order?.orderStatus) && (
           <View style={styles(currentTheme).mapCard}>
@@ -426,7 +426,7 @@ function OrderDetail(props) {
           </View>
         )}
         <View style={styles(currentTheme).statusSection}>
-          <TextDefault H4 bold textColor={currentTheme.colors.textPrimary} style={styles(currentTheme).statusHeading}>
+          <TextDefault testID='customer.order.status' H4 bold textColor={currentTheme.colors.textPrimary} style={styles(currentTheme).statusHeading}>
             {getStatusMessage(order, eta, riderLocation, now)}
           </TextDefault>
           {![ORDER_STATUS_ENUM.PENDING, ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.COMPLETED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order?.orderStatus) && (
@@ -465,7 +465,7 @@ function OrderDetail(props) {
         </View>
         {isOrderCancelable && (
           <View style={styles(currentTheme).cancelWrap}>
-            <Button disabled={!isOrderCancelable} text={t('cancelOrder')} buttonProps={{ onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
+            <Button disabled={!isOrderCancelable} text={t('cancelOrder')} buttonProps={{ testID: 'customer.order.cancel-open', onPress: cancelModalToggle }} buttonStyles={styles().cancelButtonContainer(currentTheme)} textProps={{ textColor: currentTheme.red600 }} textStyles={{ ...alignment.Pmedium }} />
           </View>
         )}
       </ScrollView>

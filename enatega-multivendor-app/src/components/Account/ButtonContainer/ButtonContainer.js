@@ -19,7 +19,7 @@ const ButtonContainer = (props) => {
 
   return (
     <>
-      <Pressable
+      <Pressable testID={props?.testID}
           accessibilityRole={isDisabled ? undefined : 'button'}
           activeOpacity={isDisabled ? 1 : 0.7}
           style={({ pressed }) => [
@@ -36,7 +36,7 @@ const ButtonContainer = (props) => {
               {props?.title}
             </TextDefault>
             {hasDetail && (
-              <TextDefault
+              <TextDefault testID={props?.detailTestID}
                 numberOfLines={1}
                 textColor={tokens.colors.textPrimary}
                 style={themedStyles.detail}

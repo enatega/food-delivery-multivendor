@@ -137,7 +137,7 @@ function NewRestaurantCard(props) {
       props?.fullWidth && { width: '100%', marginLeft: 0, marginRight: 0 },
       { position: 'relative' }
     ]}>
-      <Ripple
+      <Ripple testID={`customer.restaurant.card.${restaurantId}`}
         rippleColor={'#F5F5F5'}
         style={[
           styles(cardTheme).cardSurface,
