@@ -354,19 +354,6 @@ const styles = (props = null) =>
       paddingHorizontal: scale(20),
       backgroundColor: props !== null ? props?.cardBackground : '#F3F4F6'
     },
-    marker: {
-      width: 50,
-      height: 50,
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      zIndex: 1,
-      translateX: -25,
-      translateY: -25,
-      justifyContent: 'center',
-      alignItems: 'center',
-      transform: [{ translateX: -25 }, { translateY: -25 }]
-    },
     voucherSec: {
       paddingHorizontal: 0,
       marginTop: props?.spacing?.lg ?? scale(16)

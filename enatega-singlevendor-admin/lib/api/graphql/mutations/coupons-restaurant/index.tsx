@@ -13,6 +13,8 @@ export const CREATE_RESTAURANT_COUPON = gql`
       title
       discount
       enabled
+      startDate
+      endDate
     }
   }
 `;
@@ -30,6 +32,8 @@ export const EDIT_RESTAURANT_COUPON = gql`
       title
       discount
       enabled
+      startDate
+      endDate
     }
   }
 `;

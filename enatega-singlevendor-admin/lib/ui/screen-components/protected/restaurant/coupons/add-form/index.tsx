@@ -4,6 +4,7 @@ import { Form, Formik, FormikHelpers } from 'formik';
 
 // Prime React
 import { Sidebar } from 'primereact/sidebar';
+import { Calendar } from 'primereact/calendar';
 
 // Interface and Types
 import { ICouponRestaurantForm } from '@/lib/utils/interfaces/forms/coupon-restaurant.form.interface';
@@ -47,8 +48,16 @@ export default function CouponsAddForm({
   const initialValues: ICouponRestaurantForm = {
     title: '',
     discount: null,
+    startDate: coupon?.startDate ? new Date(coupon.startDate) : null,
+    endDate: coupon?.endDate ? new Date(coupon.endDate) : null,
     enabled: true,
-    ...coupon,
+    ...(coupon
+      ? {
+          title: coupon.title,
+          discount: coupon.discount,
+          enabled: coupon.enabled,
+        }
+      : {}),
   };
 
   // Hooks
@@ -76,6 +85,9 @@ export default function CouponsAddForm({
           title: values.title,
           discount: values.discount,
           enabled: values.enabled,
+          startDate: values.startDate?.toISOString(),
+          endDate: values.endDate?.toISOString(),
+          couponType: 'PERCENTAGE',
         },
       },
       onCompleted: () => {
@@ -147,19 +159,28 @@ export default function CouponsAddForm({
                           value={values.title}
                           onChange={handleChange}
                           showLabel={true}
+                          isRequired
                           style={{
                             borderColor:
                               errors.title && touched.title ? 'red' : '',
                           }}
                         />
+                        {touched.title && errors.title && (
+                          <small className="text-red-500 dark:text-red-400">
+                            {errors.title}
+                          </small>
+                        )}
 
                         <CustomNumberField
-                          min={0}
+                          min={1}
+                          max={100}
+                          suffix="%"
                           placeholder={t('Discount')}
                           minFractionDigits={0}
                           maxFractionDigits={2}
                           name="discount"
                           showLabel={true}
+                          isRequired
                           value={values.discount}
                           useGrouping={false}
                           onChange={setFieldValue}
@@ -168,6 +189,70 @@ export default function CouponsAddForm({
                               errors.discount && touched.discount ? 'red' : '',
                           }}
                         />
+                        {touched.discount && errors.discount && (
+                          <small className="text-red-500 dark:text-red-400">
+                            {errors.discount}
+                          </small>
+                        )}
+
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                          <div>
+                            <label htmlFor="coupon-valid-from" className="mb-2 block text-sm font-medium">
+                              Valid From <span className="text-red-500">*</span>
+                            </label>
+                            <Calendar
+                              inputId="coupon-valid-from"
+                              value={values.startDate}
+                              onChange={(event) => {
+                                const startDate = event.value as Date | null;
+                                setFieldValue('startDate', startDate);
+                                if (
+                                  startDate &&
+                                  values.endDate &&
+                                  values.endDate <= startDate
+                                ) {
+                                  setFieldValue('endDate', null);
+                                }
+                              }}
+                              showIcon
+                              showTime
+                              hourFormat="24"
+                              dateFormat="dd/mm/yy"
+                              className="w-full"
+                              inputClassName="h-10 w-full text-sm dark:bg-dark-900 dark:text-white"
+                            />
+                            {touched.startDate && errors.startDate && (
+                              <small className="text-red-500 dark:text-red-400">
+                                {errors.startDate}
+                              </small>
+                            )}
+                          </div>
+
+                          <div>
+                            <label htmlFor="coupon-valid-until" className="mb-2 block text-sm font-medium">
+                              Valid Until <span className="text-red-500">*</span>
+                            </label>
+                            <Calendar
+                              inputId="coupon-valid-until"
+                              value={values.endDate}
+                              onChange={(event) =>
+                                setFieldValue('endDate', event.value)
+                              }
+                              minDate={values.startDate ?? undefined}
+                              showIcon
+                              showTime
+                              hourFormat="24"
+                              dateFormat="dd/mm/yy"
+                              className="w-full"
+                              inputClassName="h-10 w-full text-sm dark:bg-dark-900 dark:text-white"
+                            />
+                            {touched.endDate && errors.endDate && (
+                              <small className="text-red-500 dark:text-red-400">
+                                {errors.endDate}
+                              </small>
+                            )}
+                          </div>
+                        </div>
 
                         <Toggle
                           checked={values.enabled}

@@ -12,6 +12,7 @@ import {
 import { GraphQLFormattedError } from "graphql";
 import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "expo-router";
 import { parseTimestamp } from "@/lib/utils/methods/date-time";
 import { GET_CONFIGURATION } from "../api/graphql/query/configuration";
 import {
@@ -37,6 +38,7 @@ interface RiderOrdersCacheData {
 const useDetails = (orderData: IOrder) => {
   // Hooks
   const { t } = useTranslation();
+  const router = useRouter();
   const { mode } = useRiderMode();
   const riderOrdersQuery =
     mode === RIDER_SERVER_MODES.SINGLE
@@ -132,7 +134,7 @@ const useDetails = (orderData: IOrder) => {
       FlashMessageComponent({
         message: "Order assigned",
       });
-      //   setActive("MyOrders");
+      router.replace("/(tabs)/home/orders/processing");
     }
   }
 

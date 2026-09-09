@@ -13,7 +13,7 @@ const styles = (props = null) =>
     },
     scrollContent: {
       flexGrow: 1,
-      paddingBottom: scale(104)
+      paddingBottom: scale(28)
     },
     mapCard: {
       height: scale(238),
@@ -29,11 +29,11 @@ const styles = (props = null) =>
     },
     statusSection: {
       paddingHorizontal: scale(12),
-      paddingTop: scale(20),
-      paddingBottom: scale(10)
+      paddingTop: scale(16),
+      paddingBottom: scale(6)
     },
     statusHeading: {
-      marginBottom: scale(18),
+      marginBottom: scale(12),
       lineHeight: scale(25)
     },
     estimateRow: {
@@ -59,7 +59,7 @@ const styles = (props = null) =>
       ...alignment.MBsmall
     },
 
-    orderReceipt: theme => ({
+    orderReceipt: (theme) => ({
       elevation: 1,
       shadowColor: theme.shadow,
       shadowOffset: {
@@ -89,21 +89,27 @@ const styles = (props = null) =>
       backgroundColor: 'black',
       margin: 15
     },
-    bottomContainer: (theme) => ({
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      width: '100%',
-      // height: scale(80),
-      backgroundColor: theme.colors?.surface || theme.themeBackground,
-      justifyContent: 'center',
-      paddingHorizontal: scale(14),
-      paddingTop: scale(10),
-      paddingBottom: scale(12),
-      borderColor: theme.colors?.borderSubtle || theme.borderLight,
-      borderTopWidth: StyleSheet.hairlineWidth
-    }),
-    cancelButtonContainer: theme => ({
+    paymentCard: {
+      backgroundColor: props?.colors?.surface,
+      borderColor: props?.colors?.borderSubtle,
+      borderRadius: scale(16),
+      borderWidth: StyleSheet.hairlineWidth,
+      marginHorizontal: scale(12),
+      marginTop: scale(12),
+      padding: scale(14)
+    },
+    paymentHeader: {
+      alignItems: 'center',
+      flexDirection: props?.isRTL ? 'row-reverse' : 'row',
+      justifyContent: 'space-between'
+    },
+    paymentBreakdown: {
+      borderTopColor: props?.colors?.borderSubtle,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      marginTop: scale(12),
+      paddingTop: scale(12)
+    },
+    cancelButtonContainer: (theme) => ({
       alignItems: 'center',
       justifyContent: 'center',
       borderColor: theme.red600,
@@ -111,9 +117,10 @@ const styles = (props = null) =>
       borderRadius: scale(12)
     }),
     cancelWrap: {
-      marginTop: scale(10)
+      marginHorizontal: scale(12),
+      marginTop: scale(12)
     },
-    dismissButtonContainer: theme => ({
+    dismissButtonContainer: (theme) => ({
       alignItems: 'center',
       justifyContent: 'center',
       borderColor: theme.red600,

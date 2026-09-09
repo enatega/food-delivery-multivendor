@@ -1,115 +1,131 @@
-// GraphQL
 import { STORE_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
-
-// Hooks
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 import { useUserContext } from "@/lib/context/global/user.context";
-import { QueryResult, useQuery } from "@apollo/client";
-
-// Components
-import SpinnerComponent from "@/lib/ui/useable-components/spinner";
-
-// Interfacs
-import { IStoreEarningsResponse } from "@/lib/utils/interfaces/rider-earnings.interface";
-
-// Core
 import { useApptheme } from "@/lib/context/theme.context";
-import { useEffect, useState } from "react";
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
+import { IStoreEarningsResponse } from "@/lib/utils/interfaces/rider-earnings.interface";
+import { formatAmount } from "@/lib/utils/methods";
+import { QueryResult, useQuery } from "@apollo/client";
+import { Ionicons } from "@expo/vector-icons";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEarningsTheme } from "../../earnings/theme";
 
 export default function EarningDetailsHeader() {
-  // States
-  const [storeEarningsGrandTotal, setStoreEarningsGrandTotal] = useState({
-    earnings: 0,
-    totalDeliveries: 0,
-  });
-
-  // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId } = useUserContext();
+  const configuration = useContext(ConfigurationContext);
+  const earningsTheme = useEarningsTheme();
 
-  // Queries
-  const { loading: isRiderEarningsLoading, data: riderEarningsData } = useQuery(
+  const { loading: isStoreEarningsLoading, data: storeEarningsData } = useQuery(
     STORE_EARNINGS_GRAPH,
     {
-      variables: {
-        storeId: userId ?? "",
-      },
+      variables: { storeId: userId ?? "" },
     },
   ) as QueryResult<IStoreEarningsResponse | undefined, { storeId: string }>;
 
-  useEffect(() => {
-    if (riderEarningsData?.storeEarningsGraph?.earnings?.length) {
-      const totalEarnings =
-        riderEarningsData?.storeEarningsGraph?.earnings?.reduce(
-          (acc, curr) => acc + curr.totalEarningsSum,
-          0,
-        );
-      const totalDeliveries =
-        riderEarningsData?.storeEarningsGraph.earnings.reduce(
-          (acc, curr) => acc + curr.earningsArray.length,
-          0,
-        );
-      setStoreEarningsGrandTotal({
-        earnings: totalEarnings,
-        totalDeliveries: totalDeliveries,
-      });
-    }
-  }, []);
+  const totals = useMemo(
+    () =>
+      (storeEarningsData?.storeEarningsGraph?.earnings ?? []).reduce(
+        (summary, earning) => ({
+          earnings: summary.earnings + earning.totalEarningsSum,
+          totalDeliveries:
+            summary.totalDeliveries + earning.earningsArray.length,
+        }),
+        { earnings: 0, totalDeliveries: 0 },
+      ),
+    [storeEarningsData?.storeEarningsGraph?.earnings],
+  );
 
-  if (isRiderEarningsLoading) return <SpinnerComponent />;
+  if (isStoreEarningsLoading) return <SpinnerComponent />;
+
+  const summaryItems = [
+    {
+      icon: "wallet-outline" as const,
+      label: t("Total Earnings"),
+      value: `${configuration?.currencySymbol || "$"}${formatAmount(
+        totals.earnings,
+      )}`,
+    },
+    {
+      icon: "bag-check-outline" as const,
+      label: t("Total Deliveries"),
+      value: String(totals.totalDeliveries),
+    },
+  ];
+
   return (
-    <View
-      style={{
-        backgroundColor: appTheme.themeBackground,
-        borderColor: appTheme.borderLineColor,
-        borderWidth: 1,
-        paddingVertical: 12,
-      }}
-    >
+    <View style={{ paddingHorizontal: 16, paddingBottom: 22 }}>
       <Text
-        className="left-5 text-xl font-semibold"
-        style={{ color: appTheme.fontMainColor }}
+        style={{
+          color: earningsTheme.primaryText,
+          fontSize: 20,
+          fontWeight: "800",
+          marginBottom: 12,
+        }}
       >
-        {t("Summary").length > 15
-          ? t("Summary").substring(0, 15)
-          : t("Summary")}
+        {t("Summary")}
       </Text>
-      <View className="flex flex-row justify-between items-center p-5">
-        <View className="flex gap-2 items-center">
-          <Text className="text-lg" style={{ color: appTheme.fontMainColor }}>
-            {t("Total Earnings").length > 15
-              ? t("Total Earnings")
-              : t("Total Earnings")}
-          </Text>
-          <Text
-            className="font-semibold text-lg text-start self-start"
-            style={{ color: appTheme.fontMainColor }}
+      <LinearGradient
+        colors={[earningsTheme.surfaceRaised, earningsTheme.surfaceEnd]}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
+        style={{
+          borderRadius: 12,
+          flexDirection: "row",
+          padding: 18,
+        }}
+      >
+        {summaryItems.map((item, index) => (
+          <View
+            key={item.label}
+            style={{
+              flex: 1,
+              paddingEnd: index === 0 ? 10 : 0,
+              paddingStart: index === 0 ? 0 : 10,
+            }}
           >
-            ${Number(storeEarningsGrandTotal.earnings).toFixed(2)}
-          </Text>
-        </View>
-        <View
-          className="flex gap-2 items-center pl-3"
-          style={{
-            borderLeftWidth: 2,
-            borderLeftColor: appTheme.borderLineColor,
-          }}
-        >
-          <Text className="text-lg" style={{ color: appTheme.fontMainColor }}>
-            {t("Total Deliveries").length > 15
-              ? t("Total Deliveries")
-              : t("Total Deliveries")}
-          </Text>
-          <Text
-            className="font-semibold text-lg text-start self-start"
-            style={{ color: appTheme.fontMainColor }}
-          >
-            {storeEarningsGrandTotal.totalDeliveries}
-          </Text>
-        </View>
-      </View>
+            <View
+              style={{
+                alignItems: "center",
+                backgroundColor: earningsTheme.accentSoft,
+                borderRadius: 9,
+                height: 34,
+                justifyContent: "center",
+                marginBottom: 12,
+                width: 34,
+              }}
+            >
+              <Ionicons color={appTheme.primary} name={item.icon} size={18} />
+            </View>
+            <Text
+              numberOfLines={1}
+              style={{
+                color: earningsTheme.mutedText,
+                fontSize: 13,
+              }}
+            >
+              {item.label}
+            </Text>
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={1}
+              style={{
+                color: earningsTheme.primaryText,
+                fontSize: 22,
+                fontWeight: "800",
+                fontVariant: ["tabular-nums"],
+                marginTop: 6,
+              }}
+            >
+              {item.value}
+            </Text>
+          </View>
+        ))}
+      </LinearGradient>
     </View>
   );
 }

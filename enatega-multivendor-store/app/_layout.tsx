@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { ApolloProvider } from "@apollo/client";
 import { Slot } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useState } from "react";
 import FlashMessage from "react-native-flash-message";
@@ -25,8 +24,6 @@ import { useFonts } from "expo-font";
 
 import "../global.css";
 
-SplashScreen.preventAutoHideAsync();
-
 function ModeAwareRootLayout() {
   const { currentTheme, appTheme } = useApptheme();
   const { environment, isModeReady, mode, storeIdKey, tokenKey } =
@@ -46,12 +43,6 @@ function ModeAwareRootLayout() {
       }),
     [environment, storeIdKey, tokenKey],
   );
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
 
   useEffect(() => {
     let mounted = true;
@@ -79,32 +70,37 @@ function ModeAwareRootLayout() {
       }
       disposeApollo(client);
     };
-  }, [client, environment.GRAPHQL_URL, environment.PUBLIC_ACCESS_REQUIRED, mode]);
+  }, [
+    client,
+    environment.GRAPHQL_URL,
+    environment.PUBLIC_ACCESS_REQUIRED,
+    mode,
+  ]);
 
-  if (!isModeReady || !isTokenReady) {
-    return null;
-  }
+  const appReady = loaded && isModeReady && isTokenReady;
 
   return (
-    <ApolloProvider client={client} key={mode}>
-      <AnimatedSplashScreen>
-        <InternetProvider>
-          <AuthProvider client={client}>
-            <ConfigurationProvider>
-              <StatusBar
-                style={currentTheme ?? "dark"}
-                backgroundColor={appTheme.themeBackground ?? ""}
-              />
-              <UserProvider>
-                <UnavailableStatus />
-                <Slot />
-              </UserProvider>
-            </ConfigurationProvider>
-          </AuthProvider>
-        </InternetProvider>
-      </AnimatedSplashScreen>
-      <FlashMessage position="center" />
-    </ApolloProvider>
+    <AnimatedSplashScreen ready={appReady}>
+      {appReady ? (
+        <ApolloProvider client={client} key={mode}>
+          <InternetProvider>
+            <AuthProvider client={client}>
+              <ConfigurationProvider>
+                <StatusBar
+                  style={currentTheme ?? "dark"}
+                  backgroundColor={appTheme.themeBackground ?? ""}
+                />
+                <UserProvider>
+                  <UnavailableStatus />
+                  <Slot />
+                </UserProvider>
+              </ConfigurationProvider>
+            </AuthProvider>
+          </InternetProvider>
+          <FlashMessage position="center" />
+        </ApolloProvider>
+      ) : null}
+    </AnimatedSplashScreen>
   );
 }
 

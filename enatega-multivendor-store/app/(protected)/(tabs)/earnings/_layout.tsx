@@ -3,28 +3,35 @@ import { useApptheme } from "@/lib/context/theme.context";
 import EarningBottomBar from "@/lib/ui/screen-components/earnings/view/bottom-bar";
 import { Stack, usePathname } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { useEarningsTheme } from "@/lib/ui/screen-components/earnings/theme";
 
 export default function StackLayout() {
   // Hooks
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
+  const earningsTheme = useEarningsTheme();
   const { modalVisible, setModalVisible } = useUserContext();
   const pathname = usePathname();
   return (
     <>
       <Stack
         screenOptions={{
-          headerTitle:
-            pathname.startsWith("/earnings/earnings-detail") ?
-              t("Earnings Summary")
-            : pathname.startsWith("/earnings/earnings-order-details") ?
-              t("Deliveries")
-            : t("Earnings"),
+          headerTitle: pathname.startsWith("/earnings/earnings-detail")
+            ? t("Earnings Summary")
+            : pathname.startsWith("/earnings/earnings-order-details")
+              ? t("Deliveries")
+              : t("Earnings"),
           headerBackTitle: t("Earnings"),
           headerTitleAlign: "center",
           headerTintColor: appTheme.fontMainColor,
-          headerTitleStyle: { color: appTheme.fontMainColor },
-          headerStyle: { backgroundColor: appTheme.themeBackground },
+          headerTitleStyle: {
+            color: earningsTheme.primaryText,
+            fontSize: 20,
+            fontWeight: "700",
+          },
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: earningsTheme.canvas },
+          contentStyle: { backgroundColor: earningsTheme.canvas },
         }}
       >
         <Stack.Screen
@@ -38,7 +45,7 @@ export default function StackLayout() {
           name="(routes)"
           options={{
             headerShown: true,
-            headerTitle: t("Earnings Order Details"),
+            headerTitle: t("Earnings Summary"),
             headerBackTitle: t("Earnings"),
           }}
         />

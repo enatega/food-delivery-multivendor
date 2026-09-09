@@ -1,7 +1,6 @@
 // Utils
 import { useApptheme } from "@/lib/context/theme.context";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
-import { Colors } from "@/lib/utils/constants";
 
 // Interfaces
 import {
@@ -19,6 +18,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 // React Native Calendars
 import { Calendar, DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
+import { useEarningsTheme } from "../../earnings/theme";
 
 export default function EarningDetailsDateFilter({
   dateFilter,
@@ -32,6 +32,7 @@ export default function EarningDetailsDateFilter({
   // Hooks
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
+  const earningsTheme = useEarningsTheme();
 
   // Handlers
   const handleDayPress = (day: DateData) => {
@@ -65,11 +66,11 @@ export default function EarningDetailsDateFilter({
       markedDates[dateFilter.startDate] = {
         startingDay: true,
         marked: true,
-        color: Colors.light.primary,
-        dotColor: Colors.light.primary,
-        selectedColor: Colors.light.primary,
-        selectedTextColor: Colors.light.primary,
-        textColor: Colors.light.primary,
+        color: earningsTheme.accent,
+        dotColor: earningsTheme.accent,
+        selectedColor: earningsTheme.accent,
+        selectedTextColor: earningsTheme.canvas,
+        textColor: earningsTheme.canvas,
       };
     }
 
@@ -77,11 +78,11 @@ export default function EarningDetailsDateFilter({
       markedDates[dateFilter.endDate] = {
         endingDay: true,
         marked: true,
-        color: Colors.light.primary,
-        dotColor: Colors.light.primary,
-        selectedColor: Colors.light.primary,
-        selectedTextColor: Colors.light.primary,
-        textColor: Colors.light.primary,
+        color: earningsTheme.accent,
+        dotColor: earningsTheme.accent,
+        selectedColor: earningsTheme.accent,
+        selectedTextColor: earningsTheme.canvas,
+        textColor: earningsTheme.canvas,
       };
 
       // Mark the dates in between
@@ -92,7 +93,10 @@ export default function EarningDetailsDateFilter({
         currentDate.setDate(currentDate.getDate() + 1);
         const dateString = currentDate.toISOString().split("T")[0];
         if (dateString !== dateFilter.endDate) {
-          markedDates[dateString] = {};
+          markedDates[dateString] = {
+            color: earningsTheme.accentSoft,
+            textColor: earningsTheme.primaryText,
+          };
         }
       }
     }
@@ -102,17 +106,44 @@ export default function EarningDetailsDateFilter({
 
   const datesBeGetter = getMarkedDates();
   return (
-    <View className="p-4">
-      <View className="flex flex-row items-center justify-between w-full px-2">
+    <View style={{ paddingHorizontal: 16, paddingBottom: 18, paddingTop: 12 }}>
+      <View className="flex flex-row items-center justify-between w-full">
         <TouchableOpacity
           onPress={() => setIsDateFilterVisible((prev) => !prev)}
-          className="flex flex-row gap-2 items-center"
+          accessibilityRole="button"
+          accessibilityState={{ expanded: isDateFilterVisible }}
         >
-          <View className="flex flex-row items-center gap-2">
-            <Ionicons name="filter" color={Colors.light.primary} size={25} />
-            <Text style={{ color: appTheme.fontMainColor }}>
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: earningsTheme.accentSoft,
+              borderRadius: 10,
+              flexDirection: "row",
+              minHeight: 42,
+              paddingHorizontal: 12,
+            }}
+          >
+            <Ionicons
+              name="calendar-outline"
+              color={earningsTheme.accent}
+              size={20}
+            />
+            <Text
+              style={{
+                color: earningsTheme.primaryText,
+                fontSize: 14,
+                fontWeight: "700",
+                marginStart: 8,
+              }}
+            >
               {t("Date Filter")}
             </Text>
+            <Ionicons
+              name={isDateFilterVisible ? "chevron-up" : "chevron-down"}
+              color={earningsTheme.mutedText}
+              size={16}
+              style={{ marginStart: 8 }}
+            />
           </View>
         </TouchableOpacity>
         {(dateFilter.startDate || dateFilter.endDate) && (
@@ -125,9 +156,13 @@ export default function EarningDetailsDateFilter({
               });
             }}
           >
-            <View className="flex flex-row items-center gap-2">
-              <Ionicons name="remove-sharp" color={"red"} size={25} />
-              <Text style={{ color: appTheme.fontSecondColor }}>
+            <View className="flex flex-row items-center gap-1">
+              <Ionicons
+                name="close-circle-outline"
+                color={appTheme.error}
+                size={19}
+              />
+              <Text style={{ color: earningsTheme.mutedText, fontSize: 13 }}>
                 {t("Clear Filters")}
               </Text>
             </View>
@@ -135,12 +170,31 @@ export default function EarningDetailsDateFilter({
         )}
       </View>
       {isDateFilterVisible && (
-        <View>
+        <View
+          style={{
+            backgroundColor: earningsTheme.surface,
+            borderRadius: 14,
+            marginTop: 12,
+            overflow: "hidden",
+            padding: 10,
+          }}
+        >
           <Calendar
             initialDate={""}
             onDayPress={(day: DateData) => handleDayPress(day)}
             markedDates={{
               ...datesBeGetter,
+            }}
+            markingType="period"
+            theme={{
+              arrowColor: earningsTheme.accent,
+              backgroundColor: earningsTheme.surface,
+              calendarBackground: earningsTheme.surface,
+              dayTextColor: earningsTheme.primaryText,
+              monthTextColor: earningsTheme.primaryText,
+              textDisabledColor: earningsTheme.divider,
+              textSectionTitleColor: earningsTheme.mutedText,
+              todayTextColor: earningsTheme.accent,
             }}
           />
           <CustomContinueButton

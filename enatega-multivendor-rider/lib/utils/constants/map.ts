@@ -24,7 +24,7 @@ export const CustomMapStyles = (appTheme: AppTheme) => {
       elementType: "geometry",
       stylers: [
         {
-          color: appTheme.lowOpacityPrimaryColor,
+          color: appTheme.mapRoad,
         },
       ],
     },
@@ -33,7 +33,7 @@ export const CustomMapStyles = (appTheme: AppTheme) => {
       elementType: "labels.text.fill",
       stylers: [
         {
-          color: appTheme.black,
+          color: appTheme.mapLabel,
         },
       ],
     },
@@ -42,7 +42,7 @@ export const CustomMapStyles = (appTheme: AppTheme) => {
       elementType: "geometry",
       stylers: [
         {
-          color: appTheme.lowOpacityPrimaryColor,
+          color: appTheme.mapRoad,
         },
       ],
     },
@@ -51,7 +51,7 @@ export const CustomMapStyles = (appTheme: AppTheme) => {
       elementType: "geometry.stroke",
       stylers: [
         {
-          color: appTheme.fontMainColor,
+          color: appTheme.mapBackground,
         },
       ],
     },
@@ -60,7 +60,7 @@ export const CustomMapStyles = (appTheme: AppTheme) => {
       elementType: "geometry",
       stylers: [
         {
-          color: "#6ab8f7",
+          color: appTheme.mapWater,
         },
       ],
     },
@@ -69,7 +69,7 @@ export const CustomMapStyles = (appTheme: AppTheme) => {
       elementType: "labels.text.fill",
       stylers: [
         {
-          color: "#515c6d",
+          color: appTheme.mapLabel,
         },
       ],
     },

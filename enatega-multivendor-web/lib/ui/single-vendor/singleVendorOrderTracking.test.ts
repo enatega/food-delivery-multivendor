@@ -32,6 +32,7 @@ describe("single-vendor order tracking data", () => {
       }),
     ).toEqual({
       subtotal: 100,
+      dealDiscount: 0,
       deliveryCharge: 8,
       tax: 4,
       tip: 3,
@@ -43,7 +44,7 @@ describe("single-vendor order tracking data", () => {
     });
   });
 
-  it("falls back to discounted item prices when summary totals are absent", () => {
+  it("derives deal savings from item prices when summary totals are absent", () => {
     expect(
       getSingleVendorTrackingAmounts({
         items: [
@@ -54,7 +55,34 @@ describe("single-vendor order tracking data", () => {
         ],
         discountAmount: 3,
       }),
-    ).toMatchObject({ subtotal: 18, discount: 3 });
+    ).toMatchObject({ subtotal: 24, dealDiscount: 6, discount: 3 });
+  });
+
+  it("falls back to the regular item price when discounted is the zero sentinel", () => {
+    expect(
+      getSingleVendorTrackingAmounts({
+        items: [
+          {
+            quantity: 2,
+            variation: { price: 12, discounted: 0 },
+          },
+        ],
+      }),
+    ).toMatchObject({ subtotal: 24 });
+  });
+
+  it("shows the original subtotal and deal savings separately", () => {
+    expect(
+      getSingleVendorTrackingAmounts({
+        itemsSubTotal: 8.45,
+        items: [
+          {
+            quantity: 1,
+            variation: { price: 9.49, discounted: 8.45 },
+          },
+        ],
+      }),
+    ).toMatchObject({ subtotal: 9.49, dealDiscount: 1.04 });
   });
 
   it("merges summary items without losing live raw-order locations", () => {
@@ -91,5 +119,67 @@ describe("single-vendor order tracking data", () => {
       quantity: 2,
     });
     expect(normalized.orderStatus).toBe("ACCEPTED");
+  });
+
+  it("ignores a legacy catalog discount when the order was charged regular price", () => {
+    const normalized = normalizeSingleVendorTrackingOrder(
+      {
+        _id: "order-id",
+        orderId: "SV-2",
+        items: [],
+      },
+      {
+        itemsSubTotal: 8.99,
+        items: [
+          {
+            foodTitle: "Classic Angus Burger",
+            foodQuantity: 1,
+            variation: {
+              title: "Single",
+              price: 8.99,
+              discounted: 7.99,
+            },
+          },
+        ],
+      },
+      "PENDING",
+      null,
+    );
+
+    expect(normalized.items[0].variation).toMatchObject({
+      price: 8.99,
+      discounted: 0,
+    });
+  });
+
+  it("recovers the charged deal price for a legacy single-item order", () => {
+    const normalized = normalizeSingleVendorTrackingOrder(
+      {
+        _id: "order-id",
+        orderId: "SV-3",
+        items: [],
+      },
+      {
+        itemsSubTotal: 8.45,
+        items: [
+          {
+            foodTitle: "Smash Chili Burger",
+            foodQuantity: 1,
+            variation: {
+              title: "Regular",
+              price: 9.49,
+              discounted: 0,
+            },
+          },
+        ],
+      },
+      "PENDING",
+      null,
+    );
+
+    expect(normalized.items[0].variation).toMatchObject({
+      price: 9.49,
+      discounted: 8.45,
+    });
   });
 });

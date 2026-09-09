@@ -9,13 +9,17 @@ import {
 import { Tabs, usePathname } from "expo-router";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 const RootLayout = () => {
   const [tabKey, setTabKey] = useState(0);
   const pathName = usePathname();
   const { t } = useTranslation();
-  const { appTheme } = useApptheme();
+  const { appTheme, currentTheme } = useApptheme();
+  const tabBarBorderColor =
+    currentTheme === "dark"
+      ? "rgba(214, 224, 235, 0.10)"
+      : "rgba(31, 41, 55, 0.12)";
 
   useEffect(() => {
     setTabKey((prev) => prev + 1);
@@ -32,9 +36,10 @@ const RootLayout = () => {
           ios: {
             position: "absolute",
             backgroundColor: appTheme.tabNaviatorBackground,
+            borderTopColor: tabBarBorderColor,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
-            borderTopWidth: 0.5,
+            borderTopWidth: StyleSheet.hairlineWidth,
             shadowColor: appTheme.black,
             shadowOffset: { width: 0, height: -5 },
             shadowOpacity: 0.1,
@@ -44,10 +49,11 @@ const RootLayout = () => {
           android: {
             position: "absolute",
             backgroundColor: appTheme.tabNaviatorBackground,
+            borderTopColor: tabBarBorderColor,
             display: pathName.startsWith("/wallet/success") ? "none" : "flex",
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
-            borderTopWidth: 0.5,
+            borderTopWidth: StyleSheet.hairlineWidth,
             elevation: 5,
             shadowOffset: { width: 0, height: -5 },
             shadowOpacity: 0.1,
@@ -62,11 +68,7 @@ const RootLayout = () => {
           href: "/(protected)/(tabs)/home/orders",
           title: t("Home"),
           tabBarIcon: ({ color }) => (
-            <HomeIcon
-              color={color}
-              width={25}
-              height={25}
-            />
+            <HomeIcon color={color} width={25} height={25} />
           ),
         }}
       />
@@ -75,11 +77,7 @@ const RootLayout = () => {
         options={{
           title: t("Wallet"),
           tabBarIcon: ({ color }) => (
-            <WalletIcon
-              color={color}
-              width={25}
-              height={25}
-            />
+            <WalletIcon color={color} width={25} height={25} />
           ),
         }}
       />
@@ -88,11 +86,7 @@ const RootLayout = () => {
         options={{
           title: t("Earnings"),
           tabBarIcon: ({ color }) => (
-            <CurrencyIcon
-              color={color}
-              width={25}
-              height={25}
-            />
+            <CurrencyIcon color={color} width={25} height={25} />
           ),
         }}
       />
@@ -106,11 +100,7 @@ const RootLayout = () => {
           headerTitleStyle: { color: appTheme.fontMainColor },
           title: t("Profile"),
           tabBarIcon: ({ color }) => (
-            <PersonIcon
-              color={color}
-              width={25}
-              height={25}
-            />
+            <PersonIcon color={color} width={25} height={25} />
           ),
         }}
       />

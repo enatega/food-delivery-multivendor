@@ -20,6 +20,7 @@ import {
   Image,
   Linking,
   Platform,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -58,6 +59,10 @@ import {
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
+import {
+  useChatNotifications,
+  useUnreadChat,
+} from "@/lib/context/global/chat-notification.context";
 import AccordionItem from "@/lib/ui/useable-components/accordian";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import { ChatIcon, HomeIcon } from "@/lib/ui/useable-components/svg";
@@ -75,6 +80,7 @@ import {
 const { height } = Dimensions.get("window");
 const MAX_ROUTE_RETRIES = 3;
 const RETRY_BASE_DELAY_MS = 500;
+const MAP_EDGE_PADDING = { top: 72, right: 48, bottom: 112, left: 48 };
 
 // Helper function to check if coordinates are valid
 // Added to prevent array bounds crashes when using invalid coordinates
@@ -95,6 +101,7 @@ const isValidCoordinate = (
 export default function OrderDetailScreen() {
   // Ref
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const mapRef = useRef<MapView>(null);
   const router = useRouter();
 
   // Context
@@ -121,6 +128,8 @@ export default function OrderDetailScreen() {
     locationPin,
   } = useOrderDetail();
   const { userId } = useUserContext();
+  const { markChatRead } = useChatNotifications();
+  const unreadChat = useUnreadChat(order?._id ?? "");
   const { mutateAssignOrder, mutateOrderStatus, loadingAssignOrder, loadingOrderStatus } =
     useDetails(order);
 
@@ -135,6 +144,32 @@ export default function OrderDetailScreen() {
   const [orderId, setOrderId] = useState("");
   const [retryCount, setRetryCount] = useState(0);
   const retryCountRef = useRef(0);
+
+  const activeRouteCoordinates = useMemo<LatLng[]>(() => {
+    const destination = ["PICKED", "DELIVERED"].includes(
+      order?.orderStatus ?? "",
+    )
+      ? deliveryAddressPin?.location
+      : restaurantAddressPin?.location;
+    return [locationPin?.location, destination].filter(isValidCoordinate);
+  }, [
+    deliveryAddressPin?.location,
+    locationPin?.location,
+    order?.orderStatus,
+    restaurantAddressPin?.location,
+  ]);
+
+  const fitMapToCoordinates = useCallback(
+    (coordinates: LatLng[], animated = true) => {
+      const validCoordinates = coordinates.filter(isValidCoordinate);
+      if (validCoordinates.length < 2) return;
+      mapRef.current?.fitToCoordinates(validCoordinates, {
+        edgePadding: MAP_EDGE_PADDING,
+        animated,
+      });
+    },
+    [],
+  );
 
   // Ref
   const latitude = useRef(
@@ -211,15 +246,23 @@ export default function OrderDetailScreen() {
   }, []);
 
   const handleRouteReady = useCallback(
-    (result: { distance?: number; duration?: number }) => {
+    (result: {
+      distance?: number;
+      duration?: number;
+      coordinates?: LatLng[];
+    }) => {
       if (result?.distance) {
         setDistance(result.distance);
         setDuration(result.duration ?? null);
       }
 
+      if (result.coordinates?.length) {
+        fitMapToCoordinates(result.coordinates);
+      }
+
       resetRouteRetry();
     },
-    [resetRouteRetry, setDistance, setDuration],
+    [fitMapToCoordinates, resetRouteRetry, setDistance, setDuration],
   );
 
   const handleRouteError = useCallback(
@@ -359,6 +402,10 @@ export default function OrderDetailScreen() {
     };
   }, [latitude, longitude]);
 
+  useEffect(() => {
+    fitMapToCoordinates(activeRouteCoordinates);
+  }, [activeRouteCoordinates, fitMapToCoordinates]);
+
   if (!order) return;
 
   const hasValidRiderLocation = isValidCoordinate(locationPin?.location);
@@ -391,21 +438,33 @@ export default function OrderDetailScreen() {
               alignItems: "center",
               justifyContent: "center",
 
-              width: 38,
-              backgroundColor: appTheme.themeBackground,
-              opacity: 0.75,
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: appTheme.mapControlBackground,
+              borderColor: appTheme.borderLineColor,
+              borderWidth: StyleSheet.hairlineWidth,
               position: "absolute",
-              top: 60,
-              right: 12,
+              top: 16,
+              end: 12,
               zIndex: 1,
+              elevation: 3,
+              shadowColor: appTheme.black,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.18,
+              shadowRadius: 4,
             }}
           >
-            <TouchableOpacity onPress={openMaps}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t("Open in Maps")}
+              className="h-12 w-12 items-center justify-center"
+              onPress={openMaps}
+            >
               <Icons
                 name="navigation"
-                size={30}
-                color="#1f2937"
-                className={appTheme.fontMainColor}
+                size={26}
+                color={appTheme.fontMainColor}
               />
             </TouchableOpacity>
           </View>
@@ -415,6 +474,7 @@ export default function OrderDetailScreen() {
             </View>
           ) : canRenderMap ? (
             <MapView
+              ref={mapRef}
               style={{
                 width: "100%",
                 height: "100%",
@@ -422,9 +482,15 @@ export default function OrderDetailScreen() {
               }}
               customMapStyle={customMapStyles}
               showsUserLocation
+              showsCompass
+              showsMyLocationButton
               zoomEnabled={true}
               zoomControlEnabled={true}
               rotateEnabled={false}
+              mapPadding={{ top: 64, right: 16, bottom: 96, left: 16 }}
+              onMapReady={() =>
+                fitMapToCoordinates(activeRouteCoordinates, false)
+              }
               initialRegion={{
                 latitude:
                   (hasValidRiderLocation && locationPin?.location?.latitude) ||
@@ -512,8 +578,8 @@ export default function OrderDetailScreen() {
                     origin={locationPin?.location}
                     destination={restaurantAddressPin?.location}
                     apikey={GOOGLE_MAPS_KEY}
-                    strokeWidth={2}
-                    strokeColor={"#f95509"}
+                    strokeWidth={5}
+                    strokeColor={appTheme.mapRoute}
                     precision="low"
                     resetOnChange={false} // Prevents unnecessary recalculations
                     onReady={handleRouteReady}
@@ -533,8 +599,8 @@ export default function OrderDetailScreen() {
                     origin={locationPin?.location}
                     destination={deliveryAddressPin?.location}
                     apikey={GOOGLE_MAPS_KEY}
-                    strokeWidth={2}
-                    strokeColor={"#f95509"}
+                    strokeWidth={5}
+                    strokeColor={appTheme.mapRoute}
                     precision="low"
                     resetOnChange={false}
                     optimizeWaypoints={true}
@@ -554,9 +620,9 @@ export default function OrderDetailScreen() {
                     origin={restaurantAddressPin?.location}
                     destination={deliveryAddressPin?.location}
                     apikey={GOOGLE_MAPS_KEY ?? ""}
-                    strokeWidth={2}
+                    strokeWidth={5}
                     precision="low"
-                    strokeColor={"#f95509"}
+                    strokeColor={appTheme.mapRoute}
                     resetOnChange={false}
                     optimizeWaypoints={true}
                     onReady={handleRouteReady}
@@ -709,7 +775,8 @@ export default function OrderDetailScreen() {
                 <TouchableOpacity
                   className="h-14 rounded-3xl py-3 w-full mt-4"
                   style={{ backgroundColor: appTheme.themeBackground, borderWidth: 1, borderColor: appTheme.borderLineColor }}
-                  onPress={() =>
+                  onPress={() => {
+                    if (order?._id) markChatRead(order._id);
                     router.push({
                       pathname: "/chat",
                       params: {
@@ -718,14 +785,42 @@ export default function OrderDetailScreen() {
                         id: order?._id,
                       },
                     })
-                  }
+                  }}
                 >
                   <View className="flex-row items-center justify-center gap-x-3">
-                    <ChatIcon
-                      width={24}
-                      height={24}
-                      color={appTheme.fontMainColor}
-                    />
+                    <View>
+                      <ChatIcon
+                        width={24}
+                        height={24}
+                        color={appTheme.fontMainColor}
+                      />
+                      {!!unreadChat?.count && (
+                        <View
+                          style={{
+                            position: "absolute",
+                            top: -8,
+                            end: -12,
+                            minWidth: 18,
+                            height: 18,
+                            paddingHorizontal: 4,
+                            borderRadius: 9,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: appTheme.orderUncomplete,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: appTheme.white,
+                              fontSize: 10,
+                              fontWeight: "700",
+                            }}
+                          >
+                            {unreadChat.count > 99 ? "99+" : unreadChat.count}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                     <Text
                       className="text-center text-lg font-medium"
                       style={{ color: appTheme.fontMainColor }}

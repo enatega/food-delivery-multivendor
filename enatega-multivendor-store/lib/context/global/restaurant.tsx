@@ -17,6 +17,7 @@ import React, {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
+import { AppState } from "react-native";
 
 // API
 import {
@@ -230,6 +231,28 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
       cleanupSubscription();
     };
   }, [cleanupSubscription, clearRetryTimer, subscribeToMoreOrders]);
+
+  useEffect(() => {
+    let previousState = AppState.currentState;
+    const appStateSubscription = AppState.addEventListener(
+      "change",
+      (nextState) => {
+        const returnedToForeground =
+          (previousState === "background" || previousState === "inactive") &&
+          nextState === "active";
+        previousState = nextState;
+
+        if (!returnedToForeground) return;
+
+        // Native apps can miss subscription events while suspended. Recreate
+        // the subscription and reconcile with the server when the app resumes.
+        void subscribeToMoreOrders(true);
+        void refetch().catch(() => {});
+      },
+    );
+
+    return () => appStateSubscription.remove();
+  }, [refetch, subscribeToMoreOrders]);
 
   const value = useMemo<IRestaurantContext>(
     () => ({

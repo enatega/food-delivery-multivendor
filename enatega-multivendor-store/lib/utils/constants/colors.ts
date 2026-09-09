@@ -68,7 +68,7 @@ export const Colors = {
     white: "#E0E0E0", // Light gray instead of pure white
     black: "#000",
     secondaryTextColor: "#4B5563",
-    lowOpacityPrimaryColor: "gray",
+    lowOpacityPrimaryColor: "rgba(165, 198, 22, 0.12)",
     mainTextColor: "#f2f2f2",
     switchButtonColor: "#4F46E5",
     sidebarIconBackground: "#E5E7EB",

@@ -1,24 +1,51 @@
-// Hooks
-import { useApptheme } from "@/lib/context/theme.context";
-
-// Moti
+import { useEarningsTheme } from "@/lib/ui/screen-components/earnings/theme";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 
-export default function EarningStackSkeleton() {
-  // Hooks
-  const { appTheme, currentTheme } = useApptheme();
+interface EarningStackSkeletonProps {
+  isFirst?: boolean;
+  isLast?: boolean;
+}
+
+export default function EarningStackSkeleton({
+  isFirst = false,
+  isLast = false,
+}: EarningStackSkeletonProps) {
+  const earningsTheme = useEarningsTheme();
+  const skeletonProps = {
+    backgroundColor: earningsTheme.skeletonBase,
+    colors: [
+      earningsTheme.skeletonBase,
+      earningsTheme.skeletonHighlight,
+      earningsTheme.skeletonBase,
+    ],
+  };
+
   return (
     <MotiView
-      className="flex flex-row justify-between items-center p-4 w-[95%] mx-auto my-2  border-b-2 w"
-      style={{ borderBottomColor: appTheme.borderLineColor }}
+      style={{
+        alignItems: "center",
+        backgroundColor: earningsTheme.surface,
+        borderBottomColor: earningsTheme.divider,
+        borderBottomLeftRadius: isLast ? 14 : 0,
+        borderBottomRightRadius: isLast ? 14 : 0,
+        borderBottomWidth: isLast ? 0 : 1,
+        borderTopLeftRadius: isFirst ? 14 : 0,
+        borderTopRightRadius: isFirst ? 14 : 0,
+        flexDirection: "row",
+        minHeight: 76,
+        paddingHorizontal: 16,
+        paddingVertical: 13,
+      }}
     >
-      <MotiView className="flex flex-row gap-2 items-center flex-2">
-        <Skeleton width={70} height={30} colorMode={currentTheme ?? "light"} />
-        <Skeleton width={70} height={30} colorMode={currentTheme ?? "light"} />
+      <Skeleton height={42} radius={10} width={42} {...skeletonProps} />
+      <MotiView style={{ flex: 1, gap: 8, marginStart: 10 }}>
+        <Skeleton height={15} radius={5} width={122} {...skeletonProps} />
+        <Skeleton height={12} radius={4} width={84} {...skeletonProps} />
       </MotiView>
-      <MotiView>
-        <Skeleton width={40} height={30} colorMode={currentTheme ?? "light"} />
+      <MotiView style={{ alignItems: "flex-end", gap: 8 }}>
+        <Skeleton height={15} radius={5} width={68} {...skeletonProps} />
+        <Skeleton height={10} radius={4} width={18} {...skeletonProps} />
       </MotiView>
     </MotiView>
   );
