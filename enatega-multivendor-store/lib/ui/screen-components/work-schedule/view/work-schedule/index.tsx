@@ -39,8 +39,13 @@ export default function WorkScheduleStack({
   isTogglingDay: number;
 }) {
   // Hooks
-  const { appTheme } = useApptheme();
+  const { appTheme, currentTheme } = useApptheme();
   const { t } = useTranslation();
+
+  // Ensure weekday labels use high-contrast light text in dark mode
+  const isDark = currentTheme === "dark";
+  const weekdayTextColor = isDark ? "#FFFFFF" : appTheme.fontMainColor;
+
   return (
     <TouchableOpacity
       onPress={() => setDropdown(null)}
@@ -54,7 +59,7 @@ export default function WorkScheduleStack({
       <View className="flex-row justify-between items-center">
         <Text
           className="text-lg font-bold"
-          style={{ color: appTheme.fontMainColor }}
+          style={{ color: weekdayTextColor }}
         >
           {t(item.day)}
         </Text>
