@@ -52,6 +52,7 @@ const DrawerMain = ({
         headerLeft: () => {
           return (
             <TouchableOpacity
+              testID="rider.drawer.toggle"
               onPress={() => {
                 navigation.dispatch(DrawerActions.toggleDrawer());
               }}

@@ -46,6 +46,7 @@ export const OrderHeader = ({
           {t("Order ID")}
         </Text>
         <Text
+          testID={`rider.order.number.${orderId}`}
           selectable
           style={[styles.orderId, { color: appTheme.fontMainColor }]}
         >
@@ -59,7 +60,10 @@ export const OrderHeader = ({
           { backgroundColor: palette.backgroundColor },
         ]}
       >
-        <Text style={[styles.statusText, { color: palette.color }]}>
+        <Text
+          testID={`rider.order.status.${orderId}`}
+          style={[styles.statusText, { color: palette.color }]}
+        >
           {t(orderStatus)}
         </Text>
       </View>

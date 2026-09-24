@@ -95,6 +95,10 @@ const formatClockTime = (value) => {
   return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
 }
 
+// Only the dedicated QA variant (com.enatega.multivendor.qa) renders the
+// automation hooks below; every shipping variant is unaffected.
+const IS_QA_BUILD = process.env.EXPO_PUBLIC_APP_ENV === 'qa-production'
+
 const getStatusMessage = (order, eta, riderLocation, now) => {
   switch (order?.orderStatus) {
     case ORDER_STATUS_ENUM.PENDING:
@@ -429,6 +433,17 @@ function OrderDetail(props) {
           <TextDefault testID='customer.order.status' H4 bold textColor={currentTheme.colors.textPrimary} style={styles(currentTheme).statusHeading}>
             {getStatusMessage(order, eta, riderLocation, now)}
           </TextDefault>
+          {/* QA hook, rendered only in the `qa-production` build. The heading
+              above is customer-facing prose, so automation cannot read a status
+              off it without coupling to English copy. This exposes the raw
+              orderStatus enum instead. It is deliberately rendered (not zero
+              sized or transparent) so it reaches the accessibility tree that
+              Maestro reads. */}
+          {IS_QA_BUILD && (
+            <TextDefault testID='customer.order.status-code' small textColor={currentTheme.colors.textSecondary}>
+              {order?.orderStatus}
+            </TextDefault>
+          )}
           {![ORDER_STATUS_ENUM.PENDING, ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.COMPLETED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order?.orderStatus) && (
             <View style={styles(currentTheme).estimateRow}>
               <TextDefault textColor={currentTheme.colors.textSecondary}>{t('estimatedDeliveryTime')}</TextDefault>

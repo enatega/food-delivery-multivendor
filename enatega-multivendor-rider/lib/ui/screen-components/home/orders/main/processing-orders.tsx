@@ -117,6 +117,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
 
   return (
     <View
+      testID="rider.orders.processing.screen"
       className="pt-14 flex-1 pb-16"
       style={[style.container, { backgroundColor: appTheme.screenBackground }]}
     >
