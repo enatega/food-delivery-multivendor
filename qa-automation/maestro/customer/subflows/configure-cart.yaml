@@ -30,10 +30,12 @@ appId: ${APP_ID}
 - launchApp:
     appId: ${APP_ID}
     clearState: false
+# A release build is back in a few seconds; a dev-client build reconnects to
+# Metro and re-evaluates the bundle first, which took ~50s on a loaded machine.
 - extendedWaitUntil:
     visible:
       id: customer.header.cart
-    timeout: 30000
+    timeout: 120000
 # The cart count is refetched from the server after relaunch, and the header cart
 # button deliberately no-ops (flashing "cart is empty") while cartCount is still
 # 0. Retry the tap until the cart screen actually opens rather than assuming the

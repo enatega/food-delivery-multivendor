@@ -1,0 +1,112 @@
+appId: ${APP_ID}
+name: CM-P1-027 Logout empties the cart and the next session does not inherit it
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# UserContext.logout() calls clearCart(), which does more than blank the React
+# state: it removes the persisted `cartItems` and `restaurant` entries and drops
+# the coupon and the special instructions. Every one of those is a leak if it
+# survives, because the device is then handed to a different customer holding
+# the previous customer's order — and on this app the cart is what the checkout
+# screen prices, so an inherited cart can be paid for.
+#
+# CM-P1-016 proves the SESSION is cleared. This proves the CART is, which is a
+# different storage key and a different failure. Nothing here places an order.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+# Establish that there really is something to lose before logging out. Without
+# this, an app that never built a cart would pass the assertions below.
+- assertVisible:
+    id: "customer\\.cart\\.item\\.${PRODUCT_ID}"
+- assertVisible:
+    id: customer.cart.total
+- assertVisible:
+    id: customer.cart.checkout
+- takeScreenshot: cart-before-logout
+# --- Log out ----------------------------------------------------------------
+# The cart screen is pushed over the tab bar, so the Profile tab is unreachable
+# from here. Restarting without clearing state is the idiom the other flows use
+# to get back to the tab root with the cart intact.
+- runFlow: ../../subflows/return-to-tab-root.yaml
+- runFlow: ../../subflows/open-profile.yaml
+- tapOn:
+    id: customer.profile.account
+- extendedWaitUntil:
+    visible:
+      id: customer.account.screen
+    timeout: 30000
+# Logout sits at the bottom of a long scrolling Account screen, below Settings
+# and Legal, so it is off-screen on first render and Maestro's `tapOn` does not
+# scroll to find it. Scroll it into view first. (CM-P1-016 taps it directly and
+# fails here for exactly this reason on an iPhone 17 Pro.)
+- scrollUntilVisible:
+    element:
+      id: customer.account.logout
+    direction: DOWN
+    timeout: 30000
+    centerElement: false
+- tapOn:
+    id: customer.account.logout
+- extendedWaitUntil:
+    visible:
+      id: customer.logout.modal
+    timeout: 15000
+- tapOn:
+    id: customer.logout.confirm
+# logout() clears the token and the auth-gated navigator remounts to guest
+# Discovery, so the tab bar coming back is the signal that logout completed.
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+# --- The cart must be gone --------------------------------------------------
+# HeaderIcons always renders the cart control, and navigateCart deliberately
+# no-ops (flashing "cart is empty") while cartCount is 0. An emptied cart is
+# therefore proved by the cart screen NOT opening — the same assertion
+# CM-P2-001 uses after the replace prompt is accepted.
+- tapOn:
+    id: customer.header.cart
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: customer.cart.screen
+- assertNotVisible:
+    id: "customer\\.cart\\.item\\.${PRODUCT_ID}"
+- takeScreenshot: cart-cleared-by-logout
+# --- And it must stay gone across a restart ---------------------------------
+# clearCart removes the persisted keys rather than only the in-memory cart, so
+# a restart that rehydrates storage must not bring the line back. This is the
+# assertion that catches "cleared the state, forgot the storage".
+- stopApp:
+    appId: ${APP_ID}
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 120000
+- tapOn:
+    id: customer.header.cart
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: customer.cart.screen
+- takeScreenshot: cart-still-cleared-after-restart
+# --- Signing back in must not resurrect it ----------------------------------
+# The cart count is refetched from the server after a sign-in, so a server-side
+# cart that was never cleared would reappear here and nowhere earlier.
+- runFlow: ../../subflows/login.yaml
+- tapOn:
+    id: customer.header.cart
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: customer.cart.screen
+- assertNotVisible:
+    id: "customer\\.cart\\.item\\.${PRODUCT_ID}"
+- takeScreenshot: cart-empty-for-next-session

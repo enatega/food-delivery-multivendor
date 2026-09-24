@@ -11,16 +11,45 @@ appId: ${APP_ID}
 - tapOn:
     id: customer.auth.email
 - inputText: invalid-email
-- hideKeyboard
+# Dismiss with the return key, not just hideKeyboard. Cloud devices report
+# "Couldn't hide the keyboard", and a keyboard left up covers the submit control
+# below the field, so the tap lands on the keyboard and the screen never
+# advances. This input defines no onSubmitEditing, so Enter only blurs.
+# hideKeyboard stays as a fallback, optional so "no keyboard" is not a failure.
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+# The dismissal animates this screen's KeyboardAvoidingView, and a tap issued
+# mid-animation resolves the control's position before it settles: the step
+# reports success and nothing happens. Wait for the layout to stop moving.
+- waitForAnimationToEnd:
+    timeout: 5000
 - tapOn:
     id: customer.auth.email-submit
 - assertVisible:
     id: customer.auth.email
 - tapOn:
     id: customer.auth.email
-- eraseText
+# Explicit count: the field still holds "invalid-email" from the check above, and
+# a partial erase leaves a concatenated address that fails the app's own regex
+# (useLogin.js validateCredentials) — which keeps this screen up with an inline
+# error and never calls EmailExist, so the failure only surfaces much later as a
+# missing password field.
+- eraseText: 50
 - inputText: ${CUSTOMER_EMAIL}
-- hideKeyboard
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+# The dismissal animates this screen's KeyboardAvoidingView, and a tap issued
+# mid-animation resolves the control's position before it settles: the step
+# reports success and nothing happens. Wait for the layout to stop moving.
+- waitForAnimationToEnd:
+    timeout: 5000
+# Prove the field holds exactly the intended address before submitting, so a
+# typing or erase problem fails here, naming the actual contents, instead of
+# surfacing 30s later as "customer.auth.password is not visible".
+- assertVisible:
+    text: ".*${CUSTOMER_EMAIL}.*"
 - tapOn:
     id: customer.auth.email-submit
 # The email check is a production round trip. 15s was tight enough to flake when
@@ -33,9 +62,25 @@ appId: ${APP_ID}
 - tapOn:
     id: customer.auth.password
 - inputText: ${CUSTOMER_PASSWORD}
-- hideKeyboard
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+# The dismissal animates this screen's KeyboardAvoidingView, and a tap issued
+# mid-animation resolves the control's position before it settles: the step
+# reports success and nothing happens. Wait for the layout to stop moving.
+- waitForAnimationToEnd:
+    timeout: 5000
 - tapOn:
     id: customer.auth.login-submit
+# A rejected login only surfaces as a FlashMessage banner that stays up for 1.5s
+# (src/ui/FlashMessage/FlashMessage.js), long gone by the time the 30s wait
+# below fails and Maestro takes its failure screenshot. Capture the moments
+# right after submit so the report shows the server's reason
+# (e.g. "Too many requests. Try again later.") instead of an unexplained
+# password screen.
+- takeScreenshot: login-after-submit-1
+- takeScreenshot: login-after-submit-2
+- takeScreenshot: login-after-submit-3
 - extendedWaitUntil:
     visible:
       id: customer.tab.discovery

@@ -1,18 +1,26 @@
 appId: ${APP_ID}
 ---
-# A release build reaches the discovery tab on the first attempt, and every
-# dev-client-only step below is skipped after a single hierarchy check.
+# Cold-start the app with location permission REFUSED.
 #
-# A dev-client build (QA_MOBILE_APP_ID=com.enatega.multivendor) needs more:
-# - clearState wipes its recent servers, so it cold-starts into the Expo dev
-#   launcher and must be pointed back at the customer's Metro (METRO_URL).
-# - the dev menu opens itself as a bottom sheet on that first launch and covers
-#   the tab bar.
-# - it intermittently aborts while loading the bundle
-#   (react-native-reanimated: assert(jsiRuntime != nullptr) in
-#   installTurboModule). Relaunching without clearState after that restores
-#   stale navigation (e.g. the password screen), so the only reliable recovery is
-#   to start the whole launch again from a clean state, hence the retry.
+# This is launch.yaml with one deliberate difference — `location: never` instead
+# of `location: inuse` — and it is kept separate rather than parameterised so
+# every existing flow keeps the launch it was written against.
+#
+# `never`, not `deny`: Maestro's location permission takes
+# always/inuse/never/unset, and anything else aborts the run outright with
+# "wrong argument value 'deny' was provided for 'location' permission".
+#
+# The readiness marker is still `customer.tab.discovery`. That is not an
+# oversight: while the server configuration has `enableCustomerDemoMode` on,
+# Location.js seeds a demo location before it ever consults the device
+# permission, so a refused permission still lands on the tab bar. CM-P1-029
+# asserts exactly that. In an environment with demo mode OFF this subflow would
+# time out here, which is the correct signal that the flow's premise changed.
+#
+# The dev-client handling below is identical to launch.yaml's and is needed for
+# the same reasons: clearState wipes the recent-servers list, so a dev-client
+# build cold-starts into the Expo launcher and must be pointed back at Metro,
+# and the dev menu can cover the tab bar on that first launch.
 - retry:
     maxRetries: 3
     commands:
@@ -22,7 +30,7 @@ appId: ${APP_ID}
           clearKeychain: true
           permissions:
             all: deny
-            location: inuse
+            location: never
             notifications: deny
       - repeat:
           while:
@@ -51,7 +59,6 @@ appId: ${APP_ID}
                 commands:
                   - tapOn:
                       point: "50%,20%"
-      # The dev menu can also slide up just after the app renders.
       - waitForAnimationToEnd:
           timeout: 5000
       - runFlow:

@@ -1,0 +1,84 @@
+appId: ${APP_ID}
+name: CM-P1-021 Cart and checkout agree, and the pickup total is subtotal plus tax
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# The existing pricing flows compare a total against itself across a toggle
+# (CM-P1-010) or across a rejected coupon (CM-P1-018). Neither checks that the
+# figures are internally consistent, so a pricing bug that shifts every number by
+# the same amount passes both. This flow asserts the arithmetic itself, against
+# `src/utils/orderPricing.js`:
+#
+#   subtotal = SUM(price * quantity)          <- also what Cart.js renders
+#   tax      = (discountedSubtotal + delivery) / 100 * taxPercent
+#   total    = discountedSubtotal + delivery + tax + tip
+#
+# At pickup with no coupon, delivery and tip are both forced to 0 and there is no
+# discount, which collapses to `total == subtotal + tax` and `cart total ==
+# checkout subtotal`. Those two identities are what this flow checks.
+#
+# Both screens derive their figure from the same cart, but by different paths:
+# Cart.js reduces its own `populatedCart` (server-priced), Checkout.js reduces
+# `cart` from UserContext. A divergence between them is exactly the silent
+# overcharge this flow exists to catch.
+#
+# Nothing leaves the checkout screen; place-order is asserted but never tapped.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+# --- Cart side -------------------------------------------------------------
+- assertVisible:
+    id: customer.cart.screen
+- copyTextFrom:
+    id: customer.cart.total
+- evalScript: ${output.cartTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.cartTotal) && output.cartTotal > 0}
+    label: The cart must render a positive total before checkout is opened
+- takeScreenshot: pricing-cart-total
+# --- Checkout side ---------------------------------------------------------
+- runFlow: ../../subflows/open-checkout.yaml
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- tapOn:
+    id: customer.checkout.payment.cod
+# Pickup zeroes delivery and tip inside the same memo that produces every figure
+# below, so let the recompute settle before reading any of them.
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.subtotal
+- evalScript: ${output.subtotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- copyTextFrom:
+    id: customer.checkout.tax
+- evalScript: ${output.tax = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.total = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.subtotal) && output.subtotal > 0}
+    label: Checkout subtotal must be a positive number
+# An allowlisted restaurant is permitted to have a zero tax rate, so this is a
+# floor rather than a strict positive.
+- assertTrue:
+    condition: ${Number.isFinite(output.tax) && output.tax >= 0}
+    label: Checkout tax must be a finite non-negative number
+# --- The two identities ----------------------------------------------------
+# Every figure is rendered through its own .toFixed(2), so comparing a sum of
+# rounded values against a rounded sum can legitimately differ by one cent. The
+# tolerance admits that and nothing larger.
+- assertTrue:
+    condition: ${Math.abs(output.cartTotal - output.subtotal) < 0.011}
+    label: The cart total and the checkout subtotal must be the same figure
+- assertTrue:
+    condition: ${Math.abs(output.total - (output.subtotal + output.tax)) < 0.011}
+    label: At pickup the total must be exactly subtotal plus tax
+- assertTrue:
+    condition: ${output.total <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must stay at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: pricing-checkout-breakdown

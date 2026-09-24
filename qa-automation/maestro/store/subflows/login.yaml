@@ -1,0 +1,50 @@
+appId: ${APP_ID}
+---
+# The store app keeps its session, so a run that starts already signed in falls
+# straight through to the order list.
+- runFlow:
+    when:
+      visible:
+        id: store.auth.username
+    commands:
+      # The multivendor tab must win before typing: the single-vendor tab points
+      # the app at a different backend, where these credentials do not exist.
+      # Switching tabs also re-runs the prefill, so it happens first.
+      - tapOn:
+          id: store.auth.mode.multi
+          optional: true
+      # The login screen prefills demo credentials. With USE_PREFILLED_CREDENTIALS
+      # the run signs in as whoever the build prefilled and types nothing at all;
+      # otherwise each field is cleared first, because inputText into a prefilled
+      # field concatenates and produces a credential that belongs to nobody.
+      - runFlow:
+          when:
+            true: ${USE_PREFILLED_CREDENTIALS == 'false'}
+          commands:
+            - tapOn:
+                id: store.auth.username
+            - eraseText: 60
+            - inputText: ${STORE_USERNAME}
+            - pressKey: Enter
+            - hideKeyboard:
+                optional: true
+            - tapOn:
+                id: store.auth.password
+            - eraseText: 60
+            - inputText: ${STORE_PASSWORD}
+            - pressKey: Enter
+            - hideKeyboard:
+                optional: true
+      # Same KeyboardAvoidingView settling problem as the customer login: a tap
+      # issued mid-animation resolves the button's old position and silently
+      # does nothing.
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn:
+          id: store.auth.login-submit
+- extendedWaitUntil:
+    visible:
+      id: store.orders.new.screen
+    timeout: 45000
+- assertVisible:
+    id: store.orders.new.screen

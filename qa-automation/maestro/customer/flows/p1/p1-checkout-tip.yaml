@@ -56,7 +56,14 @@ tags:
 - tapOn:
     id: customer.checkout.tip-input
 - inputText: "5"
-- hideKeyboard
+# Dismiss with the return key, not just hideKeyboard. Cloud devices report
+# "Couldn't hide the keyboard", and a keyboard left up covers the submit control
+# below the field, so the tap lands on the keyboard and the screen never
+# advances. This input defines no onSubmitEditing, so Enter only blurs.
+# hideKeyboard stays as a fallback, optional so "no keyboard" is not a failure.
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
 - tapOn:
     id: customer.checkout.tip-apply
 - extendedWaitUntil:

@@ -1,0 +1,67 @@
+appId: ${APP_ID}
+---
+# Delivery + COD checkout for the cross-app E2E. The read-only smoke uses
+# checkout-readonly.yaml (pickup) because a pickup order never reaches a rider;
+# only a DELIVERY order is offered to the rider app, so the E2E needs its own
+# checkout. Everything up to (but not including) place-order stays read-only.
+- tapOn:
+    id: customer.cart.checkout
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.screen
+    timeout: 30000
+- tapOn:
+    id: customer.checkout.fulfillment.delivery
+# Production has enableCustomerDemoMode on, so every launch replaces the
+# customer's location with "Demo Address" at the demo zone's centroid
+# (src/context/Location.js). That point is far from the restaurant and costs
+# thousands in delivery fee, tripping the QA_MAX_ORDER_TOTAL guard below. Open
+# the address row and confirm the account's saved address instead: Cart
+# Addresses preselects the last selected one, and Done applies it.
+- runFlow:
+    when:
+      visible:
+        text: ".*Demo Address.*"
+    commands:
+      - tapOn:
+          text: ".*Demo Address.*"
+      - extendedWaitUntil:
+          visible:
+            text: "Cart Addresses"
+          timeout: 15000
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn:
+          text: "Done"
+      - extendedWaitUntil:
+          visible:
+            id: customer.checkout.screen
+          timeout: 30000
+      - assertNotVisible:
+          text: ".*Demo Address.*"
+- tapOn:
+    id: customer.checkout.payment.cod
+# Delivery adds the address and ETA rows that pickup does not have, which
+# pushes the payment summary below the fold behind the sticky Place Order bar.
+- scrollUntilVisible:
+    element:
+      id: customer.checkout.total
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- assertVisible:
+    id: customer.checkout.subtotal
+- assertVisible:
+    id: customer.checkout.tax
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.orderTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+# The ceiling is the last guard before real money moves, so it is asserted on
+# the device against the total the customer actually sees, not on the total the
+# runner predicted.
+- assertTrue:
+    condition: ${Number.isFinite(output.orderTotal) && output.orderTotal > 0 && output.orderTotal <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must be positive and at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: checkout-delivery-cod

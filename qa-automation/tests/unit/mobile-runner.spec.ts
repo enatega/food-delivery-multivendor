@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 
 import {
   buildMobileRun,
+  validateMobileCloudTarget,
   validateMobileMultiVendorEnvironment,
   validateMobileSmokeEnvironment
 } from '../../scripts/mobile-runner.js'
@@ -170,4 +171,215 @@ test('builds a multi-vendor invocation that stays read-only', () => {
   expect(run.args).toContain('SECOND_PRODUCT_ID=product-999')
   expect(run.args).not.toContain('QA_PLACE_REAL_ORDER=true')
   expect(run.args).not.toContain('FULFILLMENT=pickup')
+})
+
+const cloudEnvironment = {
+  ...smokeEnvironment,
+  QA_MOBILE_APP_FILE: 'builds/EnategaQA.app.zip',
+  MAESTRO_CLOUD_API_KEY: 'not-a-real-key'
+}
+
+test('validates a cloud target that ships a binary', () => {
+  expect(validateMobileCloudTarget(cloudEnvironment)).toMatchObject({
+    appFile: 'builds/EnategaQA.app.zip',
+    appBinaryId: undefined,
+    apiKey: 'not-a-real-key'
+  })
+})
+
+test('rejects a cloud target with no app to run against', () => {
+  expect(() => validateMobileCloudTarget(smokeEnvironment)).toThrow(
+    'Cloud runs require QA_MOBILE_APP_FILE'
+  )
+})
+
+test('rejects a cloud target that names both an app file and a binary id', () => {
+  expect(() =>
+    validateMobileCloudTarget({
+      ...cloudEnvironment,
+      QA_MOBILE_APP_BINARY_ID: 'binary-123'
+    })
+  ).toThrow('Set only one of QA_MOBILE_APP_FILE or QA_MOBILE_APP_BINARY_ID')
+})
+
+test('rejects a cloud app file that is not a build artifact', () => {
+  expect(() =>
+    validateMobileCloudTarget({
+      ...cloudEnvironment,
+      QA_MOBILE_APP_FILE: 'builds/EnategaQA.tar.gz'
+    })
+  ).toThrow('QA_MOBILE_APP_FILE must end in')
+})
+
+test('builds a cloud smoke invocation that keeps the read-only guards', () => {
+  const run = buildMobileRun('smoke', cloudEnvironment, 'run-123', {
+    target: 'cloud'
+  })
+
+  expect(run.target).toBe('cloud')
+  expect(run.args[0]).toBe('cloud')
+  expect(run.args).toContain('--app-file=builds/EnategaQA.app.zip')
+  expect(run.args).toContain('--flows=maestro/customer')
+  expect(run.args).toContain('--include-tags=smoke')
+  expect(run.args).toContain('--name=run-123')
+  expect(run.args).toContain('--output=reports/maestro/run-123/junit.xml')
+  expect(run.args).toContain('--api-key=not-a-real-key')
+  expect(run.args).toContain('PRODUCT_ID=product-456')
+  expect(run.args).not.toContain('QA_PLACE_REAL_ORDER=true')
+  // Cloud has no local simulator and keeps its own artifacts.
+  expect(run.args).not.toContain('--platform=ios')
+  expect(run.args.some((arg) => arg.startsWith('--test-output-dir'))).toBe(false)
+})
+
+test('omits cloud selectors that were not configured', () => {
+  const run = buildMobileRun('smoke', cloudEnvironment, 'run-123', {
+    target: 'cloud'
+  })
+
+  expect(run.args.some((arg) => arg.startsWith('--device-model'))).toBe(false)
+  expect(run.args.some((arg) => arg.startsWith('--project-id'))).toBe(false)
+  expect(run.args).not.toContain('--async')
+})
+
+test('passes cloud device selection through when configured', () => {
+  const run = buildMobileRun(
+    'regression',
+    {
+      ...cloudEnvironment,
+      QA_MOBILE_CLOUD_DEVICE_MODEL: 'iPhone-17-Pro',
+      QA_MOBILE_CLOUD_DEVICE_OS: 'iOS-26-2',
+      QA_MOBILE_CLOUD_DEVICE_LOCALE: 'en_US',
+      QA_MOBILE_CLOUD_PROJECT_ID: 'project-42'
+    },
+    'run-123',
+    { target: 'cloud', async: true }
+  )
+
+  expect(run.args).toContain('--device-model=iPhone-17-Pro')
+  expect(run.args).toContain('--device-os=iOS-26-2')
+  expect(run.args).toContain('--device-locale=en_US')
+  expect(run.args).toContain('--project-id=project-42')
+  expect(run.args).toContain('--async')
+  expect(run.args).toContain('--flows=maestro/customer')
+})
+
+// A cloud upload is rooted at the path given to --flows, so a directory of
+// flows uploaded alone cannot see ../../subflows and the run is rejected before
+// it starts. Every mode must upload the workspace and select by tag instead.
+// Every mode's fixtures at once, so one table can cover all five.
+const everyModeEnvironment = {
+  ...multiVendorEnvironment,
+  ...cloudEnvironment,
+  QA_MOBILE_ALLOW_PRODUCTION_WRITES: 'true',
+  QA_PLACE_REAL_ORDER: 'true',
+  QA_MOBILE_RESTAURANT_ID: 'restaurant-123',
+  QA_MOBILE_FULFILLMENT: 'pickup',
+  QA_MOBILE_PAYMENT_METHOD: 'COD',
+  QA_RUN_ID: 'mobile-20260827-1200-abc1234'
+}
+
+const cloudTagSelections = [
+  { mode: 'smoke', include: '--include-tags=smoke' },
+  { mode: 'production-order', include: '--include-tags=production-write' },
+  {
+    mode: 'regression',
+    include: '--include-tags=regression',
+    exclude: '--exclude-tags=multi-vendor,navigation'
+  },
+  { mode: 'multi-vendor', include: '--include-tags=multi-vendor' },
+  { mode: 'navigation', include: '--include-tags=navigation' }
+] as const
+
+for (const selection of cloudTagSelections) {
+  const { mode, include } = selection
+  const exclude = 'exclude' in selection ? selection.exclude : undefined
+  test(`uploads the whole workspace and selects ${mode} by tag`, () => {
+    const run = buildMobileRun(mode, everyModeEnvironment, 'run-123', {
+      target: 'cloud'
+    })
+
+    expect(run.args).toContain('--flows=maestro/customer')
+    expect(run.args).toContain(include)
+    expect(
+      run.args.some((arg) => arg.startsWith('--flows=maestro/customer/flows'))
+    ).toBe(false)
+    if (exclude) {
+      expect(run.args).toContain(exclude)
+    } else {
+      expect(run.args.some((arg) => arg.startsWith('--exclude-tags'))).toBe(false)
+    }
+  })
+}
+
+// p2 and p3 both carry the regression tag, so without the exclusions a
+// regression run would silently pull in the multi-vendor and navigation suites.
+test('keeps the multi-vendor and navigation suites out of a cloud regression run', () => {
+  const run = buildMobileRun('regression', cloudEnvironment, 'run-123', {
+    target: 'cloud'
+  })
+
+  expect(run.args).toContain('--exclude-tags=multi-vendor,navigation')
+})
+
+// Local runs still resolve ../../subflows on disk, so they keep taking a path.
+test('leaves the local invocation pointed at a flow path', () => {
+  const run = buildMobileRun('regression', smokeEnvironment, 'run-123')
+
+  expect(run.args).toContain('maestro/customer/flows/p1')
+  expect(run.args.some((arg) => arg.startsWith('--include-tags'))).toBe(false)
+})
+
+test('rejects a malformed cloud device locale', () => {
+  expect(() =>
+    validateMobileCloudTarget({
+      ...cloudEnvironment,
+      QA_MOBILE_CLOUD_DEVICE_LOCALE: 'english'
+    })
+  ).toThrow('QA_MOBILE_CLOUD_DEVICE_LOCALE must be an ISO locale')
+})
+
+test('runs a cloud production order only when it can be watched', () => {
+  const productionEnvironment = {
+    ...cloudEnvironment,
+    QA_MOBILE_ALLOW_PRODUCTION_WRITES: 'true',
+    QA_PLACE_REAL_ORDER: 'true',
+    QA_MOBILE_RESTAURANT_ID: 'restaurant-123',
+    QA_MOBILE_FULFILLMENT: 'pickup',
+    QA_MOBILE_PAYMENT_METHOD: 'COD',
+    QA_RUN_ID: 'mobile-20260827-1200-abc1234'
+  }
+
+  const run = buildMobileRun('production-order', productionEnvironment, 'run-123', {
+    target: 'cloud'
+  })
+  expect(run.args).toContain('QA_PLACE_REAL_ORDER=true')
+  expect(run.args).toContain('--flows=maestro/customer')
+  expect(run.args).toContain('--include-tags=production-write')
+
+  expect(() =>
+    buildMobileRun('production-order', productionEnvironment, 'run-123', {
+      target: 'cloud',
+      async: true
+    })
+  ).toThrow('production-order cannot run with --async')
+})
+
+test('a cloud run still fails the environment guards it shares with local', () => {
+  expect(() =>
+    buildMobileRun(
+      'smoke',
+      { ...cloudEnvironment, QA_MOBILE_GRAPHQL_URL: 'https://evil.example.com/graphql' },
+      'run-123',
+      { target: 'cloud' }
+    )
+  ).toThrow('Mobile production hostname is not allowlisted')
+})
+
+test('defaults to a local run when no target is given', () => {
+  const run = buildMobileRun('smoke', cloudEnvironment, 'run-123')
+
+  expect(run.target).toBe('local')
+  expect(run.args[0]).toBe('test')
+  expect(run.args).toContain('--platform=ios')
+  expect(run.args).not.toContain('--api-key=not-a-real-key')
 })

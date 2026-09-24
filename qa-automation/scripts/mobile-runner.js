@@ -1,7 +1,9 @@
 /* global URL, console, process */
 
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 import { config as loadDotenv } from 'dotenv'
@@ -20,8 +22,27 @@ const MULTI_VENDOR_FLOW = 'maestro/customer/flows/p2'
 // Navigation-graph regression. Read-only and fixture-compatible with the smoke,
 // so it needs no extra variables and no write guards.
 const NAVIGATION_FLOW = 'maestro/customer/flows/p3'
+// `maestro cloud` zips the path given to --flows and makes it the workspace
+// root, so a directory of flows uploaded on its own loses ../../subflows and is
+// rejected with "Invalid File Path" before any device runs. Upload the whole
+// customer workspace instead and narrow the run with tags. `maestro test`
+// resolves against the real filesystem, so local runs keep taking a path.
+const CLOUD_WORKSPACE = 'maestro/customer'
+// Every flow is tagged, and the tags already partition the modes: p1 is the
+// regression set minus the two suites that carry their own tag.
+/** @type {Record<string, { include: string[], exclude?: string[] }>} */
+const CLOUD_TAGS = {
+  smoke: { include: ['smoke'] },
+  'production-order': { include: ['production-write'] },
+  regression: { include: ['regression'], exclude: ['multi-vendor', 'navigation'] },
+  'multi-vendor': { include: ['multi-vendor'] },
+  navigation: { include: ['navigation'] }
+}
 const SAFE_PATH_COMPONENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
 const SAFE_IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:-]*$/
+// Maestro Cloud accepts a built binary, not a simulator that happens to be
+// booted here: .app/.zip for simulator runs, .ipa/.apk for device runs.
+const CLOUD_APP_FILE_EXTENSIONS = ['.app', '.zip', '.ipa', '.apk']
 
 /**
  * @param {Record<string, string | undefined>} input
@@ -130,16 +151,98 @@ export function validateMobileMultiVendorEnvironment(input) {
 }
 
 /**
+ * Maestro Cloud runs the flows on someone else's device farm, so a booted local
+ * simulator is irrelevant and the app has to travel with the run: either a fresh
+ * binary (`--app-file`) or one already uploaded (`--app-binary-id`). Everything
+ * that makes a run safe — the environment guards, the injected values, the flow
+ * itself — is unchanged, so a cloud run is exactly as read-only as its mode.
+ *
+ * @param {Record<string, string | undefined>} input
+ */
+export function validateMobileCloudTarget(input) {
+  const appFile = input.QA_MOBILE_APP_FILE?.trim()
+  const appBinaryId = input.QA_MOBILE_APP_BINARY_ID?.trim()
+  if (!appFile && !appBinaryId) {
+    throw new Error(
+      'Cloud runs require QA_MOBILE_APP_FILE (a built app binary) or QA_MOBILE_APP_BINARY_ID'
+    )
+  }
+  if (appFile && appBinaryId) {
+    throw new Error(
+      'Set only one of QA_MOBILE_APP_FILE or QA_MOBILE_APP_BINARY_ID'
+    )
+  }
+  if (
+    appFile &&
+    !CLOUD_APP_FILE_EXTENSIONS.some((extension) =>
+      appFile.toLowerCase().endsWith(extension)
+    )
+  ) {
+    throw new Error(
+      `QA_MOBILE_APP_FILE must end in ${CLOUD_APP_FILE_EXTENSIONS.join(', ')}`
+    )
+  }
+  if (appBinaryId && !SAFE_IDENTIFIER.test(appBinaryId)) {
+    throw new Error('QA_MOBILE_APP_BINARY_ID contains unsupported characters')
+  }
+
+  const deviceLocale = input.QA_MOBILE_CLOUD_DEVICE_LOCALE?.trim()
+  if (deviceLocale && !/^[a-z]{2}_[A-Z]{2}$/.test(deviceLocale)) {
+    throw new Error(
+      'QA_MOBILE_CLOUD_DEVICE_LOCALE must be an ISO locale such as "en_US"'
+    )
+  }
+  /** @type {Record<string, string | undefined>} */
+  const selectors = {}
+  for (const key of [
+    'QA_MOBILE_CLOUD_DEVICE_MODEL',
+    'QA_MOBILE_CLOUD_DEVICE_OS',
+    'QA_MOBILE_CLOUD_PROJECT_ID'
+  ]) {
+    const value = input[key]?.trim()
+    if (value && !SAFE_IDENTIFIER.test(value)) {
+      throw new Error(`${key} contains unsupported characters`)
+    }
+    selectors[key] = value
+  }
+
+  return {
+    appFile,
+    appBinaryId,
+    // Deliberately never written to command-metadata.json: that file is echoed
+    // verbatim into the HTML summary.
+    apiKey: input.MAESTRO_CLOUD_API_KEY?.trim(),
+    deviceModel: selectors.QA_MOBILE_CLOUD_DEVICE_MODEL,
+    deviceOs: selectors.QA_MOBILE_CLOUD_DEVICE_OS,
+    deviceLocale,
+    projectId: selectors.QA_MOBILE_CLOUD_PROJECT_ID,
+    // Free-form on purpose — branch names carry slashes. Nothing is shell
+    // interpolated, so these only ever reach the console as run labels.
+    branch: input.QA_MOBILE_CLOUD_BRANCH?.trim(),
+    commitSha: input.QA_MOBILE_CLOUD_COMMIT_SHA?.trim()
+  }
+}
+
+/**
  * @param {'smoke' | 'production-order' | 'regression' | 'multi-vendor' | 'navigation'} mode
  * @param {Record<string, string | undefined>} input
  * @param {string} reportRunId
+ * @param {{ target?: 'local' | 'cloud'; async?: boolean }} [options]
  */
-export function buildMobileRun(mode, input, reportRunId) {
+export function buildMobileRun(mode, input, reportRunId, options = {}) {
   if (!SAFE_PATH_COMPONENT.test(reportRunId)) {
     throw new Error('report Run ID contains unsupported characters')
   }
 
+  const target = options.target ?? 'local'
   const isProductionOrder = mode === 'production-order'
+  // An async cloud run exits before the order exists, so nobody would be
+  // watching to cancel one that the flow failed to clean up.
+  if (isProductionOrder && options.async) {
+    throw new Error(
+      'production-order cannot run with --async: a real order must never be left unwatched'
+    )
+  }
   const reportDirectory = `reports/maestro/${reportRunId}`
   let flow
   /** @type {Record<string, string>} */
@@ -200,6 +303,42 @@ export function buildMobileRun(mode, input, reportRunId) {
     }
   }
 
+  const environmentArgs = Object.entries(values).flatMap(([key, value]) => [
+    '-e',
+    `${key}=${value}`
+  ])
+
+  if (target === 'cloud') {
+    const cloud = validateMobileCloudTarget(input)
+    const tags = CLOUD_TAGS[mode]
+    if (!tags) throw new Error(`No cloud tag selection is defined for mode ${mode}`)
+    // Cloud keeps screenshots and video in the console, so the only local
+    // artifact is the JUnit report the summary is built from.
+    const args = [
+      'cloud',
+      cloud.appFile
+        ? `--app-file=${cloud.appFile}`
+        : `--app-binary-id=${cloud.appBinaryId}`,
+      `--flows=${CLOUD_WORKSPACE}`,
+      `--include-tags=${tags.include.join(',')}`,
+      ...(tags.exclude ? [`--exclude-tags=${tags.exclude.join(',')}`] : []),
+      `--name=${reportRunId}`,
+      '--format=JUNIT',
+      `--output=${reportDirectory}/junit.xml`,
+      ...(cloud.apiKey ? [`--api-key=${cloud.apiKey}`] : []),
+      ...(cloud.projectId ? [`--project-id=${cloud.projectId}`] : []),
+      ...(cloud.deviceModel ? [`--device-model=${cloud.deviceModel}`] : []),
+      ...(cloud.deviceOs ? [`--device-os=${cloud.deviceOs}`] : []),
+      ...(cloud.deviceLocale ? [`--device-locale=${cloud.deviceLocale}`] : []),
+      ...(cloud.branch ? [`--branch=${cloud.branch}`] : []),
+      ...(cloud.commitSha ? [`--commit-sha=${cloud.commitSha}`] : []),
+      ...(options.async ? ['--async'] : []),
+      ...environmentArgs
+    ]
+
+    return { args, flow, reportDirectory, target, tags }
+  }
+
   const args = [
     'test',
     '--platform=ios',
@@ -207,22 +346,22 @@ export function buildMobileRun(mode, input, reportRunId) {
     `--output=${reportDirectory}/junit.xml`,
     `--test-output-dir=${reportDirectory}/artifacts`,
     `--debug-output=${reportDirectory}/debug`,
-    ...Object.entries(values).flatMap(([key, value]) => [
-      '-e',
-      `${key}=${value}`
-    ]),
+    ...environmentArgs,
     flow
   ]
 
-  return { args, flow, reportDirectory }
+  return { args, flow, reportDirectory, target }
+}
+
+/** @param {string[]} args */
+function gitOutput(args) {
+  const git = spawnSync('git', args, { encoding: 'utf8' })
+  return git.status === 0 ? git.stdout.trim() : ''
 }
 
 function createReportRunId() {
   const timestamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 13)
-  const git = spawnSync('git', ['rev-parse', '--short=7', 'HEAD'], {
-    encoding: 'utf8'
-  })
-  const sha = git.status === 0 ? git.stdout.trim() : 'unknown'
+  const sha = gitOutput(['rev-parse', '--short=7', 'HEAD']) || 'unknown'
   return `mobile-${timestamp}-${sha}`
 }
 
@@ -244,18 +383,9 @@ function toolEnvironment(input) {
   }
 }
 
-/** @param {string} appId */
-function runPreflight(appId) {
+/** @param {[string, string[]][]} checks */
+function runChecks(checks) {
   const environment = toolEnvironment(process.env)
-  /** @type {[string, string[]][]} */
-  const checks = [
-    ['java', ['-version']],
-    ['maestro', ['--version']],
-    ['xcodebuild', ['-version']],
-    ['xcrun', ['simctl', 'list', 'devices', 'booted']],
-    ['xcrun', ['simctl', 'get_app_container', 'booted', appId]]
-  ]
-
   for (const [command, args] of checks) {
     const result = spawnSync(command, args, {
       env: environment,
@@ -273,6 +403,48 @@ function runPreflight(appId) {
   }
 }
 
+/** @param {string} appId */
+function runLocalPreflight(appId) {
+  runChecks([
+    ['java', ['-version']],
+    ['maestro', ['--version']],
+    ['xcodebuild', ['-version']],
+    ['xcrun', ['simctl', 'list', 'devices', 'booted']],
+    ['xcrun', ['simctl', 'get_app_container', 'booted', appId]]
+  ])
+}
+
+// Best-effort only. The CLI is the real authority on whether this machine is
+// signed in, so a missed session downgrades to a warning rather than blocking a
+// run that would have worked.
+function hasCloudSession() {
+  if (existsSync(join(homedir(), '.mobiledev', 'authtoken'))) return true
+  try {
+    const analytics = JSON.parse(
+      readFileSync(join(homedir(), '.maestro', 'analytics.json'), 'utf8')
+    )
+    return Boolean(analytics.cachedToken)
+  } catch {
+    return false
+  }
+}
+
+/** @param {ReturnType<typeof validateMobileCloudTarget>} cloud */
+function runCloudPreflight(cloud) {
+  runChecks([
+    ['java', ['-version']],
+    ['maestro', ['--version']]
+  ])
+  if (cloud.appFile && !existsSync(cloud.appFile)) {
+    throw new Error(`QA_MOBILE_APP_FILE does not exist: ${cloud.appFile}`)
+  }
+  if (!cloud.apiKey && !hasCloudSession()) {
+    console.warn(
+      'No MAESTRO_CLOUD_API_KEY and no local Maestro session found — run `maestro login` or set the key in .env.mobile.local if the upload is rejected.'
+    )
+  }
+}
+
 function loadLocalEnvironment() {
   const path = process.env.QA_MOBILE_ENV_FILE || '.env.mobile.local'
   if (existsSync(path)) loadDotenv({ path, override: false, quiet: true })
@@ -280,7 +452,14 @@ function loadLocalEnvironment() {
 
 function main() {
   loadLocalEnvironment()
-  const requestedMode = process.argv[2]
+  const [, , requestedMode, ...flags] = process.argv
+  const usage =
+    'Usage: node scripts/mobile-runner.js <preflight|smoke|regression|multi-vendor|navigation|production-order> [--cloud] [--async]'
+  for (const flag of flags) {
+    if (flag !== '--cloud' && flag !== '--async') {
+      throw new Error(`Unknown option ${flag}\n${usage}`)
+    }
+  }
   if (
     ![
       'preflight',
@@ -291,18 +470,33 @@ function main() {
       'production-order'
     ].includes(requestedMode)
   ) {
-    throw new Error(
-      'Usage: node scripts/mobile-runner.js <preflight|smoke|regression|multi-vendor|navigation|production-order>'
-    )
+    throw new Error(usage)
   }
   const mode =
     /** @type {'preflight' | 'smoke' | 'regression' | 'multi-vendor' | 'navigation' | 'production-order'} */ (
       requestedMode
     )
 
+  const target =
+    flags.includes('--cloud') || process.env.QA_MOBILE_TARGET === 'cloud'
+      ? 'cloud'
+      : 'local'
+  const runAsync = flags.includes('--async')
+  if (runAsync && target === 'local') {
+    throw new Error('--async applies to --cloud runs only')
+  }
+
   const appId = process.env.QA_MOBILE_APP_ID || DEFAULT_APP_ID
   if (mode === 'preflight') {
-    runPreflight(appId)
+    if (target === 'cloud') {
+      const cloud = validateMobileCloudTarget(process.env)
+      runCloudPreflight(cloud)
+      console.log(
+        `Maestro Cloud preflight passed for ${cloud.appFile || cloud.appBinaryId}`
+      )
+      return
+    }
+    runLocalPreflight(appId)
     console.log(`Mobile iOS preflight passed for ${appId}`)
     return
   }
@@ -311,34 +505,71 @@ function main() {
     process.env.QA_RUN_ID = createReportRunId()
   }
   const reportRunId = process.env.QA_RUN_ID || createReportRunId()
-  const run = buildMobileRun(mode, process.env, reportRunId)
-  runPreflight(appId)
+  if (target === 'cloud') {
+    // Label the upload in the Maestro Cloud console with the same provenance
+    // the local report carries.
+    process.env.QA_MOBILE_CLOUD_BRANCH ||= gitOutput(['rev-parse', '--abbrev-ref', 'HEAD'])
+    process.env.QA_MOBILE_CLOUD_COMMIT_SHA ||= gitOutput(['rev-parse', 'HEAD'])
+  }
+  const run = buildMobileRun(mode, process.env, reportRunId, {
+    target,
+    async: runAsync
+  })
+  const cloud = target === 'cloud' ? validateMobileCloudTarget(process.env) : undefined
+  if (cloud) runCloudPreflight(cloud)
+  else runLocalPreflight(appId)
   mkdirSync(run.reportDirectory, { recursive: true })
   writeFileSync(
     `${run.reportDirectory}/command-metadata.json`,
     `${JSON.stringify({
       runId: reportRunId,
       mode,
+      target,
       appId,
       flow: run.flow,
+      // The API key is intentionally absent: this file is rendered into the
+      // HTML summary as-is.
+      ...(cloud
+        ? {
+            appFile: cloud.appFile,
+            appBinaryId: cloud.appBinaryId,
+            deviceModel: cloud.deviceModel,
+            deviceOs: cloud.deviceOs,
+            // A cloud run uploads the workspace and selects by tag, so `flow`
+            // above names the suite rather than what was actually uploaded.
+            workspace: CLOUD_WORKSPACE,
+            includeTags: run.tags?.include,
+            excludeTags: run.tags?.exclude,
+            async: runAsync
+          }
+        : {}),
       startedAt: new Date().toISOString(),
       maestroVersion: '2.9.0'
     }, null, 2)}\n`
   )
 
-  console.log(`Running ${mode} as ${reportRunId}`)
+  console.log(`Running ${mode} on ${target} as ${reportRunId}`)
   console.log(`Artifacts: ${run.reportDirectory}`)
   const result = spawnSync('maestro', run.args, {
     env: toolEnvironment(process.env),
     encoding: 'utf8',
     stdio: 'inherit'
   })
-  const report = spawnSync('node', ['scripts/mobile-report.js', run.reportDirectory], {
-    encoding: 'utf8',
-    stdio: 'inherit'
-  })
-  if (report.status !== 0) {
-    console.error('The HTML summary could not be generated; retain the JUnit and debug artifacts.')
+
+  if (runAsync) {
+    // The upload returns before any device has run a flow, so there is no JUnit
+    // to summarise — the console owns the result.
+    console.log(
+      `Cloud run ${reportRunId} was queued asynchronously; follow it at https://app.maestro.dev`
+    )
+  } else {
+    const report = spawnSync('node', ['scripts/mobile-report.js', run.reportDirectory], {
+      encoding: 'utf8',
+      stdio: 'inherit'
+    })
+    if (report.status !== 0) {
+      console.error('The HTML summary could not be generated; retain the JUnit and debug artifacts.')
+    }
   }
 
   if (result.status !== 0) {

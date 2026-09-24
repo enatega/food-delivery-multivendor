@@ -1,0 +1,132 @@
+appId: ${APP_ID}
+name: CM-P1-023 Invalid tip amounts are rejected and the tip section is pickup-aware
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# CM-P1-017 covers the happy path: a valid tip of 5 raises the delivery total by
+# 5. It never submits a bad amount, so the two guards in `onTipping` are
+# unexercised — and a tip that silently accepts 0, or an apply button that fires
+# while the field is empty, would charge or crash without failing any flow.
+#
+# Checkout.js:
+#   - the tip section renders only while `!isPickup`
+#   - `customer.checkout.tip-apply` is `disabled={!tipAmount}`, so an empty field
+#     cannot submit at all
+#   - `onTipping` rejects `Number(tipAmount) <= 0` with a flash message and,
+#     crucially, does NOT close the modal — an open modal after apply is the
+#     observable signal that the amount was refused
+#
+# The flow ends by applying a valid tip, which is what makes the rejections
+# meaningful: the same control, on the same modal, does work when the amount is
+# legitimate.
+#
+# `setTip` is local component state. No mutation is sent and place-order is never
+# tapped, so no order is created.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- runFlow: ../../subflows/open-checkout.yaml
+- tapOn:
+    id: customer.checkout.payment.cod
+# --- Tip section is delivery-only ------------------------------------------
+# Tipping a pickup order is meaningless and the pricing memo forces the tip to 0
+# there, so the entry point must be absent rather than present-but-ignored.
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: customer.checkout.tip-section
+- assertNotVisible:
+    id: customer.checkout.tip-open
+- tapOn:
+    id: customer.checkout.fulfillment.delivery
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.tip-section
+- takeScreenshot: tip-section-delivery-only
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.baseTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.baseTotal) && output.baseTotal > 0}
+    label: The delivery total must be a positive number before any tip is entered
+# --- An empty field cannot be applied --------------------------------------
+- tapOn:
+    id: customer.checkout.tip-open
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.tip-input
+    timeout: 15000
+# The control is rendered disabled, so this tap must not fire onPress. If the
+# disabled prop is ever dropped, `onTipping` would run with an empty string and
+# the modal would close — which is what the assertion below catches.
+- tapOn:
+    id: customer.checkout.tip-apply
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.tip-input
+- takeScreenshot: tip-empty-not-applied
+# --- Zero is rejected ------------------------------------------------------
+- tapOn:
+    id: customer.checkout.tip-input
+- inputText: "0"
+# Dismiss with the return key, not just hideKeyboard. Cloud devices report
+# "Couldn't hide the keyboard", and a keyboard left up covers the submit control
+# below the field, so the tap lands on the keyboard and the screen never
+# advances. This input defines no onSubmitEditing, so Enter only blurs.
+# hideKeyboard stays as a fallback, optional so "no keyboard" is not a failure.
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn:
+    id: customer.checkout.tip-apply
+# Give the rejection time to come back before concluding the modal stayed open.
+- waitForAnimationToEnd:
+    timeout: 10000
+# A rejected amount leaves the modal up. A closed modal here means 0 was accepted.
+- assertVisible:
+    id: customer.checkout.tip-input
+- takeScreenshot: tip-zero-rejected
+# --- A valid amount is accepted --------------------------------------------
+# This is what makes the two rejections above meaningful rather than a modal
+# that is simply stuck.
+- tapOn:
+    id: customer.checkout.tip-input
+# Explicit count: the field still holds "0", and a concatenated "05" would apply
+# a fifty-five-unit tip and fail the arithmetic below for the wrong reason.
+- eraseText: 50
+- inputText: "5"
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn:
+    id: customer.checkout.tip-apply
+# A successful apply is the only path that calls onModalClose.
+- extendedWaitUntil:
+    notVisible:
+      id: customer.checkout.tip-input
+    timeout: 15000
+- assertVisible:
+    id: customer.checkout.screen
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.tippedTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.tippedTotal - (output.baseTotal + 5)) < 0.011}
+    label: A tip of 5 must raise the delivery total by exactly 5
+- assertTrue:
+    condition: ${output.tippedTotal <= Number(MAX_ORDER_TOTAL)}
+    label: The tipped total must stay at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: tip-valid-applied

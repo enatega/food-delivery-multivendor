@@ -15,7 +15,14 @@ appId: ${APP_ID}
 - tapOn:
     id: customer.search.input
 - inputText: ${SECOND_RESTAURANT_NAME}
-- hideKeyboard
+# Dismiss with the return key, not just hideKeyboard. Cloud devices report
+# "Couldn't hide the keyboard", and a keyboard left up covers the submit control
+# below the field, so the tap lands on the keyboard and the screen never
+# advances. This input defines no onSubmitEditing, so Enter only blurs.
+# hideKeyboard stays as a fallback, optional so "no keyboard" is not a failure.
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
 - extendedWaitUntil:
     visible:
       text: ".*${SECOND_RESTAURANT_NAME}.*"

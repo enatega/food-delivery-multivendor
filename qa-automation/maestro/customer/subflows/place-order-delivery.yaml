@@ -1,0 +1,85 @@
+appId: ${APP_ID}
+---
+# Tags the order so a human can recognise it in the production dashboard, then
+# places it for real. Unlike place-cancel-order.yaml this subflow does NOT
+# cancel: the store and rider stages of the E2E need a live order to work on.
+- tapOn:
+    id: customer.cart.instructions-open
+- tapOn:
+    id: customer.cart.instructions-input
+- inputText: QA-E2E-${RUN_ID}
+- hideKeyboard:
+    optional: true
+# Same KeyboardAvoidingView settling problem as login: a "Done" tap issued while
+# the keyboard is still animating away lands on the old position and the sheet
+# stays open, hiding the checkout button. Retry until the sheet has gone.
+- waitForAnimationToEnd:
+    timeout: 5000
+- repeat:
+    while:
+      visible:
+        id: customer.cart.instructions-input
+    times: 5
+    commands:
+      - tapOn:
+          id: customer.cart.instructions-done
+      - waitForAnimationToEnd:
+          timeout: 5000
+- assertNotVisible:
+    id: customer.cart.instructions-input
+- runFlow: checkout-delivery-cod.yaml
+- assertTrue:
+    condition: ${QA_PLACE_REAL_ORDER == 'true' && QA_MOBILE_ALLOW_PRODUCTION_WRITES == 'true' && FULFILLMENT == 'delivery' && PAYMENT_METHOD == 'COD'}
+    label: Production write guards must reach the device unchanged
+- tapOn:
+    id: customer.checkout.place-order
+# After clearState the active location is GPS-derived and has no saved-address
+# _id, so Checkout refuses a delivery order and routes to Cart Addresses
+# (Checkout.js validateOrder). That screen preselects the account's saved
+# address; confirm it and place the order again. The QA customer account must
+# own at least one saved address inside the restaurant's delivery zone.
+- runFlow:
+    when:
+      visible:
+        text: "Cart Addresses"
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn:
+          text: "Done"
+      - extendedWaitUntil:
+          visible:
+            id: customer.checkout.place-order
+          timeout: 30000
+      - tapOn:
+          id: customer.checkout.place-order
+- extendedWaitUntil:
+    visible:
+      id: customer.order.screen
+    timeout: 60000
+- assertVisible:
+    id: customer.order.number
+- copyTextFrom:
+    id: customer.order.number
+# Maestro cannot hand a variable back to the shell, but it does interpolate the
+# screenshot name. The runner reads the digits out of this filename and passes
+# them to the store and rider stages as ORDER_NUMBER, so both apps act on this
+# exact order instead of "whatever is at the top of the list" — which on
+# production would mean touching a real customer's order.
+# Keep the whole order ID (minus the leading #): the store and rider testIDs
+# use order.orderId verbatim, which is not guaranteed to be digits only.
+- evalScript: ${output.orderNumber = maestro.copiedText.replace(/[^A-Za-z0-9-]/g, '')}
+- assertTrue:
+    condition: ${output.orderNumber.length > 0}
+    label: Order number must be readable from the order detail screen
+- takeScreenshot: qa-order-number-${output.orderNumber}
+# `customer.order.status` renders customer-facing prose ("Waiting for the store
+# to confirm your order."), so it cannot be matched without coupling this test
+# to English copy. `customer.order.status-code` is the QA-build-only hook that
+# carries the raw orderStatus enum. Both are OrderDetail.js.
+- copyTextFrom:
+    id: customer.order.status-code
+- assertTrue:
+    condition: ${maestro.copiedText.trim() === 'PENDING'}
+    label: A freshly placed order must report a pending state
+- takeScreenshot: customer-order-placed-${RUN_ID}

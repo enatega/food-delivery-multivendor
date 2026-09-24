@@ -39,7 +39,14 @@ tags:
 - tapOn:
     id: customer.checkout.voucher-input
 - inputText: QA-INVALID-VOUCHER-000
-- hideKeyboard
+# Dismiss with the return key, not just hideKeyboard. Cloud devices report
+# "Couldn't hide the keyboard", and a keyboard left up covers the submit control
+# below the field, so the tap lands on the keyboard and the screen never
+# advances. This input defines no onSubmitEditing, so Enter only blurs.
+# hideKeyboard stays as a fallback, optional so "no keyboard" is not a failure.
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
 - tapOn:
     id: customer.checkout.voucher-apply
 # The mutation is in flight; give the rejection time to come back before
