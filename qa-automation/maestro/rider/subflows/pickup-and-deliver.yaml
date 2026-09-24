@@ -1,0 +1,78 @@
+appId: ${APP_ID}
+---
+# Pick up and delivery both live on the order detail screen, reached from the
+# Processing card.
+- tapOn:
+    id: rider.tab.orders.processing
+- extendedWaitUntil:
+    visible:
+      id: "rider.order.card.${ORDER_NUMBER}"
+    timeout: 45000
+- tapOn:
+    id: "rider.order.details-open.${ORDER_NUMBER}"
+- extendedWaitUntil:
+    visible:
+      text: "Order Details"
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 8000
+# The action buttons sit inside a @gorhom/bottom-sheet whose content never
+# reaches the iOS accessibility tree: rider.order.picked-up and
+# rider.order.delivered exist in code but Maestro cannot resolve them. Expand
+# the sheet so the action button is fully on screen at a fixed position, tap
+# it by coordinate, and prove every transition through what IS observable
+# (the confirmation alert and the Delivered tab's status text).
+- swipe:
+    start: "50%, 61%"
+    end: "50%, 12%"
+    duration: 800
+- waitForAnimationToEnd:
+    timeout: 5000
+# Pick up (ASSIGNED -> PICKED).
+- tapOn:
+    point: "50%, 94%"
+- takeScreenshot: rider-order-picked-${ORDER_NUMBER}
+# The same slot then becomes "Mark as Delivered". While the PICKED mutation is
+# in flight the button is disabled and shows a spinner, so keep tapping until
+# the native confirmation alert appears rather than guessing a delay.
+- repeat:
+    while:
+      notVisible:
+        text: "Mark as Delivered\\?"
+    times: 10
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 3000
+      - tapOn:
+          point: "50%, 94%"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- assertVisible:
+    text: "Mark as Delivered\\?"
+# For an unpaid COD order the alert also asks the rider to confirm the cash.
+- takeScreenshot: rider-deliver-confirm-${ORDER_NUMBER}
+- tapOn:
+    text: "Mark as Delivered"
+- waitForAnimationToEnd:
+    timeout: 8000
+# Confirming delivery pops the order detail by itself and returns to the Orders
+# tabs. Wait for that instead of tapping a back control: the previous blind tap
+# at 7%,10% raced the pop, and once the list had already rendered that point is
+# the drawer's hamburger — which opened the drawer over the tab bar and made
+# rider.tab.orders.delivered unreachable for the rest of the flow.
+- extendedWaitUntil:
+    visible:
+      id: rider.tab.orders.delivered
+    timeout: 30000
+- tapOn:
+    id: rider.tab.orders.delivered
+- extendedWaitUntil:
+    visible:
+      id: "rider.order.card.${ORDER_NUMBER}"
+    timeout: 45000
+- copyTextFrom:
+    id: "rider.order.status.${ORDER_NUMBER}"
+- assertTrue:
+    condition: ${maestro.copiedText.toUpperCase().includes('DELIVERED')}
+    label: The order must report DELIVERED at the end of the E2E
+- takeScreenshot: rider-order-delivered-${ORDER_NUMBER}

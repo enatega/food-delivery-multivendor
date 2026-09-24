@@ -21,6 +21,7 @@ const ButtonContainer = (props) => {
    <>
     <View style={styles(visualTheme).flexRow}>
       <TouchableOpacity
+        testID={props.testID}
         activeOpacity={1}
         style={styles(visualTheme).linkContainer}
         onPress={props.onPress}

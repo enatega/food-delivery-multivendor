@@ -1,0 +1,11 @@
+node_modules/
+reports/
+test-results/
+playwright-report/
+.env
+.env.local
+.env.*.local
+.env.mobile.local
+.maestro/
+*.pem
+*.key

@@ -30,7 +30,7 @@ const ActiveOrders = ({ navigation, loading, error, activeOrders }) => {
   const { reFetchOrders, networkStatusActiveOrders } = useContext(OrdersContext)
 
   const emptyView = () => {
-    return <EmptyView title={'titleEmptyActiveOrders'} description={'emptyActiveOrdersDesc'} buttonText={'emptyActiveOrdersBtn'} navigateTo='Discovery' />
+    return <EmptyView testID='customer.orders.active.empty' title={'titleEmptyActiveOrders'} description={'emptyActiveOrdersDesc'} buttonText={'emptyActiveOrdersBtn'} navigateTo='Discovery' />
   }
 
   const renderItem = useCallback(({ item }) => <Item item={item} navigation={navigation} currentTheme={currentTheme} configuration={configuration} />, [configuration, currentTheme, navigation])
@@ -77,7 +77,7 @@ const Item = ({ item, navigation, currentTheme, configuration }) => {
   }, [item])
 
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('OrderDetail', { _id: item?._id })}>
+    <TouchableOpacity testID={`customer.orders.active.card.${item?._id}`} activeOpacity={0.7} onPress={() => navigation.navigate('OrderDetail', { _id: item?._id })}>
       <View style={{ flex: 1 }}>
         <View style={styles(currentTheme).subContainer}>
           <View style={styles().orderDescriptionContainer}>

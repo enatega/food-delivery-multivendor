@@ -1,0 +1,47 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: customer.cart.instructions-open
+- tapOn:
+    id: customer.cart.instructions-input
+- inputText: QA-RUN-${RUN_ID}
+# Cloud simulators attach a hardware keyboard, so no software keyboard ever
+# appears and hideKeyboard aborts the flow with "Couldn't hide the keyboard".
+# Optional keeps the dismissal where a keyboard does appear (local simulators)
+# without failing where there is nothing to dismiss.
+- hideKeyboard:
+    optional: true
+- tapOn:
+    id: customer.cart.instructions-done
+- runFlow: checkout-readonly.yaml
+- assertTrue:
+    condition: ${QA_PLACE_REAL_ORDER == 'true' && FULFILLMENT == 'pickup' && PAYMENT_METHOD == 'COD'}
+    label: Production write guards must reach the device unchanged
+- tapOn:
+    id: customer.checkout.place-order
+- extendedWaitUntil:
+    visible:
+      id: customer.order.screen
+    timeout: 45000
+- assertVisible:
+    id: customer.order.number
+- takeScreenshot: order-created-${RUN_ID}
+- tapOn:
+    id: customer.order.cancel-open
+- tapOn:
+    id: customer.order.cancel-confirm
+- extendedWaitUntil:
+    visible:
+      text: ".*[Cc]ancel.*"
+    timeout: 30000
+- assertVisible:
+    id: customer.order.status
+# Read the raw enum, not the heading: OrderDetail.js renders no cancellation
+# copy at all for CANCELLED — getStatusMessage falls through to "This order is
+# no longer active." — so matching the visible text can never confirm a cancel.
+- copyTextFrom:
+    id: customer.order.status-code
+- assertTrue:
+    condition: ${maestro.copiedText.trim() === 'CANCELLED' || maestro.copiedText.trim() === 'CANCELLEDBYREST'}
+    label: Order detail must report a cancelled state
+- takeScreenshot: order-cancelled-${RUN_ID}

@@ -1,0 +1,84 @@
+appId: ${APP_ID}
+name: CM-P3-001 Every tab bar icon must land on its own screen
+tags:
+  - regression
+  - production-readonly
+  - ios
+  - navigation
+---
+# The five tab icons are the top of the customer's navigation graph, and two of
+# them — Restaurants and Store — render the SAME `Menu` component, differing only
+# by the `selectedType` route param. A regression that drops or staleness-caches
+# that param leaves both tabs showing one collection, which looks correct in a
+# screenshot and is invisible to any assertion that only checks "a screen
+# appeared". Each tab is therefore asserted both positively (its own marker is
+# visible) and negatively (its sibling's marker is gone).
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- tapOn:
+    id: customer.tab.discovery
+- extendedWaitUntil:
+    visible:
+      id: customer.discovery.screen
+    timeout: 30000
+- takeScreenshot: tab-discovery
+# --- Restaurants -----------------------------------------------------------
+- tapOn:
+    id: customer.tab.restaurants
+- extendedWaitUntil:
+    visible:
+      id: customer.restaurants.screen
+    timeout: 30000
+- assertNotVisible:
+    id: customer.discovery.screen
+- takeScreenshot: tab-restaurants
+# --- Store: the same component, and it must actually swap ------------------
+- tapOn:
+    id: customer.tab.store
+- extendedWaitUntil:
+    visible:
+      id: customer.store.screen
+    timeout: 30000
+- assertNotVisible:
+    id: customer.restaurants.screen
+- takeScreenshot: tab-store
+# Back to Restaurants, to prove the swap is not one-way.
+- tapOn:
+    id: customer.tab.restaurants
+- extendedWaitUntil:
+    visible:
+      id: customer.restaurants.screen
+    timeout: 30000
+- assertNotVisible:
+    id: customer.store.screen
+# --- Search ----------------------------------------------------------------
+- tapOn:
+    id: customer.tab.search
+- extendedWaitUntil:
+    visible:
+      id: customer.search.screen
+    timeout: 30000
+- assertVisible:
+    id: customer.search.input
+- takeScreenshot: tab-search
+# --- Profile ---------------------------------------------------------------
+# The Profile tab renders Profile or CreateAccount depending on the session, so
+# a signed-in customer landing on the auth wall here is a real regression.
+- tapOn:
+    id: customer.tab.profile
+- extendedWaitUntil:
+    visible:
+      id: customer.profile.screen
+    timeout: 30000
+- assertNotVisible:
+    id: customer.auth.welcome
+- takeScreenshot: tab-profile
+# --- Home again ------------------------------------------------------------
+- tapOn:
+    id: customer.tab.discovery
+- extendedWaitUntil:
+    visible:
+      id: customer.discovery.screen
+    timeout: 30000
+- assertNotVisible:
+    id: customer.profile.screen

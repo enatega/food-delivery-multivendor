@@ -1,0 +1,59 @@
+appId: ${APP_ID}
+name: CM-P3-003 Catalog cards must open the right detail screen and pop back
+tags:
+  - regression
+  - production-readonly
+  - ios
+  - navigation
+---
+# The catalog drill-down is the path every order starts from: a restaurant card
+# opens a restaurant, a product card opens an item, and each must pop back to the
+# screen that pushed it. `customer.restaurant.screen` marks the LOADED restaurant
+# render, not the loading skeleton, so this cannot pass on a spinner.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+# --- A card on Discovery pushes a restaurant -------------------------------
+- tapOn:
+    id: customer.tab.discovery
+- extendedWaitUntil:
+    visible:
+      id: customer.discovery.screen
+    timeout: 30000
+- tapOn:
+    id: "customer\\.restaurant\\.card\\..*"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: customer.restaurant.screen
+    timeout: 30000
+- takeScreenshot: restaurant-from-discovery
+# The restaurant screen draws its own ImageHeader instead of the stack header, so
+# its back control is `customer.restaurant.back`, not the header's "Go back".
+- tapOn:
+    id: customer.restaurant.back
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.discovery.screen
+# --- The same card type from Search ----------------------------------------
+# Search reaches the restaurant through a different navigator path, so it is
+# asserted separately rather than assumed equivalent to the Discovery route.
+- runFlow: ../../subflows/discovery.yaml
+- assertVisible:
+    id: customer.item.screen
+- takeScreenshot: item-from-restaurant
+# --- Popping the item returns to the restaurant, not to the tab root -------
+- runFlow: ../../subflows/back.yaml
+- assertVisible:
+    id: customer.restaurant.screen
+- assertNotVisible:
+    id: customer.item.screen
+# --- Popping the restaurant returns to Search -------------------------------
+- tapOn:
+    id: customer.restaurant.back
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.search.screen
+- assertNotVisible:
+    id: customer.restaurant.screen

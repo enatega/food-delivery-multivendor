@@ -130,6 +130,7 @@ function Favourite() {
   const emptyView = () => {
     return (
       <EmptyView
+        testID='customer.favourites.empty'
         title={'titleEmptyFav'}
         description={'emptyFavDesc'}
         buttonText={'emptyFavBtn'}
@@ -149,7 +150,7 @@ function Favourite() {
 const favouriteRestaurants = data?.userFavourite?.filter(item => item !== null) || []
 console.log('Favourite Restaurants:', favouriteRestaurants)
   return (
-    <SafeAreaView edges={['bottom']} style={styles(currentTheme).flex}>
+    <SafeAreaView testID='customer.favourites.screen' edges={['bottom']} style={styles(currentTheme).flex}>
       <FlatList
         data={favouriteRestaurants}
         keyExtractor={(item, index) => item._id}

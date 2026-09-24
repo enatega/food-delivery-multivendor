@@ -1,0 +1,50 @@
+appId: ${APP_ID}
+---
+# ORDER_NUMBER comes from the customer stage, so every selector below is scoped
+# to that one order. Never fall back to "the first card in the list" here: on
+# production the top card can belong to a real customer.
+- extendedWaitUntil:
+    visible:
+      id: "store.order.card.${ORDER_NUMBER}"
+    timeout: ${NEW_ORDER_TIMEOUT}
+- scrollUntilVisible:
+    element:
+      id: "store.order.card.${ORDER_NUMBER}"
+    direction: DOWN
+    timeout: 30000
+    centerElement: false
+- assertVisible:
+    id: "store.order.number.${ORDER_NUMBER}"
+- copyTextFrom:
+    id: "store.order.status.${ORDER_NUMBER}"
+- assertTrue:
+    condition: ${maestro.copiedText.toUpperCase().includes('PENDING')}
+    label: The order must still be PENDING before the store accepts it
+- takeScreenshot: store-order-pending-${ORDER_NUMBER}
+- tapOn:
+    id: "store.order.accept.${ORDER_NUMBER}"
+- extendedWaitUntil:
+    visible:
+      id: store.order.prep-time.sheet
+    timeout: 20000
+- tapOn:
+    id: "store.order.prep-time.option.${PREPARATION_TIME}"
+- tapOn:
+    id: store.order.prep-time.done
+# Accepting navigates the app to the Processing list on its own
+# (ROUTES.processingOrders), so the assertion below also proves the accept
+# mutation came back successfully rather than just closing the sheet.
+- extendedWaitUntil:
+    visible:
+      id: store.orders.processing.screen
+    timeout: 45000
+- extendedWaitUntil:
+    visible:
+      id: "store.order.card.${ORDER_NUMBER}"
+    timeout: 45000
+- copyTextFrom:
+    id: "store.order.status.${ORDER_NUMBER}"
+- assertTrue:
+    condition: ${maestro.copiedText.toUpperCase().includes('ACCEPTED')}
+    label: The order must report ACCEPTED after the store accepts it
+- takeScreenshot: store-order-accepted-${ORDER_NUMBER}

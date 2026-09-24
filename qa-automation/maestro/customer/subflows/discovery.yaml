@@ -1,0 +1,62 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: customer.tab.search
+- extendedWaitUntil:
+    visible:
+      id: customer.search.input
+    timeout: 15000
+# On a dev-client build the Search screen is still settling when the text is
+# typed, and the query can be dropped, leaving an empty box and no results.
+# Retry the whole type-and-wait so a lost query is re-entered, not waited out.
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          id: customer.search.input
+      - eraseText: 50
+      - inputText: ${RESTAURANT_NAME}
+      # Dismiss with the return key, not just hideKeyboard. Cloud devices report
+      # "Couldn't hide the keyboard", and a keyboard left up covers the submit
+      # control below the field, so the tap lands on the keyboard and the screen
+      # never advances. This input defines no onSubmitEditing, so Enter only
+      # blurs. hideKeyboard stays as a fallback, optional so "no keyboard" is
+      # not a failure.
+      - pressKey: Enter
+      - hideKeyboard:
+          optional: true
+      # Maestro matches `text` as an anchored regex, but the app renders catalog
+      # names with surrounding whitespace (e.g. "Falafel Tmeer "). Every name
+      # match below is therefore wrapped in .* so padding does not cause a false
+      # negative.
+      - extendedWaitUntil:
+          visible:
+            text: ".*${RESTAURANT_NAME}.*"
+          timeout: 20000
+# Tap the restaurant CARD by its testID, not by raw text: the search box still
+# holds the same string, so a text match can resolve to the input field and
+# merely refocus it instead of navigating.
+- tapOn:
+    id: "customer\\.restaurant\\.card\\..*"
+    index: 0
+# Fail loudly if the card that was tapped was not the intended restaurant.
+- extendedWaitUntil:
+    visible:
+      text: ".*${RESTAURANT_NAME}.*"
+    timeout: 30000
+# Scroll to and tap the product CARD by its testID. A text match here is unsafe:
+# the scroll container's accessibility label aggregates every child's text, so
+# ".*<product>.*" also matches the full-screen container and the tap lands on
+# nothing.
+- scrollUntilVisible:
+    element:
+      id: "customer\\.product\\.card\\.${PRODUCT_ID}"
+    direction: DOWN
+    # The production menu is long enough that the product only reaches the
+    # viewport after ~30s of scrolling, so 30s timed out with it just in view.
+    timeout: 90000
+    centerElement: false
+- tapOn:
+    id: "customer\\.product\\.card\\.${PRODUCT_ID}"
+- assertVisible:
+    id: customer.item.screen

@@ -1,0 +1,36 @@
+appId: ${APP_ID}
+---
+# new-orders.tsx returns an empty list when dataProfile.available is false, so
+# an offline rider sees "no orders" and the E2E would fail with a misleading
+# "card not found". Force availability on before looking for the order.
+- tapOn:
+    id: rider.drawer.toggle
+- extendedWaitUntil:
+    visible:
+      id: rider.availability.toggle
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: rider.availability.toggle.off
+    commands:
+      - tapOn:
+          id: rider.availability.toggle
+      - extendedWaitUntil:
+          visible:
+            id: rider.availability.toggle.on
+          timeout: 20000
+- assertVisible:
+    id: rider.availability.toggle.on
+- takeScreenshot: rider-available-${RUN_ID}
+# Close the drawer again: it covers the order list underneath. The open drawer
+# sits over the header, so its own toggle is not reachable; tap the dimmed
+# scrim to the right of the drawer panel instead.
+- tapOn:
+    point: "95%,50%"
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: rider.orders.new.screen
+    timeout: 20000

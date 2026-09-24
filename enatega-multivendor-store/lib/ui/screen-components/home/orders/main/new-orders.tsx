@@ -129,6 +129,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     <GestureHandlerRootView style={style.gestureContainer}>
       <BottomSheetModalProvider>
         <View
+          testID="store.orders.new.screen"
           className="pt-14 flex-1 items-center"
           style={[
             style.container,

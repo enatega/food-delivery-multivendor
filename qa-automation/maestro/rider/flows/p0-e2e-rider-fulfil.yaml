@@ -1,0 +1,18 @@
+appId: ${APP_ID}
+name: RM-E2E-001 Rider assigns, picks up and delivers the order (stage 3 of 3)
+tags:
+  - e2e-rider
+  - production-write
+  - ios
+---
+# See the store flow: no `permissions:` block, because overriding permissions
+# restarts these dev-client builds into a render error. Grant location to the
+# rider simulator once by hand instead.
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- runFlow: ../subflows/connect-dev-client.yaml
+- runFlow: ../subflows/login.yaml
+- runFlow: ../subflows/ensure-available.yaml
+- runFlow: ../subflows/assign-order.yaml
+- runFlow: ../subflows/pickup-and-deliver.yaml

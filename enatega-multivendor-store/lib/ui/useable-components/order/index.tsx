@@ -158,6 +158,7 @@ const Order = ({
   return (
     <View className="w-full">
       <View
+        testID={`store.order.card.${order?.orderId}`}
         style={[
           styles.card,
           {
@@ -179,6 +180,7 @@ const Order = ({
               {t("Order ID")}
             </Text>
             <Text
+              testID={`store.order.number.${order?.orderId}`}
               selectable
               style={{
                 color: appTheme.fontMainColor,
@@ -199,6 +201,7 @@ const Order = ({
             ]}
           >
             <Text
+              testID={`store.order.status.${order?.orderId}`}
               style={{
                 color: statusPalette.color,
                 fontSize: 12,
@@ -336,6 +339,7 @@ const Order = ({
             <View style={styles.actionRow}>
               {/* Decline */}
               <TouchableOpacity
+                testID={`store.order.decline.${order?.orderId}`}
                 accessibilityRole="button"
                 disabled={loadingCancelOrder}
                 onPress={() => onCancelOrderHandler()}
@@ -362,6 +366,7 @@ const Order = ({
               {/* Accept */}
               {handlePresentModalPress && (
                 <TouchableOpacity
+                  testID={`store.order.accept.${order?.orderId}`}
                   accessibilityRole="button"
                   onPress={() => handlePresentModalPress(order)}
                   style={[

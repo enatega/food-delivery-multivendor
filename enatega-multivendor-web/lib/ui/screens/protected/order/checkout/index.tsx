@@ -129,7 +129,9 @@ export default function OrderCheckoutScreen() {
   console.log(cart, "cart");
   const { userAddress } = useUserAddress();
   const restaurantFromLocalStorage = localStorage.getItem("restaurant");
-  const { data: restaurantData } = useRestaurant(restaurantId || "") || {
+  const checkoutRestaurantId =
+    restaurantId || restaurantFromLocalStorage || "";
+  const { data: restaurantData } = useRestaurant(checkoutRestaurantId) || {
     data: restaurantFromLocalStorage
       ? JSON.parse(restaurantFromLocalStorage)
       : null,
@@ -736,7 +738,7 @@ export default function OrderCheckoutScreen() {
 
       placeOrder({
         variables: {
-          restaurant: restaurantId,
+          restaurant: checkoutRestaurantId,
           orderInput: items,
           instructions: localStorage.getItem("newOrderInstructions") || "",
           paymentMethod: paymentMethod,
@@ -929,7 +931,7 @@ export default function OrderCheckoutScreen() {
   return (
     <>
       {/* <!-- Header with map and navigation --> */}
-      <div className="relative">
+      <div data-testid="checkout-page" className="relative">
         {isLoaded ? (
           <GoogleMap
             mapContainerStyle={{
@@ -1144,6 +1146,7 @@ export default function OrderCheckoutScreen() {
                 return (
                   <div
                     key={item._id}
+                    data-testid={`checkout-item-${item._id}`}
                     className="flex items-center justify-between mb-2"
                   >
                     <div className="flex items-start">
@@ -1182,7 +1185,10 @@ export default function OrderCheckoutScreen() {
                       </div>
                     </div>
 
-                    <div className="border border-secondary-color text-secondary-color py-1 px-3 rounded-lg text-xs sm:text-sm font-medium w-fit">
+                    <div
+                      data-testid="checkout-item-quantity"
+                      className="border border-secondary-color text-secondary-color py-1 px-3 rounded-lg text-xs sm:text-sm font-medium w-fit"
+                    >
                       {item.quantity}
                     </div>
                   </div>
@@ -1384,7 +1390,10 @@ export default function OrderCheckoutScreen() {
                 <span className="font-inter text-gray-900 dark:text-white leading-5">
                   {t("item_subtotal_label")}
                 </span>
-                <span className="font-inter text-gray-900 dark:text-white leading-5">
+                <span
+                  data-testid="checkout-subtotal"
+                  className="font-inter text-gray-900 dark:text-white leading-5"
+                >
                   {CURRENCY_SYMBOL}
                   {calculatePrice(0)}
                 </span>
@@ -1421,7 +1430,10 @@ export default function OrderCheckoutScreen() {
                   {" "}
                   {t("tax_label")}{" "}
                 </span>
-                <span className="font-inter text-gray-900 dark:text-white leading-5">
+                <span
+                  data-testid="checkout-tax"
+                  className="font-inter text-gray-900 dark:text-white leading-5"
+                >
                   {CURRENCY_SYMBOL}
                   {taxCalculation()}
                 </span>
@@ -1460,13 +1472,18 @@ export default function OrderCheckoutScreen() {
 
               <div className="flex justify-between font-semibold mb-4 text-xs lg:text-[16px] dark:text-white ">
                 <span>{t("total_sum_label")}</span>
-                <span>{`${CURRENCY_SYMBOL} ${calculateTotal()}`}</span>
+                <span data-testid="checkout-total">{`${CURRENCY_SYMBOL} ${calculateTotal()}`}</span>
               </div>
 
               <button
+                data-testid="place-order"
                 className="bg-primary-color text-gray-900 dark:text-gray-900 w-full py-2 rounded-full font-semibold text-xs lg:text-[16px] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={onPlaceOrder}
-                disabled={cart.length === 0 || loadingOrderMutation}
+                disabled={
+                  !finalRestaurantData?.restaurant ||
+                  cart.length === 0 ||
+                  loadingOrderMutation
+                }
               >
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />
@@ -1495,7 +1512,10 @@ export default function OrderCheckoutScreen() {
                 <span className="font-inter text-gray-900 dark:text-white leading-5">
                   {t("item_subtotal_label")}
                 </span>
-                <span className="font-inter text-gray-900 dark:text-white leading-5">
+                <span
+                  data-testid="checkout-subtotal"
+                  className="font-inter text-gray-900 dark:text-white leading-5"
+                >
                   {CURRENCY_SYMBOL}
                   {calculatePrice(0)}
                 </span>
@@ -1534,7 +1554,10 @@ export default function OrderCheckoutScreen() {
                 <span className="font-inter text-gray-900 dark:text-white leading-5">
                   {t("tax_label")}
                 </span>
-                <span className="font-inter text-gray-900 dark:text-white leading-5">
+                <span
+                  data-testid="checkout-tax"
+                  className="font-inter text-gray-900 dark:text-white leading-5"
+                >
                   {CURRENCY_SYMBOL}
                   {taxCalculation()}
                 </span>
@@ -1573,13 +1596,18 @@ export default function OrderCheckoutScreen() {
 
               <div className="flex justify-between font-semibold mb-4 text-xs lg:text-[14px ] dark:text-white">
                 <span>{t("total_sum_label")}</span>
-                <span>{`${CURRENCY_SYMBOL} ${calculateTotal()}`}</span>
+                <span data-testid="checkout-total">{`${CURRENCY_SYMBOL} ${calculateTotal()}`}</span>
               </div>
 
               <button
+                data-testid="place-order"
                 className="bg-primary-color text-gray-900 dark:text-white w-full py-2 rounded-full text-xs lg:text-[12px]"
                 onClick={onPlaceOrder}
-                disabled={cart.length === 0 || loadingOrderMutation}
+                disabled={
+                  !finalRestaurantData?.restaurant ||
+                  cart.length === 0 ||
+                  loadingOrderMutation
+                }
               >
                 {loadingOrderMutation ? (
                   <FontAwesomeIcon icon={faSpinner} spin />

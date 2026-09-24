@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
@@ -31,6 +31,8 @@ export default function Cart({ onClose }: CartProps) {
     updateItemQuantity,
     calculateSubtotal,
     restaurant: restaurantId,
+    transformCartWithFoodInfo,
+    updateCart,
   } = useUser();
 
   const { CURRENCY_SYMBOL } = useConfig();
@@ -44,6 +46,13 @@ export default function Cart({ onClose }: CartProps) {
   const id = localStorage.getItem("cart-product-store-id") || "";
 
   const { data } = useRestaurant(id, decodeURIComponent(slug));
+
+  useEffect(() => {
+    if (!data?.restaurant || cart.length === 0) return;
+
+    const detailedCart = transformCartWithFoodInfo(cart, data.restaurant);
+    void updateCart(detailedCart);
+  }, [cart, data?.restaurant, transformCartWithFoodInfo, updateCart]);
 
   const router = useRouter();
   const t = useTranslations();
@@ -159,7 +168,10 @@ export default function Cart({ onClose }: CartProps) {
 
   return (
     <>
-      <div className="h-full flex flex-col bg-white dark:bg-gray-800 dark:text-white relative">
+      <div
+        data-testid="customer-cart"
+        className="h-full flex flex-col bg-white dark:bg-gray-800 dark:text-white relative"
+      >
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="font-inter font-semibold text-xl text-gray-900 dark:text-white">
@@ -177,6 +189,7 @@ export default function Cart({ onClose }: CartProps) {
             {cart.map((item) => (
               <div
                 key={item.key}
+                data-testid={`cart-item-${item._id}`}
                 className="flex sm:flex-row sm:items-center bg-white dark:bg-gray-800 dark:text-white rounded-lg p-3 shadow-sm dark:shadow-gray-700"
               >
                 <div className="flex-grow">
@@ -212,6 +225,7 @@ export default function Cart({ onClose }: CartProps) {
                 {/* Quantity Controls */}
                 <div className="flex items-center space-x-2">
                   <button
+                    aria-label={`Decrease ${item.foodTitle || item.title || t("food_item_label")} quantity`}
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -223,11 +237,15 @@ export default function Cart({ onClose }: CartProps) {
                     <FontAwesomeIcon icon={faMinus} size="xs" />
                   </button>
 
-                  <span className="text-gray-900 dark:text-white  w-6 text-center">
+                  <span
+                    data-testid="cart-item-quantity"
+                    className="text-gray-900 dark:text-white  w-6 text-center"
+                  >
                     {item.quantity}
                   </span>
 
                   <button
+                    aria-label={`Increase ${item.foodTitle || item.title || t("food_item_label")} quantity`}
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -325,10 +343,11 @@ export default function Cart({ onClose }: CartProps) {
         {/* Fixed Checkout Button */}
         <div className="p-4 flex flex-col justify-center items-center border-t bg-white dark:bg-gray-800 ">
           <button
+            data-testid="go-to-checkout"
             className="flex justify-between items-center w-full bg-primary-color text-black rounded-full px-4 py-3"
             onClick={() => {
-              router.push("/order/checkout");
               if (onClose) onClose();
+              router.push("/order/checkout");
             }}
             type="button"
           >

@@ -116,6 +116,7 @@ const CustomDrawerHeader = () => {
           <SpinnerComponent color={appTheme.secondaryTextColor} />
         ) : (
           <CustomSwitch
+            testID="rider.availability.toggle"
             value={isRiderAvailable}
             isDisabled={loading}
             onToggle={async () => {

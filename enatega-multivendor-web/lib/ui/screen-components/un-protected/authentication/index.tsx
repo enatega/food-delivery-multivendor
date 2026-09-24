@@ -293,9 +293,12 @@ export default function AuthModal({
       }}
       closeOnEscape={activePanel <= 3}
       showHeader={false}
+      data-testid="customer-auth-dialog"
     >
       {/* close icon to close the modal */}
       <button
+        aria-label="Close authentication"
+        data-testid="auth-close"
         onClick={handleModalToggle}
         className={` ${direction === "rtl" ? "left-0" : "right-0"} tooltip tooltip-left absolute top-3  z-10 transition-all duration-300 rounded-full p-2 dark:text-gray-300`}
         data-tip="Close"
@@ -312,6 +315,7 @@ export default function AuthModal({
         <Tooltip id="close-auth-modal" />
       </button>
 
+      <div data-testid="auth-stepper">
       <Stepper ref={authenticationPanelRef} activeStep={activePanel}>
         <StepperPanel>
           <LoginWithGoogle
@@ -391,6 +395,7 @@ export default function AuthModal({
           />
         </StepperPanel>
       </Stepper>
+      </div>
     </Dialog>
   );
 }

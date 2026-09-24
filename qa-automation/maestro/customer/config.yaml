@@ -1,0 +1,8 @@
+# The upload root for `maestro cloud`, so this list must reach the flows nested
+# one directory deep (p1/, p2/, p3/) as well as the p0 flows beside them.
+# Tags, not paths, choose which of these a given run executes.
+flows:
+  - "flows/*.yaml"
+  - "flows/*/*.yaml"
+executionOrder:
+  continueOnFailure: false

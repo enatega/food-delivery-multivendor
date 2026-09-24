@@ -1,0 +1,104 @@
+appId: ${APP_ID}
+name: CM-P1-025 Search normalises case, padding, and partial names
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# CM-P1-008 covers the empty state and the clear control, and discovery.yaml
+# only ever searches the exact name, so the normalisation that stands between a
+# customer's typing and a result is untested. SearchScreen.js debounces on
+# `search.trim()` and matches with
+# `restaurant.name.toLowerCase().includes(debouncedSearch.toLowerCase())`, so
+# three transformations of the allowlisted name must all reach the same card:
+#
+#   - a different case          (toLowerCase on both sides)
+#   - surrounding whitespace    (trim before the query)
+#   - a truncated name          (includes, not equality)
+#
+# All three derive from RESTAURANT_NAME at run time, so this depends on no
+# catalog data beyond the restaurant the rest of the suite already requires. No
+# sign-in is needed — search is open to guests — and nothing is added to a cart.
+- runFlow: ../../subflows/launch.yaml
+- tapOn:
+    id: customer.tab.search
+- extendedWaitUntil:
+    visible:
+      id: customer.search.input
+    timeout: 15000
+- evalScript: ${output.upperName = RESTAURANT_NAME.trim().toUpperCase()}
+- evalScript: ${output.paddedName = '   ' + RESTAURANT_NAME.trim() + '   '}
+# Drop the last two characters so the query is a strict prefix of the name. The
+# floor of 3 keeps a very short name from collapsing to a query that matches most
+# of the catalog.
+- evalScript: ${output.partialName = RESTAURANT_NAME.trim().slice(0, Math.max(3, RESTAURANT_NAME.trim().length - 2))}
+- assertTrue:
+    condition: ${output.partialName.length < RESTAURANT_NAME.trim().length}
+    label: The partial query must be genuinely shorter than the full restaurant name
+# --- Case ------------------------------------------------------------------
+- tapOn:
+    id: customer.search.input
+- inputText: ${output.upperName}
+# Dismiss with the return key, not just hideKeyboard. Cloud devices report
+# "Couldn't hide the keyboard", and a keyboard left up covers the submit control
+# below the field, so the tap lands on the keyboard and the screen never
+# advances. This input defines no onSubmitEditing, so Enter only blurs.
+# hideKeyboard stays as a fallback, optional so "no keyboard" is not a failure.
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+# The query is debounced before it filters, so the wait has to outlast the
+# debounce as well as the render.
+- extendedWaitUntil:
+    visible:
+      text: ".*${RESTAURANT_NAME}.*"
+    timeout: 30000
+- assertVisible:
+    id: "customer\\.restaurant\\.card\\..*"
+- takeScreenshot: search-uppercase-match
+- tapOn:
+    id: customer.search.clear
+- extendedWaitUntil:
+    notVisible:
+      id: customer.search.clear
+    timeout: 15000
+# --- Padding ---------------------------------------------------------------
+- tapOn:
+    id: customer.search.input
+- inputText: ${output.paddedName}
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+- extendedWaitUntil:
+    visible:
+      text: ".*${RESTAURANT_NAME}.*"
+    timeout: 30000
+- assertVisible:
+    id: "customer\\.restaurant\\.card\\..*"
+- takeScreenshot: search-padded-match
+- tapOn:
+    id: customer.search.clear
+- extendedWaitUntil:
+    notVisible:
+      id: customer.search.clear
+    timeout: 15000
+# --- Partial name ----------------------------------------------------------
+- tapOn:
+    id: customer.search.input
+- inputText: ${output.partialName}
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+# A prefix can only widen the result set, so the target may sit below the fold
+# behind other matches. Scroll to it rather than assuming it is the first hit.
+- scrollUntilVisible:
+    element:
+      text: ".*${RESTAURANT_NAME}.*"
+    direction: DOWN
+    timeout: 30000
+    centerElement: false
+- assertVisible:
+    text: ".*${RESTAURANT_NAME}.*"
+- assertVisible:
+    id: "customer\\.restaurant\\.card\\..*"
+- takeScreenshot: search-partial-match

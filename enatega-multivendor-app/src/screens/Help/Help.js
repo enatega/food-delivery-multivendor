@@ -89,7 +89,7 @@ const Help = (props) => {
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
   return (
-    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles(currentTheme).flex}>
+    <SafeAreaView testID='customer.help.screen' edges={['bottom', 'right', 'left']} style={styles(currentTheme).flex}>
       <StatusBar barStyle='light-content' backgroundColor={currentTheme.themeBackground} />
       <View style={[styles(currentTheme).flex, styles(currentTheme).mainContainer]}>
         <FlatList

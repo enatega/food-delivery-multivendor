@@ -6,7 +6,7 @@ import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, Alert, AppState, BackHandler, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import { ActivityIndicator, Alert, AppState, BackHandler, LogBox, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
 import * as NavigationBar from 'expo-navigation-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import FlashMessage from 'react-native-flash-message'
@@ -38,6 +38,13 @@ import {
   subscribeToSessionInvalidation,
   subscribeToSessionExpiredModalDismiss
 } from './src/utils/session'
+
+// QA automation drives dev-client builds, where LogBox toasts (e.g. Amplitude's
+// cookie warning) sit on top of the tab bar and swallow taps. Opt-in only: Metro
+// must be started with EXPO_PUBLIC_QA_DISABLE_LOGBOX=true, and never in release.
+if (__DEV__ && process.env.EXPO_PUBLIC_QA_DISABLE_LOGBOX === 'true') {
+  LogBox.ignoreAllLogs()
+}
 import {
   initializePublicAccessToken,
   stopPublicAccessTokenRefresh

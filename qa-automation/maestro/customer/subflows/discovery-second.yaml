@@ -1,0 +1,42 @@
+appId: ${APP_ID}
+---
+# Search for the second allowlisted restaurant and scroll its second allowlisted
+# product into view, without tapping it. Callers decide what the tap should do.
+#
+# Same matching rules as discovery.yaml: names are wrapped in .* because catalog
+# names carry padding, cards are tapped by test ID because the search box and
+# the menu's scroll container both defeat text matching.
+- tapOn:
+    id: customer.tab.search
+- extendedWaitUntil:
+    visible:
+      id: customer.search.input
+    timeout: 15000
+- tapOn:
+    id: customer.search.input
+- inputText: ${SECOND_RESTAURANT_NAME}
+# Dismiss with the return key, not just hideKeyboard. Cloud devices report
+# "Couldn't hide the keyboard", and a keyboard left up covers the submit control
+# below the field, so the tap lands on the keyboard and the screen never
+# advances. This input defines no onSubmitEditing, so Enter only blurs.
+# hideKeyboard stays as a fallback, optional so "no keyboard" is not a failure.
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+- extendedWaitUntil:
+    visible:
+      text: ".*${SECOND_RESTAURANT_NAME}.*"
+    timeout: 30000
+- tapOn:
+    id: "customer\\.restaurant\\.card\\..*"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: ".*${SECOND_RESTAURANT_NAME}.*"
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: "customer\\.product\\.card\\.${SECOND_PRODUCT_ID}"
+    direction: DOWN
+    timeout: 30000
+    centerElement: false

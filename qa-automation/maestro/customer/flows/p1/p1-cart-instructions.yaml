@@ -1,0 +1,133 @@
+appId: ${APP_ID}
+name: CM-P1-028 A note to the restaurant is kept, shown back, and never priced
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# CM-P3-004 proves the special-instructions modal opens and dismisses. It never
+# types anything, so the two ways this feature actually fails in production are
+# both uncovered: a note that is accepted and silently dropped (the kitchen
+# never sees "no peanuts"), and a note that is echoed into the price.
+#
+# SpecialInstructions keeps the draft in local state and only lifts it to
+# UserContext on Done, then renders the lifted value as the row's caption. So
+# the row caption is the evidence the note was committed, and the modal's own
+# field is the evidence the draft survived. Both are asserted.
+#
+# Read-only: the note lives in context and storage until checkout, and this flow
+# never taps place-order.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- assertVisible:
+    id: customer.cart.screen
+# The figure the note must not move.
+- copyTextFrom:
+    id: customer.cart.total
+- evalScript: ${output.totalBefore = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.totalBefore) && output.totalBefore > 0}
+    label: Cart total must be a positive number before the note is written
+# --- Write the note ---------------------------------------------------------
+- tapOn:
+    id: customer.cart.instructions-open
+- extendedWaitUntil:
+    visible:
+      id: customer.cart.instructions-input
+    timeout: 15000
+- tapOn:
+    id: customer.cart.instructions-input
+- inputText: QA note do not deliver
+# Unlike the other inputs in this app, this field defines onSubmitEditing, so
+# Enter commits the note and closes the modal outright. The Done control is the
+# fallback for a device that swallows the return key; it is guarded so a modal
+# that already closed is not treated as a missing control.
+- pressKey: Enter
+- runFlow:
+    when:
+      visible:
+        id: customer.cart.instructions-input
+    commands:
+      - hideKeyboard:
+          optional: true
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn:
+          id: customer.cart.instructions-done
+- extendedWaitUntil:
+    notVisible:
+      id: customer.cart.instructions-input
+    timeout: 15000
+- assertVisible:
+    id: customer.cart.screen
+# --- The committed note is shown back ---------------------------------------
+# The row's caption falls back to the "special request" placeholder when the
+# context value is empty, so a note that was dropped leaves the placeholder and
+# fails this assertion instead of passing silently.
+- assertVisible:
+    text: ".*QA note do not deliver.*"
+- takeScreenshot: cart-instructions-saved
+# --- And it must not be priced ----------------------------------------------
+- copyTextFrom:
+    id: customer.cart.total
+- evalScript: ${output.totalAfterNote = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.totalAfterNote - output.totalBefore) < 0.01}
+    label: Writing a note to the restaurant must not change the cart total
+# --- Reopening must show the note, not an empty field -----------------------
+- tapOn:
+    id: customer.cart.instructions-open
+- extendedWaitUntil:
+    visible:
+      id: customer.cart.instructions-input
+    timeout: 15000
+- copyTextFrom:
+    id: customer.cart.instructions-input
+- evalScript: ${output.reopened = maestro.copiedText.trim()}
+- assertTrue:
+    condition: ${output.reopened === 'QA note do not deliver'}
+    label: Reopening the modal must show the note that was saved
+- takeScreenshot: cart-instructions-reopened
+- hideKeyboard:
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn:
+    id: customer.cart.instructions-done
+- extendedWaitUntil:
+    notVisible:
+      id: customer.cart.instructions-input
+    timeout: 15000
+# --- The note must reach checkout -------------------------------------------
+# Checkout is where the note is finally read into the order, so a note that is
+# lost on the way there is lost for the order. Checkout.js renders it under
+# "Instruction for the restaurant", which is the last place it can be verified
+# without placing anything. Pickup and cash are chosen only to make the total
+# deterministic; place-order is asserted and never tapped.
+- runFlow: ../../subflows/open-checkout.yaml
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- tapOn:
+    id: customer.checkout.payment.cod
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.checkoutTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.checkoutTotal) && output.checkoutTotal > 0 && output.checkoutTotal <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must be positive and at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+# The assertion this flow exists for: the note the customer typed in the cart is
+# the note the restaurant will be sent.
+- assertVisible:
+    text: ".*QA note do not deliver.*"
+- takeScreenshot: checkout-carries-instructions
+# Deliberately NOT asserted here: popping back to the cart. The Checkout header
+# renders its own back arrow with no "Go back" accessibility label, so
+# subflows/back.yaml cannot leave this screen — it fails with
+# "Element not found: Text matching regex: Go back". That is a navigation
+# concern and belongs to CM-P3-004, which owns the cart/checkout round trip.

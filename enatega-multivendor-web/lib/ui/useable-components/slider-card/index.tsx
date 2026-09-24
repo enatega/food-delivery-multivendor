@@ -188,7 +188,7 @@ const SliderCard = <T,>({
           )}
           numVisible={numVisible}
           numScroll={1}
-          circular
+          circular={data.length > numVisible}
           responsiveOptions={responsiveOptions}
           showIndicators={false}
           showNavigators

@@ -1,0 +1,106 @@
+appId: ${APP_ID}
+name: CM-P1-029 A refused location still resolves a serviceable demo location
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# Every other mobile flow launches with `location: inuse`, so nothing in the
+# suite has ever asked what a customer who REFUSES location sees. On this
+# deployment the answer is not the permission gate:
+# `src/context/Location.js:98` seeds a demo location from
+# `customerDemoZoneId` and returns before it consults the device permission or
+# any stored location, so `shouldShowLocationStack` in `routes/index.js` is
+# never true and `CurrentLocation` cannot render while the server configuration
+# has `enableCustomerDemoMode` on.
+#
+# That seeding is load-bearing and silent. If it breaks, every customer who
+# declines the permission is held at a gate they cannot pass, or lands on a
+# catalog queried with null coordinates that returns nothing — and no other
+# flow would notice, because they all grant the permission.
+#
+# So this asserts the seeding end to end, with the permission refused
+# throughout: the app reaches the catalog, the catalog is populated (which is
+# only possible if real coordinates reached `nearByRestaurantsPreview`), and
+# the seeded location is inside a serviceable zone (the allowlisted restaurant
+# is still findable). None of those can pass on a null location.
+#
+# If `enableCustomerDemoMode` is ever turned off for this environment, the
+# launch subflow times out instead — the correct signal that the premise here
+# changed and that CM-P1-029 should be rewritten around the gate it was
+# originally aimed at.
+#
+# Nothing signs in and nothing is added to a cart.
+- runFlow: ../../subflows/launch-location-refused.yaml
+# --- The gate must not be what the customer gets -----------------------------
+- assertNotVisible:
+    id: customer.location.screen
+- assertNotVisible:
+    id: customer.location.allow
+# --- The catalog must be reachable and populated -----------------------------
+- tapOn:
+    id: customer.tab.discovery
+- extendedWaitUntil:
+    visible:
+      id: customer.discovery.screen
+    timeout: 30000
+# A card on Discovery is the evidence that coordinates reached the query. A
+# seeded location that resolved to null would render the same screen with
+# nothing on it, so this is the assertion that separates the two.
+- extendedWaitUntil:
+    visible:
+      id: "customer\\.restaurant\\.card\\..*"
+    timeout: 30000
+- takeScreenshot: location-refused-catalog-populated
+# --- The seeded location must be in a serviceable zone -----------------------
+# Reaching the allowlisted restaurant proves more than "some data came back":
+# the demo zone actually serves the fixture this whole suite is built on.
+- tapOn:
+    id: customer.tab.search
+- extendedWaitUntil:
+    visible:
+      id: customer.search.input
+    timeout: 15000
+- tapOn:
+    id: customer.search.input
+- inputText: ${RESTAURANT_NAME}
+# Dismiss with the return key, not just hideKeyboard. Cloud devices report
+# "Couldn't hide the keyboard", and a keyboard left up covers the controls below
+# the field. This input defines no onSubmitEditing, so Enter only blurs.
+- pressKey: Enter
+- hideKeyboard:
+    optional: true
+# Catalog names carry surrounding whitespace, so the match is wrapped in .*
+- extendedWaitUntil:
+    visible:
+      text: ".*${RESTAURANT_NAME}.*"
+    timeout: 30000
+- assertVisible:
+    id: "customer\\.restaurant\\.card\\..*"
+- takeScreenshot: location-refused-restaurant-findable
+# --- And it must survive a restart with the permission still refused ---------
+# The seeded location is written to storage, so the second launch takes the
+# stored-location path rather than the seeding path. Both must produce a
+# working catalog, and only a restart exercises the second one.
+- stopApp:
+    appId: ${APP_ID}
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 120000
+- assertNotVisible:
+    id: customer.location.screen
+- tapOn:
+    id: customer.tab.discovery
+- extendedWaitUntil:
+    visible:
+      id: customer.discovery.screen
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "customer\\.restaurant\\.card\\..*"
+    timeout: 30000
+- takeScreenshot: location-refused-catalog-after-restart

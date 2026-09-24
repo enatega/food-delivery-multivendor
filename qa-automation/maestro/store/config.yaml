@@ -1,0 +1,7 @@
+# Upload root for `maestro cloud`, mirroring maestro/customer/config.yaml.
+# Tags, not paths, choose which flows a given run executes.
+flows:
+  - "flows/*.yaml"
+  - "flows/*/*.yaml"
+executionOrder:
+  continueOnFailure: false

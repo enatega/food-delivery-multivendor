@@ -1,0 +1,26 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: customer.cart.checkout
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.screen
+    timeout: 30000
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- tapOn:
+    id: customer.checkout.payment.cod
+- assertVisible:
+    id: customer.checkout.subtotal
+- assertVisible:
+    id: customer.checkout.tax
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.orderTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.orderTotal) && output.orderTotal > 0 && output.orderTotal <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must be positive and at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: checkout-readonly
+

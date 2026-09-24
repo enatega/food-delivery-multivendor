@@ -31,7 +31,7 @@ function emptyViewPastOrders() {
 
     const hasPastOrders = orders.filter((o) => orderStatusInactive.includes(o.orderStatus)).length > 0
     if (hasActiveOrders || hasPastOrders) return null
-    return <EmptyView title={'titleEmptyPastOrders'} description={'emptyPastOrdersDesc'} buttonText={'emptyPastOrdersBtn'} navigateTo='Discovery' />
+    return <EmptyView testID='customer.orders.past.empty' title={'titleEmptyPastOrders'} description={'emptyPastOrdersDesc'} buttonText={'emptyPastOrdersBtn'} navigateTo='Discovery' />
   }
 }
 
@@ -108,6 +108,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
   return (
     <View style={{ ...alignment.MBsmall }}>
       <TouchableOpacity
+        testID={`customer.orders.past.card.${item._id}`}
         activeOpacity={0.7}
         onPress={() =>
           navigation.navigate('OrderDetail', {
@@ -180,7 +181,7 @@ const Item = ({ item, navigation, currentTheme, configuration, onPressReview }) 
             </View>
           </View>
           <View style={styles().rateOrderContainer}>
-            <TouchableOpacity activeOpacity={0.7} style={styles(currentTheme).subContainerButton} onPress={() => navigation.navigate('Reorder', { item })}>
+            <TouchableOpacity testID={`customer.orders.past.reorder.${item._id}`} activeOpacity={0.7} style={styles(currentTheme).subContainerButton} onPress={() => navigation.navigate('Reorder', { item })}>
               <TextDefault textColor={currentTheme.black} H5 bolder B700 center>
                 {' '}
                 {t('reOrder')}

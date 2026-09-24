@@ -1,0 +1,56 @@
+appId: ${APP_ID}
+---
+# The store and rider simulators run expo-dev-client builds, which open the
+# Expo dev launcher ("Development servers") instead of the app whenever they are
+# cold-started. Reconnect to this app's own Metro server, then wait for real UI.
+#
+# A release build never shows the launcher, so the whole block is skipped and
+# this subflow costs one hierarchy check.
+# Both apps ask for a push token on launch and, on a simulator, surface
+# "Must use physical device for Push Notifications" as a system alert that
+# swallows every tap underneath it until dismissed.
+- tapOn:
+    text: "OK"
+    optional: true
+- runFlow:
+    when:
+      visible:
+        text: "Development servers"
+    commands:
+      - tapOn:
+          text: ${METRO_URL}
+          index: 0
+      - extendedWaitUntil:
+          visible:
+            id: "store\\.(auth\\.username|orders\\.new\\.screen)"
+          timeout: 120000
+# Both apps ask for a push token on launch and, on a simulator, surface
+# "Must use physical device for Push Notifications" as a system alert that
+# swallows every tap underneath it until dismissed.
+- tapOn:
+    text: "OK"
+    optional: true
+# A dev client that auto-reconnects to Metro skips the launcher entirely and
+# then spends 45s+ building the bundle, and the push-token alert only appears
+# once that bundle runs. Keep clearing alerts until real app UI is on screen
+# rather than tapping once before the app has even rendered.
+- repeat:
+    while:
+      notVisible:
+        id: "store\\.(auth\\.username|orders\\.new\\.screen)"
+    times: 40
+    commands:
+      - tapOn:
+          text: "OK"
+          optional: true
+      - tapOn:
+          text: "Dismiss"
+          optional: true
+# Cold starts race the store/rider async i18n init: a component calls
+# useTranslation() before i18next has loaded its resources and LogBox covers the
+# app with "Render Error: Cannot read property 'length' of undefined". The app
+# itself is fine underneath, so dismiss the overlay and carry on. Remove this
+# once the apps initialise i18n before their first render.
+- tapOn:
+    text: "Dismiss"
+    optional: true

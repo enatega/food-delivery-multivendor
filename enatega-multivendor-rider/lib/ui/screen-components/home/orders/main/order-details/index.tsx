@@ -834,6 +834,7 @@ export default function OrderDetailScreen() {
               {/* Pick up Button */}
               {tab === "processing" && canPickupOrderForMode(order, mode) && (
                   <TouchableOpacity
+                    testID="rider.order.picked-up"
                     className="h-14 rounded-3xl py-3 w-full mt-4 mb-10"
                     style={{ backgroundColor: appTheme.primary }}
                     disabled={loadingOrderStatus}
@@ -858,6 +859,7 @@ export default function OrderDetailScreen() {
 
               {tab == "processing" && canDeliverOrderForMode(order, mode) && (
                 <TouchableOpacity
+                  testID="rider.order.delivered"
                   className="h-14 rounded-3xl py-3 w-full mt-4 mb-10"
                   style={{ backgroundColor: appTheme.primary }}
                   disabled={loadingOrderStatus}
@@ -905,6 +907,7 @@ export default function OrderDetailScreen() {
               {tab === "new_orders" && isNewOrderForMode(order, mode) && (
                   <View style={{ paddingBottom: Platform.OS === 'ios' ? insets.bottom : insets.bottom + 10 }}>
                     <TouchableOpacity
+                      testID="rider.order.detail.assign-me"
                       className="w-[55%] mx-auto h-14 rounded-3xl py-3 items-center justify-center"
                       style={{ backgroundColor: appTheme.primary }}
                       disabled={loadingAssignOrder}

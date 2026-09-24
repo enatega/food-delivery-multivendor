@@ -1,4 +1,7 @@
+const { getAppVariantConfig } = require('./app-variant.config')
+
 module.exports = () => {
+  const identity = getAppVariantConfig(process.env.EXPO_PUBLIC_APP_ENV || 'production')
   const iosGoogleMapsApiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS
   const androidGoogleMapsApiKey =
     process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_ANDROID
@@ -22,12 +25,12 @@ module.exports = () => {
     : fallbackUrlTypes
   const urlTypes = [
     ...googleUrlTypes,
-    { CFBundleURLSchemes: ['enategamultivendor'] }
+    { CFBundleURLSchemes: [identity.scheme] }
   ]
 
   return {
-    name: 'Enatega Multi',
-    scheme: 'enategamultivendor',
+    name: identity.name,
+    scheme: identity.scheme,
     version: '1.1.41',
     description:
       "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
@@ -61,7 +64,7 @@ module.exports = () => {
       },
       supportsTablet: true,
       userInterfaceStyle: 'automatic',
-      bundleIdentifier: 'com.enatega.multivendor',
+      bundleIdentifier: identity.bundleIdentifier,
       buildNumber: '143',
       icon: './assets/icon.png',
       googleServicesFile: './GoogleService-Info.plist',
@@ -97,7 +100,7 @@ module.exports = () => {
     },
     android: {
       versionCode: 144,
-      package: 'com.enatega.multivendor',
+      package: identity.packageName,
       userInterfaceStyle: 'automatic',
       // Disable ADB/cloud backups so the AsyncStorage DB (JWT) can't be pulled
       // off a connected device without root (SEC-002).

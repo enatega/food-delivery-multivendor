@@ -105,6 +105,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
 
   return (
     <View
+      testID="store.orders.processing.screen"
       className="pt-14 flex-1 items-center"
       style={[style.container, { backgroundColor: appTheme.themeBackground }]}
     >

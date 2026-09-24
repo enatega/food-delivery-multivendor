@@ -1,0 +1,79 @@
+appId: ${APP_ID}
+name: CM-P1-016 Logout clears the persisted session
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# The mirror image of CM-P1-011. Session persistence is only correct if the
+# session can also be ended: logging out must clear the stored token, not just
+# navigate away, so a cold restart must still land on the auth wall.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/open-profile.yaml
+- tapOn:
+    id: customer.profile.account
+- extendedWaitUntil:
+    visible:
+      id: customer.account.screen
+    timeout: 30000
+- tapOn:
+    id: customer.account.logout
+- extendedWaitUntil:
+    visible:
+      id: customer.logout.modal
+    timeout: 15000
+# Cancelling must be safe: the session survives and we are still on Account.
+- tapOn:
+    id: customer.logout.cancel
+- extendedWaitUntil:
+    notVisible:
+      id: customer.logout.modal
+    timeout: 15000
+- assertVisible:
+    id: customer.account.screen
+- takeScreenshot: logout-cancelled
+# Now log out for real.
+- tapOn:
+    id: customer.account.logout
+- extendedWaitUntil:
+    visible:
+      id: customer.logout.modal
+    timeout: 15000
+- tapOn:
+    id: customer.logout.confirm
+# Account.js resets the stack to Main, so discovery is the landing screen.
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+- tapOn:
+    id: customer.tab.profile
+- extendedWaitUntil:
+    visible:
+      id: customer.auth.welcome
+    timeout: 15000
+- assertVisible:
+    id: customer.auth.continue-email
+- takeScreenshot: logged-out
+# The real assertion: a restart that preserves device storage must not resurrect
+# the session. A logout that only cleared React state would pass everything
+# above and fail here.
+- stopApp:
+    appId: ${APP_ID}
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+- tapOn:
+    id: customer.tab.profile
+- extendedWaitUntil:
+    visible:
+      id: customer.auth.welcome
+    timeout: 15000
+- assertNotVisible:
+    id: customer.profile.screen
+- takeScreenshot: logged-out-after-restart

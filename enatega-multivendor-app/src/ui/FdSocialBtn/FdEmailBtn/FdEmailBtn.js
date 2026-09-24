@@ -17,6 +17,7 @@ const FdEmailBtn = props => {
 
   return (
     <TouchableOpacity
+      testID={props?.testID || 'customer.auth.continue-email'}
       activeOpacity={0.7}
       style={styles(currentTheme).mainContainer}
       onPress={props?.onPress}>

@@ -1,0 +1,17 @@
+appId: ${APP_ID}
+---
+# Return to the tab navigator's root with the cart intact.
+#
+# The item and cart screens are pushed over the tab bar, so `customer.tab.*` is
+# unreachable from them, and Maestro's `back` is a no-op on iOS. Restarting
+# without clearing state is the idiom configure-cart.yaml already relies on: the
+# cart count is refetched from the server, so the cart survives the restart.
+- stopApp:
+    appId: ${APP_ID}
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000

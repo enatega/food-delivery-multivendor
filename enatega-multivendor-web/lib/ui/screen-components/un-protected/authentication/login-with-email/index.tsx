@@ -59,7 +59,7 @@ export default function LoginWithEmail({
     if (emailExists) {
       showToast({
         type: "success",
-        title: t("Login"),
+        title: t("login"),
         message: t("Got_your_account_please_enter_your_password"),
       });
       return handleChangePanel(7); // go to password

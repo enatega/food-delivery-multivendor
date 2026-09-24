@@ -11,8 +11,8 @@ export const FulfillmentMode = ({ theme, isPickup, setIsPickup, t }) => {
     const styles = useStyles(theme)
     return <View style={styles.container}>
         <View style={styles.ovalContainer}>
-            <OvalButton theme={theme} styles={styles.ovalButton} title={t('Delivery')} selected={!isPickup} icon={<DeliveryIcon />} onSelect={() => { setIsPickup(false) }} />
-            <OvalButton theme={theme} styles={styles.ovalButton} title={t('Pickup')} selected={isPickup} icon={<PickupIcon />} onSelect={() => { setIsPickup(true) }} />
+            <OvalButton testID='customer.checkout.fulfillment.delivery' theme={theme} styles={styles.ovalButton} title={t('Delivery')} selected={!isPickup} icon={<DeliveryIcon />} onSelect={() => { setIsPickup(false) }} />
+            <OvalButton testID='customer.checkout.fulfillment.pickup' theme={theme} styles={styles.ovalButton} title={t('Pickup')} selected={isPickup} icon={<PickupIcon />} onSelect={() => { setIsPickup(true) }} />
         </View>
     </View>
 }
@@ -22,7 +22,8 @@ const OvalButton = ({
     selected = false, title,
     icon,
     onSelect,
-    styles }) => (<Pressable onPress={onSelect} style={[styles, {
+    testID,
+    styles }) => (<Pressable testID={testID} onPress={onSelect} style={[styles, {
         backgroundColor: selected ? (theme.colors?.accent || theme.main) : 'transparent'
     }]}> 
         <View style={alignment.MxSmall}>

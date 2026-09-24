@@ -1,0 +1,87 @@
+appId: ${APP_ID}
+name: CM-P1-022 The cart total scales linearly with the line quantity
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# CM-P1-009 proves the stepper moves the quantity NUMBER correctly. It never
+# reads the money, so a cart that displays 3 units and charges for 1 — or that
+# counts a required option's price once instead of per unit — passes it.
+#
+# Cart.js computes `cartTotal` as SUM(price * quantity) over one line here, so
+# the total must be exactly proportional to the quantity:
+#
+#   total(2) == 2 x total(1)     and     total(3) == 3 x total(1)
+#
+# Proportionality is the assertion, not just monotonicity: a total that merely
+# increases would hide an option priced per line rather than per unit.
+#
+# add-item-to-cart increments once on the item screen, so the line enters the
+# cart at quantity 2. Nothing here leaves the cart, so no order is created.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- assertVisible:
+    id: customer.cart.screen
+# --- quantity 2 ------------------------------------------------------------
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.q2 = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.q2 === 2}
+    label: The configured line must enter the cart at quantity 2
+- copyTextFrom:
+    id: customer.cart.total
+- evalScript: ${output.total2 = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+# --- quantity 1 ------------------------------------------------------------
+# One decrement from 2 lands on 1. CartItem.js only swaps the control to a trash
+# icon BELOW 2, so this decrement steps the line rather than removing it.
+- tapOn:
+    id: "customer\\.cart\\.item\\..*\\.decrease"
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.q1 = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.q1 === 1}
+    label: One decrease must step the line from 2 to 1 without removing it
+- copyTextFrom:
+    id: customer.cart.total
+- evalScript: ${output.total1 = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.total1) && output.total1 > 0}
+    label: A single unit must carry a positive price
+- takeScreenshot: linearity-one-unit
+# --- quantity 3 ------------------------------------------------------------
+- tapOn:
+    id: "customer\\.cart\\.item\\..*\\.increase"
+- tapOn:
+    id: "customer\\.cart\\.item\\..*\\.increase"
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.q3 = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.q3 === 3}
+    label: Two increases must step the line from 1 to 3
+- copyTextFrom:
+    id: customer.cart.total
+- evalScript: ${output.total3 = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+# --- proportionality -------------------------------------------------------
+# Each figure is rendered through its own .toFixed(2), so a multiple of a
+# rounded unit price can sit one cent off the rounded multiple. The tolerance
+# scales with the multiplier and admits nothing larger.
+- assertTrue:
+    condition: ${Math.abs(output.total2 - 2 * output.total1) < 0.021}
+    label: Two units must cost exactly twice one unit
+- assertTrue:
+    condition: ${Math.abs(output.total3 - 3 * output.total1) < 0.031}
+    label: Three units must cost exactly three times one unit
+- assertTrue:
+    condition: ${output.total3 <= Number(MAX_ORDER_TOTAL)}
+    label: The three-unit cart must stay at or below QA_MAX_ORDER_TOTAL
+- takeScreenshot: linearity-three-units
