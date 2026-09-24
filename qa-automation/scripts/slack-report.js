@@ -211,18 +211,42 @@ function escapeMarkdown(value) {
 }
 
 /**
+ * A gate that produces no JUnit report, such as typecheck or lint, or a job
+ * that never ran. Outcomes use GitHub's step vocabulary.
+ * @typedef {{ name: string, outcome: 'success' | 'failure' | 'cancelled' | 'skipped' }} Check
+ */
+
+const CHECK_ICONS = { success: '✅', failure: '❌', cancelled: '⛔', skipped: '⏭' }
+
+/**
  * @param {string} title
  * @param {RunResult[]} runs
  * @param {string} [reproduceCommand]
+ * @param {Check[]} [checks]
  */
-function buildMessage(title, runs, reproduceCommand) {
-  const summary = summarise(runs)
+function buildMessage(title, runs, reproduceCommand, checks = []) {
+  const testSummary = summarise(runs)
+  // A failed typecheck or lint must turn the card red even when every test
+  // that did run passed — otherwise a broken build reads as green in Slack.
+  const failedChecks = checks.filter(
+    (check) => check.outcome === 'failure' || check.outcome === 'cancelled'
+  )
+  const summary = { ...testSummary, healthy: testSummary.healthy && failedChecks.length === 0 }
   const icon = summary.healthy ? ':large_green_circle:' : ':red_circle:'
-  const headline = summary.missingReport
-    ? `${title}: run produced no report`
-    : `${title}: ${summary.passed}/${summary.total} passed`
+  const testHeadline =
+    runs.length === 0
+      ? title
+      : summary.missingReport
+        ? `${title}: run produced no report`
+        : `${title}: ${summary.passed}/${summary.total} passed`
+  const headline = failedChecks.length
+    ? `${testHeadline} — ${failedChecks.map((check) => check.name).join(', ')} failed`
+    : testHeadline
 
-  const branch = process.env.GITHUB_REF_NAME || process.env.QA_BRANCH || 'local'
+  // QA_BRANCH first: on a pull_request run GITHUB_REF_NAME is `<n>/merge`,
+  // which names nothing a reader would recognise.
+  const branch = process.env.QA_BRANCH || process.env.GITHUB_REF_NAME || 'local'
+  const pullRequestUrl = process.env.QA_PR_URL?.trim()
   const runUrl =
     process.env.GITHUB_RUN_ID &&
     `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
@@ -247,6 +271,18 @@ function buildMessage(title, runs, reproduceCommand) {
       ]
     }
   ]
+
+  if (checks.length > 0) {
+    blocks.push({
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `*Checks*\n${checks
+          .map((check) => `${CHECK_ICONS[check.outcome]} ${escapeMarkdown(check.name)}`)
+          .join('   ')}`
+      }
+    })
+  }
 
   if (summary.missingReport) {
     const missing = runs.filter((run) => !run.reportFound).map((run) => basename(run.source))
@@ -339,18 +375,23 @@ function buildMessage(title, runs, reproduceCommand) {
     })
   }
 
+  /** @type {Record<string, unknown>[]} */
+  const buttons = []
   if (runUrl) {
-    blocks.push({
-      type: 'actions',
-      elements: [
-        {
-          type: 'button',
-          text: { type: 'plain_text', text: 'Open run & full report' },
-          url: runUrl
-        }
-      ]
+    buttons.push({
+      type: 'button',
+      text: { type: 'plain_text', text: 'Open run & full report' },
+      url: runUrl
     })
   }
+  if (pullRequestUrl) {
+    buttons.push({
+      type: 'button',
+      text: { type: 'plain_text', text: 'Open pull request' },
+      url: pullRequestUrl
+    })
+  }
+  if (buttons.length > 0) blocks.push({ type: 'actions', elements: buttons })
 
   return { text: `${icon} ${headline}`, blocks }
 }
@@ -400,6 +441,8 @@ function parseArguments(argv) {
   let title = 'QA run'
   let dryRun = false
   let command = ''
+  /** @type {Check[]} */
+  const checks = []
 
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index]
@@ -418,6 +461,18 @@ function parseArguments(argv) {
       if (!value) throw new Error('--command needs a value')
       command = value
       index += 1
+    } else if (flag === '--check') {
+      const value = argv[index + 1] ?? ''
+      const separator = value.lastIndexOf('=')
+      const name = value.slice(0, separator).trim()
+      const outcome = value.slice(separator + 1).trim()
+      if (separator < 1 || !name || !(outcome in CHECK_ICONS)) {
+        throw new Error(
+          `--check needs "Name=outcome" with outcome one of ${Object.keys(CHECK_ICONS).join(', ')}`
+        )
+      }
+      checks.push({ name, outcome: /** @type {Check['outcome']} */ (outcome) })
+      index += 1
     } else if (flag === '--dry-run') {
       dryRun = true
     } else {
@@ -425,13 +480,15 @@ function parseArguments(argv) {
     }
   }
 
-  if (junitPaths.length === 0) throw new Error('At least one --junit path is required')
-  return { junitPaths, title, dryRun, command }
+  if (junitPaths.length === 0 && checks.length === 0) {
+    throw new Error('At least one --junit path or --check is required')
+  }
+  return { junitPaths, title, dryRun, command, checks }
 }
 
 async function main() {
-  const { junitPaths, title, dryRun, command } = parseArguments(process.argv.slice(2))
-  const message = buildMessage(title, junitPaths.map(readRun), command)
+  const { junitPaths, title, dryRun, command, checks } = parseArguments(process.argv.slice(2))
+  const message = buildMessage(title, junitPaths.map(readRun), command, checks)
 
   if (dryRun) {
     console.log(JSON.stringify(message, null, 2))

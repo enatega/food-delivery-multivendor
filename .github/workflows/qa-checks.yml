@@ -3,7 +3,7 @@ name: QA Automation Checks
 # Runs on every push, to ANY branch, and every pull request that touches the
 # QA suite or an app it tests. Two gates: fast static checks (including the
 # web and mobile test-id contracts), then deterministic mock browser tests that
-# never contact production.
+# never contact production. Every run ends with one Slack card, pass or fail.
 #
 # The three mobile app directories are listed because the mobile contract test
 # reads their source: a customer, store or rider change that drops a testID a
@@ -37,13 +37,56 @@ concurrency:
   group: qa-checks-${{ github.ref }}
   cancel-in-progress: true
 
+# `gh pr list` in the gate job needs to read pull requests; nothing here writes.
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
+  # A push to a branch with an open pull request fires BOTH `push` and
+  # `pull_request`, which ran every check twice. When a PR is open, its
+  # `pull_request` run is the one that counts — it tests the merge result and
+  # shows on the PR — so the push run stands down. A branch with no PR still
+  # gets checked on push. If the lookup itself fails, the gate fails open.
+  gate:
+    name: Decide whether this run is needed
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+      - id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          BRANCH: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          run=true
+          if [ "$EVENT" = "push" ]; then
+            if open=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq 'length') \
+              && [ "${open:-0}" -gt 0 ]; then
+              run=false
+              echo "::notice::$BRANCH has an open pull request; its pull_request run covers this push."
+            fi
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+
   static:
     name: Typecheck / lint / unit / contracts
+    needs: gate
+    if: ${{ needs.gate.outputs.run == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: qa-automation
+    # Each gate records its own outcome for the Slack card instead of stopping
+    # the job at the first failure, so one run reports everything that is
+    # broken. The last step still fails the job if any gate did.
+    outputs:
+      typecheck: ${{ steps.typecheck.outcome }}
+      lint: ${{ steps.lint.outcome }}
+      unit: ${{ steps.unit.outcome }}
+      contract: ${{ steps.contract.outcome }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,19 +95,55 @@ jobs:
           cache: npm
           cache-dependency-path: qa-automation/package-lock.json
       - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run test:unit
+      - id: typecheck
+        continue-on-error: true
+        run: npm run typecheck
+      - id: lint
+        continue-on-error: true
+        run: npm run lint
+      # Both suites write reports/junit/playwright.xml, so each copy is taken
+      # immediately — pass or fail — before the next run overwrites it.
+      - id: unit
+        continue-on-error: true
+        run: |
+          rc=0
+          npm run test:unit || rc=$?
+          cp reports/junit/playwright.xml reports/junit/unit.xml || true
+          exit $rc
       # Reads app source, drives no browser, so it needs no Playwright install.
       # CW-CONTRACT-001 guards the web data-testids; CM-CONTRACT-001 checks that
       # every Maestro flow parses, every runFlow exists, and every id it selects
       # is still instrumented in the customer, store and rider apps.
-      - run: npm run test:contract
+      - id: contract
+        continue-on-error: true
+        run: |
+          rc=0
+          npm run test:contract || rc=$?
+          cp reports/junit/playwright.xml reports/junit/contract.xml || true
+          exit $rc
+      - name: Keep the JUnit results for the Slack card
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-junit
+          path: |
+            qa-automation/reports/junit/unit.xml
+            qa-automation/reports/junit/contract.xml
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Fail if any gate failed
+        if: >-
+          steps.typecheck.outcome != 'success' || steps.lint.outcome != 'success' ||
+          steps.unit.outcome != 'success' || steps.contract.outcome != 'success'
+        run: |
+          echo "typecheck=${{ steps.typecheck.outcome }} lint=${{ steps.lint.outcome }} unit=${{ steps.unit.outcome }} contract=${{ steps.contract.outcome }}"
+          exit 1
 
   mock-web:
     name: Deterministic Customer Web (mock)
+    needs: [gate, static]
+    if: ${{ needs.gate.outputs.run == 'true' }}
     runs-on: ubuntu-latest
-    needs: static
     defaults:
       run:
         working-directory: qa-automation
@@ -112,3 +191,72 @@ jobs:
             qa-automation/reports/playwright
             qa-automation/reports/junit
           retention-days: 7
+      # The full report carries traces and video; the Slack job needs only this.
+      - name: Keep the JUnit result for the Slack card
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mock-web-junit
+          path: qa-automation/reports/junit/playwright.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # One card per run, pass or fail, combining every gate: the typecheck and
+  # lint outcomes (which produce no JUnit), the unit, contract and mock-web test
+  # results, and whether mock-web ran at all. SLACK_WEBHOOK_URL is optional;
+  # without it — and on pull requests from forks, which get no secrets — the
+  # reporter says so and exits cleanly.
+  notify:
+    name: Report to Slack
+    needs: [gate, static, mock-web]
+    if: ${{ always() && needs.gate.outputs.run == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: qa-automation
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      QA_BRANCH: ${{ github.head_ref || github.ref_name }}
+      QA_PR_URL: ${{ github.event.pull_request.html_url }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      EVENT: ${{ github.event_name }}
+      TYPECHECK: ${{ needs.static.outputs.typecheck || 'skipped' }}
+      LINT: ${{ needs.static.outputs.lint || 'skipped' }}
+      UNIT: ${{ needs.static.outputs.unit || 'skipped' }}
+      CONTRACT: ${{ needs.static.outputs.contract || 'skipped' }}
+      MOCK_WEB: ${{ needs.mock-web.result }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: qa-automation
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: qa-automation/package-lock.json
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: static-junit
+          path: qa-automation/ci-reports/static
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: mock-web-junit
+          path: qa-automation/ci-reports/mock
+      - name: Post the result
+        run: |
+          case "$EVENT" in
+            pull_request) title="QA checks · PR #$PR_NUMBER" ;;
+            push) title="QA checks · push" ;;
+            *) title="QA checks · manual run" ;;
+          esac
+          args=(--title "$title"
+            --command "npm run typecheck && npm run lint && npm run test:unit && npm run test:contract && npm run test:web:mock")
+          for report in ci-reports/static/unit.xml ci-reports/static/contract.xml ci-reports/mock/playwright.xml; do
+            [ -f "$report" ] && args+=(--junit "$report")
+          done
+          args+=(--check "Typecheck=$TYPECHECK" --check "Lint=$LINT" --check "Unit=$UNIT"
+            --check "Contracts=$CONTRACT" --check "Mock web=$MOCK_WEB")
+          node scripts/slack-report.js "${args[@]}"

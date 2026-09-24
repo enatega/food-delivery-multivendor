@@ -244,7 +244,7 @@ npm run build
 
 | Schedule | Runs | Reports to |
 | --- | --- | --- |
-| `qa-checks.yml`, every relevant push (any branch) and PR | typecheck, lint, unit, web + mobile contracts, mock browser | GitHub checks |
+| `qa-checks.yml`, every relevant push (any branch) and PR — once per push: a branch with an open PR is checked by its PR run only | typecheck, lint, unit, web + mobile contracts, mock browser | GitHub checks on the PR, plus one Slack card per run, pass or fail, listing every gate |
 | `qa-nightly.yml`, 02:00 UTC daily | Web production read-only + authenticated | Slack card per suite, plus a 14-day report artifact |
 | `com.enatega.qa.nightly-mobile` launchd agent, 03:00 local | iOS smoke, regression, navigation | Slack card per suite, plus `reports/nightly/*.log` |
 | `qa-mobile.yml`, push to `qa/**` (self-hosted runner, off until enabled) | iOS smoke; regression or navigation on demand | Slack card, plus a 14-day Maestro report artifact |
