@@ -1,0 +1,18 @@
+{
+  // Typechecks the specs that import Customer Web SOURCE, under the resolution
+  // that source is written for. The web app is an ESM Next.js package that uses
+  // `@/` aliases and extensionless relative imports, which the main config's
+  // NodeNext resolution rightly rejects for this package's own Node scripts.
+  // Keeping the two configs apart preserves that check here while still
+  // typechecking the web-coupled specs rather than skipping them.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@/*": ["../enatega-multivendor-web/*"]
+    }
+  },
+  "include": ["tests/unit/customer-web-business-logic.spec.ts"],
+  "exclude": []
+}

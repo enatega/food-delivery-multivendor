@@ -10,12 +10,19 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "types": ["node", "@playwright/test"]
+    "types": [
+      "node",
+      "@playwright/test"
+    ]
   },
   "include": [
     "playwright.config.ts",
     "scripts/**/*.js",
     "src/**/*.ts",
     "tests/**/*.ts"
+  ],
+  "extends": "expo/tsconfig.base",
+  "exclude": [
+    "tests/unit/customer-web-business-logic.spec.ts"
   ]
 }

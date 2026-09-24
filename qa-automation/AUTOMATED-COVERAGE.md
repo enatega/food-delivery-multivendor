@@ -4,7 +4,7 @@ This is the source of truth for manual QA work that has been converted into
 automation. It records what is automated, the expected outcome, where it runs,
 and whether the scenario can change production data.
 
-Last updated: 2026-08-28
+Last updated: 2026-09-22
 
 ## Maintenance rule
 
@@ -30,7 +30,7 @@ When updating coverage:
 | Production read-only               |                      14 | Real production GraphQL | Nightly and manual                     |
 | Authenticated production read-only | 8 including login setup | Real production GraphQL | Nightly when secrets exist, and manual |
 | Production order                   |                       2 | Real production GraphQL | Manual only; order placement is opt-in |
-| Customer Mobile iOS                |                      22 | Real production GraphQL | Manual; write scenario separately opted in |
+| Customer Mobile iOS                |                      37 | Real production GraphQL | Manual; write scenario separately opted in |
 
 The per-push quality gate currently contains 61 tests: 44 unit tests and 17
 mock browser tests.
@@ -67,6 +67,25 @@ mock browser tests.
 | Customer presentation    | Generate slugs and customer initials               | Navigation slugs and profile initials are deterministic           | Implemented |
 | Language direction       | Classify Arabic, Urdu, Persian, Hebrew, English, and Croatian | RTL layout is enabled only for right-to-left languages | Implemented |
 | Authentication expiry    | Evaluate seconds, milliseconds, ISO, missing, and malformed expirations | Expired tokens are identified without rejecting unspecified expirations | Implemented |
+
+## Contract coverage
+
+These read application source rather than driving a browser or a device, so
+they run in seconds on every push, on any branch.
+
+| ID | Automated manual check | Expected outcome | Status |
+| --- | --- | --- | --- |
+| CW-CONTRACT-001 | Customer Web keeps every `data-testid` the browser suites select on | A dropped attribute fails in ~1s, naming it and its owning component, instead of as a 60s selector timeout | Implemented |
+| CM-CONTRACT-001 | Every customer, store and rider Maestro flow parses into Maestro's two-document shape | A malformed flow fails on push rather than on a simulator | Implemented |
+| CM-CONTRACT-001 | Every `runFlow` a flow calls exists on disk | A renamed or deleted subflow fails on push | Implemented |
+| CM-CONTRACT-001 | Every `id:` a flow selects on is still instrumented in its app's source | A testID dropped by an app change or upstream merge fails on the push that dropped it, naming the flow that needs it | Implemented |
+
+CM-CONTRACT-001 derives the required IDs from the flows themselves, so it
+cannot drift from what the flows use. It understands IDs that components build
+dynamically — a template head such as `` `store.auth.mode.${value}` `` and a
+composed tail such as the rider switch's `` `${testID}.on` `` — and was
+mutation-checked to still reject plausible typos. It cannot prove a flow passes:
+a control can exist and be off-screen. That remains the simulator run's job.
 
 ## Customer Web mock browser coverage
 
@@ -166,7 +185,22 @@ automation.
 | CM-P1-018 | Mobile-only | An invalid voucher is rejected, the apply-voucher entry point stays offered, and the total is unchanged to the cent | Production read-only regression |
 | CM-P1-019 | CW-P1-041, CW-P1-044 | Add-to-cart is inert until a required addon is chosen, the quantity stepper will not fall below 1, and the configured quantity carries into the cart | Production read-only regression |
 | CM-P1-020 | CW-P1-100 | Cash and card are both offered, switching between them never reprices the order, and card selection does not leave checkout | Production read-only regression |
+| CM-P1-021 | Mobile-only | The cart total equals the checkout subtotal, and at pickup the total is exactly subtotal + tax | Production read-only regression |
+| CM-P1-022 | Mobile-only | The cart total is proportional to the line quantity: two units cost exactly twice one unit, three units exactly three times | Production read-only regression |
+| CM-P1-023 | Mobile-only | The tip section is delivery-only; an empty amount cannot be applied and a tip of 0 is refused with the modal left open | Production read-only regression |
+| CM-P1-024 | Mobile-only | A preset tip and a custom tip replace each other in both directions and are never both charged; re-tapping a preset clears it | Production read-only regression |
+| CM-P1-025 | Mobile-only | Search reaches the same restaurant from a different case, from a padded query, and from a truncated name | Production read-only regression |
+| CM-P1-026 | Mobile-only | A wrong password is rejected, no session survives a restart, and the correct password still signs in | Production read-only regression |
+| CM-P1-027 | Mobile-only | Logout empties the cart and clears its persisted keys, so neither a restart nor a fresh sign-in inherits the previous customer's order | Production read-only regression |
+| CM-P1-028 | CW-P1-051 | A note to the restaurant is committed, echoed back in the cart row and the modal, survives the trip to checkout, and never moves the total | Production read-only regression |
+| CM-P1-029 | Mobile-only | With location permission refused throughout, demo-mode seeding still resolves a serviceable location: the catalog is reachable and populated, the allowlisted restaurant is findable, and a restart repeats it from storage | Production read-only regression |
+| CM-P1-030 | CW-P1-PROD-092 | An in-flight order opens a tracking detail carrying a real order number and a live status, and backs out to the list; a quiet account asserts the empty state | Production read-only regression |
+| CM-P1-031 | CW-P1-PROD-083 | A cart priced at checkout survives an app kill: the session, the line, the quantity, the subtotal, the tax and the total all come back identical to the cent | Production read-only regression |
 | CM-P2-001 | Mobile-only | Adding a product from a second restaurant prompts before replacing the cart: declining preserves it, accepting empties it | Production read-only, extra fixtures |
+| CM-P3-001 | Mobile-only | Every tab bar icon lands on its own screen, including the two tabs that share one component and must swap in both directions | Production read-only, navigation suite |
+| CM-P3-002 | CW-P1-PROD-090 | Every Profile hub row opens its screen and pops back to the hub; Delete Account is left uninstrumented and unreachable | Production read-only, navigation suite |
+| CM-P3-003 | CW-P1-030, CW-P1-035 | Catalog cards open the right detail screen from both Discovery and Search and pop back to the screen that pushed them | Production read-only, navigation suite |
+| CM-P3-004 | CW-P1-064 | Every cart and checkout control that opens something also dismisses it, and popping checkout returns to an intact cart | Production read-only, navigation suite |
 
 ## Commands
 
@@ -176,6 +210,7 @@ Run from `qa-automation`:
 npm run typecheck
 npm run lint
 npm run test:unit
+npm run test:contract
 npm run test:web:mock
 npm run test:web:production-smoke
 npm run test:web:production-authenticated
@@ -204,3 +239,20 @@ npm run build
 - Playwright HTML and JUnit reports are uploaded as workflow artifacts.
 - A skipped conditional live-data scenario is not equivalent to a pass and
   should be reviewed in the report.
+
+### Scheduled runs and where the result appears
+
+| Schedule | Runs | Reports to |
+| --- | --- | --- |
+| `qa-checks.yml`, every relevant push (any branch) and PR | typecheck, lint, unit, web + mobile contracts, mock browser | GitHub checks |
+| `qa-nightly.yml`, 02:00 UTC daily | Web production read-only + authenticated | Slack card per suite, plus a 14-day report artifact |
+| `com.enatega.qa.nightly-mobile` launchd agent, 03:00 local | iOS smoke, regression, navigation | Slack card per suite, plus `reports/nightly/*.log` |
+| `qa-mobile.yml`, push to `qa/**` (self-hosted runner, off until enabled) | iOS smoke; regression or navigation on demand | Slack card, plus a 14-day Maestro report artifact |
+
+Slack posting needs `SLACK_WEBHOOK_URL` — a repository secret for the workflow,
+and `qa-automation/.env` for the local agent. `slack-report.js` warns and skips
+when it is absent, so an unconfigured checkout still runs every suite.
+
+Neither schedule places an order. `test:web:production-order-smoke` and
+`test:mobile:e2e` both write a real COD order to production and stay manual;
+see "Nightly and scheduled runs" in MOBILE-IOS.md for why.

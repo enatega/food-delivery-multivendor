@@ -1,19 +1,35 @@
 name: QA Automation Checks
 
-# Runs on every push and pull request that touches the QA suite or the
-# Customer Web app. Two gates: fast static checks, then deterministic mock
-# browser tests that never contact production.
+# Runs on every push, to ANY branch, and every pull request that touches the
+# QA suite or an app it tests. Two gates: fast static checks (including the
+# web and mobile test-id contracts), then deterministic mock browser tests that
+# never contact production.
+#
+# The three mobile app directories are listed because the mobile contract test
+# reads their source: a customer, store or rider change that drops a testID a
+# Maestro flow selects on must fail here, on the push that caused it, rather
+# than hours later on a simulator.
 
 on:
   push:
     paths:
       - 'qa-automation/**'
       - 'enatega-multivendor-web/**'
+      - 'enatega-multivendor-app/src/**'
+      - 'enatega-multivendor-store/lib/**'
+      - 'enatega-multivendor-store/app/**'
+      - 'enatega-multivendor-rider/lib/**'
+      - 'enatega-multivendor-rider/app/**'
       - '.github/workflows/qa-checks.yml'
   pull_request:
     paths:
       - 'qa-automation/**'
       - 'enatega-multivendor-web/**'
+      - 'enatega-multivendor-app/src/**'
+      - 'enatega-multivendor-store/lib/**'
+      - 'enatega-multivendor-store/app/**'
+      - 'enatega-multivendor-rider/lib/**'
+      - 'enatega-multivendor-rider/app/**'
       - '.github/workflows/qa-checks.yml'
   workflow_dispatch:
 
@@ -23,7 +39,7 @@ concurrency:
 
 jobs:
   static:
-    name: Typecheck / lint / unit
+    name: Typecheck / lint / unit / contracts
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -39,6 +55,11 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test:unit
+      # Reads app source, drives no browser, so it needs no Playwright install.
+      # CW-CONTRACT-001 guards the web data-testids; CM-CONTRACT-001 checks that
+      # every Maestro flow parses, every runFlow exists, and every id it selects
+      # is still instrumented in the customer, store and rider apps.
+      - run: npm run test:contract
 
   mock-web:
     name: Deterministic Customer Web (mock)

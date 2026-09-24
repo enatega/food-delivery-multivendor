@@ -58,9 +58,15 @@ xcodebuild -workspace EnategaQAPROD.xcworkspace -scheme EnategaQAPROD \
   -configuration Release -sdk iphonesimulator \
   -destination "platform=iOS Simulator,id=<UDID>" \
   -derivedDataPath build/ddata ARCHS=arm64 ONLY_ACTIVE_ARCH=YES \
-  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+  CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=NO build
 xcrun simctl install <UDID> build/ddata/Build/Products/Release-iphonesimulator/EnategaQAPROD.app
 ```
+
+Keep ad-hoc signing (`CODE_SIGN_IDENTITY=-`) on. With `CODE_SIGNING_ALLOWED=NO`
+the app has no entitlements, so every Keychain call fails with -34018. The login
+token lives in expo-secure-store, so the login request succeeds but saving the
+token throws. `useLogin.js` swallows that error in release builds, so the password
+screen stays up with no error message.
 
 The generated `ios/Podfile` carries a `post_install` hook that rewrites
 `Pods/fmt/include/fmt/base.h` to disable fmt's `consteval` path. fmt 11.0.2 (pinned
@@ -143,7 +149,7 @@ milestone.
 npm run test:mobile:ios:regression
 ```
 
-Runs every flow in `maestro/customer/flows/p1/` (CM-P1-007 … CM-P1-020). They
+Runs every flow in `maestro/customer/flows/p1/` (CM-P1-007 … CM-P1-031). They
 use the same validated read-only environment as the smoke, so they need no
 additional variables and no write guards. None of them taps
 `customer.checkout.place-order`.
@@ -164,8 +170,35 @@ additional variables and no write guards. None of them taps
 | `p1-checkout-voucher-invalid.yaml` | An invalid code is rejected, apply-voucher stays offered, and the total is unchanged to the cent |
 | `p1-item-configuration.yaml` | Add-to-cart is inert until the required addon is chosen, the stepper will not fall below 1, and the quantity carries into the cart |
 | `p1-payment-methods.yaml` | Cash and card are both offered, switching never reprices, and card selection does not leave checkout |
+| `p1-pricing-arithmetic.yaml` | The cart total equals the checkout subtotal, and the pickup total is exactly subtotal + tax |
+| `p1-cart-total-linearity.yaml` | The cart total is proportional to the line quantity: 2 units cost twice 1, and 3 units three times |
+| `p1-checkout-tip-invalid.yaml` | The tip section is delivery-only; an empty field cannot be applied and a tip of 0 is refused with the modal left open |
+| `p1-checkout-tip-no-stacking.yaml` | A preset and a custom tip replace each other in both directions and are never both charged; re-tapping a preset clears it |
+| `p1-search-normalization.yaml` | A different case, surrounding whitespace, and a truncated name all reach the same restaurant card |
+| `p1-login-wrong-password.yaml` | A wrong password is rejected, persists no session across a restart, and the correct one still signs in |
+| `p1-logout-clears-cart.yaml` | Logout empties the cart and its persisted keys; neither a restart nor a fresh sign-in brings the line back |
+| `p1-cart-instructions.yaml` | A note to the restaurant is committed, shown back in the row and the modal, survives checkout and back, and never moves the total |
+| `p1-location-permission-gate.yaml` | With location refused, demo-mode seeding still yields a populated catalog and a findable allowlisted restaurant, before and after a restart |
+| `p1-active-order-detail.yaml` | An in-flight order opens a tracking detail with a real order number and a live status, and backs out to the list |
+| `p1-checkout-restart-recovery.yaml` | A cart priced at checkout survives an app kill: session, line, quantity, subtotal, tax and total all return identical to the cent |
 
-The last nine flows reach screens that carried no test IDs, so `Profile`,
+`p1-pricing-arithmetic.yaml`, `p1-cart-total-linearity.yaml`,
+`p1-checkout-tip-invalid.yaml`, `p1-checkout-tip-no-stacking.yaml`,
+`p1-search-normalization.yaml` and `p1-login-wrong-password.yaml` are the
+arithmetic and input-validation set. They differ from the other flows in what
+they read: rather than comparing a figure against itself
+across a toggle, they assert the identities in `src/utils/orderPricing.js`
+directly, so a pricing change that moves every number by the same amount fails
+them. `p1-checkout-tip-no-stacking.yaml` branches on whether the Tips query
+returns presets — live configuration rather than fixture data — and each branch
+carries its own arithmetic, so it cannot pass on a checkout with no tip controls.
+
+`p1-login-wrong-password.yaml` makes exactly **one** failed sign-in against the
+shared automation account, deliberately. Do not add more attempts: the suite runs
+this account back to back, so a server-side rate limit would take down every
+flow rather than just this one.
+
+The profile-side flows reach screens that carried no test IDs, so `Profile`,
 `Account`, `MyOrders`, `Addresses`, `Favourite`, `SelectLocation`, the logout
 modal and the checkout tip and voucher modals were instrumented for them. Two controls were left deliberately
 uninstrumented so that no flow can reach them by test ID: **Delete Account** on
@@ -175,6 +208,32 @@ irreversible mutations on the automation account.
 `p1-favourites.yaml` and `p1-order-history.yaml` branch on live data. Each branch
 carries its own assertion, so neither can pass on a blank screen — a list that
 resolves to nothing must produce that screen's empty state.
+
+`p1-active-order-detail.yaml` branches the same way, on whether the automation
+account has an order in flight. The detail assertions live inside the branch that
+found a card, so a quiet account asserts the Current tab's empty state and claims
+nothing about the tracking screen.
+
+`p1-location-permission-gate.yaml` is the one flow that does not start from
+`subflows/launch.yaml`. It cold-starts through
+`subflows/launch-location-refused.yaml`, which is the same launch with
+`location: never` — Maestro takes always/inuse/never/unset for that permission
+and aborts the run on anything else, including `deny`.
+
+It asserts demo-mode seeding, not the permission gate, and that is deliberate.
+`routes/index.js` only mounts `LocationStack` when `!permissionState?.granted ||
+!location`, but `src/context/Location.js:98` seeds a demo location from
+`customerDemoZoneId` and returns before it consults the device permission, so
+while the server configuration has `enableCustomerDemoMode` on, `CurrentLocation`
+is unreachable and a flow aimed at it can only fail. What is reachable — and
+load-bearing, and otherwise untested, because every other flow grants the
+permission — is the seeding itself. If demo mode is ever turned off here, the
+launch subflow times out, which is the signal to rewrite this flow around the
+gate instead.
+
+`p1-logout-clears-cart.yaml` ends the shared automation account's session, the
+same as `p1-logout.yaml`. Both leave the account signed out for whatever runs
+next, which is safe because every flow signs in for itself.
 
 ## Read-only navigation suite
 
@@ -240,11 +299,14 @@ The prompt is a native `Alert`, so it is matched by its `Cancel` and `OK` button
 text rather than by a test ID. If the app's alert button labels are localised
 away from English, this flow needs the localised strings.
 
-Every flow in both suites starts from `launch.yaml` with `clearState: true` and
-none depends on state left by another, so they are order-independent and
-Maestro's `continueOnFailure: false` is the only thing that stops a run early.
-That also covers `p1-logout.yaml`, which ends the shared automation account's
-session: the next flow signs in again from a cleared install.
+Every flow in both suites cold-starts with `clearState: true` and none depends on
+state left by another, so they are order-independent and Maestro's
+`continueOnFailure: false` is the only thing that stops a run early. That also
+covers `p1-logout.yaml` and `p1-logout-clears-cart.yaml`, which end the shared
+automation account's session: the next flow signs in again from a cleared
+install. All of them start from `launch.yaml` except
+`p1-location-permission-gate.yaml`, which uses `launch-location-refused.yaml` for
+its first launch — the same cold start with the location permission refused.
 
 To iterate on a single flow, run Maestro directly with the same variables the
 runner passes (`APP_ID`, `CUSTOMER_EMAIL`, `CUSTOMER_PASSWORD`, `RESTAURANT_NAME`,
@@ -252,6 +314,177 @@ runner passes (`APP_ID`, `CUSTOMER_EMAIL`, `CUSTOMER_PASSWORD`, `RESTAURANT_NAME
 `SECOND_RESTAURANT_NAME` and `SECOND_PRODUCT_ID` for the P2 flows); the
 exact argument list for the last run is recorded in
 `reports/maestro/<run-id>/command-metadata.json`.
+
+## Nightly and scheduled runs
+
+The web nightly (`.github/workflows/qa-nightly.yml`, 02:00 UTC) posts a Slack
+card per suite through `scripts/run-with-slack.js`, which always reports and
+then exits with the suite's own code, so a red run still fails the job.
+
+The iOS suites are scheduled locally instead, by launchd:
+
+```sh
+cp scripts/com.enatega.qa.nightly-mobile.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.enatega.qa.nightly-mobile.plist
+```
+
+`scripts/nightly-mobile.sh` runs at 03:00 local — an hour after the web
+nightly, so the two never contend for the shared automation account. It puts
+the Homebrew JDK on PATH (launchd's environment is barer than a login shell's),
+resolves and boots the simulator, reinstalls the app only if it is missing,
+runs the preflight, then runs smoke, regression and navigation, each posting
+its own card. Logs land in `reports/nightly/` and are pruned after 14 days.
+
+It is not a GitHub job because Maestro can only drive an app that is already
+built, and `expo prebuild` discards the `Pods/fmt/include/fmt/base.h` patch
+every time it runs (see "Build and install the QA app"). A hosted runner would
+rebuild nightly and go red on the toolchain rather than on the app.
+
+Two details worth knowing before changing the script:
+
+- The simulator is resolved by `scripts/resolve-simulator.py`, not by a name
+  grep. `simctl` lists one "iPhone 17 Pro" per installed runtime, so
+  `head -1` can return the iOS 26.3 device while the app sits on the 26.5 one;
+  the resolver prefers an already-booted match and otherwise the highest iOS
+  runtime. It also shuts down any other booted simulator, because `booted`
+  resolves arbitrarily when more than one device is up.
+- The agent needs the Mac awake at 03:00. launchd runs a missed job once the
+  machine wakes, but a sleeping laptop means no run that night.
+
+**Nothing on either schedule places an order.** `test:web:production-order-smoke`
+and `test:mobile:e2e` each write a real COD order to the production backend —
+the E2E one is fulfilled by a real store and rider rather than cancelled — so
+both stay manual and opt-in.
+
+## On-push iOS runs (self-hosted runner)
+
+`.github/workflows/qa-mobile.yml` runs the read-only **smoke** suite on every
+push to a `qa/**` branch that touches the Maestro flows, the mobile runner, or
+the customer app source. Regression and navigation can be run on demand from
+the Actions tab (**Run workflow → suite**). Every run posts a Slack card.
+
+It runs on a **self-hosted** runner — a Mac registered to the repository, which
+is free — because Maestro needs the QA app already built and installed, and the
+build cannot be reproduced on a hosted runner (see "Build and install the QA
+app"). The job tests the pushed **flows** against the app installed on that
+Mac; it does not rebuild the app. Dropped test IDs in an app change are caught
+on every push, on any branch, by CM-CONTRACT-001 in `qa-checks.yml`.
+
+The workflow is **off until you enable it**, so pushing it does not leave
+commits waiting on a runner that does not exist.
+
+### One-time setup
+
+1. **Lock down fork pull requests first.** This is a public repository, and a
+   self-hosted runner executes whatever a workflow tells it to. In
+   Settings → Actions → General → *Fork pull request workflows from outside
+   collaborators*, choose **Require approval for all outside collaborators**.
+   The workflow itself only triggers on `push` and `workflow_dispatch`, which
+   need write access, but a fork PR could otherwise add its own trigger.
+
+2. **Register the runner.** Settings → Actions → Runners → *New self-hosted
+   runner* → macOS, and follow the download and `./config.sh` steps GitHub
+   shows. When `config.sh` asks for labels, add **`enatega-ios`**. Then install
+   it as a service so it survives logout and reboot:
+
+   ```sh
+   ./svc.sh install && ./svc.sh start
+   ```
+
+3. **Put the credentials where the job looks for them.** They stay on the Mac
+   and never pass through GitHub:
+
+   ```sh
+   mkdir -p ~/.enatega-qa && chmod 700 ~/.enatega-qa
+   cp qa-automation/.env.mobile.local ~/.enatega-qa/
+   chmod 600 ~/.enatega-qa/.env.mobile.local
+   ```
+
+4. **Add the Slack secret** (shared with the web nightly): Settings → Secrets
+   and variables → Actions → *New repository secret* → `SLACK_WEBHOOK_URL`.
+
+5. **Turn it on:** Settings → Secrets and variables → Actions → **Variables** →
+   `QA_MOBILE_RUNNER_ENABLED` = `true`.
+
+The Mac needs the same toolchain as a local run — JDK 17, Maestro, Xcode, a
+booted iPhone 17 Pro with the QA app installed — and must be awake. The job puts
+the JDK on PATH itself, picks the simulator with `scripts/resolve-simulator.py`,
+and shuts down any other booted simulator so `booted` is unambiguous.
+
+The local launchd nightly and this runner share one simulator. They are
+scheduled apart (03:00 nightly; pushes during the day), and each run cancels a
+superseded one, but a push landing at 03:00 would contend for the device.
+
+## Maestro Cloud runs
+
+Every mode also runs on Maestro Cloud's device farm by appending `--cloud`. The
+flows, the environment guards, and the injected values are identical to a local
+run — only the device and the artifact location change.
+
+Connect the machine first, either way round:
+
+```sh
+maestro login                       # interactive, writes a local session
+# or, for CI and unattended runs, put the key in .env.mobile.local:
+# MAESTRO_CLOUD_API_KEY=...
+```
+
+Cloud has no access to a simulator booted here, so the app binary travels with
+the run. Point `QA_MOBILE_APP_FILE` at a built artifact (`.app`/`.zip` for a
+simulator run, `.ipa` for a device run), or reuse an upload with
+`QA_MOBILE_APP_BINARY_ID` — set exactly one:
+
+```sh
+QA_MOBILE_APP_FILE=builds/EnategaQA.app.zip \
+npm run mobile:preflight:cloud
+QA_MOBILE_APP_FILE=builds/EnategaQA.app.zip \
+npm run test:mobile:cloud:smoke
+```
+
+`test:mobile:cloud:regression`, `:multi-vendor`, and `:navigation` mirror their
+iOS counterparts.
+
+A local run takes a flow path, because Maestro resolves `../../subflows/...`
+against the real filesystem. A cloud run cannot: `maestro cloud` zips the path
+given to `--flows` and treats it as the workspace root, so uploading
+`flows/p1` alone leaves the subflows behind and the upload is rejected with
+`Invalid File Path` before any device starts. Cloud runs therefore upload
+`maestro/customer` — the whole workspace, `config.yaml` included — and pick the
+suite with `--include-tags` / `--exclude-tags`. Keep the tags on each flow
+accurate: they, not the directory layout, decide what a cloud run executes.
+
+| Mode | Cloud tag selection |
+| --- | --- |
+| `smoke` | `smoke` |
+| `regression` | `regression`, minus `multi-vendor` and `navigation` |
+| `multi-vendor` | `multi-vendor` |
+| `navigation` | `navigation` |
+| `production-order` | `production-write` |
+
+Optional selectors — all validated before the upload starts:
+
+| Variable | Purpose |
+| --- | --- |
+| `QA_MOBILE_CLOUD_DEVICE_MODEL` | `iPhone-17-Pro`, etc. See `maestro list-cloud-devices` |
+| `QA_MOBILE_CLOUD_DEVICE_OS` | `iOS-26-2`, etc. |
+| `QA_MOBILE_CLOUD_DEVICE_LOCALE` | ISO locale such as `en_US` |
+| `QA_MOBILE_CLOUD_PROJECT_ID` | Maestro Cloud project the run belongs to |
+| `QA_MOBILE_TARGET=cloud` | Same as passing `--cloud` |
+
+Cloud keeps screenshots, video, and debug output in its own console, so the only
+local artifact is `reports/maestro/<run-id>/junit.xml` and the HTML summary built
+from it. The branch and commit SHA are attached to each upload, and the run is
+named after the same Run ID the local reports use, so a console run and a local
+report directory always line up.
+
+`--async` queues the upload and exits without waiting for a verdict; no JUnit is
+produced, so no summary is generated and the console owns the result. It is
+refused for `production-order`: a real order must never be placed with nobody
+watching to cancel it if the flow's own cleanup fails.
+
+The API key is read from the environment and passed to the CLI only. It is never
+written to `command-metadata.json`, which is rendered verbatim into the HTML
+summary.
 
 ## Manual production order and cancellation
 
@@ -271,6 +504,12 @@ The order instructions contain `QA-RUN-<Run ID>`. If the command fails after
 placing the order, do not rerun it. Locate that Run ID/order number in Store or
 Admin, cancel it manually, and retain the entire report directory as evidence.
 
+The same guards apply on cloud (`npm run test:mobile:cloud:production-order`),
+which places the order from Maestro's infrastructure rather than this machine.
+`--async` is refused for this mode.
+
 JUnit, HTML, screenshots, Maestro debug output, and non-secret command metadata
-are retained below `reports/maestro/<run-id>/`.
+are retained below `reports/maestro/<run-id>/`. A cloud run retains JUnit,
+the HTML summary, and command metadata locally; its screenshots and video stay
+in the Maestro Cloud console.
 

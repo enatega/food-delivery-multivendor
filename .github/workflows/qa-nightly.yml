@@ -25,6 +25,10 @@ jobs:
     env:
       QA_CUSTOMER_EMAIL: ${{ secrets.QA_CUSTOMER_EMAIL }}
       QA_CUSTOMER_PASSWORD: ${{ secrets.QA_CUSTOMER_PASSWORD }}
+      # Optional. slack-report.js warns and skips when neither this nor
+      # SLACK_BOT_TOKEN is set, so an unconfigured repo still runs the suites —
+      # it just posts nothing.
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -50,22 +54,38 @@ jobs:
             echo 'NEXT_PUBLIC_WS_SERVER_URL=wss://aws-server-v2.enatega.com/'
           } > .env
 
+      # Each suite runs through run-with-slack.js, which posts a pass/fail card
+      # whatever the outcome and then exits with the SUITE's code, so a red run
+      # still fails the job. Without this the nightly's only output was an
+      # artifact somebody had to go looking for.
       - name: Read-only GraphQL + UI smoke
-        run: npm run test:web:production-smoke
+        run: npm run slack:web:production-smoke
         env:
           CI: 'true'
 
-      # Authenticated flows only run when the customer secrets are configured.
+      # `if: always()` on the three steps below is deliberate: a failing smoke
+      # must not silence the authenticated suite, or a single red step would
+      # hide the rest of the nightly's result.
       - name: Establish authenticated session
-        if: ${{ env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
+        if: ${{ always() && env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
         run: npm run auth:web:production
         env:
           CI: 'true'
       - name: Authenticated read-only suite
-        if: ${{ env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
-        run: npm run test:web:production-authenticated
+        if: ${{ always() && env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
+        run: npm run slack:web:production-authenticated
         env:
           CI: 'true'
+
+      # The login step above is the one part of the nightly that posts no card
+      # of its own, so a failure there would otherwise be silent in Slack.
+      - name: Report a broken authenticated session
+        if: ${{ failure() && env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
+        run: |
+          node scripts/slack-report.js \
+            --junit reports/junit/playwright.xml \
+            --title 'Web production authenticated — session setup failed' \
+            --command 'npm run auth:web:production'
 
       - name: Upload Playwright report
         if: always()
