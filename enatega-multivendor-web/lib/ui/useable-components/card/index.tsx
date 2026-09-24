@@ -34,6 +34,7 @@ const Card: React.FC<ICardProps> = ({
 
   return (
     <div
+      data-testid={`restaurant-card-${item._id}`}
       role="link"
       tabIndex={0}
       className="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface transition-shadow hover:shadow-[0_12px_30px_rgba(21,25,20,0.09)] focus-visible:outline-none dark:border-gray-800 dark:bg-gray-900 dark:text-white"

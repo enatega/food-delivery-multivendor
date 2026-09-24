@@ -115,11 +115,22 @@ export default defineConfig({
       // Places REAL COD orders against the configured backend. Intentionally
       // separate from the read-only projects and never wired into per-push CI.
       name: 'customer-production-order',
-      testMatch: /web\/customer\/production-order\/.*\.spec\.ts/,
+      testMatch: /web\/customer\/production-order\/place-order\.spec\.ts/,
       dependencies: ['customer-production-auth-setup'],
       use: {
         ...devices['Desktop Chrome'],
         storageState: customerAuthState,
+        trace: 'retain-on-failure',
+        video: 'retain-on-failure'
+      }
+    },
+    {
+      // Self-contained production smoke: performs its own login and places a
+      // REAL COD order. No auth-setup dependency, never in per-push CI.
+      name: 'customer-production-order-smoke',
+      testMatch: /web\/customer\/production-order\/login-to-order-smoke\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
         trace: 'retain-on-failure',
         video: 'retain-on-failure'
       }
@@ -140,6 +151,12 @@ export default defineConfig({
       name: 'admin-chromium',
       testMatch: /web\/admin\/.*\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] }
+    },
+    {
+      // Source-level contract check: fast, browser-free, and kept in its own
+      // project so a missing test id does not masquerade as a unit-test failure.
+      name: 'contract',
+      testMatch: /contract\/.*\.spec\.ts/
     },
     {
       name: 'unit',

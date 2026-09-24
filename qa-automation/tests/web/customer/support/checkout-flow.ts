@@ -77,9 +77,25 @@ export async function addConfiguredBurger(page: Page, quantity = 1) {
 }
 
 /** Adds Automation Diner's add-on-free product. */
-export async function addPizzaFromSecondRestaurant(page: Page) {
+export async function addPizzaFromSecondRestaurant(
+  page: Page,
+  { replacingCart = false }: { replacingCart?: boolean } = {}
+) {
   await openCustomerWeb(page, '/restaurant/automation-diner/mock-restaurant-2')
   await page.getByTestId('product-card-mock-pizza').click()
+
+  // With a cart from another vendor, the restaurant screen asks before clearing
+  // it (ClearCartModal) and opens the item only once that is confirmed. The
+  // prompt is asserted, not merely dismissed if present: a cart that is
+  // silently replaced — or silently merged — is exactly what this guards.
+  if (replacingCart) {
+    const prompt = page
+      .getByRole('dialog')
+      .filter({ hasText: /items from a different restaurant/i })
+    await expect(prompt).toBeVisible()
+    await prompt.getByRole('button', { name: 'OK', exact: true }).click()
+    await expect(prompt).toBeHidden()
+  }
 
   const dialog = page.getByRole('dialog').filter({ visible: true }).last()
   await expect(dialog).toBeVisible()

@@ -17,7 +17,9 @@ test('CW-P1-001 opens Customer Web without a fatal error @mobile @cross-browser'
 
   await openCustomerWeb(page)
 
-  await expect(page.getByText('LIFE TASTES BETTER WITH ENATEGA')).toBeVisible()
+  // The landing hero's heading, not its copy: the redesign replaced the old
+  // tagline outright, and marketing text is not what this test is about.
+  await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
   await expect(page.getByTestId('customer-login-trigger')).toBeVisible()
   expect(forbiddenRequests).toEqual([])
 })
@@ -25,7 +27,10 @@ test('CW-P1-001 opens Customer Web without a fatal error @mobile @cross-browser'
 test('CW-P1-002 and CW-P1-005 navigate to Customer Web static pages', async ({
   page
 }) => {
-  await openCustomerWeb(page)
+  // `/` is now the marketplace landing page, whose compact footer has no Terms
+  // link. Every other page renders the full footer, where these are buttons.
+  const start = '/discovery'
+  await openCustomerWeb(page, start)
 
   for (const destination of [
     { name: 'About us', path: '/about' },
@@ -34,8 +39,10 @@ test('CW-P1-002 and CW-P1-005 navigate to Customer Web static pages', async ({
   ]) {
     await page.getByRole('button', { name: destination.name }).click()
     await expect(page).toHaveURL(new RegExp(`${destination.path}/?$`))
-    await expect(page.locator('main, body')).not.toBeEmpty()
-    await page.goto('/')
+    // The layout renders a single <main> landmark; `main, body` matched both
+    // and tripped strict mode once the redesign introduced it.
+    await expect(page.getByRole('main')).not.toBeEmpty()
+    await page.goto(start)
   }
 })
 
