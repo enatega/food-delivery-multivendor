@@ -27,9 +27,9 @@ When updating coverage:
 | ---------------------------------- | ----------------------: | ----------------------- | -------------------------------------- |
 | Unit and safety                    |                      44 | Local only              | Every relevant push and pull request   |
 | Customer Web mock browser          |                      17 | Mocked GraphQL          | Every relevant push and pull request   |
-| Production read-only               |                      14 | Real production GraphQL | Nightly and manual                     |
-| Authenticated production read-only | 8 including login setup | Real production GraphQL | Nightly when secrets exist, and manual |
-| Production order                   |                       2 | Real production GraphQL | Manual only; order placement is opt-in |
+| Production read-only               |                      14 | Real production GraphQL | Every relevant push and PR, nightly, and manual |
+| Authenticated production read-only | 8 including login setup | Real production GraphQL | Every relevant push and PR, and nightly, when secrets exist; and manual |
+| Production order                   |                       3 | Real production GraphQL | CW-P0-SMOKE-300 on every push and PR, stopped before the order; a real order only from a manual run that opts in |
 | Customer Mobile iOS                |                      37 | Real production GraphQL | Manual; write scenario separately opted in |
 
 The per-push quality gate currently contains 61 tests: 44 unit tests and 17
@@ -159,6 +159,7 @@ automation.
 | -------------- | --------------------------------------- | ------------------------------------------------------------------- | -------------------------------------- |
 | CW-P1-PROD-200 | Build a cart using live production data | An available product meeting the restaurant minimum enters the cart | Manual command only                    |
 | CW-P1-PROD-201 | Place a real COD pickup order           | One order is created and its tracking route opens                   | Opt-in with `QA_PLACE_REAL_ORDER=true` |
+| CW-P0-SMOKE-300 | Log in, pick an open restaurant, build a cart and reach checkout against live production, then place a real COD pickup order | Every step is asserted against the live GraphQL response; with no restaurant open in the zone the test is skipped with that reason | Every push and PR with `QA_STOP_BEFORE_ORDER=true` (no order placed); a real order only from **Run workflow** with *place a REAL order* ticked |
 
 ## Customer Mobile iOS coverage
 
@@ -244,7 +245,7 @@ npm run build
 
 | Schedule | Runs | Reports to |
 | --- | --- | --- |
-| `qa-checks.yml`, every relevant push (any branch) and PR — once per push: a branch with an open PR is checked by its PR run only | typecheck, lint, unit, web + mobile contracts, mock browser | GitHub checks on the PR, plus one Slack card per run, pass or fail, listing every gate |
+| `qa-checks.yml`, every relevant push (any branch) and PR — once per push: a branch with an open PR is checked by its PR run only | typecheck, lint, unit, web + mobile contracts, mock browser, and Customer Web against production: read-only smoke, authenticated read-only, and the E2E held at the Place order button | GitHub checks on the PR, plus one Slack card per run, pass or fail, listing every gate |
 | `qa-nightly.yml`, 02:00 UTC daily | Web production read-only + authenticated | Slack card per suite, plus a 14-day report artifact |
 | `com.enatega.qa.nightly-mobile` launchd agent, 03:00 local | iOS smoke, regression, navigation | Slack card per suite, plus `reports/nightly/*.log` |
 | `qa-mobile.yml`, push to `qa/**` (self-hosted runner, off until enabled) | iOS smoke; regression or navigation on demand | Slack card, plus a 14-day Maestro report artifact |

@@ -1,9 +1,15 @@
 name: QA Automation Checks
 
 # Runs on every push, to ANY branch, and every pull request that touches the
-# QA suite or an app it tests. Two gates: fast static checks (including the
-# web and mobile test-id contracts), then deterministic mock browser tests that
-# never contact production. Every run ends with one Slack card, pass or fail.
+# QA suite or an app it tests. Fast static checks (including the web and mobile
+# test-id contracts) come first; then, in parallel, deterministic mock browser
+# tests and the Customer Web suites against real production. Every run ends
+# with one Slack card, pass or fail.
+#
+# Production is exercised READ-ONLY on every push: the web E2E walks the full
+# real journey — login, catalogue, cart, checkout — and stops at the enabled
+# Place order button. A real order is placed only from a manual "Run workflow"
+# with the "place a REAL order" box ticked.
 #
 # The three mobile app directories are listed because the mobile contract test
 # reads their source: a customer, store or rider change that drops a testID a
@@ -32,6 +38,11 @@ on:
       - 'enatega-multivendor-rider/app/**'
       - '.github/workflows/qa-checks.yml'
   workflow_dispatch:
+    inputs:
+      place_real_order:
+        description: 'Web E2E: place a REAL COD pickup order on production. Unticked, it stops at the Place order button.'
+        type: boolean
+        default: false
 
 concurrency:
   group: qa-checks-${{ github.ref }}
@@ -201,6 +212,136 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  # The real backend. Every suite here reads production GraphQL; the read-only
+  # guard blocks business mutations in the smoke and authenticated suites, and
+  # the E2E is held at the Place order button unless a manual run opts in.
+  production-web:
+    name: Customer Web against production (read-only + E2E)
+    needs: [gate, static]
+    if: ${{ needs.gate.outputs.run == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The authenticated suite and the E2E each log in to the shared QA
+    # account, and the backend rate limits logins (roughly six per 20 minutes).
+    # One production run at a time, repo-wide, and queued rather than
+    # cancelled, so a burst of pushes cannot trip the limit or kill a run that
+    # is part-way through checkout.
+    concurrency:
+      group: qa-production-web
+      cancel-in-progress: false
+    defaults:
+      run:
+        working-directory: qa-automation
+    env:
+      CI: 'true'
+      QA_CUSTOMER_EMAIL: ${{ secrets.QA_CUSTOMER_EMAIL }}
+      QA_CUSTOMER_PASSWORD: ${{ secrets.QA_CUSTOMER_PASSWORD }}
+      # A ceiling, not a price: the E2E refuses to submit above it.
+      QA_MAX_ORDER_TOTAL: ${{ vars.QA_MAX_ORDER_TOTAL || '2000' }}
+      # 'false' only for a manual run with the box ticked; every push, PR and
+      # unticked manual run stops before the order.
+      QA_STOP_BEFORE_ORDER: ${{ (github.event_name == 'workflow_dispatch' && inputs.place_real_order) && 'false' || 'true' }}
+    outputs:
+      smoke: ${{ steps.smoke.outcome }}
+      authenticated: ${{ steps.authenticated.outcome }}
+      e2e: ${{ steps.e2e.outcome }}
+      stop_before_order: ${{ steps.mode.outputs.stop_before_order }}
+    steps:
+      - id: mode
+        run: |
+          echo "stop_before_order=$QA_STOP_BEFORE_ORDER" >> "$GITHUB_OUTPUT"
+          if [ "$QA_STOP_BEFORE_ORDER" = "false" ]; then
+            echo "::warning::This run will place a REAL COD order on production."
+          fi
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            qa-automation/package-lock.json
+            enatega-multivendor-web/package-lock.json
+      - name: Install QA automation dependencies
+        run: npm ci
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('qa-automation/package-lock.json') }}
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Install Customer Web dependencies
+        working-directory: enatega-multivendor-web
+        run: npm ci --legacy-peer-deps
+      # This job has its own runner, so its .next cache is never shared with
+      # the mock job's — a shared cache serves chunks compiled against the
+      # wrong backend and renders a blank page.
+      - name: Point Customer Web at production
+        working-directory: enatega-multivendor-web
+        run: |
+          {
+            echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}"
+            echo 'NEXT_PUBLIC_SERVER_URL=https://aws-server-v2.enatega.com/'
+            echo 'NEXT_PUBLIC_WS_SERVER_URL=wss://aws-server-v2.enatega.com/'
+          } > .env
+      # Each suite writes reports/junit/playwright.xml; copy it before the next
+      # one overwrites it, pass or fail.
+      - id: smoke
+        name: Production read-only smoke
+        continue-on-error: true
+        run: |
+          rc=0
+          npm run test:web:production-smoke || rc=$?
+          cp reports/junit/playwright.xml reports/junit/production-smoke.xml || true
+          exit $rc
+      # Signs in once through the auth-setup dependency, then reads profile,
+      # orders, addresses, favourites and checkout. Needs the QA account
+      # secrets, which pull requests from forks never receive.
+      - id: authenticated
+        name: Production authenticated read-only
+        if: ${{ env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
+        continue-on-error: true
+        run: |
+          rc=0
+          npm run test:web:production-authenticated || rc=$?
+          cp reports/junit/playwright.xml reports/junit/production-authenticated.xml || true
+          exit $rc
+      - id: e2e
+        name: Web E2E, login to checkout (${{ env.QA_STOP_BEFORE_ORDER == 'false' && 'REAL order' || 'stops before order' }})
+        if: ${{ env.QA_CUSTOMER_EMAIL != '' && env.QA_CUSTOMER_PASSWORD != '' }}
+        continue-on-error: true
+        run: |
+          rc=0
+          npm run test:web:production-order-smoke || rc=$?
+          cp reports/junit/playwright.xml reports/junit/web-e2e.xml || true
+          exit $rc
+      - name: Keep the JUnit results for the Slack card
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-web-junit
+          path: |
+            qa-automation/reports/junit/production-smoke.xml
+            qa-automation/reports/junit/production-authenticated.xml
+            qa-automation/reports/junit/web-e2e.xml
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-web-report
+          path: qa-automation/reports/playwright
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Fail if any suite failed
+        if: >-
+          steps.smoke.outcome == 'failure' || steps.authenticated.outcome == 'failure' ||
+          steps.e2e.outcome == 'failure'
+        run: |
+          echo "smoke=${{ steps.smoke.outcome }} authenticated=${{ steps.authenticated.outcome }} e2e=${{ steps.e2e.outcome }}"
+          exit 1
+
   # One card per run, pass or fail, combining every gate: the typecheck and
   # lint outcomes (which produce no JUnit), the unit, contract and mock-web test
   # results, and whether mock-web ran at all. SLACK_WEBHOOK_URL is optional;
@@ -208,7 +349,7 @@ jobs:
   # reporter says so and exits cleanly.
   notify:
     name: Report to Slack
-    needs: [gate, static, mock-web]
+    needs: [gate, static, mock-web, production-web]
     if: ${{ always() && needs.gate.outputs.run == 'true' }}
     runs-on: ubuntu-latest
     defaults:
@@ -225,6 +366,10 @@ jobs:
       UNIT: ${{ needs.static.outputs.unit || 'skipped' }}
       CONTRACT: ${{ needs.static.outputs.contract || 'skipped' }}
       MOCK_WEB: ${{ needs.mock-web.result }}
+      PROD_SMOKE: ${{ needs.production-web.outputs.smoke || 'skipped' }}
+      PROD_AUTH: ${{ needs.production-web.outputs.authenticated || 'skipped' }}
+      WEB_E2E: ${{ needs.production-web.outputs.e2e || 'skipped' }}
+      STOP_BEFORE_ORDER: ${{ needs.production-web.outputs.stop_before_order || 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -245,6 +390,11 @@ jobs:
         with:
           name: mock-web-junit
           path: qa-automation/ci-reports/mock
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: production-web-junit
+          path: qa-automation/ci-reports/production
       - name: Post the result
         run: |
           case "$EVENT" in
@@ -252,11 +402,21 @@ jobs:
             push) title="QA checks · push" ;;
             *) title="QA checks · manual run" ;;
           esac
+          if [ "$STOP_BEFORE_ORDER" = "false" ]; then
+            title="$title (REAL order)"
+            e2e_label="Web E2E (REAL order)"
+          else
+            e2e_label="Web E2E (stops before order)"
+          fi
           args=(--title "$title"
             --command "npm run typecheck && npm run lint && npm run test:unit && npm run test:contract && npm run test:web:mock")
-          for report in ci-reports/static/unit.xml ci-reports/static/contract.xml ci-reports/mock/playwright.xml; do
+          for report in ci-reports/static/unit.xml ci-reports/static/contract.xml ci-reports/mock/playwright.xml \
+            ci-reports/production/production-smoke.xml ci-reports/production/production-authenticated.xml \
+            ci-reports/production/web-e2e.xml; do
             [ -f "$report" ] && args+=(--junit "$report")
           done
           args+=(--check "Typecheck=$TYPECHECK" --check "Lint=$LINT" --check "Unit=$UNIT"
-            --check "Contracts=$CONTRACT" --check "Mock web=$MOCK_WEB")
+            --check "Contracts=$CONTRACT" --check "Mock web=$MOCK_WEB"
+            --check "Prod smoke=$PROD_SMOKE" --check "Prod authenticated=$PROD_AUTH"
+            --check "$e2e_label=$WEB_E2E")
           node scripts/slack-report.js "${args[@]}"

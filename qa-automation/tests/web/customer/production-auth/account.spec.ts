@@ -2,6 +2,7 @@ import { expect, test, type Page, type Response } from '@playwright/test'
 
 import { openCustomerWeb } from '../support/customer-web.js'
 import { installProductionReadOnlyGuard } from '../support/production-read-only.js'
+import { modeKey } from '../support/app-storage.js'
 
 type GraphqlResult<T> = {
   data?: T
@@ -45,7 +46,12 @@ test('CW-P1-PROD-020 restores the real authenticated customer session', async ({
   await expect(page).toHaveURL(/\/profile$/)
   await expect(page.getByTestId('customer-login-trigger')).toHaveCount(0)
   await expect
-    .poll(() => page.evaluate(() => localStorage.getItem('token')))
+    .poll(() =>
+      page.evaluate(
+        (key) => localStorage.getItem(key) ?? localStorage.getItem('token'),
+        modeKey('token')
+      )
+    )
     .not.toBeNull()
 
   await page.reload({ waitUntil: 'domcontentloaded' })

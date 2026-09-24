@@ -4,6 +4,7 @@ import { dirname } from 'node:path'
 import { expect, test } from '@playwright/test'
 
 import { createCustomerOnlyAuthState } from '../../../../src/auth/customer-auth-state.js'
+import { modeKey } from '../support/app-storage.js'
 import {
   openCustomerWeb,
   openEmailLogin
@@ -110,10 +111,13 @@ test('save an Enatega session after production email login', async ({
     new URL(page.url()).origin
   )
 
+  // The session token is stored under the mode-scoped key; the bare `token`
+  // key is accepted too, for an app build that predates the scoping.
   expect(
     customerState.origins[0]?.localStorage.some(
-      ({ name, value }) => name === 'token' && value.length > 0
-    )
+      ({ name, value }) => (name === modeKey('token') || name === 'token') && value.length > 0
+    ),
+    `no session token saved under ${modeKey('token')}`
   ).toBe(true)
 
   await mkdir(dirname(customerAuthState), { recursive: true })

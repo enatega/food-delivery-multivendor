@@ -2,6 +2,7 @@ import { expect, test, type Page, type Response } from '@playwright/test'
 
 import { openCustomerWeb } from '../support/customer-web.js'
 import { installProductionReadOnlyGuard } from '../support/production-read-only.js'
+import { APP_MODE, APP_MODE_STORAGE_KEY, MODE_KEY_PREFIX } from '../support/app-storage.js'
 
 type OpeningTime = {
   day?: string
@@ -139,32 +140,39 @@ test('CW-P1-PROD-083 builds a real cart and reaches checkout without placing an 
   test.setTimeout(120_000)
   const monitor = await installProductionReadOnlyGuard(page)
 
-  await page.addInitScript(() => {
-    for (const key of [
-      'cartItems',
-      'restaurant',
-      'restaurant-slug',
-      'cart-product-store-id',
-      'cart-product-store-slug',
-      'currentShopType',
-      'orderInstructions',
-      'newOrderInstructions',
-      'applied_coupon',
-      'coupon_text',
-      'is_coupon_applied',
-      'coupon_restaurant_id'
-    ]) {
-      localStorage.removeItem(key)
-    }
-    localStorage.setItem(
-      'location',
-      JSON.stringify({
+  // Cart and location keys are mode-scoped now, so both spellings are cleared
+  // and both are seeded, with the mode pinned so the scoped ones are the ones
+  // the app reads.
+  await page.addInitScript(
+    ({ prefix, modeStorageKey, mode }) => {
+      localStorage.setItem(modeStorageKey, mode)
+      for (const key of [
+        'cartItems',
+        'restaurant',
+        'restaurant-slug',
+        'cart-product-store-id',
+        'cart-product-store-slug',
+        'currentShopType',
+        'orderInstructions',
+        'newOrderInstructions',
+        'applied_coupon',
+        'coupon_text',
+        'is_coupon_applied',
+        'coupon_restaurant_id'
+      ]) {
+        localStorage.removeItem(key)
+        localStorage.removeItem(`${prefix}${key}`)
+      }
+      const location = JSON.stringify({
         latitude: 33.6844,
         longitude: 73.0479,
         deliveryAddress: 'Automation checkout location'
       })
-    )
-  })
+      localStorage.setItem('location', location)
+      localStorage.setItem(`${prefix}location`, location)
+    },
+    { prefix: MODE_KEY_PREFIX, modeStorageKey: APP_MODE_STORAGE_KEY, mode: APP_MODE }
+  )
 
   const restaurantsResponsePromise = waitForOperation(page, 'Restaurants')
   await openCustomerWeb(page, '/discovery')

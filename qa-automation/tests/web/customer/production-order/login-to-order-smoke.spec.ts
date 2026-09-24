@@ -22,10 +22,14 @@ import { expect, test, type Page, type Response } from '@playwright/test'
  * headed runs and UI mode, where the test re-runs on every click.
  *
  * SAFETY: this WRITES to production — it places a real COD pickup order. It is
- * gated to its own `customer-production-order-smoke` project, is never wired
- * into per-push CI, and refuses to submit if the checkout total exceeds
- * QA_MAX_ORDER_TOTAL. Pickup + Cash keeps the order free of any delivery
- * dispatch or payment gateway.
+ * gated to its own `customer-production-order-smoke` project and refuses to
+ * submit if the checkout total exceeds QA_MAX_ORDER_TOTAL. Pickup + Cash keeps
+ * the order free of any delivery dispatch or payment gateway.
+ *
+ * In CI (.github/workflows/qa-checks.yml) it runs on every push and pull
+ * request with QA_STOP_BEFORE_ORDER=true, so no order is ever placed
+ * automatically. A real order is submitted only from a manual "Run workflow"
+ * with the "place a REAL order" box ticked.
  */
 
 // The QA account's real, serviceable delivery zone (Islamabad, E-11).
@@ -215,6 +219,11 @@ function isOpenNow(restaurant: RestaurantCandidate) {
 
 // Prefer the simplest orderable item: an in-stock variation whose required
 // add-on groups are all optional, so the detail modal needs no option picking.
+/**
+ * The CHEAPEST in-stock item that can be added without choosing a required
+ * addon. Taking the first such item instead let one expensive dish at the top
+ * of a menu rule the whole restaurant out against QA_MAX_ORDER_TOTAL.
+ */
 function findSimpleFood(menu: MenuResult) {
   const restaurant = menu.data?.restaurant
   const addons = restaurant?.addons ?? []
@@ -224,6 +233,7 @@ function findSimpleFood(menu: MenuResult) {
       return (addon?.quantityMinimum ?? 0) > 0
     }).length
 
+  let cheapest: { foodId: string; title: string; price: number } | undefined
   for (const category of restaurant?.categories ?? []) {
     for (const food of category.foods ?? []) {
       if (!food._id || food.isOutOfStock) continue
@@ -234,12 +244,12 @@ function findSimpleFood(menu: MenuResult) {
           item.price > 0 &&
           requiredGroups(item.addons) === 0
       )
-      if (variation?.price) {
-        return { foodId: food._id, title: food.title ?? '', price: variation.price }
+      if (variation?.price && (!cheapest || variation.price < cheapest.price)) {
+        cheapest = { foodId: food._id, title: food.title ?? '', price: variation.price }
       }
     }
   }
-  return undefined
+  return cheapest
 }
 
 // Pin the app mode and delivery zone before any app script runs, and start from
@@ -405,37 +415,70 @@ test('CW-P0-SMOKE-300 logs in and places a real COD pickup order end to end', as
   )
     .filter(isOpenNow)
     .sort((a, b) => (a.minimumOrder ?? 0) - (b.minimumOrder ?? 0))
-  expect(
-    openRestaurants.length,
+  // The query itself was asserted above, so a broken backend still fails. What
+  // is left is the clock: outside trading hours nothing in the zone is open,
+  // which says nothing about the code under test. This runs on every push, so
+  // it is reported as a skip with its reason rather than as a failure.
+  test.skip(
+    openRestaurants.length === 0,
     'no open restaurants in this zone right now — retry during trading hours'
-  ).toBeGreaterThan(0)
+  )
 
   // ---- 3. Real menu -----------------------------------------------------
   let chosen:
     | { restaurant: RestaurantCandidate; foodId: string; title: string; quantity: number }
     | undefined
+  // Why each candidate was passed over, so a failure or skip explains itself.
+  const rejected: string[] = []
+  let menusLoaded = 0
+  let pricedOut = 0
 
   for (const restaurant of openRestaurants.slice(0, 8)) {
+    const name = restaurant.name
     const menuPromise = expectOperation<MenuResult>(page, 'RestaurantByIdAndSlug')
     await navigate(page, `/restaurant/${restaurant.slug}/${restaurant._id}`)
     const menu = await menuPromise.catch(() => undefined)
-    if (!menu) continue
-    if (menu.errors?.length) continue
+    if (!menu || menu.errors?.length) {
+      rejected.push(`${name}: menu query ${menu ? 'returned errors' : 'never responded'}`)
+      continue
+    }
+    menusLoaded += 1
 
     const food = findSimpleFood(menu)
-    if (!food) continue
+    if (!food) {
+      rejected.push(`${name}: no in-stock item without a required addon`)
+      continue
+    }
 
     const minimumOrder = menu.data?.restaurant?.minimumOrder ?? restaurant.minimumOrder ?? 0
     const quantity = Math.max(1, Math.ceil(minimumOrder / food.price))
-    if (food.price * quantity > ceiling) continue
+    if (food.price * quantity > ceiling) {
+      pricedOut += 1
+      rejected.push(
+        `${name}: cheapest simple item ${food.price} x ${quantity} to reach the ` +
+          `${minimumOrder} minimum = ${food.price * quantity}, over the ${ceiling} ceiling`
+      )
+      continue
+    }
 
     chosen = { restaurant, foodId: food.foodId, title: food.title, quantity }
     break
   }
 
+  const reasons = rejected.map((line) => `  - ${line}`).join('\n')
+  // Menus that never load are a defect in the app or the backend.
+  expect(menusLoaded, `no restaurant menu loaded:\n${reasons}`).toBeGreaterThan(0)
+  // Menus that load but price every simple item above the ceiling are the live
+  // catalogue, not the code — skip with the prices, and raise
+  // QA_MAX_ORDER_TOTAL if it keeps happening. A menu with no orderable item at
+  // all is NOT excused: that usually means its data changed shape.
+  test.skip(
+    !chosen && pricedOut > 0,
+    `every open restaurant's cheapest simple item is over QA_MAX_ORDER_TOTAL right now:\n${reasons}`
+  )
   expect(
     chosen,
-    'no open restaurant offered a simple in-stock item under QA_MAX_ORDER_TOTAL'
+    `no open restaurant offered a simple in-stock item under QA_MAX_ORDER_TOTAL:\n${reasons}`
   ).toBeTruthy()
   if (!chosen) throw new Error('unreachable')
 

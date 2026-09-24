@@ -9,6 +9,7 @@ import {
 } from '../support/checkout-flow.js'
 import { openCustomerWeb } from '../support/customer-web.js'
 import { mockGraphql } from '../support/mock-graphql.js'
+import { modeKey } from '../support/app-storage.js'
 
 /**
  * Cart durability and the cart/restaurant coupling.
@@ -22,10 +23,6 @@ import { mockGraphql } from '../support/mock-graphql.js'
  * keys before it can trust the cart it builds.
  */
 
-// The web app's default mode is MULTI, and cart keys are not in its
-// SHARED_KEYS set, so they are stored as `@enatega/multi/<key>`. Reading the
-// bare legacy key would always return null and assert nothing.
-const modeKey = (key: string) => `@enatega/multi/${key}`
 test.beforeEach(async ({ page }) => {
   await seedCustomerSession(page)
   await clearCartStorage(page)
