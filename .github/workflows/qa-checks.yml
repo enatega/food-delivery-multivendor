@@ -247,13 +247,15 @@ jobs:
       e2e: ${{ steps.e2e.outcome }}
       stop_before_order: ${{ steps.mode.outputs.stop_before_order }}
     steps:
+      # Checkout first: every `run` step here executes inside qa-automation/,
+      # which does not exist until the repository is checked out.
+      - uses: actions/checkout@v4
       - id: mode
         run: |
           echo "stop_before_order=$QA_STOP_BEFORE_ORDER" >> "$GITHUB_OUTPUT"
           if [ "$QA_STOP_BEFORE_ORDER" = "false" ]; then
             echo "::warning::This run will place a REAL COD order on production."
           fi
-      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
