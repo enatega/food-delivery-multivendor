@@ -84,7 +84,8 @@ const nextConfig = {
   },
 
   images: {
-    formats: ["image/avif", "image/webp"],
+    // WebP only: AVIF encodes much slower, delaying first-time image loads.
+    formats: ["image/webp"],
     minimumCacheTTL: 86400,
     dangerouslyAllowSVG: false,
     remotePatterns: [

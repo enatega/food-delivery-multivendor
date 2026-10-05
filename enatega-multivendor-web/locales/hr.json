@@ -1001,5 +1001,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Još nema favorita",
+  "favorite_products_empty_description": "Dodirnite srce na bilo kojem proizvodu da ga spremite ovdje za brzu ponovnu narudžbu.",
+  "favorite_products_empty_cta": "Pregledaj proizvode"
 }

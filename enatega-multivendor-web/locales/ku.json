@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "هێشتا هیچ هەڵبژاردنێک نییە",
+  "favorite_products_empty_description": "دڵی هەر بەرهەمێک دابگرە بۆ پاشەکەوتکردنی لێرە بۆ داواکردنەوەی خێرا.",
+  "favorite_products_empty_cta": "گەڕان لە بەرهەمەکان"
 }

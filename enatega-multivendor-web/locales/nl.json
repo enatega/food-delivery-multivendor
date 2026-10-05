@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Nog geen favorieten",
+  "favorite_products_empty_description": "Tik op het hartje bij een product om het hier op te slaan en snel opnieuw te bestellen.",
+  "favorite_products_empty_cta": "Producten bekijken"
 }

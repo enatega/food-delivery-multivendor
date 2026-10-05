@@ -1012,5 +1012,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "لا توجد مفضلات بعد",
+  "favorite_products_empty_description": "اضغط على القلب في أي منتج لحفظه هنا وإعادة طلبه بسرعة.",
+  "favorite_products_empty_cta": "تصفح المنتجات"
 }

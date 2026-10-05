@@ -1024,5 +1024,8 @@
   "show_more_orders": "Show more orders",
   "your_email": "your@email.com",
   "Select_your_address_prompt": "Select your address.",
-  "Our-brands": "Our brands"
+  "Our-brands": "Our brands",
+  "favorite_products_empty_title": "No favorites yet",
+  "favorite_products_empty_description": "Tap the heart on any product to save it here for quick reordering.",
+  "favorite_products_empty_cta": "Browse products"
 }

@@ -1008,5 +1008,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Hələ sevimlilər yoxdur",
+  "favorite_products_empty_description": "Tez yenidən sifariş üçün istənilən məhsulda ürəyə toxunaraq onu burada saxlayın.",
+  "favorite_products_empty_cta": "Məhsullara baxın"
 }

@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "अभी तक कोई पसंदीदा नहीं",
+  "favorite_products_empty_description": "जल्दी दोबारा ऑर्डर करने के लिए किसी भी उत्पाद पर दिल को टैप करके उसे यहाँ सहेजें।",
+  "favorite_products_empty_cta": "उत्पाद देखें"
 }

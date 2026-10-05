@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "아직 즐겨찾기가 없습니다",
+  "favorite_products_empty_description": "상품의 하트를 눌러 여기에 저장하고 빠르게 다시 주문하세요.",
+  "favorite_products_empty_cta": "상품 둘러보기"
 }

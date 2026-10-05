@@ -1010,5 +1010,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "お気に入りがまだありません",
+  "favorite_products_empty_description": "商品のハートをタップすると、ここに保存してすばやく再注文できます。",
+  "favorite_products_empty_cta": "商品を見る"
 }

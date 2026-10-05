@@ -1010,5 +1010,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Henüz favori yok",
+  "favorite_products_empty_description": "Hızlıca yeniden sipariş vermek için herhangi bir üründeki kalbe dokunarak onu buraya kaydedin.",
+  "favorite_products_empty_cta": "Ürünlere göz at"
 }

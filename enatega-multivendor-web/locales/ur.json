@@ -1000,5 +1000,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "ابھی تک کوئی پسندیدہ نہیں",
+  "favorite_products_empty_description": "جلد دوبارہ آرڈر کرنے کے لیے کسی بھی پروڈکٹ پر دل کو ٹیپ کر کے اسے یہاں محفوظ کریں۔",
+  "favorite_products_empty_cta": "پروڈکٹس دیکھیں"
 }

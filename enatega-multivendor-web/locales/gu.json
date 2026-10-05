@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "હજુ સુધી કોઈ પસંદગીઓ નથી",
+  "favorite_products_empty_description": "ઝડપથી ફરી ઓર્ડર કરવા માટે કોઈપણ ઉત્પાદન પરના હાર્ટને ટેપ કરીને તેને અહીં સાચવો.",
+  "favorite_products_empty_cta": "ઉત્પાદનો જુઓ"
 }

@@ -18,7 +18,6 @@ import { getMainDefinition } from "@apollo/client/utilities";
 
 // GQL
 import { SubscriptionClient } from "subscriptions-transport-ws";
-import { useEffect, useRef } from "react";
 
 // Utility imports
 import { Subscription } from "zen-observable-ts";
@@ -92,23 +91,34 @@ async function fetchMetricsToken(
   return refreshPromise;
 }
 
+// One client per mode for the lifetime of the tab. Switching vendor mode
+// remounts the provider tree, so reusing the client keeps its cache: going
+// back to a mode renders instantly from cache while queries refresh, and data
+// prefetched for the inactive mode is already there when the user switches.
+const clientsByMode = new Map<AppMode, ApolloClient<NormalizedCacheObject>>();
+
+export const getApolloClient = (
+  mode: AppMode,
+): ApolloClient<NormalizedCacheObject> => {
+  // Never share a cache between server requests.
+  if (typeof window === "undefined") return createApolloClient(mode);
+  let client = clientsByMode.get(mode);
+  if (!client) {
+    client = createApolloClient(mode);
+    clientsByMode.set(mode, client);
+  }
+  return client;
+};
+
 export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
   const { mode } = useAppMode();
+  return getApolloClient(mode);
+};
+
+function createApolloClient(
+  mode: AppMode,
+): ApolloClient<NormalizedCacheObject> {
   const environment = getModeEnvironment(mode);
-  const clientRef = useRef<ApolloClient<NormalizedCacheObject> | null>(null);
-  const wsClientRef = useRef<SubscriptionClient | null>(null);
-
-  useEffect(() => {
-    return () => {
-      wsClientRef.current?.close(false, false);
-      wsClientRef.current = null;
-      clientRef.current = null;
-    };
-  }, []);
-
-  if (clientRef.current) {
-    return clientRef.current;
-  }
 
   // const { SERVER_URL, WS_SERVER_URL } = getEnv(ENV);
   const SERVER_URL = environment.graphqlUrl;
@@ -129,13 +139,14 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     reconnect: true,
     timeout: 30000,
     lazy: true,
+    // The client outlives mode switches, so let an idle socket close.
+    inactivityTimeout: 30000,
     connectionParams: () => ({
       authorization: getAccessToken(mode)
         ? `Bearer ${getAccessToken(mode)}`
         : "",
     }),
   });
-  wsClientRef.current = wsClient;
   const wsLink = new WebSocketLink(wsClient);
 
   const errorLink = new ApolloLink(
@@ -242,6 +253,5 @@ export const useSetupApollo = (): ApolloClient<NormalizedCacheObject> => {
     connectToDevTools: process.env.NODE_ENV !== "production",
   });
 
-  clientRef.current = client;
   return client;
-};
+}

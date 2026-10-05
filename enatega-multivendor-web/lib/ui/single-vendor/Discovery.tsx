@@ -13,6 +13,7 @@ import SingleVendorProductSection, {
   SingleVendorProductSectionSkeleton,
 } from "./ProductSection";
 import SingleVendorActiveOrderCard from "./ActiveOrderCard";
+import { SINGLE_VENDOR_DISCOVERY_VARIABLES } from "./prefetchDiscovery";
 import { useTranslations } from "next-intl";
 
 const normalizeProducts = (items: any[] = []): ModeProduct[] =>
@@ -56,7 +57,7 @@ export default function SingleVendorDiscovery() {
   const t = useTranslations();
   const dealsSectionTitle = t("tab_deals");
   const discovery = useQuery(SINGLE_VENDOR_DISCOVERY, {
-    variables: { previewLimit: 10, dealLimit: 20 },
+    variables: SINGLE_VENDOR_DISCOVERY_VARIABLES,
     fetchPolicy: "cache-and-network",
   });
   const discoveryData = discovery.data?.singleVendorDiscovery;
@@ -84,8 +85,10 @@ export default function SingleVendorDiscovery() {
     <div className="pb-12">
       <DiscoveryBannerSection
         banners={discoveryData?.banners}
-        loading={discovery.loading}
-        error={discovery.error}
+        // Cached banners (e.g. prefetched before the mode switch) render
+        // immediately; only show the skeleton when there is nothing yet.
+        loading={discovery.loading && !discoveryData}
+        error={discoveryData ? undefined : discovery.error}
       />
       <SingleVendorActiveOrderCard />
 

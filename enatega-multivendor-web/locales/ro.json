@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Încă nu există favorite",
+  "favorite_products_empty_description": "Atinge inima de pe orice produs pentru a-l salva aici și a-l comanda rapid din nou.",
+  "favorite_products_empty_cta": "Răsfoiește produsele"
 }

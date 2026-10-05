@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "暂无收藏",
+  "favorite_products_empty_description": "点击任意商品上的爱心即可收藏到这里，方便快速再次下单。",
+  "favorite_products_empty_cta": "浏览商品"
 }

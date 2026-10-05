@@ -1024,5 +1024,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Таңдаулылар әлі жоқ",
+  "favorite_products_empty_description": "Жылдам қайта тапсырыс беру үшін кез келген өнімдегі жүрекшені басып, оны осында сақтаңыз.",
+  "favorite_products_empty_cta": "Өнімдерді қарау"
 }
