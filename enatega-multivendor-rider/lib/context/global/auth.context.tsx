@@ -6,6 +6,10 @@ import { getSecureItem, removeSecureItem, setSecureItem } from "@/lib/services/s
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
 import { useRouter } from "expo-router";
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
+import {
+  hasCompleteRiderSession,
+  subscribeToSessionInvalidation,
+} from "@/lib/utils/session";
 
 export const AuthContext = React.createContext<IAuthContext>(
   {} as IAuthContext,
@@ -28,10 +32,27 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
 
     const hydrateAuth = async () => {
       try {
-        const storedToken = await getSecureItem(tokenKey);
+        setIsAuthReady(false);
+        setToken("");
+        const [storedToken, storedRiderId] = await Promise.all([
+          getSecureItem(tokenKey),
+          getSecureItem(riderIdKey),
+        ]);
 
-        if (isMounted && storedToken) {
+        if (
+          isMounted &&
+          hasCompleteRiderSession(storedToken, storedRiderId)
+        ) {
           setToken(storedToken);
+        } else if (storedToken || storedRiderId) {
+          // The token and rider id form one session. A partial pair can happen
+          // if the app is terminated during login or legacy migration, and it
+          // must never unlock a profile-less authenticated UI.
+          await Promise.all([
+            removeSecureItem(tokenKey),
+            removeSecureItem(riderIdKey),
+          ]);
+          if (isMounted) router.replace("/login");
         }
       } finally {
         if (isMounted) {
@@ -45,7 +66,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     return () => {
       isMounted = false;
     };
-  }, [tokenKey]);
+  }, [riderIdKey, router, tokenKey]);
 
   const setTokenAsync = useCallback(
     async (token: string) => {
@@ -89,6 +110,18 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       router.replace("/login");
     }
   }, [client, riderIdKey, router, tokenKey]);
+
+  useEffect(
+    () =>
+      subscribeToSessionInvalidation((event) => {
+        if (event.tokenKey === tokenKey && event.riderIdKey === riderIdKey) {
+          void logout();
+          return true;
+        }
+        return false;
+      }),
+    [logout, riderIdKey, tokenKey],
+  );
 
   const values: IAuthContext = useMemo(
     () => ({

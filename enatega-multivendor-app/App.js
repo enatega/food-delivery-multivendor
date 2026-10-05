@@ -5,7 +5,7 @@ import 'react-native-get-random-values';
 import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
-import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { ActivityIndicator, Alert, AppState, BackHandler, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
 import * as NavigationBar from 'expo-navigation-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -72,6 +72,7 @@ function ModeAwareApp() {
   const [appIsReady, setAppIsReady] = useState(false)
   const [isThemeReady, setIsThemeReady] = useState(false)
   const [orderId, setOrderId] = useState()
+  const [reviewAppState, setReviewAppState] = useState(AppState.currentState)
   const [isUpdating, setIsUpdating] = useState(false)
   const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false)
   const [clarityInitialized, setClarityInitialized] = useState(false)
@@ -142,6 +143,21 @@ function ModeAwareApp() {
       stopPublicAccessTokenRefresh()
     }
   }, [GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED])
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', setReviewAppState)
+    return () => subscription.remove()
+  }, [])
+
+  // Modalize cannot reliably present while the native app is suspended. Keep
+  // the pending order id and open only after the app is active and the modal
+  // has received the new order prop.
+  useEffect(() => {
+    if (!orderId || reviewAppState !== 'active') return undefined
+
+    const frame = requestAnimationFrame(() => reviewModalRef.current?.open())
+    return () => cancelAnimationFrame(frame)
+  }, [orderId, reviewAppState])
 
   // Screen keep-awake is now scoped to the active order-tracking screen
   // (see OrderDetail) instead of being on app-wide, which drained battery
@@ -266,7 +282,6 @@ function ModeAwareApp() {
         const id = notification?.request?.content?.data?._id
         if (id) {
           setOrderId(id)
-          reviewModalRef?.current?.open()
         }
       }
     })
@@ -277,7 +292,6 @@ function ModeAwareApp() {
         const id = data?._id
         if (id) {
           setOrderId(id)
-          reviewModalRef?.current?.open()
         }
         return
       }
@@ -323,6 +337,10 @@ function ModeAwareApp() {
     reviewModalRef?.current?.close()
   }
 
+  const handleOrderDelivered = useCallback((order) => {
+    if (order?._id) setOrderId(order._id)
+  }, [])
+
   const handleSessionExpiredLogin = () => {
     setSessionExpiredVisible(false)
     navigationService.navigate('CreateAccount')
@@ -358,16 +376,11 @@ function ModeAwareApp() {
                     <SentryInit />
                     <UserProvider>
                       <ModeNotificationRegistration />
-                      <OrdersProvider
-                        onOrderDelivered={(order) => {
-                          setOrderId(order._id)
-                          reviewModalRef?.current?.open()
-                        }}
-                      >
+                      <OrdersProvider onOrderDelivered={handleOrderDelivered}>
                         {mode === APP_MODES.SINGLE
                           ? <SingleVendorAppContainer />
                           : <AppContainer />}
-                        <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
+                        <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} onClosed={() => setOrderId(undefined)} theme={Theme[theme]} orderId={orderId} />
                         <SessionExpiredModal
                           visible={sessionExpiredVisible}
                           onLogin={handleSessionExpiredLogin}
