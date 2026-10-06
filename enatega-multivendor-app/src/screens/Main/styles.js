@@ -39,16 +39,10 @@ const styles = (props = null) =>
       height: '100%',
       alignSelf: 'center'
     },
-    discoverySections: {
-      gap: 0
-    },
-    collectionSection: {
-      marginTop: scale(20),
-      marginBottom: scale(10)
-    },
-    collectionHeading: {
-      paddingHorizontal: props?.spacing?.md ?? scale(12),
-      marginBottom: scale(15)
+    // Breathing room between the header and the banner carousel.
+    discoveryContent: {
+      paddingTop: scale(16),
+      paddingBottom: scale(16)
     },
     searchbar: {
       backgroundColor: props != null ? props?.main : 'black',
@@ -199,7 +193,7 @@ const styles = (props = null) =>
       paddingLeft: scale(38)
     },
     topBrandsMargin: {
-      marginBottom: scale(8)
+      marginBottom: 0
     },
     buttonContainer: {
       ...alignment.PLmedium,

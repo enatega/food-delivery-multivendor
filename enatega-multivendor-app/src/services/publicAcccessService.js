@@ -3,7 +3,12 @@ import { METRICS_GENERAL } from '../apollo/publicAccess'
 import { savePublicToken, getOrCreateNonce, isTokenExpired, getPublicToken, getTokenExpiry } from '../utils/publicAccessToken'
 import { Platform } from 'react-native'
 
-let tokenRefreshPromise = null
+// Multi-vendor and single-vendor are different backends with different public
+// tokens, so in-flight refreshes and refresh timers are tracked per GraphQL URL.
+// A shared slot let one backend's request await (and use) the other's token.
+const tokenRefreshPromises = new Map()
+const refreshTimers = new Map()
+const TOKEN_FETCH_TIMEOUT_MS = 10000
 
 // Proactively refresh the public (bop-auth / MetricsGeneral) token this many ms
 // before it actually expires, and keep a background timer running so the token
@@ -12,13 +17,14 @@ let tokenRefreshPromise = null
 // and the web app, and prevents the "Unauthorized: jwt expired" race where a
 // request is sent right as the token expires.
 const EXPIRY_BUFFER_MS = 30000
-let refreshTimer = null
+const clearRefreshTimer = (graphqlUrl) => {
+  const timer = refreshTimers.get(graphqlUrl)
+  if (timer) clearTimeout(timer)
+  refreshTimers.delete(graphqlUrl)
+}
 
 const scheduleNextRefresh = (graphqlUrl, expiryValue) => {
-  if (refreshTimer) {
-    clearTimeout(refreshTimer)
-    refreshTimer = null
-  }
+  clearRefreshTimer(graphqlUrl)
 
   if (!expiryValue) return
 
@@ -29,17 +35,21 @@ const scheduleNextRefresh = (graphqlUrl, expiryValue) => {
   // fetch re-schedules the following refresh on success.
   const delay = Math.max(expiryMs - Date.now() - EXPIRY_BUFFER_MS, 1000)
 
-  refreshTimer = setTimeout(() => {
+  refreshTimers.set(graphqlUrl, setTimeout(() => {
+    refreshTimers.delete(graphqlUrl)
     fetchPublicAccessToken(graphqlUrl).catch(() => {})
-  }, delay)
+  }, delay))
 }
 
 export const fetchPublicAccessToken = async(graphqlUrl) => {
-  if (tokenRefreshPromise) {
-    return tokenRefreshPromise
+  const inFlight = tokenRefreshPromises.get(graphqlUrl)
+  if (inFlight) {
+    return inFlight
   }
 
-  tokenRefreshPromise = (async() => {
+  const refreshPromise = (async() => {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null
+    const timer = controller ? setTimeout(() => controller.abort(), TOKEN_FETCH_TIMEOUT_MS) : null
     try {
       const nonce = await getOrCreateNonce(graphqlUrl)
 
@@ -57,7 +67,8 @@ export const fetchPublicAccessToken = async(graphqlUrl) => {
       })
 
       const { data } = await client.mutate({
-        mutation: METRICS_GENERAL
+        mutation: METRICS_GENERAL,
+        context: controller ? { fetchOptions: { signal: controller.signal } } : undefined
       })
 
       const token = data.metricsGeneral.experience
@@ -74,11 +85,13 @@ export const fetchPublicAccessToken = async(graphqlUrl) => {
       console.error('Failed to fetch public access token:', error.message)
       throw error
     } finally {
-      tokenRefreshPromise = null
+      if (timer) clearTimeout(timer)
+      tokenRefreshPromises.delete(graphqlUrl)
     }
   })()
 
-  return tokenRefreshPromise
+  tokenRefreshPromises.set(graphqlUrl, refreshPromise)
+  return refreshPromise
 }
 
 export const getValidPublicToken = async(graphqlUrl) => {
@@ -108,9 +121,12 @@ export const initializePublicAccessToken = async(graphqlUrl) => {
   }
 }
 
-export const stopPublicAccessTokenRefresh = () => {
-  if (refreshTimer) {
-    clearTimeout(refreshTimer)
-    refreshTimer = null
+// Stops the background refresh for one backend, or for all when no URL is given.
+export const stopPublicAccessTokenRefresh = (graphqlUrl) => {
+  if (graphqlUrl) {
+    clearRefreshTimer(graphqlUrl)
+    return
   }
+  refreshTimers.forEach((timer) => clearTimeout(timer))
+  refreshTimers.clear()
 }

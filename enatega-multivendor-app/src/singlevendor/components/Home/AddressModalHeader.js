@@ -7,7 +7,7 @@ import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { Entypo } from '@expo/vector-icons'
 
-const AddressModalHeader = ({onClose}) => {
+const AddressModalHeader = ({ onClose }) => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = useMemo(() => ({ isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }), [themeContext.ThemeValue, i18n])

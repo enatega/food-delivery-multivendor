@@ -928,5 +928,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Aucun favori pour le moment",
+  "favorite_products_empty_description": "Touchez le cœur d'un produit pour l'enregistrer ici et le recommander rapidement.",
+  "favorite_products_empty_cta": "Parcourir les produits"
 }

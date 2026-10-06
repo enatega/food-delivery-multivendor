@@ -11,6 +11,15 @@ export const spacing = Object.freeze({
   section: verticalScale(28)
 })
 
+// Vertical rhythm for multivendor Discovery. Every section applies these itself,
+// so two adjacent sections sit sectionTop + sectionBottom (16pt) apart.
+export const discoverySpacing = Object.freeze({
+  bannerTop: scale(16),
+  bannerBottom: scale(4),
+  sectionTop: scale(12),
+  sectionBottom: scale(4)
+})
+
 export const radii = Object.freeze({
   none: 0,
   sm: scale(6),

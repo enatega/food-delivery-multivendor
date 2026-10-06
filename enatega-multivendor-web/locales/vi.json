@@ -1010,5 +1010,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Chưa có mục yêu thích nào",
+  "favorite_products_empty_description": "Nhấn vào biểu tượng trái tim trên bất kỳ sản phẩm nào để lưu tại đây và đặt lại nhanh chóng.",
+  "favorite_products_empty_cta": "Duyệt sản phẩm"
 }

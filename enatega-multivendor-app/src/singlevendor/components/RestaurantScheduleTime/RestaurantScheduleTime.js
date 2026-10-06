@@ -9,6 +9,62 @@ import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../../utils/scaling'
 import { Feather } from '@expo/vector-icons'
 
+// Header geometry shared with the Home header (Android) and the tab header
+// (iOS) so the address always reserves exactly the space the pill takes.
+export const SCHEDULE_PILL_WIDTH = scale(132)
+export const SCHEDULE_PILL_INSET = scale(12)
+export const SCHEDULE_PILL_RESERVED = SCHEDULE_PILL_WIDTH + SCHEDULE_PILL_INSET + scale(8)
+
+const WEEK = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+const DAY_PATTERN = /\b(MON|TUE|WED|THU|FRI|SAT|SUN)\b/
+
+// "MON-WED, FRI" -> ['MON', 'TUE', 'WED', 'FRI']
+const expandDays = (label = '') =>
+  label.split(',').flatMap((part) => {
+    const [start, end] = part.trim().split('-').map((code) => code.trim())
+    const from = WEEK.indexOf(start)
+    if (from < 0) return []
+    const to = end ? WEEK.indexOf(end) : from
+    if (to < 0) return [start]
+    const days = []
+    for (let i = from; ; i = (i + 1) % 7) {
+      days.push(WEEK[i])
+      if (i === to) break
+    }
+    return days
+  })
+
+// The API sends `openDaysTimes` as "MON-WED 09:00-17:00; FRI 10:00-16:00"
+// plus Saturday separately. Split it into { days, hours } groups.
+export const parseScheduleGroups = ({ openDaysTimes, saturdaySlotString } = {}) => {
+  const groups = (openDaysTimes || '')
+    .split(';')
+    .map((segment) => segment.trim())
+    .filter(Boolean)
+    .map((segment) => {
+      // Days run up to the first digit (the first time slot).
+      const firstDigit = segment.search(/\d/)
+      const daysLabel = (firstDigit > 0 ? segment.slice(0, firstDigit) : segment).trim().replace(/,\s*$/, '')
+      const hours = firstDigit >= 0 ? segment.slice(firstDigit).trim() : ''
+      return DAY_PATTERN.test(daysLabel) ? { label: daysLabel, days: expandDays(daysLabel), hours } : null
+    })
+    .filter((group) => group && group.hours)
+
+  const saturdayHours = saturdaySlotString?.trim()
+  if (saturdayHours) groups.push({ label: 'SAT', days: ['SAT'], hours: saturdayHours })
+  return groups
+}
+
+// Today's group, otherwise the next day that opens, otherwise the first.
+const pickGroupForToday = (groups, todayIndex) => {
+  for (let offset = 0; offset < 7; offset++) {
+    const day = WEEK[(todayIndex + offset) % 7]
+    const match = groups.find((group) => group.days.includes(day))
+    if (match) return match
+  }
+  return groups[0]
+}
+
 const RestaurantScheduleTime = () => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
@@ -22,36 +78,23 @@ const RestaurantScheduleTime = () => {
   const scheduleSummary = useMemo(() => {
     const schedule = data?.getScheduleUntilNextDayOff
     if (!schedule) return null
-    const { openDaysString, openDaysTimes, saturdaySlotString } = schedule
 
-    const formatDaysLabel = label => {
-      if (!label) return ''
-      return label.replace(/\b(MON|TUE|WED|THU|FRI|SAT|SUN)\b/g, dayCode =>
-        t(dayCode, { defaultValue: dayCode })
-      ).replace(/-/g, '–')
-    }
+    const formatDaysLabel = (label) =>
+      (label || '')
+        .replace(/\b(MON|TUE|WED|THU|FRI|SAT|SUN)\b/g, (dayCode) => t(dayCode, { defaultValue: dayCode }))
+        .replace(/-/g, '–')
 
-    const primaryDays = formatDaysLabel(openDaysString)
-    const rawPrimaryHours = openDaysTimes?.trim() || ''
-    const primaryHours = rawPrimaryHours.includes(';')
-      ? formatDaysLabel(rawPrimaryHours).replace(/;\s*/g, '\n')
-      : rawPrimaryHours.replace(new RegExp(`^${openDaysString?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`), '')
-    const saturdayHours = saturdaySlotString?.trim() || ''
-    const saturdayLabel = t('SAT', { defaultValue: 'SAT' })
+    const groups = parseScheduleGroups(schedule)
+    if (!groups.length) return null
 
+    const current = pickGroupForToday(groups, new Date().getDay())
     return {
-      days: [primaryDays, saturdayHours ? saturdayLabel : '']
-        .filter(Boolean)
-        .join(' + '),
-      hours: [primaryHours, saturdayHours]
-        .filter(Boolean)
-        .join(' / '),
-      accessibilityText: [
-        primaryDays && primaryHours
-          ? `${primaryDays} ${primaryHours}`
-          : '',
-        saturdayHours ? `${saturdayLabel} ${saturdayHours}` : ''
-      ].filter(Boolean).join(', ')
+      // Top line: the days; bottom line: only that group's times.
+      days: formatDaysLabel(current.label),
+      hours: current.hours.replace(/\s*-\s*/g, '–'),
+      accessibilityText: groups
+        .map((group) => `${formatDaysLabel(group.label)} ${group.hours}`)
+        .join(', ')
     }
   }, [data, t])
 
@@ -79,14 +122,14 @@ const RestaurantScheduleTime = () => {
           ? (
             <ActivityIndicator
               size='small'
-              color={currentTheme.main}
+              color={currentTheme.singleVendorBrandForeground}
             />
             )
           : (
             <Feather
               name={error ? 'refresh-cw' : 'clock'}
               size={scale(16)}
-              color={currentTheme.main}
+              color={currentTheme.singleVendorBrandForeground}
             />
             )}
       </View>
@@ -107,7 +150,7 @@ const RestaurantScheduleTime = () => {
           textColor={currentTheme.fontMainColor}
           small
           bold
-          numberOfLines={2}
+          numberOfLines={1}
           ellipsizeMode='tail'
           style={styles(currentTheme).hours}
         >
@@ -123,33 +166,26 @@ export default RestaurantScheduleTime
 const styles = (currentTheme) =>
   StyleSheet.create({
     container: {
-      flexDirection: 'row',
+      flexDirection: currentTheme.isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
-      width: scale(148),
-      minHeight: scale(42),
-      paddingHorizontal: scale(7),
-      paddingVertical: scale(6),
-      borderRadius: scale(12),
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
-      backgroundColor: currentTheme.cardBackground,
-      borderColor: currentTheme.colorBorder,
-      borderWidth: 1,
-      borderRightWidth: 0,
-      shadowColor: currentTheme.shadowColor || '#000000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.16,
-      shadowRadius: 8,
-      elevation: 6
+      width: SCHEDULE_PILL_WIDTH,
+      height: scale(40),
+      paddingLeft: scale(5),
+      paddingRight: scale(10),
+      borderRadius: 999,
+      backgroundColor: currentTheme.singleVendorBrandSubtle,
+      borderColor: currentTheme.newBorderColor2 || currentTheme.colorBorder,
+      borderWidth: StyleSheet.hairlineWidth
     },
     iconContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      width: scale(26),
-      height: scale(26),
-      marginRight: scale(6),
-      borderRadius: scale(13),
-      backgroundColor: currentTheme.singleVendorBrandSubtle
+      width: scale(30),
+      height: scale(30),
+      marginRight: currentTheme.isRTL ? 0 : scale(7),
+      marginLeft: currentTheme.isRTL ? scale(7) : 0,
+      borderRadius: scale(15),
+      backgroundColor: currentTheme.cardBackground
     },
     content: {
       flex: 1,
@@ -158,10 +194,12 @@ const styles = (currentTheme) =>
     days: {
       fontSize: scale(9),
       lineHeight: scale(11),
-      marginBottom: scale(1)
+      letterSpacing: 0.3,
+      textAlign: currentTheme.isRTL ? 'right' : 'left'
     },
     hours: {
       fontSize: scale(12),
-      lineHeight: scale(15)
+      lineHeight: scale(15),
+      textAlign: currentTheme.isRTL ? 'right' : 'left'
     }
   })

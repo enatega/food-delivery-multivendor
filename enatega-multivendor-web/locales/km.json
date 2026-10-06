@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "មិនទាន់មានចំណូលចិត្ត",
+  "favorite_products_empty_description": "ចុចលើបេះដូងនៅលើផលិតផលណាមួយ ដើម្បីរក្សាទុកវានៅទីនេះសម្រាប់ការកុម្ម៉ង់ម្តងទៀតយ៉ាងរហ័ស។",
+  "favorite_products_empty_cta": "រុករកផលិតផល"
 }

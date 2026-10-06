@@ -1,6 +1,6 @@
 "use client";
 
-import { FavouriteProducts, PersonalInfoMain } from "@/lib/ui/screen-components/protected/profile";
+import { FavouriteProducts, PersonalInfoMain } from "@/lib/ui/screen-components/protected/profile/personal-info";
 import { useAppMode } from "@/lib/mode";
 import { FavoriteProducts } from "@/lib/ui/single-vendor/ProfileExtras";
 

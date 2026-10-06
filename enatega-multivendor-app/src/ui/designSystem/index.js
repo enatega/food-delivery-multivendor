@@ -1,5 +1,6 @@
 export { default as useMultivendorTheme } from './useMultivendorTheme'
 export {
+  discoverySpacing,
   radii,
   resolveMultivendorTokens,
   sizes,

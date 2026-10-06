@@ -1010,5 +1010,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "এখনো কোনো পছন্দ নেই",
+  "favorite_products_empty_description": "দ্রুত আবার অর্ডার করতে যেকোনো পণ্যের হার্টে ট্যাপ করে এখানে সংরক্ষণ করুন।",
+  "favorite_products_empty_cta": "পণ্য ব্রাউজ করুন"
 }

@@ -1,11 +1,10 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import useCheckoutPalette from './useCheckoutPalette'
 
 const OrderSummary = ({
   // subtotal,
@@ -31,26 +30,24 @@ const OrderSummary = ({
   creditsUsed,
   dealDiscount = 0
 }) => {
-  const { t, i18n } = useTranslation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const { t } = useTranslation()
+  const { palette } = useCheckoutPalette()
 
   const totalPlusTip = total + (isCheckout ? tipAmount + priorityDeliveryFee : 0)
 
   return (
-    <View style={styles(currentTheme).container}>
+    <View style={styles(palette).container}>
       {/* Summary Header */}
       <TouchableOpacity style={styles().summaryHeader} onPress={onToggleExpanded} activeOpacity={0.7}>
         <View style={styles().summaryHeaderLeft}>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder H5 isRTL>
+          <TextDefault textColor={palette.textPrimary} bolder H5 isRTL>
             {t('Summary') || 'Summary'}
           </TextDefault>
-          <Feather name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color={currentTheme.fontMainColor} style={styles().chevron} />
+          <View style={styles(palette).chevron}>
+            <Feather name={expanded ? 'chevron-up' : 'chevron-down'} size={16} color={palette.textPrimary} />
+          </View>
         </View>
-        <TextDefault textColor={currentTheme.fontMainColor} bolder H5 isRTL>
+        <TextDefault textColor={palette.textPrimary} bolder H5 isRTL>
           {totalPlusTip.toFixed(2)}&nbsp;{currencySymbol}
         </TextDefault>
       </TouchableOpacity>
@@ -60,30 +57,30 @@ const OrderSummary = ({
         <View style={styles().summaryDetails}>
           {orderNumber && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.fontSecondColor} isRTL bold>
+              <TextDefault textColor={palette.textSecondary} isRTL bold>
                 {t('Order number') || 'Order number'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+              <TextDefault textColor={palette.textPrimary} isRTL>
                 {orderNumber}
               </TextDefault>
             </View>
           )}
 
           <View style={styles().summaryRow}>
-            <TextDefault textColor={currentTheme.fontSecondColor} isRTL bold>
+            <TextDefault textColor={palette.textSecondary} isRTL bold>
               {t('Item subtotal') || 'Item subtotal'}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+            <TextDefault textColor={palette.textPrimary} isRTL>
               {(subtotal + dealDiscount).toFixed(2)}&nbsp;{currencySymbol}
             </TextDefault>
           </View>
 
           {serviceFee > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.fontSecondColor} isRTL>
+              <TextDefault textColor={palette.textSecondary} isRTL>
                 {t('Service fee') || 'Service fee'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+              <TextDefault textColor={palette.textPrimary} isRTL>
                 {serviceFee.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
@@ -91,10 +88,10 @@ const OrderSummary = ({
 
           {minimumOrderFee > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.fontSecondColor} isRTL>
+              <TextDefault textColor={palette.textSecondary} isRTL>
                 {t('Low order fee') || 'Low order fee'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+              <TextDefault textColor={palette.textPrimary} isRTL>
                 {minimumOrderFee.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
@@ -102,10 +99,10 @@ const OrderSummary = ({
 
           {priorityDeliveryFee > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.fontSecondColor} isRTL>
+              <TextDefault textColor={palette.textSecondary} isRTL>
                 {t('Priority order fee') || 'Priority order fee'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+              <TextDefault textColor={palette.textPrimary} isRTL>
                 {priorityDeliveryFee.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
@@ -113,10 +110,10 @@ const OrderSummary = ({
 
           {/* {deliveryFee > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.fontSecondColor} isRTL>
+              <TextDefault textColor={palette.textSecondary} isRTL>
                 {t('Delivery fee') || 'Delivery fee'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+              <TextDefault textColor={palette.textPrimary} isRTL>
                 {currencySymbol} {deliveryFee.toFixed(2)}
               </TextDefault>
             </View>
@@ -124,10 +121,10 @@ const OrderSummary = ({
 
           {originalDeliveryCharges > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.fontSecondColor} isRTL>
+              <TextDefault textColor={palette.textSecondary} isRTL>
                 {t('deliveryFee') || 'Delivery fee'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+              <TextDefault textColor={palette.textPrimary} isRTL>
                 {originalDeliveryCharges.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
@@ -135,10 +132,10 @@ const OrderSummary = ({
 
           {deliveryDiscount > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+              <TextDefault textColor={palette.success} isRTL>
                 {t('deliveryDiscount') || 'Delivery discount'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+              <TextDefault textColor={palette.success} isRTL>
                 -{deliveryDiscount.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
@@ -146,10 +143,10 @@ const OrderSummary = ({
 
           {couponDiscountAmount > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+              <TextDefault textColor={palette.success} isRTL>
                 {t('Coupon Amount') || 'Coupon Amount'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+              <TextDefault textColor={palette.success} isRTL>
                 -{couponDiscountAmount.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
@@ -157,10 +154,10 @@ const OrderSummary = ({
 
           {dealDiscount > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+              <TextDefault textColor={palette.success} isRTL>
                 {t('Deals savings', { defaultValue: 'Deals savings' })}
               </TextDefault>
-              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+              <TextDefault textColor={palette.success} isRTL>
                 -{dealDiscount.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
@@ -168,10 +165,10 @@ const OrderSummary = ({
 
           {creditsUsed > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+              <TextDefault textColor={palette.success} isRTL>
                 {t('Credits Used') || 'Credits Used'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.success || '#16A34A'} isRTL>
+              <TextDefault textColor={palette.success} isRTL>
                 -{creditsUsed.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
@@ -179,34 +176,34 @@ const OrderSummary = ({
 
           {tipAmount > 0 && (
             <View style={styles().summaryRow}>
-              <TextDefault textColor={currentTheme.fontSecondColor} isRTL bold>
+              <TextDefault textColor={palette.textSecondary} isRTL bold>
                 {t('Tip') || 'Tip'}
               </TextDefault>
-              <TextDefault textColor={currentTheme.fontMainColor} isRTL>
+              <TextDefault textColor={palette.textPrimary} isRTL>
                 {tipAmount.toFixed(2)}&nbsp;{currencySymbol}
               </TextDefault>
             </View>
           )}
 
-          <View style={styles(currentTheme).divider} />
+          <View style={styles(palette).divider} />
 
           <View style={styles().summaryRow}>
-            <TextDefault textColor={currentTheme.fontMainColor} bolder isRTL H5>
+            <TextDefault textColor={palette.textPrimary} bolder isRTL H5>
               {t('total') || 'Total'}
             </TextDefault>
-            <TextDefault textColor={currentTheme.fontMainColor} bolder H5 isRTL>
+            <TextDefault textColor={palette.textPrimary} bolder H5 isRTL>
               {totalPlusTip.toFixed(2)}&nbsp;{currencySymbol}
             </TextDefault>
           </View>
         </View>
       )}
 
-      <TextDefault textColor={currentTheme.fontSecondColor} small isRTL bolder style={styles().taxNote}>
+      <TextDefault textColor={palette.textMuted} small isRTL style={styles().taxNote}>
         {t('incl. taxes (if applicable)') || 'incl. taxes (if applicable)'}
       </TextDefault>
 
       {freeDeliveriesRemaining > 0 && (
-        <TextDefault textColor={currentTheme.fontSecondColor} small isRTL bolder style={styles().taxNote}>
+        <TextDefault textColor={palette.success} small isRTL bold style={styles().taxNote}>
           {t('free delivery applied') || 'free delivery applied'}
         </TextDefault>
       )}
@@ -217,38 +214,44 @@ const OrderSummary = ({
 const styles = (props = null) =>
   StyleSheet.create({
     container: {
-      paddingBottom: scale(5)
+      paddingBottom: scale(2)
     },
     summaryHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      minHeight: scale(34)
+      minHeight: scale(30)
     },
     summaryHeaderLeft: {
       flexDirection: 'row',
       alignItems: 'center'
     },
     chevron: {
-      marginLeft: scale(8)
+      width: scale(24),
+      height: scale(24),
+      borderRadius: scale(12),
+      marginLeft: scale(8),
+      backgroundColor: props !== null ? props.surfaceMuted : '#F4F4F5',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     summaryDetails: {
-      marginTop: scale(12)
+      marginTop: scale(10)
     },
     summaryRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: scale(12)
+      marginBottom: scale(8)
     },
     divider: {
       height: StyleSheet.hairlineWidth,
-      backgroundColor: props !== null ? props.colorBorder : '#E5E7EB',
-      marginVertical: scale(8)
+      backgroundColor: props !== null ? props.border : '#E5E7EB',
+      marginTop: scale(2),
+      marginBottom: scale(10)
     },
     taxNote: {
-      marginTop: scale(1),
-      opacity: 0.78
+      marginTop: scale(1)
     }
   })
 

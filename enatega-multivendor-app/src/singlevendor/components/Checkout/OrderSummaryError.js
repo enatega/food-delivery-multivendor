@@ -1,30 +1,24 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import useCheckoutPalette from './useCheckoutPalette'
 
 const OrderSummaryError = ({ onRetry }) => {
-  const { t, i18n } = useTranslation()
-  const themeContext = useContext(ThemeContext)
-
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const { t } = useTranslation()
+  const { palette } = useCheckoutPalette()
 
   return (
-    <View style={styles(currentTheme).container}>
-      <View style={styles(currentTheme).card}>
+    <View style={styles(palette).container}>
+      <View style={styles(palette).card}>
         <View style={styles().iconWrapper}>
-          <Feather name="alert-circle" size={28} color={currentTheme.warning || '#F59E0B'} />
+          <Feather name="alert-circle" size={22} color={palette.warning} />
         </View>
 
         <TextDefault
-          textColor={currentTheme.fontMainColor}
+          textColor={palette.textPrimary}
           H5
           bolder
           isRTL
@@ -34,7 +28,7 @@ const OrderSummaryError = ({ onRetry }) => {
         </TextDefault>
 
         <TextDefault
-          textColor={currentTheme.fontSecondColor}
+          textColor={palette.textSecondary}
           small
           isRTL
           style={styles().description}
@@ -44,13 +38,13 @@ const OrderSummaryError = ({ onRetry }) => {
         </TextDefault>
 
         <TouchableOpacity
-          style={styles(currentTheme).retryButton}
+          style={styles(palette).retryButton}
           onPress={onRetry}
           activeOpacity={0.8}
         >
-          <Feather name="refresh-ccw" size={16} color={currentTheme.white} />
+          <Feather name="refresh-ccw" size={16} color={palette.onBrand} />
           <TextDefault
-            textColor={currentTheme.white}
+            textColor={palette.onBrand}
             bolder
             style={styles().retryText}
           >
@@ -62,40 +56,43 @@ const OrderSummaryError = ({ onRetry }) => {
   )
 }
 
-const styles = (props = null) =>
+const styles = (palette) =>
   StyleSheet.create({
     container: {
-      paddingBottom: scale(8)
+      paddingBottom: scale(4)
     },
     card: {
-      backgroundColor: props?.colorBgTertiary || '#fff',
-      borderRadius: scale(12),
-      padding: scale(16),
-      shadowColor: '#000',
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      shadowOffset: { width: 0, height: 4 },
-      elevation: 3
+      backgroundColor: palette.surfaceMuted,
+      borderRadius: scale(14),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: palette.border,
+      padding: scale(14)
     },
     iconWrapper: {
+      alignSelf: 'center',
+      width: scale(40),
+      height: scale(40),
+      borderRadius: scale(20),
+      backgroundColor: palette.warningSubtle,
       alignItems: 'center',
-      marginBottom: scale(12)
+      justifyContent: 'center',
+      marginBottom: scale(10)
     },
     title: {
       textAlign: 'center',
-      marginBottom: scale(6)
+      marginBottom: scale(4)
     },
     description: {
       textAlign: 'center',
-      marginBottom: scale(16)
+      marginBottom: scale(14)
     },
     retryButton: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: props?.primary || '#2563EB',
-      paddingVertical: scale(10),
-      borderRadius: scale(8)
+      backgroundColor: palette.brand,
+      minHeight: scale(42),
+      borderRadius: scale(12)
     },
     retryText: {
       marginLeft: scale(8)

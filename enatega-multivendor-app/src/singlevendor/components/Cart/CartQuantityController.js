@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useRef } from 'react'
-import { Animated, Pressable, StyleSheet, View } from 'react-native'
+import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
@@ -7,153 +7,198 @@ import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import useDebouncedCartQuantity from '../../hooks/useDebouncedCartQuantity'
 
-const CartQuantityController = ({ foodId, categoryId, variationId, addons = [], defaultQuantity = 0, collapsedWhenZero = false, variant = 'overlay', isOutOfStock = false }) => {
-  const { i18n } = useTranslation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+// Tactile feedback without a haptics module: every tap gets an immediate
+// squish on the button, a pulse on the pill, and the number rolls in the
+// direction of the change so rapid taps read as 4 -> 5 -> 6.
+const useTapFeedback = () => {
+  const plusScale = useRef(new Animated.Value(1)).current
+  const minusScale = useRef(new Animated.Value(1)).current
+  const pillPulse = useRef(new Animated.Value(0)).current
 
-  const { quantity, increase, decrease, isLoading } = useDebouncedCartQuantity({
-    foodId,
-    categoryId,
-    variationId,
-    addons,
-    defaultQuantity
-  })
-
-  const showCount = !isLoading
-
-  const appearAnim = useRef(new Animated.Value(0)).current
-  const countAnim = useRef(new Animated.Value(0)).current
-  const prevQuantityRef = useRef(quantity)
-
-  const shouldShowController = !(collapsedWhenZero && quantity === 0)
-
-  useEffect(() => {
-    if (!shouldShowController) return
-    appearAnim.setValue(0)
-    Animated.spring(appearAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      friction: 6,
-      tension: 90
-    }).start()
-  }, [shouldShowController, appearAnim])
-
-  useEffect(() => {
-    if (quantity === prevQuantityRef.current) return
-    prevQuantityRef.current = quantity
-    countAnim.setValue(12)
-    Animated.parallel([
-      Animated.timing(countAnim, {
-        toValue: 0,
-        duration: 220,
-        useNativeDriver: true
-      })
-    ]).start()
-  }, [quantity, countAnim])
-
-  const controllerAnimatedStyle = useMemo(
-    () => ({
-      transform: [
-        { scale: appearAnim },
-        {
-          translateY: appearAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [6, 0]
-          })
-        }
-      ],
-      opacity: appearAnim
-    }),
-    [appearAnim]
-  )
-
-  const countAnimatedStyle = useMemo(
-    () => ({
-      transform: [{ translateY: countAnim }],
-      opacity: countAnim.interpolate({
-        inputRange: [0, 12],
-        outputRange: [1, 0]
-      })
-    }),
-    [countAnim]
-  )
-
-  if (collapsedWhenZero && quantity === 0) {
-    return (
-      <Pressable style={[styles(currentTheme).addButton, variant === 'details' && styles(currentTheme).addButtonLarge, isOutOfStock && styles(currentTheme).disabledButton]} onPress={increase} disabled={isLoading || isOutOfStock} accessibilityRole='button' accessibilityState={{ disabled: isLoading || isOutOfStock }} accessibilityLabel={isOutOfStock ? 'Out of stock' : 'Add to cart'}>
-        {isLoading ? <DotLoader color={currentTheme.singleVendorBrandForeground} /> : <AntDesign name='plus' size={14} color={currentTheme.singleVendorBrandForeground} />}
-      </Pressable>
-    )
+  const squish = (value) => {
+    value.stopAnimation()
+    value.setValue(0.78)
+    Animated.spring(value, { toValue: 1, friction: 4, tension: 260, useNativeDriver: true }).start()
   }
 
+  const pulse = () => {
+    pillPulse.stopAnimation()
+    pillPulse.setValue(1)
+    Animated.timing(pillPulse, { toValue: 0, duration: 260, easing: Easing.out(Easing.quad), useNativeDriver: true }).start()
+  }
+
+  return {
+    plusScale,
+    minusScale,
+    pillPulse,
+    tapPlus: () => { squish(plusScale); pulse() },
+    tapMinus: () => { squish(minusScale); pulse() }
+  }
+}
+
+const RollingCount = ({ value, style, textColor }) => {
+  const shift = useRef(new Animated.Value(0)).current
+  const fade = useRef(new Animated.Value(1)).current
+  const previous = useRef(value)
+
+  useEffect(() => {
+    if (previous.current === value) return
+    const direction = value > previous.current ? 1 : -1
+    previous.current = value
+    shift.stopAnimation()
+    fade.stopAnimation()
+    // New number enters from below on +, from above on -.
+    shift.setValue(direction * 10)
+    fade.setValue(0.2)
+    Animated.parallel([
+      Animated.spring(shift, { toValue: 0, friction: 6, tension: 220, useNativeDriver: true }),
+      Animated.timing(fade, { toValue: 1, duration: 140, useNativeDriver: true })
+    ]).start()
+  }, [value, shift, fade])
+
   return (
-    <Animated.View style={[styles(currentTheme).controller, variant === 'details' && styles(currentTheme).controllerLarge, controllerAnimatedStyle]}>
-      <Pressable style={styles(currentTheme).controlButton} onPress={decrease} disabled={isLoading} accessibilityState={{ disabled: isLoading }}>
-        <AntDesign name={quantity <= 1 ? 'delete' : 'minus'} size={14} color={currentTheme.singleVendorOnBrand} />
-      </Pressable>
-
-      <View style={styles(currentTheme).countContainer}>
-        <View style={styles(currentTheme).countSlot}>
-          {showCount && (
-            <Animated.View style={countAnimatedStyle}>
-              <TextDefault H6 bolder textColor={currentTheme.fontMainColor}>
-                {quantity}
-              </TextDefault>
-            </Animated.View>
-          )}
-          {isLoading && (
-            <View style={styles(currentTheme).countSpinner}>
-              <DotLoader color={currentTheme.singleVendorBrandForeground} />
-            </View>
-          )}
-        </View>
-      </View>
-
-      <Pressable style={[styles(currentTheme).controlButton, isOutOfStock && styles(currentTheme).disabledButton]} onPress={increase} disabled={isLoading || isOutOfStock} accessibilityState={{ disabled: isLoading || isOutOfStock }}>
-        <AntDesign name='plus' size={14} color={currentTheme.singleVendorOnBrand} />
-      </Pressable>
+    <Animated.View style={[style, { opacity: fade, transform: [{ translateY: shift }] }]}>
+      <TextDefault H6 bolder textColor={textColor}>
+        {value}
+      </TextDefault>
     </Animated.View>
   )
 }
 
-const DotLoader = ({ color, size = 3, gap = 2 }) => {
-  const d1 = useRef(new Animated.Value(0)).current
-  const d2 = useRef(new Animated.Value(0)).current
-  const d3 = useRef(new Animated.Value(0)).current
+const CartQuantityController = ({ foodId, categoryId, variationId, addons = [], defaultQuantity = 0, collapsedWhenZero = false, variant = 'overlay', isOutOfStock = false, product = null }) => {
+  const { i18n } = useTranslation()
+  const themeContext = useContext(ThemeContext)
+  const isRTL = i18n.dir() === 'rtl'
+  const currentTheme = useMemo(() => ({ isRTL, ...theme[themeContext.ThemeValue] }), [isRTL, themeContext.ThemeValue])
+  const s = useMemo(() => styles(currentTheme), [currentTheme])
 
-  useEffect(() => {
-    const pulse = (val) => Animated.sequence([Animated.timing(val, { toValue: 1, duration: 260, useNativeDriver: true }), Animated.timing(val, { toValue: 0, duration: 260, useNativeDriver: true })])
-
-    const animation = Animated.loop(Animated.stagger(120, [pulse(d1), pulse(d2), pulse(d3)]))
-    animation.start()
-    return () => animation.stop()
-  }, [d1, d2, d3])
-
-  const dotStyle = (val) => ({
-    opacity: val.interpolate({ inputRange: [0, 1], outputRange: [0.3, 1] }),
-    transform: [
-      {
-        translateY: val.interpolate({ inputRange: [0, 1], outputRange: [2, 0] })
-      }
-    ]
+  // Quantity updates optimistically; server sync runs in the background and never blocks taps.
+  const { quantity, increase, decrease } = useDebouncedCartQuantity({
+    foodId,
+    categoryId,
+    variationId,
+    addons,
+    defaultQuantity,
+    product
   })
 
+  const { plusScale, minusScale, pillPulse, tapPlus, tapMinus } = useTapFeedback()
+  const appearAnim = useRef(new Animated.Value(1)).current
+  const addPop = useRef(new Animated.Value(1)).current
+  const wasCollapsedRef = useRef(collapsedWhenZero && quantity === 0)
+
+  const shouldShowController = !(collapsedWhenZero && quantity === 0)
+
+  useEffect(() => {
+    if (!shouldShowController) {
+      wasCollapsedRef.current = true
+      return
+    }
+    if (!wasCollapsedRef.current) return
+    wasCollapsedRef.current = false
+    // Expand from a near-full size so the +/- pill is readable on the very
+    // first frame after the tap, then settle with a short spring.
+    appearAnim.setValue(0.72)
+    Animated.spring(appearAnim, { toValue: 1, friction: 5, tension: 240, useNativeDriver: true }).start()
+  }, [shouldShowController, appearAnim])
+
+  const onAdd = () => {
+    addPop.setValue(0.75)
+    Animated.spring(addPop, { toValue: 1, friction: 4, tension: 260, useNativeDriver: true }).start()
+    increase()
+  }
+  const onIncrease = () => {
+    tapPlus()
+    increase()
+  }
+  const onDecrease = () => {
+    tapMinus()
+    decrease()
+  }
+
+  if (!shouldShowController) {
+    return (
+      <Animated.View style={[s.addButtonWrap, variant === 'details' && s.addButtonWrapLarge, { transform: [{ scale: addPop }] }]}>
+        <Pressable
+          style={({ pressed }) => [s.addButton, variant === 'details' && s.addButtonLarge, isOutOfStock && s.disabledButton, pressed && !isOutOfStock && s.addButtonPressed]}
+          onPress={onAdd}
+          disabled={isOutOfStock}
+          hitSlop={8}
+          accessibilityRole='button'
+          accessibilityState={{ disabled: isOutOfStock }}
+          accessibilityLabel={isOutOfStock ? 'Out of stock' : 'Add to cart'}
+        >
+          <AntDesign name='plus' size={14} color={currentTheme.singleVendorBrandForeground} />
+        </Pressable>
+      </Animated.View>
+    )
+  }
+
+  const pulseRing = {
+    opacity: pillPulse.interpolate({ inputRange: [0, 1], outputRange: [0, 0.55] }),
+    transform: [{ scale: pillPulse.interpolate({ inputRange: [0, 1], outputRange: [1.12, 1] }) }]
+  }
+
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Animated.View style={[{ backgroundColor: color, width: size, height: size, borderRadius: size / 2, marginRight: gap }, dotStyle(d1)]} />
-      <Animated.View style={[{ backgroundColor: color, width: size, height: size, borderRadius: size / 2, marginRight: gap }, dotStyle(d2)]} />
-      <Animated.View style={[{ backgroundColor: color, width: size, height: size, borderRadius: size / 2 }, dotStyle(d3)]} />
-    </View>
+    <Animated.View style={[s.controller, variant === 'details' && s.controllerLarge, { transform: [{ scale: appearAnim }] }]}>
+      <Animated.View pointerEvents='none' style={[s.pulseRing, pulseRing]} />
+
+      <Animated.View style={{ transform: [{ scale: minusScale }] }}>
+        <Pressable
+          style={s.controlButton}
+          onPress={onDecrease}
+          hitSlop={8}
+          accessibilityRole='button'
+          accessibilityLabel={quantity <= 1 ? 'Remove from cart' : 'Decrease quantity'}
+        >
+          <AntDesign name={quantity <= 1 ? 'delete' : 'minus'} size={14} color={currentTheme.singleVendorOnBrand} />
+        </Pressable>
+      </Animated.View>
+
+      <View style={s.countContainer}>
+        <RollingCount value={quantity} style={s.countSlot} textColor={currentTheme.fontMainColor} />
+      </View>
+
+      <Animated.View style={{ transform: [{ scale: plusScale }] }}>
+        <Pressable
+          style={[s.controlButton, isOutOfStock && s.disabledButton]}
+          onPress={onIncrease}
+          disabled={isOutOfStock}
+          hitSlop={8}
+          accessibilityRole='button'
+          accessibilityLabel='Increase quantity'
+          accessibilityState={{ disabled: isOutOfStock }}
+        >
+          <AntDesign name='plus' size={14} color={currentTheme.singleVendorOnBrand} />
+        </Pressable>
+      </Animated.View>
+    </Animated.View>
   )
 }
 
 const styles = (currentTheme) =>
   StyleSheet.create({
-    addButton: {
+    addButtonWrap: {
       position: 'absolute',
       top: 8,
       right: 8,
+      zIndex: 1
+    },
+    addButtonWrapLarge: {
+      position: 'relative',
+      top: 0,
+      right: 0
+    },
+    addButtonPressed: {
+      opacity: 0.8
+    },
+    pulseRing: {
+      ...StyleSheet.absoluteFillObject,
+      borderRadius: 16,
+      borderWidth: 2,
+      borderColor: currentTheme.singleVendorBrand
+    },
+    addButton: {
       width: 24,
       height: 24,
       borderRadius: 12,
@@ -168,9 +213,6 @@ const styles = (currentTheme) =>
       elevation: 2
     },
     addButtonLarge: {
-      position: 'relative',
-      top: 0,
-      right: 0,
       width: 28,
       height: 28,
       borderRadius: 14
@@ -214,6 +256,10 @@ const styles = (currentTheme) =>
       justifyContent: 'center',
       backgroundColor: currentTheme.singleVendorBrand
     },
+    pressedButton: {
+      opacity: 0.65,
+      transform: [{ scale: 0.9 }]
+    },
     countContainer: {
       minWidth: 24,
       alignItems: 'center',
@@ -221,8 +267,8 @@ const styles = (currentTheme) =>
       paddingHorizontal: 4
     },
     countSlot: {
-      width: 20,
-      height: 16,
+      minWidth: 20,
+      height: 18,
       alignItems: 'center',
       justifyContent: 'center'
     },

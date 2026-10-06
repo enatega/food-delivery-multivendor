@@ -25,12 +25,24 @@
 import { useContext, useEffect, useRef } from 'react'
 import { useQuery } from '@apollo/client'
 import { GET_USER_CART } from '../../apollo/queries'
+import { useShallow } from 'zustand/react/shallow'
 import useCartStore from '../../stores/useCartStore'
 import useNetworkStatus from '../../../utils/useNetworkStatus'
 import AuthContext from '../../../context/Auth'
 
 const useCart = () => {
-  const { clearCart, setCartFromServer, setLoading, setError, setHasFetchedCart, hasFetchedCart } = useCartStore()
+  // Actions plus one flag only, so Home (which calls this hook) doesn't
+  // re-render on every cart quantity change.
+  const { clearCart, setCartFromServer, setLoading, setError, setHasFetchedCart, hasFetchedCart } = useCartStore(
+    useShallow((state) => ({
+      clearCart: state.clearCart,
+      setCartFromServer: state.setCartFromServer,
+      setLoading: state.setLoading,
+      setError: state.setError,
+      setHasFetchedCart: state.setHasFetchedCart,
+      hasFetchedCart: state.hasFetchedCart
+    }))
+  )
   const { isConnected } = useNetworkStatus()
   const { token } = useContext(AuthContext)
   const wasOfflineRef = useRef(false)

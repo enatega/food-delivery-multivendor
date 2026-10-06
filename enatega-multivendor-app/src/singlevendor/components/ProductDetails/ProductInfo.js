@@ -1,12 +1,11 @@
-import { Image, StyleSheet, View } from 'react-native'
-import React, { useContext, useMemo } from 'react'
+import { ActivityIndicator, Image, Pressable, StyleSheet, View } from 'react-native'
+import React, { useContext } from 'react'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import ConfigurationContext from '../../../context/Configuration'
 import ToggleFavorite from '../ToggleFavorite'
 import CartQuantityController from '../Cart/CartQuantityController'
-import ContinueWithPhoneButton from '../../../components/Auth/ContinueWithPhoneButton/ContinueWithPhoneButton'
 import useAddToCart from '../../screens/ProductDetails/useAddToCart'
 import useCartStore from '../../stores/useCartStore'
 import { normalizeSingleVendorMediaUrl } from '../../../utils/mediaUrl'
@@ -17,19 +16,18 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
   const config = useContext(ConfigurationContext)
 
   // Todo: temp states for handling fav and item count
-  console.log('productInfoData', productInfoData)
-  const items = useCartStore((state) => state.items)
-  const { addItemToCart, updateUserCartLoading } = useAddToCart({ foodId: productInfoData?.id })
+  const { addItemToCart } = useAddToCart({ foodId: productInfoData?.id })
 
   const firstAvailableVariation = getFirstAvailableVariation(productInfoData?.variations)
   const selectedVariation = selectedVariationId || firstAvailableVariation?.id || productInfoData?.variations?.[0]?.id
-  const isInCart = useMemo(() => {
+  // Boolean selector: re-renders only when this product enters or leaves the cart.
+  const isInCart = useCartStore((state) => {
     const foodId = productInfoData?.id
-    if (!foodId || !selectedVariation || !Array.isArray(items)) return false
-    const cartItem = items.find((item) => item?.foodId === foodId)
+    if (!foodId || !selectedVariation || !Array.isArray(state.items)) return false
+    const cartItem = state.items.find((item) => item?.foodId === foodId)
     if (!cartItem?.variations) return false
     return cartItem.variations.some((v) => v?.variationId === selectedVariation || v?._id === selectedVariation)
-  }, [items, productInfoData?.id, selectedVariation])
+  })
 
   const selectedVariationData = productInfoData?.variations?.find((variation) => variation?.id === selectedVariation) || productInfoData?.variations?.[0]
   const actualPrice = Number(productInfoData?.originalPrice ?? productInfoData?.price ?? 0)
@@ -58,7 +56,7 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
         )}
       </View>
 
-      <View style={[styles().containerPadding, { gap: 18 }]}>
+      <View style={[styles().containerPadding, { gap: 8 }]}>
         <View style={styles().titleContainer}>
           <TextDefault bolder H2 numberOfLines={3} style={{ flexShrink: 1, flex: 1, paddingRight: 8 }}>
             {productInfoData?.title}
@@ -105,27 +103,48 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
           <View style={styles().priceRight}>
             {editMode
               ? (
-              <View style={{ alignItems: 'flex-end', minWidth: 130 }}>
-                <ContinueWithPhoneButton containerStyles={{ minWidth: 130 }} textStyle={{ paddingHorizontal: 8 }} isLoading={editingCart} isDisabled={editingCart || isOutOfStock} title='Save changes' onPress={onSaveEdit} />
-              </View>
+              <Pressable
+                accessibilityRole='button'
+                accessibilityState={{ disabled: editingCart || isOutOfStock, busy: editingCart }}
+                disabled={editingCart || isOutOfStock}
+                hitSlop={6}
+                onPress={onSaveEdit}
+                style={({ pressed }) => [
+                  styles(currentTheme).addButton,
+                  isOutOfStock && styles(currentTheme).addButtonDisabled,
+                  pressed && styles().addButtonPressed
+                ]}
+              >
+                {editingCart
+                  ? <ActivityIndicator size='small' color={currentTheme.singleVendorOnBrand} />
+                  : !isOutOfStock && <Ionicons name='checkmark-circle-outline' size={16} color={currentTheme.singleVendorOnBrand} />}
+                <TextDefault bolder style={[styles().addButtonText, { color: isOutOfStock ? currentTheme.singleVendorDisabledForeground : currentTheme.singleVendorOnBrand }]} numberOfLines={1}>
+                  {t('Save changes', { defaultValue: 'Save changes' })}
+                </TextDefault>
+              </Pressable>
                 )
               : isInCart
                 ? (
-              <CartQuantityController foodId={productInfoData?.id} categoryId={productInfoData?.categoryId} variationId={selectedVariation} addons={selectedAddons || []} defaultQuantity={1} variant='details' isOutOfStock={isOutOfStock} />
+              <CartQuantityController foodId={productInfoData?.id} categoryId={productInfoData?.categoryId} variationId={selectedVariation} addons={selectedAddons || []} defaultQuantity={1} variant='details' isOutOfStock={isOutOfStock} product={productInfoData} />
                   )
                 : (
-              <View style={{ alignItems: 'flex-end', minWidth: 130 }}>
-                <ContinueWithPhoneButton
-                  containerStyles={{ minWidth: 130 }}
-                  textStyle={{ paddingHorizontal: 8 }}
-                  isLoading={updateUserCartLoading}
-                  isDisabled={updateUserCartLoading || isOutOfStock}
-                  title={isOutOfStock ? 'out_of_stock_label' : 'addToCart'}
-                  onPress={() => {
-                    if (!isOutOfStock) addItemToCart(productInfoData?.id, productInfoData?.categoryId, selectedVariation, selectedAddons || [], 1)
-                  }}
-                />
-              </View>
+              <Pressable
+                accessibilityRole='button'
+                accessibilityState={{ disabled: isOutOfStock }}
+                disabled={isOutOfStock}
+                hitSlop={6}
+                onPress={() => addItemToCart(productInfoData?.id, productInfoData?.categoryId, selectedVariation, selectedAddons || [], 1, undefined, '', productInfoData)}
+                style={({ pressed }) => [
+                  styles(currentTheme).addButton,
+                  isOutOfStock && styles(currentTheme).addButtonDisabled,
+                  pressed && styles().addButtonPressed
+                ]}
+              >
+                {!isOutOfStock && <Ionicons name='bag-add-outline' size={16} color={currentTheme.singleVendorOnBrand} />}
+                <TextDefault bolder style={[styles().addButtonText, { color: isOutOfStock ? currentTheme.singleVendorDisabledForeground : currentTheme.singleVendorOnBrand }]} numberOfLines={1}>
+                  {t(isOutOfStock ? 'out_of_stock_label' : 'addToCart', { defaultValue: isOutOfStock ? 'Out of stock' : 'Add to cart' })}
+                </TextDefault>
+              </Pressable>
                   )}
           </View>
         </View>
@@ -159,7 +178,28 @@ const styles = (props = null) =>
     },
     priceLeft: {
       flex: 1,
-      gap: 10
+      gap: 6
+    },
+    // Compact pill sized to its label, matching the +/- control's footprint.
+    addButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      height: 36,
+      paddingHorizontal: 14,
+      borderRadius: 999,
+      backgroundColor: props?.singleVendorBrand
+    },
+    addButtonDisabled: {
+      backgroundColor: props?.singleVendorDisabledBackground
+    },
+    addButtonPressed: {
+      opacity: 0.85,
+      transform: [{ scale: 0.96 }]
+    },
+    addButtonText: {
+      fontSize: 13.5,
+      letterSpacing: 0.1
     },
     priceRight: {
       alignItems: 'flex-end',
@@ -167,7 +207,7 @@ const styles = (props = null) =>
       marginLeft: 12
     },
     imageContainer: {
-      height: 300,
+      height: 270,
       width: '100%',
       borderTopLeftRadius: scale(10),
       borderTopRightRadius: scale(10),
@@ -179,7 +219,7 @@ const styles = (props = null) =>
     },
     titleContainer: {
       width: '100%',
-      paddingTop: 12,
+      paddingTop: 10,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between'
@@ -189,7 +229,7 @@ const styles = (props = null) =>
       minWidth: 80,
       maxWidth: 120,
       gap: 4,
-      paddingVertical: 6,
+      paddingVertical: 4,
       paddingHorizontal: 8,
       borderRadius: 6
     },

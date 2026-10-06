@@ -359,7 +359,7 @@ const styles = (theme) =>
   StyleSheet.create({
     container: {
       paddingHorizontal: scale(16),
-      paddingTop: scale(18),
+      paddingTop: scale(6),
       paddingBottom: scale(4)
     },
     row: {

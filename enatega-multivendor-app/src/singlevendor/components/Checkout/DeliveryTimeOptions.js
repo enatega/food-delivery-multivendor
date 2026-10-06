@@ -1,26 +1,24 @@
 import React, { useContext, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { MaterialCommunityIcons, Feather } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { useNavigation } from '@react-navigation/native'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import useScheduleStore from '../../stores/scheduleStore'
 import ConfigurationContext from '../../../context/Configuration'
 import LoadingSkeleton from '../LoadingSkeleton'
 import ClickCollectConfirmModal from './ClickCollectConfirmModal'
+import CheckoutSection from './CheckoutSection'
+import useCheckoutPalette from './useCheckoutPalette'
 
 const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, mode = 'delivery', scheduledTime = null }) => {
   console.log('🚀 ~ DeliveryTimeOptions ~ mode:', mode)
   const { clearSchedule } = useScheduleStore()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const navigation = useNavigation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const { palette, isRTL } = useCheckoutPalette()
+  const s = styles(palette)
   const configuration = useContext(ConfigurationContext)
   const currencySymbol = configuration?.currencySymbol || '€'
 
@@ -39,17 +37,20 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
     {
       id: 'priority',
       title: mode === 'delivery' ? `${t('Priority delivery for') || 'Priority delivery for'} +${priorityDeliveryFee} ${currencySymbol}` : `${t('Priority collection for') || 'Priority collection for'} +${priorityDeliveryFee} ${currencySymbol}`,
-      subtitle: t('Your order will be handled with priority') || 'Your order will be handled with priority'
+      subtitle: t('Your order will be handled with priority') || 'Your order will be handled with priority',
+      icon: 'lightning-bolt'
     },
     {
       id: 'standard',
       title: mode === 'collection' ? (t('Immediate') || 'Immediate') : (t('Standard') || 'Standard'),
-      subtitle: mode === 'collection' ? (t('2-5 Min abholbereit') || '2-5 Min abholbereit') : (t('under 35 minutes') || 'under 35 minutes')
+      subtitle: mode === 'collection' ? (t('2-5 Min abholbereit') || '2-5 Min abholbereit') : (t('under 35 minutes') || 'under 35 minutes'),
+      icon: mode === 'collection' ? 'store-clock-outline' : 'clock-fast'
     },
     {
       id: 'schedule',
       title: t('Schedule') || 'Schedule',
-      subtitle: getScheduleSubtitle()
+      subtitle: getScheduleSubtitle(),
+      icon: 'calendar-month-outline'
     }
   ]
 
@@ -107,49 +108,58 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
   }
 
   return (
-    <View style={styles(currentTheme).container}>
-      <TextDefault textColor={currentTheme.fontMainColor} bolder H4 isRTL style={styles().sectionTitle}>
-        {mode === 'delivery' ? t('Delivery Time') || 'Delivery Time' : t('Collection Time') || 'Collection Time'}
-      </TextDefault>
-
+    <CheckoutSection icon='clock-outline' title={mode === 'delivery' ? t('Delivery Time') || 'Delivery Time' : t('Collection Time') || 'Collection Time'}>
+      <View style={s.optionsList}>
       {timeOptions.map((option) => {
         if (mode === 'collection' && option.id === 'priority') return null
+        const isSelected = selectedTime === option.id
         return (
-          <TouchableOpacity key={option.id} style={[styles(currentTheme).optionCard, selectedTime === option.id && styles(currentTheme).optionCardSelected]} onPress={() => handleTimeSelect(option.id)} activeOpacity={0.7}>
-            <View style={styles().radioButton}>
-              <View style={[styles(currentTheme).radioOuter, selectedTime === option.id && styles(currentTheme).radioOuterSelected]}>{selectedTime === option.id && <View style={styles(currentTheme).radioInner} />}</View>
+          <TouchableOpacity
+            key={option.id}
+            style={[s.optionCard, isSelected && s.optionCardSelected]}
+            onPress={() => handleTimeSelect(option.id)}
+            activeOpacity={0.75}
+            accessibilityRole='radio'
+            accessibilityState={{ selected: isSelected }}
+          >
+            <View style={[s.optionIcon, isSelected && s.optionIconSelected]}>
+              <MaterialCommunityIcons name={option.icon} size={scale(19)} color={isSelected ? palette.brandText : palette.textSecondary} />
             </View>
 
-            <View style={styles().optionContent}>
+            <View style={s.optionContent}>
               {option.id === 'priority' && !priorityDeliveryFee
                 ? (
-                <>
-                  <View style={{ gap: 4 }}>
-                    <LoadingSkeleton height={10} width='100%' borderRadius={8} />
-                    <LoadingSkeleton height={8} width='60%' borderRadius={8} />
-                  </View>
-                </>
+                <View style={{ gap: 4 }}>
+                  <LoadingSkeleton height={10} width='100%' borderRadius={8} />
+                  <LoadingSkeleton height={8} width='60%' borderRadius={8} />
+                </View>
                   )
                 : (
                 <>
-                  <TextDefault textColor={currentTheme.fontMainColor} bold bolder={selectedTime === option.id} isRTL>
+                  <TextDefault textColor={palette.textPrimary} bold bolder={isSelected} isRTL>
                     {option.title}
                   </TextDefault>
-                  <TextDefault textColor={currentTheme.fontSecondColor} small isRTL>
+                  <TextDefault textColor={palette.textMuted} small isRTL style={s.optionSubtitle}>
                     {option.subtitle}
                   </TextDefault>
                 </>
                   )}
               {option.id === 'schedule' && scheduledTime && selectedTime === 'schedule' && (
-                <TextDefault textColor={currentTheme.singleVendorBrandForeground} small isRTL style={{ marginTop: scale(2) }}>
+                <TextDefault textColor={palette.brandText} small bold isRTL style={s.optionSubtitle}>
                   {t('Tap to change') || 'Tap to change'}
                 </TextDefault>
               )}
             </View>
 
+            {option.id === 'schedule' && !isSelected
+              ? <Feather name={isRTL ? 'chevron-left' : 'chevron-right'} size={scale(18)} color={palette.textMuted} />
+              : (
+              <View style={[s.radioOuter, isSelected && s.radioOuterSelected]}>{isSelected && <View style={s.radioInner} />}</View>
+                )}
           </TouchableOpacity>
         )
       })}
+      </View>
 
       {/* Click & Collect Confirmation Modal */}
       <ClickCollectConfirmModal
@@ -158,62 +168,67 @@ const DeliveryTimeOptions = ({ selectedTime, onSelectTime, priorityDeliveryFee, 
         onConfirm={handleModalConfirm}
         selectedOption={pendingSelection}
       />
-    </View>
+    </CheckoutSection>
   )
 }
 
-const styles = (props = null) => {
-  const subtleBorder = props?.themeBackground === '#000'
-    ? 'rgba(255, 255, 255, 0.13)'
-    : 'rgba(15, 23, 42, 0.10)'
-
-  return StyleSheet.create({
-    container: {
-      paddingHorizontal: scale(12),
-      paddingTop: scale(14),
-      paddingBottom: scale(10)
-    },
-    sectionTitle: {
-      marginBottom: scale(8)
+const styles = (palette) =>
+  StyleSheet.create({
+    optionsList: {
+      gap: scale(6)
     },
     optionCard: {
       flexDirection: 'row',
       alignItems: 'center',
-      minHeight: scale(58),
-      paddingVertical: scale(11),
-      paddingHorizontal: scale(4),
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: subtleBorder
+      minHeight: scale(52),
+      paddingVertical: scale(8),
+      paddingHorizontal: scale(10),
+      borderRadius: scale(12),
+      borderWidth: 1,
+      borderColor: palette.border,
+      backgroundColor: palette.surface
     },
     optionCardSelected: {
-      borderBottomColor: props !== null ? props.singleVendorBrand : '#90E36D'
+      borderColor: palette.brandBorder,
+      backgroundColor: palette.brandSubtle
     },
-    radioButton: {
+    optionIcon: {
+      width: scale(32),
+      height: scale(32),
+      borderRadius: scale(9),
+      backgroundColor: palette.iconBackground,
+      alignItems: 'center',
+      justifyContent: 'center',
       marginRight: scale(12)
+    },
+    optionIconSelected: {
+      backgroundColor: palette.surface
+    },
+    optionContent: {
+      flex: 1,
+      paddingRight: scale(8)
+    },
+    optionSubtitle: {
+      marginTop: scale(1)
     },
     radioOuter: {
       width: scale(20),
       height: scale(20),
       borderRadius: scale(10),
       borderWidth: 2,
-      borderColor: props !== null ? props.gray300 : '#D1D5DB',
+      borderColor: palette.borderStrong,
       alignItems: 'center',
       justifyContent: 'center'
     },
     radioOuterSelected: {
-      borderColor: props !== null ? props.singleVendorBrand : '#90E36D'
+      borderColor: palette.brand
     },
     radioInner: {
       width: scale(10),
       height: scale(10),
       borderRadius: scale(5),
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D'
-    },
-    optionContent: {
-      flex: 1,
-      paddingRight: scale(8)
+      backgroundColor: palette.brand
     }
   })
-}
 
 export default DeliveryTimeOptions

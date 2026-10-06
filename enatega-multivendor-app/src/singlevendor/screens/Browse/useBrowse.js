@@ -9,6 +9,7 @@ import { SEARCH_SINGLE_VENDOR_FOODS } from '../../apollo/queries'
 import { useDebounce } from '../../../utils/useDebounce'
 import { useNavigation } from '@react-navigation/native'
 import { storeSearch } from '../../../utils/recentSearch'
+import { useOpenProductExplorer } from '../../utils/productExplorerPrefetch'
 
 const useBrowse = () => {
   const { t, i18n } = useTranslation()
@@ -16,11 +17,15 @@ const useBrowse = () => {
   const currentTheme = useMemo(() => ({ isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }), [themeContext.ThemeValue, i18n])
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
+  const openProductExplorer = useOpenProductExplorer()
 
   // use states
   const [searchTerm, setSearchTerm] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
   const [isSearched, setisSearched] = useState(false)
+  // The term whose results are currently on screen; anything else is in flight.
+  const [settledTerm, setSettledTerm] = useState('')
+  const latestTermRef = useRef('')
   const inputRef = useRef(null)
 
   // Queries and mutations
@@ -37,12 +42,21 @@ const useBrowse = () => {
       return Promise.resolve(null)
     }
 
+    const requestedTerm = searchTerm.trim()
+    latestTermRef.current = requestedTerm
+    // Settle on this request's own promise (success or error) so the loader
+    // can't stick if Apollo skips onCompleted for a repeated query.
     return executeSearch({
       variables: {
         search: searchTerm,
         skip: 0,
         limit: 20
       }
+    }).finally(() => {
+      // An older request finishing late must not settle a newer term.
+      if (latestTermRef.current !== requestedTerm) return
+      setSettledTerm(requestedTerm)
+      setisSearched(true)
     })
   }
 
@@ -81,6 +95,11 @@ const useBrowse = () => {
       }
     })
   }
+  const trimmedTerm = searchTerm.trim()
+  // True from the first keystroke of a searchable term (covering the debounce
+  // window) until the server answers for exactly that term.
+  const isSearching = trimmedTerm.length >= 2 && (loading || settledTerm !== trimmedTerm)
+
   const data = searchData
     ? { searchFood: searchData.searchSingleVendorFoods?.items || [] }
     : undefined
@@ -94,12 +113,14 @@ const useBrowse = () => {
     setSearchTerm('')
     dismissKeyboard()
     setisSearched(false)
+    setSettledTerm('')
   }
 
   const handleModalClose = () => {
     setSearchTerm('')
     dismissKeyboard()
     setisSearched(false)
+    setSettledTerm('')
     setTimeout(() => {
       setModalVisible(false)
     }, 100)
@@ -121,9 +142,7 @@ const useBrowse = () => {
 
   const handleSeeAll = (viewType, id) => {
     if (viewType === 'see-all') {
-      navigation.navigate('ProductExplorer', {
-        categoryId: id
-      })
+      openProductExplorer(id)
     } else {
       // setCategoryId(id)
       // setModalVisible(false)
@@ -158,6 +177,7 @@ const useBrowse = () => {
     handleAddToCart,
     handleSeeAll,
     isSearched,
+    isSearching,
     loadMore,
     hasMore: !!searchData?.searchSingleVendorFoods?.hasMore
   }

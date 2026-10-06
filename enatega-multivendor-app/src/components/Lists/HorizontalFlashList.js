@@ -9,7 +9,9 @@ function HorizontalFlashList({
   contentContainerStyle,
   inverted,
   estimatedItemSize = 160,
-  itemSpacing = 0
+  itemSpacing = 0,
+  getItemLayout,
+  initialNumToRender = 6
 }) {
   const Spacer = React.useCallback(() => <View style={{ width: itemSpacing }} />, [itemSpacing])
 
@@ -24,10 +26,11 @@ function HorizontalFlashList({
       inverted={inverted}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      initialNumToRender={6}
-      maxToRenderPerBatch={6}
+      getItemLayout={itemSpacing > 0 ? undefined : getItemLayout}
+      initialNumToRender={initialNumToRender}
+      maxToRenderPerBatch={4}
       updateCellsBatchingPeriod={16}
-      windowSize={7}
+      windowSize={5}
       // Keep nearby items mounted while the user swipes backward so reverse
       // swipes stay smooth instead of flashing a blank frame.
       removeClippedSubviews={false}

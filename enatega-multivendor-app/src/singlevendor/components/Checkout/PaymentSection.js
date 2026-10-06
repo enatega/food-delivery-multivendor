@@ -154,14 +154,14 @@
 
 // export default PaymentSection;
 
-import React, { useContext } from 'react'
-import { View, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native'
-import { Feather, Ionicons, FontAwesome } from '@expo/vector-icons'
+import React from 'react'
+import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native'
+import { Feather, Ionicons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import CheckoutSection from './CheckoutSection'
+import useCheckoutPalette from './useCheckoutPalette'
 
 const PaymentSection = ({
   paymentMethod,
@@ -176,13 +176,9 @@ const PaymentSection = ({
   onOpenVouchers,
   voucherBottomSheetRef
 }) => {
-  const { t, i18n } = useTranslation()
-  const themeContext = useContext(ThemeContext)
-
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const { t } = useTranslation()
+  const { palette, isRTL } = useCheckoutPalette()
+  const s = styles(palette)
 
   const paymentOptions = [
     {
@@ -216,291 +212,215 @@ const PaymentSection = ({
     })
   }
 
+  const renderMethodIcon = (id, isSelected) => {
+    const color = isSelected ? palette.brandText : palette.textPrimary
+    const size = scale(19)
+    switch (id) {
+      case 'STRIPE':
+        return <Ionicons name='card-outline' size={size} color={color} />
+      case 'PAYPAL':
+        return <Ionicons name='logo-paypal' size={size} color={isSelected ? color : '#1E6FD9'} />
+      case 'COD':
+        return <MaterialCommunityIcons name='cash' size={scale(21)} color={color} />
+      case 'GOOGLE_PAY':
+        return <FontAwesome name='google' size={scale(17)} color={isSelected ? color : '#4285F4'} />
+      case 'APPLE_PAY':
+        return <Ionicons name='logo-apple' size={size} color={color} />
+      default:
+        return null
+    }
+  }
+
   return (
-    <View style={styles(currentTheme).container}>
-      <TextDefault textColor={currentTheme.fontMainColor} bolder H4 style={styles().sectionTitle}>
-        {t('Payment') || 'Payment'}
-      </TextDefault>
+    <CheckoutSection icon='wallet-outline' title={t('Payment') || 'Payment'}>
+      <View style={s.optionsList}>
+        {paymentOptions.map((option) => {
+          const isSelected = paymentMethod === option.id
 
-      {/* ===== PAYMENT METHOD SELECTOR (DeliveryTimeOptions STYLE) ===== */}
-      {paymentOptions.map((option) => {
-        const isSelected = paymentMethod === option.id
+          return (
+            <TouchableOpacity
+              key={option.id}
+              style={[s.optionCard, isSelected && s.optionCardSelected]}
+              onPress={() => onSelectPaymentMethod(option.id)}
+              activeOpacity={0.75}
+              accessibilityRole='radio'
+              accessibilityState={{ selected: isSelected }}
+            >
+              <View style={[s.methodIcon, isSelected && s.methodIconSelected]}>{renderMethodIcon(option.id, isSelected)}</View>
 
-        return (
-          <TouchableOpacity key={option.id} style={[styles(currentTheme).optionCard, isSelected && styles(currentTheme).optionCardSelected]} onPress={() => onSelectPaymentMethod(option.id)} activeOpacity={0.7}>
-            {/* Left icon (logo when not selected for Apple/Google, otherwise radio) */}
-            <View style={styles().radioButton}>
-              {!isSelected && option.id === 'GOOGLE_PAY'
-                ? (
-                <FontAwesome name='google' size={18} color='#4285F4' />
-                  )
-                : !isSelected && option.id === 'APPLE_PAY'
-                    ? (
-                <Ionicons name='logo-apple' size={20} color={currentTheme.fontMainColor || '#111'} />
-                      )
-                    : !isSelected && option.id === 'PAYPAL'
-                        ? (
-                <Ionicons name='logo-paypal' size={20} color={currentTheme.fontMainColor || '#111'} />
-                          )
-                        : !isSelected && option.id === 'STRIPE'
-                            ? (
-                <Ionicons name='card' size={20} color={currentTheme.fontMainColor || '#111'} />
-                              )
-                            : (
-                <View style={[styles(currentTheme).radioOuter, isSelected && styles(currentTheme).radioOuterSelected]}>{isSelected && <View style={styles(currentTheme).radioInner} />}</View>
-                              )}
-            </View>
-
-            {/* Content */}
-            <View style={styles().optionContent}>
-              <TextDefault textColor={currentTheme.fontMainColor} bold bolder={isSelected}>
-                {option.title}
-              </TextDefault>
-              <TextDefault textColor={currentTheme.fontSecondColor} small>
-                {option.subtitle}
-              </TextDefault>
-            </View>
-
-            {/* Check icon */}
-            {isSelected && <Feather name='check-circle' size={20} color={currentTheme.singleVendorBrandForeground} style={styles().checkIcon} />}
-          </TouchableOpacity>
-        )
-      })}
-
-      {/* ===== ORIGINAL CARD + VOUCHER UI (UNCHANGED) ===== */}
-      {paymentMethod === 'STRIPE' && (
-        <>
-          {/* Card */}
-          {/* <TouchableOpacity
-            style={styles(currentTheme).paymentRow}
-            activeOpacity={0.7}
-          >
-            <View style={styles().paymentLeft}>
-              <Image
-                source={require('../../assets/images/payment-method.png')}
-                style={styles().paymentIcon}
-                resizeMode="contain"
-              />
-              <View>
-                <TextDefault
-                  textColor={currentTheme.fontMainColor}
-                  bold
-                >
-                  {selectedCard}
+              <View style={s.optionContent}>
+                <TextDefault textColor={palette.textPrimary} bold bolder={isSelected} isRTL>
+                  {option.title}
                 </TextDefault>
-                <TextDefault
-                  textColor={currentTheme.fontSecondColor}
-                  small
-                >
-                  {t('Tap here to change') || 'Tap here to change'}
+                <TextDefault textColor={palette.textMuted} small isRTL style={s.optionSubtitle}>
+                  {option.subtitle}
                 </TextDefault>
               </View>
-            </View>
-            <Feather
-              name="chevron-right"
-              size={20}
-              color={currentTheme.fontSecondColor}
-            />
-          </TouchableOpacity> */}
 
-          {/* Voucher */}
-        </>
-      )}
+              <View style={[s.radioOuter, isSelected && s.radioOuterSelected]}>
+                {isSelected && <Feather name='check' size={scale(12)} color={palette.onBrand} />}
+              </View>
+            </TouchableOpacity>
+          )
+        })}
+      </View>
 
-      <TouchableOpacity style={styles(currentTheme).paymentRow} onPress={() => voucherBottomSheetRef?.current?.open()} activeOpacity={0.7}>
-        <View style={styles().paymentLeft}>
-          <Image source={require('../../assets/images/promo-icon.png')} style={styles().paymentIcon} resizeMode='contain' />
-          <View>
-            <TextDefault textColor={currentTheme.fontMainColor} bold>
-              {selectedVoucher?.title || t('Voucher')}
-            </TextDefault>
-            <TextDefault textColor={currentTheme.fontSecondColor} small>
-              {selectedVoucher ? t('Tap here to change') : t('Tap here to continue')}
-            </TextDefault>
-          </View>
+      {/* Voucher */}
+      <TouchableOpacity
+        style={[s.voucherCard, selectedVoucher && s.voucherCardApplied]}
+        onPress={() => voucherBottomSheetRef?.current?.open()}
+        activeOpacity={0.75}
+      >
+        <View style={s.voucherIcon}>
+          <MaterialCommunityIcons name='ticket-percent-outline' size={scale(20)} color={palette.brandText} />
         </View>
-        <Feather name='chevron-right' size={20} color={currentTheme.fontSecondColor} />
+        <View style={s.optionContent}>
+          <TextDefault textColor={palette.textPrimary} bolder isRTL numberOfLines={1}>
+            {selectedVoucher?.title || t('Voucher')}
+          </TextDefault>
+          <TextDefault textColor={selectedVoucher ? palette.brandText : palette.textMuted} small isRTL style={s.optionSubtitle}>
+            {selectedVoucher ? t('Tap here to change') : t('Tap here to continue')}
+          </TextDefault>
+        </View>
+        <Feather name={isRTL ? 'chevron-left' : 'chevron-right'} size={scale(18)} color={palette.textMuted} />
       </TouchableOpacity>
 
-      <View style={styles().voucherActionsRow}>
+      <View style={s.voucherActionsRow}>
         <TouchableOpacity
-          style={styles(currentTheme).voucherNavButton}
+          style={s.voucherNavButton}
           onPress={onOpenVouchers}
           activeOpacity={0.7}
           disabled={!!selectedVoucher}
         >
-          <TextDefault textColor={currentTheme.fontMainColor} bold>
+          <MaterialCommunityIcons name='tag-multiple-outline' size={scale(15)} color={palette.textSecondary} style={s.voucherNavIcon} />
+          <TextDefault textColor={palette.textPrimary} bold small numberOfLines={1}>
             {selectedVoucher?.title || t('viewVouchers') || 'View vouchers'}
           </TextDefault>
         </TouchableOpacity>
         {selectedVoucher
           ? (
-          <TouchableOpacity style={styles(currentTheme).voucherRemoveButton} onPress={onRemoveVoucher} activeOpacity={0.7}>
-            <TextDefault textColor={currentTheme.red || '#EF4444'} bold>
+          <TouchableOpacity style={s.voucherRemoveButton} onPress={onRemoveVoucher} activeOpacity={0.7}>
+            <Feather name='x' size={scale(14)} color={palette.danger} style={s.voucherNavIcon} />
+            <TextDefault textColor={palette.danger} bold small>
               {t('remove') || 'Remove'}
             </TextDefault>
           </TouchableOpacity>
             )
           : null}
       </View>
-
-      {/* <View style={styles().voucherInputRow}>
-        <TextInput
-          style={styles(currentTheme).voucherInput}
-          placeholder={t('voucherCode')}
-          placeholderTextColor={currentTheme.fontSecondColor}
-          value={voucherCode}
-          onChangeText={onChangeVoucherCode}
-          autoCorrect={false}
-        />
-        <TouchableOpacity
-          style={[styles(currentTheme).voucherApplyButton, !voucherCode?.trim() && styles(currentTheme).voucherApplyButtonDisabled]}
-          onPress={onApplyVoucherCode}
-          disabled={!voucherCode?.trim() || applyingVoucher}
-          activeOpacity={0.7}
-        >
-          <TextDefault textColor={voucherCode?.trim() ? '#fff' : currentTheme.fontSecondColor} bolder>
-            {t('apply') || 'Apply'}
-          </TextDefault>
-        </TouchableOpacity>
-      </View> */}
-    </View>
+    </CheckoutSection>
   )
 }
 
-const styles = (props = null) => {
-  const isDark = props?.themeBackground === '#000'
-  const subtleBorder = isDark
-    ? 'rgba(255, 255, 255, 0.13)'
-    : 'rgba(15, 23, 42, 0.10)'
-  const selectedBackground = props?.singleVendorBrandSubtle || (isDark ? '#203519' : '#F3FFEE')
-  const removeBackground = isDark
-    ? 'rgba(248, 113, 113, 0.14)'
-    : 'rgba(239, 68, 68, 0.08)'
-
-  return StyleSheet.create({
-    container: {
-      paddingHorizontal: scale(12),
-      paddingVertical: scale(14)
+const styles = (palette) =>
+  StyleSheet.create({
+    optionsList: {
+      gap: scale(6)
     },
-    sectionTitle: {
-      marginBottom: scale(12)
-    },
-
-    /* ===== Selector cards (same as DeliveryTimeOptions) ===== */
     optionCard: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: scale(12),
-      paddingHorizontal: scale(14),
-      marginBottom: scale(8),
-      borderRadius: scale(10),
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: subtleBorder,
-      backgroundColor: props ? props.themeBackground : '#fff'
+      minHeight: scale(52),
+      paddingVertical: scale(8),
+      paddingHorizontal: scale(10),
+      borderRadius: scale(12),
+      borderWidth: 1,
+      borderColor: palette.border,
+      backgroundColor: palette.surface
     },
     optionCardSelected: {
-      borderColor: props ? props.singleVendorBrand : '#90E36D',
-      borderWidth: 1,
-      backgroundColor: selectedBackground
+      borderColor: palette.brandBorder,
+      backgroundColor: palette.brandSubtle
     },
-    radioButton: {
+    methodIcon: {
+      width: scale(32),
+      height: scale(32),
+      borderRadius: scale(9),
+      backgroundColor: palette.iconBackground,
+      alignItems: 'center',
+      justifyContent: 'center',
       marginRight: scale(12)
+    },
+    methodIconSelected: {
+      backgroundColor: palette.surface
+    },
+    optionContent: {
+      flex: 1,
+      paddingRight: scale(8)
+    },
+    optionSubtitle: {
+      marginTop: scale(1)
     },
     radioOuter: {
       width: scale(20),
       height: scale(20),
       borderRadius: scale(10),
       borderWidth: 2,
-      borderColor: props ? props.gray300 : '#D1D5DB',
+      borderColor: palette.borderStrong,
       alignItems: 'center',
       justifyContent: 'center'
     },
     radioOuterSelected: {
-      borderColor: props ? props.singleVendorBrand : '#90E36D'
+      borderColor: palette.brand,
+      backgroundColor: palette.brand
     },
-    radioInner: {
-      width: scale(10),
-      height: scale(10),
-      borderRadius: scale(5),
-      backgroundColor: props ? props.singleVendorBrand : '#90E36D'
-    },
-    optionContent: {
-      flex: 1
-    },
-    checkIcon: {
-      marginLeft: scale(8)
-    },
-
-    /* ===== Old Card / Voucher UI ===== */
-    paymentRow: {
+    voucherCard: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingVertical: scale(14)
+      minHeight: scale(52),
+      marginTop: scale(8),
+      paddingVertical: scale(8),
+      paddingHorizontal: scale(10),
+      borderRadius: scale(12),
+      borderWidth: 1.5,
+      borderStyle: 'dashed',
+      borderColor: palette.brandBorder,
+      backgroundColor: palette.surface
     },
-    paymentLeft: {
-      flexDirection: 'row',
-      alignItems: 'center'
+    voucherCardApplied: {
+      borderStyle: 'solid',
+      backgroundColor: palette.brandSubtle
     },
-    paymentIcon: {
+    voucherIcon: {
       width: scale(32),
-      height: scale(22),
+      height: scale(32),
+      borderRadius: scale(9),
+      backgroundColor: palette.brandSubtle,
+      alignItems: 'center',
+      justifyContent: 'center',
       marginRight: scale(12)
     },
     voucherActionsRow: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginBottom: scale(0)
+      marginTop: scale(8),
+      gap: scale(8)
     },
     voucherNavButton: {
-      paddingVertical: scale(6),
-      paddingHorizontal: scale(10),
-      borderRadius: scale(6),
+      flexShrink: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      minHeight: scale(32),
+      paddingHorizontal: scale(12),
+      borderRadius: scale(17),
+      backgroundColor: palette.surfaceMuted,
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: subtleBorder
+      borderColor: palette.border
+    },
+    voucherNavIcon: {
+      marginRight: scale(6)
     },
     voucherRemoveButton: {
-      minHeight: scale(34),
-      paddingVertical: scale(6),
-      paddingHorizontal: scale(14),
-      borderRadius: scale(8),
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: isDark ? 'rgba(248, 113, 113, 0.30)' : 'rgba(239, 68, 68, 0.20)',
-      backgroundColor: removeBackground,
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    voucherInputRow: {
       flexDirection: 'row',
-      alignItems: 'center'
-    },
-    voucherInput: {
-      flex: 1,
-      height: scale(40),
-      borderRadius: scale(8),
-      borderWidth: 1,
-      borderColor: props ? props.gray200 : '#E5E7EB',
-      backgroundColor: props ? props.gray100 : '#F9FAFB',
-      paddingHorizontal: scale(12),
-      fontSize: scale(14),
-      color: props ? props.fontMainColor : '#000',
-      fontFamily: 'Poppins-Regular'
-    },
-    voucherApplyButton: {
-      height: scale(40),
-      paddingHorizontal: scale(14),
-      borderRadius: scale(8),
-      marginLeft: scale(8),
-      backgroundColor: props ? props.singleVendorBrand : '#90E36D',
       alignItems: 'center',
-      justifyContent: 'center'
-    },
-    voucherApplyButtonDisabled: {
-      backgroundColor: props ? props.gray200 : '#E5E7EB'
+      minHeight: scale(32),
+      paddingHorizontal: scale(12),
+      borderRadius: scale(17),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: palette.dangerBorder,
+      backgroundColor: palette.dangerSubtle
     }
   })
-}
 
 export default PaymentSection

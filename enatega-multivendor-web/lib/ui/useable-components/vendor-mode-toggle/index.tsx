@@ -1,8 +1,11 @@
 "use client";
 
-import { APP_MODES, type AppMode, useAppMode } from "@/lib/mode";
+import { APP_MODES, type AppMode, getModeHomeRoute, useAppMode } from "@/lib/mode";
 import useUser from "@/lib/hooks/useUser";
+import { prefetchSingleVendorDiscovery } from "@/lib/ui/single-vendor/prefetchDiscovery";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 function ModeIcon({ mode }: { mode: AppMode }) {
   if (mode === APP_MODES.MULTI) {
@@ -68,7 +71,29 @@ export default function VendorModeToggle({
     switchMode,
   } = useAppMode();
   const t = useTranslations();
+  const router = useRouter();
   const { cartCount, orders = [] } = useUser();
+  const canPrefetchSingle =
+    isModeToggleEnabled && singleVendorAvailable && mode === APP_MODES.MULTI;
+
+  const prefetchSingle = () => {
+    if (!canPrefetchSingle) return;
+    router.prefetch(getModeHomeRoute(APP_MODES.SINGLE));
+    void prefetchSingleVendorDiscovery();
+  };
+
+  // Warm single-vendor data and images in the background so toggling to it
+  // renders Discovery from cache instead of waiting on the network.
+  useEffect(() => {
+    if (!canPrefetchSingle) return;
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1500));
+    const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout;
+    const handle = idle(() => {
+      router.prefetch(getModeHomeRoute(APP_MODES.SINGLE));
+      void prefetchSingleVendorDiscovery();
+    });
+    return () => cancelIdle(handle);
+  }, [canPrefetchSingle, router]);
 
   if (!isModeToggleEnabled || !singleVendorAvailable) return null;
   const activeStatuses = new Set(["PENDING", "PICKED", "ACCEPTED", "ASSIGNED"]);
@@ -123,6 +148,13 @@ export default function VendorModeToggle({
             aria-label={label}
             disabled={isSwitchingMode || isModeSwitchBlocked}
             onClick={() => void requestSwitch(itemMode)}
+            onPointerEnter={
+              itemMode === APP_MODES.SINGLE ? prefetchSingle : undefined
+            }
+            onFocus={itemMode === APP_MODES.SINGLE ? prefetchSingle : undefined}
+            onTouchStart={
+              itemMode === APP_MODES.SINGLE ? prefetchSingle : undefined
+            }
             className={`group relative flex min-w-0 items-center justify-center overflow-hidden rounded-lg text-center transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color disabled:cursor-not-allowed disabled:opacity-60 ${
               landing
                 ? "h-9 gap-1.5 px-2 md:h-12 md:px-4"

@@ -5,10 +5,10 @@ import {
   createHttpLink,
   ApolloLink,
   split,
-  concat,
   Observable
 } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
+import { RetryLink } from '@apollo/client/link/retry'
 import {
   getMainDefinition,
   offsetLimitPagination
@@ -23,6 +23,55 @@ import { invalidateUserSession } from '../utils/session'
 import { FlashMessage } from '../ui/FlashMessage/FlashMessage'
 import i18n from '../../i18next'
 import { APP_MODES } from '../mode/constants'
+
+// React Native's Android HTTP client has no read timeout, so a request sent on a
+// connection the network silently dropped (common after the app has been talking
+// to the other backend for a while) hangs for minutes. Bound every request.
+const QUERY_TIMEOUT_MS = 15000
+const MUTATION_TIMEOUT_MS = 30000
+
+const getOperationType = (operation) => getMainDefinition(operation.query)?.operation
+
+const timeoutLink = new ApolloLink((operation, forward) => {
+  if (typeof AbortController === 'undefined') return forward(operation)
+
+  const controller = new AbortController()
+  const timeoutMs = getOperationType(operation) === 'mutation' ? MUTATION_TIMEOUT_MS : QUERY_TIMEOUT_MS
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+
+  operation.setContext(({ fetchOptions = {} }) => ({
+    fetchOptions: { ...fetchOptions, signal: controller.signal }
+  }))
+
+  return new Observable((observer) => {
+    const handle = forward(operation).subscribe({
+      next: (value) => observer.next(value),
+      error: (error) => {
+        clearTimeout(timer)
+        observer.error(error)
+      },
+      complete: () => {
+        clearTimeout(timer)
+        observer.complete()
+      }
+    })
+
+    return () => {
+      clearTimeout(timer)
+      handle.unsubscribe()
+    }
+  })
+})
+
+// Retry only queries: they are idempotent, and a retry opens a fresh connection
+// instead of waiting on a dead one. Mutations (orders, payments) never replay.
+const retryLink = new RetryLink({
+  delay: { initial: 300, max: 2000, jitter: true },
+  attempts: {
+    max: 3,
+    retryIf: (error, operation) => Boolean(error) && getOperationType(operation) === 'query'
+  }
+})
 
 const getNextFetchPolicy = (currentFetchPolicy, context) => {
   if (context?.reason === 'variables-changed') {
@@ -275,7 +324,7 @@ const setupApollo = ({
       return kind === 'OperationDefinition' && operation === 'subscription'
     },
     wsLink,
-    concat(requestLink, httpLink)
+    ApolloLink.from([retryLink, requestLink, timeoutLink, httpLink])
   )
 
   const client = new ApolloClient({

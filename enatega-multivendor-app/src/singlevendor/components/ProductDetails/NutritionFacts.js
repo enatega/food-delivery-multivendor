@@ -1,73 +1,31 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import useCheckoutPalette from '../Checkout/useCheckoutPalette'
+import { InfoSectionHeader, infoSectionStyle } from './ProductOtherDetails'
 
-const NutritionFacts = ({ t, title, currentTheme, productOtherDetails }) => {
-
-  console.log('productOtherDetails______',productOtherDetails);
+const NutritionFacts = ({ t, title, productOtherDetails }) => {
+  const { palette } = useCheckoutPalette()
+  const s = styles(palette)
+  const rows = (productOtherDetails || []).filter((item) => item?.name || item?.quantity)
+  if (!rows.length) return null
 
   return (
-    <View style={{ gap: 5, paddingVertical: 4, paddingHorizontal: 15 }}>
-      {
-        productOtherDetails.length > 0 && (
-          <TextDefault bold H4>
-            {t(title)}
-          </TextDefault>
-        )
-      }
+    <View style={s.section}>
+      <InfoSectionHeader icon='chart-donut' title={t(title)} palette={palette} />
 
-      <View style={{ gap: 16, marginTop:4 }}>
-        {/* <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
-          {productOtherDetails.size}
-        </TextDefault> */}
-
-        {productOtherDetails.map((item) => (
-          <View style={[styles.flex]}>
-            <TextDefault H5 bold>
+      {/* Label/value table: muted label on the left, bold value on the right. */}
+      <View style={s.table}>
+        {rows.map((item, index) => (
+          <View key={`${item?.name ?? 'nutrition'}-${index}`} style={[s.row, index % 2 === 1 && s.rowAlt]}>
+            <TextDefault textColor={palette.textSecondary} isRTL style={s.label} numberOfLines={2}>
               {item.name}
             </TextDefault>
-            <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
+            <TextDefault bolder textColor={palette.textPrimary} isRTL>
               {item.quantity}
             </TextDefault>
           </View>
         ))}
-        
-
-        {/* <View style={[styles.flex]}>
-          <TextDefault H5 bold>
-            {t('Fat')}
-          </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
-            {productOtherDetails.fat}
-          </TextDefault>
-        </View>
-
-        <View style={[styles.flex]}>
-          <TextDefault H5 bold>
-            {t('Carbohydrates')}
-          </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
-            {productOtherDetails.carbohydrates}
-          </TextDefault>
-        </View>
-
-        <View style={[styles.flex]}>
-          <TextDefault H5 bold>
-            {t('Protein')}
-          </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
-            {productOtherDetails.protein}
-          </TextDefault>
-        </View>
-
-        <View style={[styles.flex]}>
-          <TextDefault H5 bold>
-            {t('Sugar')}
-          </TextDefault>
-          <TextDefault H5 bold textColor={currentTheme.colorTextMuted}>
-            {productOtherDetails.sugar}
-          </TextDefault>
-        </View> */}
       </View>
     </View>
   )
@@ -75,12 +33,28 @@ const NutritionFacts = ({ t, title, currentTheme, productOtherDetails }) => {
 
 export default NutritionFacts
 
-const styles = StyleSheet.create({
-  flex: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 8
-  }
-})
+const styles = (palette) =>
+  StyleSheet.create({
+    section: infoSectionStyle(palette),
+    table: {
+      borderRadius: 12,
+      overflow: 'hidden',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: palette.border
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 12,
+      minHeight: 36,
+      paddingHorizontal: 12,
+      paddingVertical: 7
+    },
+    rowAlt: {
+      backgroundColor: palette.surfaceMuted
+    },
+    label: {
+      flex: 1
+    }
+  })

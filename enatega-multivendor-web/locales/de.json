@@ -105,5 +105,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Noch keine Favoriten",
+  "favorite_products_empty_description": "Tippe bei einem Produkt auf das Herz, um es hier für schnelles Nachbestellen zu speichern.",
+  "favorite_products_empty_cta": "Produkte durchsuchen"
 }

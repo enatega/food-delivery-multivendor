@@ -40,25 +40,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 100,
-    backgroundColor:  '#f0f0f0'
+    backgroundColor: '#f0f0f0'
   },
-    addButton: {
-      width: '100%',
-      height: scale(40),
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignSelf: 'center',
-      marginBottom: scale(10)
-    },
-     addressSubContainer: {
-      width: '90%',
-      alignSelf: 'center',
-      flexDirection:  'row',
-      alignItems: 'center'
-    },
-      mL5p: {
-          ...alignment.MLsmall
-        },
+  addButton: {
+    width: '100%',
+    height: scale(40),
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: scale(10)
+  },
+  addressSubContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  mL5p: {
+    ...alignment.MLsmall
+  }
 })
 
 export default styles

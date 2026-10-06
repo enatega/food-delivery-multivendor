@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Belum ada favorit",
+  "favorite_products_empty_description": "Ketuk ikon hati pada produk mana pun untuk menyimpannya di sini agar mudah dipesan lagi.",
+  "favorite_products_empty_cta": "Jelajahi produk"
 }

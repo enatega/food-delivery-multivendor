@@ -223,8 +223,7 @@ const OrderConfirmationScreen = (props) => {
         backgroundColor: currentTheme.newheaderBG,
         shadowColor: 'transparent',
         elevation: 0,
-        borderBottomWidth: 0,
-        height: scale(100)
+        borderBottomWidth: 0
       },
 
       headerLeft: () => (

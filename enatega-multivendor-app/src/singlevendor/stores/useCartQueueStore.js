@@ -11,8 +11,10 @@ const useCartQueueStore = create((set, get) => ({
     set((state) => {
       const queue = [...state.queue]
       const replaceFrom = state.isProcessing ? 1 : 0
-      const existingIndex = itemId
-        ? queue.findIndex((queued, index) => index >= replaceFrom && queued?.__itemId === itemId)
+      // Only absolute-count tasks can supersede each other; additive "add to cart"
+      // tasks must all reach the server.
+      const existingIndex = itemId && task?.__replaceable
+        ? queue.findIndex((queued, index) => index >= replaceFrom && queued?.__itemId === itemId && queued?.__replaceable)
         : -1
 
       if (existingIndex >= 0) queue[existingIndex] = task

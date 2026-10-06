@@ -22,7 +22,6 @@
 
 // export default useHomeProducts
 
-
 import { useQuery } from '@apollo/client'
 import { GET_CATEGORY_ITEMS_SINGLE_VENDOR } from '../../apollo/queries'
 
@@ -31,9 +30,8 @@ const useHomeProducts = ({
   skip = 0,
   limit = 10,
   search = '',
-  skipQuery = false, // 👈 NEW (optional)
+  skipQuery = false // 👈 NEW (optional)
 } = {}) => {
-
   const { data, loading, error, refetch } = useQuery(
     GET_CATEGORY_ITEMS_SINGLE_VENDOR,
     {
@@ -41,10 +39,10 @@ const useHomeProducts = ({
         categoryId,
         skip,
         limit,
-        search,
+        search
       },
       skip: skipQuery || !categoryId, // 👈 prevents auto execution
-      notifyOnNetworkStatusChange: true,
+      notifyOnNetworkStatusChange: true
     }
   )
 
@@ -52,7 +50,7 @@ const useHomeProducts = ({
     loading,
     data,
     error,
-    refetch,
+    refetch
   }
 }
 

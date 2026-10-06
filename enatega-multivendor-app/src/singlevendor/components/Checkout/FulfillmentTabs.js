@@ -1,104 +1,86 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
+import useCheckoutPalette from './useCheckoutPalette'
 
 const FulfillmentTabs = ({ selectedMode, onSelectMode }) => {
-  const { t, i18n } = useTranslation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const { t } = useTranslation()
+  const { palette } = useCheckoutPalette()
+  const s = styles(palette)
 
   const handleModeSelect = (mode) => {
     console.log('🚚 Fulfillment Mode Selected:', mode === 'delivery' ? 'Delivery' : 'Click & Collect')
     onSelectMode(mode)
   }
 
-  return (
-    <View style={styles(currentTheme).container}>
-      <View style={styles(currentTheme).tabsContainer}>
-        <TouchableOpacity
-          style={[
-            styles(currentTheme).tab,
-            selectedMode === 'delivery' && styles(currentTheme).tabSelected
-          ]}
-          onPress={() => handleModeSelect('delivery')}
-          activeOpacity={0.7}
-        >
-          <TextDefault
-            textColor={selectedMode === 'delivery' ? currentTheme.singleVendorBrandForeground : currentTheme.fontSecondColor}
-            bold
-            bolder={selectedMode === 'delivery'}
-            isRTL
-          >
-            {t('Delivery') || 'Delivery'}
-          </TextDefault>
-          {selectedMode === 'delivery' && <View style={styles(currentTheme).activeIndicator} />}
-        </TouchableOpacity>
+  const tabs = [
+    { id: 'delivery', icon: 'moped-outline', label: t('Delivery') || 'Delivery' },
+    { id: 'collection', icon: 'shopping-outline', label: t('Click & Collect') || 'Click & Collect' }
+  ]
 
-        <TouchableOpacity
-          style={[
-            styles(currentTheme).tab,
-            selectedMode === 'collection' && styles(currentTheme).tabSelected
-          ]}
-          onPress={() => handleModeSelect('collection')}
-          activeOpacity={0.7}
-        >
-          <TextDefault
-            textColor={selectedMode === 'collection' ? currentTheme.singleVendorBrandForeground : currentTheme.fontSecondColor}
-            bold
-            bolder={selectedMode === 'collection'}
-            isRTL
+  return (
+    <View style={s.track}>
+      {tabs.map((tab) => {
+        const isSelected = selectedMode === tab.id
+        return (
+          <TouchableOpacity
+            key={tab.id}
+            style={[s.segment, isSelected && s.segmentSelected]}
+            onPress={() => handleModeSelect(tab.id)}
+            activeOpacity={0.8}
+            accessibilityRole='tab'
+            accessibilityState={{ selected: isSelected }}
           >
-            {t('Click & Collect') || 'Click & Collect'}
-          </TextDefault>
-          {selectedMode === 'collection' && <View style={styles(currentTheme).activeIndicator} />}
-        </TouchableOpacity>
-      </View>
+            <MaterialCommunityIcons
+              name={tab.icon}
+              size={scale(18)}
+              color={isSelected ? palette.brandText : palette.textMuted}
+              style={s.segmentIcon}
+            />
+            <TextDefault textColor={isSelected ? palette.textPrimary : palette.textMuted} bold bolder={isSelected} isRTL>
+              {tab.label}
+            </TextDefault>
+          </TouchableOpacity>
+        )
+      })}
     </View>
   )
 }
 
-const styles = (props = null) => {
-  const subtleBorder = props?.themeBackground === '#000'
-    ? 'rgba(255, 255, 255, 0.13)'
-    : 'rgba(15, 23, 42, 0.10)'
-
-  return StyleSheet.create({
-    container: {
-      paddingHorizontal: scale(12),
-      paddingTop: scale(12),
-      paddingBottom: scale(12)
-    },
-    tabsContainer: {
+const styles = (palette) =>
+  StyleSheet.create({
+    track: {
       flexDirection: 'row',
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: subtleBorder
+      backgroundColor: palette.track,
+      borderRadius: scale(14),
+      padding: scale(3),
+      marginBottom: scale(10)
     },
-    tab: {
+    segment: {
       flex: 1,
-      paddingVertical: scale(12),
+      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      position: 'relative'
+      minHeight: scale(38),
+      borderRadius: scale(11),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: 'transparent'
     },
-    tabSelected: {
-      backgroundColor: 'transparent'
+    segmentSelected: {
+      backgroundColor: palette.surface,
+      borderColor: palette.border,
+      shadowColor: '#0F172A',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: palette.shadowOpacity * 1.5,
+      shadowRadius: 4,
+      elevation: palette.shadowOpacity ? 2 : 0
     },
-    activeIndicator: {
-      position: 'absolute',
-      bottom: -StyleSheet.hairlineWidth,
-      width: scale(44),
-      height: scale(3),
-      borderRadius: scale(2),
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D'
+    segmentIcon: {
+      marginRight: scale(6)
     }
   })
-}
 
 export default FulfillmentTabs

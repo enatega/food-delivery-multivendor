@@ -9,19 +9,18 @@ import { useNavigation } from '@react-navigation/native'
 import LoadingSkeleton from './LoadingSkeleton'
 import HorizontalProductsEmptyView from './HorizontalProductsEmptyView'
 import { scale } from '../../utils/scaling'
+import { useOpenProductExplorer } from '../utils/productExplorerPrefetch'
 
 const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, showSeeAll = true, viewType, setSearchVisible, containerStyles, categoryId }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
+  const openProductExplorer = useOpenProductExplorer()
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   const handleSeeAll = () => {
     if (viewType === 'see-all') {
-      // navigation.navigate('ProductExplorer')
-      navigation.navigate('ProductExplorer', {
-        categoryId
-      })
+      openProductExplorer(categoryId)
     } else {
       setSearchVisible(true)
     }
@@ -47,7 +46,7 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
         </View>
           )
         : (
-        <FlatList ListEmptyComponent={<HorizontalProductsEmptyView />} data={ListData} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles(currentTheme).scrollContent, containerStyles]} keyExtractor={(item) => item.id.toString()} renderItem={({ item: drink }) => <ProductCard product={{ ...drink, categoryId: drink?.categoryId || categoryId }} onAddToCart={handleAddToCart} onCardPress={onProductPress} />} />
+        <FlatList ListEmptyComponent={<HorizontalProductsEmptyView />} data={ListData} horizontal initialNumToRender={3} maxToRenderPerBatch={4} windowSize={5} showsHorizontalScrollIndicator={false} contentContainerStyle={[styles(currentTheme).scrollContent, containerStyles]} keyExtractor={(item) => item.id.toString()} renderItem={({ item: drink }) => <ProductCard product={drink?.categoryId ? drink : { ...drink, categoryId }} onAddToCart={handleAddToCart} onCardPress={onProductPress} />} />
           )}
     </View>
   )

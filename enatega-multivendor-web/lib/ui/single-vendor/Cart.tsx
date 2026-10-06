@@ -1,13 +1,65 @@
 "use client";
+import { useApolloClient } from "@apollo/client";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
+import {
+  SINGLE_VENDOR_CALCULATE_CHECKOUT,
+  SINGLE_VENDOR_SCHEDULE,
+} from "@/lib/api/graphql/single-vendor";
 import useUser from "@/lib/hooks/useUser";
 import Image from "@/lib/ui/useable-components/safe-image";
 import useCurrencyFormatter from "@/lib/hooks/useCurrencyFormatter";
+import useCheckoutDestination from "./useCheckoutDestination";
+
+const CHECKOUT_ROUTE = "/order/checkout";
 
 export default function SingleVendorCart({ onClose }: { onClose: () => void }) {
   const router = useRouter();
-  const { cart, calculateSubtotal, clearCart } = useUser();
+  const client = useApolloClient();
+  const { profile, cart, calculateSubtotal, clearCart } = useUser();
   const { formatCurrency } = useCurrencyFormatter();
+  const { latitude, longitude, hasDeliveryCoordinates } =
+    useCheckoutDestination();
+  const cartSignature = cart
+    .map((item) => `${item.key}:${item.quantity}`)
+    .join("|");
+
+  // Warm the checkout route, its code and its first quote while the cart is
+  // open, so "Continue to checkout" renders immediately. Variables match the
+  // checkout page's defaults (delivery, no coupon).
+  const prefetchCheckout = useCallback(() => {
+    if (!cartSignature) return;
+    router.prefetch(CHECKOUT_ROUTE);
+    void import("./Checkout");
+    void client.query({ query: SINGLE_VENDOR_SCHEDULE }).catch(() => {});
+    if (!profile || !hasDeliveryCoordinates) return;
+    void client
+      .query({
+        query: SINGLE_VENDOR_CALCULATE_CHECKOUT,
+        variables: {
+          isPickup: false,
+          latDestination: latitude,
+          longDestination: longitude,
+          coupon: undefined,
+        },
+        fetchPolicy: "network-only",
+      })
+      .catch(() => {});
+  }, [
+    cartSignature,
+    client,
+    hasDeliveryCoordinates,
+    latitude,
+    longitude,
+    profile,
+    router,
+  ]);
+
+  useEffect(() => {
+    // Debounced so rapid cart edits trigger one quote request.
+    const handle = window.setTimeout(prefetchCheckout, 300);
+    return () => window.clearTimeout(handle);
+  }, [prefetchCheckout]);
   return (
     <div className="flex h-full flex-col p-5 dark:text-white">
       <div className="flex items-center justify-between">
@@ -113,7 +165,7 @@ export default function SingleVendorCart({ onClose }: { onClose: () => void }) {
           <button
             onClick={() => {
               onClose();
-              router.push("/order/checkout");
+              router.push(CHECKOUT_ROUTE);
             }}
             className="w-full rounded-full bg-primary-color py-3 font-semibold text-white"
           >

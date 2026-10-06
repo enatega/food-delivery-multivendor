@@ -34,7 +34,6 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
   const dealLabel = getDealLabel(variation.dealInfo ?? variation.deal, currencySymbol)
   const isOutOfStock = isProductOutOfStock(item)
 
-  console.log('CartItem Rendered:', item.variations[0])
   const handlePress = () => {
     const productId = item?.foodId || item?._id || item?.id
     const categoryId = item?.categoryId
@@ -156,4 +155,5 @@ const CartItem = ({ item, onAddQuantity, onRemoveQuantity, currencySymbol = '€
   )
 }
 
-export default CartItem
+// Memoized so a quantity change re-renders only the row that changed.
+export default React.memo(CartItem)

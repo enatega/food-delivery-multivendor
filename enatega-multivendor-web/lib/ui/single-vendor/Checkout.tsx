@@ -16,20 +16,13 @@ import {
 import { getAccessToken } from "@/lib/utils/methods/auth";
 import useUser from "@/lib/hooks/useUser";
 import useCurrencyFormatter from "@/lib/hooks/useCurrencyFormatter";
-import { useUserAddress } from "@/lib/context/address/address.context";
-
-const toCheckoutCoordinate = (value: unknown): number | null => {
-  if (value === null || value === undefined || value === "") return null;
-  const coordinate = Number(value);
-  return Number.isFinite(coordinate) ? coordinate : null;
-};
+import useCheckoutDestination from "./useCheckoutDestination";
 
 export default function SingleVendorCheckout() {
   const router = useRouter();
   const { mode } = useAppMode();
   const environment = getModeEnvironment(mode);
   const { profile, cart, clearCart } = useUser();
-  const { userAddress } = useUserAddress();
   const { currencySymbol, currency, formatCurrency } = useCurrencyFormatter();
   const [pickup, setPickup] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("COD");
@@ -38,21 +31,15 @@ export default function SingleVendorCheckout() {
   const [priority, setPriority] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [schedule, setSchedule] = useState<any>(null);
+  // Set once the order is placed and we are leaving checkout (tracking page or
+  // payment provider). Keeps the "Your cart is empty" view from flashing after
+  // the cart is cleared, and keeps Place order disabled during the hand-off.
+  const [isLeavingCheckout, setLeavingCheckout] = useState(false);
   const idempotencyKey = useRef(
     `sv-web-${Date.now()}-${Math.random().toString(36).slice(2)}`,
   );
-  const profileAddress =
-    profile?.addresses?.find((item) => item.selected) ??
-    profile?.addresses?.[0];
-  const userAddressCoordinates = userAddress?.location?.coordinates;
-  const hasUserAddressCoordinates =
-    toCheckoutCoordinate(userAddressCoordinates?.[1]) !== null &&
-    toCheckoutCoordinate(userAddressCoordinates?.[0]) !== null;
-  const address = hasUserAddressCoordinates ? userAddress : profileAddress;
-  const coordinates = address?.location?.coordinates ?? [];
-  const latitude = toCheckoutCoordinate(coordinates[1]);
-  const longitude = toCheckoutCoordinate(coordinates[0]);
-  const hasDeliveryCoordinates = latitude !== null && longitude !== null;
+  const { address, latitude, longitude, hasDeliveryCoordinates } =
+    useCheckoutDestination();
   const checkout = useQuery(SINGLE_VENDOR_CALCULATE_CHECKOUT, {
     variables: {
       isPickup: pickup,
@@ -61,7 +48,10 @@ export default function SingleVendorCheckout() {
       coupon: coupon || undefined,
     },
     skip: !profile || (!pickup && !hasDeliveryCoordinates),
-    fetchPolicy: "network-only",
+    // The cart prefetches this quote, so render it immediately and refresh.
+    // Place order stays disabled while loading, so it always uses a fresh
+    // checkoutQuoteId.
+    fetchPolicy: "cache-and-network",
   });
   const scheduleQuery = useQuery(SINGLE_VENDOR_SCHEDULE);
   const [placeOrder, placeState] = useMutation(SINGLE_VENDOR_PLACE_ORDER);
@@ -113,11 +103,21 @@ export default function SingleVendorCheckout() {
     });
     const order = result.data?.placeOrder;
     if (!order) return;
+    setLeavingCheckout(true);
     if (paymentMethod === "COD") {
-      clearCart();
       router.replace(`/order/${order.orderId}/tracking`);
+      clearCart();
       return;
     }
+    try {
+      await startOnlinePayment(order);
+    } catch (error) {
+      setLeavingCheckout(false);
+      throw error;
+    }
+  };
+
+  const startOnlinePayment = async (order: { _id: string }) => {
     modeStorage.set("pending_stripe_order_id", order._id);
     modeStorage.set("pending_stripe_started_at", String(Date.now()));
     const response = await fetch(
@@ -140,6 +140,26 @@ export default function SingleVendorCheckout() {
     window.location.assign(payload.checkoutUrl);
   };
 
+  if (isLeavingCheckout)
+    return (
+      <div
+        className="mx-auto my-16 flex max-w-lg flex-col items-center text-center"
+        aria-busy="true"
+      >
+        <span
+          aria-hidden="true"
+          className="h-10 w-10 animate-spin rounded-full border-4 border-primary-color/30 border-t-primary-dark"
+        />
+        <h1 className="mt-5 text-2xl font-bold dark:text-white">
+          Order placed
+        </h1>
+        <p className="mt-2 text-gray-500 dark:text-gray-400">
+          {paymentMethod === "COD"
+            ? "Opening order tracking…"
+            : "Redirecting to payment…"}
+        </p>
+      </div>
+    );
   if (!cart.length)
     return (
       <div className="mx-auto my-16 max-w-lg text-center">
@@ -276,7 +296,7 @@ export default function SingleVendorCheckout() {
       </div>
       <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
         <h2 className="text-xl font-semibold dark:text-white">Order summary</h2>
-        {checkout.loading ? (
+        {checkout.loading && !summary ? (
           <div className="skeleton-surface my-5 h-32 animate-pulse rounded-xl" />
         ) : (
           <dl className="my-5 space-y-2 text-sm text-gray-600 dark:text-gray-300">
@@ -312,6 +332,7 @@ export default function SingleVendorCheckout() {
         <button
           disabled={
             placeState.loading ||
+            isLeavingCheckout ||
             checkout.loading ||
             (!pickup && !hasDeliveryCoordinates)
           }

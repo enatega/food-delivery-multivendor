@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 
 import { theme } from '../../utils/themeColors'
@@ -13,7 +13,7 @@ import Cart from '../screens/Cart/Cart'
 import Browse from '../screens/Browse/Browse'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import BottomTabIcon from '../../components/BottomTabIcon/BottomTabIcon'
-import RestaurantScheduleTime from '../components/RestaurantScheduleTime/RestaurantScheduleTime'
+import RestaurantScheduleTime, { SCHEDULE_PILL_INSET } from '../components/RestaurantScheduleTime/RestaurantScheduleTime'
 import ModeProfileTab from '../../components/VendorModeToggle/ModeProfileTab'
 import useCartStore from '../stores/useCartStore'
 import { scale } from '../../utils/scaling'
@@ -36,23 +36,56 @@ const selectCartItemCount = state => state.items.reduce(
 )
 
 const SingleVendorProfileTab = props => {
-  const items = useCartStore(state => state.items)
+  const hasCartItems = useCartStore(state => state.items.length > 0)
   return (
     <ModeProfileTab
       {...props}
       AuthenticatedComponent={Profile}
       GuestComponent={CreateAccount}
-      hasCartItemsOverride={items.length > 0}
+      hasCartItemsOverride={hasCartItems}
     />
   )
 }
+
+// Subscribes to the cart count itself so cart changes re-render only this icon,
+// not the whole tab navigator and every tab screen under it.
+const CartTabIcon = ({ name, size, color, currentTheme }) => {
+  const cartItemCount = useCartStore(selectCartItemCount)
+  const cartBadge = cartItemCount > 99 ? '99+' : cartItemCount
+  return (
+    <View>
+      <BottomTabIcon name={name} size={size} color={color} />
+      {!!cartItemCount && (
+        <View style={[badgeStyles.badge, { backgroundColor: currentTheme.singleVendorBrand }]}>
+          <Text style={[badgeStyles.badgeText, { color: currentTheme.singleVendorOnBrand }]}>{cartBadge}</Text>
+        </View>
+      )}
+    </View>
+  )
+}
+
+const badgeStyles = StyleSheet.create({
+  badge: {
+    position: 'absolute',
+    top: -scale(4),
+    right: -scale(10),
+    minWidth: scale(18),
+    height: scale(18),
+    borderRadius: scale(9),
+    paddingHorizontal: scale(4),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  badgeText: {
+    fontSize: scale(9),
+    fontWeight: '700'
+  }
+})
 
 const SingleVendorBottomTab = () => {
   const { t, i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
-  const cartItemCount = useCartStore(selectCartItemCount)
-  const cartBadge = cartItemCount > 99 ? '99+' : cartItemCount || undefined
 
   return (
     <Tab.Navigator
@@ -60,6 +93,9 @@ const SingleVendorBottomTab = () => {
         headerShown: route.name === 'SVDiscovery' && Platform.OS === 'ios',
         tabBarIcon: ({ focused, color, size }) => {
           // synced with BottomTabIcon, make sure to have the same name as icon in BottomTabIcon
+          if (route.name === 'Cart') {
+            return <CartTabIcon name={tabIconNames[route.name]} size={focused ? '28' : size} color={color} currentTheme={currentTheme} />
+          }
           return <BottomTabIcon name={tabIconNames[route.name]} size={focused ? '28' : size} color={color} />
         },
         tabBarStyle: {
@@ -94,14 +130,9 @@ const SingleVendorBottomTab = () => {
               )
             : undefined,
           headerRightContainerStyle: {
-            right: 0,
-            width: scale(108),
             height: '100%',
             justifyContent: 'center',
-            paddingRight: 0,
-            overflow: 'visible',
-            transform: [{ translateY: scale(Platform.OS === 'android' ? 8 : 13) }],
-            zIndex: 10
+            paddingRight: SCHEDULE_PILL_INSET
           }
         }}
       />
@@ -120,18 +151,7 @@ const SingleVendorBottomTab = () => {
         name='Cart'
         component={Cart}
         options={{
-          tabBarLabel: t('Cart'),
-          tabBarBadge: cartBadge,
-          tabBarBadgeStyle: {
-            minWidth: scale(18),
-            height: scale(18),
-            borderRadius: scale(9),
-            paddingHorizontal: scale(4),
-            backgroundColor: currentTheme.singleVendorBrand,
-            color: currentTheme.singleVendorOnBrand,
-            fontSize: scale(9),
-            fontWeight: '700'
-          }
+          tabBarLabel: t('Cart')
         }}
         initialParams={{
           selectedType: 'grocery',

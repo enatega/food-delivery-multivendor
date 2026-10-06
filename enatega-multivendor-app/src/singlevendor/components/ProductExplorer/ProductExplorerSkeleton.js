@@ -18,12 +18,11 @@ const ProductExplorerSkeleton = () => {
     >
       {/* Search Header */}
       <View style={styles(currentTheme).searchRow}>
-        <LoadingSkeleton width={36} height={36} borderRadius={18} />
+        <LoadingSkeleton width={40} height={40} borderRadius={20} />
         <LoadingSkeleton
-          width="85%"
-          height={40}
-          borderRadius={20}
-          style={{ marginLeft: 12 }}
+          height={42}
+          borderRadius={21}
+          style={{ marginLeft: 10, flex: 1 }}
         />
       </View>
 
@@ -32,85 +31,75 @@ const ProductExplorerSkeleton = () => {
         {Array.from({ length: 3 }).map((_, i) => (
           <LoadingSkeleton
             key={i}
-            width={90}
-            height={22}
-            borderRadius={11}
-            style={{ marginRight: 16 }}
+            width={i === 0 ? 110 : 90}
+            height={36}
+            borderRadius={18}
+            style={{ marginRight: 8 }}
           />
         ))}
       </View>
 
-      {/* Sub Categories */}
-      <View style={styles(currentTheme).subCategoriesRow}>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <LoadingSkeleton
-            key={i}
-            width={80}
-            height={32}
-            borderRadius={16}
-            style={{ marginRight: 10 }}
-          />
-        ))}
+      <ProductGrid styles={styles(currentTheme)} />
+    </ScrollView>
+  )
+}
+
+// Mirrors the grid ProductCard (framed image, two-line name, price) so the
+// real tiles swap in without a layout jump.
+const ProductGrid = ({ styles: themedStyles }) => (
+  <View style={themedStyles.grid}>
+    {Array.from({ length: 6 }).map((_, i) => (
+      <View key={i} style={themedStyles.card}>
+        <LoadingSkeleton width='100%' height={140} borderRadius={12} />
+        <View style={themedStyles.cardCopy}>
+          <LoadingSkeleton width='80%' height={14} borderRadius={6} />
+          <LoadingSkeleton width='60%' height={11} borderRadius={6} style={{ marginTop: 6 }} />
+          <LoadingSkeleton width='42%' height={16} borderRadius={8} style={{ marginTop: 10 }} />
+        </View>
       </View>
+    ))}
+  </View>
+)
 
-      {/* Product Grid */}
-      <View style={styles(currentTheme).grid}>
-        {Array.from({ length: 6 }).map((_, i) => (
-          <View key={i} style={styles(currentTheme).card}>
-            {/* Image */}
-            <LoadingSkeleton width="100%" height={120} borderRadius={12} />
-
-            {/* Price */}
-            <LoadingSkeleton
-              width={60}
-              height={14}
-              borderRadius={7}
-              style={{ marginTop: 10 }}
-            />
-
-            {/* Title */}
-            <LoadingSkeleton
-              width="80%"
-              height={16}
-              borderRadius={8}
-              style={{ marginTop: 6 }}
-            />
-
-            {/* Subtitle */}
-            <LoadingSkeleton
-              width="50%"
-              height={12}
-              borderRadius={6}
-              style={{ marginTop: 6 }}
-            />
-          </View>
-        ))}
-      </View>
+// Product grid placeholder shown inside a category page while its products load.
+export const ProductGridSkeleton = ({ style }) => {
+  const themeContext = useContext(ThemeContext)
+  const currentTheme = theme[themeContext.ThemeValue]
+  return (
+    <ScrollView
+      style={[styles(currentTheme).pageContainer, style]}
+      contentContainerStyle={{ paddingTop: 10, paddingBottom: 20 }}
+      showsVerticalScrollIndicator={false}
+      scrollEnabled={false}
+    >
+      <ProductGrid styles={styles(currentTheme)} />
     </ScrollView>
   )
 }
 
 const styles = (currentTheme) => StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+    paddingHorizontal: 8,
+    backgroundColor: currentTheme.themeBackground
+  },
+
   container: {
     flex: 1,
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     backgroundColor: currentTheme.themeBackground
   },
 
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 18
+    paddingTop: 6,
+    marginBottom: 8
   },
 
   categoriesRow: {
     flexDirection: 'row',
     marginBottom: 16
-  },
-
-  subCategoriesRow: {
-    flexDirection: 'row',
-    marginBottom: 22
   },
 
   grid: {
@@ -120,8 +109,18 @@ const styles = (currentTheme) => StyleSheet.create({
   },
 
   card: {
-    width: '48%',
-    marginBottom: 18
+    width: '48.8%',
+    marginBottom: 8,
+    padding: 5,
+    borderRadius: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: currentTheme.colorBorder || currentTheme.newBorderColor2
+  },
+
+  cardCopy: {
+    paddingHorizontal: 5,
+    paddingTop: 8,
+    paddingBottom: 4
   }
 })
 

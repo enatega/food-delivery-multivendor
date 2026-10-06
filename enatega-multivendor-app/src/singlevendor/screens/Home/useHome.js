@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client'
 import {
+  GET_SINGLE_VENDOR_DISCOVERY,
   GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR,
   GET_SINGLE_VENDOR_BANNERS
 } from '../../apollo/queries'
@@ -14,6 +15,7 @@ import CustomApartmentIcon from '../../../assets/SVG/imageComponents/CustomApart
 import CustomOtherIcon from '../../../assets/SVG/imageComponents/CustomOtherIcon'
 import { LocationContext } from '../../../context/Location'
 import { selectAddress } from '../../../apollo/mutations'
+import { SINGLE_VENDOR_DISCOVERY_VARIABLES } from '../../utils/prewarmSingleVendor'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -28,25 +30,51 @@ const useHome = () => {
   const { location, setLocation, isConnected } = useContext(LocationContext)
   const client = useApolloClient()
 
-  const categoriesQuery = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR, {
+  const discoveryQuery = useQuery(GET_SINGLE_VENDOR_DISCOVERY, {
+    variables: SINGLE_VENDOR_DISCOVERY_VARIABLES,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true
+  })
+  const discovery = discoveryQuery.data?.singleVendorDiscovery
+  const useLegacyQueries = !!discoveryQuery.error || (!discoveryQuery.loading && !discovery)
+
+  const categoriesQuery = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR, {
+    skip: !useLegacyQueries,
+    fetchPolicy: 'cache-first'
   })
   const bannersQuery = useQuery(GET_SINGLE_VENDOR_BANNERS, {
     variables: { page: 1, limit: 10 },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true
+    skip: !useLegacyQueries,
+    fetchPolicy: 'cache-first'
   })
 
   const refetch = useCallback(async() => {
+    if (!useLegacyQueries) {
+      await discoveryQuery.refetch()
+      return
+    }
     await Promise.allSettled([
       categoriesQuery.refetch(),
       bannersQuery.refetch(),
       client.refetchQueries({ include: ['SingleVendorDealSection'] })
     ])
-  }, [bannersQuery.refetch, categoriesQuery.refetch, client])
+  }, [bannersQuery.refetch, categoriesQuery.refetch, client, discoveryQuery.refetch, useLegacyQueries])
+
+  const refetchBanners = useCallback(() =>
+    useLegacyQueries ? bannersQuery.refetch() : discoveryQuery.refetch(),
+  [bannersQuery.refetch, discoveryQuery.refetch, useLegacyQueries])
+
+  // Stable references keep Home's memoized list header from rebuilding on
+  // every render.
+  const bannersData = useMemo(
+    () => ({ banners: discovery?.banners || bannersQuery.data?.singleVendorBanners || [] }),
+    [discovery?.banners, bannersQuery.data?.singleVendorBanners]
+  )
+  const categoriesData = useMemo(
+    () => discovery ? { getRestaurantCategoriesSingleVendor: discovery.categories } : categoriesQuery.data,
+    [discovery, categoriesQuery.data]
+  )
 
   const [mutate] = useMutation(SELECT_ADDRESS, {
     onError
@@ -77,21 +105,23 @@ const useHome = () => {
   }
 
   const onOpen = useCallback(() => {
-    console.log('open')
     if (modalRef.current) {
       modalRef.current.open()
     }
   }, [])
 
   return {
-    loading: categoriesQuery.loading,
-    data: categoriesQuery.data,
-    error: categoriesQuery.error,
+    loading: useLegacyQueries ? categoriesQuery.loading : discoveryQuery.loading,
+    data: categoriesData,
+    error: useLegacyQueries ? categoriesQuery.error : undefined,
     refetch,
-    bannersLoading: bannersQuery.loading,
-    bannersData: { banners: bannersQuery.data?.singleVendorBanners || [] },
-    bannersError: bannersQuery.error,
-    refetchBanners: bannersQuery.refetch,
+    bannersLoading: useLegacyQueries ? bannersQuery.loading : discoveryQuery.loading,
+    bannersData,
+    bannersError: useLegacyQueries ? bannersQuery.error : undefined,
+    refetchBanners,
+    dealsData: discovery?.deals,
+    dealsLoading: discoveryQuery.loading,
+    useLegacyDeals: useLegacyQueries,
     t,
     currentTheme,
     isLoggedIn,

@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native
 import ConfigurationContext from '../../../context/Configuration'
 import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../../utils/themeColors'
-import { getDealLabel, getDealPricing } from '../../utils/helper'
+import { getDealPricing } from '../../utils/helper'
 import { isVariationOutOfStock } from '../../utils/stock'
 
 const OptionList = ({ title, subtitle, list = [], isVariation = false, selectedIds = [], onChange, t }) => {
@@ -32,7 +32,6 @@ const OptionList = ({ title, subtitle, list = [], isVariation = false, selectedI
   const renderItem = ({ item }) => {
     const selected = selectedIds.includes(item.id)
     const pricing = getDealPricing(item.price, item.deal)
-    const dealLabel = isVariation ? getDealLabel(item.deal, configuration?.currencySymbol) : null
     const hasDeal = isVariation && pricing.discountAmount > 0
     const isOutOfStock = isVariation && isVariationOutOfStock(item)
 
@@ -53,16 +52,16 @@ const OptionList = ({ title, subtitle, list = [], isVariation = false, selectedI
 
         {/* Price */}
         {item.price !== undefined && (
-          <View style={themedStyles.priceBlock}>
-            {dealLabel && <Text style={themedStyles.dealLabel}>{dealLabel}</Text>}
-            <Text style={[themedStyles.price, hasDeal && themedStyles.dealPrice]}>
-              {hasDeal ? pricing.finalPrice : item.price} {configuration?.currencySymbol}
-            </Text>
+          // Original (struck) then discounted price on one baseline-aligned line.
+          <View style={themedStyles.priceRow}>
             {hasDeal && (
               <Text style={themedStyles.originalPrice}>
                 {item.price} {configuration?.currencySymbol}
               </Text>
             )}
+            <Text style={[themedStyles.price, hasDeal && themedStyles.dealPrice]}>
+              {hasDeal ? pricing.finalPrice : item.price} {configuration?.currencySymbol}
+            </Text>
           </View>
         )}
       </TouchableOpacity>
@@ -90,7 +89,7 @@ const styles = (currentTheme) =>
       paddingHorizontal: 15
     },
     header: {
-      marginBottom: 8
+      marginBottom: 4
     },
     headerTitle: {
       color: currentTheme.fontMainColor,
@@ -98,10 +97,10 @@ const styles = (currentTheme) =>
       fontWeight: '600'
     },
     subtitle: {
-      fontSize: 16,
+      fontSize: 13,
       fontWeight: '500',
       color: currentTheme.secondaryText,
-      marginTop: 12
+      marginTop: 2
     },
     row: {
       flexDirection: 'row',
@@ -158,26 +157,18 @@ const styles = (currentTheme) =>
       color: currentTheme.fontMainColor,
       fontWeight: '600'
     },
-    priceBlock: {
-      alignItems: 'flex-end',
-      gap: 2
+    priceRow: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      gap: 6
     },
     dealPrice: {
-      color: currentTheme.singleVendorBrandForeground
+      color: currentTheme.singleVendorBrandForeground,
+      fontWeight: '700'
     },
     originalPrice: {
       color: currentTheme.fontSecondColor,
-      fontSize: 12,
+      fontSize: 13,
       textDecorationLine: 'line-through'
-    },
-    dealLabel: {
-      backgroundColor: currentTheme.singleVendorBrand,
-      borderRadius: 5,
-      color: currentTheme.singleVendorOnBrand,
-      fontSize: 10,
-      fontWeight: '700',
-      overflow: 'hidden',
-      paddingHorizontal: 6,
-      paddingVertical: 3
     }
   })

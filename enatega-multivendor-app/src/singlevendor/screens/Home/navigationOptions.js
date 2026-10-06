@@ -3,7 +3,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import SelectedLocation from '../../../components/Main/Location/Location'
 import { alignment } from '../../../utils/alignment'
-import { scale } from '../../../utils/scaling'
+import { SCHEDULE_PILL_RESERVED } from '../../components/RestaurantScheduleTime/RestaurantScheduleTime'
 
 const navigationOptions = (props) => ({
   headerStyle: {
@@ -26,7 +26,7 @@ const navigationOptions = (props) => ({
   },
   headerTitleContainerStyle: {
     left: 0,
-    right: scale(112),
+    right: SCHEDULE_PILL_RESERVED,
     marginLeft: 0,
     paddingLeft: 0,
     alignItems: 'flex-start'

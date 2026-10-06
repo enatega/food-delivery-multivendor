@@ -7,6 +7,7 @@ import screenOptions from './screenOptions'
 import ProductInfo from '../../components/ProductDetails/ProductInfo'
 import SimilarProducts from '../../components/ProductDetails/SimilarProducts'
 import ProductDetailsLoader from '../../components/ProductDetails/ProductDetailsLoader'
+import LoadingSkeleton from '../../components/LoadingSkeleton'
 import WrapperProductOtherDetails from '../../components/ProductDetails/WrapperProductOtherDetails'
 import Addons from './Addons'
 import Variations from './Variations'
@@ -21,7 +22,7 @@ import { getFirstAvailableVariation } from '../../utils/stock'
 const ProductDetails = ({ route }) => {
   const { productId, categoryId, editCartItem } = route?.params
   const editVariation = editCartItem?.variations?.[0]
-  const { loading, productInfoData, productOtherDetails } = useProductDetails({ foodId: productId, categoryId })
+  const { loading, isDetailsLoaded, productInfoData, productOtherDetails } = useProductDetails({ foodId: productId, categoryId })
   const { t, currentTheme } = useAddToCart({ foodId: productId })
   const navigation = useNavigation()
 
@@ -36,7 +37,6 @@ const ProductDetails = ({ route }) => {
   const [quantity, setQuantity] = useState(editVariation?.quantity || 1)
   const [specialInstructions, setSpecialInstructions] = useState(editVariation?.specialInstructions || '')
   const selectedAddonsRef = useRef([])
-  const cartRevision = useCartStore((state) => state.cartRevision)
   const setCartFromServer = useCartStore((state) => state.setCartFromServer)
   const selectedVariation = variations?.find((v) => v.id === selectedVariationId[0])
 
@@ -100,7 +100,7 @@ const ProductDetails = ({ route }) => {
           addons: selectedAddonsRef.current,
           quantity,
           specialInstructions,
-          expectedCartRevision: cartRevision
+          expectedCartRevision: useCartStore.getState().cartRevision
         }
       }
     })
@@ -148,14 +148,14 @@ const ProductDetails = ({ route }) => {
     })
     setTotalPrice(price)
     setOriginalTotalPrice(originalPrice)
-  }, [selectedVariationId, selectedAddonIds])
+  }, [selectedVariation, selectedAddonIds])
 
   return (
     <>
       <ScrollView style={{ backgroundColor: currentTheme.themeBackground, minHeight: '100%' }} contentContainerStyle={{ paddingBottom: 20 }}>
         {loading && <ProductDetailsLoader />}
         {!loading && (
-          <View style={{ gap: 10 }}>
+          <View style={{ gap: 12 }}>
             <ProductInfo
               t={t}
               productInfoData={{
@@ -167,73 +167,82 @@ const ProductDetails = ({ route }) => {
               currentTheme={currentTheme}
               selectedVariationId={selectedVariationId[0]}
               selectedAddons={selectedAddonsRef?.current}
-              editMode={!!editVariation}
+              editMode={!!editVariation && isDetailsLoaded}
               onSaveEdit={saveCartEdit}
               editingCart={editingCart}
             />
             <WrapperProductOtherDetails t={t} currentTheme={currentTheme} productOtherDetails={productOtherDetails} />
-            <Variations
-              t={t}
-              variations={variations}
-              selectedVariationId={selectedVariationId}
-              setSelectedVariationId={(ids) => {
-                setSelectedVariationId(ids)
-                setSelectedAddonIds([])
-              }}
-              setSelectedAddonIds={setSelectedAddonIds}
-            />
-            <Addons
-              selectedVariation={selectedVariation}
-              selectedAddonIds={selectedAddonIds}
-              setSelectedAddonIds={(value, optionId, addonId) => {
-                setSelectedAddonIds(value)
-
-                let updatedSelectedAddons = selectedAddonsRef.current.map((addon) => ({
-                  _id: addon._id,
-                  options: [...addon.options] // 👈 deep copy options
-                }))
-
-                if (value.includes(optionId)) {
-                  const index = updatedSelectedAddons.findIndex((a) => a._id === addonId)
-
-                  if (index !== -1) {
-                    updatedSelectedAddons[index] = {
-                      ...updatedSelectedAddons[index],
-                      options: [...updatedSelectedAddons[index].options, optionId]
-                    }
-                  } else {
-                    updatedSelectedAddons.push({
-                      _id: addonId,
-                      options: [optionId]
-                    })
-                  }
-                } else {
-                  updatedSelectedAddons = updatedSelectedAddons.map((addon) => (addon._id === addonId ? { ...addon, options: addon.options.filter((id) => id !== optionId) } : addon)).filter((addon) => addon.options.length > 0)
-                }
-
-                selectedAddonsRef.current = updatedSelectedAddons
-              }}
-            />
-            {!!editVariation && (
-              <View style={{ paddingHorizontal: 15, gap: 12 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <TextDefault bold>{t('Quantity')}</TextDefault>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-                    <TouchableOpacity accessibilityLabel={t('Decrease quantity')} onPress={() => setQuantity((value) => Math.max(1, value - 1))}>
-                      <TextDefault H3 textColor={currentTheme.singleVendorBrandForeground}>
-                        −
-                      </TextDefault>
-                    </TouchableOpacity>
-                    <TextDefault bold>{quantity}</TextDefault>
-                    <TouchableOpacity accessibilityLabel={t('Increase quantity')} onPress={() => setQuantity((value) => value + 1)}>
-                      <TextDefault H3 textColor={currentTheme.singleVendorBrandForeground}>
-                        +
-                      </TextDefault>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <TextInput value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={500} multiline placeholder={t('itemInstructions', { defaultValue: 'Instructions for this item' })} placeholderTextColor={currentTheme.fontSecondColor} style={{ minHeight: 72, borderWidth: 1, borderColor: currentTheme.singleVendorBorder, borderRadius: 8, padding: 12, color: currentTheme.fontMainColor, textAlignVertical: 'top' }} />
+            {!isDetailsLoaded && (
+              <View style={{ paddingHorizontal: 15 }}>
+                <LoadingSkeleton height={120} width='100%' borderRadius={20} />
               </View>
+            )}
+            {isDetailsLoaded && (
+              <>
+                <Variations
+                  t={t}
+                  variations={variations}
+                  selectedVariationId={selectedVariationId}
+                  setSelectedVariationId={(ids) => {
+                    setSelectedVariationId(ids)
+                    setSelectedAddonIds([])
+                  }}
+                  setSelectedAddonIds={setSelectedAddonIds}
+                />
+                <Addons
+                  selectedVariation={selectedVariation}
+                  selectedAddonIds={selectedAddonIds}
+                  setSelectedAddonIds={(value, optionId, addonId) => {
+                    setSelectedAddonIds(value)
+
+                    let updatedSelectedAddons = selectedAddonsRef.current.map((addon) => ({
+                      _id: addon._id,
+                      options: [...addon.options] // 👈 deep copy options
+                    }))
+
+                    if (value.includes(optionId)) {
+                      const index = updatedSelectedAddons.findIndex((a) => a._id === addonId)
+
+                      if (index !== -1) {
+                        updatedSelectedAddons[index] = {
+                          ...updatedSelectedAddons[index],
+                          options: [...updatedSelectedAddons[index].options, optionId]
+                        }
+                      } else {
+                        updatedSelectedAddons.push({
+                          _id: addonId,
+                          options: [optionId]
+                        })
+                      }
+                    } else {
+                      updatedSelectedAddons = updatedSelectedAddons.map((addon) => (addon._id === addonId ? { ...addon, options: addon.options.filter((id) => id !== optionId) } : addon)).filter((addon) => addon.options.length > 0)
+                    }
+
+                    selectedAddonsRef.current = updatedSelectedAddons
+                  }}
+                />
+                {!!editVariation && (
+                  <View style={{ paddingHorizontal: 15, gap: 12 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <TextDefault bold>{t('Quantity')}</TextDefault>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+                        <TouchableOpacity accessibilityLabel={t('Decrease quantity')} onPress={() => setQuantity((value) => Math.max(1, value - 1))}>
+                          <TextDefault H3 textColor={currentTheme.singleVendorBrandForeground}>
+                            −
+                          </TextDefault>
+                        </TouchableOpacity>
+                        <TextDefault bold>{quantity}</TextDefault>
+                        <TouchableOpacity accessibilityLabel={t('Increase quantity')} onPress={() => setQuantity((value) => value + 1)}>
+                          <TextDefault H3 textColor={currentTheme.singleVendorBrandForeground}>
+                            +
+                          </TextDefault>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <TextInput value={specialInstructions} onChangeText={setSpecialInstructions} maxLength={500} multiline placeholder={t('itemInstructions', { defaultValue: 'Instructions for this item' })} placeholderTextColor={currentTheme.fontSecondColor} style={{ minHeight: 72, borderWidth: 1, borderColor: currentTheme.singleVendorBorder, borderRadius: 8, padding: 12, color: currentTheme.fontMainColor, textAlignVertical: 'top' }} />
+                  </View>
+                )}
+              </>
             )}
             {/* <NutritionFactsSection
               t={t}
@@ -245,7 +254,7 @@ const ProductDetails = ({ route }) => {
             /> */}
           </View>
         )}
-        <SimilarProducts id={productId} />
+        <SimilarProducts id={productId} categoryId={categoryId ?? productInfoData?.categoryId} />
       </ScrollView>
       <FloatingCartButton />
     </>

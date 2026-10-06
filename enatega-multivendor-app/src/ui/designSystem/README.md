@@ -32,9 +32,10 @@ dimensions appropriate to their content.
 
 Discovery follows the same vertical relationships as the single-vendor home:
 
-- 30 points between the navigation header and a rendered banner.
-- 16 points after the banner region.
-- 20 points before and 10 points after each content section.
+- `discoverySpacing` in `tokens.js` holds every value below; use it instead of literals.
+- 16 points between the navigation header and a rendered banner, 4 points after it.
+- 12 points before and 4 points after each content section (16 points between sections).
+- Loading skeletons use the same section padding so content doesn't jump on load.
 - 20-point horizontal insets for section headings and rail starts.
 - 15 points between a section heading row and its content.
 - `SectionAction` for compact, bordered section actions such as “See All”.

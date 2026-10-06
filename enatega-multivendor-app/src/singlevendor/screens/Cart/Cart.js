@@ -19,6 +19,7 @@ import RecommendedProducts from '../../components/Cart/RecommendedProducts'
 import styles from './Styles'
 import useCart from './useCart'
 import CartSkeleton from '../../components/Cart/CartSkeleton'
+import { useShallow } from 'zustand/react/shallow'
 import useCartStore from '../../stores/useCartStore'
 import { useMutation } from '@apollo/client'
 import { CLEAR_CART } from '../../apollo/mutations'
@@ -28,7 +29,18 @@ import SectionErrorCard from '../../components/SectionErrorCard'
 import AuthContext from '../../../context/Auth'
 
 const Cart = (props) => {
-  const { items, grandTotal, loading, error, isBelowMinimumOrder, clearCart } = useCartStore()
+  // Pick only what this screen renders: a bare useCartStore() re-renders the
+  // (always-mounted) Cart tab on every store write, including each +/- tap.
+  const { items, grandTotal, loading, error, isBelowMinimumOrder, clearCart } = useCartStore(
+    useShallow((state) => ({
+      items: state.items,
+      grandTotal: state.grandTotal,
+      loading: state.loading,
+      error: state.error,
+      isBelowMinimumOrder: state.isBelowMinimumOrder,
+      clearCart: state.clearCart
+    }))
+  )
   const { token } = useContext(AuthContext)
   const visibleItems = token ? items : []
   const { refetch } = useCart()
