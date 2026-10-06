@@ -1,11 +1,10 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { View, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { scale } from '../../../utils/scaling'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { useTranslation } from 'react-i18next'
+import useCheckoutPalette from './useCheckoutPalette'
 
 const ClickCollectConfirmModal = ({
   visible,
@@ -13,12 +12,8 @@ const ClickCollectConfirmModal = ({
   onConfirm,
   selectedOption // 'standard' (immediate) or 'schedule'
 }) => {
-  const { t, i18n } = useTranslation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const { t } = useTranslation()
+  const { palette } = useCheckoutPalette()
 
   const getModalContent = () => {
     if (selectedOption === 'standard') {
@@ -38,7 +33,7 @@ const ClickCollectConfirmModal = ({
   }
 
   const { title, content } = getModalContent()
-  const themedStyles = styles(currentTheme)
+  const themedStyles = styles(palette)
 
   return (
     <Modal
@@ -55,31 +50,36 @@ const ClickCollectConfirmModal = ({
         />
 
         <View style={themedStyles.modalContent}>
+          <View style={themedStyles.handle} />
+
           {/* Header */}
           <View style={themedStyles.header}>
             <View style={themedStyles.headerSpacer} />
-            <TextDefault
-              textColor={currentTheme.fontMainColor}
-              bolder
-              H4
-              isRTL
-              style={themedStyles.headerTitle}
-            >
-              {title}
-            </TextDefault>
+            <View style={themedStyles.headerIcon}>
+              <MaterialCommunityIcons name={selectedOption === 'schedule' ? 'calendar-clock-outline' : 'shopping-outline'} size={scale(22)} color={palette.brandText} />
+            </View>
             <TouchableOpacity
               onPress={onClose}
               activeOpacity={0.7}
               style={themedStyles.closeButton}
             >
-              <AntDesign name="close" size={20} color={currentTheme.fontMainColor} />
+              <AntDesign name="close" size={18} color={palette.textPrimary} />
             </TouchableOpacity>
           </View>
+          <TextDefault
+            textColor={palette.textPrimary}
+            bolder
+            H4
+            isRTL
+            style={themedStyles.headerTitle}
+          >
+            {title}
+          </TextDefault>
 
           {/* Content */}
           <ScrollView style={themedStyles.contentContainer} showsVerticalScrollIndicator={false}>
             <TextDefault
-              textColor={currentTheme.fontMainColor}
+              textColor={palette.textSecondary}
               Normal
               isRTL
               style={themedStyles.contentText}
@@ -98,7 +98,7 @@ const ClickCollectConfirmModal = ({
             onPress={onConfirm}
           >
             <TextDefault
-              textColor={currentTheme.singleVendorOnBrand}
+              textColor={palette.onBrand}
               bolder
               H4
             >
@@ -111,44 +111,63 @@ const ClickCollectConfirmModal = ({
   )
 }
 
-const styles = (currentTheme = null) =>
+const styles = (palette) =>
   StyleSheet.create({
     modalOverlay: {
       flex: 1,
       justifyContent: 'flex-end',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      backgroundColor: palette.overlay
     },
     modalBackdrop: {
       flex: 1
     },
     modalContent: {
-      backgroundColor: currentTheme ? currentTheme.themeBackground : '#fff',
-      borderTopLeftRadius: scale(20),
-      borderTopRightRadius: scale(20),
+      backgroundColor: palette.surface,
+      borderTopLeftRadius: scale(24),
+      borderTopRightRadius: scale(24),
+      borderWidth: StyleSheet.hairlineWidth,
+      borderBottomWidth: 0,
+      borderColor: palette.border,
       paddingHorizontal: scale(20),
-      paddingTop: scale(20),
-      paddingBottom: scale(40)
+      paddingTop: scale(10),
+      paddingBottom: scale(34)
+    },
+    handle: {
+      alignSelf: 'center',
+      width: scale(40),
+      height: scale(4),
+      borderRadius: scale(2),
+      backgroundColor: palette.borderStrong,
+      marginBottom: scale(12)
     },
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: scale(16)
+      marginBottom: scale(12)
     },
     headerSpacer: {
       width: 36
+    },
+    headerIcon: {
+      width: scale(48),
+      height: scale(48),
+      borderRadius: scale(24),
+      backgroundColor: palette.brandSubtle,
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     closeButton: {
       width: 36,
       height: 36,
       borderRadius: 18,
-      backgroundColor: currentTheme ? currentTheme.gray100 : '#F3F4F6',
+      backgroundColor: palette.surfaceMuted,
       alignItems: 'center',
       justifyContent: 'center'
     },
     headerTitle: {
-      flex: 1,
-      textAlign: 'center'
+      textAlign: 'center',
+      marginBottom: scale(10)
     },
     contentContainer: {
       maxHeight: scale(300),
@@ -159,15 +178,15 @@ const styles = (currentTheme = null) =>
       lineHeight: scale(22)
     },
     separator: {
-      height: 1,
-      backgroundColor: currentTheme ? currentTheme.gray200 : '#E5E7EB',
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: palette.border,
       marginHorizontal: -scale(20),
       marginBottom: scale(16)
     },
     confirmButton: {
-      backgroundColor: currentTheme?.singleVendorBrand || '#90E36D',
-      paddingVertical: scale(12),
-      borderRadius: scale(12),
+      backgroundColor: palette.brand,
+      minHeight: scale(52),
+      borderRadius: scale(14),
       alignItems: 'center',
       justifyContent: 'center'
     }

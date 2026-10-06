@@ -1,9 +1,9 @@
 import { View, Platform, StatusBar, FlatList, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import React, { useLayoutEffect, useContext, useMemo } from 'react'
+import React, { useLayoutEffect, useContext, useMemo, useCallback } from 'react'
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import HorizontalCategoriesList from '../../components/HorizontalCategoriesList'
+import DiscoveryCategories from '../../components/Home/DiscoveryCategories'
 import HomeBanner from '../../components/Home/HomeBanner'
 import OfflineBanner from '../../components/Home/OfflineBanner'
 import useHome from './useHome'
@@ -55,6 +55,7 @@ const Home = () => {
 
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
+  const themedStyles = useMemo(() => styles(currentTheme), [currentTheme])
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') {
@@ -86,7 +87,7 @@ const Home = () => {
     ? (
       <View
         style={[
-          styles(currentTheme).androidHeader,
+          themedStyles.androidHeader,
           {
             borderBottomColor:
               currentTheme.newBorderColor2 ||
@@ -96,13 +97,13 @@ const Home = () => {
           }
         ]}
       >
-        <View style={styles(currentTheme).androidAddress}>
+        <View style={themedStyles.androidAddress}>
           <SelectedLocation
             modalOn={onOpen}
             navigation={navigation}
           />
         </View>
-        <View style={styles(currentTheme).androidScheduleOverlay}>
+        <View style={themedStyles.androidScheduleOverlay}>
           <RestaurantScheduleTime />
         </View>
       </View>
@@ -116,7 +117,7 @@ const Home = () => {
   const orderConfirmation = useMemo(() => <OrderConfirmation isHome={true} />, [])
   const listHeader = useMemo(
     () => (
-      <View style={styles(currentTheme).listHeader}>
+      <View style={themedStyles.listHeader}>
         {isConnected
           ? (
           <>
@@ -146,21 +147,26 @@ const Home = () => {
               onRetry={refetch}
             />
               )
-            : <HorizontalCategoriesList categoriesData={categoriesData} />}
+            : <DiscoveryCategories categoriesData={categoriesData} />}
         <DiscoveryDeals deals={dealsData} loading={dealsLoading} useLegacyDeals={useLegacyDeals} />
       </View>
     ),
-    [isConnected, bannersData, bannersLoading, bannersError, orderConfirmation, currentTheme, t, categoriesData, loading, error, refetch, refetchBanners, dealsData, dealsLoading, useLegacyDeals]
+    [isConnected, bannersData, bannersLoading, bannersError, orderConfirmation, currentTheme, themedStyles, t, categoriesData, loading, error, refetch, refetchBanners, dealsData, dealsLoading, useLegacyDeals]
   )
+  const renderCategoryProducts = useCallback(
+    ({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />,
+    []
+  )
+
   return (
     <SafeAreaView
       edges={Platform.OS === 'android' ? ['top', 'left', 'right'] : ['left', 'right']}
-      style={styles(currentTheme).container}
+      style={themedStyles.container}
     >
       {androidHeader}
       <FlatList
         data={error ? [] : categoriesData}
-        renderItem={({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />}
+        renderItem={renderCategoryProducts}
         keyExtractor={(item) => item.id}
         initialNumToRender={4}
         windowSize={15}

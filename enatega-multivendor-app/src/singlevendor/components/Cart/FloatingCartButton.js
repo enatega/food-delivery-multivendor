@@ -13,13 +13,14 @@ const FloatingCartButton = () => {
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
 
-  const items = useCartStore((state) => state.items)
-
-  const totalQuantity = items?.reduce((sum, item) => {
-    const variationsTotal = item?.variations?.reduce((vSum, v) => vSum + (v?.quantity || 0), 0)
-    const itemQuantity = typeof variationsTotal === 'number' ? variationsTotal : (item?.quantity || 0)
-    return sum + itemQuantity
-  }, 0)
+  // Select the number only, so unrelated cart changes don't re-render this button.
+  const totalQuantity = useCartStore((state) =>
+    state.items?.reduce((sum, item) => {
+      const variationsTotal = item?.variations?.reduce((vSum, v) => vSum + (v?.quantity || 0), 0)
+      const itemQuantity = typeof variationsTotal === 'number' ? variationsTotal : (item?.quantity || 0)
+      return sum + itemQuantity
+    }, 0)
+  )
 
   if (!totalQuantity) return null
 

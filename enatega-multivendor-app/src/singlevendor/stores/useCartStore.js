@@ -28,6 +28,66 @@ const useCartStore = create((set) => ({
       lowOrderFees: cart.lowOrderFees
     }),
 
+  // Apply a full cart from a mutation response without discarding local
+  // optimistic changes for items whose own requests are still queued.
+  mergeCartFromServer: (cart, pendingItemIds = []) =>
+    set((state) => {
+      const pending = new Set(pendingItemIds)
+      if (!pending.size) {
+        return {
+          cartId: cart.cartId,
+          cartRevision: cart.cartRevision || 1,
+          items: cart.foods || [],
+          grandTotal: cart.grandTotal,
+          maxOrderAmount: cart.maxOrderAmount,
+          minOrderAmount: cart.minOrderAmount,
+          isBelowMinimumOrder: cart.isBelowMinimumOrder,
+          lowOrderFees: cart.lowOrderFees
+        }
+      }
+
+      const keyOf = (foodId, variation) => `${foodId}_${variation?.variationId || variation?._id}`
+      const localByKey = new Map()
+      state.items.forEach((food) => (food?.variations || []).forEach((variation) => localByKey.set(keyOf(food.foodId, variation), { food, variation })))
+
+      const serverKeys = new Set()
+      const items = (cart.foods || [])
+        .map((food) => {
+          const variations = (food.variations || [])
+            .map((variation) => {
+              const key = keyOf(food.foodId, variation)
+              serverKeys.add(key)
+              if (!pending.has(key)) return variation
+              const local = localByKey.get(key)
+              // Pending local delete: keep it removed.
+              if (!local) return null
+              return { ...variation, quantity: local.variation.quantity }
+            })
+            .filter(Boolean)
+          return variations.length ? { ...food, variations } : null
+        })
+        .filter(Boolean)
+
+      // Pending optimistic adds the server has not seen yet.
+      localByKey.forEach(({ food, variation }, key) => {
+        if (!pending.has(key) || serverKeys.has(key)) return
+        const existing = items.find((item) => item.foodId === food.foodId)
+        if (existing) existing.variations = [...existing.variations, variation]
+        else items.push({ ...food, variations: [variation] })
+      })
+
+      return {
+        cartId: cart.cartId,
+        cartRevision: cart.cartRevision || 1,
+        items,
+        grandTotal: cart.grandTotal,
+        maxOrderAmount: cart.maxOrderAmount,
+        minOrderAmount: cart.minOrderAmount,
+        isBelowMinimumOrder: cart.isBelowMinimumOrder,
+        lowOrderFees: cart.lowOrderFees
+      }
+    }),
+
   // Update a single food item after API response
   updateCartItem: (updatedItem) =>
     set((state) => ({
@@ -54,6 +114,7 @@ const useCartStore = create((set) => ({
       const optimisticVariation = {
         _id: variationId,
         variationId,
+        isOptimistic: true,
         variationTitle,
         addons,
         quantity,
@@ -116,11 +177,12 @@ const useCartStore = create((set) => ({
   updateCartItemQuantity: ({ _id, foodId, variationId, quantity, foodTotal, itemTotal, grandTotal, isBelowMinimumOrder }) => {
     set((state) => {
       // 1️⃣ Create new items array
+      const matches = (v) => v?._id === _id || (variationId && v?.variationId === variationId)
       const newItems = state.items
         .map((item) => {
-          if (item.variations[0]._id !== _id) return item
+          if ((foodId && item.foodId !== foodId) || !item.variations?.some(matches)) return item
 
-          const updatedVariations = item.variations.map((v) => (v._id === _id ? { ...v, quantity, itemTotal } : v)).filter((v) => v.quantity > 0)
+          const updatedVariations = item.variations.map((v) => (matches(v) ? { ...v, quantity, itemTotal } : v)).filter((v) => v.quantity > 0)
 
           // Remove food if no variations left
           if (updatedVariations.length === 0) return null

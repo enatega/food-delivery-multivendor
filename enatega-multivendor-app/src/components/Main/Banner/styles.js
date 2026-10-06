@@ -1,11 +1,12 @@
 import { scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
+import { discoverySpacing } from '../../../ui/designSystem/tokens'
 
 const styles = (props = null) =>
   StyleSheet.create({
     wrapper: {
-      paddingTop: scale(30),
-      marginBottom: scale(16)
+      paddingTop: discoverySpacing.bannerTop,
+      marginBottom: discoverySpacing.bannerBottom
     },
     banner: {
       flex: 1,

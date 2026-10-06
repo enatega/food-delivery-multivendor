@@ -15,6 +15,7 @@ import CustomApartmentIcon from '../../../assets/SVG/imageComponents/CustomApart
 import CustomOtherIcon from '../../../assets/SVG/imageComponents/CustomOtherIcon'
 import { LocationContext } from '../../../context/Location'
 import { selectAddress } from '../../../apollo/mutations'
+import { SINGLE_VENDOR_DISCOVERY_VARIABLES } from '../../utils/prewarmSingleVendor'
 
 const SELECT_ADDRESS = gql`
   ${selectAddress}
@@ -30,7 +31,7 @@ const useHome = () => {
   const client = useApolloClient()
 
   const discoveryQuery = useQuery(GET_SINGLE_VENDOR_DISCOVERY, {
-    variables: { previewLimit: 10, dealLimit: 5 },
+    variables: SINGLE_VENDOR_DISCOVERY_VARIABLES,
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true
@@ -64,6 +65,17 @@ const useHome = () => {
     useLegacyQueries ? bannersQuery.refetch() : discoveryQuery.refetch(),
   [bannersQuery.refetch, discoveryQuery.refetch, useLegacyQueries])
 
+  // Stable references keep Home's memoized list header from rebuilding on
+  // every render.
+  const bannersData = useMemo(
+    () => ({ banners: discovery?.banners || bannersQuery.data?.singleVendorBanners || [] }),
+    [discovery?.banners, bannersQuery.data?.singleVendorBanners]
+  )
+  const categoriesData = useMemo(
+    () => discovery ? { getRestaurantCategoriesSingleVendor: discovery.categories } : categoriesQuery.data,
+    [discovery, categoriesQuery.data]
+  )
+
   const [mutate] = useMutation(SELECT_ADDRESS, {
     onError
   })
@@ -93,7 +105,6 @@ const useHome = () => {
   }
 
   const onOpen = useCallback(() => {
-    console.log('open')
     if (modalRef.current) {
       modalRef.current.open()
     }
@@ -101,13 +112,11 @@ const useHome = () => {
 
   return {
     loading: useLegacyQueries ? categoriesQuery.loading : discoveryQuery.loading,
-    data: discovery
-      ? { getRestaurantCategoriesSingleVendor: discovery.categories }
-      : categoriesQuery.data,
+    data: categoriesData,
     error: useLegacyQueries ? categoriesQuery.error : undefined,
     refetch,
     bannersLoading: useLegacyQueries ? bannersQuery.loading : discoveryQuery.loading,
-    bannersData: { banners: discovery?.banners || bannersQuery.data?.singleVendorBanners || [] },
+    bannersData,
     bannersError: useLegacyQueries ? bannersQuery.error : undefined,
     refetchBanners,
     dealsData: discovery?.deals,

@@ -14,10 +14,16 @@ const TopBrandsLoadingUI = () => {
         <SkeletonBlock width={scale(58)} height={scale(18)} borderRadius={scale(7)} />
       </View>
       <View style={styles(tokens).brandRowSkeleton}>
-        {[0, 1, 2, 3].map((item) => (
-          <View key={item} style={styles(tokens).brandItemSkeleton}>
-            <SkeletonBlock width={scale(82)} height={scale(82)} borderRadius={scale(12)} />
-            <SkeletonBlock width={scale(66)} height={scale(12)} borderRadius={scale(6)} />
+        {[0, 1, 2].map((item) => (
+          <View key={item} style={[styles(tokens).brandItemSkeleton, { borderRadius: tokens.radii.lg, borderColor: tokens.colors.borderSubtle }]}>
+            <SkeletonBlock width='100%' height={scale(86)} borderRadius={0} />
+            <View style={[styles(tokens).brandLogoSkeleton, { backgroundColor: tokens.colors.canvas }]}>
+              <SkeletonBlock width={scale(50)} height={scale(50)} borderRadius={scale(25)} />
+            </View>
+            <View style={styles(tokens).brandTextSkeleton}>
+              <SkeletonBlock width='78%' height={scale(13)} borderRadius={scale(6)} />
+              <SkeletonBlock width='52%' height={scale(11)} borderRadius={scale(6)} />
+            </View>
           </View>
         ))}
       </View>

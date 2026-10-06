@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native'
 import { scale } from '../../../utils/scaling'
 import { alignment } from '../../../utils/alignment'
+import { discoverySpacing } from '../../../ui/designSystem/tokens'
+import { SCHEDULE_PILL_INSET, SCHEDULE_PILL_RESERVED } from '../../components/RestaurantScheduleTime/RestaurantScheduleTime'
 
 const styles = (currentTheme) =>
   StyleSheet.create({
@@ -9,7 +11,7 @@ const styles = (currentTheme) =>
       backgroundColor: currentTheme?.themeBackground || '#F5F5F5'
     },
     listHeader: {
-      paddingTop: scale(30)
+      paddingTop: discoverySpacing.bannerTop
     },
     androidHeader: {
       position: 'relative',
@@ -22,15 +24,15 @@ const styles = (currentTheme) =>
     },
     androidAddress: {
       height: '100%',
-      paddingRight: scale(116),
+      paddingRight: SCHEDULE_PILL_RESERVED,
       justifyContent: 'center'
     },
     androidScheduleOverlay: {
       position: 'absolute',
-      right: 0,
-      bottom: -scale(13),
-      zIndex: 30,
-      elevation: 30
+      top: 0,
+      bottom: 0,
+      right: SCHEDULE_PILL_INSET,
+      justifyContent: 'center'
     },
     image: {
       width: '100%',

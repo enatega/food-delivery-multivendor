@@ -12,7 +12,7 @@ const styles = (props = null) =>
       flex: 1
     },
     contentContainer: {
-      paddingBottom: scale(220)
+      paddingBottom: scale(160)
     },
     orderIdRow: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -33,9 +33,9 @@ const styles = (props = null) =>
       left: 0,
       right: 0,
       backgroundColor: props !== null ? props.themeBackground : '#fff',
-      paddingTop: scale(10),
+      paddingTop: scale(8),
       paddingHorizontal: scale(16),
-      paddingBottom: scale(30),
+      paddingBottom: scale(14),
       borderTopWidth: StyleSheet.hairlineWidth,
       borderTopColor: props !== null ? props.colorBorder : '#E5E7EB',
       shadowColor: '#000',

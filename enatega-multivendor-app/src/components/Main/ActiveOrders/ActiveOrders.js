@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { Feather, Ionicons } from '@expo/vector-icons'
+import { LinearGradient } from 'expo-linear-gradient'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 
 import ConfigurationContext from '../../../context/Configuration'
@@ -10,17 +11,28 @@ import useMultivendorTheme from '../../../ui/designSystem/useMultivendorTheme'
 import { calulateRemainingTime } from '../../../utils/customFunctions'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../Text/TextDefault/TextDefault'
-import { checkStatus } from './ProgressBar'
+import { LiveDot } from '../../../singlevendor/screens/Checkout/HomeCart'
 import styles from './styles'
 
 const ACTIVE_STATUSES = ['PENDING', 'ACCEPTED', 'ASSIGNED', 'PICKED']
-const PROGRESS_BY_STATUS = {
-  PENDING: 1,
-  ACCEPTED: 2,
-  ASSIGNED: 3,
-  PICKED: 4
+const DELIVERY_PROGRESS = { PENDING: 1, ACCEPTED: 2, ASSIGNED: 3, PICKED: 4 }
+const PICKUP_PROGRESS = { PENDING: 1, ACCEPTED: 2, ASSIGNED: 2, PICKED: 2 }
+const DELIVERY_SEGMENTS = 6
+const PICKUP_SEGMENTS = 2
+
+const getTitle = (status, isPickup) => {
+  if (status === 'PICKED') return isPickup ? 'Your order is ready for collection' : 'Your order is on the way'
+  if (status === 'ASSIGNED' && !isPickup) return 'Rider assigned to your order'
+  if (status === 'ACCEPTED') return isPickup ? 'Your order is being prepared for collection' : 'Your order is being prepared'
+  return 'Order placed'
 }
-const TIMELINE_SEGMENTS = 6
+
+const getIcon = (status, isPickup) => {
+  if (status === 'PICKED') return isPickup ? 'bag-check-outline' : 'bicycle'
+  if (status === 'ASSIGNED' && !isPickup) return 'person-outline'
+  if (status === 'ACCEPTED') return 'restaurant-outline'
+  return 'receipt-outline'
+}
 
 const getItemCount = (items = []) =>
   items.reduce((total, item) => total + (item?.quantity || 0), 0)
@@ -32,13 +44,17 @@ const getRemainingTime = (order, currentTime) => {
   return Math.max(0, Math.ceil((targetDate.getTime() - currentTime.getTime()) / 60000))
 }
 
+// Mirrors the single-vendor Home "live activity" card (HomeCart) in a tighter
+// footprint, fed by the multivendor orders context.
 const ActiveOrders = ({ onActiveOrdersChange }) => {
   const { t, i18n } = useTranslation()
   const { loadingOrders, orders = [] } = useContext(OrdersContext)
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
+  const isFocused = useIsFocused()
   const { tokens } = useMultivendorTheme()
-  const themedStyles = styles({ ...tokens, isRTL: i18n.dir() === 'rtl' })
+  const isRTL = i18n.dir() === 'rtl'
+  const themedStyles = useMemo(() => styles({ ...tokens, isRTL }), [tokens, isRTL])
   const [currentTime, setCurrentTime] = useState(new Date())
 
   const activeOrders = useMemo(
@@ -62,13 +78,23 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   if (loadingOrders || !activeOrders.length) return null
 
   const order = activeOrders[0]
+  const status = order?.orderStatus
+  const isPickup = !!order?.isPickedUp
+  const segments = isPickup ? PICKUP_SEGMENTS : DELIVERY_SEGMENTS
+  const progressCount = (isPickup ? PICKUP_PROGRESS : DELIVERY_PROGRESS)[status] ?? 1
   const remainingTime = getRemainingTime(order, currentTime)
-  const progressCount = PROGRESS_BY_STATUS[order?.orderStatus] ?? 1
-  const orderNumber = order?.orderId || order?.id || order?._id?.slice(-6) || '--'
-  const restaurantName = order?.restaurant?.name || t('Restaurant')
-  const address = order?.deliveryAddress?.deliveryAddress || order?.restaurant?.address
+  const showEta = remainingTime > 0
+  const title = getTitle(status, isPickup)
+  const subtitle = showEta
+    ? t(isPickup ? 'Ready for collection in' : 'Estimated arrival in')
+    : order?.restaurant?.name || t('Tracking your order')
+  const orderNumber = order?.orderId || order?._id?.slice(-6)
+  const address = isPickup
+    ? order?.restaurant?.address
+    : order?.deliveryAddress?.deliveryAddress || order?.restaurant?.address
   const itemCount = getItemCount(order?.items)
-  const statusText = t(checkStatus(order?.orderStatus).statusText)
+  const extraOrders = activeOrders.length - 1
+  const { colors } = tokens
 
   const openOrder = () => {
     navigation.navigate('OrderDetail', {
@@ -79,85 +105,91 @@ const ActiveOrders = ({ onActiveOrdersChange }) => {
   }
 
   return (
-    <View style={themedStyles.card}>
-      <TouchableOpacity
-        activeOpacity={0.86}
-        accessibilityRole='button'
-        accessibilityLabel={`${statusText}. ${t('orderTracking')}`}
-        onPress={openOrder}
-      >
-        <View style={themedStyles.headerRow}>
-          <View style={themedStyles.titleWrap}>
-            <TextDefault bolder numberOfLines={2} style={themedStyles.title}>
-              {statusText}
-            </TextDefault>
-            <TextDefault numberOfLines={1} style={themedStyles.subtitle}>
-              {remainingTime > 0
-                ? `${remainingTime}-${remainingTime + 5} ${t('mins')}`
-                : t('orderTracking')}
-            </TextDefault>
-          </View>
+    <Pressable
+      accessibilityRole='button'
+      accessibilityLabel={`${t(title)}. ${subtitle}${showEta ? ` ${remainingTime} ${t('min')}` : ''}`}
+      onPress={openOrder}
+      style={({ pressed }) => [themedStyles.card, pressed && themedStyles.cardPressed]}
+    >
+      <LinearGradient
+        pointerEvents='none'
+        colors={[colors.accentSubtle, colors.surface]}
+        locations={[0, 0.62]}
+        style={StyleSheet.absoluteFill}
+      />
 
-          <View style={themedStyles.statusIcon}>
-            <MaterialIcons name='delivery-dining' size={scale(22)} color={tokens.colors.accent} />
-          </View>
-        </View>
-
-        <View style={themedStyles.progressRow}>
-          {Array.from({ length: TIMELINE_SEGMENTS }).map((_, index) => (
-            <View
-              key={`active-order-progress-${index}`}
-              style={[
-                themedStyles.progressSegment,
-                index !== TIMELINE_SEGMENTS - 1 && themedStyles.progressSpacing,
-                index < progressCount && themedStyles.progressActive
-              ]}
-            />
-          ))}
-        </View>
-      </TouchableOpacity>
-
-      <ScrollView
-        style={themedStyles.metaScroller}
-        horizontal
-        nestedScrollEnabled
-        directionalLockEnabled
-        keyboardShouldPersistTaps='handled'
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={themedStyles.metaRow}
-      >
-        <View style={[themedStyles.metaPill, themedStyles.metaSpacing]}>
-          <MaterialIcons name='tag' size={scale(17)} color={tokens.colors.textPrimary} />
-          <TextDefault numberOfLines={1} style={themedStyles.metaText}>#{orderNumber}</TextDefault>
-        </View>
-        <View style={[themedStyles.metaPill, themedStyles.metaSpacing]}>
-          <MaterialIcons name='restaurant' size={scale(17)} color={tokens.colors.textPrimary} />
-          <TextDefault numberOfLines={1} style={themedStyles.metaText}>{restaurantName}</TextDefault>
-        </View>
-        <View style={themedStyles.metaPill}>
-          <MaterialIcons name='shopping-bag' size={scale(17)} color={tokens.colors.textPrimary} />
-          <TextDefault numberOfLines={1} style={themedStyles.metaText}>
-            {itemCount} {itemCount === 1 ? 'item' : 'items'}
+      <View style={themedStyles.topRow}>
+        <View style={themedStyles.statusChip}>
+          <LiveDot color={colors.accent} animate={isFocused} />
+          <TextDefault bold style={themedStyles.statusChipText} numberOfLines={1}>
+            {t('Live', { defaultValue: 'Live' })}
           </TextDefault>
         </View>
-      </ScrollView>
+        {!!orderNumber && (
+          <TextDefault style={themedStyles.orderNumber} numberOfLines={1}>
+            #{orderNumber}{extraOrders > 0 ? `  ·  +${extraOrders}` : ''}
+          </TextDefault>
+        )}
+      </View>
 
-      {!!address && (
-        <TouchableOpacity
-          activeOpacity={0.72}
-          accessibilityRole='button'
-          accessibilityLabel={address}
-          onPress={openOrder}
-          style={themedStyles.addressRow}
-        >
-          <MaterialIcons name='location-on' size={scale(17)} color={tokens.colors.textMuted} />
-          <TextDefault numberOfLines={2} style={themedStyles.addressText}>{address}</TextDefault>
-          {activeOrders.length > 1 && (
-            <TextDefault style={themedStyles.moreText}>+{activeOrders.length - 1}</TextDefault>
-          )}
-        </TouchableOpacity>
-      )}
-    </View>
+      <View style={themedStyles.mainRow}>
+        <View style={themedStyles.iconTile}>
+          <Ionicons name={getIcon(status, isPickup)} size={scale(19)} color={colors.accentForeground} />
+        </View>
+
+        <View style={themedStyles.titleWrap}>
+          <TextDefault bold style={themedStyles.title} numberOfLines={2}>
+            {t(title)}
+          </TextDefault>
+          <TextDefault style={themedStyles.subtitle} numberOfLines={1}>
+            {subtitle}
+          </TextDefault>
+        </View>
+
+        {showEta
+          ? (
+            <View style={themedStyles.etaBlock}>
+              <TextDefault bold style={themedStyles.etaValue}>{remainingTime}</TextDefault>
+              <TextDefault style={themedStyles.etaUnit}>{t('min', { defaultValue: 'min' })}</TextDefault>
+            </View>
+            )
+          : (
+            <View style={themedStyles.chevron}>
+              <Feather name={isRTL ? 'chevron-left' : 'chevron-right'} size={scale(16)} color={colors.textPrimary} />
+            </View>
+            )}
+      </View>
+
+      <View style={themedStyles.progressRow}>
+        {Array.from({ length: segments }).map((_, index) => (
+          <View
+            key={index}
+            style={[themedStyles.progressSegment, index < progressCount && themedStyles.progressActive]}
+          />
+        ))}
+      </View>
+
+      <View style={themedStyles.footer}>
+        <View style={themedStyles.addressWrap}>
+          <Ionicons
+            name={isPickup ? 'storefront-outline' : 'location-outline'}
+            size={scale(13)}
+            color={colors.textMuted}
+          />
+          <TextDefault numberOfLines={1} style={themedStyles.addressText}>
+            {address || t('Tracking your order')}
+          </TextDefault>
+        </View>
+        {itemCount > 0 && (
+          <View style={themedStyles.itemsPill}>
+            <Feather name='shopping-bag' size={scale(10)} color={colors.textPrimary} />
+            <TextDefault bold style={themedStyles.itemsText}>
+              {itemCount} {itemCount === 1 ? t('item', { defaultValue: 'item' }) : t('items', { defaultValue: 'items' })}
+            </TextDefault>
+          </View>
+        )}
+      </View>
+    </Pressable>
   )
 }
 

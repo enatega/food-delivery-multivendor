@@ -1,14 +1,13 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { View, TouchableOpacity, StyleSheet, TextInput, ActivityIndicator, Alert } from 'react-native'
 import { Modalize } from 'react-native-modalize'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
-import ThemeContext from '../../../ui/ThemeContext/ThemeContext'
-import { theme } from '../../../utils/themeColors'
 import { scale } from '../../../utils/scaling'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { useMutation } from '@apollo/client'
 import { COUPON } from '../../apollo/mutations'
+import useCheckoutPalette from './useCheckoutPalette'
 
 const VoucherBottomSheet = React.forwardRef(({ onApplyVoucher }, ref) => {
   const [applyCoupon, { loading: applyingCoupon }] = useMutation(COUPON, {
@@ -29,14 +28,13 @@ const VoucherBottomSheet = React.forwardRef(({ onApplyVoucher }, ref) => {
     }
   })
 
-  const { t, i18n } = useTranslation()
-  const themeContext = useContext(ThemeContext)
-  const currentTheme = {
-    isRTL: i18n.dir() === 'rtl',
-    ...theme[themeContext.ThemeValue]
-  }
+  const { t } = useTranslation()
+  const { palette, isRTL } = useCheckoutPalette()
+  const s = styles(palette)
 
   const [voucherCode, setVoucherCode] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
+  const hasCode = !!voucherCode.trim()
 
   const handleApply = () => {
     if (voucherCode.trim()) {
@@ -52,31 +50,53 @@ const VoucherBottomSheet = React.forwardRef(({ onApplyVoucher }, ref) => {
   }
 
   return (
-    <Modalize ref={ref} adjustToContentHeight handlePosition='inside' modalStyle={styles(currentTheme).modalStyle} handleStyle={styles(currentTheme).handleStyle} keyboardAvoidingOffset={100}>
-      <View style={styles(currentTheme).container}>
+    <Modalize ref={ref} adjustToContentHeight handlePosition='inside' modalStyle={s.modalStyle} handleStyle={s.handleStyle} overlayStyle={s.overlay} keyboardAvoidingOffset={100}>
+      <View style={s.container}>
         {/* Header */}
-        <View style={styles().header}>
-          <TextDefault textColor={currentTheme.fontMainColor} bolder H3>
+        <View style={s.header}>
+          <View style={s.headerIcon}>
+            <MaterialCommunityIcons name='ticket-percent-outline' size={22} color={palette.brandText} />
+          </View>
+          <TextDefault textColor={palette.textPrimary} bolder H4 isRTL style={s.headerTitle} numberOfLines={1}>
             {t('enterVoucher')}
           </TextDefault>
-          <TouchableOpacity onPress={handleClose} style={styles(currentTheme).closeButton} activeOpacity={0.7}>
-            <AntDesign name='close' size={18} color={currentTheme.fontMainColor} />
+          <TouchableOpacity onPress={handleClose} style={s.closeButton} activeOpacity={0.7} hitSlop={8} accessibilityRole='button' accessibilityLabel={t('Close') || 'Close'}>
+            <AntDesign name='close' size={16} color={palette.textPrimary} />
           </TouchableOpacity>
         </View>
 
         {/* Input Field */}
-        <View style={styles(currentTheme).inputContainer}>
-          <TextInput style={styles(currentTheme).input} placeholder={t('voucherCode')} placeholderTextColor={currentTheme.fontSecondColor} value={voucherCode} onChangeText={setVoucherCode} autoCorrect={false} />
+        <View style={[s.inputContainer, isFocused && s.inputContainerFocused]}>
+          <MaterialCommunityIcons name='tag-outline' size={18} color={isFocused ? palette.brandText : palette.textMuted} />
+          <TextInput
+            style={[s.input, isRTL && s.inputRTL]}
+            placeholder={t('voucherCode')}
+            placeholderTextColor={palette.textMuted}
+            selectionColor={palette.brand}
+            value={voucherCode}
+            onChangeText={setVoucherCode}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onSubmitEditing={handleApply}
+            returnKeyType='done'
+            autoCapitalize='none'
+            autoCorrect={false}
+          />
+          {voucherCode.length > 0 && (
+            <TouchableOpacity onPress={() => setVoucherCode('')} hitSlop={8} activeOpacity={0.7} style={s.clearButton}>
+              <AntDesign name='close' size={11} color={palette.textSecondary} />
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Apply Button */}
-        <TouchableOpacity style={[styles(currentTheme).applyButton, !voucherCode.trim() && styles(currentTheme).applyButtonDisabled]} onPress={handleApply} disabled={!voucherCode.trim()} activeOpacity={0.7}>
+        <TouchableOpacity style={[s.applyButton, !hasCode && s.applyButtonDisabled]} onPress={handleApply} disabled={!hasCode} activeOpacity={0.8}>
           {applyingCoupon
             ? (
-            <ActivityIndicator size='small' color={currentTheme.singleVendorOnBrand} />
+            <ActivityIndicator size='small' color={palette.onBrand} />
               )
             : (
-            <TextDefault textColor={voucherCode.trim() ? currentTheme.singleVendorOnBrand : currentTheme.singleVendorDisabledForeground} bolder H5>
+            <TextDefault textColor={hasCode ? palette.onBrand : palette.disabledText} bolder H5>
               {t('apply')}
             </TextDefault>
               )}
@@ -88,63 +108,98 @@ const VoucherBottomSheet = React.forwardRef(({ onApplyVoucher }, ref) => {
 
 VoucherBottomSheet.displayName = 'VoucherBottomSheet'
 
-const styles = (props = null) =>
+const styles = (palette) =>
   StyleSheet.create({
     modalStyle: {
-      backgroundColor: props !== null ? props.singleVendorSurface : '#fff',
-      borderTopLeftRadius: scale(20),
-      borderTopRightRadius: scale(20)
+      backgroundColor: palette.surface,
+      borderTopLeftRadius: scale(24),
+      borderTopRightRadius: scale(24)
+    },
+    overlay: {
+      backgroundColor: palette.overlay
     },
     handleStyle: {
-      backgroundColor: props !== null ? props.fontSecondColor : '#D1D5DB',
-      width: scale(60),
-      height: scale(5)
+      backgroundColor: palette.borderStrong,
+      width: scale(40),
+      height: scale(4)
     },
     container: {
-      paddingHorizontal: scale(20),
-      paddingTop: scale(40),
-      paddingBottom: scale(40)
+      paddingHorizontal: scale(16),
+      paddingTop: scale(26),
+      paddingBottom: scale(28)
     },
     header: {
       flexDirection: 'row',
-      justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: scale(24),
-      position: 'relative'
+      marginBottom: scale(16)
+    },
+    headerIcon: {
+      width: scale(40),
+      height: scale(40),
+      borderRadius: scale(12),
+      backgroundColor: palette.brandSubtle,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: scale(12)
+    },
+    headerTitle: {
+      flex: 1
     },
     closeButton: {
-      position: 'absolute',
-      right: 0,
-      width: scale(30),
-      height: scale(30),
-      borderRadius: scale(20),
-      backgroundColor: props !== null ? props.singleVendorDisabledBackground : '#F3F4F6',
+      width: scale(32),
+      height: scale(32),
+      borderRadius: scale(16),
+      backgroundColor: palette.surfaceMuted,
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      marginLeft: scale(8)
     },
     inputContainer: {
-      marginBottom: scale(20)
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: scale(52),
+      paddingHorizontal: scale(14),
+      marginBottom: scale(12),
+      borderRadius: scale(14),
+      borderWidth: 1.5,
+      borderColor: palette.border,
+      backgroundColor: palette.surfaceMuted
+    },
+    inputContainerFocused: {
+      borderColor: palette.brandBorder,
+      backgroundColor: palette.surface
     },
     input: {
-      height: scale(40),
-      borderRadius: scale(8),
-      borderWidth: 1,
-      borderColor: props !== null ? props.singleVendorBorder : '#E5E7EB',
-      backgroundColor: props !== null ? props.singleVendorSurface : '#F9FAFB',
-      paddingHorizontal: scale(16),
-      fontSize: scale(16),
-      color: props !== null ? props.fontMainColor : '#000',
-      fontFamily: 'Poppins-Regular'
+      flex: 1,
+      height: '100%',
+      marginLeft: scale(10),
+      paddingVertical: 0,
+      fontSize: scale(15),
+      letterSpacing: 0.8,
+      color: palette.textPrimary,
+      fontWeight: '600'
+    },
+    inputRTL: {
+      textAlign: 'right'
+    },
+    clearButton: {
+      width: scale(20),
+      height: scale(20),
+      borderRadius: scale(10),
+      backgroundColor: palette.borderStrong,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: scale(8)
     },
     applyButton: {
-      height: scale(40),
-      borderRadius: scale(8),
-      backgroundColor: props !== null ? props.singleVendorBrand : '#90E36D',
+      height: scale(50),
+      borderRadius: scale(14),
+      backgroundColor: palette.brand,
       alignItems: 'center',
       justifyContent: 'center'
     },
     applyButtonDisabled: {
-      backgroundColor: props !== null ? props.singleVendorDisabledBackground : '#E5E7EB'
+      backgroundColor: palette.disabledBackground
     }
   })
 

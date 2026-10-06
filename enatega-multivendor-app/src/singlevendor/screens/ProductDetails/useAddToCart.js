@@ -17,11 +17,13 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   const { isLoggedIn } = useContext(UserContext)
-  const { setCartFromServer, items, addOptimisticCartItem, restoreItems } = useCartStore()
+  // Select only actions so cards don't re-render on every cart change.
+  const mergeCartFromServer = useCartStore((state) => state.mergeCartFromServer)
+  const addOptimisticCartItem = useCartStore((state) => state.addOptimisticCartItem)
+  const restoreItems = useCartStore((state) => state.restoreItems)
   const navigation = useNavigation()
   const { updateUserCartCount } = useUpdateUserCartCount()
 
-  const loadingItemIds = useCartQueueStore((state) => state.loadingItemIds)
   const { enqueueTask } = useCartQueue()
 
   const onCartUpdateSuccessRef = useRef(onCartUpdateSuccess)
@@ -41,7 +43,14 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
         return
       }
 
-      setCartFromServer({
+      // Requests still queued behind this one hold newer local quantities; keep them.
+      const pendingItemIds = useCartQueueStore
+        .getState()
+        .queue.slice(1)
+        .map((task) => task?.__itemId)
+        .filter(Boolean)
+
+      mergeCartFromServer({
         cartId: response.cartId,
         cartRevision: response.cartRevision,
         foods: response.foods,
@@ -50,7 +59,7 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
         minOrderAmount: response.minOrderAmount,
         isBelowMinimumOrder: response.isBelowMinimumOrder,
         lowOrderFees: response.lowOrderFees
-      })
+      }, pendingItemIds)
 
       optimisticSnapshotsRef.current.clear()
 
@@ -67,9 +76,10 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
   const addItemToCart = (foodId, categoryId, variationId, addons, count, orderItems, specialInstructions = '', productInfo = null) => {
     if (!isLoggedIn) {
       navigation.navigate('CreateAccount')
-      return
+      return false
     }
 
+    const items = useCartStore.getState().items
     const existingItem = items?.find((item) => item?.foodId === foodId && Array.isArray(item?.variations) && item.variations.some((v) => v?.variationId === variationId || v?._id === variationId))
 
     if (existingItem) {
@@ -167,7 +177,7 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
   //   }
   // }
 
-  return { currentTheme, t, loadingItemIds, addItemToCart, updateUserCartLoading }
+  return { currentTheme, t, addItemToCart, updateUserCartLoading }
 }
 
 export default useAddToCart

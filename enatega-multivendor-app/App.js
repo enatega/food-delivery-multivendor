@@ -6,7 +6,7 @@ import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, Alert, AppState, BackHandler, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import { ActivityIndicator, Alert, AppState, BackHandler, InteractionManager, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
 import * as NavigationBar from 'expo-navigation-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import FlashMessage from 'react-native-flash-message'
@@ -50,12 +50,14 @@ import {
 } from './src/mode/AppModeContext'
 import { APP_MODES } from './src/mode/constants'
 import SingleVendorAppContainer from './src/singlevendor/routes/SingleVendorAppContainer'
+import { prewarmSingleVendor } from './src/singlevendor/utils/prewarmSingleVendor'
 import ModeNotificationRegistration from './src/mode/ModeNotificationRegistration'
 import {
   inferNotificationMode,
   savePendingOrderNavigation
 } from './src/mode/orderOrigin'
 import { getGoogleAuthConfigurationErrors } from './src/utils/googleAuthConfig'
+const { getEnvironmentConfig } = require('./environment.config')
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -80,7 +82,7 @@ function ModeAwareApp() {
   const [isUpdating, setIsUpdating] = useState(false)
   const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false)
   const [clarityInitialized, setClarityInitialized] = useState(false)
-  const { mode, isModeReady, switchMode } = useAppMode()
+  const { mode, isModeReady, switchMode, singleVendorAvailable, isModeToggleEnabled } = useAppMode()
   const {
     CLARITY_ENABLED,
     GRAPHQL_URL,
@@ -101,25 +103,48 @@ function ModeAwareApp() {
       console.warn('[GoogleAuth] Invalid or missing client ID fields:', invalidFields.join(', '))
     }
   }, [EXPO_CLIENT_ID, ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE])
-  const client = useMemo(() => {
-    const clientKey = `${mode}:${GRAPHQL_URL}:${WS_GRAPHQL_URL}:${PUBLIC_ACCESS_REQUIRED}`
+  const getClientForMode = useCallback((clientMode, config) => {
+    const clientKey = `${clientMode}:${config.GRAPHQL_URL}:${config.WS_GRAPHQL_URL}:${config.PUBLIC_ACCESS_REQUIRED}`
     const cachedClient = clientsRef.current.get(clientKey)
     if (cachedClient) return cachedClient
 
     const nextClient = setupApolloClient({
-      GRAPHQL_URL,
-      WS_GRAPHQL_URL,
-      mode,
-      publicAccessRequired: PUBLIC_ACCESS_REQUIRED
+      GRAPHQL_URL: config.GRAPHQL_URL,
+      WS_GRAPHQL_URL: config.WS_GRAPHQL_URL,
+      mode: clientMode,
+      publicAccessRequired: config.PUBLIC_ACCESS_REQUIRED
     })
     clientsRef.current.set(clientKey, nextClient)
     return nextClient
-  }, [
-    GRAPHQL_URL,
-    mode,
-    PUBLIC_ACCESS_REQUIRED,
-    WS_GRAPHQL_URL
-  ])
+  }, [])
+
+  const client = useMemo(
+    () => getClientForMode(mode, { GRAPHQL_URL, WS_GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED }),
+    [getClientForMode, GRAPHQL_URL, mode, PUBLIC_ACCESS_REQUIRED, WS_GRAPHQL_URL]
+  )
+
+  // While in multi-vendor, quietly warm the single-vendor client (public token +
+  // Home data) after startup work settles, so the first switch renders from cache.
+  // The client is kept in clientsRef and reused when the mode actually switches.
+  useEffect(() => {
+    if (!appIsReady || mode !== APP_MODES.MULTI || !singleVendorAvailable || !isModeToggleEnabled) return undefined
+
+    let cancelled = false
+    let timer
+    const interaction = InteractionManager.runAfterInteractions(() => {
+      timer = setTimeout(() => {
+        if (cancelled) return
+        const singleConfig = getEnvironmentConfig(Updates.channel, APP_MODES.SINGLE)
+        prewarmSingleVendor(getClientForMode(APP_MODES.SINGLE, singleConfig))
+      }, 2000)
+    })
+
+    return () => {
+      cancelled = true
+      interaction.cancel()
+      if (timer) clearTimeout(timer)
+    }
+  }, [appIsReady, getClientForMode, isModeToggleEnabled, mode, singleVendorAvailable])
 
   useEffect(() => () => {
     clientsRef.current.forEach(cachedClient => cachedClient.dispose?.())
@@ -150,7 +175,7 @@ function ModeAwareApp() {
 
     return () => {
       subscription.remove()
-      stopPublicAccessTokenRefresh()
+      stopPublicAccessTokenRefresh(GRAPHQL_URL)
     }
   }, [GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED])
 

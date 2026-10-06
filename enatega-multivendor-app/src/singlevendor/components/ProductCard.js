@@ -1,5 +1,5 @@
 import { View, Text, ImageBackground, StyleSheet, Pressable } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { theme } from '../../utils/themeColors'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { useTranslation } from 'react-i18next'
@@ -9,12 +9,30 @@ import { getDealLabel, getDealPricing } from '../utils/helper'
 import CartQuantityController from './Cart/CartQuantityController'
 import { normalizeSingleVendorMediaUrl } from '../../utils/mediaUrl'
 import { getFirstAvailableVariation, isProductOutOfStock } from '../utils/stock'
+import { useApolloClient } from '@apollo/client'
+import { rememberCategoryProduct, setProductPreview } from '../utils/productPreviewCache'
+import { GET_FOOD_DETAILS, GET_SIMILAR_FOODS } from '../apollo/queries'
 
 const ProductCard = ({ product, onCardPress, containerStyles, layout = 'horizontal' }) => {
   const { i18n, t } = useTranslation()
   const themeContext = useContext(ThemeContext)
-  const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
+  const isRTL = i18n.dir() === 'rtl'
+  const currentTheme = useMemo(() => ({ isRTL, ...theme[themeContext.ThemeValue] }), [isRTL, themeContext.ThemeValue])
+  const s = useMemo(() => styles(currentTheme), [currentTheme])
   const configuration = useContext(ConfigurationContext)
+  const client = useApolloClient()
+
+  rememberCategoryProduct(product)
+
+  // Start the details and similar-products requests before the screen transition,
+  // with the same variables ProductDetails uses so Apollo dedupes and reuses them.
+  const prefetchDetails = () => {
+    const foodId = product?.id
+    if (!foodId) return
+    const ignore = () => {}
+    client.query({ query: GET_FOOD_DETAILS, variables: product?.categoryId ? { foodId, categoryId: product.categoryId } : { foodId }, fetchPolicy: 'network-only' }).catch(ignore)
+    client.query({ query: GET_SIMILAR_FOODS, variables: { foodId, skip: 0, limit: 10 }, fetchPolicy: 'network-only' }).catch(ignore)
+  }
 
   const isGrid = layout === 'grid'
   const variation = getFirstAvailableVariation(product?.variations) || product?.variations?.[0]
@@ -25,12 +43,40 @@ const ProductCard = ({ product, onCardPress, containerStyles, layout = 'horizont
   const dealLabel = getDealLabel(deal, configuration?.currencySymbol)
   const hasDeal = discountAmount > 0 && Boolean(dealLabel)
 
+  const priceRow = (
+    <View style={[s.priceContainer, isGrid && s.gridPriceContainer]}>
+      <Text style={[s.finalPrice, isGrid && s.gridFinalPrice]} numberOfLines={1}>
+        {hasDeal ? finalPrice : variation?.price} {configuration?.currencySymbol}
+      </Text>
+      {hasDeal && (
+        <Text style={[s.originalPrice, isGrid && s.gridOriginalPrice]} numberOfLines={1}>
+          {variation?.price} {configuration?.currencySymbol}
+        </Text>
+      )}
+    </View>
+  )
+
+  const nameText = (
+    <Text style={[s.productName, isGrid && s.gridProductName]} numberOfLines={isGrid ? 1 : 3} ellipsizeMode='tail'>
+      {product?.title}
+    </Text>
+  )
+
+  // Grid tiles always reserve the description line so prices align across a row.
+  const descriptionText = (
+    <Text style={s.gridDescription} numberOfLines={1} ellipsizeMode='tail'>
+      {product?.description || ' '}
+    </Text>
+  )
+
   return (
     <Pressable
       onPress={() => {
+        setProductPreview(product)
+        prefetchDetails()
         onCardPress && onCardPress(product?.id, product?.categoryId)
       }}
-      style={[styles(currentTheme).card, isGrid && styles(currentTheme).gridCard, containerStyles]}
+      style={({ pressed }) => [s.card, isGrid && s.gridCard, containerStyles, isGrid && pressed && s.gridCardPressed]}
       accessibilityRole='button'
       accessibilityLabel={`${product?.title || t('product', { defaultValue: 'Product' })}${isOutOfStock ? `, ${t('out_of_stock_label', { defaultValue: 'Out of stock' })}` : ''}`}
     >
@@ -39,49 +85,39 @@ const ProductCard = ({ product, onCardPress, containerStyles, layout = 'horizont
           // console.log("Error loading images",err)
         }}
         source={{ uri: typeof product?.image === 'number' ? '' : normalizeSingleVendorMediaUrl(product?.image) }}
-        style={[styles(currentTheme).imageContainer, isGrid && styles(currentTheme).gridImageContainer]}
-        imageStyle={[styles(currentTheme).productImage, isOutOfStock && styles(currentTheme).outOfStockImage]}
+        style={[s.imageContainer, isGrid && s.gridImageContainer]}
+        imageStyle={[s.productImage, isOutOfStock && s.outOfStockImage]}
       >
         {hasDeal && (
-          <View style={styles(currentTheme).dealBadge}>
-            <Text style={styles(currentTheme).dealBadgeText}>{dealLabel}</Text>
+          <View style={[s.dealBadge, isGrid && s.gridDealBadge]}>
+            <Text style={s.dealBadgeText}>{dealLabel}</Text>
           </View>
         )}
         {isOutOfStock && (
-          <View style={styles(currentTheme).outOfStockBadge}>
-            <Text style={styles(currentTheme).outOfStockText}>{t('out_of_stock_label', { defaultValue: 'Out of stock' })}</Text>
+          <View style={[s.outOfStockBadge, isGrid && s.gridOutOfStockBadge]}>
+            <Text style={s.outOfStockText}>{t('out_of_stock_label', { defaultValue: 'Out of stock' })}</Text>
           </View>
         )}
-        <ProductImageOverlay hasDeal={hasDeal} product={product} dealText={product?.dealText || 'Deal'} control={<CartQuantityController foodId={product?.id} categoryId={product?.categoryId} variationId={variation?.id} addons={[]} defaultQuantity={0} collapsedWhenZero variant='overlay' isOutOfStock={isOutOfStock} />} />
+        <ProductImageOverlay hasDeal={hasDeal} product={product} dealText={product?.dealText || 'Deal'} control={<CartQuantityController foodId={product?.id} categoryId={product?.categoryId} variationId={variation?.id} addons={[]} defaultQuantity={0} collapsedWhenZero variant='overlay' isOutOfStock={isOutOfStock} product={product} />} />
       </ImageBackground>
-      <View style={[styles(currentTheme).contentContainer, isGrid && styles(currentTheme).gridContentContainer]}>
-        <View style={styles(currentTheme).priceContainer}>
-          {hasDeal
-            ? (
+      <View style={[s.contentContainer, isGrid && s.gridContentContainer]}>
+        {/* Grid tiles lead with the name so prices line up along the bottom edge. */}
+        {isGrid
+          ? (
             <>
-              <Text style={styles(currentTheme).finalPrice}>
-                {finalPrice} {configuration?.currencySymbol}
-              </Text>
-
-              <Text style={styles(currentTheme).originalPrice}>
-                {variation?.price} {configuration?.currencySymbol}
-              </Text>
+              <View>
+                {nameText}
+                {descriptionText}
+              </View>
+              {priceRow}
             </>
-              )
-            : (
-            <Text style={styles(currentTheme).finalPrice}>
-              {variation?.price} {configuration?.currencySymbol}
-            </Text>
-              )}
-        </View>
-        <Text style={styles(currentTheme).productName} numberOfLines={isGrid ? 2 : 3} ellipsizeMode='tail'>
-          {product?.title}
-        </Text>
-        {/* Todo: can show variations specific price and product size. */}
-        {/* <View style={styles(currentTheme).volumeContainer}>
-                <Text style={styles(currentTheme).volume}>{product?.volume}</Text>
-                <Text style={styles(currentTheme).pricePerLiter}>€ {product?.pricePerLiter?.toFixed(1)}/l</Text>
-            </View> */}
+            )
+          : (
+            <>
+              {priceRow}
+              {nameText}
+            </>
+            )}
       </View>
     </Pressable>
   )
@@ -104,22 +140,36 @@ const styles = (currentTheme) =>
       shadowRadius: 4,
       elevation: 3
     },
+    // Grid tile: framed photo inside a soft card, name then price below.
     gridCard: {
       flex: 1,
       width: 'auto',
-      minHeight: 224,
-      marginHorizontal: 6,
-      marginRight: 6,
-      marginBottom: 12,
-      overflow: 'hidden'
+      marginHorizontal: 4,
+      marginRight: 4,
+      marginBottom: 8,
+      padding: 5,
+      borderRadius: 16,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: currentTheme.themeBackground === '#000' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(24, 24, 27, 0.08)',
+      shadowColor: '#0F172A',
+      shadowOpacity: currentTheme.themeBackground === '#000' ? 0 : 0.06,
+      shadowRadius: 10,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: currentTheme.themeBackground === '#000' ? 0 : 2
+    },
+    gridCardPressed: {
+      opacity: 0.94,
+      transform: [{ scale: 0.98 }]
     },
     contentContainer: {
       padding: 12
     },
     gridContentContainer: {
       flexGrow: 1,
-      minHeight: 88,
-      justifyContent: 'flex-start'
+      paddingHorizontal: 5,
+      paddingTop: 8,
+      paddingBottom: 3,
+      justifyContent: 'space-between'
     },
     imageContainer: {
       width: '100%',
@@ -130,11 +180,10 @@ const styles = (currentTheme) =>
       position: 'relative'
     },
     gridImageContainer: {
-      height: 136,
+      height: 140,
       marginBottom: 0,
-      borderRadius: 0,
-      borderTopLeftRadius: 12,
-      borderTopRightRadius: 12
+      borderRadius: 12,
+      backgroundColor: currentTheme.colorBgTertiary
     },
     productImage: {
       width: '100%',
@@ -215,6 +264,39 @@ const styles = (currentTheme) =>
       borderRadius: 6
     },
 
+    gridDealBadge: {
+      borderRadius: 999,
+      paddingHorizontal: 9
+    },
+    gridOutOfStockBadge: {
+      borderRadius: 999
+    },
+    gridProductName: {
+      fontSize: 14,
+      lineHeight: 19,
+      fontWeight: '700',
+      letterSpacing: -0.1,
+      marginBottom: 0
+    },
+    gridDescription: {
+      fontSize: 12,
+      lineHeight: 16,
+      marginTop: 2,
+      color: currentTheme.themeBackground === '#000' ? '#A1A1AA' : '#71717A'
+    },
+    gridPriceContainer: {
+      marginTop: 6,
+      marginBottom: 0,
+      flexWrap: 'wrap'
+    },
+    gridFinalPrice: {
+      fontSize: 15.5,
+      fontWeight: '800',
+      letterSpacing: -0.2
+    },
+    gridOriginalPrice: {
+      fontSize: 12
+    },
     dealBadgeText: {
       fontSize: 11,
       fontWeight: '700',

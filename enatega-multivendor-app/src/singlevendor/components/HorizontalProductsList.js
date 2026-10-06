@@ -9,19 +9,18 @@ import { useNavigation } from '@react-navigation/native'
 import LoadingSkeleton from './LoadingSkeleton'
 import HorizontalProductsEmptyView from './HorizontalProductsEmptyView'
 import { scale } from '../../utils/scaling'
+import { useOpenProductExplorer } from '../utils/productExplorerPrefetch'
 
 const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading, showSeeAll = true, viewType, setSearchVisible, containerStyles, categoryId }) => {
   const { i18n } = useTranslation()
   const themeContext = useContext(ThemeContext)
   const navigation = useNavigation()
+  const openProductExplorer = useOpenProductExplorer()
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   const handleSeeAll = () => {
     if (viewType === 'see-all') {
-      // navigation.navigate('ProductExplorer')
-      navigation.navigate('ProductExplorer', {
-        categoryId
-      })
+      openProductExplorer(categoryId)
     } else {
       setSearchVisible(true)
     }

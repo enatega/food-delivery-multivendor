@@ -3,13 +3,14 @@ import { StyleSheet, View } from 'react-native'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import useMultivendorTheme from '../useMultivendorTheme'
 
-const SectionHeader = ({ title, action, description, style }) => {
+const SectionHeader = ({ title, action, description, icon, style }) => {
   const { tokens } = useMultivendorTheme()
   const themedStyles = styles(tokens)
 
   return (
     <View style={[themedStyles.container, style]}>
       <View style={themedStyles.row}>
+        {icon}
         <TextDefault textColor={tokens.colors.textPrimary} style={themedStyles.title} bolder>
           {title}
         </TextDefault>

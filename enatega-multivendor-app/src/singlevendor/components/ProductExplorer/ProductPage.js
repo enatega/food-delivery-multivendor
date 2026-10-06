@@ -159,7 +159,7 @@
 //   subcategoryList: { marginTop: 10, marginBottom: 22 }
 // })
 
-import React, { useRef, useState } from 'react'
+import React, { memo, useMemo, useRef, useState } from 'react'
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { useQuery } from '@apollo/client'
@@ -167,88 +167,110 @@ import { useNavigation } from '@react-navigation/native'
 
 import ProductCard from '../ProductCard'
 import HorizontalProductsEmptyView from '../HorizontalProductsEmptyView'
+import SectionErrorCard from '../SectionErrorCard'
+import { ProductGridSkeleton } from './ProductExplorerSkeleton'
 import { GET_CATEGORY_PRODUCTS } from '../../apollo/queries'
-
-const PAGE_SIZE = 20
+import { categoryProductsVariables } from '../../utils/productExplorerPrefetch'
 
 const ProductPage = ({ category }) => {
   const navigation = useNavigation()
   const productListRef = useRef(null)
+  const isFetchingMoreRef = useRef(false)
 
-  const [products, setProducts] = useState([])
-  const [hasMore, setHasMore] = useState(true)
+  const [extraItems, setExtraItems] = useState([])
+  const [extraHasMore, setExtraHasMore] = useState(null)
+  const [isFetchingMore, setIsFetchingMore] = useState(false)
 
-  const { fetchMore, loading } = useQuery(GET_CATEGORY_PRODUCTS, {
-    variables: {
-      categoryId: category.categoryId,
-      limit: PAGE_SIZE,
-      offset: 0
-    },
-    onCompleted: (data) => {
-      setProducts(data.getCategoryProducts.items)
-      setHasMore(data.getCategoryProducts.hasMore)
-    }
+  const { data, error, refetch, fetchMore } = useQuery(GET_CATEGORY_PRODUCTS, {
+    variables: categoryProductsVariables(category.categoryId),
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first'
   })
 
-  const loadMore = () => {
-    if (!hasMore || loading) return
+  const firstPage = data?.getCategoryProducts
+  const hasLoaded = firstPage != null
 
-    fetchMore({
-      variables: {
-        offset: products.length
-      }
-    }).then(({ data }) => {
-      const newItems = data.getCategoryProducts.items
-      setProducts((prev) => [...prev, ...newItems])
-      setHasMore(data.getCategoryProducts.hasMore)
+  const products = useMemo(() => {
+    const seen = new Set()
+    return [...(firstPage?.items ?? []), ...extraItems].filter((item) => {
+      if (!item?.id || seen.has(item.id)) return false
+      seen.add(item.id)
+      return true
     })
+  }, [firstPage, extraItems])
+
+  const hasMore = extraHasMore ?? firstPage?.hasMore ?? false
+
+  const loadMore = async() => {
+    if (!hasLoaded || !hasMore || isFetchingMoreRef.current) return
+
+    isFetchingMoreRef.current = true
+    setIsFetchingMore(true)
+    try {
+      const { data: moreData } = await fetchMore({
+        variables: { offset: products.length }
+      })
+      const result = moreData?.getCategoryProducts
+      setExtraItems((prev) => [...prev, ...(result?.items ?? [])])
+      setExtraHasMore(result?.hasMore ?? false)
+    } catch (_) {
+      // Keep what is already loaded; the next end-reached will retry.
+    } finally {
+      isFetchingMoreRef.current = false
+      setIsFetchingMore(false)
+    }
+  }
+
+  const onRetry = async() => {
+    setExtraItems([])
+    setExtraHasMore(null)
+    await refetch()
+  }
+
+  // Until the server has answered for this category, show a loader – never the empty state.
+  if (!hasLoaded) {
+    if (error) {
+      return (
+        <View style={styles.stateContainer}>
+          <SectionErrorCard title={category?.categoryName} onRetry={onRetry} />
+        </View>
+      )
+    }
+    return <ProductGridSkeleton />
   }
 
   return (
-    <>
-      {/* Todo: can show subcategories */}
-      {/* <FlashList ref={subCatListRef} horizontal data={subCategories} keyExtractor={(item) => item.subCategoryId} estimatedItemSize={80} renderItem={({ item }) => <CategoryItem title={item.subCategoryName} />} showsHorizontalScrollIndicator={false} style={styles.subcategoryList} /> */}
-
-      <FlashList
-        ref={productListRef}
-        data={products}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        estimatedItemSize={236}
-        contentContainerStyle={{ paddingHorizontal: 4 }}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.6}
-        renderItem={({ item }) => (
-          <ProductCard
-            product={{ ...item, categoryId: item?.categoryId || category?.categoryId }}
-            onCardPress={() => navigation.navigate('ProductDetails', { productId: item?.id, categoryId: category?.categoryId })}
-            layout='grid'
-          />
-        )}
-        ListFooterComponent={hasMore ? <ActivityIndicator style={{ marginVertical: 20 }} /> : null}
-        ListEmptyComponent={
-          !loading && products.length === 0
-            ? (
-            <View style={styles.loadingContainer}>
-              <HorizontalProductsEmptyView />
-            </View>
-              )
-            : null
-        }
-        showsVerticalScrollIndicator={false}
-      />
-    </>
+    <FlashList
+      ref={productListRef}
+      data={products}
+      keyExtractor={(item) => item.id}
+      numColumns={2}
+      estimatedItemSize={236}
+      contentContainerStyle={{ paddingHorizontal: 4, paddingTop: 10, paddingBottom: 16 }}
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.6}
+      renderItem={({ item }) => (
+        <ProductCard
+          product={{ ...item, categoryId: item?.categoryId || category?.categoryId }}
+          onCardPress={() => navigation.navigate('ProductDetails', { productId: item?.id, categoryId: category?.categoryId })}
+          layout='grid'
+        />
+      )}
+      ListFooterComponent={isFetchingMore ? <ActivityIndicator style={{ marginVertical: 20 }} /> : null}
+      ListEmptyComponent={
+        <View style={styles.stateContainer}>
+          <HorizontalProductsEmptyView />
+        </View>
+      }
+      showsVerticalScrollIndicator={false}
+    />
   )
 }
 
-export default ProductPage
+export default memo(ProductPage)
 
 const styles = StyleSheet.create({
-  subcategoryList: {
-    marginTop: 10,
-    marginBottom: 22
-  },
-  loadingContainer: {
+  stateContainer: {
     margin: 20
   }
 })

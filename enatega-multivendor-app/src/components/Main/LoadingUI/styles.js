@@ -1,5 +1,6 @@
 import { scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
+import { discoverySpacing } from '../../../ui/designSystem/tokens'
 const styles = (props = null) =>
   StyleSheet.create({
     screenBackground: {
@@ -28,8 +29,8 @@ const styles = (props = null) =>
       height: scale(80)
     },
     sectionSkeleton: {
-      paddingTop: scale(18),
-      paddingBottom: scale(12),
+      paddingTop: discoverySpacing.sectionTop,
+      paddingBottom: discoverySpacing.sectionBottom,
       backgroundColor: props?.colors?.canvas
     },
     sectionHeaderSkeleton: {
@@ -69,7 +70,8 @@ const styles = (props = null) =>
       marginTop: scale(4)
     },
     brandSectionSkeleton: {
-      paddingVertical: scale(16),
+      paddingTop: discoverySpacing.sectionTop,
+      paddingBottom: discoverySpacing.sectionBottom,
       backgroundColor: props?.colors?.canvas
     },
     brandRowSkeleton: {
@@ -79,7 +81,21 @@ const styles = (props = null) =>
       overflow: 'hidden'
     },
     brandItemSkeleton: {
-      width: scale(82),
+      width: scale(148),
+      borderWidth: StyleSheet.hairlineWidth,
+      overflow: 'hidden'
+    },
+    brandLogoSkeleton: {
+      position: 'absolute',
+      top: scale(86) - scale(28),
+      start: scale(9),
+      padding: scale(3),
+      borderRadius: scale(28)
+    },
+    brandTextSkeleton: {
+      paddingTop: scale(33),
+      paddingHorizontal: scale(12),
+      paddingBottom: scale(12),
       gap: scale(7)
     }
   })

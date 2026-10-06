@@ -20,7 +20,7 @@ const toCheckoutCoordinate = (value) => {
 
 const useCheckout = ({ fulfillmentMode, deliveryAddress, selectedVoucher, onPlaceOrderError }) => {
   const navigation = useNavigation()
-  const { clearCart } = useCartStore()
+  const clearCart = useCartStore((state) => state.clearCart)
   const configuration = useContext(ConfigurationContext)
   const currencySymbol = configuration?.currencySymbol || '€'
   const idempotencyKeyRef = useRef(`sv-${Date.now()}-${Math.random().toString(36).slice(2)}`)

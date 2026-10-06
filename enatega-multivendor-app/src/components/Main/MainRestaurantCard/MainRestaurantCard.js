@@ -10,14 +10,40 @@ import { useNavigation } from '@react-navigation/native'
 import { isOpen } from '../../../utils/customFunctions'
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
 import { scale } from '../../../utils/scaling'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { RESTAURANT_CARD_WIDTH } from '../RestaurantCard/styles'
+import { alignment } from '../../../utils/alignment'
 
-function PopularSectionSkeleton({ currentTheme, title, t }) {
+const SECTION_ICONS = {
+  trending: 'fire',
+  restaurant: 'silverware-fork-knife',
+  store: 'storefront-outline',
+  history: 'history'
+}
+
+// Card width + its trailing margin: lets the rail skip per-item measurement.
+const RESTAURANT_ITEM_INTERVAL = RESTAURANT_CARD_WIDTH + alignment.MRsmall.marginRight
+const getRestaurantItemLayout = (_, index) => ({
+  length: RESTAURANT_ITEM_INTERVAL,
+  offset: RESTAURANT_ITEM_INTERVAL * index,
+  index
+})
+const keyExtractor = (item) => item._id
+
+const SectionIcon = ({ name, tokens }) => {
+  const glyph = SECTION_ICONS[name]
+  if (!glyph) return null
+  return <MaterialCommunityIcons name={glyph} size={scale(22)} color={tokens.colors.accentForeground} />
+}
+
+function PopularSectionSkeleton({ currentTheme, title, icon, t }) {
   return (
     <View style={styles().orderAgainSec}>
       <View>
         <SectionHeader
           style={styles(currentTheme).sectionHeader}
           title={t(title)}
+          icon={<SectionIcon name={icon} tokens={currentTheme} />}
           action={<SectionAction label={t('SeeAll')} />}
         />
 
@@ -78,6 +104,7 @@ function MainRestaurantCard(props) {
         <SectionHeader
           style={styles(tokens).sectionHeader}
           title={t(props?.title)}
+          icon={<SectionIcon name={props?.icon} tokens={tokens} />}
           action={<SectionAction
             label={t('SeeAll')}
             onPress={() => {
@@ -98,7 +125,9 @@ function MainRestaurantCard(props) {
             alignItems: 'flex-start'
           }}
           data={orders}
-          keyExtractor={(item) => item._id}
+          keyExtractor={keyExtractor}
+          getItemLayout={getRestaurantItemLayout}
+          initialNumToRender={3}
           renderItem={renderRestaurantItem}
           inverted={isRTL}
         />

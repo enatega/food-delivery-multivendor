@@ -3,6 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import TextDefault from '../../../components/Text/TextDefault/TextDefault'
 import { scale } from '../../../utils/scaling'
+import useCheckoutPalette from './useCheckoutPalette'
 
 const SmallOrderFeeTip = ({
   currencySymbol,
@@ -11,48 +12,48 @@ const SmallOrderFeeTip = ({
   currentTheme,
   t
 }) => {
+  const { palette } = useCheckoutPalette()
   return (
-    <View style={styles(currentTheme).container}>
-      <View style={styles(currentTheme).iconContainer}>
-        <Feather name='info' size={14} color={currentTheme.singleVendorBrandForeground} />
+    <View style={styles(palette).container}>
+      <View style={styles(palette).iconContainer}>
+        <Feather name='info' size={14} color={palette.warning} />
       </View>
-      <View style={styles(currentTheme).content}>
-        <TextDefault textColor={currentTheme.fontMainColor} H6 bolder>
+      <View style={styles(palette).content}>
+        <TextDefault textColor={palette.textPrimary} small bolder>
           {t('smallOrderFeeTitle') || 'Small order fee applies'}
         </TextDefault>
-        <TextDefault textColor={currentTheme.colorTextMuted || currentTheme.fontSecondColor} H6>
+        <TextDefault textColor={palette.textSecondary} small>
           {t('Orders under') || 'Orders under'} {minimumOrderAmount || 10}{currencySymbol} {t('are subject to a') || 'are subject to a'}{' '}
           {t('small order fee') || 'small order fee'}.
         </TextDefault>
       </View>
       <TouchableOpacity
         onPress={onClose}
-        style={styles(currentTheme).closeButton}
+        style={styles(palette).closeButton}
         activeOpacity={0.7}
       >
-        <Feather name='x' size={16} color={currentTheme.fontSecondColor} />
+        <Feather name='x' size={16} color={palette.textMuted} />
       </TouchableOpacity>
     </View>
   )
 }
 
-const styles = (props) =>
+const styles = (palette) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: props?.cardBackground || '#fff',
-      borderRadius: scale(9),
+      backgroundColor: palette.warningSubtle,
+      borderRadius: scale(12),
       paddingVertical: scale(8),
       paddingHorizontal: scale(10),
-      marginTop: scale(7),
-      marginBottom: scale(2)
+      marginTop: scale(8)
     },
     iconContainer: {
-      width: scale(24),
-      height: scale(24),
-      borderRadius: scale(12),
-      backgroundColor: props?.colorBgTertiary || '#F3F4F6',
+      width: scale(26),
+      height: scale(26),
+      borderRadius: scale(13),
+      backgroundColor: palette.surface,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: scale(10)

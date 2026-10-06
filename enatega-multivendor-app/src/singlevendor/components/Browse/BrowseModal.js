@@ -7,9 +7,12 @@ import SearchesList from './SearchesList'
 import ProductCard from '../ProductCard'
 import EmptySearch from './EmptySearch'
 import SectionErrorCard from '../SectionErrorCard'
+import { ProductGridSkeleton } from '../ProductExplorer/ProductExplorerSkeleton'
 
-const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm, setSearchTerm, currentTheme, t, insets, data, loading, error, onRetry, debouncedSearch, onProductPress, handleAddToCart, isSearched, loadMore, hasMore }) => {
+const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm, setSearchTerm, currentTheme, t, insets, data, loading, error, onRetry, debouncedSearch, onProductPress, handleAddToCart, isSearched, isSearching, loadMore, hasMore }) => {
   const searchData = data?.searchFood && data?.searchFood?.length > 0 ? data?.searchFood : []
+  const trimmedTerm = searchTerm.trim()
+  const hasSearchableTerm = trimmedTerm.length >= 2
 
   const onBackPress = () => {
     onClose()
@@ -28,37 +31,39 @@ const BrowseModal = ({ visible, onClose, handleClearSearch, inputRef, searchTerm
           </View>
         </View>
 
-        {error && searchTerm.trim()
-          ? (
-            <SectionErrorCard
-              title={t('Search')}
-              message={t('searchLoadFailed', { defaultValue: 'Search results could not be loaded.' })}
-              onRetry={onRetry}
-              style={{ marginHorizontal: 0 }}
-            />
-            )
-          : isSearched
+        {/* Order matters: a stale error or stale results must never show while
+            the current term is still loading. */}
+        {hasSearchableTerm && isSearching
+          ? <ProductGridSkeleton style={styles(currentTheme).skeleton} />
+          : error && hasSearchableTerm
             ? (
-          <>
-            <FlashList
-              estimatedItemSize={236}
-              contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: insets.bottom + 24 }}
-              data={searchData}
-              keyExtractor={(item) => item?.id}
-              renderItem={({ item }) => {
-                return <ProductCard product={item} onCardPress={onProductPress} onAddToCart={handleAddToCart} layout='grid' />
-              }}
-              numColumns={2}
-              showsVerticalScrollIndicator={false}
-              onEndReached={hasMore ? loadMore : undefined}
-              onEndReachedThreshold={0.5}
-              ListEmptyComponent={<EmptySearch currentTheme={currentTheme} t={t} />}
-            />
-          </>
+              <SectionErrorCard
+                title={t('Search')}
+                message={t('searchLoadFailed', { defaultValue: 'Search results could not be loaded.' })}
+                onRetry={onRetry}
+                style={{ marginHorizontal: 0 }}
+              />
               )
-            : (
-          <SearchesList currentTheme={currentTheme} t={t} setSearchTerm={setSearchTerm} />
-              )}
+            : hasSearchableTerm && isSearched
+              ? searchData.length
+                ? (
+                  <FlashList
+                    estimatedItemSize={236}
+                    contentContainerStyle={{ paddingHorizontal: 0, paddingBottom: insets.bottom + 24 }}
+                    data={searchData}
+                    keyExtractor={(item) => item?.id}
+                    renderItem={({ item }) => (
+                      <ProductCard product={item} onCardPress={onProductPress} onAddToCart={handleAddToCart} layout='grid' />
+                    )}
+                    numColumns={2}
+                    showsVerticalScrollIndicator={false}
+                    onEndReached={hasMore ? loadMore : undefined}
+                    onEndReachedThreshold={0.5}
+                    keyboardDismissMode='on-drag'
+                  />
+                  )
+                : <EmptySearch currentTheme={currentTheme} t={t} searchTerm={trimmedTerm} />
+              : <SearchesList currentTheme={currentTheme} t={t} setSearchTerm={setSearchTerm} />}
       </View>
     </Modal>
   )
@@ -75,6 +80,10 @@ const styles = (currentTheme) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     width: '100%'
+  },
+  skeleton: {
+    paddingHorizontal: 0,
+    marginTop: 4
   },
   backButton: {
     backgroundColor: currentTheme?.colorBgTertiary || '#F2F2F2',

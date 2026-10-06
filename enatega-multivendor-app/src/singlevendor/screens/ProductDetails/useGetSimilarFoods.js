@@ -7,9 +7,13 @@ const useGetSimilarFoods = ({ foodId }) => {
       foodId,
       skip: 0,
       limit: 10
-    }
+    },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    skip: !foodId
   })
-  return { data, loading, error }
+  // Keep showing cached items while a background refresh runs.
+  return { data, loading: loading && !data, error }
 }
 
 export default useGetSimilarFoods

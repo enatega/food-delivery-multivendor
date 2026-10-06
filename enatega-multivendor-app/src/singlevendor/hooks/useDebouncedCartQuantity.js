@@ -18,19 +18,20 @@ const useDebouncedCartQuantity = ({
   categoryId,
   variationId,
   addons = [],
-  defaultQuantity = 0
+  defaultQuantity = 0,
+  product = null
 }) => {
-  const items = useCartStore((state) => state.items)
+  const itemId = useMemo(() => `${foodId}_${variationId}`, [foodId, variationId])
+  // Subscribe to this item's quantity and sync flag only, so a tap on one card
+  // doesn't re-render every other card on screen.
+  const cartQuantity = useCartStore((state) => {
+    const result = getCartVariation(state.items, foodId, variationId)
+    return result?.variation ? Number(result.variation.quantity || 0) : null
+  })
+  const isItemSyncing = useCartQueueStore((state) => !!state.loadingItemIds[itemId])
   const updateOptimisticCartItemQuantity = useCartStore((state) => state.updateOptimisticCartItemQuantity)
-  const loadingItemIds = useCartQueueStore((state) => state.loadingItemIds)
   const { addItemToCart } = useAddToCart({ foodId })
   const { updateUserCartCount } = useUpdateUserCartCount()
-
-  const itemId = useMemo(() => `${foodId}_${variationId}`, [foodId, variationId])
-  const cartQuantity = useMemo(() => {
-    const result = getCartVariation(items, foodId, variationId)
-    return result?.variation ? Number(result.variation.quantity || 0) : null
-  }, [items, foodId, variationId])
 
   const [quantity, setQuantity] = useState(cartQuantity ?? defaultQuantity)
   const quantityRef = useRef(cartQuantity ?? defaultQuantity)
@@ -38,6 +39,7 @@ const useDebouncedCartQuantity = ({
   const isSyncingRef = useRef(false)
   const pendingVariationRef = useRef(null)
   const debounceRef = useRef(null)
+  const pendingCommitRef = useRef(null)
 
   const clearDebounce = () => {
     if (debounceRef.current) {
@@ -65,6 +67,8 @@ const useDebouncedCartQuantity = ({
 
         const action =
           nextQuantity === 0 ? 'delete' : nextQuantity > existingQuantity ? 'increase' : 'decrease'
+        // Cart badge/totals catch up once per burst of taps instead of on every tap.
+        updateOptimisticCartItemQuantity({ foodId, variationId, quantity: nextQuantity })
         updateUserCartCount(
           {
             variation_id: resolvedVariationInternalId,
@@ -98,19 +102,29 @@ const useDebouncedCartQuantity = ({
       }
 
       if (nextQuantity > 0) {
-        addItemToCart(foodId, categoryId, variationId, addons, nextQuantity)
+        const added = addItemToCart(foodId, categoryId, variationId, addons, nextQuantity, undefined, '', product)
+        if (added === false) {
+          // Not logged in: nothing was added, so undo the local count.
+          isSyncingRef.current = false
+          isInteractingRef.current = false
+          quantityRef.current = 0
+          setQuantity(0)
+        }
         return
       }
 
       isSyncingRef.current = false
     },
-    [addItemToCart, categoryId, foodId, itemId, updateUserCartCount, variationId, addons]
+    [addItemToCart, categoryId, foodId, itemId, updateUserCartCount, updateOptimisticCartItemQuantity, variationId, addons, product]
   )
 
   const scheduleCommit = useCallback(
     (nextQuantity) => {
       clearDebounce()
+      pendingCommitRef.current = () => commitQuantity(nextQuantity)
       debounceRef.current = setTimeout(() => {
+        debounceRef.current = null
+        pendingCommitRef.current = null
         commitQuantity(nextQuantity)
       }, 400)
     },
@@ -122,9 +136,15 @@ const useDebouncedCartQuantity = ({
     isInteractingRef.current = true
     quantityRef.current = nextQuantity
     setQuantity(nextQuantity)
-    updateOptimisticCartItemQuantity({ foodId, variationId, quantity: nextQuantity })
+    const isInCart = !!getCartVariation(useCartStore.getState().items, foodId, variationId)
+    if (!isInCart) {
+      // First add goes out immediately so the cart badge and totals update at once.
+      clearDebounce()
+      commitQuantity(nextQuantity)
+      return
+    }
     scheduleCommit(nextQuantity)
-  }, [foodId, scheduleCommit, updateOptimisticCartItemQuantity, variationId])
+  }, [commitQuantity, foodId, scheduleCommit, variationId])
 
   const decrease = useCallback(() => {
     const nextQuantity = Math.max(0, quantityRef.current - 1)
@@ -140,9 +160,14 @@ const useDebouncedCartQuantity = ({
       }
     }
     setQuantity(nextQuantity)
-    updateOptimisticCartItemQuantity({ foodId, variationId, quantity: nextQuantity })
-    if (nextQuantity === 0) commitQuantity(nextQuantity)
-    else scheduleCommit(nextQuantity)
+    if (nextQuantity === 0) {
+      // Removing the item is applied to the cart immediately.
+      clearDebounce()
+      updateOptimisticCartItemQuantity({ foodId, variationId, quantity: 0 })
+      commitQuantity(0)
+    } else {
+      scheduleCommit(nextQuantity)
+    }
   }, [categoryId, commitQuantity, foodId, scheduleCommit, updateOptimisticCartItemQuantity, variationId])
 
   useEffect(() => {
@@ -153,20 +178,27 @@ const useDebouncedCartQuantity = ({
   }, [cartQuantity, defaultQuantity])
 
   useEffect(() => {
-    if (isSyncingRef.current && !loadingItemIds[itemId]) {
+    // Wait for any pending debounced change before adopting the server quantity.
+    if (isSyncingRef.current && !isItemSyncing && !debounceRef.current) {
       isSyncingRef.current = false
       isInteractingRef.current = false
       const nextQuantity = cartQuantity ?? defaultQuantity
       quantityRef.current = nextQuantity
       setQuantity(nextQuantity)
     }
-  }, [cartQuantity, defaultQuantity, itemId, loadingItemIds])
+  }, [cartQuantity, defaultQuantity, isItemSyncing])
 
-  useEffect(() => () => clearDebounce(), [])
+  // Leaving the screen mid-debounce still sends the latest quantity.
+  useEffect(
+    () => () => {
+      if (!debounceRef.current) return
+      clearDebounce()
+      pendingCommitRef.current?.()
+    },
+    []
+  )
 
-  const isLoading = !!loadingItemIds[itemId]
-
-  return { quantity, increase, decrease, isLoading }
+  return { quantity, increase, decrease, isLoading: isItemSyncing }
 }
 
 export default useDebouncedCartQuantity

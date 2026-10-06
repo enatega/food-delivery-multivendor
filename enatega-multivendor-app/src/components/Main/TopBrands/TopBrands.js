@@ -1,10 +1,8 @@
 import React, { useContext, useMemo, useCallback } from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 import styles from './styles'
-import TextDefault from '../../Text/TextDefault/TextDefault'
 import { useTranslation } from 'react-i18next'
 import { LocationContext } from '../../../context/Location'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { topRatedVendorsInfo } from '../../../apollo/queries'
 import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
@@ -12,10 +10,10 @@ import TopBrandsLoadingUI from '../LoadingUI/TopBrandsLoadingUI'
 import NewRestaurantCard from '../RestaurantCard/NewRestaurantCard'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../../utils/customFunctions'
 import HorizontalFlashList from '../../Lists/HorizontalFlashList'
-import { useCachedMediaUri } from '../../../utils/mediaCache'
-import { resolveLogoImage } from '../../../utils/resolveImageUrl'
 import { SectionAction, SectionHeader, useMultivendorTheme } from '../../../ui/designSystem'
-import { MaterialIcons } from '@expo/vector-icons'
+import BrandCard, { BRAND_CARD_WIDTH } from './BrandCard'
+
+const keyExtractor = (item) => item?._id
 
 function TopBrands() {
   const { t, i18n } = useTranslation()
@@ -33,45 +31,43 @@ function TopBrands() {
     fetchPolicy: 'cache-and-network'
   })
 
-  const RenderItem = ({ item }) => (
-    <TouchableOpacity style={styles(tokens).topbrandsContainer} onPress={() => navigation.navigate('Restaurant', { ...item })}>
-      <View style={styles(tokens).brandImgContainer}>
-        <Image source={{ uri: useCachedMediaUri(resolveLogoImage(item), 'image') }} style={styles(tokens).brandImg} resizeMode='contain' />
-        <View style={styles(tokens).deliveryBadge}>
-          <MaterialIcons name='schedule' size={12} color={tokens.colors.accent} />
-          <TextDefault style={styles(tokens).deliveryBadgeText} textColor={tokens.colors.textPrimary} numberOfLines={1}>
-            {item?.deliveryTime} {t('mins')}
-          </TextDefault>
-        </View>
-      </View>
-
-      <View style={styles(tokens).brandTextContainer}>
-        <TextDefault style={styles(tokens).brandName} textColor={tokens.colors.textPrimary} numberOfLines={2} ellipsizeMode='tail' bolder>
-          {item?.name}
-        </TextDefault>
-      </View>
-    </TouchableOpacity>
-  )
-
   const topRatedVendors = useMemo(() => data?.topRatedVendorsPreview ?? [], [data])
   const restaurantBrands = useMemo(() => topRatedVendors.filter((item) => item.shopType === 'restaurant'), [topRatedVendors])
   const groceryBrands = useMemo(() => topRatedVendors.filter((item) => item.shopType === 'grocery'), [topRatedVendors])
   const sortedRestaurantBrands = useMemo(() => sortRestaurantsByOpenStatus(restaurantBrands || []), [restaurantBrands])
   const sortedGroceryBrands = useMemo(() => sortRestaurantsByOpenStatus(groceryBrands || []), [groceryBrands])
 
-  const renderBrandItem = useCallback(({ item }) => <RenderItem item={item} />, [navigation, tokens])
+  const openBrand = useCallback((item) => navigation.navigate('Restaurant', { ...item }), [navigation])
+  const minsLabel = t('mins')
+  const newLabel = t('New', { defaultValue: 'New' })
+  const closedLabel = t('Closed', { defaultValue: 'Closed' })
+  // Open brands lead the spotlight rail; closed ones stay visible but dimmed.
+  const sortedBrands = useMemo(() => sortRestaurantsByOpenStatus(topRatedVendors), [topRatedVendors])
+  const renderBrandItem = useCallback(
+    ({ item }) => (
+      <BrandCard
+        item={item}
+        tokens={tokens}
+        minsLabel={minsLabel}
+        newLabel={newLabel}
+        closedLabel={closedLabel}
+        isOpen={isOpen(item)}
+        onPress={openBrand}
+      />
+    ),
+    [tokens, minsLabel, newLabel, closedLabel, openBrand]
+  )
+  const railContentStyle = useMemo(() => ({
+    flexGrow: 1,
+    paddingStart: tokens.spacing.md
+  }), [tokens])
   const renderRestaurantItem = useCallback(({ item }) => {
     const restaurantOpen = isOpen(item)
     return <NewRestaurantCard {...item} isOpen={restaurantOpen} />
   }, [])
 
-  if (loading) return <TopBrandsLoadingUI />
+  if (loading && !data) return <TopBrandsLoadingUI />
   if (error) return null
-
-  const railContentStyle = {
-    flexGrow: 1,
-    paddingStart: tokens.spacing.md
-  }
 
   return (
     <View style={styles().mainContainer}>
@@ -87,7 +83,7 @@ function TopBrands() {
               })
             }} />}
           />
-          <HorizontalFlashList data={topRatedVendors} renderItem={renderBrandItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={96} itemSpacing={tokens.spacing.lg} />
+          <HorizontalFlashList data={sortedBrands} renderItem={renderBrandItem} keyExtractor={keyExtractor} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={BRAND_CARD_WIDTH + tokens.spacing.md} itemSpacing={tokens.spacing.md} />
         </View>
       )}
 
@@ -104,7 +100,7 @@ function TopBrands() {
               })
             }} />}
           />
-          <HorizontalFlashList data={sortedRestaurantBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={224} />
+          <HorizontalFlashList data={sortedRestaurantBrands} renderItem={renderRestaurantItem} keyExtractor={keyExtractor} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={224} />
         </View>
       )}
 
@@ -121,7 +117,7 @@ function TopBrands() {
               })
             }} />}
           />
-          <HorizontalFlashList data={sortedGroceryBrands} renderItem={renderRestaurantItem} keyExtractor={(item) => item?._id} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={224} />
+          <HorizontalFlashList data={sortedGroceryBrands} renderItem={renderRestaurantItem} keyExtractor={keyExtractor} contentContainerStyle={railContentStyle} inverted={isRTL} estimatedItemSize={224} />
         </View>
       )}
     </View>

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useLayoutEffect, useRef, useCallback } from 'react'
 import { View, ScrollView, TouchableOpacity, StatusBar, Platform, StyleSheet } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, Feather } from '@expo/vector-icons'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { useTranslation } from 'react-i18next'
@@ -40,6 +40,7 @@ import { APP_MODES } from '../../../mode/constants'
 import { getModeItem, removeModeItem, setModeItem } from '../../../mode/storage'
 import OrderSummarySkeleton from './OrderSummarySkeleton'
 import SmallOrderFeeTip from '../../components/Checkout/SmallOrderFeeTip'
+import useCheckoutPalette from '../../components/Checkout/useCheckoutPalette'
 
 const Checkout = (props) => {
   const { location, setLocation } = useContext(LocationContext)
@@ -68,6 +69,7 @@ const Checkout = (props) => {
     isRTL: i18n.dir() === 'rtl',
     ...theme[themeContext.ThemeValue]
   }
+  const { palette } = useCheckoutPalette()
 
   // const currencySymbol = configuration?.currencySymbol || '€'
 
@@ -78,6 +80,7 @@ const Checkout = (props) => {
   const [courierInstructions, setCourierInstructions] = useState('')
   const [deliveryTime, setDeliveryTime] = useState(selectedSchedule ? 'schedule' : 'standard') // 'priority', 'standard', 'schedule'
   const [paymentMethod, setPaymentMethod] = useState('COD') // 'card' or 'voucher'
+  const isCashOnDelivery = paymentMethod === 'COD'
   const [selectedCard] = useState('**** 9432')
   const [selectedVoucher, setSelectedVoucher] = useState(null)
   const [voucherCode, setVoucherCode] = useState('')
@@ -152,6 +155,11 @@ const Checkout = (props) => {
     }
   }, [fulfillmentMode])
 
+  // Leave at the door is not available for cash on delivery
+  React.useEffect(() => {
+    if (isCashOnDelivery) setLeaveAtDoor(false)
+  }, [isCashOnDelivery])
+
   React.useEffect(() => {
     console.log('⏰ Delivery Time Changed:', deliveryTime)
     if (deliveryTime === 'schedule' && selectedSchedule) {
@@ -171,7 +179,7 @@ const Checkout = (props) => {
       headerRight: null,
       headerTitleAlign: 'center',
       headerTitleStyle: {
-        color: currentTheme.newFontcolor,
+        color: palette.textPrimary,
         ...textStyles.H4,
         ...textStyles.Bolder
       },
@@ -179,13 +187,12 @@ const Checkout = (props) => {
         paddingHorizontal: scale(20)
       },
       headerStyle: {
-        backgroundColor: currentTheme.newheaderBG,
+        backgroundColor: palette.canvas,
         shadowColor: 'transparent',
         shadowRadius: 0,
         shadowOffset: { height: 0 },
         elevation: 0,
-        borderBottomWidth: 0,
-        height: scale(84)
+        borderBottomWidth: 0
       },
       headerLeft: () => (
         <HeaderBackButton
@@ -197,16 +204,16 @@ const Checkout = (props) => {
                   width: scale(34),
                   height: scale(34),
                   borderRadius: scale(17),
-                  backgroundColor: currentTheme.colorBgTertiary || '#fff',
+                  backgroundColor: palette.surface,
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderWidth: StyleSheet.hairlineWidth,
-                  borderColor: currentTheme.colorBorder,
+                  borderColor: palette.border,
                   shadowColor: 'transparent',
                   elevation: 0
                 }}
               >
-                <AntDesign name='arrowleft' size={19} color={currentTheme.fontMainColor || '#000'} />
+                <AntDesign name='arrowleft' size={19} color={palette.textPrimary} />
               </View>
             </View>
           )}
@@ -214,7 +221,7 @@ const Checkout = (props) => {
         />
       )
     })
-  }, [props?.navigation, currentTheme])
+  }, [props?.navigation, currentTheme, palette])
 
   const getAndApplySelectedVoucher = useCallback(async() => {
     try {
@@ -231,7 +238,7 @@ const Checkout = (props) => {
   useFocusEffect(
     React.useCallback(() => {
       if (Platform.OS === 'android') {
-        StatusBar.setBackgroundColor(currentTheme.menuBar)
+        StatusBar.setBackgroundColor(palette.canvas)
       }
       StatusBar.setBarStyle(themeContext.ThemeValue === 'Dark' ? 'light-content' : 'dark-content')
 
@@ -249,7 +256,7 @@ const Checkout = (props) => {
           setDeliveryTime(null)
         }
       }
-    }, [currentTheme, themeContext, selectedSchedule, fulfillmentMode, deliveryTime, getAndApplySelectedVoucher])
+    }, [currentTheme, palette, themeContext, selectedSchedule, fulfillmentMode, deliveryTime, getAndApplySelectedVoucher])
   )
 
   const handlePlaceOrder = () => {
@@ -377,10 +384,10 @@ const Checkout = (props) => {
     setTipAmount((prev) => (prev === amount ? 0 : amount))
   }
   return (
-    <View style={styles(currentTheme).mainContainer}>
-      <ScrollView style={styles().scrollView} contentContainerStyle={styles().contentContainer} showsVerticalScrollIndicator={false}>
+    <View style={styles(palette).mainContainer}>
+      <ScrollView style={styles().scrollView} contentContainerStyle={styles().contentContainer} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled'>
         <FulfillmentTabs selectedMode={fulfillmentMode} onSelectMode={setFulfillmentMode} />
-        {fulfillmentMode === 'delivery' && <DeliveryOptions deliveryAddress={location} onSelectAddress={() => onOpen()} leaveAtDoor={leaveAtDoor} onToggleLeaveAtDoor={setLeaveAtDoor} callOnArrival={callOnArrival} onToggleCallOnArrival={setCallOnArrival} courierInstructions={courierInstructions} onChangeCourierInstructions={setCourierInstructions} />}
+        {fulfillmentMode === 'delivery' && <DeliveryOptions deliveryAddress={location} onSelectAddress={() => onOpen()} showLeaveAtDoor={!isCashOnDelivery} leaveAtDoor={leaveAtDoor} onToggleLeaveAtDoor={setLeaveAtDoor} callOnArrival={callOnArrival} onToggleCallOnArrival={setCallOnArrival} courierInstructions={courierInstructions} onChangeCourierInstructions={setCourierInstructions} />}
         <DeliveryTimeOptions priorityDeliveryFee={priorityDeliveryFee} selectedTime={deliveryTime} onSelectTime={setDeliveryTime} mode={fulfillmentMode} scheduledTime={selectedSchedule} />
         <PaymentSection
           paymentMethod={paymentMethod}
@@ -402,9 +409,8 @@ const Checkout = (props) => {
           voucherBottomSheetRef={voucherBottomSheetRef}
         />
         {fulfillmentMode === 'delivery' && <TipSection selectedTip={tipAmount} onSelectTip={handleTipSelection} currencySymbol={currencySymbol} />}
-        <View style={{ height: scale(24) }} />
       </ScrollView>
-      <View style={styles(currentTheme).stickyBottomContainer}>
+      <View style={styles(palette).stickyBottomContainer}>
         {loading
           ? (
           <OrderSummarySkeleton />
@@ -440,15 +446,21 @@ const Checkout = (props) => {
             onSubscribe={() => navigation.navigate('Membership')}
           />
         )} */}
-        <TouchableOpacity style={[styles(currentTheme).placeOrderButton, !isOrderValid() && styles(currentTheme).placeOrderButtonDisabled]} onPress={handlePlaceOrder} disabled={!isOrderValid()} activeOpacity={0.7}>
+        <TouchableOpacity style={[styles(palette).placeOrderButton, !isOrderValid() && styles(palette).placeOrderButtonDisabled]} onPress={handlePlaceOrder} disabled={!isOrderValid()} activeOpacity={0.8}>
           {placingOrder
             ? (
-            <ActivityIndicator size={18} color={currentTheme.singleVendorOnBrand} />
+            <ActivityIndicator size={18} color={palette.onBrand} />
               )
             : (
-            <TextDefault textColor={isOrderValid() ? currentTheme.singleVendorOnBrand : currentTheme.fontSecondColor} bolder H5>
-              {t('placeOrder') || 'Place order'}
-            </TextDefault>
+            <>
+              <Feather name='lock' size={scale(16)} color={isOrderValid() ? palette.onBrand : palette.disabledText} style={styles().placeOrderLock} />
+              <TextDefault textColor={isOrderValid() ? palette.onBrand : palette.disabledText} bolder H5>
+                {t('placeOrder') || 'Place order'}
+              </TextDefault>
+              <View style={[styles(palette).placeOrderArrow, !isOrderValid() && styles(palette).placeOrderArrowDisabled]}>
+                <Feather name={currentTheme.isRTL ? 'arrow-left' : 'arrow-right'} size={scale(16)} color={isOrderValid() ? palette.onBrand : palette.disabledText} />
+              </View>
+            </>
               )}
         </TouchableOpacity>
       </View>

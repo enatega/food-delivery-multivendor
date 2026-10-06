@@ -1,6 +1,7 @@
 import { scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
 import { alignment } from '../../../utils/alignment'
+import { discoverySpacing } from '../../../ui/designSystem/tokens'
 const buildStyles = (props = null) =>
   StyleSheet.create({
     // ML20: {
@@ -16,8 +17,8 @@ const buildStyles = (props = null) =>
       ...alignment.MRmedium
     },
     orderAgainSec: {
-      marginTop: scale(20),
-      marginBottom: scale(10)
+      marginTop: discoverySpacing.sectionTop,
+      marginBottom: discoverySpacing.sectionBottom
     },
     topPicksSec: {
       ...alignment.MLmedium,

@@ -1,5 +1,6 @@
 import { scale } from '../../../utils/scaling'
 import { StyleSheet } from 'react-native'
+import { discoverySpacing } from '../../../ui/designSystem/tokens'
 
 const buildStyles = (props = null) =>
   StyleSheet.create({
@@ -7,8 +8,8 @@ const buildStyles = (props = null) =>
       gap: 0
     },
     topbrandsSec: {
-      marginTop: scale(20),
-      marginBottom: scale(10)
+      marginTop: discoverySpacing.sectionTop,
+      marginBottom: discoverySpacing.sectionBottom
     },
     sectionHeader: {
       paddingHorizontal: props?.spacing?.md ?? scale(12),

@@ -36,8 +36,8 @@ export default function SingleVendorProductCard({
   const href = `/product/${product.id}${product.categoryId ? `?categoryId=${product.categoryId}` : ""}`;
   return (
     <article className="group relative h-full overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface transition-shadow hover:shadow-[0_12px_30px_rgba(21,25,20,0.09)] dark:border-gray-800 dark:bg-gray-900">
-      <Link href={href} className="block h-full focus-visible:outline-none">
-        <div className="relative aspect-[16/9] overflow-hidden bg-dispatch-map dark:bg-gray-800">
+      <Link href={href} className="flex h-full flex-col focus-visible:outline-none">
+        <div className="relative aspect-[16/9] shrink-0 overflow-hidden bg-dispatch-map dark:bg-gray-800">
           {product.image ? (
             <Image
               src={product.image}
@@ -60,7 +60,7 @@ export default function SingleVendorProductCard({
             </span>
           )}
         </div>
-        <div className="p-2.5">
+        <div className="flex flex-1 flex-col p-2.5">
           <h3 className="line-clamp-1 text-sm font-medium leading-tight text-dispatch-ink dark:text-white sm:text-base">
             {product.title}
           </h3>
@@ -70,13 +70,20 @@ export default function SingleVendorProductCard({
             </p>
           )}
           {typeof originalPrice === "number" && (
-            <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm">
-              <span className="font-semibold text-primary-dark">
-                {formatCurrency(finalPrice)}
-              </span>
+            <div className="mt-auto flex flex-wrap items-end justify-between gap-x-2 gap-y-1 pt-3">
+              <div className="flex flex-wrap items-baseline gap-x-1.5">
+                <span className="text-base font-bold leading-none tracking-[-0.01em] text-dispatch-ink tabular-nums dark:text-white sm:text-lg">
+                  {formatCurrency(finalPrice)}
+                </span>
+                {hasDeal && (
+                  <span className="text-xs leading-none text-dispatch-muted line-through decoration-1 tabular-nums dark:text-gray-400">
+                    {formatCurrency(originalPrice)}
+                  </span>
+                )}
+              </div>
               {hasDeal && (
-                <span className="text-xs text-dispatch-muted line-through decoration-1 dark:text-gray-400">
-                  {formatCurrency(originalPrice)}
+                <span className="rounded-full bg-primary-light px-2 py-0.5 text-[11px] font-semibold leading-4 text-[#2f6b14] dark:bg-primary-color/15 dark:text-primary-color">
+                  Save {formatCurrency(originalPrice - finalPrice)}
                 </span>
               )}
             </div>
