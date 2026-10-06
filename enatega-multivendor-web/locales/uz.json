@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Hali sevimlilar yo'q",
+  "favorite_products_empty_description": "Tez qayta buyurtma berish uchun istalgan mahsulotdagi yurakchani bosib, uni shu yerda saqlang.",
+  "favorite_products_empty_cta": "Mahsulotlarni ko'rish"
 }

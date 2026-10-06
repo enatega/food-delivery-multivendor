@@ -36,7 +36,9 @@ export default function PersonalInfoMain() {
     setIsUpdatePhoneModalVisible(!isUpdatePhoneModalVisible);
   };
 
-  if (!profileLoading) {
+  // The profile is usually already cached by the User context; show it right
+  // away and let cache-and-network refresh it in the background.
+  if (profileData?.profile || !profileLoading) {
     return (
       <div className="p-6 w-full bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="flex items-center gap-4 mb-6 ">

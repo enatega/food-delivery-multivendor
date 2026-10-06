@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "ยังไม่มีรายการโปรด",
+  "favorite_products_empty_description": "แตะรูปหัวใจบนสินค้าใดก็ได้เพื่อบันทึกไว้ที่นี่และสั่งซื้อซ้ำได้อย่างรวดเร็ว",
+  "favorite_products_empty_cta": "เรียกดูสินค้า"
 }

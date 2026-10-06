@@ -50,7 +50,7 @@ const FavouriteProducts = () => {
         title={t('your_fav')}
         onSeeAllClick={handleSeeAllClick}
       />
-      {isFavouriteRestaurantsLoading ? (
+      {isFavouriteRestaurantsLoading && !FavouriteRestaurantsData ? (
         <CardSkeletonGrid count={4} />
       ) : FavouriteRestaurantsData?.userFavourite && FavouriteRestaurantsData.userFavourite.length > 0 ? (
         <FavouriteCardsGrid items={FavouriteRestaurantsData.userFavourite}

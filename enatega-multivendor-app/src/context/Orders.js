@@ -1,4 +1,5 @@
-import React, { useContext, useState, useCallback, useEffect, useMemo } from 'react'
+import React, { useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import { AppState } from 'react-native'
 import { useQuery, useSubscription } from '@apollo/client'
 import gql from 'graphql-tag'
 import { getUsersActiveOrders, getUsersPastOrders } from '../apollo/queries'
@@ -60,6 +61,8 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
   const [activePage, setActivePage] = useState(1)
   const [pastPage, setPastPage] = useState(1)
   const [singleVendorLiveOrders, setSingleVendorLiveOrders] = useState({})
+  const activeOrdersRef = useRef([])
+  const backgroundOrderIdsRef = useRef(new Set())
 
   function onError(error) {
     console.log('error context orders', error?.message)
@@ -119,6 +122,61 @@ export const OrdersProvider = ({ children, onOrderDelivered }) => {
     () => [...activeOrders, ...pastOrders],
     [activeOrders, pastOrders]
   )
+
+  useEffect(() => {
+    activeOrdersRef.current = activeOrders
+  }, [activeOrders])
+
+  // A WebSocket status event can be missed while React Native is suspended in
+  // the background. Remember the orders that were active when the app left,
+  // then reconcile them from the network on foreground and surface the same
+  // review prompt the live subscription would have shown.
+  useEffect(() => {
+    if (isSingleVendor || !profile) return undefined
+
+    let appState = AppState.currentState
+    let isMounted = true
+
+    const subscription = AppState.addEventListener('change', async nextState => {
+      const wasActive = appState === 'active'
+      const isReturningToForeground = appState.match(/inactive|background/) && nextState === 'active'
+
+      if (wasActive && nextState.match(/inactive|background/)) {
+        backgroundOrderIdsRef.current = new Set(
+          activeOrdersRef.current.map(order => String(order?._id)).filter(Boolean)
+        )
+      }
+
+      appState = nextState
+      if (!isReturningToForeground || backgroundOrderIdsRef.current.size === 0) return
+
+      const previouslyActiveIds = backgroundOrderIdsRef.current
+      backgroundOrderIdsRef.current = new Set()
+
+      try {
+        const [, pastResult] = await Promise.all([
+          refetchActive?.(),
+          refetchPast?.()
+        ])
+        if (!isMounted) return
+
+        const deliveredOrder = pastResult?.data?.getUsersPastOrders?.find(order =>
+          previouslyActiveIds.has(String(order?._id)) &&
+          ['DELIVERED', 'COMPLETED'].includes(order?.orderStatus) &&
+          !order?.review
+        )
+
+        if (deliveredOrder) onOrderDelivered?.(deliveredOrder)
+      } catch (error) {
+        console.log('error reconciling delivered orders on foreground', error?.message)
+      }
+    })
+
+    return () => {
+      isMounted = false
+      subscription.remove()
+    }
+  }, [isSingleVendor, onOrderDelivered, profile, refetchActive, refetchPast])
 
   useEffect(() => {
     setSingleVendorLiveOrders({})

@@ -44,7 +44,10 @@ const Home = () => {
     bannersError,
     isConnected,
     refetch,
-    refetchBanners
+    refetchBanners,
+    dealsData,
+    dealsLoading,
+    useLegacyDeals
   } = useHome()
   const { refreshing, handleRefresh, spinnerColor } = usePullToRefresh([refetch])
   useCart()
@@ -144,10 +147,10 @@ const Home = () => {
             />
               )
             : <HorizontalCategoriesList categoriesData={categoriesData} />}
-        <DiscoveryDeals />
+        <DiscoveryDeals deals={dealsData} loading={dealsLoading} useLegacyDeals={useLegacyDeals} />
       </View>
     ),
-    [isConnected, bannersData, bannersLoading, bannersError, orderConfirmation, currentTheme, t, categoriesData, loading, error, refetch, refetchBanners]
+    [isConnected, bannersData, bannersLoading, bannersError, orderConfirmation, currentTheme, t, categoriesData, loading, error, refetch, refetchBanners, dealsData, dealsLoading, useLegacyDeals]
   )
   return (
     <SafeAreaView
@@ -159,6 +162,8 @@ const Home = () => {
         data={error ? [] : categoriesData}
         renderItem={({ item }) => <WrapperHorizontalProductsList data={item} listTitle={item?.name} />}
         keyExtractor={(item) => item.id}
+        initialNumToRender={4}
+        windowSize={15}
         ListHeaderComponent={listHeader}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={spinnerColor} colors={[spinnerColor]} />}
       />

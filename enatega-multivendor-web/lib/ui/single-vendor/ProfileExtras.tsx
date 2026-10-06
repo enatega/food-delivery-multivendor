@@ -11,6 +11,7 @@ import {
   SINGLE_VENDOR_VOUCHERS,
 } from "@/lib/api/graphql/single-vendor";
 import SingleVendorProductSection from "./ProductSection";
+import FavoritesEmptyState from "./FavoritesEmptyState";
 import { normalizeProducts } from "./Discovery";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import {
@@ -42,15 +43,17 @@ export function FavoriteProducts() {
   const { data, loading } = useQuery(SINGLE_VENDOR_FAVORITES, {
     variables: { limit: 50, skip: 0 },
   });
+  const favorites = normalizeProducts(
+    data?.getFavoriteFoodsSingleVendor?.data,
+  );
   return (
     <Shell title="Favorite products">
-      {loading ? (
+      {loading && !data ? (
         <p>Loading…</p>
+      ) : favorites.length ? (
+        <SingleVendorProductSection title="" products={favorites} />
       ) : (
-        <SingleVendorProductSection
-          title=""
-          products={normalizeProducts(data?.getFavoriteFoodsSingleVendor?.data)}
-        />
+        <FavoritesEmptyState />
       )}
     </Shell>
   );

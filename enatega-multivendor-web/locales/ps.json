@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "تر اوسه هیڅ غوره توکي نشته",
+  "favorite_products_empty_description": "د ژر بیا فرمایش لپاره په هر محصول کې زړه کېکاږئ ترڅو دلته خوندي شي.",
+  "favorite_products_empty_cta": "محصولات وګورئ"
 }

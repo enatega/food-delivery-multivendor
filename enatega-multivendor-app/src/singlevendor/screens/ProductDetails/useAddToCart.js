@@ -17,7 +17,7 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
   const currentTheme = { isRTL: i18n.dir() === 'rtl', ...theme[themeContext.ThemeValue] }
 
   const { isLoggedIn } = useContext(UserContext)
-  const { setCartFromServer, items } = useCartStore()
+  const { setCartFromServer, items, addOptimisticCartItem, restoreItems } = useCartStore()
   const navigation = useNavigation()
   const { updateUserCartCount } = useUpdateUserCartCount()
 
@@ -25,14 +25,16 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
   const { enqueueTask } = useCartQueue()
 
   const onCartUpdateSuccessRef = useRef(onCartUpdateSuccess)
+  const optimisticSnapshotsRef = useRef(new Map())
   onCartUpdateSuccessRef.current = onCartUpdateSuccess
 
   const [updateUserCart, { loading: updateUserCartLoading }] = useMutation(UPDATE_USER_CART, {
     onCompleted: (data) => {
       const response = data?.userCartData
-      console.log('response_response', JSON.stringify(response, null, 2))
 
       if (!response?.success) {
+        optimisticSnapshotsRef.current.forEach((snapshot) => restoreItems(snapshot))
+        optimisticSnapshotsRef.current.clear()
         if (response?.message) {
           FlashMessage({ message: response?.message || 'Failed to Add item in cart' })
         }
@@ -50,15 +52,19 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
         lowOrderFees: response.lowOrderFees
       })
 
+      optimisticSnapshotsRef.current.clear()
+
       FlashMessage({ message: t('itemAddedToCart') })
       onCartUpdateSuccessRef.current?.(response)
     },
     onError: (error) => {
       console.error('Error updating cart:', error)
+      optimisticSnapshotsRef.current.forEach((snapshot) => restoreItems(snapshot))
+      optimisticSnapshotsRef.current.clear()
     }
   })
 
-  const addItemToCart = (foodId, categoryId, variationId, addons, count, orderItems, specialInstructions = '') => {
+  const addItemToCart = (foodId, categoryId, variationId, addons, count, orderItems, specialInstructions = '', productInfo = null) => {
     if (!isLoggedIn) {
       navigation.navigate('CreateAccount')
       return
@@ -88,6 +94,20 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
 
     const itemId = `${foodId}_${variationId}`
 
+    optimisticSnapshotsRef.current.set(itemId, items)
+    const variation = productInfo?.variations?.find((item) => item?.id === variationId)
+    addOptimisticCartItem({
+      foodId,
+      categoryId,
+      variationId,
+      addons,
+      quantity: count,
+      foodTitle: productInfo?.title,
+      foodImage: productInfo?.image,
+      variationTitle: variation?.title,
+      unitPrice: variation?.price || productInfo?.price
+    })
+
     const singleItemList = [
       {
         _id: foodId,
@@ -101,19 +121,13 @@ const useAddToCart = ({ foodId, onCartUpdateSuccess }) => {
       }
     ]
 
-    console.log('singleItemList____Json', JSON.stringify(singleItemList, null, 2))
-    console.log('orderItems____Json', JSON.stringify(orderItems, null, 2))
-
     // If orderItems is provided (array case), use it; otherwise use single object case
     const foodArray = orderItems && Array.isArray(orderItems) && orderItems.length > 0 ? orderItems : singleItemList
-
-    console.log('foodArray____Json', JSON.stringify(foodArray, null, 2))
 
     enqueueTask(
       {
         __itemId: itemId,
         run: () => {
-          console.log('Adding To Cart with itemId:', itemId)
           return updateUserCart({
             variables: {
               input: {

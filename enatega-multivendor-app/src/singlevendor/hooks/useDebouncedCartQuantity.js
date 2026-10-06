@@ -21,6 +21,7 @@ const useDebouncedCartQuantity = ({
   defaultQuantity = 0
 }) => {
   const items = useCartStore((state) => state.items)
+  const updateOptimisticCartItemQuantity = useCartStore((state) => state.updateOptimisticCartItemQuantity)
   const loadingItemIds = useCartQueueStore((state) => state.loadingItemIds)
   const { addItemToCart } = useAddToCart({ foodId })
   const { updateUserCartCount } = useUpdateUserCartCount()
@@ -28,11 +29,14 @@ const useDebouncedCartQuantity = ({
   const itemId = useMemo(() => `${foodId}_${variationId}`, [foodId, variationId])
   const cartQuantity = useMemo(() => {
     const result = getCartVariation(items, foodId, variationId)
-    return result?.variation?.quantity || 0
+    return result?.variation ? Number(result.variation.quantity || 0) : null
   }, [items, foodId, variationId])
 
-  const [quantity, setQuantity] = useState(cartQuantity || defaultQuantity)
+  const [quantity, setQuantity] = useState(cartQuantity ?? defaultQuantity)
+  const quantityRef = useRef(cartQuantity ?? defaultQuantity)
   const isInteractingRef = useRef(false)
+  const isSyncingRef = useRef(false)
+  const pendingVariationRef = useRef(null)
   const debounceRef = useRef(null)
 
   const clearDebounce = () => {
@@ -44,6 +48,7 @@ const useDebouncedCartQuantity = ({
 
   const commitQuantity = useCallback(
     (nextQuantity) => {
+      isSyncingRef.current = true
       const currentItems = useCartStore.getState().items
       const result = getCartVariation(currentItems, foodId, variationId)
       const existingQuantity = result?.variation?.quantity || 0
@@ -54,6 +59,7 @@ const useDebouncedCartQuantity = ({
         const resolvedVariationInternalId = result.variation?._id || variationId
 
         if (!foodId || !resolvedVariationInternalId || !resolvedVariationId) {
+          isSyncingRef.current = false
           return
         }
 
@@ -73,9 +79,30 @@ const useDebouncedCartQuantity = ({
         return
       }
 
+      // The optimistic delete removes the variation locally, so retain its
+      // server id to send the delete mutation immediately.
+      if (nextQuantity === 0 && pendingVariationRef.current) {
+        const pendingVariation = pendingVariationRef.current
+        updateUserCartCount(
+          {
+            variation_id: pendingVariation.internalId,
+            foodId,
+            categoryId: pendingVariation.categoryId || categoryId,
+            variationId: pendingVariation.variationId || variationId,
+            action: 'delete',
+            count: 0
+          },
+          { itemId }
+        )
+        return
+      }
+
       if (nextQuantity > 0) {
         addItemToCart(foodId, categoryId, variationId, addons, nextQuantity)
+        return
       }
+
+      isSyncingRef.current = false
     },
     [addItemToCart, categoryId, foodId, itemId, updateUserCartCount, variationId, addons]
   )
@@ -85,30 +112,55 @@ const useDebouncedCartQuantity = ({
       clearDebounce()
       debounceRef.current = setTimeout(() => {
         commitQuantity(nextQuantity)
-        isInteractingRef.current = false
-      }, 500)
+      }, 400)
     },
     [commitQuantity]
   )
 
   const increase = useCallback(() => {
-    const nextQuantity = quantity + 1
+    const nextQuantity = quantityRef.current + 1
     isInteractingRef.current = true
+    quantityRef.current = nextQuantity
     setQuantity(nextQuantity)
+    updateOptimisticCartItemQuantity({ foodId, variationId, quantity: nextQuantity })
     scheduleCommit(nextQuantity)
-  }, [quantity, scheduleCommit])
+  }, [foodId, scheduleCommit, updateOptimisticCartItemQuantity, variationId])
 
   const decrease = useCallback(() => {
-    const nextQuantity = Math.max(0, quantity - 1)
+    const nextQuantity = Math.max(0, quantityRef.current - 1)
     isInteractingRef.current = true
+    quantityRef.current = nextQuantity
+    const currentResult = getCartVariation(useCartStore.getState().items, foodId, variationId)
+    const currentVariation = currentResult?.variation
+    if (currentVariation) {
+      pendingVariationRef.current = {
+        internalId: currentVariation._id || variationId,
+        variationId: currentVariation.variationId || variationId,
+        categoryId: categoryId || currentResult?.cartItem?.categoryId
+      }
+    }
     setQuantity(nextQuantity)
-    scheduleCommit(nextQuantity)
-  }, [quantity, scheduleCommit])
+    updateOptimisticCartItemQuantity({ foodId, variationId, quantity: nextQuantity })
+    if (nextQuantity === 0) commitQuantity(nextQuantity)
+    else scheduleCommit(nextQuantity)
+  }, [categoryId, commitQuantity, foodId, scheduleCommit, updateOptimisticCartItemQuantity, variationId])
 
   useEffect(() => {
     if (isInteractingRef.current) return
-    setQuantity(cartQuantity || defaultQuantity)
+    const nextQuantity = cartQuantity ?? defaultQuantity
+    quantityRef.current = nextQuantity
+    setQuantity(nextQuantity)
   }, [cartQuantity, defaultQuantity])
+
+  useEffect(() => {
+    if (isSyncingRef.current && !loadingItemIds[itemId]) {
+      isSyncingRef.current = false
+      isInteractingRef.current = false
+      const nextQuantity = cartQuantity ?? defaultQuantity
+      quantityRef.current = nextQuantity
+      setQuantity(nextQuantity)
+    }
+  }, [cartQuantity, defaultQuantity, itemId, loadingItemIds])
 
   useEffect(() => () => clearDebounce(), [])
 

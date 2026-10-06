@@ -105,5 +105,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "אין מועדפים עדיין",
+  "favorite_products_empty_description": "הקישו על הלב בכל מוצר כדי לשמור אותו כאן להזמנה חוזרת מהירה.",
+  "favorite_products_empty_cta": "עיון במוצרים"
 }

@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Aún no hay favoritos",
+  "favorite_products_empty_description": "Toca el corazón de cualquier producto para guardarlo aquí y volver a pedirlo rápidamente.",
+  "favorite_products_empty_cta": "Explorar productos"
 }

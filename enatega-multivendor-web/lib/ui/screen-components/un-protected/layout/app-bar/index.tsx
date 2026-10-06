@@ -537,7 +537,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   <button
                     type="button"
                     className={`order-4 hidden min-w-0 items-center gap-2 rounded-lg border border-dispatch-line bg-dispatch-surface px-2 py-1.5 transition-colors duration-200 hover:border-primary-color hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color md:flex ${isSearchFocused ? "hidden" : ""}`}
-                    onClick={(event) => menuRef.current?.toggle(event)}
+                    onClick={(event) => {
+                      router.prefetch("/profile");
+                      menuRef.current?.toggle(event);
+                    }}
                     aria-controls="popup_menu_right"
                     aria-haspopup
                     title={userName}
@@ -691,6 +694,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       return (
                         <div
                           className="text-gray-600 hover:bg-gray-300 dark:text-white dark:hover:bg-gray-600  p-2 cursor-pointer"
+                          onPointerEnter={() => router.prefetch("/profile")}
                           onClick={() => router.push("/profile")}
                         >
                           {item.label}
@@ -798,7 +802,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     <button
                       type="button"
                       className="flex max-w-[44%] shrink-0 items-center gap-2 rounded-lg border border-dispatch-line bg-dispatch-surface px-1 py-1 transition-colors duration-200 hover:border-primary-color hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color md:hidden"
-                      onClick={(event) => menuRef.current?.toggle(event)}
+                      onClick={(event) => {
+                      router.prefetch("/profile");
+                      menuRef.current?.toggle(event);
+                    }}
                       aria-controls="popup_menu_right"
                       aria-haspopup
                       title={userName}

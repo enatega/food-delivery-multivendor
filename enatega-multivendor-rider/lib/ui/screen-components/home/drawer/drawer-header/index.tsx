@@ -5,13 +5,12 @@ import { UPDATE_AVAILABILITY } from "@/lib/apollo/mutations/rider.mutation";
 import { RIDER_PROFILE } from "@/lib/apollo/queries";
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
+import { AuthContext } from "@/lib/context/global/auth.context";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import CustomSwitch from "@/lib/ui/useable-components/switch-button";
 import { IRiderProfile } from "@/lib/utils/interfaces";
 import { MutationTuple, useMutation } from "@apollo/client";
-// import { showMessage } from "react-native-flash-message";
-import { useEffect, useState } from "react";
-import { showMessage } from "react-native-flash-message";
+import { useContext, useEffect, useState } from "react";
 import { isBoolean } from "lodash";
 
 const CustomDrawerHeader = () => {
@@ -19,6 +18,7 @@ const CustomDrawerHeader = () => {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { dataProfile, loadingProfile } = useUserContext();
+  const { logout } = useContext(AuthContext);
   const [isRiderAvailable, setIsRiderAvailable] = useState(false);
 
   useEffect(() => {
@@ -122,10 +122,7 @@ const CustomDrawerHeader = () => {
             onToggle={async () => {
               try {
                 if (!dataProfile?._id?.toString()) {
-                  showMessage({
-                    message: t("User ID is missing"),
-                    type: "danger",
-                  });
+                  await logout();
                   return;
                 }
 

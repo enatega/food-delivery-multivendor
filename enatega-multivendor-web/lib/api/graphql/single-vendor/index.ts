@@ -53,6 +53,7 @@ export const SINGLE_VENDOR_DISCOVERY = gql`
             title
             description
             image
+            categoryId
             isOutOfStock
             variations {
               id
@@ -76,6 +77,7 @@ export const SINGLE_VENDOR_DISCOVERY = gql`
             title
             description
             image
+            categoryId
             isOutOfStock
             variations {
               id
@@ -99,6 +101,7 @@ export const SINGLE_VENDOR_DISCOVERY = gql`
             title
             description
             image
+            categoryId
             isOutOfStock
             variations {
               id

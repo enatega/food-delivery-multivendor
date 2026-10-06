@@ -28,6 +28,10 @@ import PublicAccessTokenService, {
 import { getSecureItem, removeSecureItem } from "@/lib/services/secure-storage";
 import { IRestaurantLocation } from "@/lib/utils/interfaces";
 import { calculateDistance } from "@/lib/utils/methods/custom-functions";
+import {
+  isInvalidRiderSessionError,
+  publishSessionInvalidation,
+} from "@/lib/utils/session";
 
 interface SetupApolloOptions {
   environment: RiderEnvironment;
@@ -119,11 +123,21 @@ export default function setupApollo({
     if (isAuthRedirecting) return;
     isAuthRedirecting = true;
     try {
-      await Promise.all([
-        removeSecureItem(tokenKey),
-        removeSecureItem(riderIdKey),
-      ]);
-      router.replace("/login");
+      const subscriberCount = publishSessionInvalidation({
+        riderIdKey,
+        tokenKey,
+      });
+
+      // Queries normally run inside AuthProvider, whose subscriber performs a
+      // full logout. Keep this fallback for startup/runtime edge cases where an
+      // authenticated request fails before that provider has mounted.
+      if (subscriberCount === 0) {
+        await Promise.all([
+          removeSecureItem(tokenKey),
+          removeSecureItem(riderIdKey),
+        ]);
+        router.replace("/login");
+      }
     } finally {
       setTimeout(() => {
         isAuthRedirecting = false;
@@ -210,23 +224,9 @@ export default function setupApollo({
   );
 
   const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
-    const hasInvalidSession = (graphQLErrors || []).some((error) => {
-      const code = error?.extensions?.code;
-      const message = error.message.toLowerCase();
-      const isPublicAuthError =
-        PUBLIC_ACCESS_REQUIRED &&
-        (message.includes("fingerprint") ||
-          message.includes("public token") ||
-          message.includes("bop-auth") ||
-          message.includes("nonce"));
-      return (
-        !isPublicAuthError &&
-        (code === "TOKEN_EXPIRED" ||
-          code === "INVALID_TOKEN" ||
-          message.includes("unauthenticated") ||
-          message.includes("unauthorized"))
-      );
-    });
+    const hasInvalidSession = (graphQLErrors || []).some((error) =>
+      isInvalidRiderSessionError(error, operation.operationName),
+    );
 
     const hadUserAuthorization = Boolean(
       operation.getContext().headers?.authorization,

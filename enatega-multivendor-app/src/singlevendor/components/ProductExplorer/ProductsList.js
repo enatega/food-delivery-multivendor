@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext, useRef } from 'react'
+import React, { useState, useMemo, useContext, useRef, useEffect } from 'react'
 import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -26,9 +26,10 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
 
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
 
   const [listData, setListData] = useState(items)
-  const isSearched = useRef(false)
+  const isFetchingMore = useRef(false)
   const { loading, refetch } = useHomeProducts(
     isPaginated
       ? {
@@ -41,6 +42,14 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
       : {}
   )
 
+  // The first page is fetched by the parent screen. Keep the local list in
+  // sync when that request completes; otherwise FlashList can remain empty
+  // until a later pagination request causes a render.
+  useEffect(() => {
+    if (!isPaginated || query.trim() || isFetchingMore.current) return
+    setListData(items)
+  }, [isPaginated, items, query])
+
   const filteredLocalItems = useMemo(() => {
     if (!query.trim()) return items
     const q = query.toLowerCase()
@@ -48,27 +57,33 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
   }, [query, items])
 
   const onEndReached = async() => {
-    if (isSearched.current) {
-      isSearched.current = false
-      return
-    }
-
-    if (!isPaginated || loading) return
+    if (!isPaginated || loading || !hasMore || isFetchingMore.current) return
 
     const nextPage = page + 1
+    isFetchingMore.current = true
     setPage(nextPage)
 
-    const { data } = await refetch({
-      categoryId,
-      skip: nextPage * PAGE_LIMIT,
-      limit: PAGE_LIMIT,
-      search: query
-    })
+    try {
+      const { data } = await refetch({
+        categoryId,
+        skip: nextPage * PAGE_LIMIT,
+        limit: PAGE_LIMIT,
+        search: query
+      })
 
-    const newItems = data?.getCategoryItemsSingleVendor?.items ?? []
+      const result = data?.getCategoryItemsSingleVendor
+      const newItems = result?.items ?? []
+      const nextHasMore = result?.pagination?.hasMore
 
-    if (newItems.length > 0) {
-      setListData((prev) => [...prev, ...newItems])
+      setHasMore(nextHasMore == null ? newItems.length === PAGE_LIMIT : nextHasMore)
+      if (newItems.length > 0) {
+        setListData((prev) => {
+          const existingIds = new Set(prev.map(item => item.id))
+          return [...prev, ...newItems.filter(item => !existingIds.has(item.id))]
+        })
+      }
+    } finally {
+      isFetchingMore.current = false
     }
   }
 
@@ -81,8 +96,9 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
       search: searchText
     })
 
-    isSearched.current = true
-    setListData(data?.getCategoryItemsSingleVendor?.items ?? [])
+    const result = data?.getCategoryItemsSingleVendor
+    setListData(result?.items ?? [])
+    setHasMore(result?.pagination?.hasMore ?? false)
   }, 600)
 
   const onSearchChange = async(text) => {
@@ -91,6 +107,7 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
     if (!isPaginated) return
 
     setPage(0)
+    setHasMore(true)
     console.log('on Search Changed', text)
     debouncedSearch(text)
   }
@@ -109,11 +126,6 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
 
       {/* 🔹 Results */}
       <FlashList
-        onScroll={() => {
-          if (isSearched.current) {
-            isSearched.current = false
-          }
-        }}
         style={{ paddingHorizontal: 4 }}
         data={dataSource}
         keyExtractor={(item) => item.id}
@@ -125,11 +137,12 @@ const ProductsList = ({ onClose, items = [], isPaginated = false, categoryId = n
           />
         )}
         numColumns={2}
-        estimatedItemSize={236}
+        estimatedItemSize={248}
+        drawDistance={800}
         onEndReached={onEndReached}
-        onEndReachedThreshold={0.4}
+        onEndReachedThreshold={0.7}
         showsVerticalScrollIndicator={false}
-        ListFooterComponent={isPaginated && loading ? <ActivityIndicator style={{ marginVertical: 20 }} /> : null}
+        ListFooterComponent={isPaginated && loading && hasMore ? <ActivityIndicator style={{ marginVertical: 20 }} /> : null}
         ListEmptyComponent={<HorizontalProductsEmptyView />}
       />
     </View>

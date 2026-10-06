@@ -1024,5 +1024,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "Пока нет избранного",
+  "favorite_products_empty_description": "Нажмите на сердечко у любого товара, чтобы сохранить его здесь и быстро заказать снова.",
+  "favorite_products_empty_cta": "Смотреть товары"
 }

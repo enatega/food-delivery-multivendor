@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "ఇంకా ఫేవరెట్లు లేవు",
+  "favorite_products_empty_description": "త్వరగా మళ్లీ ఆర్డర్ చేయడానికి ఏదైనా ఉత్పత్తిపై హార్ట్‌ను నొక్కి ఇక్కడ సేవ్ చేయండి.",
+  "favorite_products_empty_cta": "ఉత్పత్తులను చూడండి"
 }

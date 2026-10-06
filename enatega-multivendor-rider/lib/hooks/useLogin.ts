@@ -54,13 +54,12 @@ const useLogin = () => {
   }) {
     setIsLoading(false);
     if (riderLogin) {
-      // Store the token (and clear the Apollo cache) before the rider-id, since
-      // writing rider-id un-skips the profile/orders queries. Doing it in this
-      // order avoids clearStore() cancelling those queries mid-flight, which
-      // left assignedOrders stuck at [] until the app was restarted.
+      // Persist the rider id first and the token last so the token remains the
+      // commit marker for a complete session. Keep setUserId until after the
+      // Apollo cache clear so profile/order queries cannot start too early.
+      await setSecureItem(riderIdKey, riderLogin.userId);
       await setTokenAsync(riderLogin.token);
       setUserId(riderLogin.userId);
-      await setSecureItem(riderIdKey, riderLogin.userId);
       router.replace(ROUTES.home as Href);
     }
   }

@@ -5,8 +5,8 @@ import 'react-native-get-random-values';
 import * as Font from 'expo-font'
 import * as Notifications from 'expo-notifications'
 import * as Updates from 'expo-updates'
-import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, Alert, AppState, BackHandler, LogBox, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { ActivityIndicator, Alert, AppState, BackHandler, Platform, StatusBar, StyleSheet, View, useColorScheme } from 'react-native'
 import * as NavigationBar from 'expo-navigation-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import FlashMessage from 'react-native-flash-message'
@@ -76,9 +76,14 @@ Notifications.setNotificationHandler({
 
 function ModeAwareApp() {
   const reviewModalRef = useRef()
+  // Keep one Apollo cache per delivery mode. Recreating the client on every
+  // toggle discarded the just-loaded discovery/products cache and forced the
+  // destination mode to fetch everything again.
+  const clientsRef = useRef(new Map())
   const [appIsReady, setAppIsReady] = useState(false)
   const [isThemeReady, setIsThemeReady] = useState(false)
   const [orderId, setOrderId] = useState()
+  const [reviewAppState, setReviewAppState] = useState(AppState.currentState)
   const [isUpdating, setIsUpdating] = useState(false)
   const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false)
   const [clarityInitialized, setClarityInitialized] = useState(false)
@@ -103,20 +108,30 @@ function ModeAwareApp() {
       console.warn('[GoogleAuth] Invalid or missing client ID fields:', invalidFields.join(', '))
     }
   }, [EXPO_CLIENT_ID, ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE])
-  const client = useMemo(
-    () => setupApolloClient({
+  const client = useMemo(() => {
+    const clientKey = `${mode}:${GRAPHQL_URL}:${WS_GRAPHQL_URL}:${PUBLIC_ACCESS_REQUIRED}`
+    const cachedClient = clientsRef.current.get(clientKey)
+    if (cachedClient) return cachedClient
+
+    const nextClient = setupApolloClient({
       GRAPHQL_URL,
       WS_GRAPHQL_URL,
       mode,
       publicAccessRequired: PUBLIC_ACCESS_REQUIRED
-    }),
-    [
-      GRAPHQL_URL,
-      mode,
-      PUBLIC_ACCESS_REQUIRED,
-      WS_GRAPHQL_URL
-    ]
-  )
+    })
+    clientsRef.current.set(clientKey, nextClient)
+    return nextClient
+  }, [
+    GRAPHQL_URL,
+    mode,
+    PUBLIC_ACCESS_REQUIRED,
+    WS_GRAPHQL_URL
+  ])
+
+  useEffect(() => () => {
+    clientsRef.current.forEach(cachedClient => cachedClient.dispose?.())
+    clientsRef.current.clear()
+  }, [])
 
   useEffect(() => {
     LiveActivityService.configure(client, mode)
@@ -124,10 +139,6 @@ function ModeAwareApp() {
     LiveActivityService.cleanAppGroupImages(24).catch(() => {})
     return unsubscribe
   }, [client, mode])
-
-  useEffect(() => () => {
-    void client.dispose?.()
-  }, [client])
 
   // Fetch/refresh the public (MetricsGeneral) token up front and keep it fresh
   // via a background timer, instead of refreshing only when a request finds it
@@ -149,6 +160,21 @@ function ModeAwareApp() {
       stopPublicAccessTokenRefresh()
     }
   }, [GRAPHQL_URL, PUBLIC_ACCESS_REQUIRED])
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', setReviewAppState)
+    return () => subscription.remove()
+  }, [])
+
+  // Modalize cannot reliably present while the native app is suspended. Keep
+  // the pending order id and open only after the app is active and the modal
+  // has received the new order prop.
+  useEffect(() => {
+    if (!orderId || reviewAppState !== 'active') return undefined
+
+    const frame = requestAnimationFrame(() => reviewModalRef.current?.open())
+    return () => cancelAnimationFrame(frame)
+  }, [orderId, reviewAppState])
 
   // Screen keep-awake is now scoped to the active order-tracking screen
   // (see OrderDetail) instead of being on app-wide, which drained battery
@@ -273,7 +299,6 @@ function ModeAwareApp() {
         const id = notification?.request?.content?.data?._id
         if (id) {
           setOrderId(id)
-          reviewModalRef?.current?.open()
         }
       }
     })
@@ -284,7 +309,6 @@ function ModeAwareApp() {
         const id = data?._id
         if (id) {
           setOrderId(id)
-          reviewModalRef?.current?.open()
         }
         return
       }
@@ -330,6 +354,10 @@ function ModeAwareApp() {
     reviewModalRef?.current?.close()
   }
 
+  const handleOrderDelivered = useCallback((order) => {
+    if (order?._id) setOrderId(order._id)
+  }, [])
+
   const handleSessionExpiredLogin = () => {
     setSessionExpiredVisible(false)
     navigationService.navigate('CreateAccount')
@@ -365,16 +393,11 @@ function ModeAwareApp() {
                     <SentryInit />
                     <UserProvider>
                       <ModeNotificationRegistration />
-                      <OrdersProvider
-                        onOrderDelivered={(order) => {
-                          setOrderId(order._id)
-                          reviewModalRef?.current?.open()
-                        }}
-                      >
+                      <OrdersProvider onOrderDelivered={handleOrderDelivered}>
                         {mode === APP_MODES.SINGLE
                           ? <SingleVendorAppContainer />
                           : <AppContainer />}
-                        <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} theme={Theme[theme]} orderId={orderId} />
+                        <ReviewModal ref={reviewModalRef} onOverlayPress={onOverlayPress} onClosed={() => setOrderId(undefined)} theme={Theme[theme]} orderId={orderId} />
                         <SessionExpiredModal
                           visible={sessionExpiredVisible}
                           onLogin={handleSessionExpiredLogin}

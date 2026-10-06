@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "अद्याप कोणतेही आवडते नाहीत",
+  "favorite_products_empty_description": "पटकन पुन्हा ऑर्डर करण्यासाठी कोणत्याही उत्पादनावरील हृदयावर टॅप करून ते येथे जतन करा.",
+  "favorite_products_empty_cta": "उत्पादने पहा"
 }

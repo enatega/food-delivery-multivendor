@@ -305,7 +305,7 @@ const Order = ({
         </View>
       </TouchableOpacity>
 
-      {orderStatus === "PICKED" && (
+      {["ASSIGNED", "PICKED"].includes(orderStatus) && (
         <OrderChatButton _id={_id} orderId={orderId} phone={user.phone} />
       )}
 

@@ -1011,5 +1011,8 @@
         }
       }
     }
-  }
+  },
+  "favorite_products_empty_title": "هنوز مورد علاقه‌ای ندارید",
+  "favorite_products_empty_description": "روی قلب هر محصول بزنید تا برای سفارش سریع دوباره اینجا ذخیره شود.",
+  "favorite_products_empty_cta": "مرور محصولات"
 }

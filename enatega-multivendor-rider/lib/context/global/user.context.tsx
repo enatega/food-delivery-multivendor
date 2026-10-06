@@ -35,6 +35,7 @@ import { getSecureItem } from "@/lib/services/secure-storage";
 import { useRiderMode } from "@/lib/context/global/rider-mode.context";
 import { RIDER_SERVER_MODES } from "@/lib/mode/rider-mode";
 import { isNewOrderForMode } from "@/lib/utils/order-state";
+import { AuthContext } from "@/lib/context/global/auth.context";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
@@ -44,6 +45,7 @@ const EMPTY_ORDERS: IOrder[] = [];
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
   const { mode, riderIdKey } = useRiderMode();
+  const { isAuthReady, logout, token } = useContext(AuthContext);
   const isSingleVendor = mode === RIDER_SERVER_MODES.SINGLE;
   const riderOrdersQuery = isSingleVendor
     ? SINGLE_VENDOR_RIDER_ORDERS
@@ -124,11 +126,22 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
   const getUserId = useCallback(async () => {
     const id = await getSecureItem(riderIdKey);
-
-    if (id) {
-      setUserId(id);
-    }
+    setUserId(id ?? "");
   }, [riderIdKey]);
+
+  useEffect(() => {
+    if (!isAuthReady || !token || !userId || loadingProfile) return;
+
+    const profileError = errorProfile?.message?.toLowerCase() ?? "";
+    const riderNoLongerExists =
+      profileError.includes("rider does not exist") ||
+      profileError.includes("rider not found");
+    const completedWithoutProfile = Boolean(dataProfile) && !dataProfile?.rider;
+
+    if (riderNoLongerExists || completedWithoutProfile) {
+      void logout();
+    }
+  }, [dataProfile, errorProfile, isAuthReady, loadingProfile, logout, token, userId]);
 
   // UseEffects
 
