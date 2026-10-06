@@ -47,7 +47,7 @@ const HorizontalProductsList = ({ ListData = [], listTitle = 'Drinks', isLoading
         </View>
           )
         : (
-        <FlatList ListEmptyComponent={<HorizontalProductsEmptyView />} data={ListData} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles(currentTheme).scrollContent, containerStyles]} keyExtractor={(item) => item.id.toString()} renderItem={({ item: drink }) => <ProductCard product={{ ...drink, categoryId: drink?.categoryId || categoryId }} onAddToCart={handleAddToCart} onCardPress={onProductPress} />} />
+        <FlatList ListEmptyComponent={<HorizontalProductsEmptyView />} data={ListData} horizontal initialNumToRender={3} maxToRenderPerBatch={4} windowSize={5} showsHorizontalScrollIndicator={false} contentContainerStyle={[styles(currentTheme).scrollContent, containerStyles]} keyExtractor={(item) => item.id.toString()} renderItem={({ item: drink }) => <ProductCard product={drink?.categoryId ? drink : { ...drink, categoryId }} onAddToCart={handleAddToCart} onCardPress={onProductPress} />} />
           )}
     </View>
   )

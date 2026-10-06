@@ -4,11 +4,11 @@ import useHomeProducts from '../screens/Home/useHomeProducts'
 import WrapperSearchModal from './ProductExplorer/WrapperSearchModal'
 import SectionListError from './SectionListError'
 
-const WrapperHorizontalProductsList = ({ data = null, listTitle = '' }) => {
+const WrapperHorizontalProductsList = ({ data = null, listTitle = '', loadProducts = true }) => {
   const hasPreview = Array.isArray(data?.items)
   const { loading, data: productsData, error, refetch } = useHomeProducts({
     categoryId: data?.id,
-    skipQuery: hasPreview
+    skipQuery: !loadProducts || hasPreview
   })
   const products = hasPreview
     ? data.items
@@ -18,6 +18,19 @@ const WrapperHorizontalProductsList = ({ data = null, listTitle = '' }) => {
   const hasNoProducts = Array.isArray(products)
     ? products.length === 0
     : !loading
+
+  if (!loadProducts) {
+    return (
+      <HorizontalProductsList
+        categoryId={data?.id}
+        listTitle={listTitle}
+        viewType={data?.viewType}
+        ListData={[]}
+        isLoading
+        setSearchVisible={setSearchVisible}
+      />
+    )
+  }
 
   if (!error && hasNoProducts) {
     return null

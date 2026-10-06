@@ -20,13 +20,13 @@ const CartQuantityController = ({ foodId, categoryId, variationId, addons = [], 
     defaultQuantity
   })
 
-  const showCount = !isLoading
+  // Keep the optimistic quantity visible while the server synchronizes.
+  const showCount = true
 
   const appearAnim = useRef(new Animated.Value(0)).current
-  const countAnim = useRef(new Animated.Value(0)).current
-  const prevQuantityRef = useRef(quantity)
 
   const shouldShowController = !(collapsedWhenZero && quantity === 0)
+  const canChangeWhileSyncing = !collapsedWhenZero
 
   useEffect(() => {
     if (!shouldShowController) return
@@ -38,19 +38,6 @@ const CartQuantityController = ({ foodId, categoryId, variationId, addons = [], 
       tension: 90
     }).start()
   }, [shouldShowController, appearAnim])
-
-  useEffect(() => {
-    if (quantity === prevQuantityRef.current) return
-    prevQuantityRef.current = quantity
-    countAnim.setValue(12)
-    Animated.parallel([
-      Animated.timing(countAnim, {
-        toValue: 0,
-        duration: 220,
-        useNativeDriver: true
-      })
-    ]).start()
-  }, [quantity, countAnim])
 
   const controllerAnimatedStyle = useMemo(
     () => ({
@@ -68,17 +55,6 @@ const CartQuantityController = ({ foodId, categoryId, variationId, addons = [], 
     [appearAnim]
   )
 
-  const countAnimatedStyle = useMemo(
-    () => ({
-      transform: [{ translateY: countAnim }],
-      opacity: countAnim.interpolate({
-        inputRange: [0, 12],
-        outputRange: [1, 0]
-      })
-    }),
-    [countAnim]
-  )
-
   if (collapsedWhenZero && quantity === 0) {
     return (
       <Pressable style={[styles(currentTheme).addButton, variant === 'details' && styles(currentTheme).addButtonLarge, isOutOfStock && styles(currentTheme).disabledButton]} onPress={increase} disabled={isLoading || isOutOfStock} accessibilityRole='button' accessibilityState={{ disabled: isLoading || isOutOfStock }} accessibilityLabel={isOutOfStock ? 'Out of stock' : 'Add to cart'}>
@@ -89,28 +65,33 @@ const CartQuantityController = ({ foodId, categoryId, variationId, addons = [], 
 
   return (
     <Animated.View style={[styles(currentTheme).controller, variant === 'details' && styles(currentTheme).controllerLarge, controllerAnimatedStyle]}>
-      <Pressable style={styles(currentTheme).controlButton} onPress={decrease} disabled={isLoading} accessibilityState={{ disabled: isLoading }}>
+      <Pressable
+        style={({ pressed }) => [styles(currentTheme).controlButton, pressed && styles(currentTheme).pressedButton]}
+        onPress={decrease}
+        disabled={isLoading && !canChangeWhileSyncing}
+        hitSlop={6}
+        accessibilityState={{ disabled: isLoading && !canChangeWhileSyncing }}
+      >
         <AntDesign name={quantity <= 1 ? 'delete' : 'minus'} size={14} color={currentTheme.singleVendorOnBrand} />
       </Pressable>
 
       <View style={styles(currentTheme).countContainer}>
         <View style={styles(currentTheme).countSlot}>
           {showCount && (
-            <Animated.View style={countAnimatedStyle}>
-              <TextDefault H6 bolder textColor={currentTheme.fontMainColor}>
-                {quantity}
-              </TextDefault>
-            </Animated.View>
-          )}
-          {isLoading && (
-            <View style={styles(currentTheme).countSpinner}>
-              <DotLoader color={currentTheme.singleVendorBrandForeground} />
-            </View>
+            <TextDefault H6 bolder textColor={currentTheme.fontMainColor}>
+              {quantity}
+            </TextDefault>
           )}
         </View>
       </View>
 
-      <Pressable style={[styles(currentTheme).controlButton, isOutOfStock && styles(currentTheme).disabledButton]} onPress={increase} disabled={isLoading || isOutOfStock} accessibilityState={{ disabled: isLoading || isOutOfStock }}>
+      <Pressable
+        style={({ pressed }) => [styles(currentTheme).controlButton, isOutOfStock && styles(currentTheme).disabledButton, pressed && !isOutOfStock && styles(currentTheme).pressedButton]}
+        onPress={increase}
+        disabled={isOutOfStock}
+        hitSlop={6}
+        accessibilityState={{ disabled: isOutOfStock }}
+      >
         <AntDesign name='plus' size={14} color={currentTheme.singleVendorOnBrand} />
       </Pressable>
     </Animated.View>
@@ -213,6 +194,10 @@ const styles = (currentTheme) =>
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: currentTheme.singleVendorBrand
+    },
+    pressedButton: {
+      opacity: 0.65,
+      transform: [{ scale: 0.9 }]
     },
     countContainer: {
       minWidth: 24,

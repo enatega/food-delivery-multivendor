@@ -1,5 +1,79 @@
 import gql from 'graphql-tag'
 
+export const GET_SINGLE_VENDOR_DISCOVERY = gql`
+  fragment SingleVendorDiscoveryProduct on HomeFoodItem {
+    id
+    categoryId
+    title
+    description
+    image
+    isOutOfStock
+    variations {
+      id
+      title
+      price
+      isOutOfStock
+      deal {
+        id
+        discountType
+        discountValue
+        isActive
+      }
+    }
+  }
+
+  fragment SingleVendorDiscoveryDealProduct on CategoryProduct {
+    id
+    categoryId
+    title
+    description
+    image
+    isOutOfStock
+    variations {
+      id
+      title
+      price
+      isOutOfStock
+      deal {
+        id
+        discountType
+        discountValue
+        isActive
+      }
+    }
+  }
+
+  query SingleVendorDiscovery($previewLimit: Int, $dealLimit: Int) {
+    singleVendorDiscovery(previewLimit: $previewLimit, dealLimit: $dealLimit) {
+      banners {
+        _id
+        title
+        description
+        action
+        screen
+        file
+        parameters
+        buttonText
+      }
+      categories {
+        id
+        name
+        icon
+        image
+        description
+        itemCount
+        viewType
+        items { ...SingleVendorDiscoveryProduct }
+      }
+      deals {
+        limitedTime { items { ...SingleVendorDiscoveryDealProduct } }
+        weekly { items { ...SingleVendorDiscoveryDealProduct } }
+        newOffers { items { ...SingleVendorDiscoveryDealProduct } }
+      }
+    }
+  }
+`
+
 export const GET_SINGLE_VENDOR_BANNERS = gql`
   query SingleVendorBanners($page: Int, $limit: Int) {
     singleVendorBanners(page: $page, limit: $limit) {

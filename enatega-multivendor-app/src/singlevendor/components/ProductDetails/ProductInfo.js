@@ -19,7 +19,7 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
   // Todo: temp states for handling fav and item count
   console.log('productInfoData', productInfoData)
   const items = useCartStore((state) => state.items)
-  const { addItemToCart, updateUserCartLoading } = useAddToCart({ foodId: productInfoData?.id })
+  const { addItemToCart, updateUserCartLoading, loadingItemIds } = useAddToCart({ foodId: productInfoData?.id })
 
   const firstAvailableVariation = getFirstAvailableVariation(productInfoData?.variations)
   const selectedVariation = selectedVariationId || firstAvailableVariation?.id || productInfoData?.variations?.[0]?.id
@@ -37,6 +37,8 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
   const dealLabel = getDealLabel(selectedVariationData?.deal, config?.currencySymbol)
   const hasDeal = discountPrice < actualPrice
   const isOutOfStock = isProductOutOfStock(productInfoData) || isVariationOutOfStock(selectedVariationData)
+  const cartOperationId = `${productInfoData?.id}_${selectedVariation}`
+  const isAddingToCart = updateUserCartLoading || !!loadingItemIds?.[cartOperationId]
 
   return (
     <>
@@ -118,11 +120,11 @@ const ProductInfo = ({ t, productInfoData, currentTheme, selectedVariationId, se
                 <ContinueWithPhoneButton
                   containerStyles={{ minWidth: 130 }}
                   textStyle={{ paddingHorizontal: 8 }}
-                  isLoading={updateUserCartLoading}
-                  isDisabled={updateUserCartLoading || isOutOfStock}
+                  isLoading={isAddingToCart}
+                  isDisabled={isAddingToCart || isOutOfStock}
                   title={isOutOfStock ? 'out_of_stock_label' : 'addToCart'}
                   onPress={() => {
-                    if (!isOutOfStock) addItemToCart(productInfoData?.id, productInfoData?.categoryId, selectedVariation, selectedAddons || [], 1)
+                    if (!isOutOfStock) addItemToCart(productInfoData?.id, productInfoData?.categoryId, selectedVariation, selectedAddons || [], 1, undefined, '', productInfoData)
                   }}
                 />
               </View>

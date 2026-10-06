@@ -47,6 +47,72 @@ const useCartStore = create((set) => ({
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
 
+  // Update the local cart immediately while the server mutation runs in the background.
+  addOptimisticCartItem: ({ foodId, categoryId, variationId, addons = [], quantity = 1, foodTitle, foodImage, variationTitle, unitPrice }) =>
+    set((state) => {
+      const foodIndex = state.items.findIndex((item) => item?.foodId === foodId)
+      const optimisticVariation = {
+        _id: variationId,
+        variationId,
+        variationTitle,
+        addons,
+        quantity,
+        unitPrice: Number(unitPrice || 0),
+        itemTotal: Number(unitPrice || 0) * quantity
+      }
+
+      if (foodIndex === -1) {
+        return {
+          items: [
+            ...state.items,
+            {
+              foodId,
+              categoryId,
+              foodTitle,
+              foodImage,
+              variations: [optimisticVariation],
+              foodTotal: optimisticVariation.itemTotal
+            }
+          ]
+        }
+      }
+
+      const items = [...state.items]
+      const food = items[foodIndex]
+      const variationIndex = food.variations?.findIndex((variation) => variation?.variationId === variationId || variation?._id === variationId) ?? -1
+
+      if (variationIndex === -1) {
+        items[foodIndex] = {
+          ...food,
+          variations: [...(food.variations || []), optimisticVariation],
+          foodTotal: Number(food.foodTotal || 0) + optimisticVariation.itemTotal
+        }
+      }
+
+      return { items }
+    }),
+
+  restoreItems: (items) => set({ items }),
+
+  updateOptimisticCartItemQuantity: ({ foodId, variationId, quantity }) =>
+    set((state) => ({
+      items: state.items
+        .map((item) => {
+          if (item?.foodId !== foodId) return item
+
+          const variations = (item.variations || [])
+            .map((variation) =>
+              variation?.variationId === variationId || variation?._id === variationId
+                ? { ...variation, quantity }
+                : variation
+            )
+            .filter((variation) => Number(variation?.quantity || 0) > 0)
+
+          return variations.length > 0 ? { ...item, variations } : null
+        })
+        .filter(Boolean)
+    })),
+
   updateCartItemQuantity: ({ _id, foodId, variationId, quantity, foodTotal, itemTotal, grandTotal, isBelowMinimumOrder }) => {
     set((state) => {
       // 1️⃣ Create new items array

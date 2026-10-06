@@ -69,6 +69,10 @@ Notifications.setNotificationHandler({
 
 function ModeAwareApp() {
   const reviewModalRef = useRef()
+  // Keep one Apollo cache per delivery mode. Recreating the client on every
+  // toggle discarded the just-loaded discovery/products cache and forced the
+  // destination mode to fetch everything again.
+  const clientsRef = useRef(new Map())
   const [appIsReady, setAppIsReady] = useState(false)
   const [isThemeReady, setIsThemeReady] = useState(false)
   const [orderId, setOrderId] = useState()
@@ -97,20 +101,30 @@ function ModeAwareApp() {
       console.warn('[GoogleAuth] Invalid or missing client ID fields:', invalidFields.join(', '))
     }
   }, [EXPO_CLIENT_ID, ANDROID_CLIENT_ID_GOOGLE, IOS_CLIENT_ID_GOOGLE])
-  const client = useMemo(
-    () => setupApolloClient({
+  const client = useMemo(() => {
+    const clientKey = `${mode}:${GRAPHQL_URL}:${WS_GRAPHQL_URL}:${PUBLIC_ACCESS_REQUIRED}`
+    const cachedClient = clientsRef.current.get(clientKey)
+    if (cachedClient) return cachedClient
+
+    const nextClient = setupApolloClient({
       GRAPHQL_URL,
       WS_GRAPHQL_URL,
       mode,
       publicAccessRequired: PUBLIC_ACCESS_REQUIRED
-    }),
-    [
-      GRAPHQL_URL,
-      mode,
-      PUBLIC_ACCESS_REQUIRED,
-      WS_GRAPHQL_URL
-    ]
-  )
+    })
+    clientsRef.current.set(clientKey, nextClient)
+    return nextClient
+  }, [
+    GRAPHQL_URL,
+    mode,
+    PUBLIC_ACCESS_REQUIRED,
+    WS_GRAPHQL_URL
+  ])
+
+  useEffect(() => () => {
+    clientsRef.current.forEach(cachedClient => cachedClient.dispose?.())
+    clientsRef.current.clear()
+  }, [])
 
   useEffect(() => {
     LiveActivityService.configure(client, mode)
@@ -118,10 +132,6 @@ function ModeAwareApp() {
     LiveActivityService.cleanAppGroupImages(24).catch(() => {})
     return unsubscribe
   }, [client, mode])
-
-  useEffect(() => () => {
-    void client.dispose?.()
-  }, [client])
 
   // Fetch/refresh the public (MetricsGeneral) token up front and keep it fresh
   // via a background timer, instead of refreshing only when a request finds it

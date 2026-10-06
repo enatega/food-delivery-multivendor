@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client'
 import {
+  GET_SINGLE_VENDOR_DISCOVERY,
   GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR,
   GET_SINGLE_VENDOR_BANNERS
 } from '../../apollo/queries'
@@ -28,25 +29,40 @@ const useHome = () => {
   const { location, setLocation, isConnected } = useContext(LocationContext)
   const client = useApolloClient()
 
-  const categoriesQuery = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR, {
+  const discoveryQuery = useQuery(GET_SINGLE_VENDOR_DISCOVERY, {
+    variables: { previewLimit: 10, dealLimit: 5 },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true
+  })
+  const discovery = discoveryQuery.data?.singleVendorDiscovery
+  const useLegacyQueries = !!discoveryQuery.error || (!discoveryQuery.loading && !discovery)
+
+  const categoriesQuery = useQuery(GET_RESTAURANT_CATEGORIES_SINGLE_VENDOR, {
+    skip: !useLegacyQueries,
+    fetchPolicy: 'cache-first'
   })
   const bannersQuery = useQuery(GET_SINGLE_VENDOR_BANNERS, {
     variables: { page: 1, limit: 10 },
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true
+    skip: !useLegacyQueries,
+    fetchPolicy: 'cache-first'
   })
 
   const refetch = useCallback(async() => {
+    if (!useLegacyQueries) {
+      await discoveryQuery.refetch()
+      return
+    }
     await Promise.allSettled([
       categoriesQuery.refetch(),
       bannersQuery.refetch(),
       client.refetchQueries({ include: ['SingleVendorDealSection'] })
     ])
-  }, [bannersQuery.refetch, categoriesQuery.refetch, client])
+  }, [bannersQuery.refetch, categoriesQuery.refetch, client, discoveryQuery.refetch, useLegacyQueries])
+
+  const refetchBanners = useCallback(() =>
+    useLegacyQueries ? bannersQuery.refetch() : discoveryQuery.refetch(),
+  [bannersQuery.refetch, discoveryQuery.refetch, useLegacyQueries])
 
   const [mutate] = useMutation(SELECT_ADDRESS, {
     onError
@@ -84,14 +100,19 @@ const useHome = () => {
   }, [])
 
   return {
-    loading: categoriesQuery.loading,
-    data: categoriesQuery.data,
-    error: categoriesQuery.error,
+    loading: useLegacyQueries ? categoriesQuery.loading : discoveryQuery.loading,
+    data: discovery
+      ? { getRestaurantCategoriesSingleVendor: discovery.categories }
+      : categoriesQuery.data,
+    error: useLegacyQueries ? categoriesQuery.error : undefined,
     refetch,
-    bannersLoading: bannersQuery.loading,
-    bannersData: { banners: bannersQuery.data?.singleVendorBanners || [] },
-    bannersError: bannersQuery.error,
-    refetchBanners: bannersQuery.refetch,
+    bannersLoading: useLegacyQueries ? bannersQuery.loading : discoveryQuery.loading,
+    bannersData: { banners: discovery?.banners || bannersQuery.data?.singleVendorBanners || [] },
+    bannersError: useLegacyQueries ? bannersQuery.error : undefined,
+    refetchBanners,
+    dealsData: discovery?.deals,
+    dealsLoading: discoveryQuery.loading,
+    useLegacyDeals: useLegacyQueries,
     t,
     currentTheme,
     isLoggedIn,
