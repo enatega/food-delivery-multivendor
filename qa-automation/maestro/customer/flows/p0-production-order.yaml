@@ -1,0 +1,12 @@
+appId: ${APP_ID}
+name: CM-P0-007 Customer iOS manual production order and cancellation
+tags:
+  - production-write
+  - ios
+---
+- runFlow: ../subflows/launch.yaml
+- runFlow: ../subflows/login.yaml
+- runFlow: ../subflows/discovery.yaml
+- runFlow: ../subflows/configure-cart.yaml
+- runFlow: ../subflows/place-cancel-order.yaml
+

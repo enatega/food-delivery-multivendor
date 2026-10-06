@@ -1,0 +1,117 @@
+appId: ${APP_ID}
+name: CM-P1-030 An in-flight order opens a live tracking detail
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# CM-P1-013 reads both order tabs but only ever OPENS a past order, so the
+# tracking screen a customer actually stares at — the one behind an active
+# order card, with the live status on it — is opened by nothing except the
+# manual production-write flow. That leaves the app's most-visited authenticated
+# screen unasserted on every read-only run.
+#
+# ActiveOrders cards navigate to OrderDetail by _id. This flow opens the first
+# one and proves the detail identifies the order and reports a live status. When
+# the account has no order in flight it asserts the empty state instead, so it
+# passes on a quiet account without ever pretending to have covered the detail.
+#
+# Strictly read-only. `customer.order.cancel-open` fires a real cancellation
+# mutation, so it is asserted as present and deliberately never tapped; the
+# cancel modal is never opened.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/open-profile.yaml
+# The hub offers two rows into MyOrders; this is the one a customer taps while
+# waiting for food, so it is the one used here.
+- tapOn:
+    id: customer.profile.active-orders
+- extendedWaitUntil:
+    visible:
+      id: customer.orders.screen
+    timeout: 30000
+- assertVisible:
+    id: customer.orders.tab.current
+# The screen opens on Current. Let the query land before branching, otherwise an
+# empty-state assertion can beat a list that was still loading.
+- extendedWaitUntil:
+    visible:
+      id: "customer\\.orders\\.(active\\.card\\..*|active\\.empty)"
+    timeout: 30000
+- takeScreenshot: active-orders-list
+# --- No order in flight -----------------------------------------------------
+- runFlow:
+    when:
+      notVisible:
+        id: "customer\\.orders\\.active\\.card\\..*"
+    commands:
+      - assertVisible:
+          id: customer.orders.active.empty
+      - takeScreenshot: active-orders-empty
+# --- An order in flight -----------------------------------------------------
+- runFlow:
+    when:
+      visible:
+        id: "customer\\.orders\\.active\\.card\\..*"
+    commands:
+      - tapOn:
+          id: "customer\\.orders\\.active\\.card\\..*"
+          index: 0
+      - extendedWaitUntil:
+          visible:
+            id: customer.order.screen
+          timeout: 30000
+      # Identity: the detail must name the order, not render a shell.
+      - assertVisible:
+          id: customer.order.number
+      - copyTextFrom:
+          id: customer.order.number
+      - evalScript: ${output.activeOrderNumber = maestro.copiedText.trim()}
+      - assertTrue:
+          condition: ${output.activeOrderNumber.length > 0 && !output.activeOrderNumber.includes('undefined')}
+          label: An active order detail must expose a real order number
+      # Liveness: getStatusMessage renders customer-facing prose here, so the
+      # assertion is that it produced something rather than an empty heading.
+      - assertVisible:
+          id: customer.order.status
+      - copyTextFrom:
+          id: customer.order.status
+      - evalScript: ${output.activeStatus = maestro.copiedText.trim()}
+      - assertTrue:
+          condition: ${output.activeStatus.length > 0 && !output.activeStatus.includes('undefined')}
+          label: An active order must render a non-empty status message
+      # The raw enum is a QA-build-only hook, so it is read when the build
+      # exposes it and skipped when it does not. Reading it is what makes the
+      # status assertion above resistant to a copy change: the prose may be
+      # translated, the enum may not be anything other than a live state.
+      - runFlow:
+          when:
+            visible:
+              id: customer.order.status-code
+          commands:
+            - copyTextFrom:
+                id: customer.order.status-code
+            - evalScript: ${output.statusCode = maestro.copiedText.trim().toUpperCase()}
+            - assertTrue:
+                condition: ${['PENDING', 'ACCEPTED', 'ASSIGNED', 'PICKED'].includes(output.statusCode)}
+                label: An order on the Current tab must carry an in-flight status
+      # OrderDetail renders the cancel control only while the order is still
+      # cancelable, so its absence is legitimate on an order past that point.
+      # When it is offered it must be offered — and this flow must not use it.
+      - runFlow:
+          when:
+            visible:
+              id: customer.order.cancel-open
+          commands:
+            - assertVisible:
+                id: customer.order.cancel-open
+            - assertNotVisible:
+                id: customer.order.cancel-confirm
+      - takeScreenshot: active-order-detail
+      # Backing out must return to the list, not strand the customer on the
+      # tracking screen — the complaint this screen generates most often.
+      - runFlow: ../../subflows/back.yaml
+      - assertVisible:
+          id: customer.orders.screen
+      - assertVisible:
+          id: customer.orders.tab.current

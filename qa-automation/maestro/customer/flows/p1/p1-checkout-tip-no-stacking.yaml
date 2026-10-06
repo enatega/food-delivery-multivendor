@@ -1,0 +1,207 @@
+appId: ${APP_ID}
+name: CM-P1-024 A preset tip and a custom tip replace each other and never stack
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# The checkout holds the tip in two separate pieces of state — `selectedTip` for
+# the preset chips and `tip` for the "Other" amount — but the pricing memo reads
+# only `tip || selectedTip`. Two independent writers feeding one reader is the
+# classic shape of a double-charge, and the app relies on two side effects to
+# keep them exclusive:
+#
+#   - tapping a preset calls `setTip(null)` before selecting
+#   - `useEffect([tip])` calls `setSelectedTip(null)` whenever a custom tip lands
+#
+# If either is dropped the totals still LOOK right on the screen that set them,
+# so nothing but arithmetic catches it. This flow drives the transition in both
+# directions and requires the total to reflect exactly one tip each time.
+#
+# It also covers the preset toggle: `setSelectedTip(prev => prev === label ? null
+# : label)` means tapping the selected chip again clears it, and the total must
+# return to its untipped figure.
+#
+# The preset chips render only when the Tips query returns variations, which is
+# live configuration rather than allowlisted fixture data, so the preset half is
+# conditional. Both branches carry their own assertions — neither can pass on a
+# screen with no tip controls at all.
+#
+# All tip state is local to the component. No mutation is sent and place-order is
+# never tapped, so no order is created.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- runFlow: ../../subflows/open-checkout.yaml
+- tapOn:
+    id: customer.checkout.payment.cod
+- tapOn:
+    id: customer.checkout.fulfillment.delivery
+- waitForAnimationToEnd:
+    timeout: 5000
+# Tipping is delivery-only, so the section must be here before anything below
+# means anything.
+- assertVisible:
+    id: customer.checkout.tip-section
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.baseTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.baseTotal) && output.baseTotal > 0}
+    label: The delivery total must be a positive number before any tip is chosen
+- runFlow:
+    when:
+      visible:
+        id: customer.checkout.tip.preset.0
+    commands:
+      # --- Preset applies its own printed amount ---------------------------
+      # The chip renders "<symbol> <label>", so its own text is the authority on
+      # what it should add. Reading it here keeps the flow independent of
+      # whatever variations the Tips query happens to return.
+      - copyTextFrom:
+          id: customer.checkout.tip.preset.0
+      - evalScript: ${output.presetAmount = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+      - assertTrue:
+          condition: ${Number.isFinite(output.presetAmount) && output.presetAmount > 0}
+          label: The first tip preset must print a positive amount
+      - tapOn:
+          id: customer.checkout.tip.preset.0
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - copyTextFrom:
+          id: customer.checkout.total
+      - evalScript: ${output.presetTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+      - assertTrue:
+          condition: ${Math.abs(output.presetTotal - (output.baseTotal + output.presetAmount)) < 0.011}
+          label: Selecting a preset must raise the total by exactly the amount it prints
+      - takeScreenshot: tip-preset-selected
+      # --- Tapping the same preset again clears it -------------------------
+      - tapOn:
+          id: customer.checkout.tip.preset.0
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - copyTextFrom:
+          id: customer.checkout.total
+      - evalScript: ${output.untippedTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+      - assertTrue:
+          condition: ${Math.abs(output.untippedTotal - output.baseTotal) < 0.011}
+          label: Re-tapping the selected preset must clear it and restore the untipped total
+      - takeScreenshot: tip-preset-toggled-off
+      # --- Preset, then custom: the custom amount must replace it -----------
+      - tapOn:
+          id: customer.checkout.tip.preset.0
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn:
+          id: customer.checkout.tip-open
+      - extendedWaitUntil:
+          visible:
+            id: customer.checkout.tip-input
+          timeout: 15000
+      - tapOn:
+          id: customer.checkout.tip-input
+      - inputText: "7"
+      # Dismiss with the return key, not just hideKeyboard. Cloud devices report
+      # "Couldn't hide the keyboard", and a keyboard left up covers the submit
+      # control below the field, so the tap lands on the keyboard and the screen
+      # never advances. This input defines no onSubmitEditing, so Enter only blurs.
+      # hideKeyboard stays as a fallback, optional so "no keyboard" is not a failure.
+      - pressKey: Enter
+      - hideKeyboard:
+          optional: true
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn:
+          id: customer.checkout.tip-apply
+      - extendedWaitUntil:
+          notVisible:
+            id: customer.checkout.tip-input
+          timeout: 15000
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - copyTextFrom:
+          id: customer.checkout.total
+      - evalScript: ${output.customOverPresetTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+      # The whole point of the flow. base + 7 is correct; base + preset + 7 is
+      # the double charge, and it is called out by name so a failure reads as a
+      # diagnosis rather than a number mismatch.
+      - assertTrue:
+          condition: ${Math.abs(output.customOverPresetTotal - (output.baseTotal + 7)) < 0.011}
+          label: A custom tip must replace the selected preset, not add to it
+      - assertTrue:
+          condition: ${Math.abs(output.customOverPresetTotal - (output.baseTotal + output.presetAmount + 7)) >= 0.011}
+          label: The preset and the custom tip must never both be charged
+      - takeScreenshot: tip-custom-replaces-preset
+      # --- Custom, then preset: the preset must replace it ------------------
+      - tapOn:
+          id: customer.checkout.tip.preset.0
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - copyTextFrom:
+          id: customer.checkout.total
+      - evalScript: ${output.presetOverCustomTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+      - assertTrue:
+          condition: ${Math.abs(output.presetOverCustomTotal - (output.baseTotal + output.presetAmount)) < 0.011}
+          label: Choosing a preset must replace the custom tip, not add to it
+      - takeScreenshot: tip-preset-replaces-custom
+- runFlow:
+    when:
+      notVisible:
+        id: customer.checkout.tip.preset.0
+    commands:
+      # No presets came back from the Tips query. The custom tip is still the
+      # only writer that matters, so assert it applies exactly once rather than
+      # letting this run pass on an absent section.
+      - assertVisible:
+          id: customer.checkout.tip-open
+      - tapOn:
+          id: customer.checkout.tip-open
+      - extendedWaitUntil:
+          visible:
+            id: customer.checkout.tip-input
+          timeout: 15000
+      - tapOn:
+          id: customer.checkout.tip-input
+      - inputText: "7"
+      - pressKey: Enter
+      - hideKeyboard:
+          optional: true
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn:
+          id: customer.checkout.tip-apply
+      - extendedWaitUntil:
+          notVisible:
+            id: customer.checkout.tip-input
+          timeout: 15000
+      - copyTextFrom:
+          id: customer.checkout.total
+      - evalScript: ${output.customOnlyTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+      - assertTrue:
+          condition: ${Math.abs(output.customOnlyTotal - (output.baseTotal + 7)) < 0.011}
+          label: With no presets offered, a custom tip of 7 must raise the total by exactly 7
+      - takeScreenshot: tip-custom-only-no-presets
+# --- Pickup discards whichever tip is live ---------------------------------
+# The pricing memo forces the tip to 0 at pickup regardless of which of the two
+# state slots holds it, so this must land on the untipped delivery figure minus
+# the delivery charge — asserted only as "strictly below the tipped total", since
+# the delivery charge itself is restaurant data.
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: customer.checkout.tip-section
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.pickupTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.pickupTotal) && output.pickupTotal < output.baseTotal + 0.011}
+    label: Pickup must discard the tip and never exceed the untipped delivery total
+- assertTrue:
+    condition: ${output.pickupTotal <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must stay at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: tip-discarded-on-pickup

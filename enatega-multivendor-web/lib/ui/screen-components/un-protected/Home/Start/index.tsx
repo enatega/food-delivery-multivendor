@@ -12,8 +12,6 @@ import useLocation from "@/lib/hooks/useLocation";
 import useSetUserCurrentLocation from "@/lib/hooks/useSetUserCurrentLocation";
 import LoginInForSavedAddresses from "@/lib/ui/useable-components/LoginForSavedAddresses";
 
-// imports related to auth module
-import AuthModal from "../../authentication";
 import { useAuth } from "@/lib/context/auth/auth.context";
 import { useTranslations } from "next-intl";
 import { hasValidAuthToken } from "@/lib/utils/methods/auth";
@@ -23,8 +21,7 @@ const Start: React.FC = () => {
   const router = useRouter();
   const { getCurrentLocation } = useLocation();
   const { onSetUserLocation } = useSetUserCurrentLocation();
-  const { isAuthModalVisible, setIsAuthModalVisible, setActivePanel } =
-    useAuth();
+  const { setIsAuthModalVisible, setActivePanel } = useAuth();
 
   const handleModalToggle = () => {
     if (!hasValidAuthToken()) {
@@ -89,11 +86,6 @@ const Start: React.FC = () => {
 
         />
       </svg>
-
-      <AuthModal
-        handleModalToggle={handleModalToggle}
-        isAuthModalVisible={isAuthModalVisible}
-      />
     </div>
   );
 };

@@ -28,6 +28,7 @@ function Search(props) {
             </View>
             <View style={styles(searchTheme).inputContainer}>
               <TextInput
+                testID='customer.search.input'
                 style={[
                   styles(searchTheme).bodyStyleOne,
                   {
@@ -49,6 +50,7 @@ function Search(props) {
           <View style={styles(searchTheme).filterContainer}>
             {!!props?.search && (
               <TouchableOpacity
+                testID='customer.search.clear'
                 onPress={() => {
                   props?.setSearch('')
                 }}>

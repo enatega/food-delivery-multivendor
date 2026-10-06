@@ -1,0 +1,16 @@
+appId: ${APP_ID}
+---
+# Pop the current stack screen.
+#
+# Maestro's `back` command is a no-op on the iOS simulator, and the stack header's
+# back control is `headerBackImage` inside React Navigation's own pressable, so it
+# carries no testID we can add without replacing the header. It does expose the
+# accessibility label "Go back", which Maestro matches as an anchored regex, so
+# the aggregated "Go back Your Cart" header node does not collide with it.
+#
+# Like the native Alert's Cancel/OK in p2, this is an English-locale string. If
+# the app is localised away from English, this needs the localised label.
+- tapOn:
+    text: "Go back"
+- waitForAnimationToEnd:
+    timeout: 5000

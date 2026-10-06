@@ -102,6 +102,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
 
   return (
     <View
+      testID="store.orders.delivered.screen"
       className="pt-14 flex-1 items-center"
       style={[style.container, { backgroundColor: appTheme.themeBackground }]}
     >

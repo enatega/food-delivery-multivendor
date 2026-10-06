@@ -117,6 +117,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Render
   return (
     <View
+      testID="rider.orders.new.screen"
       className="pt-14 flex-1 pb-16"
       style={[style.container, { backgroundColor: appTheme.screenBackground }]}
     >

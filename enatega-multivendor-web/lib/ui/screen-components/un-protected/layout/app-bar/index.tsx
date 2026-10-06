@@ -521,6 +521,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 {!authToken && !isSearchFocused ? (
                   <button
+                    data-testid="customer-login-trigger"
                     className={`order-4 flex h-11 items-center justify-center gap-2 rounded-xl px-2.5 text-sm font-medium text-dispatch-ink transition-colors duration-200 hover:bg-dispatch-map hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color active:scale-[0.98] md:px-3 ${isMarketplaceLanding ? "md:border md:border-dispatch-line md:px-5" : ""}`}
                     onClick={handleModalToggle}
                     type="button"
@@ -569,6 +570,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     className={`relative items-center gap-1 sm:gap-2 ${isMarketplaceLanding ? "order-1 flex" : "order-3 hidden sm:flex"}`}
                   >
                     <button
+                      data-testid="theme-toggle"
                       type="button"
                       onClick={toggleTheme}
                       aria-label={t("theme")}
@@ -581,6 +583,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       )}
                     </button>
                     <button
+                      data-testid="language-menu-trigger"
                       type="button"
                       onClick={(e) => languageMenuRef.current?.toggle(e)}
                       aria-label={currentLanguageName}
@@ -617,7 +620,10 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                 )}
                 <div className="order-2 p-0">
                   {cartCount > 0 && !isSearchFocused && (
-                    <div
+                    <button
+                      type="button"
+                      data-testid="customer-cart-trigger"
+                      aria-label={t("show_items_btn")}
                       className="hidden h-11 items-center justify-between gap-3 rounded-lg bg-primary-color px-4 text-dispatch-ink transition-colors duration-200 hover:bg-primary-hover lg:flex lg:min-w-[240px]"
                       onClick={() => {
                         if (!authToken) {
@@ -638,7 +644,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       <span className="text-sm font-medium">
                         {formattedSubtotal}
                       </span>
-                    </div>
+                    </button>
                   )}
                   {isSearchFocused ? (
                     <button
@@ -655,6 +661,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   ) : (
                     <button
                       type="button"
+                      data-testid="customer-cart-trigger"
                       aria-label={t("show_items_btn")}
                       className={`${cartCount > 0 ? "lg:hidden" : ""} relative flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 hover:bg-dispatch-map focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/40 active:scale-95 dark:hover:bg-gray-800`}
                       onClick={() => {

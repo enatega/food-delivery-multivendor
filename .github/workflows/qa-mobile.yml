@@ -1,0 +1,134 @@
+name: QA Mobile (self-hosted iOS)
+
+# Runs the customer iOS Maestro suites on a push to a QA branch.
+#
+# Maestro can only drive an app that is already BUILT and installed on a booted
+# simulator, and building the QA app needs a local patch that `expo prebuild`
+# discards (see qa-automation/MOBILE-IOS.md). So this cannot run on a
+# GitHub-hosted runner. It runs on a SELF-HOSTED macOS runner — a Mac you
+# register yourself, which costs nothing — against the app already installed
+# there.
+#
+# What that means for coverage: a push that changes the Maestro FLOWS is tested
+# for real. A push that changes the customer APP source is not rebuilt here, so
+# it still runs against the installed build — the static half of that risk
+# (dropped test IDs) is covered on every push by CM-CONTRACT-001 in
+# qa-checks.yml.
+#
+# OFF BY DEFAULT. Nothing runs until the repository variable
+# QA_MOBILE_RUNNER_ENABLED is set to "true", so pushing this file does not
+# leave every commit waiting on a runner that does not exist yet.
+#
+# SECURITY — this is a public repository. A self-hosted runner executes
+# whatever a workflow tells it to on the machine it runs on, so:
+#   - this workflow triggers only on `push` and `workflow_dispatch`, both of
+#     which require write access. It never triggers on `pull_request`.
+#   - before enabling it, set Settings → Actions → General → "Fork pull request
+#     workflows from outside collaborators" to "Require approval for all outside
+#     collaborators". Otherwise a fork PR could add its own `pull_request`
+#     trigger to a workflow and target this runner.
+#   - the runner carries a custom `enatega-ios` label so only jobs that ask for
+#     it by name land there.
+# Setup steps are in MOBILE-IOS.md under "On-push iOS runs".
+
+on:
+  push:
+    branches:
+      - 'qa/**'
+    paths:
+      - 'qa-automation/maestro/**'
+      - 'qa-automation/scripts/mobile-runner.js'
+      - 'qa-automation/scripts/run-with-slack.js'
+      - 'enatega-multivendor-app/src/**'
+      - '.github/workflows/qa-mobile.yml'
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Read-only suite to run'
+        type: choice
+        default: smoke
+        options:
+          - smoke
+          - regression
+          - navigation
+
+# One simulator, one run. A newer push supersedes a run still in progress.
+concurrency:
+  group: qa-mobile-ios
+  cancel-in-progress: true
+
+jobs:
+  ios:
+    name: iOS ${{ inputs.suite || 'smoke' }} (read-only)
+    if: ${{ vars.QA_MOBILE_RUNNER_ENABLED == 'true' && github.repository == 'enatega/food-delivery-multivendor' }}
+    runs-on: [self-hosted, macOS, enatega-ios]
+    # Smoke takes ~10 minutes. Regression is longer, and the Maestro iOS driver
+    # has been seen dying ~45 minutes into a full local run, so the cap is
+    # generous but finite: a hung simulator must not hold the runner forever.
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: qa-automation
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      QA_BRANCH: ${{ github.ref_name }}
+      SUITE: ${{ inputs.suite || 'smoke' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # A launchd or GUI-started runner inherits a bare environment: Homebrew's
+      # JDK is not on PATH, and Maestro exits with "Unable to locate a Java
+      # Runtime" without it.
+      - name: Put the JDK and Homebrew on PATH
+        run: |
+          echo "/opt/homebrew/opt/openjdk@17/bin" >> "$GITHUB_PATH"
+          echo "/opt/homebrew/bin" >> "$GITHUB_PATH"
+          echo "JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home" >> "$GITHUB_ENV"
+          # Credentials stay on the runner Mac and never pass through GitHub.
+          # mobile-runner.js loads whatever QA_MOBILE_ENV_FILE names.
+          echo "QA_MOBILE_ENV_FILE=$HOME/.enatega-qa/.env.mobile.local" >> "$GITHUB_ENV"
+
+      - name: Check the runner is prepared
+        run: |
+          if [ ! -f "$QA_MOBILE_ENV_FILE" ]; then
+            echo "::error::$QA_MOBILE_ENV_FILE is missing. See MOBILE-IOS.md, 'On-push iOS runs'."
+            exit 1
+          fi
+          java -version
+          maestro --version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install QA automation dependencies
+        run: npm ci
+
+      # `booted` resolves arbitrarily when several simulators are up, and simctl
+      # lists one "iPhone 17 Pro" per runtime. resolve-simulator.py picks the
+      # booted match (else the newest runtime); every other booted device is shut
+      # down so the runner's `booted` lookups mean this one.
+      - name: Select the simulator
+        run: |
+          TARGET=$(python3 scripts/resolve-simulator.py "iPhone 17 Pro")
+          for udid in $(xcrun simctl list devices booted | grep -oE '[0-9A-F]{8}-[0-9A-F-]{27}'); do
+            [ "$udid" != "$TARGET" ] && xcrun simctl shutdown "$udid" || true
+          done
+          xcrun simctl boot "$TARGET" 2>/dev/null || true
+          echo "Using simulator $TARGET"
+
+      - name: Preflight
+        run: npm run mobile:preflight:ios
+
+      # run-with-slack.js posts a card whatever the outcome, then exits with the
+      # suite's own code, so a red suite still fails this job.
+      - name: Run the ${{ env.SUITE }} suite
+        run: npm run "slack:mobile:$SUITE"
+
+      - name: Upload Maestro report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-${{ env.SUITE }}-${{ github.run_id }}
+          path: qa-automation/reports/maestro
+          retention-days: 14

@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+---
+# See the store subflow of the same name: expo-dev-client builds cold-start into
+# the Expo dev launcher, not the app. Skipped entirely on a release build.
+# Both apps ask for a push token on launch and, on a simulator, surface
+# "Must use physical device for Push Notifications" as a system alert that
+# swallows every tap underneath it until dismissed.
+- tapOn:
+    text: "OK"
+    optional: true
+- runFlow:
+    when:
+      visible:
+        text: "Development servers"
+    commands:
+      - tapOn:
+          text: ${METRO_URL}
+          index: 0
+      - extendedWaitUntil:
+          visible:
+            id: "rider\\.(auth\\.username|orders\\.new\\.screen|drawer\\.toggle)"
+          timeout: 120000
+# Both apps ask for a push token on launch and, on a simulator, surface
+# "Must use physical device for Push Notifications" as a system alert that
+# swallows every tap underneath it until dismissed.
+- tapOn:
+    text: "OK"
+    optional: true
+# A dev client that auto-reconnects to Metro skips the launcher entirely and
+# then spends 45s+ building the bundle, and the push-token alert only appears
+# once that bundle runs. Keep clearing alerts until real app UI is on screen
+# rather than tapping once before the app has even rendered.
+- repeat:
+    while:
+      notVisible:
+        id: "rider\\.(auth\\.username|orders\\.new\\.screen|drawer\\.toggle)"
+    times: 40
+    commands:
+      - tapOn:
+          text: "OK"
+          optional: true
+      - tapOn:
+          text: "Dismiss"
+          optional: true
+# Cold starts race the store/rider async i18n init: a component calls
+# useTranslation() before i18next has loaded its resources and LogBox covers the
+# app with "Render Error: Cannot read property 'length' of undefined". The app
+# itself is fine underneath, so dismiss the overlay and carry on. Remove this
+# once the apps initialise i18n before their first render.
+- tapOn:
+    text: "Dismiss"
+    optional: true

@@ -1,0 +1,100 @@
+appId: ${APP_ID}
+name: CM-P3-004 Cart and checkout controls must open and dismiss correctly
+tags:
+  - regression
+  - production-readonly
+  - ios
+  - navigation
+---
+# Every control on the cart and checkout screens that opens something is asserted
+# as an open/dismiss pair. A modal that opens but does not close is the worst
+# case on this path: the customer is left holding a full cart they cannot pay for.
+#
+# Strictly read-only. `customer.checkout.place-order` is never tapped, and no
+# tip or voucher value is committed — each modal is opened and dismissed.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- assertVisible:
+    id: customer.cart.screen
+# --- The special-instructions modal ----------------------------------------
+- tapOn:
+    id: customer.cart.instructions-open
+- extendedWaitUntil:
+    visible:
+      id: customer.cart.instructions-input
+    timeout: 15000
+- takeScreenshot: cart-instructions-open
+- tapOn:
+    id: customer.cart.instructions-done
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.cart.screen
+- assertNotVisible:
+    id: customer.cart.instructions-input
+# --- Cart pushes checkout ---------------------------------------------------
+- tapOn:
+    id: customer.cart.checkout
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.screen
+    timeout: 30000
+- takeScreenshot: checkout-from-cart
+# --- The tip modal ----------------------------------------------------------
+- tapOn:
+    id: customer.checkout.tip-open
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.tip-input
+    timeout: 15000
+- takeScreenshot: checkout-tip-open
+- tapOn:
+    id: customer.checkout.tip-close
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.screen
+- assertNotVisible:
+    id: customer.checkout.tip-input
+# --- The voucher modal ------------------------------------------------------
+- tapOn:
+    id: customer.checkout.voucher-open
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.voucher-input
+    timeout: 15000
+- takeScreenshot: checkout-voucher-open
+- tapOn:
+    id: customer.checkout.voucher-close
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.screen
+- assertNotVisible:
+    id: customer.checkout.voucher-input
+# --- Fulfillment and payment switch in place, without navigating away ------
+# These are not navigation controls, but a regression that pushes a screen from
+# them is a navigation bug, so the assertion is that checkout is still here.
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.screen
+- tapOn:
+    id: customer.checkout.payment.cod
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.screen
+- assertVisible:
+    id: customer.checkout.total
+# --- Popping checkout returns to the cart, with the cart intact ------------
+- runFlow: ../../subflows/back.yaml
+- assertVisible:
+    id: customer.cart.screen
+- assertVisible:
+    id: "customer\\.cart\\.item\\.${PRODUCT_ID}"
+- takeScreenshot: cart-after-checkout-back

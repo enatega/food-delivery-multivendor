@@ -378,7 +378,7 @@ function Account(props) {
 
   return (
     <>
-      <View style={styles(currentTheme).formContainer}>
+      <View testID='customer.account.screen' style={styles(currentTheme).formContainer}>
         <ScreenHeader title={t('Account')} border />
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles(currentTheme).flex}>
           <ScrollView
@@ -390,9 +390,9 @@ function Account(props) {
             <View style={styles(currentTheme).mainContainer}>
               <View style={styles(currentTheme).subContainer}>
                 <View>
-                  <ButtonContainer title={t('email')} detail={resolvedProfile?.email} status={resolvedProfile?.emailIsVerified ? 'verified' : 'notVerified'} onPress='null' />
+                  <ButtonContainer testID='customer.account.email' detailTestID='customer.account.email-value' title={t('email')} detail={resolvedProfile?.email} status={resolvedProfile?.emailIsVerified ? 'verified' : 'notVerified'} onPress='null' />
                   <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
-                  <ButtonContainer
+                  <ButtonContainer testID='customer.account.phone' detailTestID='customer.account.phone-value'
                     title={t('phone')}
                     detail={resolvedProfile?.phone}
                     status={resolvedProfile?.phoneIsVerified ? 'verified' : 'notVerified'}
@@ -403,7 +403,7 @@ function Account(props) {
                     }
                   />
                   <Divider insetStart={tokens.spacing.lg} insetEnd={tokens.spacing.lg} />
-                  <ButtonContainer
+                  <ButtonContainer testID='customer.account.name' detailTestID='customer.account.name-value'
                     title={t('name')}
                     detail={resolvedProfile?.name}
                     status='null'
@@ -536,7 +536,7 @@ function Account(props) {
                 </View> */}
 
                 <View style={styles(accountTheme).containerButton}>
-                  <TouchableOpacity activeOpacity={0.5} style={styles(accountTheme).addButton} onPress={logoutClick}>
+                  <TouchableOpacity testID='customer.account.logout' activeOpacity={0.5} style={styles(accountTheme).addButton} onPress={logoutClick}>
                     <View style={styles(currentTheme).contentContainer}>
                       <TextDefault bold H5 textColor={tokens.colors.danger}>
                         {t('Logout')}

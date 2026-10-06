@@ -27,7 +27,7 @@ function CartComponent(props) {
     <View style={styles(currentTheme).mainContainer}>
       <View style={styles(currentTheme).subContainer}>
       <View style={styles(currentTheme).actionContainer}>
-        <TouchableOpacity
+        <TouchableOpacity testID='customer.item.quantity-decrease'
           activeOpacity={0.7}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           style={[
@@ -42,12 +42,12 @@ function CartComponent(props) {
           />
         </TouchableOpacity>
 
-        <View style={styles(currentTheme).actionContainerView}>
+        <View testID='customer.item.quantity' style={styles(currentTheme).actionContainerView}>
           <TextDefault H5 bold textColor={currentTheme.colors.textPrimary}>
           {quantity}
           </TextDefault>
         </View>
-        <TouchableOpacity
+        <TouchableOpacity testID='customer.item.quantity-increase'
           activeOpacity={0.7}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           style={[
@@ -58,7 +58,7 @@ function CartComponent(props) {
           <AntDesign name='plus' size={scale(18)} color={currentTheme.colors.textOnAccent} />
         </TouchableOpacity>
       </View>
-        <TouchableOpacity
+        <TouchableOpacity testID='customer.item.add-to-cart'
           activeOpacity={0.7}
           onPress={props?.onPress.bind(this, quantity)}
           style={[styles(currentTheme).btnContainer, !props?.disabled && styles(currentTheme).btnContainerPending]}>

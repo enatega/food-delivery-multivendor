@@ -35,7 +35,7 @@ export default function Detail({ theme, from, orderNo, deliveryAddress, items, c
         <TextDefault textColor={theme.colors.textSecondary} H5 style={{ ...alignment.MBmedium }} isRTL>
           {t('yourOrder')}
         </TextDefault>
-        <TextDefault textColor={theme.colors.accent} bold H4 style={{ ...alignment.MBmedium }} isRTL>
+        <TextDefault testID='customer.order.number' textColor={theme.colors.accent} bold H4 style={{ ...alignment.MBmedium }} isRTL>
           #{orderNo}
         </TextDefault>
       </View>

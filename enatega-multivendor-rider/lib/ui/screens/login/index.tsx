@@ -146,6 +146,7 @@ const LoginScreen = () => {
                         return (
                           <TouchableOpacity
                             key={serverMode}
+                            testID={`rider.auth.mode.${serverMode.toLowerCase()}`}
                             accessibilityRole="button"
                             accessibilityState={{ selected }}
                             disabled={isLogging}
@@ -237,6 +238,7 @@ const LoginScreen = () => {
                       }}
                     >
                       <TextInput
+                        testID="rider.auth.username"
                         className="flex-1 h-12 text-base"
                         style={{ color: appTheme.fontMainColor }}
                         placeholder={t("Email")}
@@ -263,6 +265,7 @@ const LoginScreen = () => {
                       }}
                     >
                       <TextInput
+                        testID="rider.auth.password"
                         className="flex-1 h-12 text-base"
                         style={{ color: appTheme.fontMainColor }}
                         placeholder={t("Password")}
@@ -273,6 +276,7 @@ const LoginScreen = () => {
                         onBlur={handleBlur("password")}
                       />
                       <TouchableOpacity
+                        testID="rider.auth.password-visibility"
                         onPress={() => setPasswordVisible(!passwordVisible)}
                         className="ml-2"
                       >
@@ -289,6 +293,7 @@ const LoginScreen = () => {
                       </Text>
                     )}
                     <CustomContinueButton
+                      testID="rider.auth.login-submit"
                       title={t("Login")}
                       onPress={() => handleSubmit()}
                       disabled={isLogging}

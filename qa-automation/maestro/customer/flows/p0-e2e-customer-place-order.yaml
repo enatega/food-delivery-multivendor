@@ -1,0 +1,15 @@
+appId: ${APP_ID}
+name: CM-E2E-001 Customer places a real delivery order (stage 1 of 3)
+tags:
+  - e2e-customer
+  - production-write
+  - ios
+---
+# Stage 1 of the cross-app E2E. Stages 2 (store) and 3 (rider) run on their own
+# simulators and are sequenced by scripts/e2e-runner.js, which reads the order
+# number this stage writes into a screenshot filename.
+- runFlow: ../subflows/launch.yaml
+- runFlow: ../subflows/login.yaml
+- runFlow: ../subflows/discovery.yaml
+- runFlow: ../subflows/configure-cart.yaml
+- runFlow: ../subflows/place-order-delivery.yaml

@@ -123,6 +123,7 @@ const LoginScreen = () => {
                         return (
                           <TouchableOpacity
                             key={option.value}
+                            testID={`store.auth.mode.${option.value.toLowerCase()}`}
                             accessibilityRole="button"
                             accessibilityState={{ selected }}
                             disabled={isLogging || isSwitchingMode}
@@ -211,6 +212,7 @@ const LoginScreen = () => {
                       }}
                     >
                       <TextInput
+                        testID="store.auth.username"
                         className="flex-1 h-12 text-bas"
                         style={{ color: appTheme.fontMainColor }}
                         placeholder={t("Username or Email")}
@@ -240,6 +242,7 @@ const LoginScreen = () => {
                       }}
                     >
                       <TextInput
+                        testID="store.auth.password"
                         className="flex-1 h-12 text-base"
                         style={{ color: appTheme.fontMainColor }}
                         placeholder={t("Password")}
@@ -249,6 +252,7 @@ const LoginScreen = () => {
                         onBlur={handleBlur("password")}
                       />
                       <TouchableOpacity
+                        testID="store.auth.password-visibility"
                         onPress={() => setPasswordVisible(!passwordVisible)}
                         className="ml-2"
                       >
@@ -273,6 +277,7 @@ const LoginScreen = () => {
                     )}
                     {/* Login Button */}
                     <CustomContinueButton
+                      testID="store.auth.login-submit"
                       title={t("Login")}
                       disabled={isLogging || isSwitchingMode}
                       isLoading={isLogging}

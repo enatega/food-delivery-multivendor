@@ -424,6 +424,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
           {/* Quantity Controls - Rounded Rectangle Container */}
           <div className="flex items-center space-x-2 bg-gray-200 dark:bg-gray-400 rounded-[42px] px-3 py-1 flex-[0.2]">
             <button
+              aria-label="Decrease product quantity"
               className="bg-white text-black text-2xl rounded-full w-6 h-6 flex rtl:ml-2 items-center justify-center shadow"
               onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
               type="button"
@@ -434,6 +435,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
               {quantity}
             </span>
             <button
+              aria-label="Increase product quantity"
               className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center shadow"
               onClick={() => setQuantity((prev) => prev + 1)}
               type="button"
@@ -444,6 +446,7 @@ export default function FoodItemDetail(props: IFoodItemDetalComponentProps) {
 
           {/* Add to Order Button - Takes Remaining 80% */}
           <button
+            data-testid="add-to-cart"
             className={`${isFormValid() ? "bg-primary-color" : "bg-gray-300"} text-black px-4 py-2 text-[500] font-[14px] rounded-full flex flex-col md:flex-row items-center justify-between flex-[0.8]`}
             onClick={handleAddToCart}
             disabled={!isFormValid()}

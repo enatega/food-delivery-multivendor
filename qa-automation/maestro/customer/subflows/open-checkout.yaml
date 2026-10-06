@@ -1,0 +1,10 @@
+appId: ${APP_ID}
+---
+# Move a populated cart to the checkout screen. Callers are responsible for
+# choosing fulfillment and payment; nothing here taps place-order.
+- tapOn:
+    id: customer.cart.checkout
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.screen
+    timeout: 30000

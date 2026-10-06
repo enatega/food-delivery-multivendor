@@ -9,13 +9,13 @@ import { useTranslation } from 'react-i18next'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 
-const EmptyView = ({ title, description, buttonText, navigateTo = 'Main' }) => {
+const EmptyView = ({ title, description, buttonText, navigateTo = 'Main', testID }) => {
   const { t } = useTranslation()
   const navigation = useNavigation()
   const themeContext = useContext(ThemeContext)
   const currentTheme = theme[themeContext.ThemeValue]
   return (
-    <View style={styles().mainContainerEmpty}>
+    <View testID={testID} style={styles().mainContainerEmpty}>
       <View style={styles().subContainerImage}>
         <View style={styles().imageContainer}>
           <EmptyCart width={scale(200)} height={scale(200)} />

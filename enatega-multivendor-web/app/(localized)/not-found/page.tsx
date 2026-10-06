@@ -31,6 +31,9 @@ export default function NotFound() {
   return (
     <div className="w-screen h-screen">
       <div className="w-full h-full bg-transparent flex flex-col justify-center items-center">
+        <h1 className="text-3xl font-semibold text-gray-800 dark:text-white">
+          Page not found
+        </h1>
         <div className="h-[500px] w-[500px]">
           <Lottie animationData={animationData} loop />
         </div>

@@ -1,0 +1,56 @@
+appId: ${APP_ID}
+name: CM-P1-011 Authenticated session survives an app restart
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# A cold restart that keeps device storage must restore the session, and a
+# cleared install must not. Both directions are asserted so a pass cannot come
+# from the profile tab simply failing to render.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- stopApp:
+    appId: ${APP_ID}
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+- tapOn:
+    id: customer.tab.profile
+# The auth wall must not reappear for a restored session.
+- extendedWaitUntil:
+    notVisible:
+      id: customer.auth.welcome
+    timeout: 15000
+- assertNotVisible:
+    id: customer.auth.continue-email
+- takeScreenshot: session-restored
+# Control: wiping storage and the keychain must put the auth wall back, which is
+# what makes the assertion above meaningful.
+- stopApp:
+    appId: ${APP_ID}
+- launchApp:
+    appId: ${APP_ID}
+    clearState: true
+    clearKeychain: true
+    permissions:
+      all: deny
+      location: inuse
+      notifications: deny
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+- tapOn:
+    id: customer.tab.profile
+- extendedWaitUntil:
+    visible:
+      id: customer.auth.welcome
+    timeout: 15000
+- assertVisible:
+    id: customer.auth.continue-email
+- takeScreenshot: session-cleared

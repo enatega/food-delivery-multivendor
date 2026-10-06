@@ -32,7 +32,7 @@ const ItemCard = ({ item, onPressItem, restaurant, tagCart }) => {
   const imageUrl = item?.image && item?.image?.trim() !== '' ? item?.image : IMAGE_LINK
 
   return (
-    <RectButton
+    <RectButton testID={`customer.product.card.${item?._id}`}
       onPress={handleAddToCart}
       rippleColor={currentTheme.rippleColor}
       style={styles(currentTheme).button}

@@ -95,18 +95,21 @@ export default function Layout() {
       <Tabs.Screen
         name="index"
         options={{
+          tabBarButtonTestID: "rider.tab.orders.new",
           title: t("New Orders"),
         }}
       />
       <Tabs.Screen
         name="processing"
         options={{
+          tabBarButtonTestID: "rider.tab.orders.processing",
           title: t("Processing"),
         }}
       />
       <Tabs.Screen
         name="delivered"
         options={{
+          tabBarButtonTestID: "rider.tab.orders.delivered",
           title: t("Delivered"),
         }}
       />

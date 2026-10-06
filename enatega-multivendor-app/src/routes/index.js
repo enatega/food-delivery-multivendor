@@ -301,6 +301,7 @@ function BottomTabNavigator() {
         name='Discovery'
         component={Main}
         options={({ navigation }) => ({
+          tabBarTestID: 'customer.tab.discovery',
           tabBarLabel: t('Discovery'),
           ...mainNavigationOptions({
             headerMenuBackground: currentTheme.themeBackground,
@@ -314,6 +315,7 @@ function BottomTabNavigator() {
         name='Restaurants'
         component={Menu}
         options={{
+          tabBarTestID: 'customer.tab.restaurants',
           tabBarLabel: t('Restaurants')
         }}
         listeners={({ navigation }) => ({
@@ -336,6 +338,7 @@ function BottomTabNavigator() {
         name='Store'
         component={Menu}
         options={{
+          tabBarTestID: 'customer.tab.store',
           tabBarLabel: t('Store')
         }}
         listeners={({ navigation }) => ({
@@ -359,6 +362,7 @@ function BottomTabNavigator() {
         name='Search'
         getComponent={() => require('../screens/Search/SearchScreen').default}
         options={{
+          tabBarTestID: 'customer.tab.search',
           tabBarLabel: t('search')
         }}
       />
@@ -366,6 +370,7 @@ function BottomTabNavigator() {
         name='Profile'
         component={MultiVendorProfileTab}
         options={{
+          tabBarTestID: 'customer.tab.profile',
           tabBarLabel: t('titleProfile')
         }}
       />

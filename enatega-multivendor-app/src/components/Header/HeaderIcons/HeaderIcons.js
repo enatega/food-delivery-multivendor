@@ -254,6 +254,7 @@ function RightButton(props) {
         /> */}
         {cartCount >= 0 && (
           <HeaderBackButton
+            testID='customer.header.cart'
             truncatedLabel=''
             pressColorAndroid={route.name === 'Main' && rippleColor}
             labelVisible={false}

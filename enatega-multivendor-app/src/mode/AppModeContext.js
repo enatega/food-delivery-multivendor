@@ -39,7 +39,7 @@ export const AppModeProvider = ({ children }) => {
   const isModeToggleEnabled = forcedMode === null
   const singleVendorAvailable =
     forcedMode === APP_MODES.SINGLE ||
-    getEnvironmentConfig(Updates.channel, APP_MODES.SINGLE).SINGLE_VENDOR_ENABLED
+    getEnvironmentConfig(process.env.EXPO_PUBLIC_APP_ENV || Updates.channel, APP_MODES.SINGLE).SINGLE_VENDOR_ENABLED
 
   useEffect(() => {
     let mounted = true

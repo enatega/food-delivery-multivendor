@@ -1,0 +1,38 @@
+appId: ${APP_ID}
+---
+# Scoped to ORDER_NUMBER for the same reason as the store stage: on production
+# the other cards in this list are real orders belonging to real riders.
+- tapOn:
+    id: rider.tab.orders.new
+- extendedWaitUntil:
+    visible:
+      id: "rider.order.card.${ORDER_NUMBER}"
+    timeout: ${NEW_ORDER_TIMEOUT}
+- scrollUntilVisible:
+    element:
+      id: "rider.order.card.${ORDER_NUMBER}"
+    direction: DOWN
+    timeout: 30000
+    centerElement: false
+- copyTextFrom:
+    id: "rider.order.status.${ORDER_NUMBER}"
+- assertTrue:
+    condition: ${maestro.copiedText.toUpperCase().includes('ACCEPTED')}
+    label: The rider must only see the order after the store has accepted it
+- takeScreenshot: rider-order-offered-${ORDER_NUMBER}
+- tapOn:
+    id: "rider.order.assign-me.${ORDER_NUMBER}"
+# assignOrder moves the order out of New Orders and into Processing, which is
+# the observable proof that the rider is now attached to it.
+- tapOn:
+    id: rider.tab.orders.processing
+- extendedWaitUntil:
+    visible:
+      id: "rider.order.card.${ORDER_NUMBER}"
+    timeout: 45000
+- copyTextFrom:
+    id: "rider.order.status.${ORDER_NUMBER}"
+- assertTrue:
+    condition: ${maestro.copiedText.toUpperCase().includes('ASSIGNED') || maestro.copiedText.toUpperCase().includes('PICKED')}
+    label: The order must report ASSIGNED once the rider takes it
+- takeScreenshot: rider-order-assigned-${ORDER_NUMBER}

@@ -60,7 +60,7 @@ export const CancelModal = ({ theme, modalVisible, setModalVisible, cancelOrder,
             ) : (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <View style={{ ...alignment.MTlarge }}>
-                  <Button text={t('cancelOrder')} buttonProps={{ onPress: handleCancelOrder, disabled: isCancelling }} buttonStyles={[styles.cancelButtonContainer(theme), { backgroundColor: theme.red600 }]} textProps={{ textColor: theme.white }} textStyles={{ ...alignment.Pmedium }} />
+                  <Button text={t('cancelOrder')} buttonProps={{ testID: 'customer.order.cancel-confirm', onPress: handleCancelOrder, disabled: isCancelling }} buttonStyles={[styles.cancelButtonContainer(theme), { backgroundColor: theme.red600 }]} textProps={{ textColor: theme.white }} textStyles={{ ...alignment.Pmedium }} />
                 </View>
                 <View style={{ ...alignment.MTsmall }}>
                   <Button text={t('waitForOrder')} buttonProps={{ onPress: setModalVisible }} buttonStyles={styles.dismissButtonContainer(theme)} textStyles={{ ...alignment.Pmedium, color: theme.newIconColor }} />

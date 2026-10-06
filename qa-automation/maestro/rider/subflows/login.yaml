@@ -1,0 +1,43 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    when:
+      visible:
+        id: rider.auth.username
+    commands:
+      # Multivendor tab first: the single-vendor tab talks to a different
+      # backend where these rider credentials do not exist. Switching tabs also
+      # re-runs the prefill, so it happens before any typing.
+      - tapOn:
+          id: rider.auth.mode.multi
+          optional: true
+      # See the store login subflow: the screen prefills demo credentials, so a
+      # run either types nothing or clears each field before typing.
+      - runFlow:
+          when:
+            true: ${USE_PREFILLED_CREDENTIALS == 'false'}
+          commands:
+            - tapOn:
+                id: rider.auth.username
+            - eraseText: 60
+            - inputText: ${RIDER_USERNAME}
+            - pressKey: Enter
+            - hideKeyboard:
+                optional: true
+            - tapOn:
+                id: rider.auth.password
+            - eraseText: 60
+            - inputText: ${RIDER_PASSWORD}
+            - pressKey: Enter
+            - hideKeyboard:
+                optional: true
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn:
+          id: rider.auth.login-submit
+- extendedWaitUntil:
+    visible:
+      id: rider.orders.new.screen
+    timeout: 45000
+- assertVisible:
+    id: rider.orders.new.screen

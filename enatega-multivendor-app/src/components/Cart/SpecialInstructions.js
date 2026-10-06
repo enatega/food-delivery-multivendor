@@ -24,7 +24,7 @@ export const SpecialInstructions = ({ theme, instructions, onSubmitInstructions,
     const styles = useStyles(theme)
 
     return (
-      <TouchableOpacity
+      <TouchableOpacity testID='customer.cart.instructions-open'
         activeOpacity={0.75}
         style={styles.instructionRow}
         onPress={showModal}

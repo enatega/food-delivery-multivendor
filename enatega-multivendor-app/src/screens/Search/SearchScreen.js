@@ -347,7 +347,7 @@ const SearchScreen = () => {
 
       {search
         ? renderTagsOrSearches()
-        : <ScrollView
+        : <ScrollView testID='customer.search.screen'
             style={styles(searchTheme).contentScroll}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps='handled'

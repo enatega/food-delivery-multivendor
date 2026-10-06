@@ -95,7 +95,10 @@ const SetTimeScreenAndAcceptOrder = ({
   };
 
   return (
-    <View className="flex-1 items-center justify-center px-4 pb-20">
+    <View
+      testID="store.order.prep-time.sheet"
+      className="flex-1 items-center justify-center px-4 pb-20"
+    >
       <View className="mt-4 mb-4 text-center flex-row justify-between items-center">
         <Text
           className="flex-1 text-center text-[16px] font-[600]"
@@ -113,6 +116,7 @@ const SetTimeScreenAndAcceptOrder = ({
           {TIMES.map((time, index) => (
             <Pressable
               key={index}
+              testID={`store.order.prep-time.option.${time}`}
               onPress={() => setSelectedTime(time)}
               className={`h-fit justify-center items-center  p-4 rounded-[8px] `}
               style={{
@@ -136,6 +140,7 @@ const SetTimeScreenAndAcceptOrder = ({
 
       <View>
         <CustomContinueButton
+          testID="store.order.prep-time.done"
           disabled={isSubmitting}
           isLoading={isSubmitting}
           style={{ backgroundColor: appTheme.primary }}

@@ -1,0 +1,118 @@
+appId: ${APP_ID}
+name: CM-P2-001 Adding from a second restaurant must clear the cart first
+tags:
+  - regression
+  - production-readonly
+  - ios
+  - multi-vendor
+---
+# Enatega carts are single-vendor. Restaurant.onPressItem raises a native
+# confirm before replacing a cart that belongs to another restaurant and passes
+# clearFlag=true only when the customer accepts. A regression here mixes two
+# vendors into one order, which the backend cannot fulfil, so both answers to
+# the prompt are asserted: declining preserves the original cart, accepting
+# empties it.
+#
+# This flow needs a second allowlisted restaurant and product, which is why it
+# sits outside the default P1 suite. It never reaches checkout.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+# --- A cart belonging to the first restaurant ------------------------------
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.firstQuantity = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.firstQuantity === 2}
+    label: The first restaurant's line must enter the cart at quantity 2
+- takeScreenshot: cart-first-restaurant
+# --- Decline the prompt ----------------------------------------------------
+# The cart screen is pushed over the tab bar, so return to the tab root before
+# searching for the second vendor. The cart survives the restart.
+- runFlow: ../../subflows/return-to-tab-root.yaml
+- runFlow: ../../subflows/discovery-second.yaml
+- tapOn:
+    id: "customer\\.product\\.card\\.${SECOND_PRODUCT_ID}"
+# The confirm is a native Alert, so it is matched by button text rather than by
+# a test ID. Its presence is itself the first assertion: a cart from another
+# restaurant must never be replaced silently.
+- extendedWaitUntil:
+    visible:
+      text: "Cancel"
+    timeout: 20000
+- takeScreenshot: cross-restaurant-prompt
+- tapOn:
+    text: "Cancel"
+- waitForAnimationToEnd:
+    timeout: 5000
+# Declining must leave the original cart completely intact — same line, same
+# quantity, same restaurant.
+#
+# Cancel leaves us on the second restaurant's screen, whose cart control is
+# `customer.restaurant.open-cart`; `customer.header.cart` below lives on the tab
+# root. Return there first, which also forces the preserved cart to be read back
+# from persistence rather than from in-memory state.
+- runFlow: ../../subflows/return-to-tab-root.yaml
+- retry:
+    maxRetries: 5
+    commands:
+      - tapOn:
+          id: customer.header.cart
+      - extendedWaitUntil:
+          visible:
+            id: customer.cart.screen
+          timeout: 10000
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.preservedQuantity = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.preservedQuantity === output.firstQuantity}
+    label: Declining the prompt must leave the original cart untouched
+# "Same restaurant" is asserted by the line's own product ID rather than by the
+# restaurant name: the cart screen renders the item, the totals and the upsell
+# rail, but never the vendor's name, so a name match here can only ever fail.
+# PRODUCT_ID belongs to the first restaurant, so its presence is the proof.
+- assertVisible:
+    id: "customer\\.cart\\.item\\.${PRODUCT_ID}"
+- takeScreenshot: cart-preserved-after-decline
+# --- Accept the prompt -----------------------------------------------------
+# The cart screen is pushed over the tab bar, so return to the tab root before
+# searching for the second vendor. The cart survives the restart.
+- runFlow: ../../subflows/return-to-tab-root.yaml
+- runFlow: ../../subflows/discovery-second.yaml
+- tapOn:
+    id: "customer\\.product\\.card\\.${SECOND_PRODUCT_ID}"
+- extendedWaitUntil:
+    visible:
+      text: "Cancel"
+    timeout: 20000
+- tapOn:
+    text: "OK"
+# Accepting clears the cart and opens the second product's item screen.
+- extendedWaitUntil:
+    visible:
+      id: customer.item.screen
+    timeout: 20000
+- takeScreenshot: second-restaurant-item-screen
+# Restart without wiping storage so the cart is read back the way the customer
+# would find it, rather than from in-memory state. The header cart button is
+# rendered whenever cartCount >= 0 but deliberately no-ops while the cart is
+# empty, so a cart screen that does not open is the observable proof that the
+# first restaurant's line was dropped instead of merged with the second.
+- stopApp:
+    appId: ${APP_ID}
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: customer.tab.discovery
+    timeout: 30000
+- tapOn:
+    id: customer.header.cart
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: customer.cart.screen
+- takeScreenshot: cart-cleared-after-accept

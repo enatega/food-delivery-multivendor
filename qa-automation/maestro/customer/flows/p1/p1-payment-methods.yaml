@@ -1,0 +1,74 @@
+appId: ${APP_ID}
+name: CM-P1-020 Checkout offers both payment methods without repricing
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# Payment selection is presentation state: PaymentModeOption only calls
+# onSelect, and no charge exists until place-order. This flow proves both
+# methods are offered, that switching between them is free of side effects on
+# the total, and that card selection does not navigate away from checkout or
+# auto-submit anything.
+#
+# The place-order control is asserted but never tapped, and the run never sets
+# QA_PLACE_REAL_ORDER, so no payment is ever initiated.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- runFlow: ../../subflows/open-checkout.yaml
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.payment.cod
+- assertVisible:
+    id: customer.checkout.payment.stripe
+- tapOn:
+    id: customer.checkout.payment.cod
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.codTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.codTotal) && output.codTotal > 0}
+    label: Cash-on-delivery total must be a positive number
+- takeScreenshot: checkout-payment-cod
+# Selecting card must stay on checkout: a navigation to the Stripe screen here
+# would mean the app can start a payment before the customer confirms the order.
+- tapOn:
+    id: customer.checkout.payment.stripe
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.screen
+- assertVisible:
+    id: customer.checkout.place-order
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.cardTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.cardTotal - output.codTotal) < 0.01}
+    label: Choosing card must not reprice the order
+- takeScreenshot: checkout-payment-card
+# Returning to cash must restore the same figure, proving the toggle is inert
+# in both directions.
+- tapOn:
+    id: customer.checkout.payment.cod
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.restoredTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.restoredTotal - output.codTotal) < 0.01}
+    label: Returning to cash on delivery must restore the original total
+- assertTrue:
+    condition: ${output.restoredTotal <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must stay at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: checkout-payment-restored

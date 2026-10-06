@@ -1,0 +1,64 @@
+appId: ${APP_ID}
+name: CM-P1-010 Pickup and delivery totals recompute at checkout
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# Checkout.js zeroes both delivery and tip when isPickup is true, so switching
+# fulfillment must change the total and switching back must restore it exactly.
+# The place-order control is asserted but never tapped.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- tapOn:
+    id: customer.cart.checkout
+- extendedWaitUntil:
+    visible:
+      id: customer.checkout.screen
+    timeout: 30000
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: customer.checkout.subtotal
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.pickupTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.pickupTotal) && output.pickupTotal > 0}
+    label: Pickup total must be a positive number
+- tapOn:
+    id: customer.checkout.fulfillment.delivery
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.deliveryTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+# Delivery adds a fee and enables tipping, so it can never undercut pickup.
+# The comparison is inclusive because an allowlisted restaurant is permitted to
+# have a zero delivery charge; a strict > would flake on that data.
+- assertTrue:
+    condition: ${Number.isFinite(output.deliveryTotal) && output.deliveryTotal >= output.pickupTotal}
+    label: Delivery total must be finite and at or above the pickup total
+- takeScreenshot: checkout-delivery-total
+# Switching back must land on the same figure, proving the recompute is
+# deterministic rather than accumulating charges per toggle.
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.restoredTotal = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${output.restoredTotal === output.pickupTotal}
+    label: Returning to pickup must restore the original pickup total
+- assertTrue:
+    condition: ${output.restoredTotal <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must stay at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: checkout-pickup-restored

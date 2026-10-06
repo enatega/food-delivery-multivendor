@@ -1,0 +1,131 @@
+appId: ${APP_ID}
+name: CM-P1-031 A cart priced at checkout survives an app kill and reprices identically
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# Being killed at checkout is ordinary, not exotic: the customer switches to
+# their banking app for a card number, or iOS reclaims the memory. What must
+# never happen is that they come back to a different order.
+#
+# CM-P0-001-006 already restarts the app with a cart, but it only proves the
+# cart screen opens again. It never returns to checkout, so the figure the
+# customer was about to pay is never compared across the restart — and that is
+# the number that matters. `cartItems` and `restaurant` are persisted per mode,
+# the cart count is refetched from the server on relaunch, and the checkout
+# total is recomputed from all of it, so there are three places for the restart
+# to change the price and none of them are currently asserted.
+#
+# Read-only: pickup and cash are chosen to make the total deterministic, and
+# `customer.checkout.place-order` is asserted twice and tapped never.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/discovery.yaml
+- runFlow: ../../subflows/add-item-to-cart.yaml
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.quantityBefore = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.quantityBefore === 2}
+    label: The configured line must enter the cart at quantity 2
+# --- Price it, then get killed ----------------------------------------------
+- runFlow: ../../subflows/open-checkout.yaml
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- tapOn:
+    id: customer.checkout.payment.cod
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.subtotal
+- evalScript: ${output.subtotalBefore = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- copyTextFrom:
+    id: customer.checkout.tax
+- evalScript: ${output.taxBefore = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.totalBefore = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Number.isFinite(output.totalBefore) && output.totalBefore > 0 && output.totalBefore <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must be positive and at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: checkout-before-kill
+- stopApp:
+    appId: ${APP_ID}
+# --- Come back --------------------------------------------------------------
+# clearState stays false: this is the customer returning to their own install,
+# not a fresh one. A release build is back in seconds; a dev-client build
+# reconnects to Metro and re-evaluates the bundle first, hence the long wait.
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: customer.header.cart
+    timeout: 120000
+# The header cart no-ops while cartCount is still 0, so the tap is retried until
+# the refetched count has arrived rather than assumed to land first time.
+- retry:
+    maxRetries: 5
+    commands:
+      - tapOn:
+          id: customer.header.cart
+      - extendedWaitUntil:
+          visible:
+            id: customer.cart.screen
+          timeout: 10000
+- assertVisible:
+    id: customer.cart.screen
+# The same line, at the same quantity, from the same restaurant.
+- assertVisible:
+    id: "customer\\.cart\\.item\\.${PRODUCT_ID}"
+- copyTextFrom:
+    id: "customer\\.cart\\.item\\..*\\.quantity"
+- evalScript: ${output.quantityAfter = Number(maestro.copiedText.replace(/[^0-9]/g, ''))}
+- assertTrue:
+    condition: ${output.quantityAfter === output.quantityBefore}
+    label: The restart must not change the cart line quantity
+# The session must have survived too — a restart that signs the customer out
+# would strand the cart behind the auth wall, which is the same lost order by a
+# different route. Cart.js renders this control only when `isLoggedIn && profile`,
+# so its presence is the session assertion, not a second navigation check.
+- assertVisible:
+    id: customer.cart.checkout
+- takeScreenshot: cart-recovered-after-kill
+# --- Reprice it -------------------------------------------------------------
+# Fulfillment and payment are presentation state and are NOT persisted, so they
+# are chosen again here deliberately: the comparison is only meaningful between
+# two identically configured checkouts.
+- runFlow: ../../subflows/open-checkout.yaml
+- tapOn:
+    id: customer.checkout.fulfillment.pickup
+- tapOn:
+    id: customer.checkout.payment.cod
+- waitForAnimationToEnd:
+    timeout: 5000
+- copyTextFrom:
+    id: customer.checkout.subtotal
+- evalScript: ${output.subtotalAfter = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.subtotalAfter - output.subtotalBefore) < 0.01}
+    label: The restart must not change the checkout subtotal
+- copyTextFrom:
+    id: customer.checkout.tax
+- evalScript: ${output.taxAfter = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.taxAfter - output.taxBefore) < 0.01}
+    label: The restart must not change the tax
+- copyTextFrom:
+    id: customer.checkout.total
+- evalScript: ${output.totalAfter = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue:
+    condition: ${Math.abs(output.totalAfter - output.totalBefore) < 0.01}
+    label: The customer must come back to the exact total they left
+- assertTrue:
+    condition: ${output.totalAfter <= Number(MAX_ORDER_TOTAL)}
+    label: Checkout total must stay at or below QA_MAX_ORDER_TOTAL
+- assertVisible:
+    id: customer.checkout.place-order
+- takeScreenshot: checkout-recovered-after-kill

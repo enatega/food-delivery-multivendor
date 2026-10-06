@@ -1,0 +1,14 @@
+appId: ${APP_ID}
+---
+# Open the authenticated Profile hub.
+#
+# The profile tab renders CreateAccount when `isLoggedIn` is false, so this
+# subflow is only valid after login.yaml. Waiting on `customer.profile.screen`
+# rather than the tab itself makes the failure message point at the hub that did
+# not render instead of at the tap.
+- tapOn:
+    id: customer.tab.profile
+- extendedWaitUntil:
+    visible:
+      id: customer.profile.screen
+    timeout: 30000

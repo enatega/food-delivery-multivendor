@@ -161,7 +161,7 @@ function Addresses() {
 
   function emptyView() {
     return (
-      <View style={styles().subContainerImage}>
+      <View testID='customer.addresses.empty' style={styles().subContainerImage}>
         <EmptyAddress width={scale(300)} height={scale(300)} />
         <View>
           <View style={styles().descriptionEmpty}>
@@ -227,7 +227,7 @@ function Addresses() {
   if (!connect) return <ErrorView refetchFunctions={[refetchProfile]} />
 
   return (
-    <View style={styles(currentTheme).flex}>
+    <View testID='customer.addresses.screen' style={styles(currentTheme).flex}>
       <FlatList
         onRefresh={refetchProfile}
         refreshing={networkStatus === NetworkStatus.refetch}
@@ -238,7 +238,7 @@ function Addresses() {
         ListHeaderComponent={() => <View style={{ ...alignment.MTmedium }} />}
         renderItem={({ item: address }) => {
           return (
-            <TouchableOpacity activeOpacity={0.7} style={[styles(currentTheme).containerSpace]} onPress={() => handleAddressSelection(address._id)} disabled={!isEditMode}>
+            <TouchableOpacity testID={`customer.addresses.item.${address._id}`} activeOpacity={0.7} style={[styles(currentTheme).containerSpace]} onPress={() => handleAddressSelection(address._id)} disabled={!isEditMode}>
               <View style={[styles().width100, styles(currentTheme).rowContainer]}>
                 <View style={styles(currentTheme).leftGroup}>
                   {isEditMode && (
@@ -323,6 +323,7 @@ function Addresses() {
       <View>
         <View style={styles(currentTheme).containerButton}>
           <TouchableOpacity
+            testID='customer.addresses.add'
             activeOpacity={0.5}
             style={styles(currentTheme).addButton}
             onPress={() =>

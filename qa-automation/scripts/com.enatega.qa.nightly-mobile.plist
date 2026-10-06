@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd agent for the read-only iOS nightly. Install with:
+
+    cp scripts/com.enatega.qa.nightly-mobile.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.enatega.qa.nightly-mobile.plist
+
+  Remove with `launchctl unload` and deleting the file. Runs at 03:00 local,
+  an hour after the GitHub web nightly, so the two never contend for the
+  shared automation account.
+
+  RunAtLoad is false on purpose: loading the agent should not kick off a suite.
+  The Mac must be awake at 03:00 — launchd will run a missed job once the
+  machine wakes, but a sleeping laptop means no run that night.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.enatega.qa.nightly-mobile</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>/Users/ninjascode5/Documents/Enatega_Testing/food-delivery-multivendor/qa-automation/scripts/nightly-mobile.sh</string>
+  </array>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key><integer>3</integer>
+    <key>Minute</key><integer>0</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <!-- The script redirects its own detailed log; these catch anything that
+       fails before that redirect, such as a missing interpreter. -->
+  <key>StandardOutPath</key>
+  <string>/Users/ninjascode5/Documents/Enatega_Testing/food-delivery-multivendor/qa-automation/reports/nightly/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/ninjascode5/Documents/Enatega_Testing/food-delivery-multivendor/qa-automation/reports/nightly/launchd.err.log</string>
+</dict>
+</plist>

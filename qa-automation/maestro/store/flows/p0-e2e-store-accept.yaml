@@ -1,0 +1,17 @@
+appId: ${APP_ID}
+name: SM-E2E-001 Store accepts the order placed by the customer (stage 2 of 3)
+tags:
+  - e2e-store
+  - production-write
+  - ios
+---
+# No `permissions:` block here on purpose. Overriding permissions on these
+# dev-client builds restarts them into a render error
+# (UnavailableStatus -> "Cannot read property 'length' of undefined"), and the
+# store app's own state already carries the grants it needs.
+- launchApp:
+    appId: ${APP_ID}
+    clearState: false
+- runFlow: ../subflows/connect-dev-client.yaml
+- runFlow: ../subflows/login.yaml
+- runFlow: ../subflows/accept-order.yaml

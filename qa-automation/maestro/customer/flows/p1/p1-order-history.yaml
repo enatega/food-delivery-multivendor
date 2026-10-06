@@ -1,0 +1,86 @@
+appId: ${APP_ID}
+name: CM-P1-013 Order history tabs and order detail
+tags:
+  - regression
+  - production-readonly
+  - ios
+---
+# MyOrders splits the account's orders into Current and Past. Both tabs must
+# resolve to either a real order card or the tab's own empty state — never to a
+# blank list — so this passes on a fresh account and on the automation account
+# that has history from earlier approved production-order runs.
+#
+# Reading an order is a query only. Nothing here places, reorders, cancels, or
+# rates anything: the reorder and star controls are asserted-around, not tapped.
+- runFlow: ../../subflows/launch.yaml
+- runFlow: ../../subflows/login.yaml
+- runFlow: ../../subflows/open-profile.yaml
+- tapOn:
+    id: customer.profile.order-history
+- extendedWaitUntil:
+    visible:
+      id: customer.orders.screen
+    timeout: 30000
+- assertVisible:
+    id: customer.orders.tab.current
+- assertVisible:
+    id: customer.orders.tab.past
+# --- Current tab -----------------------------------------------------------
+# The screen opens on Current. Give the orders query time to land before
+# deciding which branch applies, otherwise an empty-state assertion can win a
+# race against a list that was still loading.
+- extendedWaitUntil:
+    visible:
+      id: "customer\\.orders\\.(active\\.card\\..*|active\\.empty)"
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: "customer\\.orders\\.active\\.card\\..*"
+    commands:
+      - assertVisible:
+          id: customer.orders.active.empty
+- takeScreenshot: orders-current
+# --- Past tab --------------------------------------------------------------
+- tapOn:
+    id: customer.orders.tab.past
+- extendedWaitUntil:
+    visible:
+      id: "customer\\.orders\\.(past\\.card\\..*|past\\.empty)"
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: "customer\\.orders\\.past\\.card\\..*"
+    commands:
+      - assertVisible:
+          id: customer.orders.past.empty
+- takeScreenshot: orders-past
+# --- Order detail ----------------------------------------------------------
+# Only meaningful when the account actually has history. Opening the first past
+# order must produce a detail screen carrying both an order number and a status.
+- runFlow:
+    when:
+      visible:
+        id: "customer\\.orders\\.past\\.card\\..*"
+    commands:
+      - tapOn:
+          id: "customer\\.orders\\.past\\.card\\..*"
+          index: 0
+      - extendedWaitUntil:
+          visible:
+            id: customer.order.screen
+          timeout: 30000
+      - assertVisible:
+          id: customer.order.number
+      - copyTextFrom:
+          id: customer.order.number
+      - evalScript: ${output.orderNumber = maestro.copiedText.trim()}
+      - assertTrue:
+          condition: ${output.orderNumber.length > 0}
+          label: A past order must expose a non-empty order number
+      # `customer.order.status` is deliberately not asserted here: OrderDetail
+      # hides the whole status block once orderStatus is DELIVERED, which is the
+      # normal state for a past order. CM-P0-007 covers the status text on the
+      # live order it creates.
+      - takeScreenshot: order-detail-readonly

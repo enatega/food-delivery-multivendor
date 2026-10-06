@@ -230,6 +230,7 @@ const Order = ({
 
   return (
     <View
+      testID={`rider.order.card.${orderId}`}
       style={[
         styles.card,
         {
@@ -239,6 +240,7 @@ const Order = ({
       ]}
     >
       <TouchableOpacity
+        testID={`rider.order.details-open.${orderId}`}
         accessibilityHint={t("Opens order details")}
         accessibilityRole="button"
         activeOpacity={0.82}
@@ -309,6 +311,7 @@ const Order = ({
 
       {tab === "new_orders" && (
         <TouchableOpacity
+          testID={`rider.order.assign-me.${orderId}`}
           accessibilityRole="button"
           disabled={loadingAssignOrder}
           onPress={() => mutateAssignOrder({ variables: { id: _id } })}

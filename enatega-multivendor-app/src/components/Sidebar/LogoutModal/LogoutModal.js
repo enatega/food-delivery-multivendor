@@ -16,7 +16,7 @@ const LogoutModal = ({ visible, onCancel, onLogout, showCrossButton }) => {
     <Modal visible={visible} animationType='slide' transparent>
       <View style={styles().layout}>
         <Pressable style={styles().backdrop} onPress={onCancel} />
-        <View style={styles(currentTheme).modalContainer}>
+        <View testID='customer.logout.modal' style={styles(currentTheme).modalContainer}>
           <View style={styles(currentTheme).flexRow}>
             <TextDefault
               textColor={currentTheme.fontMainColor}
@@ -46,6 +46,7 @@ const LogoutModal = ({ visible, onCancel, onLogout, showCrossButton }) => {
           </TextDefault>
 
           <TouchableOpacity
+            testID='customer.logout.confirm'
             style={[
               styles(currentTheme).btn,
               styles(currentTheme).btnLogout,
@@ -58,6 +59,7 @@ const LogoutModal = ({ visible, onCancel, onLogout, showCrossButton }) => {
           </TouchableOpacity>
           
           <TouchableOpacity
+            testID='customer.logout.cancel'
             style={[
               styles(currentTheme).btn,
               styles(currentTheme).btnCancel,

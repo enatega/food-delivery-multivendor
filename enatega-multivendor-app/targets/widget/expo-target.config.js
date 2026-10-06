@@ -5,7 +5,7 @@ module.exports = config => ({
   type: "widget",
   icon: '../../assets/icon.png',
   name: "orderActivity",
-  bundleIdentifier: "com.enatega.multivendor.orderActivity",
+  bundleIdentifier: ".orderActivity",
   deploymentTarget: "16.2",
 
   entitlements: {

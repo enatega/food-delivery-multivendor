@@ -1,0 +1,76 @@
+appId: ${APP_ID}
+---
+# Cold-start the app with location permission REFUSED.
+#
+# This is launch.yaml with one deliberate difference — `location: never` instead
+# of `location: inuse` — and it is kept separate rather than parameterised so
+# every existing flow keeps the launch it was written against.
+#
+# `never`, not `deny`: Maestro's location permission takes
+# always/inuse/never/unset, and anything else aborts the run outright with
+# "wrong argument value 'deny' was provided for 'location' permission".
+#
+# The readiness marker is still `customer.tab.discovery`. That is not an
+# oversight: while the server configuration has `enableCustomerDemoMode` on,
+# Location.js seeds a demo location before it ever consults the device
+# permission, so a refused permission still lands on the tab bar. CM-P1-029
+# asserts exactly that. In an environment with demo mode OFF this subflow would
+# time out here, which is the correct signal that the flow's premise changed.
+#
+# The dev-client handling below is identical to launch.yaml's and is needed for
+# the same reasons: clearState wipes the recent-servers list, so a dev-client
+# build cold-starts into the Expo launcher and must be pointed back at Metro,
+# and the dev menu can cover the tab bar on that first launch.
+- retry:
+    maxRetries: 3
+    commands:
+      - launchApp:
+          appId: ${APP_ID}
+          clearState: true
+          clearKeychain: true
+          permissions:
+            all: deny
+            location: never
+            notifications: deny
+      - repeat:
+          while:
+            notVisible:
+              id: customer.tab.discovery
+          times: 30
+          commands:
+            # Home screen means the app crashed: fail this attempt now instead
+            # of spinning until the loop runs out.
+            - assertNotVisible:
+                id: spotlight-pill
+            - runFlow:
+                when:
+                  visible:
+                    text: "Development servers"
+                commands:
+                  - tapOn:
+                      text: ${METRO_URL}
+                      index: 0
+            # The dev menu sheet's close control has no label, so dismiss it by
+            # tapping the dimmed backdrop above the sheet.
+            - runFlow:
+                when:
+                  visible:
+                    text: "Connected to:"
+                commands:
+                  - tapOn:
+                      point: "50%,20%"
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - runFlow:
+          when:
+            visible:
+              text: "Connected to:"
+          commands:
+            - tapOn:
+                point: "50%,20%"
+      - extendedWaitUntil:
+          visible:
+            id: customer.tab.discovery
+          timeout: 30000
+- assertVisible:
+    id: customer.tab.discovery
