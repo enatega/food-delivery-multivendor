@@ -104,10 +104,13 @@ export default function SingleVendorProductSection({
 
   return (
     <section className="mt-8 sm:mt-10" dir={isRTL ? "rtl" : "ltr"}>
-      <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-lg font-medium tracking-[-0.02em] text-dispatch-ink sm:text-xl dark:text-white">
-          {title}
-        </h2>
+      <div className="mb-3 flex items-center justify-between border-b border-dispatch-line pb-2 dark:border-gray-800">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span className="h-2 w-2 shrink-0 rounded-full bg-primary-color shadow-[0_0_0_4px_var(--primary-light)] dark:shadow-[0_0_0_4px_rgba(117,208,75,0.12)]" aria-hidden="true" />
+          <h2 className="truncate font-dispatch text-lg font-medium tracking-[-0.02em] text-dispatch-ink sm:text-xl dark:text-white">
+            {title}
+          </h2>
+        </div>
 
         {products.length > numVisible && (
           <div className="hidden items-center gap-x-2 md:flex">
@@ -115,7 +118,7 @@ export default function SingleVendorProductSection({
               type="button"
               aria-label={title}
               onClick={() => move(-1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-dispatch-muted transition hover:bg-dispatch-map hover:text-primary-dark dark:bg-gray-900 dark:text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-dispatch-muted transition hover:border-dispatch-line hover:bg-dispatch-map hover:text-primary-dark dark:bg-gray-900 dark:text-white"
             >
               <FontAwesomeIcon icon={isRTL ? faAngleRight : faAngleLeft} />
             </button>
@@ -123,7 +126,7 @@ export default function SingleVendorProductSection({
               type="button"
               aria-label={title}
               onClick={() => move(1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-dispatch-muted transition hover:bg-dispatch-map hover:text-primary-dark dark:bg-gray-900 dark:text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-dispatch-muted transition hover:border-dispatch-line hover:bg-dispatch-map hover:text-primary-dark dark:bg-gray-900 dark:text-white"
             >
               <FontAwesomeIcon icon={isRTL ? faAngleLeft : faAngleRight} />
             </button>
@@ -136,7 +139,7 @@ export default function SingleVendorProductSection({
         className={`discovery-carousel single-vendor-product-carousel ${shouldUseFixedCardColumns ? "low-count-carousel" : ""} ${isRTL ? "rtl-carousel" : ""}`}
         style={shouldUseFixedCardColumns ? fixedColumnStyle : undefined}
         itemTemplate={(product) => (
-          <div className="mx-1.5 mb-5 h-full py-2">
+          <div className="mx-1 mb-4 h-full py-1.5 sm:mx-1.5">
             <SingleVendorProductCard product={product} />
           </div>
         )}

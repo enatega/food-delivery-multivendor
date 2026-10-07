@@ -15,15 +15,32 @@ import {
 } from "@/lib/mode";
 import { getAccessToken } from "@/lib/utils/methods/auth";
 import useUser from "@/lib/hooks/useUser";
-import useCurrencyFormatter from "@/lib/hooks/useCurrencyFormatter";
 import useCheckoutDestination from "./useCheckoutDestination";
+import CheckoutSummary from "./CheckoutSummary";
+import CheckoutExtras from "./CheckoutExtras";
+import OrderPlacedState from "./OrderPlacedState";
+import {
+  CHECKOUT_FIELD_CLASS,
+  CHECKOUT_SECTION_CLASS,
+  StepHeading,
+} from "./CheckoutSection";
+import {
+  FiAlertCircle,
+  FiCheckCircle,
+  FiChevronDown,
+  FiClock,
+  FiCreditCard,
+  FiMapPin,
+  FiShoppingBag,
+  FiTruck,
+} from "react-icons/fi";
+import { FaMoneyBillWave } from "react-icons/fa";
 
 export default function SingleVendorCheckout() {
   const router = useRouter();
   const { mode } = useAppMode();
   const environment = getModeEnvironment(mode);
   const { profile, cart, clearCart } = useUser();
-  const { currencySymbol, currency, formatCurrency } = useCurrencyFormatter();
   const [pickup, setPickup] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [tip, setTip] = useState(0);
@@ -141,25 +158,7 @@ export default function SingleVendorCheckout() {
   };
 
   if (isLeavingCheckout)
-    return (
-      <div
-        className="mx-auto my-16 flex max-w-lg flex-col items-center text-center"
-        aria-busy="true"
-      >
-        <span
-          aria-hidden="true"
-          className="h-10 w-10 animate-spin rounded-full border-4 border-primary-color/30 border-t-primary-dark"
-        />
-        <h1 className="mt-5 text-2xl font-bold dark:text-white">
-          Order placed
-        </h1>
-        <p className="mt-2 text-gray-500 dark:text-gray-400">
-          {paymentMethod === "COD"
-            ? "Opening order tracking…"
-            : "Redirecting to payment…"}
-        </p>
-      </div>
-    );
+    return <OrderPlacedState isOnlinePayment={paymentMethod !== "COD"} />;
   if (!cart.length)
     return (
       <div className="mx-auto my-16 max-w-lg text-center">
@@ -174,179 +173,255 @@ export default function SingleVendorCheckout() {
         </button>
       </div>
     );
+  const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const isMissingAddress = !pickup && !hasDeliveryCoordinates;
+  const paymentOptions = [
+    {
+      value: "COD",
+      label: pickup ? "Cash on pickup" : "Cash on delivery",
+      description: pickup
+        ? "Pay when you collect your order"
+        : "Pay when your order arrives",
+      icon: FaMoneyBillWave,
+    },
+    {
+      value: "STRIPE",
+      label: "Card",
+      description: "Card, Apple Pay or Google Pay · Secure checkout",
+      icon: FiCreditCard,
+    },
+  ];
+
   return (
-    <div className="mx-auto grid max-w-5xl gap-6 py-8 lg:grid-cols-[1fr_360px]">
-      <div className="space-y-5">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+    <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-5 lg:px-6">
+      <header className="mb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           Checkout
         </h1>
-        <section className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
-          <h2 className="font-semibold dark:text-white">Fulfillment</h2>
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <button
-              onClick={() => setPickup(false)}
-              className={`rounded-xl border p-3 ${!pickup ? "border-primary-color bg-primary-light text-primary-color" : "border-gray-200 dark:border-gray-700"}`}
-            >
-              Delivery
-            </button>
-            <button
-              onClick={() => setPickup(true)}
-              className={`rounded-xl border p-3 ${pickup ? "border-primary-color bg-primary-light text-primary-color" : "border-gray-200 dark:border-gray-700"}`}
-            >
-              Pickup
-            </button>
-          </div>
-          {!pickup && (
-            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
-              {address?.deliveryAddress ||
-                "Add and select a delivery address from your profile."}
-            </p>
-          )}
-        </section>
-        <section className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
-          <h2 className="font-semibold dark:text-white">Payment</h2>
-          <div className="mt-3 space-y-2">
-            {[
-              ["COD", "Cash on delivery"],
-              ["STRIPE", "Card / Apple Pay / Google Pay"],
-              ["PAYPAL", "PayPal"],
-            ].map(([value, label]) => (
-              <label
-                key={value}
-                className="flex items-center gap-3 rounded-xl border border-gray-200 p-3 dark:border-gray-700"
-              >
-                <input
-                  type="radio"
-                  checked={paymentMethod === value}
-                  onChange={() => setPaymentMethod(value)}
-                />
-                {label}
-              </label>
-            ))}
-          </div>
-        </section>
-        <section className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
-          <label className="font-semibold dark:text-white">Delivery time</label>
-          <select
-            value={schedule ? JSON.stringify(schedule) : ""}
-            onChange={(event) =>
-              setSchedule(
-                event.target.value ? JSON.parse(event.target.value) : null,
-              )
-            }
-            className="mt-3 w-full rounded-xl border border-gray-200 bg-transparent p-3 dark:border-gray-700 dark:text-white"
-          >
-            <option value="">As soon as possible</option>
-            {(scheduleQuery.data?.getScheduleByDay ?? []).flatMap((day: any) =>
-              (day.timings ?? []).flatMap((timing: any) =>
-                (timing.times ?? []).map((time: any) => {
-                  const value = { dayId: day.dayId, scheduleTimeId: time.id };
-                  return (
-                    <option
-                      key={`${day.dayId}-${time.id}`}
-                      value={JSON.stringify(value)}
+        <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+          {itemCount} {itemCount === 1 ? "item" : "items"} · Review your details
+          and place your order
+        </p>
+      </header>
+
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-5">
+        <div className="space-y-4">
+          <section className={CHECKOUT_SECTION_CLASS}>
+            <StepHeading title="How would you like your order?" />
+            <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
+              {[
+                {
+                  isPickup: false,
+                  label: "Delivery",
+                  description: "Delivered to your address",
+                  icon: FiTruck,
+                },
+                {
+                  isPickup: true,
+                  label: "Pickup",
+                  description: "Collect it from the store",
+                  icon: FiShoppingBag,
+                },
+              ].map((option) => {
+                const isSelected = pickup === option.isPickup;
+                const Icon = option.icon;
+                return (
+                  <button
+                    key={option.label}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => setPickup(option.isPickup)}
+                    className={`flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-start transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/60 ${
+                      isSelected
+                        ? "border-primary-color bg-primary-light/60 dark:bg-gray-900"
+                        : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-900/60"
+                    }`}
+                  >
+                    <span
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${isSelected ? "bg-primary-color text-dispatch-ink" : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"}`}
                     >
-                      {day.day}: {time.startTime}–{time.endTime}
-                    </option>
-                  );
-                }),
-              ),
-            )}
-          </select>
-          <label className="mt-5 block font-semibold dark:text-white">
-            Voucher code
-          </label>
-          <input
-            value={coupon}
-            onChange={(event) => setCoupon(event.target.value)}
-            onBlur={() => void checkout.refetch()}
-            placeholder="Optional"
-            className="mt-3 w-full rounded-xl border border-gray-200 bg-transparent p-3 dark:border-gray-700 dark:text-white"
-          />
-          <label className="mt-5 block font-semibold dark:text-white">
-            Order instructions
-          </label>
-          <textarea
-            value={instructions}
-            onChange={(event) => setInstructions(event.target.value)}
-            className="mt-3 w-full rounded-xl border border-gray-200 bg-transparent p-3 dark:border-gray-700 dark:text-white"
-          />
-          <div className="mt-4 flex items-center gap-3">
-            <label className="text-sm dark:text-gray-200">
-              Tip ({currencySymbol || currency}){" "}
-              <input
-                type="number"
-                min="0"
-                value={tip}
-                onChange={(event) => setTip(Number(event.target.value))}
-                className="ms-2 w-24 rounded-lg border p-2 dark:border-gray-700 dark:bg-gray-900"
+                      <Icon aria-hidden className="h-4 w-4" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-semibold text-gray-900 dark:text-white">
+                        {option.label}
+                      </span>
+                      <span className="block text-xs text-gray-500 dark:text-gray-400">
+                        {option.description}
+                      </span>
+                    </span>
+                    {isSelected && (
+                      <FiCheckCircle
+                        aria-hidden
+                        className="h-4 w-4 shrink-0 text-primary-dark"
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            {!pickup &&
+              (address?.deliveryAddress && hasDeliveryCoordinates ? (
+                <div className="mt-2.5 flex items-start gap-2.5 rounded-xl bg-gray-50 px-3 py-2.5 dark:bg-gray-900/60">
+                  <FiMapPin
+                    aria-hidden
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary-dark"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                      Delivering to{address.label ? ` · ${address.label}` : ""}
+                    </p>
+                    <p className="text-sm text-gray-900 dark:text-white">
+                      {address.deliveryAddress}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  role="alert"
+                  className="mt-2.5 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200"
+                >
+                  <FiAlertCircle
+                    aria-hidden
+                    className="mt-0.5 h-4 w-4 shrink-0"
+                  />
+                  <p className="text-sm">
+                    <span className="font-semibold">
+                      No delivery address selected.
+                    </span>{" "}
+                    Add and select a delivery address from your profile, or
+                    switch to pickup.
+                  </p>
+                </div>
+              ))}
+          </section>
+
+          <section className={CHECKOUT_SECTION_CLASS}>
+            <StepHeading title="Payment method" />
+            <div className="mt-3 space-y-2" role="radiogroup">
+              {paymentOptions.map((option) => {
+                const isSelected = paymentMethod === option.value;
+                const Icon = option.icon;
+                return (
+                  <label
+                    key={option.value}
+                    className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary-color/60 ${
+                      isSelected
+                        ? "border-primary-color bg-primary-light/60 dark:bg-gray-900"
+                        : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-900/60"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="payment-method"
+                      checked={isSelected}
+                      onChange={() => setPaymentMethod(option.value)}
+                      className="sr-only"
+                    />
+                    <span
+                      aria-hidden
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${isSelected ? "border-primary-color bg-primary-color" : "border-gray-300 dark:border-gray-600"}`}
+                    >
+                      {isSelected && (
+                        <span className="h-2 w-2 rounded-full bg-white" />
+                      )}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-medium text-gray-900 dark:text-white">
+                        {option.label}
+                      </span>
+                      <span className="block text-xs text-gray-500 dark:text-gray-400">
+                        {option.description}
+                      </span>
+                    </span>
+                    <Icon
+                      aria-hidden
+                      className="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500"
+                    />
+                  </label>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className={CHECKOUT_SECTION_CLASS}>
+            <StepHeading
+              title={pickup ? "Pickup time" : "Delivery time"}
+              hint="Order now or schedule it for later"
+            />
+            <div className="relative mt-3">
+              <label htmlFor="checkout-schedule" className="sr-only">
+                {pickup ? "Pickup time" : "Delivery time"}
+              </label>
+              <FiClock
+                aria-hidden
+                className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
               />
-            </label>
-            <label className="text-sm dark:text-gray-200">
-              <input
-                type="checkbox"
-                checked={priority}
-                onChange={(event) => setPriority(event.target.checked)}
-                className="me-2"
-              />
-              Priority delivery
-            </label>
-          </div>
-        </section>
-      </div>
-      <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
-        <h2 className="text-xl font-semibold dark:text-white">Order summary</h2>
-        {checkout.loading && !summary ? (
-          <div className="skeleton-surface my-5 h-32 animate-pulse rounded-xl" />
-        ) : (
-          <dl className="my-5 space-y-2 text-sm text-gray-600 dark:text-gray-300">
-            <div className="flex justify-between">
-              <dt>Subtotal</dt>
-              <dd>
-                {formatCurrency(
-                  Number(summary?.subtotal ?? 0) +
-                    Number(summary?.discountDetails?.dealDiscount ?? 0),
+              <select
+                id="checkout-schedule"
+                value={schedule ? JSON.stringify(schedule) : ""}
+                onChange={(event) =>
+                  setSchedule(
+                    event.target.value ? JSON.parse(event.target.value) : null,
+                  )
+                }
+                className={`${CHECKOUT_FIELD_CLASS} cursor-pointer appearance-none pe-10 ps-10`}
+              >
+                <option value="">As soon as possible</option>
+                {(scheduleQuery.data?.getScheduleByDay ?? []).flatMap(
+                  (day: any) =>
+                    (day.timings ?? []).flatMap((timing: any) =>
+                      (timing.times ?? []).map((time: any) => {
+                        const value = {
+                          dayId: day.dayId,
+                          scheduleTimeId: time.id,
+                        };
+                        return (
+                          <option
+                            key={`${day.dayId}-${time.id}`}
+                            value={JSON.stringify(value)}
+                          >
+                            {day.day}: {time.startTime}–{time.endTime}
+                          </option>
+                        );
+                      }),
+                    ),
                 )}
-              </dd>
+              </select>
+              <FiChevronDown
+                aria-hidden
+                className="pointer-events-none absolute end-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+              />
             </div>
-            <div className="flex justify-between">
-              <dt>Delivery</dt>
-              <dd>{formatCurrency(summary?.deliveryCharges)}</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt>Tax</dt>
-              <dd>{formatCurrency(summary?.taxAmount)}</dd>
-            </div>
-            {summary?.discountDetails?.dealDiscount > 0 && (
-              <div className="flex justify-between text-primary-color">
-                <dt>Deals savings</dt>
-                <dd>{formatCurrency(-summary.discountDetails.dealDiscount)}</dd>
-              </div>
-            )}
-            <div className="flex justify-between border-t pt-3 text-base font-bold dark:border-gray-700">
-              <dt>Total</dt>
-              <dd>{formatCurrency(summary?.grandTotal)}</dd>
-            </div>
-          </dl>
-        )}
-        <button
-          disabled={
-            placeState.loading ||
-            isLeavingCheckout ||
-            checkout.loading ||
-            (!pickup && !hasDeliveryCoordinates)
-          }
-          onClick={() => void submit()}
-          className="w-full rounded-full bg-primary-color px-5 py-3 font-semibold text-white disabled:opacity-50"
-        >
-          {placeState.loading ? "Placing order…" : "Place order"}
-        </button>
-        {placeState.error && (
-          <p className="mt-3 text-sm text-red-600">
-            {placeState.error.message}
-          </p>
-        )}
-      </aside>
+          </section>
+
+          <CheckoutExtras
+            pickup={pickup}
+            coupon={coupon}
+            onCouponChange={setCoupon}
+            onApplyCoupon={() => void checkout.refetch()}
+            instructions={instructions}
+            onInstructionsChange={setInstructions}
+            tip={tip}
+            onTipChange={setTip}
+            priority={priority}
+            onPriorityChange={setPriority}
+          />
+        </div>
+
+        <CheckoutSummary
+          cart={cart}
+          summary={summary}
+          isQuoteLoading={checkout.loading}
+          isPlacing={placeState.loading}
+          isLeavingCheckout={isLeavingCheckout}
+          isMissingAddress={isMissingAddress}
+          pickup={pickup}
+          paymentMethod={paymentMethod}
+          errorMessage={placeState.error?.message}
+          onPlaceOrder={() => void submit()}
+        />
+      </div>
     </div>
   );
 }

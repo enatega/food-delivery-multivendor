@@ -21,6 +21,8 @@ export interface ICuisinesSliderCardItemProps {
   shopType: string;
   logo?: string;
   slug?: string;
+  itemCount?: number;
+  itemCountLabel?: string;
 }
 
 export interface ICuisinesCardProps {

@@ -16,6 +16,7 @@ import {
   getSingleVendorDealPricing,
 } from "@/lib/mode/singleVendorPricing";
 import { useTranslations } from "next-intl";
+import { FiHeart } from "react-icons/fi";
 import { getFirstAvailableVariation } from "@/lib/mode/singleVendorStock";
 
 export default function SingleVendorProductDetails({
@@ -97,8 +98,8 @@ export default function SingleVendorProductDetails({
   };
   return (
     <div className="pb-12 pt-6">
-      <div className="grid gap-8 md:grid-cols-2">
-        <div className="relative aspect-square overflow-hidden rounded-3xl bg-gray-100 dark:bg-gray-800">
+      <div className="grid items-start gap-8 md:grid-cols-2 lg:gap-12">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-gray-100 md:sticky md:top-24 md:aspect-square lg:aspect-[4/3] dark:bg-gray-800">
           {product.image && (
             <Image
               src={product.image}
@@ -119,23 +120,31 @@ export default function SingleVendorProductDetails({
             </span>
           )}
         </div>
-        <div>
-          <div className="flex items-start justify-between">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <div className="min-w-0">
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 lg:text-4xl dark:text-white">
               {product.title}
             </h1>
             <button
+              type="button"
               aria-label="Toggle favorite"
               onClick={() => void toggleFavorite({ variables: { id: foodId } })}
-              className="text-2xl text-primary-color"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gray-200 text-gray-700 transition-colors hover:border-primary-color hover:bg-primary-light hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/60 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
             >
-              ♡
+              <FiHeart aria-hidden className="h-5 w-5" />
             </button>
           </div>
-          <p className="mt-3 text-gray-600 dark:text-gray-300">
-            {product.description}
-          </p>
-          <div className="mt-6 space-y-3">
+          {product.description && (
+            <p className="mt-3 leading-relaxed text-gray-600 dark:text-gray-300">
+              {product.description}
+            </p>
+          )}
+          {product.variations?.length > 0 && (
+            <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              Choose an option
+            </h2>
+          )}
+          <div className="mt-3 space-y-3" role="radiogroup">
             {product.variations?.map((variation: any) => {
               const pricing = getSingleVendorDealPricing(
                 variation.price,
@@ -148,31 +157,51 @@ export default function SingleVendorProductDetails({
                 product.isOutOfStock || variation.isOutOfStock,
               );
 
+              const isSelected = variationId === variation.id;
+
               return (
                 <label
                   key={variation.id}
-                  className={`flex cursor-pointer items-center justify-between gap-4 rounded-xl border p-4 ${isOutOfStock ? "border-gray-200 bg-gray-50 text-gray-500 dark:border-gray-700 dark:bg-gray-900/60 dark:text-gray-400" : "border-gray-200 dark:border-gray-700"}`}
+                  className={`flex cursor-pointer items-center justify-between gap-4 rounded-2xl border p-4 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary-color/60 ${
+                    isSelected
+                      ? "border-primary-color bg-primary-light/60 dark:bg-gray-800"
+                      : isOutOfStock
+                        ? "border-gray-200 bg-gray-50 text-gray-500 dark:border-gray-700 dark:bg-gray-900/60 dark:text-gray-400"
+                        : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-800/60"
+                  }`}
                 >
-                  <span className="min-w-0">
+                  <span className="flex min-w-0 items-center gap-3">
                     <input
                       type="radio"
                       name="variation"
-                      checked={variationId === variation.id}
+                      checked={isSelected}
                       onChange={() => {
                         setSelectedVariation(variation.id);
                         setSelectedAddonOptions({});
                       }}
-                      className="me-3"
+                      className="sr-only"
                     />
-                    {variation.title}
+                    <span
+                      aria-hidden
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${isSelected ? "border-primary-color bg-primary-color" : "border-gray-300 dark:border-gray-600"}`}
+                    >
+                      {isSelected && (
+                        <span className="h-2 w-2 rounded-full bg-white" />
+                      )}
+                    </span>
+                    <span className="truncate font-medium text-gray-900 dark:text-white">
+                      {variation.title}
+                    </span>
                     {isOutOfStock && (
-                      <span className="ms-2 text-xs font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">
+                      <span className="shrink-0 rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-red-600 dark:bg-red-950/40 dark:text-red-400">
                         {t("out_of_stock_label")}
                       </span>
                     )}
                   </span>
                   <span className="flex shrink-0 items-baseline gap-2">
-                    <strong className={hasDeal ? "text-primary-dark" : ""}>
+                    <strong
+                      className={`tabular-nums ${hasDeal ? "text-primary-dark" : "text-gray-900 dark:text-white"}`}
+                    >
                       {formatCurrency(finalPrice)}
                     </strong>
                     {hasDeal && (
@@ -260,9 +289,14 @@ export default function SingleVendorProductDetails({
             )}
           </div>
           {product.ingredients && (
-            <p className="mt-8 text-sm text-gray-500">
-              <strong>Ingredients:</strong> {product.ingredients}
-            </p>
+            <div className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-700">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                Ingredients
+              </h2>
+              <p className="mt-2 leading-relaxed text-gray-700 dark:text-gray-300">
+                {product.ingredients}
+              </p>
+            </div>
           )}
         </div>
       </div>

@@ -15,10 +15,6 @@ import { GoogleMapsContext } from "@/lib/context/global/google-maps.context";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import useUser from "@/lib/hooks/useUser";
 import GoogleMapTrackingComponent from "@/lib/ui/screen-components/protected/order-tracking/components/gm-tracking-comp";
-import TrackingHelpCard from "@/lib/ui/screen-components/protected/order-tracking/components/tracking-help-card";
-import TrackingOrderDetails from "@/lib/ui/screen-components/protected/order-tracking/components/tracking-order-details";
-import TrackingStatusCard from "@/lib/ui/screen-components/protected/order-tracking/components/tracking-status-card";
-import { PaddingContainer } from "@/lib/ui/useable-components/containers";
 import type { IOrderTrackingDetail } from "@/lib/utils/interfaces/order-tracking-detail.interface";
 import type { IOrderTracking } from "@/lib/utils/interfaces/orders.interface";
 import {
@@ -30,6 +26,12 @@ import {
   getSingleVendorTrackingAmounts,
   normalizeSingleVendorTrackingOrder,
 } from "./singleVendorOrderTracking";
+import TrackingStatusHero from "./TrackingStatusHero";
+import {
+  TrackingBillCard,
+  TrackingHelpActions,
+  TrackingItemsCard,
+} from "./TrackingOrderSummary";
 
 export default function SingleVendorOrderTracking({
   orderId,
@@ -159,11 +161,14 @@ export default function SingleVendorOrderTracking({
 
   if (details.loading || (isLegacyObjectId && legacyOrder.loading)) {
     return (
-      <div className="w-screen pb-20 dark:bg-gray-900">
-        <div className="skeleton-surface h-[400px] animate-pulse" />
-        <PaddingContainer className="mt-8">
-          <div className="skeleton-surface h-44 max-w-2xl animate-pulse rounded-xl" />
-        </PaddingContainer>
+      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-6 sm:px-5 lg:px-6">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-5">
+          <div className="space-y-4">
+            <div className="skeleton-surface h-64 animate-pulse rounded-2xl" />
+            <div className="skeleton-surface h-48 animate-pulse rounded-2xl" />
+          </div>
+          <div className="skeleton-surface h-80 animate-pulse rounded-2xl" />
+        </div>
       </div>
     );
   }
@@ -188,59 +193,47 @@ export default function SingleVendorOrderTracking({
   }
 
   return (
-    <div className="flex min-h-full w-screen flex-col bg-dispatch-ground pb-20 text-dispatch-ink dark:bg-gray-900 dark:text-gray-100">
-      <div className="scrollable-container flex-1">
-        {showLiveMap && (
-          <section aria-label="Order locations and delivery route">
-            {!GOOGLE_MAPS_KEY ? (
-              <TrackingUnavailable message="The interactive map is not configured." />
-            ) : mapLoadError ? (
-              <TrackingUnavailable message="Google Maps could not be loaded. Please try again." />
-            ) : destination ? (
-              <GoogleMapTrackingComponent
-                isLoaded={isLoaded}
-                destination={destination}
-                origin={storeLocation}
-                eta={trackingEnabled ? eta : null}
-                riderLocation={riderLocation}
-                requireBackendRoute={trackingEnabled && Boolean(riderLocation)}
-                showStaticLoadingImage={false}
-              />
-            ) : (
-              <TrackingUnavailable message="The customer location is unavailable for this order." />
-            )}
-          </section>
-        )}
+    <div className="min-h-full w-full bg-dispatch-ground pb-16 text-dispatch-ink dark:bg-gray-900 dark:text-gray-100">
+      {showLiveMap && (
+        <section aria-label="Order locations and delivery route">
+          {!GOOGLE_MAPS_KEY ? (
+            <TrackingUnavailable message="The interactive map is not configured." />
+          ) : mapLoadError ? (
+            <TrackingUnavailable message="Google Maps could not be loaded. Please try again." />
+          ) : destination ? (
+            <GoogleMapTrackingComponent
+              isLoaded={isLoaded}
+              destination={destination}
+              origin={storeLocation}
+              eta={trackingEnabled ? eta : null}
+              riderLocation={riderLocation}
+              requireBackendRoute={trackingEnabled && Boolean(riderLocation)}
+              showStaticLoadingImage={false}
+            />
+          ) : (
+            <TrackingUnavailable message="The customer location is unavailable for this order." />
+          )}
+        </section>
+      )}
 
-        <div className="mt-8 md:mt-10">
-          <PaddingContainer>
-            <div className="mb-8 flex flex-col items-center justify-between gap-6 md:flex-row md:items-start">
-              <TrackingStatusCard
-                orderTrackingDetails={normalizedOrder as IOrderTrackingDetail}
-                trackingData={trackingData}
-              />
-
-              <div className="w-full md:w-auto md:flex-none">
-                <TrackingHelpCard />
-                {normalizedOrder.rider?.phone && (
-                  <a
-                    href={`tel:${normalizedOrder.rider.phone}`}
-                    className="mt-3 block min-h-11 w-full rounded-xl bg-primary-color px-5 py-3 text-center text-sm font-semibold text-dispatch-ink transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus md:max-w-xs"
-                  >
-                    Contact courier
-                  </a>
-                )}
-              </div>
-            </div>
-
-            <div className="flex justify-center md:justify-start">
-              <TrackingOrderDetails
-                orderTrackingDetails={normalizedOrder as IOrderTrackingDetail}
-                summaryAmounts={summaryAmounts}
-                showCancelAction={false}
-              />
-            </div>
-          </PaddingContainer>
+      <div className="mx-auto w-full max-w-6xl px-4 pt-5 sm:px-5 lg:px-6">
+        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-5">
+          <div className="space-y-4">
+            <TrackingStatusHero
+              order={normalizedOrder as IOrderTrackingDetail}
+              trackingData={trackingData}
+              isPickup={isCustomerPickup}
+            />
+            <TrackingItemsCard order={normalizedOrder} />
+          </div>
+          <div className="space-y-4 lg:sticky lg:top-24">
+            <TrackingBillCard
+              order={normalizedOrder}
+              amounts={summaryAmounts}
+              isPickup={isCustomerPickup}
+            />
+            <TrackingHelpActions riderPhone={normalizedOrder.rider?.phone} />
+          </div>
         </div>
       </div>
     </div>

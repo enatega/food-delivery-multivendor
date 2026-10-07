@@ -170,7 +170,7 @@ describe("Single Vendor order tracking", () => {
   it("renders store acceptance from the customer order subscription without polling", () => {
     render(<SingleVendorOrderTracking orderId="SV-1001" />);
 
-    expect(screen.getByText("Accepted")).toBeInTheDocument();
+    expect(screen.getByText("Preparing your order")).toBeInTheDocument();
     expect(queryOptions.every((options) => !("pollInterval" in options))).toBe(
       true,
     );
@@ -231,7 +231,7 @@ describe("Single Vendor order tracking", () => {
 
     render(<SingleVendorOrderTracking orderId="SV-1001" />);
 
-    expect(screen.getByText("Picked")).toBeInTheDocument();
+    expect(screen.getByText("On the way to you")).toBeInTheDocument();
     expect(screen.getByTestId("single-vendor-live-map")).toHaveAttribute(
       "data-destination",
       "31.52,74.32",
@@ -275,12 +275,12 @@ describe("Single Vendor order tracking", () => {
     render(<SingleVendorOrderTracking orderId="SV-1001" />);
 
     expect(screen.getByText("Tax")).toBeInTheDocument();
-    expect(screen.getByText("Low order fee")).toBeInTheDocument();
-    expect(screen.getByText("Priority delivery fee")).toBeInTheDocument();
+    expect(screen.getByText("Small order fee")).toBeInTheDocument();
+    expect(screen.getByText("Priority delivery")).toBeInTheDocument();
     expect(screen.getByText("Discount")).toBeInTheDocument();
     expect(screen.getByText("Credits applied")).toBeInTheDocument();
-    expect(screen.getAllByText("$105.00")).not.toHaveLength(0);
-    expect(screen.getByText("-$7.00")).toBeInTheDocument();
-    expect(screen.getByText("-$6.00")).toBeInTheDocument();
+    expect(screen.getAllByText("$105")).not.toHaveLength(0);
+    expect(screen.getByText("-$7")).toBeInTheDocument();
+    expect(screen.getByText("-$6")).toBeInTheDocument();
   });
 });

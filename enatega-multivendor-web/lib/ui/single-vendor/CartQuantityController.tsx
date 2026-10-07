@@ -21,9 +21,11 @@ interface CartQuantityControllerProps {
   variationTitle?: string;
   image?: string;
   unitPrice?: number;
-  variant?: "overlay" | "details";
+  variant?: "overlay" | "details" | "inline";
   isOutOfStock?: boolean;
   addons?: SingleVendorCartAddonSelection[];
+  /** Overlay placement classes; defaults to the top-end image corner. */
+  className?: string;
 }
 
 export default function CartQuantityController({
@@ -37,6 +39,7 @@ export default function CartQuantityController({
   variant = "overlay",
   isOutOfStock = false,
   addons = [],
+  className = "end-2.5 top-2.5",
 }: CartQuantityControllerProps) {
   const t = useTranslations();
   const { authToken, setIsAuthModalVisible } = useAuth();
@@ -52,6 +55,8 @@ export default function CartQuantityController({
   );
   const quantity = cartItem?.quantity ?? 0;
   const isDetails = variant === "details";
+  // Inline: a light, static stepper for cart rows (same behavior as overlay).
+  const isInline = variant === "inline";
 
   const changeQuantity = async (nextQuantity: number) => {
     if (updatePendingRef.current) return;
@@ -105,7 +110,19 @@ export default function CartQuantityController({
   };
 
   const isActive = quantity > 0;
-  const decreaseLabel = quantity <= 1 ? "Remove from cart" : "Decrease quantity";
+  // Direction of the last change, so the count rolls up on add and down on remove.
+  // Only recomputed when the quantity actually changes, so unrelated
+  // re-renders keep the last direction.
+  const lastChangeRef = useRef({ quantity, direction: 1 });
+  if (lastChangeRef.current.quantity !== quantity) {
+    lastChangeRef.current = {
+      quantity,
+      direction: quantity > lastChangeRef.current.quantity ? 1 : -1,
+    };
+  }
+  const direction = lastChangeRef.current.direction;
+  const decreaseLabel =
+    quantity <= 1 ? "Remove from cart" : "Decrease quantity";
   const spring = { type: "spring", stiffness: 460, damping: 32 } as const;
 
   const animatedCount = (className: string) => (
@@ -113,12 +130,18 @@ export default function CartQuantityController({
       className={`relative inline-flex items-center justify-center overflow-hidden font-bold tabular-nums ${className}`}
       aria-live="polite"
     >
-      <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence mode="popLayout" initial={false} custom={direction}>
         <motion.span
           key={quantity}
-          initial={{ opacity: 0, y: 12, scale: 0.7 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -12, scale: 0.7 }}
+          custom={direction}
+          variants={{
+            enter: (dir: number) => ({ opacity: 0, y: 12 * dir, scale: 0.7 }),
+            center: { opacity: 1, y: 0, scale: 1 },
+            exit: (dir: number) => ({ opacity: 0, y: -12 * dir, scale: 0.7 }),
+          }}
+          initial="enter"
+          animate="center"
+          exit="exit"
           transition={{ duration: 0.18 }}
         >
           {quantity}
@@ -153,7 +176,9 @@ export default function CartQuantityController({
           {!isOutOfStock && (
             <span className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#151914] px-3 text-sm font-semibold text-white">
               {typeof unitPrice === "number" && (
-                <span className="tabular-nums">{formatCurrency(unitPrice)}</span>
+                <span className="tabular-nums">
+                  {formatCurrency(unitPrice)}
+                </span>
               )}
               <FiPlus
                 aria-hidden
@@ -224,29 +249,35 @@ export default function CartQuantityController({
     );
   }
 
-  // Card overlay: a single pill anchored to the image corner that expands
-  // from a "+" badge into a stepper once the item is in the cart.
+  // Card overlay: a compact "+" badge on the image corner that grows into a
+  // glassy stepper once the item is in the cart. The inline variant reuses it
+  // as a light pill in cart rows.
   return (
-    <div
+    <motion.div
+      layout
+      transition={spring}
       onClick={stopEvent}
       role="group"
       aria-label={`${foodTitle || "Product"} quantity`}
       aria-busy={isUpdating}
-      className={`absolute end-2.5 top-2.5 z-20 flex h-10 items-center rounded-full p-1 shadow-[0_8px_22px_rgba(21,25,20,0.22)] backdrop-blur-md transition-colors duration-200 ${
-        isActive
-          ? "bg-[#151914]/90 ring-1 ring-white/10"
-          : "bg-white/95 ring-1 ring-black/5 dark:bg-gray-900/95 dark:ring-white/10"
+      style={{ borderRadius: 999 }}
+      className={`${isInline ? "relative" : `absolute ${className} z-20`} flex items-center gap-1 p-[3px] backdrop-blur-md transition-[background-color,box-shadow] duration-200 ${
+        isInline
+          ? "bg-dispatch-map ring-1 ring-dispatch-line dark:bg-gray-800 dark:ring-gray-700"
+          : isActive
+            ? "bg-[#151914]/85 shadow-[0_10px_24px_rgba(21,25,20,0.32)] ring-1 ring-white/10"
+            : "bg-white/90 shadow-[0_6px_16px_rgba(21,25,20,0.18)] ring-1 ring-black/5 dark:bg-gray-900/90 dark:ring-white/10"
       }`}
     >
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} mode="popLayout">
         {isActive && (
           <motion.div
             key="stepper"
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: "auto", opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.6, x: 12 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.6, x: 12 }}
             transition={spring}
-            className="flex items-center overflow-hidden"
+            className="flex items-center gap-0.5"
           >
             <motion.button
               type="button"
@@ -256,23 +287,43 @@ export default function CartQuantityController({
                 stopEvent(event);
                 void changeQuantity(Math.max(0, quantity - 1));
               }}
-              whileTap={{ scale: 0.85 }}
-              className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 disabled:cursor-wait disabled:opacity-60 ${quantity <= 1 ? "hover:bg-red-500" : "hover:bg-white/20"}`}
+              whileTap={{ scale: 0.82 }}
+              className={`inline-flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 disabled:cursor-wait disabled:opacity-60 ${
+                isInline
+                  ? `bg-white text-dispatch-ink shadow-sm focus-visible:ring-primary-color/60 dark:bg-gray-900 dark:text-white ${quantity <= 1 ? "hover:bg-red-500 hover:text-white" : "hover:bg-dispatch-line dark:hover:bg-gray-700"}`
+                  : `bg-white/[0.12] text-white focus-visible:ring-white/70 ${quantity <= 1 ? "hover:bg-red-500" : "hover:bg-white/25"}`
+              }`}
             >
-              {quantity <= 1 ? (
-                <FiTrash2 aria-hidden className="h-3.5 w-3.5" />
-              ) : (
-                <FiMinus aria-hidden className="h-4 w-4" />
-              )}
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={quantity <= 1 ? "trash" : "minus"}
+                  initial={{ opacity: 0, rotate: -45, scale: 0.6 }}
+                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotate: 45, scale: 0.6 }}
+                  transition={{ duration: 0.15 }}
+                  className="inline-flex"
+                >
+                  {quantity <= 1 ? (
+                    <FiTrash2 aria-hidden className="h-3.5 w-3.5" />
+                  ) : (
+                    <FiMinus
+                      aria-hidden
+                      className="h-3.5 w-3.5"
+                      strokeWidth={3}
+                    />
+                  )}
+                </motion.span>
+              </AnimatePresence>
             </motion.button>
             {animatedCount(
-              `h-8 min-w-8 px-1 text-sm text-white ${isUpdating ? "opacity-60" : ""}`,
+              `h-[30px] min-w-[22px] px-0.5 text-[13px] ${isInline ? "text-dispatch-ink dark:text-white" : "text-white"} ${isUpdating ? "opacity-60" : ""}`,
             )}
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.button
+        layout="position"
         type="button"
         disabled={isUpdating || isOutOfStock}
         aria-label={
@@ -286,12 +337,30 @@ export default function CartQuantityController({
           stopEvent(event);
           void changeQuantity(quantity + 1);
         }}
-        whileHover={isOutOfStock ? undefined : { scale: 1.06 }}
-        whileTap={isOutOfStock ? undefined : { scale: 0.85 }}
-        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-color text-[#151914] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/60 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 dark:disabled:bg-gray-700 dark:disabled:text-gray-500"
+        whileHover={isOutOfStock ? undefined : { scale: 1.08 }}
+        whileTap={isOutOfStock ? undefined : { scale: 0.82 }}
+        className="group/plus relative inline-flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-primary-color text-[#151914] shadow-[inset_0_-2px_0_rgba(21,25,20,0.12)] transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color/60 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none dark:disabled:bg-gray-700 dark:disabled:text-gray-500"
       >
-        <FiPlus aria-hidden className="h-4 w-4" strokeWidth={2.75} />
+        {/* Ripple that pulses out each time a unit is added. */}
+        <AnimatePresence initial={false}>
+          {isActive && direction > 0 && (
+            <motion.span
+              key={`ripple-${quantity}`}
+              aria-hidden
+              initial={{ scale: 1, opacity: 0.55 }}
+              animate={{ scale: 1.9, opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="pointer-events-none absolute inset-0 rounded-full bg-primary-color"
+            />
+          )}
+        </AnimatePresence>
+        <FiPlus
+          aria-hidden
+          className="relative h-4 w-4 transition-transform duration-300 group-hover/plus:rotate-90"
+          strokeWidth={3}
+        />
       </motion.button>
-    </div>
+    </motion.div>
   );
 }
