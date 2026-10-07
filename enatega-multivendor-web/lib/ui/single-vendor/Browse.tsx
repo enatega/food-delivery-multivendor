@@ -11,6 +11,7 @@ import { SingleVendorProductSectionSkeleton } from "./ProductSection";
 import { normalizeProducts } from "./Discovery";
 import Image from "@/lib/ui/useable-components/safe-image";
 import { useTranslations } from "next-intl";
+import SingleVendorEmptyState from "./EmptyState";
 
 export default function SingleVendorBrowse() {
   const t = useTranslations();
@@ -87,9 +88,11 @@ export default function SingleVendorBrowse() {
               products={searchProducts}
             />
           ) : (
-            <div className="flex min-h-48 items-center justify-center py-10 text-center text-sm text-dispatch-muted">
-              {t("no_items_found")}
-            </div>
+            <SingleVendorEmptyState
+              title={t("no_items_found")}
+              description={`We couldn't find anything matching “${term.trim()}”. Check the spelling or try a different search.`}
+              action={{ label: "Clear search", onClick: () => setTerm("") }}
+            />
           )}
           {result.data?.searchSingleVendorFoods?.hasMore && (
             <button
@@ -124,7 +127,7 @@ export default function SingleVendorBrowse() {
             <Link
               href={`/category/${category.id}`}
               key={category.id}
-              className="group overflow-hidden rounded-xl border border-dispatch-line bg-dispatch-surface p-2 transition-shadow hover:shadow-[0_12px_30px_rgba(21,25,20,0.09)] focus-visible:outline-none dark:border-gray-800 dark:bg-gray-900"
+              className="group overflow-hidden rounded-[14px] border border-dispatch-line bg-dispatch-surface p-2 shadow-[0_4px_16px_rgba(21,25,20,0.035)] transition duration-300 hover:-translate-y-0.5 hover:border-primary-disabled hover:shadow-[0_14px_30px_rgba(21,25,20,0.1)] focus-visible:outline-none dark:border-gray-800 dark:bg-gray-900"
             >
               {category.image && (
                 <div className="overflow-hidden rounded-lg bg-dispatch-map">
@@ -133,23 +136,26 @@ export default function SingleVendorBrowse() {
                     alt={category.name}
                     width={320}
                     height={320}
-                    className="aspect-square w-full object-cover transition duration-500 group-hover:scale-[1.025]"
+                    className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.035]"
                   />
                 </div>
               )}
-              <p className="mt-3 line-clamp-1 px-1 text-sm font-medium leading-tight text-dispatch-ink dark:text-white">
-                {category.name}
-              </p>
-              <p className="px-1 pb-1 pt-1 text-xs text-dispatch-muted">
-                {category.itemCount ?? 0} {t("items_label")}
-              </p>
+              <div className="flex items-center justify-between gap-2 px-1 pb-1 pt-3">
+                <p className="line-clamp-1 text-sm font-medium leading-tight text-dispatch-ink dark:text-white">
+                  {category.name}
+                </p>
+                <span className="shrink-0 text-[11px] font-medium text-dispatch-muted">
+                  {category.itemCount ?? 0} {t("items_label")}
+                </span>
+              </div>
             </Link>
           ))}
         </div>
       ) : (
-        <div className="flex min-h-48 items-center justify-center py-10 text-center text-sm text-dispatch-muted">
-          {t("no_items_found")}
-        </div>
+        <SingleVendorEmptyState
+          title={t("no_items_found")}
+          description="There are no categories to show right now. Please check back soon."
+        />
       )}
     </div>
   );

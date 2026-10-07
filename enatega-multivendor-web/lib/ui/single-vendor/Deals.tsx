@@ -5,6 +5,7 @@ import SingleVendorProductSection from "./ProductSection";
 import { SingleVendorProductSectionSkeleton } from "./ProductSection";
 import { normalizeProducts } from "./Discovery";
 import { useTranslations } from "next-intl";
+import SingleVendorEmptyState from "./EmptyState";
 
 export default function SingleVendorDeals() {
   const t = useTranslations();
@@ -43,9 +44,10 @@ export default function SingleVendorDeals() {
           products={products}
         />
       ) : (
-        <div className="flex min-h-64 items-center justify-center border-y border-dispatch-line py-12 text-center text-sm text-dispatch-muted dark:border-gray-800">
-          {t("no_items_found")}
-        </div>
+        <SingleVendorEmptyState
+          title={t("no_items_found")}
+          description="There are no deals running right now. Check back soon for new offers."
+        />
       )}
     </div>
   );

@@ -767,22 +767,27 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
             {!isMarketplaceLanding &&
               !isSearchFocused &&
               userAddress?.deliveryAddress && (
-                <div className="my-1 flex items-center justify-between gap-3 lg:hidden">
+                <div className="mb-2.5 mt-0.5 flex items-center gap-2 lg:hidden">
                   <button
                     type="button"
-                    className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-dispatch-map focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color"
+                    className="flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-xl border border-dispatch-line bg-dispatch-surface px-3 text-left transition-colors duration-200 hover:border-primary-color hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color dark:border-gray-700 dark:bg-gray-800"
                     onClick={onHandleAddressModelVisibility}
                     title={userAddress?.deliveryAddress || ""}
                   >
-                    <div className="flex h-9 w-8 shrink-0 items-center justify-center text-primary-dark">
-                      <LocationSvg width={20} height={20} />
+                    <div className="flex shrink-0 items-center text-primary-dark">
+                      <LocationSvg width={18} height={18} />
                     </div>
-                    <p
-                      className="min-w-0 truncate text-sm text-primary-color"
-                      title={userAddress?.deliveryAddress || ""}
-                    >
-                      {userAddress?.deliveryAddress}
-                    </p>
+                    <div className="min-w-0 flex-1 leading-tight">
+                      <span className="block text-[11px] font-medium text-dispatch-muted dark:text-gray-400">
+                        Deliver to
+                      </span>
+                      <p
+                        className="truncate text-sm font-semibold text-dispatch-ink dark:text-white"
+                        title={userAddress?.deliveryAddress || ""}
+                      >
+                        {userAddress?.deliveryAddress}
+                      </p>
+                    </div>
                     <div className="flex shrink-0 items-center">
                       <FontAwesomeIcon
                         icon={faChevronDown}
@@ -794,7 +799,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                   {authToken && (
                     <button
                       type="button"
-                      className="flex max-w-[44%] shrink-0 items-center gap-2 rounded-lg border border-dispatch-line bg-dispatch-surface px-1 py-1 transition-colors duration-200 hover:border-primary-color hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color md:hidden"
+                      className="flex h-11 max-w-[44%] shrink-0 items-center gap-1.5 rounded-xl border border-dispatch-line bg-dispatch-surface pe-2.5 ps-1.5 transition-colors duration-200 hover:border-primary-color hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color md:hidden dark:border-gray-700 dark:bg-gray-800"
                       onClick={(event) => {
                       router.prefetch("/profile");
                       menuRef.current?.toggle(event);
@@ -803,7 +808,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                       aria-haspopup
                       title={userName}
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-color text-sm font-semibold uppercase text-white select-none">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-color text-xs font-semibold uppercase text-white select-none">
                         {profile?.name
                           ?.trim()
                           .split(" ")
@@ -811,7 +816,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                           .slice(0, 2)
                           .join("") || userName.charAt(0)}
                       </div>
-                      <span className="min-w-0 truncate text-sm text-gray-800 dark:text-white">
+                      <span className="hidden min-w-0 truncate text-sm font-medium text-gray-800 sm:inline dark:text-white">
                         {userName}
                       </span>
                       <FontAwesomeIcon
@@ -847,6 +852,13 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
           window.dispatchEvent(new Event("orderInstructionsUpdated"));
         }}
         className={`!ml-0 !p-0 !m-0 w-full md:w-[430px] lg:w-[580px] dark:bg-gray-800`}
+        // The single-vendor cart draws its own header and close button.
+        showCloseIcon={!isSingleVendor}
+        pt={
+          isSingleVendor
+            ? { header: { className: "!hidden" }, content: { className: "!p-0" } }
+            : undefined
+        }
       >
         {isSingleVendor ? (
           <SingleVendorCart onClose={() => setIsCartOpen(false)} />

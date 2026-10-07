@@ -70,6 +70,8 @@ export default function SingleVendorDiscovery() {
       image: category.image || category.icon,
       shopType: "single-vendor",
       slug: category.id,
+      itemCount: category.itemCount,
+      itemCountLabel: t("items_label"),
     }),
   );
   const catalogData = discoveryData?.categories || [];
