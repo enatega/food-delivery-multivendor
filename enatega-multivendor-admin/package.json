@@ -52,7 +52,7 @@
     "@types/react-geocode": "^0.2.4",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
-    "autoprefixer": "^10.4.19",
+    "autoprefixer": "^10.5.2",
     "cross-env": "^7.0.3",
     "cypress": "^13.13.1",
     "eslint": "^8.57.1",
