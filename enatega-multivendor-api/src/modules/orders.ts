@@ -698,7 +698,11 @@ export const ordersModule = defineModule({
     Order: {
       id: (o: { _id: unknown }) => o._id,
       restaurant: (o: { restaurant?: unknown }, _a, ctx) => (o.restaurant ? ctx.loaders.restaurant.load(String(o.restaurant)) : null),
-      user: (o: { user?: unknown }, _a, ctx) => (o.user ? ctx.loaders.user.load(String(o.user)) : null),
+      user: (o: { user?: unknown }, _a, ctx) => {
+        if (!o.user) return null;
+        if (typeof o.user === 'object' && !(o.user instanceof Types.ObjectId) && 'name' in (o.user as object)) return o.user; // sanitized public view
+        return ctx.loaders.user.load(String(o.user));
+      },
       rider: (o: { rider?: unknown }, _a, ctx) => (o.rider ? ctx.loaders.rider.load(String(o.rider)) : null),
       zone: (o: { zone?: unknown }, _a, ctx) => (o.zone ? ctx.loaders.zone.load(String(o.zone)) : null),
       review: (o: { review?: unknown }, _a, ctx) => (o.review ? ctx.loaders.review.load(String(o.review)) : null),

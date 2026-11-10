@@ -135,8 +135,8 @@ describe('customer → store → rider order lifecycle', () => {
     const earnings = await Earning.find({ order: orderId }).lean();
     expect(earnings).toHaveLength(1);
     const e = earnings[0]!;
-    expect(e.storeEarnings.orderAmount).toBeCloseTo(27, 2);
-    expect(e.platformEarnings.marketplaceCommission).toBeCloseTo(2.7, 2); // 10% commission
+    expect(e.storeEarnings?.orderAmount).toBeCloseTo(27, 2);
+    expect(e.platformEarnings?.marketplaceCommission).toBeCloseTo(2.7, 2); // 10% commission
     const store = (await Restaurant.findById(server.ids.restaurantId).lean())!;
     expect(store.currentWalletAmount).toBeCloseTo(24.3, 2);
     const rider = (await Rider.findOne({ username: 'demo-rider' }).lean())!;

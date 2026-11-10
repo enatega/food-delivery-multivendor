@@ -28,7 +28,7 @@ const isAllowedHost = (url, allowedHosts) => {
 function Paypal(props) {
   const Analytics = analytics()
 
-  const { SERVER_URL } = useEnvVars()
+  const { SERVER_REST_URL } = useEnvVars()
 
   const { t } = useTranslation()
   const [loading, loadingSetter] = useState(true)
@@ -146,7 +146,7 @@ function Paypal(props) {
           }
           return isAllowedHost(url, allowedHosts)
         }}
-        source={{ uri: `${SERVER_URL}paypal?id=${_id}` }}
+        source={{ uri: `${SERVER_REST_URL}paypal?id=${_id}` }}
         onNavigationStateChange={data => {
           handleResponse(data)
         }}

@@ -20,6 +20,7 @@ import {
   WebNotification,
   Zone,
 } from '../models/index.js';
+import { kv } from '../lib/kv.js';
 import { audit } from '../services/audit.js';
 import { getConfig, invalidateConfig } from '../services/config.js';
 import { sendPush } from '../services/push.js';
@@ -424,6 +425,8 @@ export const platformModule = defineModule({
         return { imageUrl: await uploadImage(image, `${claims.typ}s`) };
       },
       createActivity: async (_p, args: { groupId: string; module: string; screenPath: string; type: string; details: string }, ctx) => {
+        // Analytics events are cheap to send: cap them per client to protect the database.
+        if ((await kv.incr(`rl:activity:${ctx.ip}`, 60)) > 120) return false;
         const user = await optionalCustomer(ctx);
         await Activity.create({
           user: user?._id,

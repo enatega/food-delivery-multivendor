@@ -63,6 +63,16 @@ const getSingleVendorConfig = () => {
   const explicitlyEnabled =
     process.env.EXPO_PUBLIC_SINGLE_VENDOR_ENABLED === 'true'
 
+  const selfHosted = getSelfHostedConfig()
+  if (selfHosted && !(graphqlUrl && wsGraphqlUrl && serverRestUrl)) {
+    return {
+      ...selfHosted,
+      CLARITY_ENABLED: false,
+      PUBLIC_ACCESS_REQUIRED: true,
+      SINGLE_VENDOR_ENABLED: explicitlyEnabled
+    }
+  }
+
   if (graphqlUrl && wsGraphqlUrl && serverRestUrl) {
     return {
       GRAPHQL_URL: graphqlUrl,
@@ -87,6 +97,21 @@ const getSingleVendorConfig = () => {
   }
 }
 
+// Self-hosted backend (enatega-multivendor-api). When EXPO_PUBLIC_API_URL is set
+// (e.g. https://api.example.com) every endpoint is derived from it and it serves
+// both multi-vendor and single-vendor modes.
+const getSelfHostedConfig = () => {
+  const base = (process.env.EXPO_PUBLIC_API_URL || '').trim().replace(/\/+$/, '')
+  if (!base) return null
+  const ws = base.replace(/^http/i, 'ws')
+  return {
+    GRAPHQL_URL: `${base}/graphql`,
+    WS_GRAPHQL_URL: `${ws}/graphql`,
+    SERVER_URL: `${base}/graphql`,
+    SERVER_REST_URL: `${base}/`
+  }
+}
+
 const normalizeEnvironment = (env) => {
   if (env === 'production' || env === 'staging') return env
   return 'development'
@@ -101,6 +126,7 @@ const getEnvironmentConfig = (env, mode = APP_MODES.MULTI) => {
 
   return {
     ...MULTI_ENV_CONFIG[environment],
+    ...(getSelfHostedConfig() || {}),
     PUBLIC_ACCESS_REQUIRED: true,
     SINGLE_VENDOR_ENABLED: getSingleVendorConfig().SINGLE_VENDOR_ENABLED
   }

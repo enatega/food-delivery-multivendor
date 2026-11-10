@@ -1,0 +1,53 @@
+# Local / single-host deployment: API + MongoDB (single-node replica set) + Redis.
+# Usage: cp .env.example .env  (fill in the secrets)  &&  docker compose up -d --build
+services:
+  api:
+    build: .
+    image: enatega-api:latest
+    restart: unless-stopped
+    init: true
+    env_file: .env
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/enatega?replicaSet=rs0
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "${PORT:-8001}:8001"
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    stop_grace_period: 30s
+
+  mongo:
+    image: mongo:7.0
+    restart: unless-stopped
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # Initialises the replica set on first start, then reports its health.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'mongo:27017' }] }).ok }"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mongo-data:
+  redis-data:
+  uploads:

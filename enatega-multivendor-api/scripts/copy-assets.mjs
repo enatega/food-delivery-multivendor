@@ -5,5 +5,5 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 mkdirSync(join(root, 'dist/graphql'), { recursive: true });
-cpSync(join(root, 'src/graphql/schema.graphql'), join(root, 'dist/graphql/schema.graphql'));
-console.log('Copied GraphQL schema to dist/graphql');
+cpSync(join(root, 'src/graphql/schema'), join(root, 'dist/graphql/schema'), { recursive: true });
+console.log('Copied GraphQL schema to dist/graphql/schema');

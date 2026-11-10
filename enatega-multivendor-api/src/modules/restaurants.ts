@@ -455,7 +455,29 @@ export const restaurantsModule = defineModule({
       commissionRate: dashboardOnly('commissionRate'),
     },
     Review: {
-      order: (r: { order?: unknown }, _a, ctx) => (r.order ? ctx.loaders.order.load(String(r.order)) : null),
+      // Reviews are public: other customers only see the reviewer's first name and the ordered items.
+      order: async (r: { order?: unknown }, _a, ctx) => {
+        if (!r.order) return null;
+        const order = await ctx.loaders.order.load(String(r.order));
+        if (!order) return null;
+        const claims = ctx.auth.error ? undefined : ctx.auth.claims;
+        if (isDashboard(ctx) || (claims?.typ === 'customer' && String(order.user) === claims.sub)) return order;
+        const user = order.user ? await ctx.loaders.user.load(String(order.user)) : null;
+        return {
+          _id: order._id,
+          orderId: order.orderId,
+          createdAt: order.createdAt,
+          items: (order.items ?? []).map((i: { _id: unknown; title?: string; quantity?: number; variation?: unknown; image?: string }) => ({
+            _id: i._id,
+            title: i.title,
+            quantity: i.quantity,
+            image: i.image,
+            variation: i.variation,
+            addons: [],
+          })),
+          user: { _id: user?._id, name: (user?.name ?? '').split(' ')[0] || 'Customer' },
+        };
+      },
       restaurant: (r: { restaurant?: unknown }, _a, ctx) => (r.restaurant ? ctx.loaders.restaurant.load(String(r.restaurant)) : null),
     },
   },
