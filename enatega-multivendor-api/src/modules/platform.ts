@@ -414,7 +414,7 @@ export const platformModule = defineModule({
       },
       updateSupportTicketStatus: async (_p, { input }: { input: z.infer<typeof inputs.UpdateSupportTicketInput> }, ctx) => {
         await requireAdmin(ctx, 'Users');
-        const ticket = must(await SupportTicket.findByIdAndUpdate(input.ticketId, { status: input.status }, { new: true }), 'Ticket');
+        const ticket = must(await SupportTicket.findByIdAndUpdate(input.ticketId, { status: input.status }, { returnDocument: 'after' }), 'Ticket');
         await audit(ctx, 'UPDATE_TICKET_STATUS', 'SupportTicket', ticket._id, { status: input.status });
         return ticket;
       },

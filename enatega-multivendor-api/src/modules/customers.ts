@@ -39,14 +39,23 @@ const UpdateUserInput = z.object({
   emailIsVerified: optBool,
 });
 
+/** Shared by createAddress/editAddress and placeOrder; required fields are checked per mutation. */
 const AddressInput = z.object({
   _id: optStr(40),
   label: optStr(60),
-  deliveryAddress: z.string().trim().min(1).max(500),
+  deliveryAddress: optStr(500),
   details: optStr(500),
-  latitude: z.coerce.number().min(-90).max(90),
-  longitude: z.coerce.number().min(-180).max(180),
+  latitude: z.coerce.number().min(-90).max(90).optional(),
+  longitude: z.coerce.number().min(-180).max(180).optional(),
+  isDemoDefaultLocation: optBool,
+  demoZoneId: optStr(40),
 });
+
+function savedAddress(a: z.infer<typeof AddressInput>) {
+  if (!a.deliveryAddress) throw badInput('deliveryAddress is required.');
+  if (a.latitude === undefined || a.longitude === undefined || (a.latitude === 0 && a.longitude === 0)) throw badInput('Address coordinates are required.');
+  return { label: a.label ?? 'Other', deliveryAddress: a.deliveryAddress, details: a.details, location: point(a.longitude, a.latitude) };
+}
 
 export function authData(user: UserDoc, isNewUser = false) {
   const { token, expiresAt } = signAccessToken({ sub: String(user._id), typ: 'customer', tv: user.tokenVersion ?? 0 });
@@ -352,13 +361,7 @@ export const customersModule = defineModule({
         const user = await requireCustomer(ctx);
         if (user.addresses.length >= 50) throw badInput('You can save up to 50 addresses.');
         user.addresses.forEach((a) => (a.selected = false));
-        user.addresses.push({
-          label: addressInput.label ?? 'Other',
-          deliveryAddress: addressInput.deliveryAddress,
-          details: addressInput.details,
-          location: point(addressInput.longitude, addressInput.latitude),
-          selected: true,
-        });
+        user.addresses.push({ ...savedAddress(addressInput), selected: true });
         await user.save();
         return user;
       },
@@ -366,12 +369,7 @@ export const customersModule = defineModule({
         const user = await requireCustomer(ctx);
         if (!addressInput._id) throw badInput('Address id is required.');
         const a = findAddress(user, addressInput._id);
-        a.set({
-          label: addressInput.label ?? a.label,
-          deliveryAddress: addressInput.deliveryAddress,
-          details: addressInput.details,
-          location: point(addressInput.longitude, addressInput.latitude),
-        });
+        a.set({ ...savedAddress(addressInput), label: addressInput.label ?? a.label });
         await user.save();
         return user;
       },

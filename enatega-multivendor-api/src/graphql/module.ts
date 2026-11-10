@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 import type { GraphQLContext } from './context.js';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 export type Resolver<TArgs = any, TParent = any, TResult = unknown> = (
   parent: TParent,
   args: TArgs,

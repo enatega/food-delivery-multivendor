@@ -121,7 +121,7 @@ export async function createApp(httpServer: Server, schema: GraphQLSchema): Prom
     schema,
     introspection: introspectionEnabled,
     csrfPrevention: true,
-    includeStacktraceInErrorResponses: !isProduction,
+    includeStacktraceInErrorResponses: env.NODE_ENV === 'development',
     validationRules: [depthLimit(env.GRAPHQL_MAX_DEPTH), aliasLimit(env.GRAPHQL_MAX_ALIASES)],
     parseOptions: { maxTokens: env.GRAPHQL_MAX_TOKENS },
     plugins: [

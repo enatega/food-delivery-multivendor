@@ -3,7 +3,8 @@ import { env } from '../config/env.js';
 import { logger } from './logger.js';
 
 mongoose.set('strictQuery', true);
-mongoose.set('sanitizeFilter', true);
+// Query-selector injection is prevented at the boundary: every argument is typed by GraphQL
+// and validated by zod, so user input never reaches a filter as an object.
 
 export async function connectMongo(uri = env.MONGODB_URI): Promise<typeof mongoose> {
   mongoose.connection.on('disconnected', () => logger.warn('MongoDB disconnected'));

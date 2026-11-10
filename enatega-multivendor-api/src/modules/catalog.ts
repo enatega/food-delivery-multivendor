@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import { z } from 'zod';
 import { defineModule } from '../graphql/module.js';
 import type { GraphQLContext } from '../graphql/context.js';
-import { looseEnum, objectId, optBool, optNum, optStr, pagination } from '../graphql/zod.js';
+import { looseEnum, objectId, optBool, optStr, pagination } from '../graphql/zod.js';
 import { optionalCustomer, requireAdmin, requireRestaurantAccess } from '../auth/guards.js';
 import { badInput, conflict, must } from '../lib/errors.js';
 import { escapeRegex, pageArgs, pageResult, searchRegex } from '../lib/query.js';
@@ -115,7 +115,7 @@ async function saveCoupon(ctx: GraphQLContext, input: z.infer<typeof CouponInput
   if (input._id) dup._id = { $ne: input._id };
   if (await Coupon.exists(dup)) throw conflict('A coupon with this code already exists.');
   const coupon = input._id
-    ? must(await Coupon.findOneAndUpdate({ _id: input._id, restaurant } as Record<string, unknown>, data, { new: true }), 'Coupon')
+    ? must(await Coupon.findOneAndUpdate({ _id: input._id, restaurant } as Record<string, unknown>, data, { returnDocument: 'after' }), 'Coupon')
     : await Coupon.create(data);
   await audit(ctx, input._id ? 'EDIT_COUPON' : 'CREATE_COUPON', 'Coupon', coupon._id, data);
   return coupon;
@@ -240,7 +240,7 @@ export const catalogModule = defineModule({
         await requireAdmin(ctx, 'Cuisine');
         const { _id, ...data } = cuisineInput;
         const before = must(await Cuisine.findById(_id).lean(), 'Cuisine');
-        const c = await Cuisine.findByIdAndUpdate(_id, data, { new: true });
+        const c = await Cuisine.findByIdAndUpdate(_id, data, { returnDocument: 'after' });
         if (before.name !== data.name) await Restaurant.updateMany({ cuisines: before.name }, { $set: { 'cuisines.$': data.name } });
         await audit(ctx, 'EDIT_CUISINE', 'Cuisine', _id, data);
         return c;
@@ -262,7 +262,7 @@ export const catalogModule = defineModule({
       },
       updateShopType: async (_p, { dto }: { dto: z.infer<typeof ShopTypeInput> }, ctx) => {
         await requireAdmin(ctx, 'Shop Type');
-        const s = must(await ShopType.findByIdAndUpdate(dto._id, { name: dto.name, image: dto.image, ...(typeof dto.isActive === 'boolean' ? { isActive: dto.isActive } : {}) }, { new: true }), 'Shop type');
+        const s = must(await ShopType.findByIdAndUpdate(dto._id, { name: dto.name, image: dto.image, ...(typeof dto.isActive === 'boolean' ? { isActive: dto.isActive } : {}) }, { returnDocument: 'after' }), 'Shop type');
         await audit(ctx, 'UPDATE_SHOP_TYPE', 'ShopType', s._id, { name: dto.name, isActive: dto.isActive });
         return s;
       },
@@ -327,7 +327,7 @@ export const catalogModule = defineModule({
       editBanner: async (_p, { bannerInput }: { bannerInput: z.infer<typeof BannerInput> }, ctx) => {
         await requireAdmin(ctx, 'Banners');
         const { _id, ...data } = bannerInput;
-        const b = must(await Banner.findByIdAndUpdate(_id, data, { new: true }), 'Banner');
+        const b = must(await Banner.findByIdAndUpdate(_id, data, { returnDocument: 'after' }), 'Banner');
         await audit(ctx, 'EDIT_BANNER', 'Banner', _id);
         return b;
       },
@@ -345,7 +345,7 @@ export const catalogModule = defineModule({
       editBannerRestaurant: async (_p, { bannerInput }: { bannerInput: z.infer<typeof BannerRestaurantInput> }, ctx) => {
         await requireRestaurantAccess(ctx, bannerInput.restaurant);
         const { _id, ...data } = bannerInput;
-        return must(await BannerRestaurant.findOneAndUpdate({ _id, restaurant: bannerInput.restaurant } as Record<string, unknown>, data, { new: true }), 'Banner');
+        return must(await BannerRestaurant.findOneAndUpdate({ _id, restaurant: bannerInput.restaurant } as Record<string, unknown>, data, { returnDocument: 'after' }), 'Banner');
       },
       deleteBannerRestaurant: async (_p, { id }: { id: string }, ctx) => {
         const b = must(await BannerRestaurant.findById(id), 'Banner');
@@ -356,25 +356,25 @@ export const catalogModule = defineModule({
 
       createTaxation: async (_p, { taxationInput }: { taxationInput: { taxationCharges: number; enabled?: boolean } }, ctx) => {
         await requireAdmin(ctx, 'Configuration');
-        const t = await Taxation.findOneAndUpdate({}, { taxationCharges: taxationInput.taxationCharges, enabled: taxationInput.enabled ?? true }, { upsert: true, new: true });
+        const t = await Taxation.findOneAndUpdate({}, { taxationCharges: taxationInput.taxationCharges, enabled: taxationInput.enabled ?? true }, { upsert: true, returnDocument: 'after' });
         await audit(ctx, 'SAVE_TAXATION', 'Taxation', t._id, taxationInput);
         return t;
       },
       editTaxation: async (_p, { taxationInput }: { taxationInput: { taxationCharges: number; enabled?: boolean } }, ctx) => {
         await requireAdmin(ctx, 'Configuration');
-        const t = await Taxation.findOneAndUpdate({}, { taxationCharges: taxationInput.taxationCharges, ...(typeof taxationInput.enabled === 'boolean' ? { enabled: taxationInput.enabled } : {}) }, { upsert: true, new: true });
+        const t = await Taxation.findOneAndUpdate({}, { taxationCharges: taxationInput.taxationCharges, ...(typeof taxationInput.enabled === 'boolean' ? { enabled: taxationInput.enabled } : {}) }, { upsert: true, returnDocument: 'after' });
         await audit(ctx, 'SAVE_TAXATION', 'Taxation', t._id, taxationInput);
         return t;
       },
       createTipping: async (_p, { tippingInput }: { tippingInput: { tipVariations: number[]; enabled?: boolean } }, ctx) => {
         await requireAdmin(ctx, 'Tipping');
-        const t = await Tipping.findOneAndUpdate({}, { tipVariations: tippingInput.tipVariations, enabled: tippingInput.enabled ?? true }, { upsert: true, new: true });
+        const t = await Tipping.findOneAndUpdate({}, { tipVariations: tippingInput.tipVariations, enabled: tippingInput.enabled ?? true }, { upsert: true, returnDocument: 'after' });
         await audit(ctx, 'SAVE_TIPPING', 'Tipping', t._id, tippingInput);
         return t;
       },
       editTipping: async (_p, { tippingInput }: { tippingInput: { tipVariations: number[]; enabled?: boolean } }, ctx) => {
         await requireAdmin(ctx, 'Tipping');
-        const t = await Tipping.findOneAndUpdate({}, { tipVariations: tippingInput.tipVariations, ...(typeof tippingInput.enabled === 'boolean' ? { enabled: tippingInput.enabled } : {}) }, { upsert: true, new: true });
+        const t = await Tipping.findOneAndUpdate({}, { tipVariations: tippingInput.tipVariations, ...(typeof tippingInput.enabled === 'boolean' ? { enabled: tippingInput.enabled } : {}) }, { upsert: true, returnDocument: 'after' });
         await audit(ctx, 'SAVE_TIPPING', 'Tipping', t._id, tippingInput);
         return t;
       },

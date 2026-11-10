@@ -13,7 +13,7 @@ export async function getConfig(): Promise<ConfigurationDoc> {
     doc = await Configuration.findOneAndUpdate(
       { singleton: 'config' },
       { $setOnInsert: { singleton: 'config' } },
-      { upsert: true, new: true },
+      { upsert: true, returnDocument: 'after' },
     );
   }
   cached = { doc: doc!, at: Date.now() };

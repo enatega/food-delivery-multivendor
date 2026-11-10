@@ -340,13 +340,13 @@ export const restaurantsModule = defineModule({
       updateCommission: async (_p, { id, commissionRate }: { id: string; commissionRate: number }, ctx) => {
         await requireAdmin(ctx, 'Commission Rate');
         if (!(commissionRate >= 0 && commissionRate <= 100)) throw badInput('Commission rate must be between 0 and 100.');
-        const r = must(await Restaurant.findByIdAndUpdate(id, { commissionRate }, { new: true }), 'Restaurant');
+        const r = must(await Restaurant.findByIdAndUpdate(id, { commissionRate }, { returnDocument: 'after' }), 'Restaurant');
         await audit(ctx, 'UPDATE_COMMISSION', 'Restaurant', id, { commissionRate });
         return r;
       },
       updateTimings: async (_p, { id, openingTimes }: { id: string; openingTimes: z.infer<typeof TimingsInput>[] }, ctx) => {
         await requireRestaurantAccess(ctx, id);
-        return must(await Restaurant.findByIdAndUpdate(id, { openingTimes: openingTimes ?? [] }, { new: true }), 'Restaurant');
+        return must(await Restaurant.findByIdAndUpdate(id, { openingTimes: openingTimes ?? [] }, { returnDocument: 'after' }), 'Restaurant');
       },
       updateScheduleTimings: async (_p, { id, scheduleTimings }: { id: string; scheduleTimings: z.infer<typeof ScheduleTypeInput>[] }, ctx) => {
         await requireRestaurantAccess(ctx, id);
@@ -355,12 +355,12 @@ export const restaurantsModule = defineModule({
           isOpen: d.isOpen ?? true,
           times: d.times.map((t) => ({ startTime: [t.startTime], endTime: [t.endTime], maxOrder: t.maxOrder ?? t.maxOrders })),
         }));
-        return must(await Restaurant.findByIdAndUpdate(id, { scheduleTimings: normalized }, { new: true }), 'Restaurant');
+        return must(await Restaurant.findByIdAndUpdate(id, { scheduleTimings: normalized }, { returnDocument: 'after' }), 'Restaurant');
       },
       updateDeliveryOptions: async (_p, args: { restId: string; pickup: boolean; delivery: boolean }, ctx) => {
         await requireRestaurantAccess(ctx, args.restId);
         if (!args.pickup && !args.delivery) throw badInput('At least one of pickup or delivery must be enabled.');
-        return must(await Restaurant.findByIdAndUpdate(args.restId, { deliveryOptions: { pickup: args.pickup, delivery: args.delivery } }, { new: true }), 'Restaurant');
+        return must(await Restaurant.findByIdAndUpdate(args.restId, { deliveryOptions: { pickup: args.pickup, delivery: args.delivery } }, { returnDocument: 'after' }), 'Restaurant');
       },
       updateDeliveryBoundsAndLocation: async (
         _p,
@@ -388,13 +388,13 @@ export const restaurantsModule = defineModule({
           zone: zone?._id ?? null,
         };
         for (const k of ['address', 'postCode', 'city'] as const) if (args[k] !== undefined) update[k] = args[k];
-        const r = await Restaurant.findByIdAndUpdate(args.id, update, { new: true, runValidators: true });
+        const r = await Restaurant.findByIdAndUpdate(args.id, update, { returnDocument: 'after', runValidators: true });
         if (!r) throw notFound('Restaurant');
         return { success: true, message: 'Delivery zone updated', data: r };
       },
       updateRestaurantBussinessDetails: async (_p, { id, bussinessDetails }: { id: string; bussinessDetails?: z.infer<typeof BussinessDetailsInput> }, ctx) => {
         await requireRestaurantAccess(ctx, id);
-        const r = must(await Restaurant.findByIdAndUpdate(id, { bussinessDetails: bussinessDetails ?? {} }, { new: true }), 'Restaurant');
+        const r = must(await Restaurant.findByIdAndUpdate(id, { bussinessDetails: bussinessDetails ?? {} }, { returnDocument: 'after' }), 'Restaurant');
         return { success: true, message: 'Business details updated', data: r };
       },
       updateRestaurantDelivery: async (_p, args: { id: string; minDeliveryFee?: number; deliveryDistance?: number; deliveryFee?: number }, ctx) => {
@@ -406,7 +406,7 @@ export const restaurantsModule = defineModule({
           await Restaurant.findByIdAndUpdate(
             args.id,
             { deliveryInfo: { minDeliveryFee: args.minDeliveryFee, deliveryDistance: args.deliveryDistance, deliveryFee: args.deliveryFee } },
-            { new: true },
+            { returnDocument: 'after' },
           ),
           'Restaurant',
         );
@@ -421,7 +421,7 @@ export const restaurantsModule = defineModule({
       },
       uploadToken: async (_p, { id, pushToken }: { id: string; pushToken: string }, ctx) => {
         await requireRestaurantAccess(ctx, id);
-        return must(await Restaurant.findByIdAndUpdate(id, { pushToken }, { new: true }), 'Restaurant');
+        return must(await Restaurant.findByIdAndUpdate(id, { pushToken }, { returnDocument: 'after' }), 'Restaurant');
       },
     },
     Restaurant: {

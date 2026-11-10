@@ -63,6 +63,13 @@ export const JSONScalar = new GraphQLScalarType({
   parseLiteral: (ast, variables) => valueFromASTUntyped(ast, variables ?? undefined),
 });
 
+function hasVariables(ast: ValueNode): boolean {
+  if (ast.kind === Kind.VARIABLE) return true;
+  if (ast.kind === Kind.LIST) return ast.values.some(hasVariables);
+  if (ast.kind === Kind.OBJECT) return ast.fields.some((f) => hasVariables(f.value));
+  return false;
+}
+
 function formatIssues(error: z.ZodError): { path: string; message: string }[] {
   return error.issues.map((i) => ({ path: i.path.join('.'), message: i.message }));
 }
@@ -88,6 +95,12 @@ export function inputScalar(name: string, schema: z.ZodType, description?: strin
     description: description ?? `Validated input (${name}).`,
     serialize: (v) => v,
     parseValue: parse,
-    parseLiteral: (ast: ValueNode, variables) => parse(valueFromASTUntyped(ast, variables ?? undefined)),
+    parseLiteral: (ast: ValueNode, variables) => {
+      // During document validation graphql-js calls parseLiteral without variable values.
+      // Literals that embed variables (e.g. `reviewInput: { order: $order }`) are validated
+      // at execution time, when the variables are known.
+      if (!variables && hasVariables(ast)) return {};
+      return parse(valueFromASTUntyped(ast, variables ?? undefined));
+    },
   });
 }

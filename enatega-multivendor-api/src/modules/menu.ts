@@ -173,7 +173,7 @@ export const menuModule = defineModule({
       editCategory: async (_p, { category }: { category: z.infer<typeof CategoryInput> }, ctx) => {
         await requireRestaurantAccess(ctx, category.restaurant);
         if (!category._id) throw badInput('Category id is required.');
-        const c = must(await Category.findOneAndUpdate({ _id: category._id, restaurant: category.restaurant }, { title: category.title, image: category.image }, { new: true }), 'Category');
+        const c = must(await Category.findOneAndUpdate({ _id: category._id, restaurant: category.restaurant }, { title: category.title, image: category.image }, { returnDocument: 'after' }), 'Category');
         await syncSubCategories(String(c._id), category.subCategories);
         return restaurantDoc(category.restaurant);
       },

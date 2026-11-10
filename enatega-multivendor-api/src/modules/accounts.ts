@@ -256,7 +256,7 @@ export const accountsModule = defineModule({
       },
       deleteStaff: async (_p, { id }: { id: string }, ctx) => {
         await requireAdmin(ctx, 'Staff');
-        const staff = must(await Owner.findOneAndUpdate({ _id: id, userType: 'STAFF' }, { isDeleted: true, isActive: false, $inc: { tokenVersion: 1 } }, { new: true }), 'Staff');
+        const staff = must(await Owner.findOneAndUpdate({ _id: id, userType: 'STAFF' }, { isDeleted: true, isActive: false, $inc: { tokenVersion: 1 } }, { returnDocument: 'after' }), 'Staff');
         await audit(ctx, 'DELETE_STAFF', 'Staff', id);
         return staff;
       },
@@ -320,7 +320,7 @@ export const accountsModule = defineModule({
       },
       updateUserNotes: async (_p, { id, notes }: { id: string; notes: string }, ctx) => {
         await requireAdmin(ctx, 'Users');
-        const user = must(await User.findByIdAndUpdate(id, { notes: String(notes).slice(0, 5000) }, { new: true }), 'User');
+        const user = must(await User.findByIdAndUpdate(id, { notes: String(notes).slice(0, 5000) }, { returnDocument: 'after' }), 'User');
         await audit(ctx, 'UPDATE_USER_NOTES', 'User', id);
         return user;
       },
@@ -330,13 +330,13 @@ export const accountsModule = defineModule({
         if (!['active', 'blocked'].includes(s)) throw badInput('Status must be "active" or "blocked".');
         const update: Record<string, unknown> = { status: s, statusReason: reason };
         if (s === 'blocked') update.$inc = { tokenVersion: 1 };
-        const user = must(await User.findByIdAndUpdate(id, update, { new: true }), 'User');
+        const user = must(await User.findByIdAndUpdate(id, update, { returnDocument: 'after' }), 'User');
         await audit(ctx, 'UPDATE_USER_STATUS', 'User', id, { status: s, reason });
         return user;
       },
       resetUserSession: async (_p, { userId }: { userId: string }, ctx) => {
         await requireAdmin(ctx, 'Users');
-        const user = must(await User.findByIdAndUpdate(userId, { $inc: { tokenVersion: 1 } }, { new: true }), 'User');
+        const user = must(await User.findByIdAndUpdate(userId, { $inc: { tokenVersion: 1 } }, { returnDocument: 'after' }), 'User');
         await audit(ctx, 'RESET_USER_SESSION', 'User', userId);
         return user;
       },

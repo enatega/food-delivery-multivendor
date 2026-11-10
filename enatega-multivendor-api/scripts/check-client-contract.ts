@@ -196,6 +196,7 @@ function withFragments(doc: DocumentNode, fragments: Map<string, FragmentDefinit
   return { ...doc, definitions: defs };
 }
 
+export function runContractCheck(log: (msg: string) => void = console.error) {
 const schema = buildASTSchema(parse(loadTypeDefs()));
 let operations = 0;
 let failures = 0;
@@ -216,8 +217,14 @@ for (const app of CLIENT_APPS) {
       continue;
     }
     failures++;
-    for (const e of errors) console.error(`${file}:${line} [${opNames.join(',')}] ${e.message}`);
+    for (const e of errors) log(`${file}:${line} [${opNames.join(',')}] ${e.message}`);
   }
 }
-console.log(`Client contract: ${operations} operations checked, ${failures} invalid documents, ${excepted} known exceptions.`);
-process.exit(failures ? 1 : 0);
+return { operations, failures, excepted };
+}
+
+if (process.argv[1]?.endsWith('check-client-contract.ts')) {
+  const r = runContractCheck();
+  console.log(`Client contract: ${r.operations} operations checked, ${r.failures} invalid documents, ${r.excepted} known exceptions.`);
+  process.exit(r.failures ? 1 : 0);
+}
