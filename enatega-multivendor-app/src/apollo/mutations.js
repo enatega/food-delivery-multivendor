@@ -307,12 +307,16 @@ export const addFavouriteRestaurant = `mutation AddFavourite($id:String!){
 
 export const emailExist = `
   mutation EmailExist($email: String!) {
-    emailExist(email: $email)
+    emailExist(email: $email) {
+      _id
+    }
   }`
 
 export const phoneExist = `
   mutation PhoneExist($phone: String!) {
-    phoneExist(phone: $phone)
+    phoneExist(phone: $phone) {
+      _id
+    }
   }`
 
 export const sendOtpToEmail = `

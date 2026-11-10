@@ -1,11 +1,15 @@
 export const emailExist = `#graphql
   mutation EmailExist($email: String!) {
-    emailExist(email: $email)
+    emailExist(email: $email) {
+      _id
+    }
   }`;
 
 export const phoneExist = `#graphql
   mutation PhoneExist($phone: String!) {
-    phoneExist(phone: $phone)
+    phoneExist(phone: $phone) {
+      _id
+    }
   }`;
 
 export const sendOtpToEmail = `#graphql

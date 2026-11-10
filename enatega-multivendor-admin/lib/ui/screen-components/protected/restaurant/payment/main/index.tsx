@@ -10,6 +10,7 @@ import PaymentCardSkeleton from '@/lib/ui/useable-components/custom-skeletons/pa
 // Contexts
 import { RestaurantLayoutContext } from '@/lib/context/restaurant/layout-restaurant.context';
 import { ToastContext } from '@/lib/context/global/toast.context';
+import { getAccessToken } from '@/lib/utils/methods/auth';
 
 // Icons
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
@@ -57,6 +58,7 @@ export default function PaymentMain() {
         body: JSON.stringify({ restaurantId }),
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
       const data = await response.json();

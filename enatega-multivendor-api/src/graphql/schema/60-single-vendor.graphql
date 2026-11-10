@@ -1,0 +1,649 @@
+# ---------------------------------------------------------------------------
+# Single-vendor mode (one store, grocery-style catalogue): server-side cart,
+# checkout quotes, deals, credits, subscriptions, referral, scheduling,
+# discovery and catalogue browsing.
+# ---------------------------------------------------------------------------
+
+type ProductDeal {
+  id: ID
+  title: String
+  name: String
+  "PERCENTAGE | FIXED"
+  discountType: String
+  discountValue: Float
+  type: String
+  value: Float
+  isActive: Boolean
+  startDate: DateTime
+  endDate: DateTime
+}
+
+type ProductVariation {
+  id: ID
+  _id: ID
+  title: String
+  name: String
+  price: Float
+  discounted: Float
+  isOutOfStock: Boolean
+  outofstock: Boolean
+  deal: ProductDeal
+}
+
+"Catalogue product (used by category, deals, search and recommendation lists)."
+type CategoryProduct {
+  id: ID
+  title: String
+  description: String
+  image: String
+  categoryId: String
+  subCategory: String
+  isOutOfStock: Boolean
+  isFavourite: Boolean
+  variations: [ProductVariation]
+}
+
+"Product as shown on the single-vendor home screen."
+type HomeFoodItem {
+  id: ID
+  title: String
+  description: String
+  image: String
+  categoryId: String
+  isOutOfStock: Boolean
+  variations: [ProductVariation]
+}
+
+type ItemsPagination {
+  currentPage: Int
+  totalPages: Int
+  totalItems: Int
+  hasMore: Boolean
+}
+
+type ProductPage {
+  items: [CategoryProduct]
+  totalCount: Int
+  hasMore: Boolean
+}
+
+type ProductsWithPagination {
+  items: [CategoryProduct]
+  pagination: ItemsPagination
+}
+
+type SingleVendorCategory {
+  id: ID
+  name: String
+  icon: String
+  image: String
+  description: String
+  itemCount: Int
+  "grid | list | carousel"
+  viewType: String
+  items: [HomeFoodItem]
+  pagination: ItemsPagination
+}
+
+type DiscoveryDeals {
+  limitedTime: ProductPage
+  weekly: ProductPage
+  newOffers: ProductPage
+}
+
+type SingleVendorDiscovery {
+  banners: [Banner]
+  categories: [SingleVendorCategory]
+  deals: DiscoveryDeals
+  catalogVersion: String
+}
+
+type CategoryItemsResponse {
+  categoryId: ID
+  categoryName: String
+  items: [CategoryProduct]
+  pagination: ItemsPagination
+}
+
+type SubCategoryWithItems {
+  subCategoryId: ID
+  subCategoryName: String
+  items: [CategoryProduct]
+}
+
+type CategoryWithSubCategories {
+  categoryId: ID
+  categoryName: String
+  items: [CategoryProduct]
+  subCategories: [SubCategoryWithItems]
+}
+
+type Nutrition {
+  name: String
+  quantity: String
+}
+
+type FoodDetailsOption {
+  id: ID
+  title: String
+  description: String
+  price: Float
+  isSelected: Boolean
+}
+
+type FoodDetailsAddon {
+  id: ID
+  title: String
+  description: String
+  quantityMinimum: Int
+  quantityMaximum: Int
+  isSelected: Boolean
+  options: [FoodDetailsOption]
+}
+
+type FoodDetailsVariation {
+  id: ID
+  title: String
+  price: Float
+  isOutOfStock: Boolean
+  isSelected: Boolean
+  cartQuantity: Int
+  actualUnitPrice: Float
+  discountedUnitPrice: Float
+  deal: ProductDeal
+  addons: [FoodDetailsAddon]
+}
+
+type SelectedAddon {
+  _id: ID
+  options: [String]
+}
+
+type FoodDetails {
+  id: ID
+  title: String
+  description: String
+  image: String
+  categoryId: String
+  isPopular: Boolean
+  isOutOfStock: Boolean
+  cartQuantity: Int
+  usage: String
+  ingredients: String
+  nutritionDetail: String
+  nutritions: [Nutrition]
+  variations: [FoodDetailsVariation]
+  selectedVariationsIds: [String]
+  selectedAddonsId: [SelectedAddon]
+}
+
+type FavoriteFoodVariation {
+  _id: ID
+  title: String
+  name: String
+  price: Float
+  discounted: Float
+  isOutOfStock: Boolean
+  addons: [String]
+  deal: ProductDeal
+}
+
+type FavoriteFood {
+  _id: ID
+  title: String
+  image: String
+  categoryId: String
+  subCategory: String
+  isActive: Boolean
+  isOutOfStock: Boolean
+  isFavourite: Boolean
+  variations: [FavoriteFoodVariation]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type FavoriteFoodsResponse {
+  success: Boolean
+  message: String
+  data: [FavoriteFood]
+}
+
+type FavoriteResponse {
+  success: Boolean
+  message: String
+  isFavorite: Boolean
+}
+
+# --- admin catalogue ---
+
+type AdminFoodAddon {
+  title: String
+  description: String
+  isActive: Boolean
+}
+
+type AdminFoodVariation {
+  id: ID
+  title: String
+  price: Float
+  outofstock: Boolean
+  addons: [AdminFoodAddon]
+  deal: ProductDeal
+}
+
+type OrderQuantity {
+  min: Int
+  max: Int
+}
+
+type AdminFood {
+  id: ID
+  title: String
+  description: String
+  image: String
+  subCategory: String
+  isActive: Boolean
+  isOutOfStock: Boolean
+  UOM: String
+  inventory: Int
+  ingredients: String
+  usage: String
+  nutritionDetail: String
+  nutritions: [Nutrition]
+  orderQuantity: OrderQuantity
+  variations: [AdminFoodVariation]
+}
+
+type AdminFoodCategory {
+  id: ID
+  title: String
+}
+
+type AdminFoodEntry {
+  category: AdminFoodCategory
+  food: AdminFood
+}
+
+type AdminFoodsPaginated {
+  foods: [AdminFoodEntry]
+  page: Int
+  limit: Int
+  totalFoods: Int
+  hasnext: Boolean
+  hasprev: Boolean
+}
+
+type FoodDeal {
+  id: ID
+  title: String
+  "PERCENTAGE | FIXED"
+  discountType: String
+  discountValue: Float
+  food: String
+  foodTitle: String
+  variation: String
+  variationTitle: String
+  restaurant: String
+  isActive: Boolean
+  startDate: DateTime
+  endDate: DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type FoodDealsAdminResponse {
+  deals: [FoodDeal]
+  total: Int
+  page: Int
+  limit: Int
+}
+
+# --- cart & checkout ---
+
+type CartAddon {
+  addonId: String
+  optionId: String
+  title: String
+  price: Float
+}
+
+type CartDealInfo {
+  id: ID
+  dealId: String
+  title: String
+  dealTitle: String
+  discountType: String
+  discountValue: Float
+}
+
+type CartVariation {
+  _id: ID
+  variationId: String
+  variationTitle: String
+  quantity: Int
+  unitPrice: Float
+  actualUnitPrice: Float
+  discountedUnitPrice: Float
+  addonsTotal: Float
+  itemTotal: Float
+  actualItemTotal: Float
+  discountedItemTotal: Float
+  specialInstructions: String
+  dealId: String
+  dealInfo: CartDealInfo
+  addons: [CartAddon]
+}
+
+type CartFood {
+  foodId: String
+  foodTitle: String
+  foodImage: String
+  categoryId: String
+  foodTotal: Float
+  actualFoodTotal: Float
+  discountedFoodTotal: Float
+  variations: [CartVariation]
+}
+
+type CartDeal {
+  dealId: String
+  dealTitle: String
+  foodId: String
+  foodTitle: String
+  variationId: String
+  variationTitle: String
+  quantity: Int
+  discountType: String
+  discountValue: Float
+  originalPrice: Float
+  discountedPrice: Float
+  savingsPerUnit: Float
+  totalSavings: Float
+}
+
+type CartResponse {
+  success: Boolean
+  message: String
+  cartId: ID
+  cartRevision: Int
+  foods: [CartFood]
+  deals: [CartDeal]
+  grandTotal: Float
+  actualGrandTotal: Float
+  discountedGrandTotal: Float
+  totalDiscount: Float
+  hasDeals: Boolean
+  lowOrderFees: Float
+  minOrderAmount: Float
+  maxOrderAmount: Float
+  isBelowMinimumOrder: Boolean
+}
+
+type UpdateCartCountResponse {
+  success: Boolean
+  message: String
+  quantity: Int
+  itemTotal: Float
+  foodTotal: Float
+  grandTotal: Float
+  isBelowMinimumOrder: Boolean
+}
+
+type CheckoutAddon {
+  id: ID
+  addonId: String
+  title: String
+  price: Float
+}
+
+type CheckoutItem {
+  foodId: String
+  foodTitle: String
+  variationId: String
+  variationTitle: String
+  categoryId: String
+  quantity: Int
+  unitPrice: Float
+  addonsTotal: Float
+  itemTotal: Float
+  addons: [CheckoutAddon]
+}
+
+type DiscountDetails {
+  subscriptionDiscount: Float
+  couponDiscount: Float
+  dealDiscount: Float
+  freeDeliveryApplied: Boolean
+}
+
+type CheckoutCalculation {
+  success: Boolean
+  message: String
+  cartId: ID
+  cartRevision: Int
+  checkoutQuoteId: String
+  checkoutQuoteExpiresAt: DateTime
+  items: [CheckoutItem]
+  subtotal: Float
+  deliveryCharges: Float
+  originalDeliveryCharges: Float
+  deliveryDiscount: Float
+  serviceFee: Float
+  minimumOrderFee: Float
+  priorityDeliveryFees: Float
+  taxAmount: Float
+  taxPercentage: Float
+  totalDiscount: Float
+  discountDetails: DiscountDetails
+  couponApplied: Boolean
+  couponDiscountAmount: Float
+  creditsUsed: Float
+  grandTotal: Float
+  hasActiveSubscription: Boolean
+  freeDeliveriesRemaining: Int
+  appliedFreeDelivery: Boolean
+  minimumOrderAmount: Float
+  maximumOrderAmount: Float
+  isBelowMinimumOrder: Boolean
+  isBelowMaximumOrder: Boolean
+}
+
+# --- order details page ---
+
+type OrderDetailsOption {
+  title: String
+  description: String
+  price: Float
+  isActive: Boolean
+}
+
+type OrderDetailsAddon {
+  title: String
+  description: String
+  quantityMinimum: Int
+  quantityMaximum: Int
+  isActive: Boolean
+  options: [OrderDetailsOption]
+}
+
+type OrderDetailsItem {
+  _id: ID
+  food: String
+  foodTitle: String
+  foodImage: String
+  foodQuantity: Int
+  title: String
+  description: String
+  image: String
+  quantity: Int
+  specialInstructions: String
+  isActive: Boolean
+  variationTitle: String
+  variationImage: String
+  variationTotal: Float
+  variation: ItemVariation
+  addons: [OrderDetailsAddon]
+}
+
+type OrderDetailsSummary {
+  _id: ID
+  orderId: String
+  orderStatus: String
+  paymentStatus: String
+  orderDate: DateTime
+  completionTime: DateTime
+  isPickedUp: Boolean
+  isPriority: Boolean
+  instructions: String
+  deliveryAddress: OrderAddress
+  rider: Rider
+  items: [OrderDetailsItem]
+  itemsSubTotal: Float
+  orderAmount: Float
+  paidAmount: Float
+  deliveryCharges: Float
+  deliverChargesAmount: Float
+  deliveryDiscount: Float
+  couponDiscount: Float
+  couponDiscountApplied: Boolean
+  creditsApplied: Float
+  tipping: Float
+  taxationAmount: Float
+  minimumOrderFee: Float
+  minimumOrderAmount: Float
+  priorityDeliveryFees: Float
+  freeDeliveriesRemaining: Int
+  isBelowMinimumOrder: Boolean
+  isBelowMaximumOrder: Boolean
+}
+
+type OrderDetailsPageResponse {
+  success: Boolean
+  message: String
+  data: OrderDetailsSummary
+  rawOrder: Order
+}
+
+# --- credits, subscriptions, schedule ---
+
+type CreditRecord {
+  _id: ID
+  userId: UserDropdownItem
+  amount: Float
+  orderId: String
+  "credit | debit"
+  recordType: String
+  createdAt: Timestamp
+  updatedAt: Timestamp
+}
+
+type UserCredits {
+  credits: Float
+}
+
+type SubscriptionPlan {
+  id: ID
+  productId: String
+  productName: String
+  amount: Float
+  "month | year"
+  interval: String
+  intervalCount: Int
+  discountPercent: Float
+}
+
+type SubscriptionPlans {
+  plans: [SubscriptionPlan]
+}
+
+type CreatePriceResponse {
+  success: Boolean
+  message: String
+  price: SubscriptionPlan
+}
+
+type DeliveryTimings {
+  id: ID
+  times: [Timings]
+}
+
+type DeliveryDaySchedule {
+  "YYYY-MM-DD"
+  date: String
+  day: String
+  dayId: String
+  timings: [DeliveryTimings]
+}
+
+type OpeningScheduleSummary {
+  "e.g. \"MON-WED 09:00-17:00; FRI 10:00-16:00\""
+  openDaysTimes: String
+  openDaysString: String
+  saturdaySlotString: String
+}
+
+extend type Query {
+  singleVendorDiscovery(previewLimit: Int, dealLimit: Int): SingleVendorDiscovery
+  singleVendorBanners(page: Int, limit: Int): [Banner]
+  singleVendorDeals(section: String!, skip: Int, limit: Int): ProductPage
+  getLimitedTimeFoodsDeals: ProductPage
+  getWeeklyFoodsDeals: ProductPage
+  getNewOffersFoodsDeals: ProductPage
+  getRestaurantCategoriesSingleVendor: [SingleVendorCategory]
+  getCategoryItemsSingleVendor(categoryId: ID!, skip: Int, limit: Int, search: String): CategoryItemsResponse
+  getCategoryProducts(pagination: PaginationInput, categoryId: ID!): ProductPage
+  getAllCategoriesWithSubCategoriesDataSeeAllSingleVendor: [CategoryWithSubCategories]
+  getAllCategoriesWithSubCategoriesOnlySeeAllSingleVendor: [CategoryWithSubCategories]
+  searchSingleVendorFoods(search: String!, skip: Int, limit: Int): ProductPage
+  searchFood(search: String): [CategoryProduct]
+  getFoodDetails(foodId: ID!, categoryId: ID): FoodDetails
+  getSimilarFoods(foodId: ID!, skip: Int, limit: Int): ProductsWithPagination
+  getRecommendedFoods(foodId: ID!, skip: Int, limit: Int): ProductsWithPagination
+  getFavoriteFoodsSingleVendor(limit: Int, skip: Int): FavoriteFoodsResponse
+  getFavoriteFoodsStatus(foodId: String): FavoriteResponse
+
+  getUserCart: CartResponse
+  calculateCheckout(isPickup: Boolean, latDestination: Float, longDestination: Float, coupon: String): CheckoutCalculation
+  orderDetailsPage(orderId: String!): OrderDetailsPageResponse
+  recentActiveOrder: OrderDetailsPageResponse
+
+  getAllfoods(restaurantId: String!): [AdminFood]
+  getAllfoodsPaginated(restaurantId: ID!, page: Int, limit: Int, search: String): AdminFoodsPaginated
+  getAllFoodDealsAdmin(page: Int!, limit: Int!, isActive: Boolean, search: String, restaurantId: ID!): FoodDealsAdminResponse
+
+  getAllUserCredits: UserCredits
+  getUserCreditsHistory: [CreditRecord]
+  getAllCreditsRecords(searchTerm: String): [CreditRecord]
+  getAllSubscriptionPlans: SubscriptionPlans
+  getMyFreeDeliveries: Int
+  getMyReferralCode: String
+  "Estimated delivery time in minutes for the given saved address."
+  getEstimatedDeliveryTime(addressId: ID!): Int
+  getScheduleByDay: [DeliveryDaySchedule]
+  getScheduleUntilNextDayOff: OpeningScheduleSummary
+}
+
+extend type Mutation {
+  userCartData(input: CartInput!): CartResponse
+  editSingleVendorCartItem(input: EditSingleVendorCartItemInput!): CartResponse
+  updateUserCartCount(input: UpdateCartCountInput!): UpdateCartCountResponse
+  clearCart: SuccessResponse
+  toggleFavoriteFoodSingleVendor(id: ID!): FavoriteResponse
+
+  createFoodSingleVendor(foodInput: inputCreateFood!): Restaurant
+  updateFoodSingleVendor(foodId: ID!, foodInput: inputUpdateFood!): Restaurant
+  createFoodDeal(input: CreateDealInput!): FoodDeal
+  updateFoodDeal(id: ID!, input: UpdateDealInput!): FoodDeal
+  deleteFoodDeal(id: ID!): MessageResponse
+
+  giveUserCredits(userId: ID!, amount: Float!, orderId: String!, recordType: CreditRecordType!): CreditRecord
+  editUserCreditsHistory(id: ID!, amount: Float!): CreditRecord
+
+  createPriceForProduct(input: CreatePriceInput!): CreatePriceResponse
+  deactivatePrice(input: DeactivatePriceInput!): SuccessResponse
+  createSubscription(input: CreateSubscriptionInput!): MessageResponse
+  updateSubscription(input: UpdateSubscriptionInput!): MessageResponse
+  cancelSubscription: MessageResponse
+  checkReferralCodeExists(referralCode: String!): Boolean
+  giveFeedback(feedbackInput: FeedbackInput!): SuccessResponse
+}

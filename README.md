@@ -58,6 +58,11 @@ Built with ease of use and intuitiveness in mind, the Enatega system supports mu
 
 The solution is fully open source, but the backend and API are proprietary and can be licensed as part of a paid package.
 
+> **Self-hosted backend included.** [`enatega-multivendor-api`](./enatega-multivendor-api) is a production-ready
+> GraphQL + REST backend (Node.js, Apollo Server, MongoDB, Redis) that serves every app in this repository in
+> multi-vendor and single-vendor mode. Its schema is validated in CI against all GraphQL documents used by the
+> apps. See its [README](./enatega-multivendor-api/README.md) for setup, deployment and how to point the apps to it.
+
 
 <!-- Add a horizontal rule for separation -->
 <hr/>

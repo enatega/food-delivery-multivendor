@@ -1,0 +1,262 @@
+# ---------------------------------------------------------------------------
+# Riders, zones, earnings, wallet, withdrawals and transactions.
+# ---------------------------------------------------------------------------
+
+type Zone {
+  _id: ID
+  title: String
+  description: String
+  location: Polygon
+  tax: Float
+  isActive: Boolean
+}
+
+type ZonesPaginated {
+  data: [Zone]
+  totalCount: Int
+  currentPage: Int
+  totalPages: Int
+}
+
+type LicenseDetails {
+  number: String
+  expiryDate: String
+  image: String
+}
+
+type VehicleDetails {
+  number: String
+  image: String
+}
+
+type TimeSlot {
+  "HH:mm"
+  startTime: String
+  "HH:mm"
+  endTime: String
+}
+
+type DaySchedule {
+  day: String
+  enabled: Boolean
+  slots: [TimeSlot]
+}
+
+type Rider {
+  _id: ID
+  name: String
+  username: String
+  email: String
+  phone: String
+  image: String
+  available: Boolean
+  isActive: Boolean
+  "true while the rider has an order in progress"
+  assigned: Boolean
+  vehicleType: String
+  zone: Zone
+  location: Point
+  accountNumber: String
+  bussinessDetails: BussinessDetails
+  licenseDetails: LicenseDetails
+  vehicleDetails: VehicleDetails
+  currentWalletAmount: Float
+  totalWalletAmount: Float
+  withdrawnWalletAmount: Float
+  timeZone: String
+  workSchedule: [DaySchedule]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type RidersPaginated {
+  data: [Rider]
+  totalCount: Int
+  currentPage: Int
+  totalPages: Int
+}
+
+type WithdrawRequest {
+  _id: ID
+  requestId: String
+  requestAmount: Float
+  requestTime: DateTime
+  "REQUESTED | TRANSFERRED | CANCELLED"
+  status: String
+  rider: Rider
+  store: Restaurant
+  createdAt: DateTime
+}
+
+type WithdrawRequestsResponse {
+  success: Boolean
+  message: String
+  data: [WithdrawRequest]
+  pagination: PageInfoTotal
+}
+
+type WithdrawRequestResponse {
+  success: Boolean
+  message: String
+  data: WithdrawRequest
+}
+
+type BankDetails {
+  accountName: String
+  bankName: String
+  accountNumber: String
+  accountCode: String
+}
+
+type Transaction {
+  _id: ID
+  transactionId: String
+  amountCurrency: String
+  amountTransferred: Float
+  status: String
+  userType: String
+  userId: String
+  toBank: BankDetails
+  rider: Rider
+  store: Restaurant
+  createdAt: DateTime
+}
+
+type TransactionHistory {
+  data: [Transaction]
+  pagination: PageInfoTotal
+}
+
+type EarningParty {
+  _id: ID
+  name: String
+  username: String
+}
+
+type PlatformEarnings {
+  marketplaceCommission: Float
+  deliveryCommission: Float
+  tax: Float
+  platformFee: Float
+  totalEarnings: Float
+}
+
+type RiderEarnings {
+  riderId: EarningParty
+  deliveryFee: Float
+  tip: Float
+  totalEarnings: Float
+}
+
+type StoreEarnings {
+  storeId: EarningParty
+  orderAmount: Float
+  totalEarnings: Float
+}
+
+type EarningRecord {
+  _id: ID
+  orderId: String
+  orderType: String
+  paymentMethod: String
+  platformEarnings: PlatformEarnings
+  riderEarnings: RiderEarnings
+  storeEarnings: StoreEarnings
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type GrandTotalEarnings {
+  platformTotal: Float
+  riderTotal: Float
+  storeTotal: Float
+}
+
+type EarningsData {
+  earnings: [EarningRecord]
+  grandTotalEarnings: GrandTotalEarnings
+}
+
+type EarningsResponse {
+  success: Boolean
+  message: String
+  data: EarningsData
+  pagination: PageInfoTotal
+}
+
+type EarningsOrderDetails {
+  orderId: String
+  orderType: String
+  paymentMethod: String
+}
+
+type EarningsGraphEntry {
+  date: String
+  tip: Float
+  deliveryFee: Float
+  totalEarnings: Float
+  totalOrderAmount: Float
+  orderDetails: EarningsOrderDetails
+}
+
+type EarningsGraphItem {
+  _id: ID
+  "YYYY-MM-DD"
+  date: String
+  earningsArray: [EarningsGraphEntry]
+  totalDeliveries: Int
+  totalEarningsSum: Float
+  totalTipsSum: Float
+  totalHours: Float
+}
+
+type EarningsGraph {
+  totalCount: Int
+  earnings: [EarningsGraphItem]
+}
+
+extend type Query {
+  rider(id: String): Rider
+  riders: [Rider]
+  availableRiders: [Rider]
+  ridersByZone(id: String!): [Rider]
+  ridersPaginated(page: Int, limit: Int, search: String, zone: String, available: Boolean, isActive: Boolean): RidersPaginated
+  zones: [Zone]
+  zonesPaginated(page: Int, limit: Int, search: String, isActive: Boolean): ZonesPaginated
+
+  riderCurrentWithdrawRequest(riderId: String): WithdrawRequest
+  storeCurrentWithdrawRequest(storeId: String): WithdrawRequest
+  riderEarningsGraph(riderId: ID!, page: Int, limit: Int, startDate: String, endDate: String): EarningsGraph
+  storeEarningsGraph(storeId: ID!, page: Int, limit: Int, startDate: String, endDate: String): EarningsGraph
+  earnings(
+    userId: String
+    userType: UserTypeEnum
+    orderType: OrderTypeEnum
+    paymentMethod: PaymentMethodEnum
+    search: String
+    pagination: PaginationInput
+    dateFilter: DateFilter
+  ): EarningsResponse
+  transactionHistory(userType: UserTypeEnum, userId: String, search: String, pagination: PaginationInput, dateFilter: DateFilter): TransactionHistory
+  withdrawRequests(userType: UserTypeEnum, userId: String, pagination: PaginationInput, search: String): WithdrawRequestsResponse
+}
+
+extend type Mutation {
+  createRider(riderInput: RiderInput!): Rider
+  editRider(riderInput: RiderInput!): Rider
+  deleteRider(id: String!): Rider
+  toggleAvailablity(id: String): Rider
+  updateRiderBussinessDetails(bussinessDetails: BussinessDetailsInput, id: String!): Rider
+  updateRiderLicenseDetails(id: String!, licenseDetails: LicenseDetailsInput): Rider
+  updateRiderVehicleDetails(id: String!, vehicleDetails: VehicleDetailsInput): Rider
+  updateRiderLocation(latitude: String!, longitude: String!, accuracy: Float, heading: Float, speed: Float, deviceTimestamp: String): Rider
+  updateWorkSchedule(riderId: String!, workSchedule: [DayScheduleInput!]!, timeZone: String!): Rider
+
+  createZone(zone: ZoneInput!): Zone
+  editZone(zone: ZoneInput!): Zone
+  deleteZone(id: String!): Zone
+
+  "userId defaults to the authenticated rider / store."
+  createWithdrawRequest(requestAmount: Float!, userId: String): WithdrawRequest
+  updateWithdrawReqStatus(id: ID!, status: String!): WithdrawRequestResponse
+}

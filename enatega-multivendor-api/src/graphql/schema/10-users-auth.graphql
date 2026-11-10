@@ -1,0 +1,228 @@
+# ---------------------------------------------------------------------------
+# Customers, authentication (customer / owner / rider / store), OTP flows.
+# ---------------------------------------------------------------------------
+
+type Address {
+  _id: ID
+  id: ID
+  label: String
+  deliveryAddress: String
+  details: String
+  location: Point
+  selected: Boolean
+}
+
+type User {
+  _id: ID
+  name: String
+  email: String
+  phone: String
+  phoneIsVerified: Boolean
+  emailIsVerified: Boolean
+  notificationToken: String
+  isActive: Boolean
+  isOrderNotification: Boolean
+  isOfferNotification: Boolean
+  addresses: [Address]
+  favourite: [String]
+  userType: String
+  "Registration method: default | google | apple | facebook."
+  status: String
+  lastLogin: Timestamp
+  notes: String
+  stripe_plan_id: String
+  createdAt: Timestamp
+  updatedAt: Timestamp
+}
+
+type ExistResult {
+  _id: ID
+}
+
+type AuthData {
+  userId: ID
+  token: String
+  tokenExpiration: String
+  isActive: Boolean
+  name: String
+  email: String
+  phone: String
+  picture: String
+  isNewUser: Boolean
+  phoneIsVerified: Boolean
+  emailIsVerified: Boolean
+  addresses: [Address]
+  userTypeId: String
+}
+
+type OwnerAuthData {
+  userId: ID
+  token: String
+  tokenExpiration: String
+  refreshToken: String
+  refreshTokenExpiration: String
+  email: String
+  name: String
+  image: String
+  "ADMIN | STAFF | VENDOR | RESTAURANT"
+  userType: String
+  userTypeId: String
+  permissions: [String]
+  isActive: Boolean
+  restaurants: [Restaurant]
+}
+
+type RestaurantAuth {
+  token: String
+  restaurantId: ID
+}
+
+type RiderAuth {
+  userId: ID
+  token: String
+}
+
+type OwnerData {
+  _id: ID
+  unique_id: String
+  email: String
+  userType: String
+  isActive: Boolean
+  name: String
+  image: String
+  firstName: String
+  lastName: String
+  phoneNumber: String
+  restaurants: [Restaurant]
+}
+
+type Staff {
+  _id: ID
+  name: String
+  email: String
+  phone: String
+  isActive: Boolean
+  permissions: [String]
+  userType: String
+}
+
+type UsersPaginated {
+  data: [User]
+  totalCount: Int
+  currentPage: Int
+  totalPages: Int
+}
+
+type StaffsPaginated {
+  data: [Staff]
+  totalCount: Int
+  currentPage: Int
+  totalPages: Int
+}
+
+type UserDropdownItem {
+  _id: ID
+  name: String
+  email: String
+}
+
+type AuditLogAdmin {
+  _id: ID
+  email: String
+}
+
+type AuditLog {
+  _id: ID
+  timestamp: DateTime
+  admin: AuditLogAdmin
+  action: String
+  targetType: String
+  targetId: String
+  changes: JSON
+}
+
+type AuditLogsResponse {
+  auditLogs: [AuditLog]
+  totalCount: Int
+  currentPage: Int
+  totalPages: Int
+}
+
+extend type Query {
+  profile: User
+  user(id: ID!): User
+  users: [User]
+  usersPaginated(page: Int, limit: Int, search: String, registrationMethod: String, status: String): UsersPaginated
+  getAllUsersDropDownSearch(searchTerm: String): [UserDropdownItem]
+  ownerSession: OwnerAuthData
+  hasOwnerPermission(permission: String!): Boolean
+  appleAuthNonce: String
+  staffs: [Staff]
+  staffsPaginated(page: Int, limit: Int, search: String, isActive: Boolean): StaffsPaginated
+  vendors: [OwnerData]
+  getVendor(id: String!): OwnerData
+  restaurantByOwner(id: String): OwnerData
+  auditLogs(page: Int, limit: Int): AuditLogsResponse
+}
+
+extend type Mutation {
+  # --- customer auth ---
+  login(
+    email: String
+    password: String
+    type: String!
+    appleId: String
+    appleNonce: String
+    idToken: String
+    name: String
+    notificationToken: String
+    isActive: Boolean
+  ): AuthData
+  createUser(userInput: CreateUserInput): AuthData
+  updateUser(updateUserInput: UpdateUserInput): User
+  "Returns { _id } when an account with this email exists, otherwise null."
+  emailExist(email: String!): ExistResult
+  "Returns { _id } when an account with this phone exists, otherwise null."
+  phoneExist(phone: String!): ExistResult
+  "Sends a server-generated one-time code. The legacy `otp` argument is ignored."
+  sendOtpToEmail(email: String!, otp: String): ResultResponse
+  "Sends a server-generated one-time code. The legacy `otp` argument is ignored."
+  sendOtpToPhoneNumber(phone: String!, otp: String): ResultResponse
+  verifyOtp(otp: String!, email: String, phone: String): ResultResponse
+  "Sends a password-reset code to the email (always returns result=true to avoid account enumeration)."
+  forgotPassword(email: String!, otp: String): ResultResponse
+  "Resets the password. Requires either the emailed `otp` or a reset `token` (issued by verifyOtp)."
+  resetPassword(password: String!, email: String!, otp: String, token: String): ResultResponse
+  changePassword(oldPassword: String!, newPassword: String!): Boolean
+  Deactivate(isActive: Boolean!, email: String!): User
+  pushToken(token: String): User
+  updateNotificationStatus(offerNotification: Boolean!, orderNotification: Boolean!): User
+  saveNotificationTokenWeb(token: String!): SuccessResponse
+
+  # --- addresses & favourites ---
+  createAddress(addressInput: AddressInput!): User
+  editAddress(addressInput: AddressInput!): User
+  deleteAddress(id: ID!): User
+  deleteBulkAddresses(ids: [ID!]!): User
+  selectAddress(id: String!): User
+  addFavourite(id: String!): User
+
+  # --- dashboard auth ---
+  ownerLogin(email: String!, password: String!): OwnerAuthData
+  ownerLogout: Boolean
+  refreshToken(refreshToken: String!, userType: String!): OwnerAuthData
+  restaurantLogin(username: String!, password: String!, notificationToken: String): RestaurantAuth
+  riderLogin(username: String, password: String, notificationToken: String, timeZone: String!): RiderAuth
+
+  # --- admin user management ---
+  deleteUser(id: ID!): User
+  updateUserNotes(id: ID!, notes: String!): User
+  updateUserStatus(id: ID!, status: String!, reason: String): User
+  resetUserSession(userId: ID!): User
+  createStaff(staffInput: StaffInput!): Staff
+  editStaff(staffInput: StaffInput!): Staff
+  deleteStaff(id: String!): Staff
+  createVendor(vendorInput: VendorInput): OwnerData
+  editVendor(vendorInput: VendorInput): OwnerData
+  deleteVendor(id: String!): Boolean
+}
