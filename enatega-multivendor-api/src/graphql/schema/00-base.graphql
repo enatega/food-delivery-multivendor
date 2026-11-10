@@ -1,0 +1,70 @@
+# ---------------------------------------------------------------------------
+# Base scalars, shared types and root operation types.
+#
+# Compatibility notes
+# - The schema is the public contract of the Enatega client apps (customer app,
+#   customer web, rider app, store app, multi-vendor and single-vendor admin).
+#   `npm run check:contract` validates every GraphQL document found in those
+#   apps against this schema.
+# - Argument/variable types referenced by the clients (e.g. `RestaurantInput`,
+#   `OrderTypeEnum`) are declared as *validated input scalars*: each one is
+#   backed by a zod schema on the server (src/graphql/inputs.ts) that coerces,
+#   validates and strips unknown keys. This keeps every client document valid
+#   while enforcing strict server-side validation.
+# ---------------------------------------------------------------------------
+
+"Arbitrary JSON value."
+scalar JSON
+
+"ISO-8601 date-time string (e.g. 2026-01-31T12:00:00.000Z)."
+scalar DateTime
+
+"Unix epoch in milliseconds, serialized as a string (legacy Enatega format used by the admin and support screens)."
+scalar Timestamp
+
+type Query {
+  "Liveness probe for GraphQL clients."
+  _health: String!
+}
+
+type Mutation {
+  _noop: Boolean
+}
+
+type Subscription {
+  _heartbeat: String
+}
+
+"GeoJSON point. coordinates = [longitude, latitude]."
+type Point {
+  type: String
+  coordinates: [Float]
+}
+
+"GeoJSON polygon. coordinates = [[[longitude, latitude], ...]]."
+type Polygon {
+  type: String
+  coordinates: [[[Float]]]
+}
+
+type LatLng {
+  latitude: Float
+  longitude: Float
+}
+
+type SuccessResponse {
+  success: Boolean!
+  message: String
+}
+
+type MessageResponse {
+  message: String
+}
+
+type ResultResponse {
+  result: Boolean
+}
+
+type PageInfoTotal {
+  total: Int
+}

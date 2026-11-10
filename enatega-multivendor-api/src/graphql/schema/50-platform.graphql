@@ -1,0 +1,473 @@
+# ---------------------------------------------------------------------------
+# Platform: configuration, public access token, dashboards, notifications,
+# customer support, app versions, uploads, geo reference data.
+# ---------------------------------------------------------------------------
+
+"""
+Platform configuration. Secrets (Stripe/PayPal secret keys, Twilio auth token,
+SendGrid/SMTP passwords) are write-only and never returned; the `has*Configured`
+flags tell dashboards whether they are set.
+"""
+type Configuration {
+  _id: ID
+  # email
+  email: String
+  emailName: String
+  enableEmail: Boolean
+  formEmail: String
+  hasEmailPasswordConfigured: Boolean
+  # sendgrid
+  sendGridEnabled: Boolean
+  sendGridEmail: String
+  sendGridEmailName: String
+  hasSendGridSecretConfigured: Boolean
+  # payments
+  clientId: String
+  sandbox: Boolean
+  hasPaypalSecretConfigured: Boolean
+  publishableKey: String
+  hasStripeSecretConfigured: Boolean
+  # currency & delivery
+  currency: String
+  currencySymbol: String
+  deliveryRate: Float
+  "fixed | perKM"
+  costType: String
+  # twilio
+  twilioAccountSid: String
+  twilioPhoneNumber: String
+  twilioWhatsAppNumber: String
+  twilioEnabled: Boolean
+  hasTwilioSecretConfigured: Boolean
+  skipWhatsAppOTP: Boolean
+  # verification
+  skipEmailVerification: Boolean
+  skipMobileVerification: Boolean
+  testOtp: String
+  # sentry
+  dashboardSentryUrl: String
+  webSentryUrl: String
+  apiSentryUrl: String
+  customerAppSentryUrl: String
+  restaurantAppSentryUrl: String
+  riderAppSentryUrl: String
+  # google
+  googleApiKey: String
+  googleMapsApiKey: String
+  googleMapLibraries: String
+  googleColor: String
+  webClientID: String
+  androidClientID: String
+  iOSClientID: String
+  expoClientID: String
+  # cloudinary
+  cloudinaryUploadUrl: String
+  cloudinaryApiKey: String
+  # amplitude
+  webAmplitudeApiKey: String
+  appAmplitudeApiKey: String
+  # firebase (web push)
+  firebaseKey: String
+  authDomain: String
+  projectId: String
+  storageBucket: String
+  msgSenderId: String
+  appId: String
+  measurementId: String
+  vapidKey: String
+  # app
+  termsAndConditions: String
+  privacyPolicy: String
+  enableCustomerDemoMode: Boolean
+  customerDemoZoneId: String
+  isPaidVersion: Boolean
+  isMultiVendor: Boolean
+  isAppLaunched: Boolean
+  restaurantCount: Int
+}
+
+"Configuration subset that is safe to expose to unauthenticated customers."
+type PublicConfiguration {
+  _id: ID
+  currency: String
+  currencySymbol: String
+  deliveryRate: Float
+  costType: String
+  twilioEnabled: Boolean
+  appAmplitudeApiKey: String
+  customerAppSentryUrl: String
+  termsAndConditions: String
+  privacyPolicy: String
+  skipMobileVerification: Boolean
+  skipEmailVerification: Boolean
+  publishableKey: String
+}
+
+"""
+Public access token handshake. `experience` is the token (send it back as
+`bop-auth: Bearer <token>` together with the same `nonce` header) and `hehe`
+is its ISO expiry. The remaining fields are decoys kept for client compatibility.
+"""
+type MetricsGeneral {
+  excellence: String
+  topgun: String
+  experience: String
+  skydiver: String
+  rider: String
+  haha: String
+  hehe: String
+  huhu: String
+  yoyo: String
+  turu: String
+}
+
+type AppVersion {
+  android: String
+  ios: String
+}
+
+type Versions {
+  customerAppVersion: AppVersion
+  riderAppVersion: AppVersion
+  restaurantAppVersion: AppVersion
+}
+
+type UploadImageResponse {
+  imageUrl: String
+}
+
+# --- dashboards ---
+
+type DashboardUsers {
+  usersCount: Int
+  vendorsCount: Int
+  restaurantsCount: Int
+  ridersCount: Int
+}
+
+type DashboardPercentageChange {
+  usersPercent: Float
+  vendorsPercent: Float
+  restaurantsPercent: Float
+  ridersPercent: Float
+}
+
+"Monthly counts (12 entries, January..December)."
+type DashboardUsersByYear {
+  usersCount: [Int]
+  vendorsCount: [Int]
+  restaurantsCount: [Int]
+  ridersCount: [Int]
+  percentageChange: DashboardPercentageChange
+}
+
+type DashboardChartItem {
+  label: String
+  value: Float
+}
+
+type VendorDashboardStatsCard {
+  totalRestaurants: Int
+  totalOrders: Int
+  totalSales: Float
+  totalDeliveries: Int
+}
+
+"Monthly series (12 entries)."
+type VendorDashboardGrowth {
+  totalRestaurants: [Int]
+  totalOrders: [Int]
+  totalSales: [Float]
+}
+
+type RestaurantDashboardOrdersSalesStats {
+  totalOrders: Int
+  totalSales: Float
+  totalCODOrders: Int
+  totalCardOrders: Int
+}
+
+"Monthly series (12 entries)."
+type RestaurantDashboardSalesOrderCount {
+  salesAmount: [Float]
+  ordersCount: [Int]
+}
+
+type SalesSummary {
+  total_orders: Int
+  total_sales: Float
+  total_sales_without_delivery: Float
+  total_delivery_fee: Float
+}
+
+type PaymentMethodSales {
+  _type: String
+  data: SalesSummary
+}
+
+type OrderTypeCount {
+  total_orders: Int
+}
+
+type DashboardPaymentMethodSales {
+  total_orders: Int
+  total_sales: Float
+  total_sales_without_delivery: Float
+  total_delivery_fee: Float
+  pickup_total_orders: Int
+  delivery_total_orders: Int
+  pickup_orders: Int
+  delivery_orders: Int
+  pickup: OrderTypeCount
+  delivery: OrderTypeCount
+  all: PaymentMethodSales
+  cod: PaymentMethodSales
+  card: PaymentMethodSales
+}
+
+type LiveMonitorData {
+  online_stores: Int
+  cancelled_orders: Int
+  delayed_orders: Int
+  ratings: Float
+}
+
+type StoreDetails {
+  _id: ID
+  restaurantName: String
+  totalOrders: Int
+  totalSales: Float
+  pickUpCount: Int
+  deliveryCount: Int
+}
+
+type StoreDetailsPaginated {
+  data: [StoreDetails]
+  totalCount: Int
+  currentPage: Int
+  totalPages: Int
+}
+
+# --- notifications ---
+
+type Notification {
+  _id: ID
+  title: String
+  body: String
+  recipientType: String
+  createdAt: Timestamp
+}
+
+type NotificationsPaginated {
+  data: [Notification]
+  totalCount: Int
+  currentPage: Int
+  totalPages: Int
+}
+
+type WebNotification {
+  _id: ID
+  body: String
+  navigateTo: String
+  read: Boolean
+  createdAt: DateTime
+}
+
+type TokenNotification {
+  _id: ID
+  title: String
+  body: String
+  creator: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type TokenNotificationsResponse {
+  notifications: [TokenNotification]
+  total: Int
+  skip: Int
+  limit: Int
+  hasMore: Boolean
+}
+
+# --- support ---
+
+type SupportTicket {
+  _id: ID
+  title: String
+  description: String
+  "open | inProgress | closed"
+  status: String
+  category: String
+  orderId: String
+  otherDetails: String
+  user: User
+  userType: String
+  createdAt: Timestamp
+  updatedAt: Timestamp
+}
+
+type TicketMessage {
+  _id: ID
+  content: String
+  "user | admin"
+  senderType: String
+  isRead: Boolean
+  ticket: String
+  createdAt: Timestamp
+  updatedAt: Timestamp
+}
+
+type TicketsResponse {
+  tickets: [SupportTicket]
+  docsCount: Int
+  totalPages: Int
+  currentPage: Int
+}
+
+type TicketMessagesResponse {
+  messages: [TicketMessage]
+  ticket: SupportTicket
+  page: Int
+  totalPages: Int
+  docsCount: Int
+}
+
+type TicketUser {
+  _id: ID
+  name: String
+  email: String
+  phone: String
+  isActive: Boolean
+  userType: String
+  latestTicket: SupportTicket
+}
+
+type TicketUsersResponse {
+  users: [TicketUser]
+  docsCount: Int
+  totalPages: Int
+  currentPage: Int
+}
+
+# --- geo reference ---
+
+type City {
+  id: ID
+  name: String
+  latitude: Float
+  longitude: Float
+}
+
+type Country {
+  _id: ID
+  id: ID
+  name: String
+  flag: String
+  cities: [City]
+}
+
+type CategoryDetailsItem {
+  id: ID
+  label: String
+  url: String
+}
+
+type CategoryDetails {
+  id: ID
+  label: String
+  url: String
+  items: [CategoryDetailsItem]
+}
+
+type MobileCategoryDetails {
+  id: ID
+  category_name: String
+  url: String
+  food_id: String
+}
+
+extend type Query {
+  configuration: Configuration
+  adminConfiguration: Configuration
+  publicConfiguration: PublicConfiguration
+  getVersions: Versions
+
+  getDashboardUsers: DashboardUsers
+  getDashboardUsersByYear(year: Int!): DashboardUsersByYear
+  getDashboardOrdersByType: [DashboardChartItem]
+  getDashboardSalesByType: [DashboardChartItem]
+  getVendorDashboardStatsCardDetails(vendorId: String!, dateKeyword: String, starting_date: String, ending_date: String): VendorDashboardStatsCard
+  getVendorDashboardGrowthDetailsByYear(vendorId: String!, year: Int!): VendorDashboardGrowth
+  getRestaurantDashboardOrdersSalesStats(restaurant: String!, starting_date: String, ending_date: String, dateKeyword: String): RestaurantDashboardOrdersSalesStats
+  getRestaurantDashboardSalesOrderCountDetailsByYear(restaurant: String!, year: Int!): RestaurantDashboardSalesOrderCount
+  getRestaurantDashboardOrderSalesDetailsByPaymentMethod(restaurant: String!, starting_date: String, ending_date: String, dateKeyword: String): DashboardPaymentMethodSales
+  getDashboardOrderSalesDetailsByPaymentMethod(restaurant: String!, starting_date: String, ending_date: String): DashboardPaymentMethodSales
+  getLiveMonitorData(id: String!, dateKeyword: String, starting_date: String, ending_date: String): LiveMonitorData
+  getStoreDetailsByVendorId(id: String!, dateKeyword: String, starting_date: String, ending_date: String): [StoreDetails]
+  getStoreDetailsByVendorIdPaginated(
+    id: String!
+    dateKeyword: String
+    starting_date: String
+    ending_date: String
+    page: Int
+    limit: Int
+    search: String
+  ): StoreDetailsPaginated
+
+  notifications: [Notification]
+  notificationsPaginated(page: Int, limit: Int, search: String): NotificationsPaginated
+  webNotifications: [WebNotification]
+  pastNotificationsByToken(skip: Int, limit: Int): TokenNotificationsResponse
+  todayNotificationsByToken(skip: Int, limit: Int): TokenNotificationsResponse
+
+  getSingleSupportTicket(ticketId: ID!): SupportTicket
+  getSingleUserSupportTickets(input: SingleUserSupportTicketsInput): TicketsResponse
+  getTicketMessages(input: TicketMessagesInput!): TicketMessagesResponse
+  getTicketUsers(input: FiltersInput): TicketUsersResponse
+  getTicketUsersWithLatest(input: FiltersInput): TicketUsersResponse
+
+  getCountries: [Country]
+  getCountryByIso(iso: String!): Country
+  getCitiesByCountry(id: ID): Country
+  fetchCategoryDetailsByStoreId(storeId: String!): [CategoryDetails]
+  fetchCategoryDetailsByStoreIdForMobile(storeId: String!): [MobileCategoryDetails]
+}
+
+extend type Mutation {
+  "Issue a short-lived public access token bound to the `nonce` request header."
+  metricsGeneral: MetricsGeneral
+
+  saveEmailConfiguration(configurationInput: EmailConfigurationInput!): Configuration
+  saveFormEmailConfiguration(configurationInput: FormEmailConfigurationInput!): Configuration
+  saveSendGridConfiguration(configurationInput: SendGridConfigurationInput!): Configuration
+  savePaypalConfiguration(configurationInput: PaypalConfigurationInput!): Configuration
+  saveStripeConfiguration(configurationInput: StripeConfigurationInput!): Configuration
+  saveTwilioConfiguration(configurationInput: TwilioConfigurationInput!): Configuration
+  saveCurrencyConfiguration(configurationInput: CurrencyConfigurationInput!): Configuration
+  saveDeliveryRateConfiguration(configurationInput: DeliveryCostConfigurationInput!): Configuration
+  saveSentryConfiguration(configurationInput: SentryConfigurationInput!): Configuration
+  saveGoogleApiKeyConfiguration(configurationInput: GoogleApiKeyConfigurationInput!): Configuration
+  saveGoogleClientIDConfiguration(configurationInput: GoogleClientIDConfigurationInput!): Configuration
+  saveCloudinaryConfiguration(configurationInput: CloudinaryConfigurationInput!): Configuration
+  saveAmplitudeApiKeyConfiguration(configurationInput: AmplitudeApiKeyConfigurationInput!): Configuration
+  saveFirebaseConfiguration(configurationInput: FirebaseConfigurationInput!): Configuration
+  saveWebConfiguration(configurationInput: WebConfigurationInput!): Configuration
+  saveAppConfigurations(configurationInput: AppConfigurationsInput!): Configuration
+  saveVerificationsToggle(configurationInput: VerificationConfigurationInput!): Configuration
+  saveGeneralConfiguration(configurationInput: GeneralConfigurationInput!): Configuration
+  saveVendorTypeToggle(configurationInput: VendorTypeConfigurationInput!): Configuration
+  setVersions(customerAppVersion: AppTypeInput, riderAppVersion: AppTypeInput, restaurantAppVersion: AppTypeInput): String
+
+  sendNotificationUser(notificationTitle: String, notificationBody: String!, recipientType: NotificationRecipientType): String
+  markWebNotificationsAsRead: [WebNotification]
+
+  createSupportTicket(ticketInput: SupportTicketInput!): SupportTicket
+  createMessage(messageInput: MessageInput!): TicketMessage
+  updateSupportTicketStatus(input: UpdateSupportTicketInput!): SupportTicket
+
+  "Upload a base64 data-URI image. Returns the public URL."
+  uploadImageToS3(image: String!, publicMedia: Boolean): UploadImageResponse
+  "Client analytics / activity log."
+  createActivity(groupId: String!, module: String!, screenPath: String!, type: String!, details: String!): Boolean
+}

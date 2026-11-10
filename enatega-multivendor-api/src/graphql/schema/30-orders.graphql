@@ -1,0 +1,304 @@
+# ---------------------------------------------------------------------------
+# Orders: placement, lifecycle (store / rider / admin), tracking, chat and
+# real-time subscriptions.
+#
+# Order status flow:
+#   PENDING -> ACCEPTED -> ASSIGNED -> PICKED -> DELIVERED
+#   (pickup orders: PENDING -> ACCEPTED -> DELIVERED/COMPLETED)
+#   any non-final state -> CANCELLED (customer / admin) | CANCELLEDBYREST (store)
+# ---------------------------------------------------------------------------
+
+type OrderAddress {
+  _id: ID
+  id: ID
+  label: String
+  deliveryAddress: String
+  details: String
+  location: Point
+}
+
+type ItemOption {
+  _id: ID
+  id: ID
+  title: String
+  description: String
+  price: Float
+}
+
+type ItemAddon {
+  _id: ID
+  id: ID
+  title: String
+  description: String
+  quantityMinimum: Int
+  quantityMaximum: Int
+  options: [ItemOption]
+}
+
+type ItemVariation {
+  _id: ID
+  id: ID
+  title: String
+  price: Float
+  discounted: Float
+  image: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type Item {
+  _id: ID
+  id: ID
+  "Food id"
+  food: String
+  title: String
+  description: String
+  image: String
+  quantity: Int
+  specialInstructions: String
+  variation: ItemVariation
+  addons: [ItemAddon]
+  isActive: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type OrderEta {
+  "PREPARING | READY_FOR_PICKUP | EN_ROUTE_TO_STORE | EN_ROUTE_TO_CUSTOMER | DELIVERED | SCHEDULED"
+  phase: String
+  "STORE | ROUTE | FALLBACK"
+  source: String
+  readyAt: DateTime
+  estimatedArrivalAt: DateTime
+  baseArrivalAt: DateTime
+  windowStartAt: DateTime
+  windowEndAt: DateTime
+  calculatedAt: DateTime
+  lastLocationAt: DateTime
+  durationSeconds: Int
+  distanceMeters: Int
+  encodedPolyline: String
+  version: Int
+  origin: LatLng
+  destination: LatLng
+}
+
+type Order {
+  _id: ID
+  id: ID
+  orderId: String
+  restaurant: Restaurant
+  user: User
+  rider: Rider
+  zone: Zone
+  review: Review
+  deliveryAddress: OrderAddress
+  items: [Item]
+  paymentMethod: String
+  "PENDING | PAID | REFUNDED"
+  paymentStatus: String
+  orderStatus: String
+  "Legacy flag kept for older clients (true while the order is accepted by the store)."
+  status: Boolean
+  orderState: String
+  reason: String
+  isActive: Boolean
+  isPickedUp: Boolean
+  deliveryType: String
+  orderAmount: Float
+  paidAmount: Float
+  deliveryCharges: Float
+  tipping: Float
+  taxationAmount: Float
+  discountAmount: Float
+  instructions: String
+  orderDate: DateTime
+  scheduledAt: DateTime
+  expectedTime: DateTime
+  preparationTime: DateTime
+  selectedPrepTime: Int
+  completionTime: DateTime
+  acceptedAt: DateTime
+  assignedAt: DateTime
+  pickedAt: DateTime
+  deliveredAt: DateTime
+  cancelledAt: DateTime
+  isRinged: Boolean
+  isRiderRinged: Boolean
+  eta: OrderEta
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type OrdersPaginated {
+  orders: [Order]
+  totalCount: Int
+  currentPage: Int
+  totalPages: Int
+  prevPage: Int
+  nextPage: Int
+}
+
+type OrderFilterOptions {
+  restaurants: [Restaurant]
+  riders: [Rider]
+}
+
+type RiderLocation {
+  latitude: Float
+  longitude: Float
+  accuracy: Float
+  heading: Float
+  speed: Float
+  recordedAt: DateTime
+}
+
+type OrderTracking {
+  orderId: String
+  status: String
+  riderLocation: RiderLocation
+  eta: OrderEta
+}
+
+type SubscriptionOrders {
+  userId: String
+  zoneId: String
+  "new | update | remove"
+  origin: String
+  order: Order
+  rawOrder: Order
+}
+
+type SubscriptionPaymentSuccess {
+  userId: String
+  orderId: String
+  orderObjId: String
+  orderStatus: String
+  paymentStatus: String
+  paymentMethod: String
+}
+
+type ChatUser {
+  id: ID
+  name: String
+}
+
+type ChatMessageOutput {
+  id: ID
+  message: String
+  image: String
+  user: ChatUser
+  createdAt: DateTime
+}
+
+type ChatMessageResponse {
+  success: Boolean
+  message: String
+  data: ChatMessageOutput
+}
+
+extend type Query {
+  "Orders of the authenticated customer."
+  orders(offset: Int, page: Int, limit: Int): [Order]
+  order(id: String!): Order
+  orderDetails(id: String!): Order
+  getUsersActiveOrders(page: Int, limit: Int, offset: Int): [Order]
+  getUsersPastOrders(page: Int, limit: Int, offset: Int): [Order]
+  scheduledOrders(offset: Int, limit: Int): [Order]
+  orderTracking(id: ID!): OrderTracking
+  chat(order: ID!): [ChatMessageOutput]
+
+  "Orders of the authenticated store (store app)."
+  restaurantOrders(offset: Int, limit: Int): [Order]
+  "Orders visible to the authenticated rider (assigned to them, or unassigned in their zone)."
+  riderOrders(limit: Int, offset: Int): [Order]
+
+  allOrders(page: Int): [Order]
+  allOrdersPaginated(
+    page: Int
+    rows: Int
+    dateKeyword: String
+    starting_date: String
+    ending_date: String
+    orderStatus: [String]
+    search: String
+    restaurantId: ID
+    riderId: ID
+  ): OrdersPaginated
+  allOrdersWithoutPagination(dateKeyword: String, starting_date: String, ending_date: String): [Order]
+  getActiveOrders(restaurantId: ID, page: Int, rowsPerPage: Int, actions: [String], search: String): OrdersPaginated
+  ordersByRestId(restaurant: String!, page: Int, rows: Int, search: String, orderStatus: [String]): OrdersPaginated
+  ordersByRestIdWithoutPagination(restaurant: String!, search: String): [Order]
+  ordersByUser(userId: ID!, page: Int, limit: Int): OrdersPaginated
+  orderFilterOptions: OrderFilterOptions
+}
+
+extend type Mutation {
+  "Multi-vendor: pass restaurant + orderInput. Single-vendor: omit them to order the server-side cart."
+  placeOrder(
+    restaurant: String
+    orderInput: [OrderInput!]
+    paymentMethod: String!
+    couponCode: String
+    tipping: Float
+    taxationAmount: Float
+    address: AddressInput
+    orderDate: String
+    isPickedUp: Boolean
+    deliveryCharges: Float
+    instructions: String
+    specialInstructions: String
+    scheduleData: ScheduleData
+    isPriority: Boolean
+    idempotencyKey: String
+    checkoutQuoteId: String
+  ): Order
+  "Customer cancels a pending order."
+  abortOrder(id: String!): Order
+  reviewOrder(reviewInput: ReviewInput!): Order
+
+  # store app
+  acceptOrder(_id: String!, time: String): Order
+  cancelOrder(_id: String!, reason: String!): Order
+  orderPickedUp(_id: String!): Order
+  muteRing(orderId: String): Boolean
+
+  # rider app
+  assignOrder(id: String!): Order
+  updateOrderStatusRider(id: String!, status: String!): Order
+
+  # admin
+  assignRider(id: String!, riderId: String!): Order
+  updateStatus(id: String!, orderStatus: String!): Order
+
+  sendChatMessage(message: ChatMessageInput!, orderId: ID!): ChatMessageResponse
+  registerLiveActivitySession(
+    orderId: ID!
+    activityId: String!
+    platform: String!
+    pushToken: String!
+    schemaVersion: Int
+    language: String
+  ): SuccessResponse
+  removeLiveActivitySession(orderId: ID!, activityId: String!): SuccessResponse
+}
+
+extend type Subscription {
+  "Customer: status changes of the customer's orders."
+  orderStatusChanged(userId: String!): SubscriptionOrders
+  "Store: new / updated orders of a restaurant."
+  subscribePlaceOrder(restaurant: String!): SubscriptionOrders
+  "Rider: orders assigned / unassigned to a rider."
+  subscriptionAssignRider(riderId: String!): SubscriptionOrders
+  "Rider: new unassigned orders in a zone."
+  subscriptionZoneOrders(zoneId: String!): SubscriptionOrders
+  "Admin dispatcher: every order change."
+  subscriptionDispatcher: Order
+  "Any party: a single order's changes."
+  subscriptionOrder(id: String!): Order
+  subscriptionOrderTracking(id: String!): OrderTracking
+  subscriptionPaymentSuccess(userId: String!): SubscriptionPaymentSuccess
+  subscriptionNewMessage(order: ID!): ChatMessageOutput
+  subscriptionRiderLocation(riderId: String!): Rider
+  riderUpdated: Rider
+}

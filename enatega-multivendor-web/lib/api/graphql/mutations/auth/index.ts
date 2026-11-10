@@ -45,13 +45,17 @@ export const LOGIN = gql`
 
 export const EMAIL_EXISTS = gql`
   mutation EmailExist($email: String!) {
-    emailExist(email: $email)
+    emailExist(email: $email) {
+      _id
+    }
   }
 `;
 
 export const PHONE_EXISTS = gql`
   mutation PhoneExist($phone: String!) {
-    phoneExist(phone: $phone)
+    phoneExist(phone: $phone) {
+      _id
+    }
   }
 `;
 
