@@ -38,7 +38,7 @@ export const rateLimited = (message = 'Too many requests. Please try again later
 export const publicTokenInvalid = (reason: string) => new AppError(`Unauthorized: ${reason}`, 'PUBLIC_TOKEN_INVALID');
 
 /** Throws NOT_FOUND when the value is null/undefined, otherwise returns it (narrowed). */
-export function must<T>(value: T | null | undefined, what = 'Resource'): T {
+export function must<T>(value: T, what = 'Resource'): NonNullable<T> {
   if (value === null || value === undefined) throw notFound(what);
-  return value;
+  return value as NonNullable<T>;
 }

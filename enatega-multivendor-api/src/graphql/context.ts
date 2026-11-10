@@ -6,6 +6,8 @@ import { createLoaders, type Loaders } from './loaders.js';
 
 export interface AuthState {
   claims?: AccessClaims;
+  /** The presented bearer token (only set when it verified). */
+  token?: string;
   /** Error raised while verifying the presented token; thrown lazily by guards. */
   error?: AppError;
 }
@@ -41,7 +43,7 @@ export function authFromToken(raw: string | null | undefined): AuthState {
   const token = bearer(raw ?? undefined);
   if (!token) return {};
   try {
-    return { claims: verifyAccessToken(token) };
+    return { claims: verifyAccessToken(token), token };
   } catch (err) {
     return { error: err as AppError };
   }
