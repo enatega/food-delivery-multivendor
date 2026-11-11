@@ -1,16 +1,14 @@
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
-import AnimatedSplash from './AnimatedSplash'
+import StaticSplash from './StaticSplash'
 
-// Keep the native OS splash up until our theme-aware JS splash has painted, so
-// there is no black/white flash at the native -> JS handoff.
+// Keep the native OS splash up until the static JS splash has painted.
 SplashScreen.preventAutoHideAsync().catch(() => {})
 
 export default function AnimatedSplashScreen({
   ready = false,
   themeReady = false,
-  themeMode = 'Pink',
   children
 }) {
   const [splashDone, setSplashDone] = useState(false)
@@ -27,9 +25,8 @@ export default function AnimatedSplashScreen({
     <View style={{ flex: 1 }}>
       {children}
       {!splashDone && themeReady && (
-        <AnimatedSplash
+        <StaticSplash
           ready={ready}
-          themeMode={themeMode}
           onFinish={() => setSplashDone(true)}
         />
       )}

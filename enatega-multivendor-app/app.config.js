@@ -39,9 +39,8 @@ module.exports = () => {
     androidStatusBar: {
       backgroundColor: '#000000'
     },
-    // Native OS splash (before JS boots) is theme-aware via the
-    // expo-splash-screen plugin below — a solid per-theme background that
-    // matches AnimatedSplash's first frame, so there is no black/white flash.
+    // Native OS splash (before JS boots) uses the same static artwork as the
+    // JavaScript splash overlay for a seamless handoff.
     platforms: ['ios', 'android'],
     orientation: 'portrait',
     icon: './assets/icon.png',
@@ -143,26 +142,21 @@ module.exports = () => {
         }
       ],
       adaptiveIcon: {
-        foregroundImage: './assets/icon.png',
-        backgroundColor: '#000000'
+        foregroundImage: './assets/adaptive-icon.png',
+        backgroundColor: '#ffffff'
       }
     },
     plugins: [
       [
         'expo-splash-screen',
         {
-          // Solid per-theme background, no visible logo. The plugin requires an
-          // image to generate the native splashscreen_logo drawable, so we pass
-          // a 1x1 transparent PNG — only the background color shows. The animated
-          // pin / wordmark is drawn by the JS AnimatedSplash component, whose
-          // first frame uses these same colors so the handoff shows no flash.
-          backgroundColor: '#f4f8f5', // light ("Pink")
-          image: './assets/splashTransparent.png',
-          imageWidth: 1,
+          backgroundColor: '#ffffff',
+          image: './assets/splash-image.png',
+          imageWidth: 360,
           resizeMode: 'contain',
           dark: {
-            backgroundColor: '#0b1225', // dark
-            image: './assets/splashTransparent.png'
+            backgroundColor: '#ffffff',
+            image: './assets/splash-image.png'
           }
         }
       ],

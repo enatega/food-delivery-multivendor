@@ -35,18 +35,13 @@ module.exports = {
       [
         'expo-splash-screen',
         {
-          // Solid per-theme background, no visible logo. The plugin requires an
-          // image to generate the native splashscreen_logo drawable, so we pass
-          // a 1x1 transparent PNG — only the background color shows. The animated
-          // pin / wordmark is drawn by the JS AnimatedSplash component, whose
-          // first frame uses these same colors so the handoff shows no flash.
-          backgroundColor: '#f4f8f5', // light
-          image: './lib/assets/images/splashTransparent.png',
-          imageWidth: 1,
+          backgroundColor: '#ffffff',
+          image: './lib/assets/images/splash-image.png',
+          imageWidth: 360,
           resizeMode: 'contain',
           dark: {
-            backgroundColor: '#0b1225', // dark
-            image: './lib/assets/images/splashTransparent.png'
+            backgroundColor: '#ffffff',
+            image: './lib/assets/images/splash-image.png'
           }
         }
       ],
@@ -105,7 +100,7 @@ module.exports = {
         }
       },
       package: 'com.enatega.multirider',
-      icon: './lib/assets/images/appIcon.png',
+      icon: './lib/assets/images/adaptive-icon.png',
       adaptiveIcon: {
         foregroundImage: './lib/assets/images/appIcon.png',
         backgroundColor: '#ffffff'

@@ -1,7 +1,7 @@
 import * as SplashScreen from "expo-splash-screen";
 import { ReactNode, useEffect, useState } from "react";
 import { View } from "react-native";
-import AnimatedSplash from "./AnimatedSplash";
+import StaticSplash from "./StaticSplash";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -22,7 +22,7 @@ export default function AnimatedSplashScreen({
     <View style={{ flex: 1 }}>
       {children}
       {!splashDone && (
-        <AnimatedSplash ready={ready} onFinish={() => setSplashDone(true)} />
+        <StaticSplash ready={ready} onFinish={() => setSplashDone(true)} />
       )}
     </View>
   );
