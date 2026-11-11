@@ -27,6 +27,7 @@ const config = {
       },
       colors: {
         'primary-color': 'var(--primary-color)',
+        'primary-light': 'var(--primary-light)',
         'primary-dark': 'var(--primary-dark)',
         'secondary-color': 'var(--secondary-color)',
         'secondary-border-color': '#111827',

@@ -102,5 +102,5 @@ animated component.
   motion (ring pulses, spring-in, glow, wordmark wipe, underline, idle float, green
   outro) is identical. Easy to add later if wanted.
 - Timings mirror the approved video: intro ≈ 1.9s, idle loop, outro ≈ 0.7s.
-- The green end-frame color is `#5ecf72`, same as the videos, so any existing
+- The green end-frame color is `#107D7A`, same as the videos, so any existing
   fade-into-app transition behaves identically.

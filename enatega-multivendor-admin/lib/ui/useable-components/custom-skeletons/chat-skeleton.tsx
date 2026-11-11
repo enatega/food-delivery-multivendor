@@ -19,7 +19,7 @@ interface IChatSkeletonProps {
               key={index}
               className={`p-3 rounded-lg max-w-[80%] ${
                 isAdmin 
-                  ? 'bg-green-200 text-white ml-auto rounded-tr-none' 
+                  ? 'bg-primary-light text-secondary-color ml-auto rounded-tr-none' 
                   : 'bg-gray-200 text-gray-800 mr-auto rounded-tl-none'
               }`}
             >

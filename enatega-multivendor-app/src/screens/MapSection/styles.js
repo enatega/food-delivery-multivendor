@@ -12,7 +12,7 @@ const styles = (props = null) =>
       height: 40,
       width: 40,
       borderRadius: 20,
-      backgroundColor: props !== null ? props?.main : '#90E36D',
+      backgroundColor: props !== null ? props?.main : '#107D7A',
       alignItems: 'center',
       justifyContent: 'center'
     },
@@ -25,6 +25,7 @@ const styles = (props = null) =>
     userMarkerImage: {
       height: 25,
       width: 25,
+      tintColor: '#107D7A',
       borderRadius: 12.5,
       overflow: 'hidden'
     },

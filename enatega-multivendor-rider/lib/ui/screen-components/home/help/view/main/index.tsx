@@ -98,7 +98,7 @@ export default function HelpMain() {
       <View className="w-full flex items-center mt-4">
         <TouchableOpacity
           activeOpacity={0.7}
-          className="w-[90%] h-12 rounded-full bg-green-500 flex flex-row items-center justify-center gap-2 shadow-lg"
+          className="w-[90%] h-12 rounded-full bg-[#107D7A] flex flex-row items-center justify-center gap-2 shadow-lg"
           onPress={openWhatsAppChat}
         >
           <FontAwesome name="whatsapp" size={24} color="white" />

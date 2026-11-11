@@ -225,7 +225,11 @@ function NewAddress(props) {
               }}
             ></MapView>
             <View style={styles().imageContainer}>
-              <Image source={require('../../assets/images/user.png')} width={20} />
+              <Image
+                source={require('../../assets/images/user.png')}
+                width={20}
+                style={{ tintColor: '#107D7A' }}
+              />
             </View>
           </View>
 

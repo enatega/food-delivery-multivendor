@@ -50,10 +50,10 @@
       "locationError": "We could not access your location. Search for a city instead."
     },
     "journey": {
-      "eyebrow": "How Enatega moves",
+      "eyebrow": "How JSML moves",
       "title": "From your city,",
       "accent": "to your doorstep.",
-      "bagAlt": "Enatega delivery bag",
+      "bagAlt": "JSML delivery bag",
       "stages": {
         "choose": {
           "title": "Choose",
@@ -70,16 +70,16 @@
       }
     },
     "cta": {
-      "label": "Work with Enatega",
+      "label": "Work with JSML",
       "business": {
         "eyebrow": "For businesses",
-        "title": "Grow with Enatega.",
+        "title": "Grow with JSML.",
         "body": "Bring your store closer to more customers.",
         "action": "Become a partner"
       },
       "rider": {
         "eyebrow": "For riders",
-        "title": "Ride with Enatega.",
+        "title": "Ride with JSML.",
         "body": "Deliver on your schedule.",
         "action": "Become a rider"
       }

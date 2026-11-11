@@ -18,7 +18,7 @@ export const mr = {
     getStarted: 'सुरू करा!',
     welcome:
       "यल्लामध्ये आपले स्वागत आहे, कधी कधी आपल्याला फक्त प्रेमाची गरज असते. पण अधूनमधून थोडे अन्न घेतल्याने नुकसान होत नाही.",
-    welcomeScreen: 'एनाटेगा मध्ये आपले स्वागत आहे',
+    welcomeScreen: 'JSML मध्ये आपले स्वागत आहे',
     loginBtn: 'लॉगिन',
     registerBtn: 'नोंदणी करा',
     name: 'नाव',
@@ -574,8 +574,8 @@ export const mr = {
     none: 'काहीही नाही',
     yourEmail: 'आपल्या ईमेलद्वारे सहज लॉगिन करा!',
     yourEmailPassword: 'प्रवेशासाठी आता आपले पासवर्ड टाका!',
-    brandName: 'एनाटेगा',
-    welcomeText: 'एनाटेगा मध्ये आपले स्वागत आहे',
+    brandName: 'JSML',
+    welcomeText: 'JSML मध्ये आपले स्वागत आहे',
     createAccountDesc:
       'सर्वोत्तम रेस्टॉरंट्सचा आनंद घ्या किंवा जवळच्या दुकानांतून आपल्याला हवे ते वितरित करून घ्या',
     phoneNumber: 'फोन नंबर',
@@ -634,7 +634,7 @@ export const mr = {
     Done: 'झाले',
     addMessage: 'संदेश जोडा',
     kindlyBeAdvisedText: 'कृपया लक्षात ठेवा की आपला संदेश आपली ऑर्डर ठिकाणी वितरित करणाऱ्या कुरियर पार्टनरलाही दिसू शकतो.',
-    exploreYallaCities: 'एनाटेगा शहरे एक्सप्लोर करा',
+    exploreYallaCities: 'JSML शहरे एक्सप्लोर करा',
     Card: 'कार्ड',
     lebelAlreadyExist: "'{{selectedLabel}}' हे लेबल आधीच अस्तित्वात आहे. कृपया वेगळे निवडा.",
     UpdateAvailable: 'अद्यतन उपलब्ध',

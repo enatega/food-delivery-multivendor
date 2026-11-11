@@ -1,11 +1,11 @@
 {
-  "name": "Enatega MultiVendor",
+  "name": "JSML MultiVendor",
   "id":"/",
-  "short_name": "Enatega",
+  "short_name": "JSML",
   "description": "A Progressive Web App built with Next.js",
   "start_url": "/",
   "background_color": "#000",
-  "theme_color": "#94e469",
+  "theme_color": "#107D7A",
   "display": "standalone",
   "orientation": "portrait",
   "categories": ["shopping", "food", "delivery"],
@@ -13,18 +13,18 @@
   "lang": "en",
   "icons":[
       {
-          "src": "/512.png",
-          "sizes": "512x512",
+          "src": "/assets/images/jsml-logo.png",
+          "sizes": "any",
           "type": "image/png"
         },
         {
-          "src": "/192.png",
-          "sizes": "192x192",
+          "src": "/assets/images/jsml-logo.png",
+          "sizes": "any",
           "type": "image/png"
         },
         {
-          "src": "/144.png",
-          "sizes": "144x144",
+          "src": "/assets/images/jsml-logo.png",
+          "sizes": "any",
           "type": "image/png"
         }
   ]

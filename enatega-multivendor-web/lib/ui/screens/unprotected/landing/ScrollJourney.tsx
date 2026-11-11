@@ -149,10 +149,10 @@ export default function ScrollJourney() {
                       className="h-full w-full object-contain drop-shadow-[0_26px_30px_rgba(21,25,20,0.17)]"
                     />
                     <Image
-                      src="/assets/images/svgs/logo.svg"
-                      alt=""
-                      width={203}
-                      height={48}
+                      src="/assets/images/jsml-logo.png"
+                      alt="JSML"
+                      width={321}
+                      height={300}
                       className="absolute left-[21%] top-[48%] h-auto w-[39%] opacity-90"
                     />
                   </div>

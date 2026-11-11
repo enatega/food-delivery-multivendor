@@ -131,7 +131,7 @@ const RestaurantDetailSkeleton = ({ currentTheme }) => {
               <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: scale(25), height: scale(16), borderRadius: scale(3) }} />
               <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: scale(80), height: scale(16), borderRadius: scale(3) }} />
             </View>
-            <View style={[styles.reviewButton, { backgroundColor: currentTheme.newButtonBackground || '#F3FFEE' }]}>
+            <View style={[styles.reviewButton, { backgroundColor: currentTheme.newButtonBackground || '#D9EFED' }]}>
               <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: scale(80), height: scale(16), borderRadius: scale(3) }} />
             </View>
           </View>
@@ -142,7 +142,7 @@ const RestaurantDetailSkeleton = ({ currentTheme }) => {
               <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: scale(21), height: scale(21), borderRadius: scale(10.5) }} />
               <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: scale(120), height: scale(16), borderRadius: scale(3) }} />
             </View>
-            <View style={[styles.statusButton, { backgroundColor: currentTheme.newButtonBackground || '#F3FFEE' }]}>
+            <View style={[styles.statusButton, { backgroundColor: currentTheme.newButtonBackground || '#D9EFED' }]}>
               <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: scale(50), height: scale(16), borderRadius: scale(3) }} />
             </View>
           </View>
@@ -173,7 +173,7 @@ const RestaurantDetailSkeleton = ({ currentTheme }) => {
               {/* Plus button in actual position */}
               <View style={[
                 styles.plusButtonSkeleton, 
-                { backgroundColor: currentTheme.plusIcon || '#AAC810' }
+                { backgroundColor: currentTheme.plusIcon || '#107D7A' }
               ]}>
                 <SkeletonPlaceholder currentTheme={currentTheme} style={{ width: scale(16), height: scale(16), borderRadius: scale(8) }} />
               </View>

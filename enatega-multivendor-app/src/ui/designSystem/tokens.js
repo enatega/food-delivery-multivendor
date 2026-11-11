@@ -98,10 +98,10 @@ export const resolveMultivendorTokens = (themeName, legacyTheme = {}) => {
     isDark,
     colors: {
       ...colors,
-      accent: legacyTheme.main || '#90E36D',
+      accent: legacyTheme.main || '#107D7A',
       accentForeground: isDark ? '#B9F3A0' : '#397A20',
-      accentSubtle: isDark ? 'rgba(144, 227, 109, 0.14)' : 'rgba(144, 227, 109, 0.18)',
-      focus: legacyTheme.main || '#90E36D'
+      accentSubtle: isDark ? 'rgba(16, 125, 122, 0.14)' : 'rgba(16, 125, 122, 0.18)',
+      focus: legacyTheme.main || '#107D7A'
     },
     spacing,
     radii,

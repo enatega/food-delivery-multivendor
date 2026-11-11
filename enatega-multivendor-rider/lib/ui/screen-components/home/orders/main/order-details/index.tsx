@@ -523,7 +523,7 @@ export default function OrderDetailScreen() {
                 >
                   <Image
                     source={require("@/lib/assets/home_icon.png")}
-                    style={{ height: 35, width: 32 }}
+                    style={{ height: 35, width: 32, tintColor: appTheme.primary }}
                   />
                 </Marker>
               )}
@@ -540,7 +540,7 @@ export default function OrderDetailScreen() {
                 >
                   <Image
                     source={require("@/lib/assets/rest_icon.png")}
-                    style={{ height: 35, width: 32 }}
+                    style={{ height: 35, width: 32, tintColor: appTheme.primary }}
                   />
                 </Marker>
               )}
@@ -562,7 +562,7 @@ export default function OrderDetailScreen() {
                   >
                     <Image
                       source={require("@/lib/assets/rider_icon.png")}
-                      style={{ height: 35, width: 32 }}
+                      style={{ height: 35, width: 32, tintColor: appTheme.primary }}
                     />
                   </Marker.Animated>
                 )}

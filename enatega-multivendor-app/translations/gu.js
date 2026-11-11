@@ -18,7 +18,7 @@ export const gu = {
     getStarted: 'શરૂ કરો!',
     welcome:
       "યલ્લામાં સ્વાગત છે, ક્યારેક તમને ફક્ત પ્રેમની જરૂર હોય છે. પરંતુ ક્યારેક થોડું ખાવું પણ નુકસાન નથી કરતું.",
-    welcomeScreen: 'એનાટેગામાં સ્વાગત',
+    welcomeScreen: 'JSMLમાં સ્વાગત',
     loginBtn: 'લૉગિન',
     registerBtn: 'રજિસ્ટર',
     name: 'નામ',
@@ -574,8 +574,8 @@ export const gu = {
   none: 'કંઈ નહીં',
   yourEmail: 'તમારા ઈમેલ દ્વારા સરળતાથી લૉગિન કરો!',
   yourEmailPassword: 'પ્રવેશ માટે હવે તમારો પાસવર્ડ દાખલ કરો!',
-  brandName: 'એનાટેગા',
-  welcomeText: 'એનાટેગામાં સ્વાગત',
+  brandName: 'JSML',
+  welcomeText: 'JSMLમાં સ્વાગત',
   createAccountDesc:
     'શ્રેષ્ઠ રેસ્ટોરન્ટ્સનો આનંદ માણો અથવા નજીકની દુકાનોમાંથી તમને જોઈતું ડિલિવરી મેળવો',
   phoneNumber: 'ફોન નંબર',
@@ -634,7 +634,7 @@ export const gu = {
   Done: 'પૂર્ણ',
   addMessage: 'સંદેશ ઉમેરો',
   kindlyBeAdvisedText: 'કૃપા કરીને નોંધ લો કે તમારો સંદેશ તમારો ઓર્ડર ડિલિવર કરવા માટે જવાબદાર કુરિયર પાર્ટનરને પણ દેખાઈ શકે છે.',
-  exploreYallaCities: 'એનાટેગા શહેરો શોધો',
+  exploreYallaCities: 'JSML શહેરો શોધો',
   Card: 'કાર્ડ',
   lebelAlreadyExist: "'{{selectedLabel}}' લેબલ પહેલેથી જ અસ્તિત્વમાં છે. કૃપા કરીને અલગ એક પસંદ કરો.",
   UpdateAvailable: 'અપડેટ ઉપલબ્ધ',

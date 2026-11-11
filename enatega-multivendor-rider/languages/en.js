@@ -230,11 +230,11 @@ export const en = {
     "We need your location to find nearby restaurants, ensure accurate delivery, and provide the best service possible",
   "Location access for deliveries": "Location access for deliveries",
   "Enatega Multivendor Rider uses your precise location while you use the app to show your current position and support pickup and delivery navigation.":
-    "Enatega Multivendor Rider uses your precise location while you use the app to show your current position and support pickup and delivery navigation.",
+    "JSML Multivendor Rider uses your precise location while you use the app to show your current position and support pickup and delivery navigation.",
   "Allow background location for live delivery tracking":
     "Allow background location for live delivery tracking",
   "Enatega Multivendor Rider collects and transmits your precise location to the delivery server to enable live delivery tracking for customers and dispatchers during an active delivery, even when the app is not in use. Location sharing starts only after you accept a delivery and stops when the delivery ends or you log out.":
-    "Enatega Multivendor Rider collects and transmits your precise location to the delivery server to enable live delivery tracking for customers and dispatchers during an active delivery, even when the app is not in use. Location sharing starts only after you accept a delivery and stops when the delivery ends or you log out.",
+    "JSML Multivendor Rider collects and transmits your precise location to the delivery server to enable live delivery tracking for customers and dispatchers during an active delivery, even when the app is not in use. Location sharing starts only after you accept a delivery and stops when the delivery ends or you log out.",
   "Allow delivery tracking": "Allow delivery tracking",
   "Not now": "Not now",
   Logout: "Logout",

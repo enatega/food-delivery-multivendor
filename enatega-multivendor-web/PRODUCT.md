@@ -37,7 +37,7 @@ Customers browse by current or saved delivery address, search nearby vendors or 
 ## Brand Commitments
 
 - Preserve the Enatega name and existing logo.
-- Preserve the current primary green family: `#75D04B` primary, `#F3FFEE` light, `#5AC12F` dark, plus the established hover, pressed, focus, and disabled states.
+- Preserve the current primary green family: `#107D7A` primary, `#D9EFED` light, `#107D7A` dark, plus the established hover, pressed, focus, and disabled states.
 - The shipped visual direction is **Quiet Orbit**: an elegant pure-white multivendor landing canvas with precise Inter typography, restrained Cormorant Garamond italic accents, brand-green route geometry, pale-sage grounding fields, and address-first interaction.
 - The result must avoid generic AI/SaaS styling, interchangeable food-delivery templates, gratuitous glass effects, excessive rounded cards, decorative gradients, and ungrounded marketing copy.
 - New surface development is comp-first: high-fidelity desktop and mobile compositions are approved before production UI code.

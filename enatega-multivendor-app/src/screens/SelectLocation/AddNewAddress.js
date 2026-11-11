@@ -259,6 +259,7 @@ export default function AddNewAddress(props) {
               style={{
                 width: 40,
                 height: 40,
+                tintColor: '#107D7A',
                 resizeMode: 'contain',
                 transform: [{ translateY: -20 }]
               }}

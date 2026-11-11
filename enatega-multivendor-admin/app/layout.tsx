@@ -5,9 +5,9 @@ import { ThemeProvider } from 'next-themes';
 
 // ✅ Add metadata export for favicon
 export const metadata = {
-  title: 'Enatega Admin Dashboard',
+  title: 'JSML Admin Dashboard',
   icons: {
-    icon: '/favsicons.png',
+    icon: '/assets/images/jsml-logo.png',
     // You can add more like:
     // shortcut: "/favicon.png",
     // apple: "/apple-touch-icon.png"

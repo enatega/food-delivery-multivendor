@@ -18,7 +18,7 @@ export const te = {
     getStarted: 'ప్రారంభించండి!',
     welcome:
       "యల్లాకు స్వాగతం, కొన్నిసార్లు మీకు కావలసింది ప్రేమ మాత్రమే. కానీ ఎప్పుడో ఒకసారి కొంత ఆహారం తీసుకోవడం హాని చేయదు.",
-    welcomeScreen: 'ఎనాటెగాకు స్వాగతం',
+    welcomeScreen: 'JSMLకు స్వాగతం',
     loginBtn: 'లాగిన్',
     registerBtn: 'రిజిస్టర్',
     name: 'పేరు',
@@ -574,8 +574,8 @@ export const te = {
     none: 'ఏదీ లేదు',
     yourEmail: 'మీ ఈమెయిల్ ద్వారా సులభంగా లాగిన్ చేయండి!',
     yourEmailPassword: 'ప్రవేశం కోసం ఇప్పుడు మీ పాస్‌వర్డ్ నమోదు చేయండి!',
-    brandName: 'ఎనాటెగా',
-    welcomeText: 'ఎనాటెగాకు స్వాగతం',
+    brandName: 'JSML',
+    welcomeText: 'JSMLకు స్వాగతం',
     createAccountDesc:
       'ఉత్తమ రెస్టారెంట్లను ఆస్వాదించండి లేదా సమీపంలోని దుకాణాల నుండి మీకు కావలసినవి డెలివరీ చేయించుకోండి',
     phoneNumber: 'ఫోన్ నంబర్',
@@ -634,7 +634,7 @@ export const te = {
     Done: 'పూర్తయింది',
     addMessage: 'సందేశం జోడించండి',
     kindlyBeAdvisedText: 'దయచేసి గమనించండి, మీ సందేశం మీ ఆర్డర్‌ను డెలివరీ చేసే కొరియర్ భాగస్వామికి కూడా కనిపించవచ్చు.',
-    exploreYallaCities: 'ఎనాటెగా నగరాలను ఆనందించండి',
+    exploreYallaCities: 'JSML నగరాలను ఆనందించండి',
     Card: 'కార్డ్',
     lebelAlreadyExist: "'{{selectedLabel}}' లేబుల్ ఇప్పటికే ఉంది. దయచేసి వేరొకదాన్ని ఎంచుకోండి.",
     UpdateAvailable: 'నవీకరణ అందుబాటులో ఉంది',

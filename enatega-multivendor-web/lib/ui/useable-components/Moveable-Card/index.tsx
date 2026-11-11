@@ -32,7 +32,7 @@ const MoveableCard: React.FC<MoveableProps> = ({
 
   return (
     <div
-      className={`${styles.cardContainer} bg-green-300 dark:bg-gray-800 rounded-3xl cursor-pointer`}
+      className={`${styles.cardContainer} bg-primary-light dark:bg-gray-800 rounded-3xl cursor-pointer`}
       style={{ height: responsiveHeight }}
     >
       {/* Image container */}

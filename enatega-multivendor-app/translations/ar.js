@@ -571,8 +571,8 @@ secureAccountWithPhone: 'سنستخدم رقمك فقط إذا كنا بحاجة
   none: 'لا شي',
   yourEmail: 'قم بتسجيل الدخول بسهولة عن طريق إدخال بريدك الإلكتروني!',
   yourEmailPassword: 'يرجى إدخال كلمات مرورك الآن للوصول!',
-  brandName: 'إيناتيجا',
-  welcomeText: 'مرحبًا بك في إيناتيجا',
+  brandName: 'JSML',
+  welcomeText: 'مرحبًا بك في JSML',
   createAccountDesc:
     'استمتع بأفضل المطاعم أو احصل على ما تحتاجه من المتاجر القريبة، واحصل عليه مسلماً!',
     phoneNumber: 'رقم الهاتف',

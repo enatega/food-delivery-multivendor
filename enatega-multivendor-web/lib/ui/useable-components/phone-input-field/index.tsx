@@ -162,7 +162,7 @@ export default function CustomPhoneTextField({
             background-color: #374151 !important; /* gray-700 */
           }
           html.dark .custom-phone-input .country-list .country.highlight {
-            background-color: #94e469 !important; /* theme green */
+            background-color: #107D7A !important; /* theme green */
             color: #111827 !important; /* gray-900 */
           }
 

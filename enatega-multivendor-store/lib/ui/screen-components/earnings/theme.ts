@@ -10,8 +10,8 @@ export const useEarningsTheme = () => {
     return {
       accent: appTheme.primary,
       accentSoft: isDark
-        ? "rgba(165, 198, 22, 0.14)"
-        : "rgba(144, 227, 109, 0.18)",
+        ? "rgba(16, 125, 122, 0.14)"
+        : "rgba(16, 125, 122, 0.18)",
       canvas: isDark ? "#070C13" : "#F5F7F3",
       divider: isDark ? "rgba(214, 224, 235, 0.09)" : "#E2E8DE",
       iconSurface: isDark ? "#1B2736" : "#EEF4EA",

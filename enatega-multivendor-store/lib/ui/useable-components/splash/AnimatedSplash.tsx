@@ -48,7 +48,7 @@ const THEMES = {
   },
 };
 
-const GREEN = "#5ecf72";
+const GREEN = "#107D7A";
 const OUT_CUBIC = Easing.out(Easing.cubic);
 const IN_CUBIC = Easing.in(Easing.cubic);
 const INOUT_CUBIC = Easing.inOut(Easing.cubic);

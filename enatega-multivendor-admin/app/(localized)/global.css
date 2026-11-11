@@ -16,9 +16,10 @@ layer(primereact);
 }
 
 :root {
-  --primary-color: #b1c748;
-  --primary-dark: #5ac12f;
-  --secondary-color: #bac973;
+  --primary-color: #107d7a;
+  --primary-light: #d9efed;
+  --primary-dark: #107d7a;
+  --secondary-color: #171717;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
@@ -526,7 +527,7 @@ body {
 .dark .p-datatable-table tr.p-highlight {
   background-color: rgba(90, 193, 47, 0.15) !important;
   /* soft green tint */
-  color: #5ac12f !important;
+  color: #107D7A !important;
 }
 
 /* === Dark mode: dropdown input inside DataTable === */
@@ -871,7 +872,7 @@ body {
 }
 
 .dark .order-filter-dropdown:not(.p-disabled).p-focus {
-  border-color: #5ac12f !important;
+  border-color: #107D7A !important;
   box-shadow: 0 0 0 1px rgba(90, 193, 47, 0.35) !important;
 }
 

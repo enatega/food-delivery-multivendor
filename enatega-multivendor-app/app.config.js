@@ -26,11 +26,11 @@ module.exports = () => {
   ]
 
   return {
-    name: 'Enatega Multi',
+    name: 'JSML',
     scheme: 'enategamultivendor',
     version: '1.1.42',
     description:
-      "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+      'JSML multivendor food ordering and delivery app.',
     slug: 'enategamultivendor',
     owner: 'ninjas_code',
     experiments: {
@@ -90,10 +90,10 @@ module.exports = () => {
     },
     notification: {
       iosDisplayInForeground: true,
-      color: '#90E36D',
+      color: '#107D7A',
       icon: './assets/not-icon.png',
       androidMode: 'default',
-      androidCollapsedTitle: 'Enatega Multivendor'
+      androidCollapsedTitle: 'JSML'
     },
     android: {
       versionCode: 145,
@@ -176,7 +176,7 @@ module.exports = () => {
         'expo-location',
         {
           locationAlwaysAndWhenInUsePermission:
-            'Allow $Enatega Multivendor to use your location.'
+            'Allow JSML to use your location.'
         }
       ],
       '@react-native-firebase/app',
@@ -221,8 +221,8 @@ module.exports = () => {
       liveActivity: {
         appGroupId: 'group.com.enatega.multivendor.shared',
         appScheme: 'enategamultivendor',
-        brandName: 'Enatega',
-        primaryColor: '#90E36D',
+        brandName: 'JSML',
+        primaryColor: '#107D7A',
         accentColor: '#FFA921',
         logoResourceName: 'enatega_logo',
         riderResourceName: 'enatega_rider'

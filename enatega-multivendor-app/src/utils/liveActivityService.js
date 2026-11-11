@@ -49,7 +49,7 @@ const defaultConfiguration = {
   appGroupId: 'group.com.enatega.multivendor.shared',
   appScheme: 'enategamultivendor',
   brandName: 'Enatega',
-  primaryColor: '#90E36D',
+  primaryColor: '#107D7A',
   accentColor: '#FFA921',
   logoResourceName: 'enatega_logo',
   riderResourceName: 'enatega_rider',

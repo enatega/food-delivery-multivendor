@@ -155,7 +155,7 @@ function GoogleMapTrackingComponent({
           <Polyline
             path={route}
             options={{
-              strokeColor: "#5AC12F",
+              strokeColor: "#107D7A",
               strokeOpacity: 0.9,
               strokeWeight: 5,
               zIndex: 10,

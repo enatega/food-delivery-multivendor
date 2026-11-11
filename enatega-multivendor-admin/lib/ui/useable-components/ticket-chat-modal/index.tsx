@@ -390,7 +390,7 @@ export default function TicketChatModal({
                 disabled={!message.trim() || isSending}
                 className={`bg-primary-dark rounded-r-md p-2 text-white flex items-center justify-center ${!message.trim() || isSending
                   ? 'opacity-50 cursor-not-allowed'
-                  : 'hover:bg-green-600'
+                  : 'hover:bg-primary-color'
                   }`}
               >
                 <svg

@@ -57,7 +57,7 @@ export default function DeleteAccountDialog({
           <LaptopSvg
             height={screenWidth < 768 ? 300 : 380}
             width={screenWidth < 768 ? 300 : 380}
-            color="#D5FEC4"
+            color="#D9EFED"
           />
         </div>
 
