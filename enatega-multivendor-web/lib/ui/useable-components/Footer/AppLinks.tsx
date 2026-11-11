@@ -34,7 +34,7 @@ const AppLinks = () => {
   return (
     <div>
       <div className="text-[20px] mb-4 font-extrabold text-white cursor-pointer" onClick={logoClickHandler}>
-        <Logo fillColor="#FFFFFFFF" darkmode="#FFFFFFFF" />
+        <Logo light />
       </div>
 
       <div className="flex gap-2 flex-wrap">

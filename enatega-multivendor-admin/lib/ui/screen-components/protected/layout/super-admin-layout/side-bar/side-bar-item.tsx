@@ -84,7 +84,7 @@ export default function SidebarItem({
           className={`group relative flex w-full cursor-pointer items-center rounded-md px-3 py-2 transition-colors ${
             isActive && !subMenu
               ? `bg-${isClickable ? bg_color : ''} text-${isClickable ? text_color : '[#71717A]'}`
-              : `bg-${bg_color} text-${text_color} hover:bg-secondary-color`
+              : `bg-${bg_color} text-${text_color} hover:bg-secondary-color hover:text-white`
           } ${!expanded && 'hidden sm:flex'} dark:text-white`}
           onClick={() => {
             if (!isParent || isClickable) {

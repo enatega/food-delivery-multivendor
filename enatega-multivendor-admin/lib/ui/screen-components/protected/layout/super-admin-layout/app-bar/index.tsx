@@ -253,10 +253,10 @@ const AppTopbar = () => {
             className={
               pathname === '/zone'
                 ? 'rounded bg-primary-color text-white'
-                : 'bg-transparent hover:rounded hover:bg-secondary-color dark:hover:text-black '
+                : 'bg-transparent hover:rounded hover:bg-secondary-color hover:text-white'
             }
             iconStyles={{
-              color: pathname === '/zone' || isDarkMode ? 'white' : 'gray',
+              color: 'currentColor',
             }}
             onClick={() => onRedirectToPage('/zone')}
           />
@@ -268,17 +268,17 @@ const AppTopbar = () => {
             className={
               pathname === '/dispatch'
                 ? 'rounded bg-primary-color text-white'
-                : 'bg-transparent hover:rounded hover:bg-secondary-color dark:hover:text-black'
+                : 'bg-transparent hover:rounded hover:bg-secondary-color hover:text-white'
             }
             iconStyles={{
-              color: pathname === '/dispatch' || isDarkMode ? 'white' : 'gray',
+              color: 'currentColor',
             }}
             onClick={() => onRedirectToPage('/dispatch')}
           />
         )}
         <a
           href={singleVendorAdminUrl}
-          className="inline-flex h-10 min-w-10 shrink-0 items-center justify-center gap-2 rounded-md border border-gray-200 px-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-primary-color hover:bg-secondary-color hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:border-dark-600 dark:text-white dark:hover:border-primary-color dark:hover:bg-dark-600"
+          className="inline-flex h-10 min-w-10 shrink-0 items-center justify-center gap-2 rounded-md border border-gray-200 px-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-primary-color hover:bg-secondary-color hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:border-dark-600 dark:text-white dark:hover:border-primary-color dark:hover:bg-dark-600"
           aria-label="Open Single Vendor Admin"
           title="Open Single Vendor Admin"
         >
@@ -338,7 +338,7 @@ const AppTopbar = () => {
                       key={index}
                       className={`p-2 mx-3 rounded-md text-sm cursor-pointer ${notification.read
                         ? 'text-black dark:text-white'
-                        : 'text-[#484848] dark:hover:text-white dark:text-dark-950 bg-secondary-color'
+                        : 'bg-secondary-color text-white'
                         } hover:bg-gray-300 dark:hover:bg-dark-600`}
                       href={`${notification.navigateTo}`}
                       onClick={() => {
@@ -347,7 +347,7 @@ const AppTopbar = () => {
                       }}
                     >
                       <p>{notification.body}</p>
-                      <p className="text-xs text-gray-400 ">
+                      <p className="text-xs opacity-70">
                         {timeAgo(+notification.createdAt)}
                       </p>
                     </Link>
@@ -489,7 +489,7 @@ const AppTopbar = () => {
             )}
             <a
               href={singleVendorAdminUrl}
-              className="inline-flex min-h-11 w-full items-center gap-3 rounded-md bg-gray-50 px-3 text-sm font-medium text-gray-800 transition-colors hover:bg-secondary-color focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:bg-dark-600 dark:text-white dark:hover:bg-dark-500"
+              className="inline-flex min-h-11 w-full items-center gap-3 rounded-md bg-gray-50 px-3 text-sm font-medium text-gray-800 transition-colors hover:bg-secondary-color hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:bg-dark-600 dark:text-white dark:hover:bg-dark-500"
               onClick={() => setIsMenuOpen(false)}
             >
               <FontAwesomeIcon

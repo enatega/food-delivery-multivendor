@@ -142,7 +142,7 @@ export default function LoginEmailPasswordMain() {
 
             <a
               href={singleVendorAdminUrl}
-              className="mb-2 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-gray-200 px-3 text-sm font-medium text-gray-700 transition-colors hover:border-primary-color hover:bg-secondary-color hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:border-dark-600 dark:text-white dark:hover:border-primary-color dark:hover:bg-dark-600"
+              className="mb-2 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-gray-200 px-3 text-sm font-medium text-gray-700 transition-colors hover:border-primary-color hover:bg-secondary-color hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-color focus-visible:ring-offset-2 dark:border-dark-600 dark:text-white dark:hover:border-primary-color dark:hover:bg-dark-600"
               aria-label="Open Single Vendor Admin"
               title="Open Single Vendor Admin"
             >
