@@ -135,7 +135,7 @@ body:has(.quiet-orbit-page) {
   --dispatch-surface: #ffffff;
   --dispatch-map: #f7f8f6;
   --dispatch-line: #e8e9e4;
-  --quiet-plinth: #e5ecda;
+  --quiet-plinth: #d9efed;
   --quiet-inactive-opacity: 0.48;
   scrollbar-color: var(--primary-dark) var(--dispatch-ground);
 }

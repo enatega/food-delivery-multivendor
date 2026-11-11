@@ -142,8 +142,8 @@ export default function QuietOrbitHero() {
 
           <div className="absolute bottom-[9%] left-[13%] z-[2] h-[52%] w-[68%] sm:bottom-[5%] sm:left-[16%] sm:h-[55%] sm:w-[51%]">
             <div className="absolute inset-x-0 bottom-0 h-[31%]">
-              <div className="absolute inset-x-0 bottom-0 h-[72%] rounded-[0_0_50%_50%] bg-[#d8e1cc] shadow-[0_24px_34px_rgba(21,25,20,0.12)] dark:bg-[#293126]" />
-              <div className="absolute inset-x-0 top-0 h-[64%] rounded-[50%] bg-[#eaf0e2] shadow-[inset_0_-10px_18px_rgba(111,128,96,0.14)] dark:bg-[#354031]" />
+              <div className="absolute inset-x-0 bottom-0 h-[72%] rounded-[0_0_50%_50%] bg-primary-light shadow-[0_24px_34px_rgba(21,25,20,0.12)] dark:bg-[#293126]" />
+              <div className="absolute inset-x-0 top-0 h-[64%] rounded-[50%] bg-primary-light shadow-[inset_0_-10px_18px_rgba(16,125,122,0.14)] dark:bg-[#354031]" />
             </div>
             <AnimatePresence mode="wait" initial={false}>
               <motion.div key={active.id} initial={reduceMotion ? false : { opacity: 0, y: 12, clipPath: "inset(12% 0 0 0)" }} animate={{ opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)" }} exit={reduceMotion ? undefined : { opacity: 0, y: -8, clipPath: "inset(0 0 12% 0)" }} transition={{ duration: reduceMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] }} className={`absolute flex items-end justify-center ${active.stageFrameClassName} ${active.stageInsetClassName}`}>
@@ -153,7 +153,7 @@ export default function QuietOrbitHero() {
           </div>
 
           {previews.map((preview, index) => (
-            <button key={preview.id} type="button" onClick={() => setActiveCategory(preview.id)} aria-label={t("categories.show", { category: t(`categories.${preview.id}`) })} className={`absolute z-10 flex h-20 w-20 items-center justify-center rounded-full bg-[#f1f7e9] shadow-[0_14px_30px_rgba(21,25,20,0.11)] transition-transform duration-500 hover:scale-[1.03] focus-visible:outline-none dark:bg-dispatch-map dark:shadow-[0_14px_30px_rgba(0,0,0,0.3)] sm:h-40 sm:w-40 ${index === 0 ? "right-[3%] top-[5%] sm:right-[16%] sm:top-[3%]" : "bottom-[6%] right-[3%] sm:bottom-[3%] sm:right-[10%]"}`}>
+            <button key={preview.id} type="button" onClick={() => setActiveCategory(preview.id)} aria-label={t("categories.show", { category: t(`categories.${preview.id}`) })} className={`absolute z-10 flex h-20 w-20 items-center justify-center rounded-full bg-primary-light shadow-[0_14px_30px_rgba(21,25,20,0.11)] transition-transform duration-500 hover:scale-[1.03] focus-visible:outline-none dark:bg-dispatch-map dark:shadow-[0_14px_30px_rgba(0,0,0,0.3)] sm:h-40 sm:w-40 ${index === 0 ? "right-[3%] top-[5%] sm:right-[16%] sm:top-[3%]" : "bottom-[6%] right-[3%] sm:bottom-[3%] sm:right-[10%]"}`}>
               <Image src={preview.image} alt="" sizes="160px" className={`object-contain ${preview.previewImageClassName}`} />
               <span className="absolute -right-2 -top-6 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.06em] text-dispatch-muted sm:text-xs rtl:-left-2 rtl:right-auto"><span className="text-primary-dark">{preview.index}</span>{" "}{t(`categories.orbit.${preview.id}`)}</span>
             </button>

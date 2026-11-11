@@ -131,7 +131,7 @@ export default function ScrollJourney() {
               </svg>
 
               <div className="relative h-[390px] md:static md:h-auto">
-                <div className="absolute inset-x-[8%] top-[30%] h-[44%] rounded-[50%] bg-[#e5ecda] shadow-[0_28px_52px_rgba(21,25,20,0.1)] dark:bg-[#293126] dark:shadow-[0_28px_52px_rgba(0,0,0,0.3)] md:inset-x-[18%] md:top-[24%] md:h-[48%]" />
+                <div className="absolute inset-x-[8%] top-[30%] h-[44%] rounded-[50%] bg-primary-light shadow-[0_28px_52px_rgba(21,25,20,0.1)] dark:bg-[#293126] dark:shadow-[0_28px_52px_rgba(0,0,0,0.3)] md:inset-x-[18%] md:top-[24%] md:h-[48%]" />
                 <motion.div
                   style={
                     reduceMotion
@@ -153,7 +153,7 @@ export default function ScrollJourney() {
                       alt="JSML"
                       width={321}
                       height={300}
-                      className="absolute left-[21%] top-[48%] h-auto w-[39%] opacity-90"
+                      className="absolute left-[36%] top-[58%] h-auto w-[18%] -translate-x-1/2 -translate-y-1/2 opacity-90"
                     />
                   </div>
                 </motion.div>
